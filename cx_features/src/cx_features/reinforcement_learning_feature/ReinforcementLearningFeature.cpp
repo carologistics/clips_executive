@@ -34,6 +34,7 @@ namespace cx
 
   void ReinforcementLearningFeature::initialise(const std::string &feature_name)
   {
+    RCLCPP_INFO(this->get_logger(), "ReinforcementLearningFeature init");
     clips_feature_name = feature_name;
 
     get_goal_list_executable_for_robot_service =
@@ -74,6 +75,8 @@ namespace cx
     spin_thread_ =
         std::thread([this]()
                     { rclcpp::spin(this->get_node_base_interface()); });
+
+    RCLCPP_INFO(this->get_logger(), "ReinforcementLearningFeature initialized!");
   }
 
   bool ReinforcementLearningFeature::clips_context_init(
@@ -167,28 +170,8 @@ namespace cx
         CLIPS::Fact::pointer gm = NULL;
         if (fact->get_template()->name() == "goal")
         {
-
           std::string goalid = getClipsSlotValuesAsString(fact->slot_value("id"));
-
-          CLIPS::Fact::pointer gm_fact = clips_env->get_facts();
-
-          while (gm_fact)
-          {
-
-            if (gm_fact->get_template()->name() == "goal-meta")
-            {
-
-              std::string gm_goalid = getClipsSlotValuesAsString(gm_fact->slot_value("goal-id"));
-
-              if (gm_goalid == goalid)
-              {
-                gm = gm_fact;
-                break;
-              }
-            }
-            gm_fact = gm_fact->next();
-          }
-          std::string assigned_to = getClipsSlotValuesAsString(gm->slot_value("assigned-to"));
+          std::string assigned_to = getClipsSlotValuesAsString(fact->slot_value("assigned-to"));
           std::string mode = getClipsSlotValuesAsString(fact->slot_value("mode"));
           std::string is_executable = getClipsSlotValuesAsString(fact->slot_value("is-executable"));
 
@@ -233,19 +216,14 @@ namespace cx
       while (fact)
       {
         std::string fact_name = fact->get_template()->name();
-        if (fact_name == "wm-fact" && getClipsSlotValuesAsString(fact->slot_value("key")).find("robot-waiting") != std::string::npos)
+        if (fact_name == "domain-fact" && getClipsSlotValuesAsString(fact->slot_value("name")).find("robot-waiting") != std::string::npos)
         {
-          std::string key = getClipsSlotValuesAsString(fact->slot_value("key"));
-          size_t pos = key.find("#r#");
-          free_robots.push_back(key.substr(pos + 3));
+          std::string values = getClipsSlotValuesAsString(fact->slot_value("param-values"));
+          free_robots.push_back(values);
         }
         else if (fact_name == "goal")
         {
           goal_facts.push_back(fact);
-        }
-        else if (fact_name == "goal-meta")
-        {
-          goal_meta_facts.push_back(fact);
         }
         fact = fact->next();
       }
@@ -257,25 +235,18 @@ namespace cx
           std::string goalid = getClipsSlotValuesAsString(g->slot_value("id"));
           std::string mode = getClipsSlotValuesAsString(g->slot_value("mode"));
           std::string is_executable = getClipsSlotValuesAsString(g->slot_value("is-executable"));
-          if (mode == "FORMULATED" && is_executable == "TRUE")
+          std::string assigned_to = getClipsSlotValuesAsString(g->slot_value("assigned-to"));
+          if (mode == "FORMULATED" && is_executable == "TRUE" && assigned_to == r)
           {
-            for (CLIPS::Fact::pointer gm : goal_meta_facts)
-            {
-              std::string gm_goalid = getClipsSlotValuesAsString(gm->slot_value("goal-id"));
-              std::string assigned_to = getClipsSlotValuesAsString(gm->slot_value("assigned-to"));
-              if (gm_goalid == goalid && assigned_to == r)
-              {
-                freeRobot = r;
-                RCLCPP_INFO(this->get_logger(), ("Free robot: " + freeRobot).c_str());
-                return;
-              }
-            }
+            freeRobot = r;
+            RCLCPP_INFO(this->get_logger(), ("Free robot: " + freeRobot).c_str());
+            response->robot = freeRobot;
+            return;
+
           }
         }
       }
     }
-
-    response->robot = freeRobot;
   }
 
   void ReinforcementLearningFeature::getDomainObjects(
