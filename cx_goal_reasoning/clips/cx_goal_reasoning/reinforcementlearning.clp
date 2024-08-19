@@ -1,5 +1,6 @@
 (defglobal
   ?*SALIENCE-RL-SELECTION* = ?*SALIENCE-HIGH*
+  ?*SALIENCE-GOAL-EXECUTABLE-CHECK* = 450
 )
 
 (deftemplate rl-goal-selection
@@ -45,9 +46,9 @@
 			(and (eq ?g:mode FORMULATED) (not (eq ?g:type MAINTAIN)))
 			(modify ?g (assigned-to nil))
 		)
-		(do-for-fact ((?waiting wm-fact))
-			(and (wm-key-prefix ?waiting:key (create$ central agent robot-waiting))
-			     (eq (wm-key-arg ?waiting:key r) ?robot))
+		(do-for-fact ((?waiting domain-fact))
+			(and (eq ?waiting:name robot-waiting)
+			     (eq ?waiting:param-values ?robot))
 			(retract ?waiting)
 		)
 	)
@@ -88,4 +89,38 @@
   (not (rl-goal-selection))
   =>
   (retract ?r)
+)
+
+;================== ROBOT SELECTION ==================
+
+(defrule goal-production-assign-robot-to-simple-goals
+	" Before checking SIMPLE goals for their executability, pick a waiting robot
+  that should get a new goal assigned to it next. "
+  (declare (salience ?*SALIENCE-GOAL-EXECUTABLE-CHECK*))
+  (goal (id ?id) (sub-type SIMPLE) (mode FORMULATED) (is-executable FALSE) (assigned-to nil))
+  (domain-object (name ?robot) (type robot))
+  (not (goal (assigned-to ?robot)))
+  (domain-fact (name robot-waiting) (param-values ?robot))
+  (not  (and (domain-fact (name robot-waiting) (param-values ?robot2&:(neq ?robot2 ?robot)))
+            (goal (id ?id2) (sub-type SIMPLE) (mode FORMULATED) (assigned-to ?robot2))
+        )
+  )
+  =>
+  (bind ?longest-waiting 0)
+  (bind ?longest-waiting-robot ?robot)
+  (delayed-do-for-all-facts ((?waiting domain-fact))
+    (eq ?waiting:name robot-waiting)
+    (if (or (eq ?longest-waiting 0) (< (fact-index ?waiting) ?longest-waiting))
+     then
+      (bind ?longest-waiting-robot ?waiting:param-values)
+      (bind ?longest-waiting (fact-index ?waiting))
+    )
+  )
+  (delayed-do-for-all-facts ((?g goal))
+    (and (eq ?g:is-executable FALSE)
+         (eq ?g:sub-type SIMPLE) (eq ?g:mode FORMULATED)
+         (eq ?g:assigned-to nil))
+    (modify ?g (assigned-to ?robot))
+  )
+  (modify ?longest-waiting)
 )
