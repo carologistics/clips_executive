@@ -183,7 +183,7 @@ namespace cx
             std::string goal_list_entry = goal_class + "#" + goal_id + "#" + createGoalParamString(fact->slot_value("params"));
             goal_list.push_back(goal_list_entry);
             goal_ids.push_back(goal_id);
-
+            goalsExecutable = true;
             RCLCPP_INFO(this->get_logger(), ("Executable goal: " + goal_list_entry).c_str());
           }
         }
@@ -366,7 +366,7 @@ namespace cx
     RCLCPP_INFO(this->get_logger(), "Resetting environment...");
     (void)request;
     in_reset = true;
-    clips_env->assert_fact("(reset-game (stage STAGE-0) (stage-time (time)) )");
+    clips_env->assert_fact("(reset-game (stage STAGE-0))");
 
     
     double speedup = parameters["speedup"].as_double();
