@@ -192,6 +192,7 @@ namespace cx
     }
 
     RCLCPP_INFO(this->get_logger(), ("Finished passing all executable goals for " + robot).c_str());
+    executableGoals = goal_ids;
     executableGoalsForRobots[robot] = goal_ids;
     response->goals = goal_list;
   }
@@ -212,7 +213,6 @@ namespace cx
       CLIPS::Fact::pointer fact = clips_env->get_facts();
       std::vector<std::string> free_robots;
       std::vector<CLIPS::Fact::pointer> goal_facts;
-      std::vector<CLIPS::Fact::pointer> goal_meta_facts;
       while (fact)
       {
         std::string fact_name = fact->get_template()->name();
@@ -510,10 +510,14 @@ namespace cx
         {
           std::string outcome = getClipsSlotValuesAsString(fact->slot_value("outcome"));
           int reward = std::stoi(getClipsSlotValuesAsString(fact->slot_value("reward")));
+          std::string done = getClipsSlotValuesAsString(fact->slot_value("done"));
 
           result->outcome = outcome;
           result->reward = reward;
           result->info = "";
+          if (!check_for_episode_end && done == "TRUE"){
+            result->info = "Done";
+          }
           env_feedback = true;
           fact->retract();
           RCLCPP_INFO(this->get_logger(), ("rl-finished-goal found for goal " + goal_id).c_str());
