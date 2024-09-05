@@ -146,3 +146,9 @@
   )
   (modify ?longest-waiting)
 )
+
+(defrule unassign-robot-from-finished-goal
+  ?g <- (goal (mode FINISHED) (assigned-to ~nil))
+  =>
+  (modify ?g (assigned-to nil))
+)
