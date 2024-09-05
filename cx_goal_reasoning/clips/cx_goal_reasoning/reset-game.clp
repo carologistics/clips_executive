@@ -23,7 +23,7 @@
   (assert (training-counter (num 0)))
 )
 
-(defrule reset-game-stage-one
+(defrule reset-game-stage-zero
   (declare (salience ?*SALIENCE-RESET-GAME-HIGH*))
   ?r <- (reset-game (stage STAGE-0))
   =>

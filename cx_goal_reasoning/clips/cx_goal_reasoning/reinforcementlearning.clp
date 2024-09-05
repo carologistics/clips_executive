@@ -11,6 +11,7 @@
 	(slot goal-id (type SYMBOL));
 	(slot outcome (type SYMBOL));
 	(slot reward (type INTEGER));
+  (slot done (type SYMBOL))
 )
 
 
@@ -69,9 +70,30 @@
         (bind ?reward 0)
     )
  
-    (assert (rl-finished-goal (goal-id ?goal-id) (outcome ?outcome) (reward ?reward)))
+    (assert (rl-finished-goal (goal-id ?goal-id) (outcome ?outcome) (reward ?reward) (done FALSE)))
 	(retract ?r)
 )
+
+(defrule rl-selected-goal-finished-episode-end
+  (declare (salience (+ ?*SALIENCE-RL-SELECTION* 1)))
+	?r <- (rl-goal-selection (next-goal-id ?goal-id))
+	(goal (id ?goal-id) (class ?goal-class) (mode ?mode&FINISHED|EVALUATED) (outcome ?outcome) (points ?points))
+  (episode-end)
+	=>
+	(printout t crlf "Goal: " ?goal-id " is " ?mode crlf )
+
+    (if (eq ?outcome COMPLETED) 
+    then
+        (bind ?reward ?points)
+    else
+        (bind ?reward 0)
+    )
+ 
+    (assert (rl-finished-goal (goal-id ?goal-id) (outcome ?outcome) (reward ?reward) (done TRUE)))
+	(retract ?r)
+)
+
+
 
 
 (defrule delete-all-rl-selections
