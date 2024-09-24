@@ -1,5 +1,5 @@
 (defglobal
-  ?*SALIENCE-RL-SELECTION* = ?*SALIENCE-HIGH*
+  ?*SALIENCE-RL-SELECTION* = 498
   ?*SALIENCE-GOAL-EXECUTABLE-CHECK* = 450
 )
 
@@ -12,6 +12,12 @@
 	(slot outcome (type SYMBOL));
 	(slot reward (type INTEGER));
   (slot done (type SYMBOL))
+)
+
+(deftemplate rl-episode-end
+  (slot success (type SYMBOL)
+                (allowed-values TRUE FALSE)
+	              (default TRUE))
 )
 
 
@@ -78,7 +84,7 @@
   (declare (salience (+ ?*SALIENCE-RL-SELECTION* 1)))
 	?r <- (rl-goal-selection (next-goal-id ?goal-id))
 	(goal (id ?goal-id) (class ?goal-class) (mode ?mode&FINISHED|EVALUATED) (outcome ?outcome) (points ?points))
-  (episode-end)
+  ?e <- (rl-episode-end (success ?success))
 	=>
 	(printout t crlf "Goal: " ?goal-id " is " ?mode crlf )
 
@@ -88,12 +94,18 @@
     else
         (bind ?reward 0)
     )
+    (if (eq ?success FALSE)
+    then
+        (bind ?reward 0)
+        (bind ?outcome EPISODE-END-FAILURE)
+    else
+        (bind ?reward (+ ?reward 100))
+    )
  
     (assert (rl-finished-goal (goal-id ?goal-id) (outcome ?outcome) (reward ?reward) (done TRUE)))
 	(retract ?r)
+  (retract ?e)
 )
-
-
 
 
 (defrule delete-all-rl-selections
@@ -118,7 +130,7 @@
 (defrule goal-production-assign-robot-to-simple-goals
 	" Before checking SIMPLE goals for their executability, pick a waiting robot
   that should get a new goal assigned to it next. "
-  (declare (salience ?*SALIENCE-GOAL-EXECUTABLE-CHECK*))
+  (declare (salience ?*SALIENCE-HIGH*))
   (goal (id ?id) (sub-type SIMPLE) (mode FORMULATED) (is-executable FALSE) (assigned-to nil))
   (domain-object (name ?robot) (type robot))
   (not (goal (assigned-to ?robot)))
@@ -148,6 +160,7 @@
 )
 
 (defrule unassign-robot-from-finished-goal
+  (declare (salience ?*SALIENCE-HIGH*))
   ?g <- (goal (mode FINISHED) (assigned-to ~nil))
   =>
   (modify ?g (assigned-to nil))

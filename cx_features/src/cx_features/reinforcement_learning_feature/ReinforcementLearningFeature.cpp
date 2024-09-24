@@ -480,7 +480,6 @@ namespace cx
 
     bool env_feedback = false;
     int elapsed_time = 0;
-    bool check_for_episode_end = false;
 
     while (!env_feedback && elapsed_time < max_time * 1000)
     {
@@ -502,11 +501,11 @@ namespace cx
       goal_handle->publish_feedback(feedback);
 
       CLIPS::Fact::pointer fact = clips_env->get_facts();
-
+      bool finished_goal_found = false;
       while (fact)
       {
         std::string fact_name = fact->get_template()->name();
-        if (fact_name == "rl-finished-goal" && getClipsSlotValuesAsString(fact->slot_value("goal-id")) == goal_id)
+        if (!finished_goal_found && fact_name == "rl-finished-goal" && getClipsSlotValuesAsString(fact->slot_value("goal-id")) == goal_id)
         {
           std::string outcome = getClipsSlotValuesAsString(fact->slot_value("outcome"));
           int reward = std::stoi(getClipsSlotValuesAsString(fact->slot_value("reward")));
@@ -515,30 +514,17 @@ namespace cx
           result->outcome = outcome;
           result->reward = reward;
           result->info = "";
-          if (!check_for_episode_end && done == "TRUE"){
+          if (done == "TRUE"){
             result->info = "Done";
           }
           env_feedback = true;
           fact->retract();
           RCLCPP_INFO(this->get_logger(), ("rl-finished-goal found for goal " + goal_id).c_str());
-          break;
-        } else if (check_for_episode_end && fact_name == "rl-episode-end") 
-        {
-          result->outcome = "Failed";
-          result->reward = 0;
-          result->info = "Episode end";
-          RCLCPP_INFO(this->get_logger(), "Episode end");
-          env_feedback = true;
-          break;
         }
 
         fact = fact->next();
       }
       elapsed_time += wait_time;
-      
-      if (parameters["domain_based_reset"].as_bool()){
-        check_for_episode_end = true;
-      }
     }
 
     if (!env_feedback){
