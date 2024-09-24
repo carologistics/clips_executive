@@ -1,6 +1,7 @@
 (defglobal
   ?*SALIENCE-RL-SELECTION* = 498
-  ?*SALIENCE-GOAL-EXECUTABLE-CHECK* = 450
+  ?*SALIENCE-GOAL-EXECUTABLE-CHECK* = 1000
+  ?*SALIENCE-DOMAIN-GAME-FINISHED-FAILURE* = 499
 )
 
 (deftemplate rl-goal-selection
@@ -106,6 +107,17 @@
 	(retract ?r)
   (retract ?e)
 )
+
+(defrule domain-game-finished-failure
+  (declare (salience ?*SALIENCE-DOMAIN-GAME-FINISHED-FAILURE*))
+  (goal (assigned-to ?robot&~nil))
+  (not (goal (assigned-to ?robot) (is-executable TRUE)))
+  (not (goal (mode ~FORMULATED&~FINISHED)))
+  (not (rl-episode-end (success ?success)))
+  =>
+  (assert (rl-episode-end (success FALSE)))
+)
+
 
 
 (defrule delete-all-rl-selections
