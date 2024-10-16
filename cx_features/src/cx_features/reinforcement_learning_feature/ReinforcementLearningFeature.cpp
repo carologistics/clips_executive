@@ -12,6 +12,7 @@
 
 namespace cx
 {
+  using SetRLMode = cx_rl_interfaces::srv::SetRLMode;
   using GetGoalList = cx_rl_interfaces::srv::GetGoalList;
   using GetGoalListRobot = cx_rl_interfaces::srv::GetGoalListRobot;
   using GetFreeRobot = cx_rl_interfaces::srv::GetFreeRobot;
@@ -36,6 +37,9 @@ namespace cx
   {
     RCLCPP_INFO(this->get_logger(), "ReinforcementLearningFeature init");
     clips_feature_name = feature_name;
+
+    set_rl_mode_service =
+        this->create_service<SetRLMode>("set_rl_mode", std::bind(&ReinforcementLearningFeature::setRLMode, this, _1, _2));
 
     get_goal_list_executable_for_robot_service =
         this->create_service<GetGoalListRobot>("get_goal_list_executable_for_robot", std::bind(&ReinforcementLearningFeature::getGoalListExecutableForRobot, this, _1, _2));
@@ -104,6 +108,26 @@ namespace cx
   }
 
   // SERVICE-FUNCTIONS
+
+  void ReinforcementLearningFeature::setRLMode(
+      const std::shared_ptr<SetRLMode::Request> request,
+      std::shared_ptr<SetRLMode::Response> response)
+  {
+    std::string mode = request->mode;
+    RCLCPP_INFO(this->get_logger(), ("Setting reinforcement learning mode to " + mode).c_str());
+    
+    std::lock_guard<std::mutex> guard(*(clips_env.get_mutex_instance()));
+    
+    CLIPS::Value v = CLIPS::Value(mode, CLIPS::TYPE_SYMBOL);
+    CLIPS::Template::pointer tmpl = clips_env->get_template("rl-mode");
+  
+    CLIPS::Fact::pointer fact = CLIPS::Fact::create(*(clips_env.get_obj()), tmpl);
+    fact->set_slot("mode", v);
+    clips_env->assert_fact(fact);
+    
+    std::string result = "Set mode to " + mode;
+    response->confirmation = result;
+  }
 
   void ReinforcementLearningFeature::getGoalListExecutable(
       const std::shared_ptr<GetGoalList::Request> request,
