@@ -9,6 +9,7 @@
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_action/rclcpp_action.hpp"
 
+#include "cx_rl_interfaces/srv/set_rl_mode.hpp"
 #include "cx_rl_interfaces/srv/get_goal_list_robot.hpp"
 #include "cx_rl_interfaces/srv/get_free_robot.hpp"
 #include "cx_rl_interfaces/action/goal_selection.hpp"
@@ -41,6 +42,7 @@ private:
   std::thread spin_thread_;
   LockSharedPtr<CLIPS::Environment> clips_env;
 
+  rclcpp::Service<cx_rl_interfaces::srv::SetRLMode>::SharedPtr set_rl_mode_service;
   rclcpp::Service<cx_rl_interfaces::srv::GetGoalListRobot>::SharedPtr get_goal_list_executable_for_robot_service;
   rclcpp::Service<cx_rl_interfaces::srv::GetGoalList>::SharedPtr get_goal_list_executable_service;
   rclcpp::Service<cx_rl_interfaces::srv::GetFreeRobot>::SharedPtr get_free_robot_service;
@@ -52,7 +54,8 @@ private:
 
 
   
-
+  void setRLMode(const std::shared_ptr<cx_rl_interfaces::srv::SetRLMode::Request> request,
+                  std::shared_ptr<cx_rl_interfaces::srv::SetRLMode::Response> response);
   void getGoalListExecutableForRobot(const std::shared_ptr<cx_rl_interfaces::srv::GetGoalListRobot::Request> request, 
                   std::shared_ptr<cx_rl_interfaces::srv::GetGoalListRobot::Response> response);
   void getGoalListExecutable(const std::shared_ptr<cx_rl_interfaces::srv::GetGoalList::Request> request, 

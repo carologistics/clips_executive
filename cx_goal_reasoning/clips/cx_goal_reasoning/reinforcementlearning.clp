@@ -21,6 +21,11 @@
 	              (default TRUE))
 )
 
+(deftemplate rl-mode
+  (slot mode  (type SYMBOL)
+              (allowed-values TRAINING EVALUATION EXECUTION))
+)
+
 
 ;(deffunction remove-robot-assignment-from-goal-meta (?goal)
 ;  (if (not (do-for-fact ((?f goal-meta))
@@ -54,17 +59,18 @@
 			(and (eq ?g:mode FORMULATED) (not (eq ?g:type MAINTAIN)))
 			(modify ?g (assigned-to nil))
 		)
-		(do-for-fact ((?waiting domain-fact))
-			(and (eq ?waiting:name robot-waiting)
-			     (eq ?waiting:param-values ?robot))
-			(retract ?waiting)
-		)
+		;(do-for-fact ((?waiting domain-fact))
+		;	(and (eq ?waiting:name robot-waiting)
+		;	     (eq ?waiting:param-values ?robot))
+		;	(retract ?waiting)
+		;)
 	)
 )
 
 
 (defrule rl-selected-goal-finished
   (declare (salience ?*SALIENCE-RL-SELECTION*))
+  (rl-mode (mode TRAINING|EVALUATION))
 	?r <- (rl-goal-selection (next-goal-id ?goal-id))
 	(goal (id ?goal-id) (class ?goal-class) (mode ?mode&FINISHED|EVALUATED) (outcome ?outcome) (points ?points))
 	=>
@@ -83,6 +89,7 @@
 
 (defrule rl-selected-goal-finished-episode-end
   (declare (salience (+ ?*SALIENCE-RL-SELECTION* 1)))
+  (rl-mode (mode TRAINING|EVALUATION))
 	?r <- (rl-goal-selection (next-goal-id ?goal-id))
 	(goal (id ?goal-id) (class ?goal-class) (mode ?mode&FINISHED|EVALUATED) (outcome ?outcome) (points ?points))
   ?e <- (rl-episode-end (success ?success))
@@ -110,6 +117,7 @@
 
 (defrule domain-game-finished-failure
   (declare (salience ?*SALIENCE-DOMAIN-GAME-FINISHED-FAILURE*))
+  (rl-mode (mode TRAINING|EVALUATION))
   (goal (assigned-to ?robot&~nil))
   (not (goal (assigned-to ?robot) (is-executable TRUE)))
   (not (goal (mode ~FORMULATED&~FINISHED)))
@@ -118,23 +126,12 @@
   (assert (rl-episode-end (success FALSE)))
 )
 
-
-
-(defrule delete-all-rl-selections
-  (declare (salience ?*SALIENCE-FIRST*))
-  (rl-delete-selections)
-  ?r <-(rl-goal-selection (next-goal-id ?goal-id))
+(defrule rl-execution-demand-selection
+  (declare (salience ?*SALIENCE-RL-SELECTION*))
+  (rl-mode (mode EXECUTION))
+  (goal (mode FORMULATED) (assigned-to ?robot&~nil) (is-executable TRUE))
   =>
-  (assert (rl-finished-goal (goal-id ?goal-id) (outcome RESET) (reward 0)))
-  (retract ?r)
-)
-
-(defrule finished-deleting-rl-selections
-  (declare (salience ?*SALIENCE-FIRST*))
-  ?r <- (rl-delete-selections)
-  (not (rl-goal-selection))
-  =>
-  (retract ?r)
+  (assert (rl-goal-selection-requested))
 )
 
 ;================== ROBOT SELECTION ==================
