@@ -26,6 +26,8 @@
               (allowed-values TRAINING EVALUATION EXECUTION))
 )
 
+(deftemplate rl-goal-selection-requested)
+
 
 ;(deffunction remove-robot-assignment-from-goal-meta (?goal)
 ;  (if (not (do-for-fact ((?f goal-meta))

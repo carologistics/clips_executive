@@ -2,6 +2,7 @@
 #include <string>
 #include <chrono>
 #include <functional>
+#include <memory>
 
 #include "cx_core/ClipsFeature.hpp"
 #include "cx_features/ReinforcementLearningFeature.hpp"
@@ -21,6 +22,7 @@ namespace cx
   using CreateRLEnvState = cx_rl_interfaces::srv::CreateRLEnvState;
   using GoalSelection = cx_rl_interfaces::action::GoalSelection;
   using ResetCX = cx_rl_interfaces::srv::ResetCX;
+  using ExecGoalSelection = cx_rl_interfaces::srv::ExecGoalSelection;
 
   using namespace std::chrono_literals;
   using namespace std::placeholders;
@@ -61,6 +63,17 @@ namespace cx
 
     reset_cx_service =
         this->create_service<ResetCX>("reset_cx", std::bind(&ReinforcementLearningFeature::resetCX, this, _1, _2));
+
+    exec_goal_selection_service =
+        this->create_service<ExecGoalSelection>("exec_goal_selection", std::bind(&ReinforcementLearningFeature::execGoalSelection, this, _1, _2));
+
+
+    demand_goal_selection_publisher = 
+        this->create_publisher<std_msgs::msg::String>("demand_goal_selection", 10);
+
+    timer_ = this->create_wall_timer(1000ms, std::bind(&ReinforcementLearningFeature::demand_goal_selection_callback, this));
+
+    exec_in_selection = false;
 
     auto number_robots = parameters["number_robots"].as_int();
 
@@ -432,9 +445,54 @@ namespace cx
     response->confirmation = result;
   }
 
+  void ReinforcementLearningFeature::execGoalSelection(
+      const std::shared_ptr<ExecGoalSelection::Request> request,
+      std::shared_ptr<ExecGoalSelection::Response> response)
+  {
+    std::string goal_id = request->goalid;
+    RCLCPP_INFO(this->get_logger(), ("Selecting goal " + goal_id).c_str());
+
+    if (std::find(executableGoals.begin(), executableGoals.end(), goal_id) == executableGoals.end())
+    {
+      RCLCPP_INFO(this->get_logger(), ("Goal " + goal_id + " not executable!").c_str());
+      response->confirmation = "FAILED: goal id not executable";
+      return;
+    }
+
+    assertRLGoalSelectionFact(goal_id);
+    response->confirmation = "Goal selection fact asserted";
+    RCLCPP_INFO(this->get_logger(), ("Selection fact for goal " + goal_id + " asserted").c_str());
+  }
+
+  void
+  ReinforcementLearningFeature::demand_goal_selection_callback()
+  {
+    if (exec_in_selection)
+    {
+      //return;
+    }
+    std::lock_guard<std::mutex> guard(*(clips_env.get_mutex_instance()));
+
+    CLIPS::Fact::pointer fact = clips_env->get_facts();
+
+    while (fact)
+    {
+      std::string fact_name = fact->get_template()->name();
+      if (fact_name == "rl-goal-selection-requested")
+      {
+        RCLCPP_INFO(this->get_logger(), "Goal selection request found");
+        auto message = std_msgs::msg::String();
+        message.data = "rl-goal-selection-request";
+        demand_goal_selection_publisher->publish(message);
+        exec_in_selection = true;
+        break;
+      }
+      fact = fact->next();
+    }
+  }
+
   // ACTION-FUNCTIONS
 
-  // TODO
   rclcpp_action::GoalResponse ReinforcementLearningFeature::goalSelectionHandleGoal(
       const rclcpp_action::GoalUUID &uuid, std::shared_ptr<const GoalSelection::Goal> goal)
   {
@@ -448,7 +506,6 @@ namespace cx
     return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE;
   }
 
-  // TODO
   rclcpp_action::CancelResponse ReinforcementLearningFeature::goalSelectionHandleCancel(
       const std::shared_ptr<rclcpp_action::ServerGoalHandle<GoalSelection>> goal_handle)
   {
@@ -457,7 +514,6 @@ namespace cx
     return rclcpp_action::CancelResponse::ACCEPT;
   }
 
-  // TODO
   void ReinforcementLearningFeature::goalSelectionHandleAccepted(
       const std::shared_ptr<rclcpp_action::ServerGoalHandle<GoalSelection>> goal_handle)
   {
@@ -465,7 +521,6 @@ namespace cx
     std::thread{std::bind(&cx::ReinforcementLearningFeature::goalSelection, this, _1), goal_handle}.detach();
   }
 
-  // TODO
   void ReinforcementLearningFeature::goalSelection(
       const std::shared_ptr<rclcpp_action::ServerGoalHandle<GoalSelection>> goal_handle)
   {
