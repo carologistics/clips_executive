@@ -18,6 +18,8 @@
 #include "cx_rl_interfaces/srv/create_rl_env_state.hpp"
 #include "cx_rl_interfaces/srv/get_goal_list.hpp"
 #include "cx_rl_interfaces/srv/reset_cx.hpp"
+#include "cx_rl_interfaces/srv/exec_goal_selection.hpp"
+#include "std_msgs/msg/string.hpp"
 
 #include "cx_core/ClipsFeature.hpp"
 #include "cx_utils/LockSharedPtr.hpp"
@@ -41,6 +43,7 @@ private:
   std::map<std::string, LockSharedPtr<CLIPS::Environment>> envs_;
   std::thread spin_thread_;
   LockSharedPtr<CLIPS::Environment> clips_env;
+  rclcpp::TimerBase::SharedPtr timer_;
 
   rclcpp::Service<cx_rl_interfaces::srv::SetRLMode>::SharedPtr set_rl_mode_service;
   rclcpp::Service<cx_rl_interfaces::srv::GetGoalListRobot>::SharedPtr get_goal_list_executable_for_robot_service;
@@ -50,7 +53,9 @@ private:
   rclcpp::Service<cx_rl_interfaces::srv::GetDomainPredicates>::SharedPtr get_domain_predicates_service;
   rclcpp::Service<cx_rl_interfaces::srv::CreateRLEnvState>::SharedPtr create_rl_env_state_service;
   rclcpp::Service<cx_rl_interfaces::srv::ResetCX>::SharedPtr reset_cx_service;
+  rclcpp::Service<cx_rl_interfaces::srv::ExecGoalSelection>::SharedPtr exec_goal_selection_service;
   std::vector<rclcpp_action::Server<cx_rl_interfaces::action::GoalSelection>::SharedPtr> goal_selection_action_servers;
+  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr demand_goal_selection_publisher;
 
 
   
@@ -70,6 +75,8 @@ private:
                   std::shared_ptr<cx_rl_interfaces::srv::CreateRLEnvState::Response> response);
   void resetCX(const std::shared_ptr<cx_rl_interfaces::srv::ResetCX::Request> request,
                   std::shared_ptr<cx_rl_interfaces::srv::ResetCX::Response> response);
+  void execGoalSelection(const std::shared_ptr<cx_rl_interfaces::srv::ExecGoalSelection::Request> request,
+                  std::shared_ptr<cx_rl_interfaces::srv::ExecGoalSelection::Response> response);
 
   rclcpp_action::GoalResponse goalSelectionHandleGoal(const rclcpp_action::GoalUUID & uuid, 
                   std::shared_ptr<const cx_rl_interfaces::action::GoalSelection::Goal> goal);
@@ -77,6 +84,10 @@ private:
                   const std::shared_ptr<rclcpp_action::ServerGoalHandle<cx_rl_interfaces::action::GoalSelection>> goal_handle);
   void goalSelectionHandleAccepted(const std::shared_ptr<rclcpp_action::ServerGoalHandle<cx_rl_interfaces::action::GoalSelection>> goal_handle);
   void goalSelection(const std::shared_ptr<rclcpp_action::ServerGoalHandle<cx_rl_interfaces::action::GoalSelection>> goal_handle);
+
+  void demand_goal_selection_callback();
+
+  bool exec_in_selection;
 
 
   std::vector<std::string> splitActionToGoalParams(std::string action);
