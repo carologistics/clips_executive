@@ -53,9 +53,8 @@ private:
   rclcpp::Service<cx_rl_interfaces::srv::GetDomainPredicates>::SharedPtr get_domain_predicates_service;
   rclcpp::Service<cx_rl_interfaces::srv::CreateRLEnvState>::SharedPtr create_rl_env_state_service;
   rclcpp::Service<cx_rl_interfaces::srv::ResetCX>::SharedPtr reset_cx_service;
-  rclcpp::Service<cx_rl_interfaces::srv::ExecGoalSelection>::SharedPtr exec_goal_selection_service;
   std::vector<rclcpp_action::Server<cx_rl_interfaces::action::GoalSelection>::SharedPtr> goal_selection_action_servers;
-  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr demand_goal_selection_publisher;
+  rclcpp::Client<cx_rl_interfaces::srv::ExecGoalSelection>::SharedPtr request_goal_selection_client;
 
 
   
@@ -75,8 +74,6 @@ private:
                   std::shared_ptr<cx_rl_interfaces::srv::CreateRLEnvState::Response> response);
   void resetCX(const std::shared_ptr<cx_rl_interfaces::srv::ResetCX::Request> request,
                   std::shared_ptr<cx_rl_interfaces::srv::ResetCX::Response> response);
-  void execGoalSelection(const std::shared_ptr<cx_rl_interfaces::srv::ExecGoalSelection::Request> request,
-                  std::shared_ptr<cx_rl_interfaces::srv::ExecGoalSelection::Response> response);
 
   rclcpp_action::GoalResponse goalSelectionHandleGoal(const rclcpp_action::GoalUUID & uuid, 
                   std::shared_ptr<const cx_rl_interfaces::action::GoalSelection::Goal> goal);
@@ -85,7 +82,7 @@ private:
   void goalSelectionHandleAccepted(const std::shared_ptr<rclcpp_action::ServerGoalHandle<cx_rl_interfaces::action::GoalSelection>> goal_handle);
   void goalSelection(const std::shared_ptr<rclcpp_action::ServerGoalHandle<cx_rl_interfaces::action::GoalSelection>> goal_handle);
 
-  void demand_goal_selection_callback();
+  void request_goal_selection_callback();
 
   bool exec_in_selection;
 
@@ -93,6 +90,9 @@ private:
   std::vector<std::string> splitActionToGoalParams(std::string action);
   std::string getClipsSlotValuesAsString(std::vector<CLIPS::Value> slot_values);
   std::string createGoalParamString(std::vector<CLIPS::Value> params);
+  std::string getClipsEnvStateString();
+  std::vector<std::string> getExecutableGoals();
+  void execGoalSelection(std::string goal_id);
   bool checkGoalIDForRobot(std::string robot, std::string goalid);
   void assertRLGoalSelectionFact(std::string goal_id);
 
