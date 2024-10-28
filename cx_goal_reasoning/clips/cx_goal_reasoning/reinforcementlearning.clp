@@ -41,6 +41,7 @@
 
 (defrule rl-clips-goal-selection
   (declare (salience ?*SALIENCE-RL-SELECTION*))
+  (rl-mode (mode TRAINING|EVALUATION))
 	?r <- (rl-goal-selection (next-goal-id ?a))
 	?next-goal <- (goal (id ?a) (mode ?m&FORMULATED) (assigned-to ?robot))
 	=>
@@ -131,9 +132,42 @@
 (defrule rl-execution-demand-selection
   (declare (salience ?*SALIENCE-RL-SELECTION*))
   (rl-mode (mode EXECUTION))
+  (not (rl-goal-selection-requested))
   (goal (mode FORMULATED) (assigned-to ?robot&~nil) (is-executable TRUE))
   =>
   (assert (rl-goal-selection-requested))
+)
+
+(defrule rl-execution-clips-goal-selection
+  (declare (salience ?*SALIENCE-RL-SELECTION*))
+  (rl-mode (mode EXECUTION))
+	?r <- (rl-goal-selection (next-goal-id ?a))
+  ?re <- (rl-goal-selection-requested)
+	?next-goal <- (goal (id ?a) (mode ?m&FORMULATED) (assigned-to ?robot))
+	=>
+	(printout t crlf "in RL Plugin added fact: " ?r " with next action " ?a crlf )
+	(printout t crlf "goal: " ?next-goal "with in mode: "?m crlf crlf)
+	
+	(retract ?re)
+  (modify ?next-goal (mode SELECTED))
+
+  (delayed-do-for-all-facts ((?g goal))
+		(and (eq ?g:is-executable TRUE) (neq ?g:class SEND-BEACON))
+		(modify ?g (is-executable FALSE))
+	)
+  ; if it is actually a robot, remove all other assignments and the waiting status
+	(if (and (neq ?robot central) (neq ?robot nil))
+		then
+		(delayed-do-for-all-facts ((?g goal))
+			(and (eq ?g:mode FORMULATED) (not (eq ?g:type MAINTAIN)))
+			(modify ?g (assigned-to nil))
+		)
+		;(do-for-fact ((?waiting domain-fact))
+		;	(and (eq ?waiting:name robot-waiting)
+		;	     (eq ?waiting:param-values ?robot))
+		;	(retract ?waiting)
+		;)
+	)
 )
 
 ;================== ROBOT SELECTION ==================

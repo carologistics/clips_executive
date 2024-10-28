@@ -64,14 +64,10 @@ namespace cx
     reset_cx_service =
         this->create_service<ResetCX>("reset_cx", std::bind(&ReinforcementLearningFeature::resetCX, this, _1, _2));
 
-    exec_goal_selection_service =
-        this->create_service<ExecGoalSelection>("exec_goal_selection", std::bind(&ReinforcementLearningFeature::execGoalSelection, this, _1, _2));
+    request_goal_selection_client = 
+        this->create_client<ExecGoalSelection>("/request_goal_selection");
 
-
-    demand_goal_selection_publisher = 
-        this->create_publisher<std_msgs::msg::String>("demand_goal_selection", 10);
-
-    timer_ = this->create_wall_timer(1000ms, std::bind(&ReinforcementLearningFeature::demand_goal_selection_callback, this));
+    timer_ = this->create_wall_timer(1000ms, std::bind(&ReinforcementLearningFeature::request_goal_selection_callback, this));
 
     exec_in_selection = false;
 
@@ -148,37 +144,7 @@ namespace cx
   {
     RCLCPP_INFO(this->get_logger(), "Generating list of executable goals");
     (void)request;
-    std::lock_guard<std::mutex> guard(*(clips_env.get_mutex_instance()));
-
-    CLIPS::Fact::pointer fact = clips_env->get_facts();
-    std::vector<std::string> goal_list;
-    std::vector<std::string> goal_ids;
-
-    while (fact)
-    {
-      std::string fact_name = fact->get_template()->name();
-      if (fact_name == "goal")
-      {
-        std::string mode = getClipsSlotValuesAsString(fact->slot_value("mode"));
-        std::string is_executable = getClipsSlotValuesAsString(fact->slot_value("is-executable"));
-
-        if (mode == "FORMULATED" && is_executable == "TRUE")
-        {
-          std::string goal_class = getClipsSlotValuesAsString(fact->slot_value("class"));
-          std::string goal_id = getClipsSlotValuesAsString(fact->slot_value("id"));
-
-          std::string goal_list_entry = goal_class + "#" + goal_id + "#" + createGoalParamString(fact->slot_value("params"));
-          goal_list.push_back(goal_list_entry);
-          goal_ids.push_back(goal_id);
-
-          RCLCPP_INFO(this->get_logger(), ("Executable goal: " + goal_list_entry).c_str());
-        }
-      }
-      fact = fact->next();
-    }
-    RCLCPP_INFO(this->get_logger(), "Finished passing all executable goals");
-
-    executableGoals = goal_ids;
+    std::vector<std::string> goal_list = getExecutableGoals();
     response->goals = goal_list;
   }
 
@@ -361,37 +327,7 @@ namespace cx
   {
     RCLCPP_INFO(this->get_logger(), "Creating environment state...");
     (void)request;
-    std::lock_guard<std::mutex> guard(*(clips_env.get_mutex_instance()));
-    CLIPS::Fact::pointer fact = clips_env->get_facts();
-    std::string envStateString = "{";
-
-    while (fact)
-    {
-      std::string fact_name = fact->get_template()->name();
-      if (fact_name == "domain-fact")
-      {
-        std::vector<std::string> slot_names = fact->slot_names();
-        std::string fact_value = "";
-        for (std::string s : slot_names)
-        {
-          fact_value += " Slot " + s + ": ";
-          std::vector<CLIPS::Value> slot_values = fact->slot_value(s);
-          std::string value = getClipsSlotValuesAsString(slot_values);
-
-          if (s == "name")
-          {
-            envStateString += "\"" + value + "(";
-          }
-          if (s == "param-values")
-          {
-            envStateString += value + ")\",";
-          }
-          fact_value += " " + value;
-        }
-      }
-      fact = fact->next();
-    }
-    envStateString = envStateString.substr(0, envStateString.length() - 1) + "}";
+    std::string envStateString = getClipsEnvStateString();
     RCLCPP_INFO(this->get_logger(), "Environment state created...");
     response->state = envStateString;
   }
@@ -445,33 +381,15 @@ namespace cx
     response->confirmation = result;
   }
 
-  void ReinforcementLearningFeature::execGoalSelection(
-      const std::shared_ptr<ExecGoalSelection::Request> request,
-      std::shared_ptr<ExecGoalSelection::Response> response)
-  {
-    std::string goal_id = request->goalid;
-    RCLCPP_INFO(this->get_logger(), ("Selecting goal " + goal_id).c_str());
-
-    if (std::find(executableGoals.begin(), executableGoals.end(), goal_id) == executableGoals.end())
-    {
-      RCLCPP_INFO(this->get_logger(), ("Goal " + goal_id + " not executable!").c_str());
-      response->confirmation = "FAILED: goal id not executable";
-      return;
-    }
-
-    assertRLGoalSelectionFact(goal_id);
-    response->confirmation = "Goal selection fact asserted";
-    RCLCPP_INFO(this->get_logger(), ("Selection fact for goal " + goal_id + " asserted").c_str());
-  }
-
   void
-  ReinforcementLearningFeature::demand_goal_selection_callback()
+  ReinforcementLearningFeature::request_goal_selection_callback()
   {
     if (exec_in_selection)
     {
-      //return;
+      return;
     }
-    std::lock_guard<std::mutex> guard(*(clips_env.get_mutex_instance()));
+    bool clips_request_found = false;
+    std::unique_lock<std::mutex> guard(*(clips_env.get_mutex_instance()));
 
     CLIPS::Fact::pointer fact = clips_env->get_facts();
 
@@ -481,13 +399,32 @@ namespace cx
       if (fact_name == "rl-goal-selection-requested")
       {
         RCLCPP_INFO(this->get_logger(), "Goal selection request found");
-        auto message = std_msgs::msg::String();
-        message.data = "rl-goal-selection-request";
-        demand_goal_selection_publisher->publish(message);
+        clips_request_found = true;
         exec_in_selection = true;
         break;
       }
       fact = fact->next();
+    }
+    guard.unlock();
+    if (clips_request_found)
+    {
+      auto request = std::make_shared<ExecGoalSelection::Request>();
+      request->state = getClipsEnvStateString();
+      request->goals = getExecutableGoals();
+
+      while (!request_goal_selection_client->wait_for_service(1s))
+      {
+        RCLCPP_INFO(this->get_logger(), "Service not available, waiting again...");
+      }
+      auto result = request_goal_selection_client->async_send_request(request);
+      if (rclcpp::spin_until_future_complete(this->get_node_base_interface(), result) == rclcpp::FutureReturnCode::SUCCESS)
+      {
+        execGoalSelection(result.get()->goalid);
+      }
+      else
+      {
+        RCLCPP_ERROR(this->get_logger(), "Failed to call service request_goal_selection");
+      }
     }
   }
 
@@ -691,6 +628,93 @@ namespace cx
     }
 
     return goal_param_string;
+  }
+
+  std::string ReinforcementLearningFeature::getClipsEnvStateString()
+  {
+    std::lock_guard<std::mutex> guard(*(clips_env.get_mutex_instance()));
+    CLIPS::Fact::pointer fact = clips_env->get_facts();
+    std::string envStateString = "{";
+
+    while (fact)
+    {
+      std::string fact_name = fact->get_template()->name();
+      if (fact_name == "domain-fact")
+      {
+        std::vector<std::string> slot_names = fact->slot_names();
+        std::string fact_value = "";
+        for (std::string s : slot_names)
+        {
+          fact_value += " Slot " + s + ": ";
+          std::vector<CLIPS::Value> slot_values = fact->slot_value(s);
+          std::string value = getClipsSlotValuesAsString(slot_values);
+
+          if (s == "name")
+          {
+            envStateString += "\"" + value + "(";
+          }
+          if (s == "param-values")
+          {
+            envStateString += value + ")\",";
+          }
+          fact_value += " " + value;
+        }
+      }
+      fact = fact->next();
+    }
+    envStateString = envStateString.substr(0, envStateString.length() - 1) + "}";
+    return envStateString;
+  }
+
+  std::vector<std::string> ReinforcementLearningFeature::getExecutableGoals()
+  {
+    std::lock_guard<std::mutex> guard(*(clips_env.get_mutex_instance()));
+
+    CLIPS::Fact::pointer fact = clips_env->get_facts();
+    std::vector<std::string> goal_list;
+    std::vector<std::string> goal_ids;
+
+    while (fact)
+    {
+      std::string fact_name = fact->get_template()->name();
+      if (fact_name == "goal")
+      {
+        std::string mode = getClipsSlotValuesAsString(fact->slot_value("mode"));
+        std::string is_executable = getClipsSlotValuesAsString(fact->slot_value("is-executable"));
+
+        if (mode == "FORMULATED" && is_executable == "TRUE")
+        {
+          std::string goal_class = getClipsSlotValuesAsString(fact->slot_value("class"));
+          std::string goal_id = getClipsSlotValuesAsString(fact->slot_value("id"));
+
+          std::string goal_list_entry = goal_class + "#" + goal_id + "#" + createGoalParamString(fact->slot_value("params"));
+          goal_list.push_back(goal_list_entry);
+          goal_ids.push_back(goal_id);
+
+          RCLCPP_INFO(this->get_logger(), ("Executable goal: " + goal_list_entry).c_str());
+        }
+      }
+      fact = fact->next();
+    }
+    RCLCPP_INFO(this->get_logger(), "Finished passing all executable goals");
+
+    executableGoals = goal_ids;
+    return goal_list;
+  }
+
+  void ReinforcementLearningFeature::execGoalSelection(std::string goal_id)
+  {
+    RCLCPP_INFO(this->get_logger(), ("Selecting goal " + goal_id).c_str());
+
+    if (std::find(executableGoals.begin(), executableGoals.end(), goal_id) == executableGoals.end())
+    {
+      RCLCPP_INFO(this->get_logger(), ("Goal " + goal_id + " not executable!").c_str());
+      return;
+    }
+    assertRLGoalSelectionFact(goal_id);
+    std::this_thread::sleep_for(500ms);
+    exec_in_selection = false;
+    RCLCPP_INFO(this->get_logger(), ("Selection fact for goal " + goal_id + " asserted").c_str());
   }
 
   std::vector<std::string> ReinforcementLearningFeature::getDomainObjectsFromCX(std::string type)
