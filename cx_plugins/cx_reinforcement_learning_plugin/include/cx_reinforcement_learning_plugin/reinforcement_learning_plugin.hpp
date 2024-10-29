@@ -21,28 +21,25 @@
 #include "cx_rl_interfaces/srv/exec_goal_selection.hpp"
 #include "std_msgs/msg/string.hpp"
 
-#include "cx_core/ClipsFeature.hpp"
+#include "cx_plugin/clips_plugin.hpp"
 #include "cx_utils/LockSharedPtr.hpp"
 
 namespace cx {
 
-class ReinforcementLearningFeature : public ClipsFeature, public rclcpp::Node {
+class ReinforcementLearningPlugin : public ClipsPlugin, public rclcpp::Node {
 public:
-  ReinforcementLearningFeature();
-  ~ReinforcementLearningFeature();
+  ReinforcementLearningPlugin();
+  ~ReinforcementLearningPlugin();
 
-  void initialise(const std::string &feature_name) override;
+  void initialize() override;
 
-  bool clips_context_init(const std::string &env_name,
-                          LockSharedPtr<CLIPS::Environment> &clips) override;
-  bool clips_context_destroyed(const std::string &env_name) override;
-
-  std::string getFeatureName() const;
+  bool clips_env_init(LockSharedPtr<clips::Environment> &env) override;
+  bool clips_env_destroyed(LockSharedPtr<clips::Environment> &env) override;
 
 private:
-  std::map<std::string, LockSharedPtr<CLIPS::Environment>> envs_;
+  std::map<std::string, LockSharedPtr<clips::Environment>> envs_;
   std::thread spin_thread_;
-  LockSharedPtr<CLIPS::Environment> clips_env;
+  LockSharedPtr<clips::Environment> clips_env;
   rclcpp::TimerBase::SharedPtr timer_;
 
   rclcpp::Service<cx_rl_interfaces::srv::SetRLMode>::SharedPtr set_rl_mode_service;
@@ -88,8 +85,8 @@ private:
 
 
   std::vector<std::string> splitActionToGoalParams(std::string action);
-  std::string getClipsSlotValuesAsString(std::vector<CLIPS::Value> slot_values);
-  std::string createGoalParamString(std::vector<CLIPS::Value> params);
+  std::string getClipsSlotValuesAsString(clips::CLIPSValue &val);
+  std::string createGoalParamString(clips::CLIPSValue &params);
   std::string getClipsEnvStateString();
   std::vector<std::string> getExecutableGoals();
   void execGoalSelection(std::string goal_id);
