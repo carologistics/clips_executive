@@ -42,6 +42,14 @@ private:
   LockSharedPtr<clips::Environment> clips_env;
   rclcpp::TimerBase::SharedPtr timer_;
 
+  int number_robots_;
+  float reset_wait_time_;
+  float reset_max_time_;
+  float step_wait_time_;
+  float step_max_time_;
+  float speedup_;
+
+
   rclcpp::Service<cx_rl_interfaces::srv::SetRLMode>::SharedPtr set_rl_mode_service;
   rclcpp::Service<cx_rl_interfaces::srv::GetGoalListRobot>::SharedPtr get_goal_list_executable_for_robot_service;
   rclcpp::Service<cx_rl_interfaces::srv::GetGoalList>::SharedPtr get_goal_list_executable_service;

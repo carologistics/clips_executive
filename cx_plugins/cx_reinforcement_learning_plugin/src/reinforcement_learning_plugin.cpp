@@ -6,6 +6,7 @@
 #include "cx_reinforcement_learning_plugin/reinforcement_learning_plugin.hpp"
 #include "cx_utils/LockSharedPtr.hpp"
 #include "cx_utils/clips_env_context.hpp"
+#include <cx_utils/param_utils.hpp>
 
 // To export as plugin
 #include "pluginlib/class_list_macros.hpp"
@@ -65,10 +66,35 @@ namespace cx
     exec_in_selection = false;
 
     auto node = parent_.lock();
-    auto number_robots = node->get_parameter(plugin_name_ + "number_robots").as_int();
+
+    cx::cx_utils::declare_parameter_if_not_declared(
+      node, plugin_name_ + ".number_robots",
+      rclcpp::ParameterValue(0));
+    cx::cx_utils::declare_parameter_if_not_declared(
+      node, plugin_name_ + ".reset_wait_time",
+      rclcpp::ParameterValue(1.0));
+    cx::cx_utils::declare_parameter_if_not_declared(
+      node, plugin_name_ + ".reset_max_time",
+      rclcpp::ParameterValue(1.0));
+    cx::cx_utils::declare_parameter_if_not_declared(
+      node, plugin_name_ + ".step_wait_time",
+      rclcpp::ParameterValue(1.0));
+    cx::cx_utils::declare_parameter_if_not_declared(
+      node, plugin_name_ + ".step_max_time",
+      rclcpp::ParameterValue(1.0));
+    cx::cx_utils::declare_parameter_if_not_declared(
+      node, plugin_name_ + ".speedup",
+      rclcpp::ParameterValue(1.0));
+
+    node->get_parameter(plugin_name_ + ".number_robots", number_robots_);
+    node->get_parameter(plugin_name_ + ".reset_wait_time", reset_wait_time_);
+    node->get_parameter(plugin_name_ + ".reset_max_time", reset_max_time_);
+    node->get_parameter(plugin_name_ + ".step_wait_time", step_wait_time_);
+    node->get_parameter(plugin_name_ + ".step_max_time", step_max_time_);
+    node->get_parameter(plugin_name_ + ".speedup", speedup_);
 
 
-    for (int i = 0; i < number_robots; i++)
+    for (int i = 0; i < number_robots_; i++)
     {
       std::string server_name = "goal_selection_robot" + std::to_string(i + 1);
 
@@ -187,8 +213,8 @@ namespace cx
           goalsExecutable = true;
           RCLCPP_INFO(this->get_logger(), ("Executable goal: " + goal_list_entry).c_str());
         }
+        fact = clips::GetNextFactInTemplate(tmpl, fact);
       }
-      fact = clips::GetNextFactInTemplate(tmpl, fact);
     }
     RCLCPP_INFO(this->get_logger(), ("Finished passing all executable goals for " + robot).c_str());
     executableGoals = goal_ids;
@@ -352,20 +378,19 @@ namespace cx
 	clips::AssertString(clips_env.get_obj().get(), "(reset-game (stage STAGE-0))");
 
     auto node = parent_.lock();
-    double speedup = node->get_parameter(plugin_name_ + "speedup").as_double();
-    double max_time = node->get_parameter(plugin_name_ + "reset_max_time").as_double();
-    double wait_time = node->get_parameter(plugin_name_ + "reset_wait_time").as_double();
     
-    if (speedup != 0.0 || speedup != 1.0)
+    float wait_time = reset_wait_time_;
+
+    if (speedup_ != 0.0 || speedup_ != 1.0)
     {
-      wait_time = wait_time / speedup;
+      wait_time = reset_wait_time_ / speedup_;
     }
 
     bool env_feedback = false;
     int elapsed_time = 0;
     std::string result = "Reset timed out";
 
-    while (!env_feedback && elapsed_time < max_time)
+    while (!env_feedback && elapsed_time < reset_max_time_)
     {
       std::this_thread::sleep_for(wait_time * 1000ms);
       std::lock_guard<std::mutex> guard(*(clips_env.get_mutex_instance()));
@@ -484,20 +509,16 @@ namespace cx
     
 	auto node = parent_.lock();
     
-    double speedup = node->get_parameter(plugin_name_ + "speedup").as_double();
-    double max_time = node->get_parameter(plugin_name_ + "step_max_time").as_double();
-    double wait_time = node->get_parameter(plugin_name_ + "step_wait_time").as_double();
-    
-
-    if (speedup != 0.0 || speedup != 1.0)
+    float wait_time = step_wait_time_;
+    if (speedup_ != 0.0 || speedup_ != 1.0)
     {
-      wait_time = wait_time / speedup;
+      wait_time = step_wait_time_ / speedup_;
     }
 
     bool env_feedback = false;
     int elapsed_time = 0;
 
-    while (!env_feedback && elapsed_time < max_time * 1000)
+    while (!env_feedback && elapsed_time < step_max_time_ * 1000)
     {
       std::this_thread::sleep_for(wait_time * 1000ms);
 
