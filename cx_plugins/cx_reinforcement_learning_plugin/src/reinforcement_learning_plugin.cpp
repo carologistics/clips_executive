@@ -16,7 +16,7 @@ namespace cx
   using SetRLMode = cx_rl_interfaces::srv::SetRLMode;
   using GetGoalList = cx_rl_interfaces::srv::GetGoalList;
   using GetGoalListRobot = cx_rl_interfaces::srv::GetGoalListRobot;
-  using GetFreeRobot = cx_rl_interfaces::srv::GetFreeRobot;
+  using GetFreeRobot = cx_rl_interfaces::action::GetFreeRobot;
   using GetDomainObjects = cx_rl_interfaces::srv::GetDomainObjects;
   using GetDomainPredicates = cx_rl_interfaces::srv::GetDomainPredicates;
   using CreateRLEnvState = cx_rl_interfaces::srv::CreateRLEnvState;
@@ -43,9 +43,6 @@ namespace cx
     get_goal_list_executable_service =
         this->create_service<GetGoalList>("get_goal_list_executable", std::bind(&ReinforcementLearningPlugin::getGoalListExecutable, this, _1, _2));
 
-    get_free_robot_service =
-        this->create_service<GetFreeRobot>("get_free_robot", std::bind(&ReinforcementLearningPlugin::getFreeRobot, this, _1, _2));
-
     get_domain_objects_service =
         this->create_service<GetDomainObjects>("get_domain_objects", std::bind(&ReinforcementLearningPlugin::getDomainObjects, this, _1, _2));
 
@@ -57,6 +54,11 @@ namespace cx
 
     reset_cx_service =
         this->create_service<ResetCX>("reset_cx", std::bind(&ReinforcementLearningPlugin::resetCX, this, _1, _2));
+
+    get_free_robot_server = rclcpp_action::create_server<GetFreeRobot>(this, "get_free_robot",
+                                                                                          std::bind(&ReinforcementLearningPlugin::getFreeRobotHandleGoal, this, _1, _2),
+                                                                                          std::bind(&ReinforcementLearningPlugin::getFreeRobotHandleCancel, this, _1),
+                                                                                          std::bind(&ReinforcementLearningPlugin::getFreeRobotHandleAccepted, this, _1));
 
     request_goal_selection_client = 
         this->create_client<ExecGoalSelection>("/request_goal_selection");
@@ -180,7 +182,7 @@ namespace cx
 
     while (!goalsExecutable)
     {
-
+      RCLCPP_INFO(this->get_logger(), ("Searching for all executable goals for " + robot).c_str());
       std::this_thread::sleep_for(10ms);
       std::lock_guard<std::mutex> guard(*(clips_env.get_mutex_instance()));
 
@@ -222,71 +224,7 @@ namespace cx
     response->goals = goal_list;
   }
 
-// TODO: not so great, services are supposed to respond quickly. this might take some time
-  void ReinforcementLearningPlugin::getFreeRobot(
-      const std::shared_ptr<GetFreeRobot::Request> request,
-      std::shared_ptr<GetFreeRobot::Response> response)
-  {
-    RCLCPP_INFO(this->get_logger(), "Finding free robot...");
-    (void)request;
-    std::string freeRobot = "None";
 
-    while (freeRobot == "None")
-    {
-      std::this_thread::sleep_for(100ms);
-      std::lock_guard<std::mutex> guard(*(clips_env.get_mutex_instance()));
-
-      std::vector<std::string> free_robots;
-      std::vector<clips::Fact *> goal_facts;
-      clips::Deftemplate *tmpl = clips::FindDeftemplate(clips_env.get_obj().get(), "domain-fact");
-      clips::Fact *fact = clips::GetNextFactInTemplate(tmpl, NULL);
-      while (fact)
-      {
-          clips::CLIPSValue out;
-          clips::GetFactSlot(fact,"name", &out);
-        if (getClipsSlotValuesAsString(out).find("robot-waiting") != std::string::npos)
-        {
-          clips::GetFactSlot(fact,"param-values", &out);
-          std::string values = getClipsSlotValuesAsString(out);
-          free_robots.push_back(values);
-        }
-        fact = clips::GetNextFactInTemplate(tmpl, fact);
-      }
-      if(!free_robots.empty()) {
-        tmpl = clips::FindDeftemplate(clips_env.get_obj().get(), "goal");
-        clips::Fact *fact = clips::GetNextFactInTemplate(tmpl, NULL);
-        while (fact)
-        {
-          goal_facts.push_back(fact);
-          fact = clips::GetNextFactInTemplate(tmpl, fact);
-        }
-
-        for (std::string r : free_robots)
-        {
-          for (clips::Fact *g : goal_facts)
-          {
-            clips::CLIPSValue out;
-            clips::GetFactSlot(g,"id", &out);
-            std::string goalid = getClipsSlotValuesAsString(out);
-            clips::GetFactSlot(g,"mode", &out);
-            std::string mode = getClipsSlotValuesAsString(out);
-            clips::GetFactSlot(g,"is-executable", &out);
-            std::string is_executable = getClipsSlotValuesAsString(out);
-            clips::GetFactSlot(g,"assigned-to", &out);
-            std::string assigned_to = getClipsSlotValuesAsString(out);
-            if (mode == "FORMULATED" && is_executable == "TRUE" && assigned_to == r)
-            {
-              freeRobot = r;
-              RCLCPP_INFO(this->get_logger(), ("Free robot: " + freeRobot).c_str());
-              response->robot = freeRobot;
-              return;
-
-            }
-          }
-        }
-      }
-    }
-  }
 
   void ReinforcementLearningPlugin::getDomainObjects(
       const std::shared_ptr<GetDomainObjects::Request> request,
@@ -453,6 +391,111 @@ namespace cx
   }
 
   // ACTION-FUNCTIONS
+
+  rclcpp_action::GoalResponse ReinforcementLearningPlugin::getFreeRobotHandleGoal(
+      const rclcpp_action::GoalUUID &uuid, std::shared_ptr<const GetFreeRobot::Goal> goal)
+  {
+    (void)goal;
+    (void)uuid;
+    if (in_reset)
+    {
+      return rclcpp_action::GoalResponse::REJECT;
+    }
+
+    return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE;
+  }
+
+  rclcpp_action::CancelResponse ReinforcementLearningPlugin::getFreeRobotHandleCancel(
+      const std::shared_ptr<rclcpp_action::ServerGoalHandle<GetFreeRobot>> goal_handle)
+  {
+    RCLCPP_INFO(this->get_logger(), "Received request to cancel goal");
+    (void)goal_handle;
+    return rclcpp_action::CancelResponse::ACCEPT;
+  }
+
+  void ReinforcementLearningPlugin::getFreeRobotHandleAccepted(
+      const std::shared_ptr<rclcpp_action::ServerGoalHandle<GetFreeRobot>> goal_handle)
+  {
+
+    std::thread{std::bind(&cx::ReinforcementLearningPlugin::getFreeRobot, this, _1), goal_handle}.detach();
+  }
+  
+// TODO: not so great, services are supposed to respond quickly. this might take some time
+  void ReinforcementLearningPlugin::getFreeRobot(
+      const std::shared_ptr<rclcpp_action::ServerGoalHandle<GetFreeRobot>> goal_handle)
+  {
+    RCLCPP_INFO(this->get_logger(), "Finding free robot...");
+    auto feedback = std::make_shared<GetFreeRobot::Feedback>();
+    auto result = std::make_shared<GetFreeRobot::Result>();
+    std::string freeRobot = "None";
+
+    while (freeRobot == "None")
+    {
+      std::this_thread::sleep_for(500ms);
+      if (goal_handle->is_canceling())
+      {
+        RCLCPP_INFO(this->get_logger(), "get_free_robot canceled!");
+        result->robot = "Canceled";
+        goal_handle->canceled(result);
+        return;
+      }
+      std::lock_guard<std::mutex> guard(*(clips_env.get_mutex_instance()));
+
+      std::vector<std::string> free_robots;
+      std::vector<clips::Fact *> goal_facts;
+      clips::Deftemplate *tmpl = clips::FindDeftemplate(clips_env.get_obj().get(), "domain-fact");
+      clips::Fact *fact = clips::GetNextFactInTemplate(tmpl, NULL);
+      while (fact)
+      {
+          clips::CLIPSValue out;
+          clips::GetFactSlot(fact,"name", &out);
+        if (getClipsSlotValuesAsString(out).find("robot-waiting") != std::string::npos)
+        {
+          clips::GetFactSlot(fact,"param-values", &out);
+          std::string values = getClipsSlotValuesAsString(out);
+          free_robots.push_back(values);
+        }
+        fact = clips::GetNextFactInTemplate(tmpl, fact);
+      }
+      if(!free_robots.empty()) {
+        tmpl = clips::FindDeftemplate(clips_env.get_obj().get(), "goal");
+        clips::Fact *fact = clips::GetNextFactInTemplate(tmpl, NULL);
+        while (fact)
+        {
+          goal_facts.push_back(fact);
+          fact = clips::GetNextFactInTemplate(tmpl, fact);
+        }
+
+        for (std::string r : free_robots)
+        {
+          for (clips::Fact *g : goal_facts)
+          {
+            clips::CLIPSValue out;
+            clips::GetFactSlot(g,"id", &out);
+            std::string goalid = getClipsSlotValuesAsString(out);
+            clips::GetFactSlot(g,"mode", &out);
+            std::string mode = getClipsSlotValuesAsString(out);
+            clips::GetFactSlot(g,"is-executable", &out);
+            std::string is_executable = getClipsSlotValuesAsString(out);
+            clips::GetFactSlot(g,"assigned-to", &out);
+            std::string assigned_to = getClipsSlotValuesAsString(out);
+            if (mode == "FORMULATED" && is_executable == "TRUE" && assigned_to == r)
+            {
+              freeRobot = r;
+              RCLCPP_INFO(this->get_logger(), ("Free robot: " + freeRobot).c_str());
+              result->robot = freeRobot;
+              goal_handle->succeed(result);
+              return;
+
+            }
+          }
+        }
+      }
+      feedback->feedback = "No free robot found, retrying...";
+      goal_handle->publish_feedback(feedback);
+      RCLCPP_INFO(this->get_logger(), "No free robot found, retrying");
+    }
+  }
 
   rclcpp_action::GoalResponse ReinforcementLearningPlugin::goalSelectionHandleGoal(
       const rclcpp_action::GoalUUID &uuid, std::shared_ptr<const GoalSelection::Goal> goal)

@@ -11,7 +11,7 @@
 
 #include "cx_rl_interfaces/srv/set_rl_mode.hpp"
 #include "cx_rl_interfaces/srv/get_goal_list_robot.hpp"
-#include "cx_rl_interfaces/srv/get_free_robot.hpp"
+#include "cx_rl_interfaces/action/get_free_robot.hpp"
 #include "cx_rl_interfaces/action/goal_selection.hpp"
 #include "cx_rl_interfaces/srv/get_domain_objects.hpp"
 #include "cx_rl_interfaces/srv/get_domain_predicates.hpp"
@@ -53,7 +53,7 @@ private:
   rclcpp::Service<cx_rl_interfaces::srv::SetRLMode>::SharedPtr set_rl_mode_service;
   rclcpp::Service<cx_rl_interfaces::srv::GetGoalListRobot>::SharedPtr get_goal_list_executable_for_robot_service;
   rclcpp::Service<cx_rl_interfaces::srv::GetGoalList>::SharedPtr get_goal_list_executable_service;
-  rclcpp::Service<cx_rl_interfaces::srv::GetFreeRobot>::SharedPtr get_free_robot_service;
+  rclcpp_action::Server<cx_rl_interfaces::action::GetFreeRobot>::SharedPtr get_free_robot_server;
   rclcpp::Service<cx_rl_interfaces::srv::GetDomainObjects>::SharedPtr get_domain_objects_service;
   rclcpp::Service<cx_rl_interfaces::srv::GetDomainPredicates>::SharedPtr get_domain_predicates_service;
   rclcpp::Service<cx_rl_interfaces::srv::CreateRLEnvState>::SharedPtr create_rl_env_state_service;
@@ -69,8 +69,6 @@ private:
                   std::shared_ptr<cx_rl_interfaces::srv::GetGoalListRobot::Response> response);
   void getGoalListExecutable(const std::shared_ptr<cx_rl_interfaces::srv::GetGoalList::Request> request, 
                   std::shared_ptr<cx_rl_interfaces::srv::GetGoalList::Response> response);
-  void getFreeRobot(const std::shared_ptr<cx_rl_interfaces::srv::GetFreeRobot::Request> request, 
-                  std::shared_ptr<cx_rl_interfaces::srv::GetFreeRobot::Response> response);
   void getDomainObjects(const std::shared_ptr<cx_rl_interfaces::srv::GetDomainObjects::Request> request,
                   std::shared_ptr<cx_rl_interfaces::srv::GetDomainObjects::Response> response);
   void getDomainPredicates(const std::shared_ptr<cx_rl_interfaces::srv::GetDomainPredicates::Request> request,
@@ -79,6 +77,13 @@ private:
                   std::shared_ptr<cx_rl_interfaces::srv::CreateRLEnvState::Response> response);
   void resetCX(const std::shared_ptr<cx_rl_interfaces::srv::ResetCX::Request> request,
                   std::shared_ptr<cx_rl_interfaces::srv::ResetCX::Response> response);
+
+  rclcpp_action::GoalResponse getFreeRobotHandleGoal(const rclcpp_action::GoalUUID & uuid, 
+                  std::shared_ptr<const cx_rl_interfaces::action::GetFreeRobot::Goal> goal);
+  rclcpp_action::CancelResponse getFreeRobotHandleCancel(
+                  const std::shared_ptr<rclcpp_action::ServerGoalHandle<cx_rl_interfaces::action::GetFreeRobot>> goal_handle);
+  void getFreeRobotHandleAccepted(const std::shared_ptr<rclcpp_action::ServerGoalHandle<cx_rl_interfaces::action::GetFreeRobot>> goal_handle);
+  void getFreeRobot(const std::shared_ptr<rclcpp_action::ServerGoalHandle<cx_rl_interfaces::action::GetFreeRobot>> goal_handle);
 
   rclcpp_action::GoalResponse goalSelectionHandleGoal(const rclcpp_action::GoalUUID & uuid, 
                   std::shared_ptr<const cx_rl_interfaces::action::GoalSelection::Goal> goal);
