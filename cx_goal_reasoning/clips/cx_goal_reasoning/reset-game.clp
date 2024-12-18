@@ -26,9 +26,11 @@
 (defrule reset-game-stage-zero
   (declare (salience ?*SALIENCE-RESET-GAME-HIGH*))
   ?r <- (reset-game (stage STAGE-0))
+  (cx-rl-interfaces-reset-cx-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr))
   =>
   (reset)
   (load-facts reset-save)
   (retract ?r)
+  (assert (cx-rl-interfaces-reset-cx-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr)))
   (assert (reset-game-finished))
 )

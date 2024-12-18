@@ -4,7 +4,7 @@
 #include <memory>
 
 #include "cx_reinforcement_learning_plugin/reinforcement_learning_plugin.hpp"
-#include "cx_utils/LockSharedPtr.hpp"
+#include "cx_utils/lock_shared_ptr.hpp"
 #include "cx_utils/clips_env_context.hpp"
 #include <cx_utils/param_utils.hpp>
 
@@ -21,7 +21,7 @@ namespace cx
   using GetDomainPredicates = cx_rl_interfaces::srv::GetDomainPredicates;
   using CreateRLEnvState = cx_rl_interfaces::srv::CreateRLEnvState;
   using GoalSelection = cx_rl_interfaces::action::GoalSelection;
-  using ResetCX = cx_rl_interfaces::srv::ResetCX;
+  //using ResetCX = cx_rl_interfaces::srv::ResetCX;
   using ExecGoalSelection = cx_rl_interfaces::srv::ExecGoalSelection;
 
   using namespace std::chrono_literals;
@@ -52,8 +52,8 @@ namespace cx
     create_rl_env_state_service =
         this->create_service<CreateRLEnvState>("create_rl_env_state", std::bind(&ReinforcementLearningPlugin::createRLEnvState, this, _1, _2));
 
-    reset_cx_service =
-        this->create_service<ResetCX>("reset_cx", std::bind(&ReinforcementLearningPlugin::resetCX, this, _1, _2));
+    //reset_cx_service =
+    //    this->create_service<ResetCX>("reset_cx", std::bind(&ReinforcementLearningPlugin::resetCX, this, _1, _2));
 
     get_free_robot_server = rclcpp_action::create_server<GetFreeRobot>(this, "get_free_robot",
                                                                                           std::bind(&ReinforcementLearningPlugin::getFreeRobotHandleGoal, this, _1, _2),
@@ -306,6 +306,7 @@ namespace cx
   }
 
 // TODO: same here, this is not an instantaneous request, this is probably better implemented as an action
+/*  
   void ReinforcementLearningPlugin::resetCX(
       const std::shared_ptr<ResetCX::Request> request,
       std::shared_ptr<ResetCX::Response> response)
@@ -347,7 +348,7 @@ namespace cx
     in_reset = false ;
     response->confirmation = result;
   }
-
+*/
   void
   ReinforcementLearningPlugin::request_goal_selection_callback()
   {
@@ -637,7 +638,7 @@ namespace cx
     std::lock_guard<std::mutex> guard(*(clips_env.get_mutex_instance()));
 
     auto theFB = clips::CreateFactBuilder(clips_env.get_obj().get(),"rl-goal-selection");
-    clips::FBPutSlotSymbol(theFB,"next-goal-id", goal_id.c_str());
+    clips::FBPutSlotSymbol(theFB,"goalid", goal_id.c_str());
     clips::FBAssert(theFB);
     clips::FBDispose(theFB);
   }

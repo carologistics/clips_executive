@@ -1,0 +1,41 @@
+(deffunction create-goal-param-string (?params)
+    (bind ?size (length$ ?params))
+    (bind ?param-string "")
+    (loop-for-count (?i 1 ?size)
+        (if (eq (mod ?i 2) 1) then
+            (bind ?param-string (str-cat ?param-string (nth$ ?i ?params) "|"))
+        else
+            (bind ?param-string (str-cat ?param-string (nth$ ?i ?params) "#"))
+        )
+    )
+    (return ?param-string)
+)
+
+(deffunction create-slot-value-string (?values)
+    (bind ?size (length$ ?values))
+    (bind ?value-string "")
+    (loop-for-count (?i 1 ?size)
+        (bind ?value-string (str-cat ?value-string (nth$ ?i ?values)))
+        (if (neq ?i ?size) then
+            (bind ?value-string (str-cat ?value-string "#"))
+        )
+    )
+    (return ?value-string)
+)
+
+(defrule all-services-actions-created
+    (not (saved-facts))
+    (cx-rl-interfaces-set-rl-mode-service)
+    (cx-rl-interfaces-create-rl-env-state-service)
+    (cx-rl-interfaces-exec-goal-selection-client)
+    (cx-rl-interfaces-get-domain-objects-service)
+    (cx-rl-interfaces-get-domain-predicates-service)
+    (cx-rl-interfaces-get-goal-list-robot-service)
+    (cx-rl-interfaces-get-goal-list-service)
+    (cx-rl-interfaces-get-free-robot-server)
+    (cx-rl-interfaces-goal-selection-server)
+    (cx-rl-interfaces-reset-cx-server)
+=>
+    (assert (saved-facts))
+    (save-facts reset-save)
+)

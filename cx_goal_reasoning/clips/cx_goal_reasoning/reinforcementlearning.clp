@@ -5,11 +5,11 @@
 )
 
 (deftemplate rl-goal-selection
-	(slot next-goal-id (type SYMBOL))
+	(slot goalid (type SYMBOL))
 )
 
 (deftemplate rl-finished-goal
-	(slot goal-id (type SYMBOL));
+	(slot goalid (type SYMBOL));
 	(slot outcome (type SYMBOL));
 	(slot reward (type INTEGER));
   (slot done (type SYMBOL))
@@ -31,7 +31,7 @@
 
 ;(deffunction remove-robot-assignment-from-goal-meta (?goal)
 ;  (if (not (do-for-fact ((?f goal-meta))
-;      (eq ?f:goal-id (fact-slot-value ?goal id))
+;      (eq ?f:goalid (fact-slot-value ?goal id))
 ;      (modify ?f ( nil))
 ;      ))
 ;   then
@@ -42,7 +42,7 @@
 (defrule rl-clips-goal-selection
   (declare (salience ?*SALIENCE-RL-SELECTION*))
   (rl-mode (mode TRAINING|EVALUATION))
-	?r <- (rl-goal-selection (next-goal-id ?a))
+	?r <- (rl-goal-selection (goalid ?a))
 	?next-goal <- (goal (id ?a) (mode ?m&FORMULATED) (assigned-to ?robot))
 	=>
 	(printout t crlf "in RL Plugin added fact: " ?r " with next action " ?a crlf )
@@ -74,10 +74,10 @@
 (defrule rl-selected-goal-finished
   (declare (salience ?*SALIENCE-RL-SELECTION*))
   (rl-mode (mode TRAINING|EVALUATION))
-	?r <- (rl-goal-selection (next-goal-id ?goal-id))
-	(goal (id ?goal-id) (class ?goal-class) (mode ?mode&FINISHED|EVALUATED) (outcome ?outcome) (points ?points))
+	?r <- (rl-goal-selection (goalid ?goalid))
+	(goal (id ?goalid) (class ?goal-class) (mode ?mode&FINISHED|EVALUATED) (outcome ?outcome) (points ?points))
 	=>
-	(printout t crlf "Goal: " ?goal-id " is " ?mode crlf )
+	(printout t crlf "Goal: " ?goalid " is " ?mode crlf )
 
     (if (eq ?outcome COMPLETED) 
     then
@@ -86,18 +86,18 @@
         (bind ?reward 0)
     )
  
-    (assert (rl-finished-goal (goal-id ?goal-id) (outcome ?outcome) (reward ?reward) (done FALSE)))
+    (assert (rl-finished-goal (goalid ?goalid) (outcome ?outcome) (reward ?reward) (done FALSE)))
 	(retract ?r)
 )
 
 (defrule rl-selected-goal-finished-episode-end
   (declare (salience (+ ?*SALIENCE-RL-SELECTION* 1)))
   (rl-mode (mode TRAINING|EVALUATION))
-	?r <- (rl-goal-selection (next-goal-id ?goal-id))
-	(goal (id ?goal-id) (class ?goal-class) (mode ?mode&FINISHED|EVALUATED) (outcome ?outcome) (points ?points))
+	?r <- (rl-goal-selection (goalid ?goalid))
+	(goal (id ?goalid) (class ?goal-class) (mode ?mode&FINISHED|EVALUATED) (outcome ?outcome) (points ?points))
   ?e <- (rl-episode-end (success ?success))
 	=>
-	(printout t crlf "Goal: " ?goal-id " is " ?mode crlf )
+	(printout t crlf "Goal: " ?goalid " is " ?mode crlf )
 
     (if (eq ?outcome COMPLETED) 
     then
@@ -113,7 +113,7 @@
         (bind ?reward (+ ?reward 100))
     )
  
-    (assert (rl-finished-goal (goal-id ?goal-id) (outcome ?outcome) (reward ?reward) (done TRUE)))
+    (assert (rl-finished-goal (goalid ?goalid) (outcome ?outcome) (reward ?reward) (done TRUE)))
 	(retract ?r)
   (retract ?e)
 )
@@ -141,7 +141,7 @@
 (defrule rl-execution-clips-goal-selection
   (declare (salience ?*SALIENCE-RL-SELECTION*))
   (rl-mode (mode EXECUTION))
-	?r <- (rl-goal-selection (next-goal-id ?a))
+	?r <- (rl-goal-selection (goalid ?a))
   ?re <- (rl-goal-selection-requested)
 	?next-goal <- (goal (id ?a) (mode ?m&FORMULATED) (assigned-to ?robot))
 	=>
