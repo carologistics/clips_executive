@@ -17,12 +17,12 @@
 #include "cx_rl_interfaces/srv/get_domain_predicates.hpp"
 #include "cx_rl_interfaces/srv/create_rl_env_state.hpp"
 #include "cx_rl_interfaces/srv/get_goal_list.hpp"
-#include "cx_rl_interfaces/srv/reset_cx.hpp"
+//#include "cx_rl_interfaces/srv/reset_cx.hpp"
 #include "cx_rl_interfaces/srv/exec_goal_selection.hpp"
 #include "std_msgs/msg/string.hpp"
 
 #include "cx_plugin/clips_plugin.hpp"
-#include "cx_utils/LockSharedPtr.hpp"
+#include "cx_utils/lock_shared_ptr.hpp"
 
 namespace cx {
 
@@ -57,7 +57,7 @@ private:
   rclcpp::Service<cx_rl_interfaces::srv::GetDomainObjects>::SharedPtr get_domain_objects_service;
   rclcpp::Service<cx_rl_interfaces::srv::GetDomainPredicates>::SharedPtr get_domain_predicates_service;
   rclcpp::Service<cx_rl_interfaces::srv::CreateRLEnvState>::SharedPtr create_rl_env_state_service;
-  rclcpp::Service<cx_rl_interfaces::srv::ResetCX>::SharedPtr reset_cx_service;
+  //rclcpp::Service<cx_rl_interfaces::srv::ResetCX>::SharedPtr reset_cx_service;
   std::vector<rclcpp_action::Server<cx_rl_interfaces::action::GoalSelection>::SharedPtr> goal_selection_action_servers;
   rclcpp::Client<cx_rl_interfaces::srv::ExecGoalSelection>::SharedPtr request_goal_selection_client;
 
@@ -75,8 +75,8 @@ private:
                   std::shared_ptr<cx_rl_interfaces::srv::GetDomainPredicates::Response> response);
   void createRLEnvState(const std::shared_ptr<cx_rl_interfaces::srv::CreateRLEnvState::Request> request,
                   std::shared_ptr<cx_rl_interfaces::srv::CreateRLEnvState::Response> response);
-  void resetCX(const std::shared_ptr<cx_rl_interfaces::srv::ResetCX::Request> request,
-                  std::shared_ptr<cx_rl_interfaces::srv::ResetCX::Response> response);
+  //void resetCX(const std::shared_ptr<cx_rl_interfaces::srv::ResetCX::Request> request,
+  //                std::shared_ptr<cx_rl_interfaces::srv::ResetCX::Response> response);
 
   rclcpp_action::GoalResponse getFreeRobotHandleGoal(const rclcpp_action::GoalUUID & uuid, 
                   std::shared_ptr<const cx_rl_interfaces::action::GetFreeRobot::Goal> goal);

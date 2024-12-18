@@ -20,6 +20,7 @@ find_package(cx_utils REQUIRED)
 find_package(clips_vendor REQUIRED)
 find_package(clips REQUIRED)
 find_package(cx_rl_interfaces REQUIRED)
+find_package(cx_ros_comm_gen REQUIRED)
 
 set(dependencies
   ament_cmake
@@ -41,6 +42,19 @@ target_link_libraries(${PROJECT_NAME} ClipsNS::libclips_ns)
 ament_target_dependencies(${PROJECT_NAME} ${dependencies})
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD ${CMAKE_CXX_STANDARD})
+
+cx_generate_srv_bindings("cx_rl_interfaces" "SetRLMode")
+cx_generate_srv_bindings("cx_rl_interfaces" "GetDomainObjects")
+cx_generate_srv_bindings("cx_rl_interfaces" "GetDomainPredicates")
+cx_generate_srv_bindings("cx_rl_interfaces" "GetGoalList")
+cx_generate_srv_bindings("cx_rl_interfaces" "GetGoalListRobot")
+cx_generate_srv_bindings("cx_rl_interfaces" "CreateRLEnvState")
+cx_generate_srv_bindings("cx_rl_interfaces" "ExecGoalSelection")
+cx_generate_action_bindings("cx_rl_interfaces" "ResetCX")
+cx_generate_action_bindings("cx_rl_interfaces" "GetFreeRobot")
+cx_generate_action_bindings("cx_rl_interfaces" "GoalSelection")
+
+install (DIRECTORY clips DESTINATION share/${PROJECT_NAME})
 
 install(
   DIRECTORY include/
