@@ -13,6 +13,7 @@
 => 
     (printout info "Goal selection demand found" crlf)
     (printout info "Generating observation and list of executable goals" crlf)
+    (bind ?state-string "{")
 
     (do-for-all-facts ((?df domain-fact))
             TRUE
@@ -27,10 +28,10 @@
                     (eq ?goal:is-executable TRUE))
         (bind ?goal-string (str-cat ?goal:class "#" ?goal:id "#" (create-goal-param-string ?goal:params)))
         (printout info "Executable goal: " ?goal-string crlf)
-        (insert$ ?goal-list 1 ?goal-string)
+        (bind ?goal-list (insert$ ?goal-list 1 ?goal-string))
     )
 
-    (printout "Requesting goal selection" crlf)
+    (printout info "Requesting goal selection" crlf)
     (bind ?new-req (cx-rl-interfaces-exec-goal-selection-request-create))
     (cx-rl-interfaces-exec-goal-selection-request-set-field ?new-req "state" ?state-string)
     (cx-rl-interfaces-exec-goal-selection-request-set-field ?new-req "goals" ?goal-list)
