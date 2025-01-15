@@ -1,7 +1,8 @@
 (defglobal
-  ?*SALIENCE-RL-SELECTION* = 498
+  
   ?*SALIENCE-GOAL-EXECUTABLE-CHECK* = 500
   ?*SALIENCE-DOMAIN-GAME-FINISHED-FAILURE* = 499
+  ?*SALIENCE-RL-SELECTION* = 498
 )
 
 (deftemplate rl-goal-selection
