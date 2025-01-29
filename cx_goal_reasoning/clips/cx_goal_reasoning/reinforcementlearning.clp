@@ -130,11 +130,23 @@
   (assert (rl-episode-end (success FALSE)))
 )
 
+(defrule logging-on-episode-end
+  (rl-episode-end (success ?success))
+  =>
+  (if (eq ?success TRUE) then
+    (printout info "END OF EPISODE: SUCCESS" crlf)
+  else
+    (printout info "END OF EPISODE: FAILURE" crlf)
+  )
+  
+)
+
 (defrule rl-execution-demand-selection
-  (declare (salience ?*SALIENCE-RL-SELECTION*))
+  ;(declare (salience ?*SALIENCE-RL-SELECTION*))
   (rl-mode (mode EXECUTION))
   (not (rl-goal-selection-requested))
   (goal (mode FORMULATED) (assigned-to ?robot&~nil) (is-executable TRUE))
+  (not (rl-episode-end))
   =>
   (assert (rl-goal-selection-requested))
 )
@@ -150,6 +162,7 @@
 	(printout t crlf "goal: " ?next-goal "with in mode: "?m crlf crlf)
 	
 	(retract ?re)
+  (retract ?r)
   (modify ?next-goal (mode SELECTED))
 
   (delayed-do-for-all-facts ((?g goal))
