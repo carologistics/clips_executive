@@ -10,6 +10,7 @@
 
 (defrule cx-rl-interfaces-send-request-for-goal-selection
     (rl-goal-selection-requested)
+    (not (rl-goal-selection))
 => 
     (printout info "Goal selection demand found" crlf)
     (printout info "Generating observation and list of executable goals" crlf)
@@ -44,7 +45,7 @@
 =>
     (bind ?goal-id (cx-rl-interfaces-exec-goal-selection-response-get-field ?ptr "goalid"))
     (printout green "Received goalid from " ?service ": " ?goal-id crlf)
-    (assert (rl-goal-selection (goalid ?goal-id)))
+    (assert (rl-goal-selection (goalid (sym-cat ?goal-id))))
     (cx-rl-interfaces-exec-goal-selection-response-destroy ?ptr)
     (retract ?msg-fact)
 
