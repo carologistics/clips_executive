@@ -1,7 +1,0 @@
-<class_libraries>
-  <library path="cx_reinforcement_learning_plugin">
-    <class type="cx::ReinforcementLearningPlugin" base_class_type="cx::ClipsPlugin">
-      <description>Reinforcement learning plugin</description>
-    </class>
-  </library>
-</class_libraries>
