@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Carologistics
+// Copyright (c) 2024-2025 Carologistics
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -753,17 +753,20 @@ clips::UDFValue RosMsgsPlugin::create_message(clips::Environment *env,
 }
 
 void RosMsgsPlugin::destroy_msg(void *msg) {
+  auto scoped_lock = std::scoped_lock{map_mtx_};
   auto sub_it = sub_messages_.find(msg);
   if (sub_it != sub_messages_.end()) {
     for (const auto &sub_msg : sub_it->second) {
       messages_.erase(sub_msg);
     }
+    sub_messages_.erase(sub_it);
   }
   auto it = messages_.find(msg);
   if (it != messages_.end()) {
     messages_.erase(it);
   }
 }
+
 const rosidl_typesupport_introspection_cpp::MessageMembers *
 RosMsgsPlugin::get_msg_members(const std::string &msg_type) {
   if (type_support_cache_.contains(msg_type)) {
