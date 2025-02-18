@@ -88,14 +88,20 @@ private:
 
     // Enable move constructor and move assignment for efficiency
     MessageInfo(MessageInfo &&other) noexcept
-        : msg_ptr(other.msg_ptr), members(other.members) {
+        : external_created_ptr(other.external_created_ptr),
+          msg_ptr(other.msg_ptr), members(other.members),
+          is_sub_msg(other.is_sub_msg), allocator(other.allocator) {
       RCLCPP_WARN(rclcpp::get_logger("MESSAGE INFO"), "ASSIGN");
       other.msg_ptr = nullptr;
+      other.external_created_ptr.reset();
+      other.members = nullptr;
+      other.is_sub_msg = false;
     }
   };
   struct MessageInfoHasher {
     std::size_t operator()(const MessageInfo &key) const {
-      return std::hash<void *>()(key.msg_ptr) ^
+      return std::hash<void *>()(key.external_created_ptr.get()) ^
+             std::hash<void *>()(key.msg_ptr) ^
              std::hash<const rosidl_typesupport_introspection_cpp::
                            MessageMembers *>()(key.members);
     }
