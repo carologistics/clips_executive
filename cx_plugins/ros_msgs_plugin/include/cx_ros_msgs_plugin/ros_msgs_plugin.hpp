@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Carologistics
+// Copyright (c) 2024-2025 Carologistics
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -203,7 +203,8 @@ private:
   // MessageInfo* -> shared_ptr holding the MessageInfo*
   std::unordered_map<void *, std::shared_ptr<MessageInfo>> messages_;
   // parent msg MessageInfo* -> nested msg MessageInfo*
-  std::unordered_map<void *, std::vector<void *>> sub_messages_;
+  std::unordered_map<void *, std::vector<std::shared_ptr<MessageInfo>>>
+      sub_messages_;
   // message_type -> message_info
   std::unordered_map<std::string, const rosidl_message_type_support_t *>
       type_support_cache_;

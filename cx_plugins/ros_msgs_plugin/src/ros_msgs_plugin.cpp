@@ -757,7 +757,7 @@ void RosMsgsPlugin::destroy_msg(void *msg) {
   auto sub_it = sub_messages_.find(msg);
   if (sub_it != sub_messages_.end()) {
     for (const auto &sub_msg : sub_it->second) {
-      messages_.erase(sub_msg);
+      messages_.erase(sub_msg.get());
     }
     sub_messages_.erase(sub_it);
   }
@@ -856,7 +856,7 @@ clips::UDFValue RosMsgsPlugin::ros_msg_member_to_udf_value(
         std::shared_ptr<MessageInfo> sub_msg_info =
             process_nested_msg(elem.externalAddressValue->contents, member);
         if (sub_msg_info) {
-          sub_messages_[msg_info.get()].push_back(sub_msg_info.get());
+          sub_messages_[msg_info.get()].push_back(sub_msg_info);
           messages_[sub_msg_info.get()] = sub_msg_info;
           elem.externalAddressValue->contents = sub_msg_info.get();
         } else {
@@ -878,7 +878,7 @@ clips::UDFValue RosMsgsPlugin::ros_msg_member_to_udf_value(
       std::shared_ptr<MessageInfo> sub_msg_info =
           process_nested_msg(elem.externalAddressValue->contents, member);
       if (sub_msg_info) {
-        sub_messages_[msg_info.get()].push_back(sub_msg_info.get());
+        sub_messages_[msg_info.get()].push_back(sub_msg_info);
         messages_[sub_msg_info.get()] = sub_msg_info;
         elem.externalAddressValue->contents = sub_msg_info.get();
       } else {
