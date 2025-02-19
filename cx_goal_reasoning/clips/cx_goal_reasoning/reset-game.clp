@@ -14,6 +14,13 @@
   ?*RESET-GAME-TIMER* = 1.0
 )
 
+(deffunction unassign-robots-after-reset ()
+  (delayed-do-for-all-facts ((?g goal))
+    TRUE
+    (modify ?g (is-executable FALSE) (assigned-to nil))
+  )
+)
+
 
 (defrule assert-training-counter
   (declare (salience ?*SALIENCE-RESET-GAME-HIGH*))
@@ -31,6 +38,7 @@
   =>
   (reset)
   (load-facts reset-save)
+  (unassign-robots-after-reset)
   (retract ?r)
   (assert (cx-rl-interfaces-reset-cx-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr)))
   (assert (rl-mode (mode ?mode)))
