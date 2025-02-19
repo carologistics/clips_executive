@@ -1,5 +1,6 @@
 (defglobal
   
+  ?*SALIENCE-ROBOT-INIT* = 501
   ?*SALIENCE-GOAL-EXECUTABLE-CHECK* = 500
   ?*SALIENCE-DOMAIN-GAME-FINISHED-FAILURE* = 499
   ?*SALIENCE-RL-SELECTION* = 498
@@ -29,16 +30,21 @@
 
 (deftemplate rl-goal-selection-requested)
 
+(deffunction rl-goal-selected-update-goals ()
+  (delayed-do-for-all-facts ((?g goal))
+		(eq ?g:is-executable TRUE)
+		(modify ?g (is-executable FALSE))
+	)
+)
 
-;(deffunction remove-robot-assignment-from-goal-meta (?goal)
-;  (if (not (do-for-fact ((?f goal-meta))
-;      (eq ?f:goalid (fact-slot-value ?goal id))
-;      (modify ?f ( nil))
-;      ))
-;   then
-;    (printout t "Cannot find a goal meta fact for the goal " ?goal crlf)
-;  )
-;)
+(deffunction rl-goal-selected-update-robots (?robot)
+	(if (neq ?robot nil) then
+		(delayed-do-for-all-facts ((?g goal))
+			(and (eq ?g:mode FORMULATED) (not (eq ?g:type MAINTAIN)))
+			(modify ?g (assigned-to nil))
+		)
+	)
+)
 
 (defrule rl-clips-goal-selection
   (declare (salience ?*SALIENCE-RL-SELECTION*))
@@ -46,29 +52,13 @@
 	?r <- (rl-goal-selection (goalid ?a))
 	?next-goal <- (goal (id ?a) (mode ?m&FORMULATED) (assigned-to ?robot))
 	=>
-	(printout t crlf "in RL Plugin added fact: " ?r " with next action " ?a crlf )
-	(printout t crlf "goal: " ?next-goal "with in mode: "?m crlf crlf)
+	(printout info crlf "in RL Plugin added fact: " ?r " with next action " ?a crlf )
+	(printout info crlf "goal: " ?next-goal "with in mode: "?m crlf crlf)
 	
-	;(retract ?r)
   (modify ?next-goal (mode SELECTED))
-
-  (delayed-do-for-all-facts ((?g goal))
-		(and (eq ?g:is-executable TRUE) (neq ?g:class SEND-BEACON))
-		(modify ?g (is-executable FALSE))
-	)
-  ; if it is actually a robot, remove all other assignments and the waiting status
-	(if (and (neq ?robot central) (neq ?robot nil))
-		then
-		(delayed-do-for-all-facts ((?g goal))
-			(and (eq ?g:mode FORMULATED) (not (eq ?g:type MAINTAIN)))
-			(modify ?g (assigned-to nil))
-		)
-		;(do-for-fact ((?waiting domain-fact))
-		;	(and (eq ?waiting:name robot-waiting)
-		;	     (eq ?waiting:param-values ?robot))
-		;	(retract ?waiting)
-		;)
-	)
+  (rl-goal-selected-update-goals)
+  (rl-goal-selected-update-robots ?robot)
+  
 )
 
 
@@ -78,16 +68,15 @@
 	?r <- (rl-goal-selection (goalid ?goalid))
 	(goal (id ?goalid) (class ?goal-class) (mode ?mode&FINISHED|EVALUATED) (outcome ?outcome) (points ?points))
 	=>
-	(printout t crlf "Goal: " ?goalid " is " ?mode crlf )
+	(printout info crlf "Goal: " ?goalid " is " ?mode crlf )
 
-    (if (eq ?outcome COMPLETED) 
-    then
-        (bind ?reward ?points)
-    else
-        (bind ?reward 0)
-    )
+  (if (eq ?outcome COMPLETED) then
+    (bind ?reward ?points)
+  else
+    (bind ?reward 0)
+  )
  
-    (assert (rl-finished-goal (goalid ?goalid) (outcome ?outcome) (reward ?reward) (done FALSE)))
+  (assert (rl-finished-goal (goalid ?goalid) (outcome ?outcome) (reward ?reward) (done FALSE)))
 	(retract ?r)
 )
 
@@ -98,23 +87,22 @@
 	(goal (id ?goalid) (class ?goal-class) (mode ?mode&FINISHED|EVALUATED) (outcome ?outcome) (points ?points))
   ?e <- (rl-episode-end (success ?success))
 	=>
-	(printout t crlf "Goal: " ?goalid " is " ?mode crlf )
+	(printout info crlf "Goal: " ?goalid " is " ?mode crlf )
 
-    (if (eq ?outcome COMPLETED) 
-    then
-        (bind ?reward ?points)
-    else
-        (bind ?reward 0)
-    )
-    (if (eq ?success FALSE)
-    then
-        (bind ?reward 0)
-        (bind ?outcome EPISODE-END-FAILURE)
-    else
-        (bind ?reward (+ ?reward 100))
-    )
+  (if (eq ?outcome COMPLETED) then
+    (bind ?reward ?points)
+  else
+    (bind ?reward 0)
+  )
+
+  (if (eq ?success FALSE) then
+    (bind ?reward 0)
+    (bind ?outcome EPISODE-END-FAILURE)
+  else
+    (bind ?reward (+ ?reward 100))
+  )
  
-    (assert (rl-finished-goal (goalid ?goalid) (outcome ?outcome) (reward ?reward) (done TRUE)))
+  (assert (rl-finished-goal (goalid ?goalid) (outcome ?outcome) (reward ?reward) (done TRUE)))
 	(retract ?r)
   (retract ?e)
 )
@@ -142,7 +130,6 @@
 )
 
 (defrule rl-execution-demand-selection
-  ;(declare (salience ?*SALIENCE-RL-SELECTION*))
   (rl-mode (mode EXECUTION))
   (not (rl-goal-selection-requested))
   (goal (mode FORMULATED) (assigned-to ?robot&~nil) (is-executable TRUE))
@@ -158,33 +145,29 @@
   ?re <- (rl-goal-selection-requested)
 	?next-goal <- (goal (id ?a) (mode ?m&FORMULATED) (assigned-to ?robot))
 	=>
-	(printout t crlf "in RL Plugin added fact: " ?r " with next action " ?a crlf )
-	(printout t crlf "goal: " ?next-goal "with in mode: "?m crlf crlf)
+	(printout info crlf "in RL Plugin added fact: " ?r " with next action " ?a crlf )
+	(printout info crlf "goal: " ?next-goal "with in mode: "?m crlf crlf)
 	
 	(retract ?re)
   (retract ?r)
   (modify ?next-goal (mode SELECTED))
-
-  (delayed-do-for-all-facts ((?g goal))
-		(and (eq ?g:is-executable TRUE) (neq ?g:class SEND-BEACON))
-		(modify ?g (is-executable FALSE))
-	)
-  ; if it is actually a robot, remove all other assignments and the waiting status
-	(if (and (neq ?robot central) (neq ?robot nil))
-		then
-		(delayed-do-for-all-facts ((?g goal))
-			(and (eq ?g:mode FORMULATED) (not (eq ?g:type MAINTAIN)))
-			(modify ?g (assigned-to nil))
-		)
-		;(do-for-fact ((?waiting domain-fact))
-		;	(and (eq ?waiting:name robot-waiting)
-		;	     (eq ?waiting:param-values ?robot))
-		;	(retract ?waiting)
-		;)
-	)
+  (rl-goal-selected-update-goals)
+  (rl-goal-selected-update-robots ?robot)
 )
 
 ;================== ROBOT SELECTION ==================
+
+(deftemplate robot-waiting
+  (slot robot (type SYMBOL))
+)
+
+(defrule init-robot-waiting
+  (declare (salience ?*SALIENCE-ROBOT-INIT*))
+  (domain-object (name ?robot) (type robot))
+  (not (robot-waiting (robot ?robot)))
+  => 
+  (assert (robot-waiting (robot ?robot)))
+)
 
 (defrule goal-production-assign-robot-to-simple-goals
 	" Before checking SIMPLE goals for their executability, pick a waiting robot
@@ -193,19 +176,19 @@
   (goal (id ?id) (sub-type SIMPLE) (mode FORMULATED) (is-executable FALSE) (assigned-to nil))
   (domain-object (name ?robot) (type robot))
   (not (goal (assigned-to ?robot)))
-  (domain-fact (name robot-waiting) (param-values ?robot))
-  (not  (and (domain-fact (name robot-waiting) (param-values ?robot2&:(neq ?robot2 ?robot)))
+  (robot-waiting (robot ?robot))
+  (not  (and (robot-waiting (robot ?robot2&:(neq ?robot2 ?robot)))
             (goal (id ?id2) (sub-type SIMPLE) (mode FORMULATED) (assigned-to ?robot2))
         )
   )
   =>
   (bind ?longest-waiting 0)
   (bind ?longest-waiting-robot ?robot)
-  (delayed-do-for-all-facts ((?waiting domain-fact))
-    (eq ?waiting:name robot-waiting)
+  (delayed-do-for-all-facts ((?waiting robot-waiting))
+    TRUE
     (if (or (eq ?longest-waiting 0) (< (fact-index ?waiting) ?longest-waiting))
      then
-      (bind ?longest-waiting-robot ?waiting:param-values)
+      (bind ?longest-waiting-robot ?waiting:robot)
       (bind ?longest-waiting (fact-index ?waiting))
     )
   )
@@ -213,9 +196,10 @@
     (and (eq ?g:is-executable FALSE)
          (eq ?g:sub-type SIMPLE) (eq ?g:mode FORMULATED)
          (eq ?g:assigned-to nil))
-    (modify ?g (assigned-to ?robot))
+    (modify ?g (assigned-to ?longest-waiting-robot))
   )
-  (modify ?longest-waiting)
+  (retract ?longest-waiting)
+  (assert (robot-waiting (robot ?longest-waiting-robot)))
 )
 
 (defrule unassign-robot-from-finished-goal
