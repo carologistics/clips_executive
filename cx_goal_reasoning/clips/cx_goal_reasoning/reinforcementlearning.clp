@@ -96,10 +96,10 @@
   )
 
   (if (eq ?success FALSE) then
-    (bind ?reward 0)
+    (bind ?reward ?*POINTS-EPISODE-END-FAILURE*)
     (bind ?outcome EPISODE-END-FAILURE)
   else
-    (bind ?reward (+ ?reward 100))
+    (bind ?reward (+ ?reward ?*POINTS-EPISODE-END-SUCCESS*))
   )
  
   (assert (rl-finished-goal (goalid ?goalid) (outcome ?outcome) (reward ?reward) (done TRUE)))
