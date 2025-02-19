@@ -45,9 +45,9 @@
     (test (eq ?uuid (cx-rl-interfaces-get-free-robot-server-goal-handle-get-goal-id ?ptr)))
 =>  
     (bind ?robot NONE)
-    (do-for-all-facts ((?df domain-fact))
-            (eq ?df:name robot-waiting)
-        (bind ?r (nth$ 1 ?df:param-values))
+    (do-for-all-facts ((?rw robot-waiting))
+            TRUE
+        (bind ?r ?rw:robot)
         (do-for-all-facts ((?g goal))
                 (and    (eq ?g:mode FORMULATED)
                         (eq ?g:is-executable TRUE)
