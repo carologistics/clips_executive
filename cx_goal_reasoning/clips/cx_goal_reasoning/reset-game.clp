@@ -1,12 +1,3 @@
-(deftemplate reset-game
- 	(slot stage (type SYMBOL))
-)
-
-(deftemplate training-counter
-  (slot num (type INTEGER))
-)
-
-
 (defglobal
   ?*SALIENCE-RESET-GAME-HIGH* = ?*SALIENCE-HIGH*
   ?*SALIENCE-RESET-GAME-MIDDLE* = 800
@@ -14,20 +5,15 @@
   ?*RESET-GAME-TIMER* = 1.0
 )
 
-(deffunction unassign-robots-after-reset ()
-  (delayed-do-for-all-facts ((?g goal))
-    TRUE
-    (modify ?g (is-executable FALSE) (assigned-to nil))
-  )
+(deftemplate reset-game
+ 	(slot stage (type SYMBOL))
 )
 
-
-(defrule assert-training-counter
-  (declare (salience ?*SALIENCE-RESET-GAME-HIGH*))
-  (not (training-counter (num ?n)))
-	;(no-reset-on-training-start)
-	=>
-  (assert (training-counter (num 0)))
+(deffunction unassign-robots-after-reset ()
+  (delayed-do-for-all-facts ((?r rl-action))
+    TRUE
+    (modify ?r (is-executable FALSE) (assigned-to nil))
+  )
 )
 
 (defrule reset-game-stage-zero

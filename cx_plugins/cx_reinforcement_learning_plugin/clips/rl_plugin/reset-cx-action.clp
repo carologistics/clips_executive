@@ -30,7 +30,7 @@
         (bind ?uuid (cx-rl-interfaces-reset-cx-server-goal-handle-get-goal-id ?ptr))
         (assert (reset-cx (uuid ?uuid)))
         (assert (reset-game (stage STAGE-0)))
-        (assert (abort-all-goal-selections))
+        (assert (abort-all-action-selections))
         (assert (abort-get-free-robot))
     else
         (printout error "Goal immediately canceled" crlf)

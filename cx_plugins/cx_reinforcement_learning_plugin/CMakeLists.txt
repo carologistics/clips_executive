@@ -29,13 +29,13 @@ set(dependencies
 cx_generate_srv_bindings("cx_rl_interfaces" "SetRLMode")
 cx_generate_srv_bindings("cx_rl_interfaces" "GetDomainObjects")
 cx_generate_srv_bindings("cx_rl_interfaces" "GetDomainPredicates")
-cx_generate_srv_bindings("cx_rl_interfaces" "GetGoalList")
-cx_generate_srv_bindings("cx_rl_interfaces" "GetGoalListRobot")
+cx_generate_srv_bindings("cx_rl_interfaces" "GetActionList")
+cx_generate_srv_bindings("cx_rl_interfaces" "GetActionListRobot")
 cx_generate_srv_bindings("cx_rl_interfaces" "CreateRLEnvState")
-cx_generate_srv_bindings("cx_rl_interfaces" "ExecGoalSelection")
+cx_generate_srv_bindings("cx_rl_interfaces" "ExecActionSelection")
 cx_generate_action_bindings("cx_rl_interfaces" "ResetCX")
 cx_generate_action_bindings("cx_rl_interfaces" "GetFreeRobot")
-cx_generate_action_bindings("cx_rl_interfaces" "GoalSelection")
+cx_generate_action_bindings("cx_rl_interfaces" "ActionSelection")
 
 install (DIRECTORY clips DESTINATION share/${PROJECT_NAME})
 
