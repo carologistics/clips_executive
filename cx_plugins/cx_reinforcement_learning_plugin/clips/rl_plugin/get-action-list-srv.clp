@@ -1,22 +1,22 @@
-(defrule get-goal-list-service-init
-" Create a service allowing clients to recieve a list of all executable goals. "
-    (not (cx-rl-interfaces-get-goal-list-service (name "get_goal_list_executable")))
+(defrule get-action-list-service-init
+" Create a service allowing clients to recieve a list of all executable actions. "
+    (not (cx-rl-interfaces-get-action-list-service (name "get_action_list_executable")))
     (domain-facts-loaded)
 =>
-    (cx-rl-interfaces-get-goal-list-create-service "get_goal_list_executable")
-    (printout info "Created service for /get_goal_list_executable" crlf)
+    (cx-rl-interfaces-get-action-list-create-service "get_action_list_executable")
+    (printout info "Created service for /get_action_list_executable" crlf)
 )
 
-(deffunction cx-rl-interfaces-get-goal-list-service-callback (?service-name ?request ?response)
-    (printout info "Generating list of all executable goals" crlf)
-    (bind ?goal-list (create$))
-    (do-for-all-facts ((?goal goal))
-            (and    (eq ?goal:mode FORMULATED)
-                    (eq ?goal:is-executable TRUE))
-        (bind ?goal-string (str-cat ?goal:class "#" ?goal:id "#" (create-goal-param-string ?goal:params)))
-        (printout info "Executable goal: " ?goal-string crlf)
-        (bind ?goal-list (insert$ ?goal-list 1 ?goal-string))
+(deffunction cx-rl-interfaces-get-action-list-service-callback (?service-name ?request ?response)
+    (printout info "Generating list of all executable actions" crlf)
+    (bind ?action-list (create$))
+    (do-for-all-facts ((?action rl-action))
+            (and    (eq ?action:mode FORMULATED)
+                    (eq ?action:is-executable TRUE))
+        (bind ?action-string (str-cat ?action:class "#" ?action:actionid "#" (create-action-param-string ?action:params)))
+        (printout info "Executable action: " ?action-string crlf)
+        (bind ?action-list (insert$ ?action-list 1 ?action-string))
     )
-    (cx-rl-interfaces-get-goal-list-response-set-field ?response "goals" ?goal-list)
+    (cx-rl-interfaces-get-action-list-response-set-field ?response "actions" ?action-list)
 )
 
