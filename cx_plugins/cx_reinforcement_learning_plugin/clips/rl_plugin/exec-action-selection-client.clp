@@ -25,9 +25,8 @@
 
     (bind ?action-list (create$))
     (do-for-all-facts ((?action rl-action))
-            (and    (eq ?action:mode FORMULATED)
-                    (eq ?action:is-executable TRUE))
-        (bind ?action-string (str-cat ?action:class "#" ?action:actionid "#" (create-action-param-string ?action:params)))
+            (eq ?action:is-selected FALSE)
+        (bind ?action-string (str-cat ?action:id "|" ?action:name))
         (printout info "Executable action: " ?action-string crlf)
         (bind ?action-list (insert$ ?action-list 1 ?action-string))
     )

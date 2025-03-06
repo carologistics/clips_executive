@@ -46,7 +46,6 @@
     (printout info "ResetCX: Aborting action " ?actionid crlf)
     (bind ?result (cx-rl-interfaces-action-selection-result-create))
     (cx-rl-interfaces-action-selection-result-set-field ?result "actionid" (str-cat ?actionid))
-    (cx-rl-interfaces-action-selection-result-set-field ?result "outcome" "ABORTED")
     (cx-rl-interfaces-action-selection-result-set-field ?result "reward" 0)
     (cx-rl-interfaces-action-selection-result-set-field ?result "info" "Aborted")
     (cx-rl-interfaces-action-selection-server-goal-handle-abort ?ptr ?result)
@@ -60,14 +59,13 @@
 
 (defrule action-selection-finished
     ?ag <- (cx-rl-interfaces-action-selection-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr))
-    ?as <- (rl-action-selection (actionid ?actionid)  (outcome ?outcome&~UNKNOWN) (reward ?reward) 
+    ?as <- (rl-action-selection (actionid ?actionid)  (is-finished TRUE) (reward ?reward) 
                                 (done ?done) (uuid ?uuid&:(eq ?uuid (cx-rl-interfaces-action-selection-server-goal-handle-get-goal-id ?ptr))))
 =>
     (printout green "rl-action finished for action " ?actionid crlf)
     (if (eq ?done TRUE) then (bind ?info "Done") else (bind ?info ""))
     (bind ?result (cx-rl-interfaces-action-selection-result-create))
     (cx-rl-interfaces-action-selection-result-set-field ?result "actionid" (str-cat ?actionid))
-    (cx-rl-interfaces-action-selection-result-set-field ?result "outcome" (str-cat ?outcome))
     (cx-rl-interfaces-action-selection-result-set-field ?result "reward" ?reward)
     (cx-rl-interfaces-action-selection-result-set-field ?result "info" ?info)
     (cx-rl-interfaces-action-selection-server-goal-handle-succeed ?ptr ?result)

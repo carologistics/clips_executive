@@ -9,10 +9,10 @@
  	(slot stage (type SYMBOL))
 )
 
-(deffunction unassign-robots-after-reset ()
+(deffunction delete-rl-actions-after-reset ()
   (delayed-do-for-all-facts ((?r rl-action))
     TRUE
-    (modify ?r (is-executable FALSE) (assigned-to nil))
+    (retract ?r)
   )
 )
 
@@ -24,7 +24,7 @@
   =>
   (reset)
   (load-facts reset-save)
-  (unassign-robots-after-reset)
+  (delete-rl-actions-after-reset)  
   (retract ?r)
   (assert (cx-rl-interfaces-reset-cx-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr)))
   (assert (rl-mode (mode ?mode)))
