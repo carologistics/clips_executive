@@ -49,8 +49,7 @@
             TRUE
         (bind ?r ?rw:robot)
         (do-for-all-facts ((?a rl-action))
-                (and    (eq ?a:mode FORMULATED)
-                        (eq ?a:is-executable TRUE)
+                (and    (eq ?a:is-selected FALSE)
                         (eq ?a:assigned-to ?r))
             (bind ?robot ?r)
             (break)
