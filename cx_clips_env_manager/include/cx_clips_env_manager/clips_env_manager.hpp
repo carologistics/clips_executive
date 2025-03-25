@@ -83,6 +83,9 @@ public:
 private:
   std::shared_ptr<clips::Environment> new_env(const std::string & env_name);
 
+  static void redefine_callback(
+    clips::Environment * env, const char *, const char *, const char *, void * context);
+
   bool delete_env(const std::string & env_name);
   // void assert_plugins(LockSharedPtr<clips::Environment> &clips,
   //                     bool immediate_assert);

@@ -262,6 +262,16 @@ void CLIPSEnvManager::create_env_callback(
   }
 }
 
+void CLIPSEnvManager::redefine_callback(
+  clips::Environment * /*env*/, const char * construct_type, const char * construct_name,
+  const char * module_name, void * context)
+{
+  CLIPSEnvManager * manager = static_cast<CLIPSEnvManager *>(context);
+  RCLCPP_WARN(
+    manager->get_logger(), "Redefinition detected for %s '%s' in module '%s'", construct_type,
+    construct_name, module_name);
+}
+
 void CLIPSEnvManager::destroy_env_callback(
   const std::shared_ptr<rmw_request_id_t> request_header,
   const std::shared_ptr<cx_msgs::srv::DestroyClipsEnv::Request> request,
@@ -368,6 +378,8 @@ std::shared_ptr<clips::Environment> CLIPSEnvManager::new_env(const std::string &
     this, env_name + ".watch", rclcpp::ParameterValue(std::vector<std::string>{}));
   cx::cx_utils::declare_parameter_if_not_declared(
     this, env_name + ".redirect_stdout_to_debug", rclcpp::ParameterValue(false));
+  cx::cx_utils::declare_parameter_if_not_declared(
+    this, env_name + ".ignore_redefinition", rclcpp::ParameterValue(false));
   std::vector<std::string> watch_info;
   get_parameter(env_name + ".watch", watch_info);
   for (const auto & w : watch_info) {
@@ -378,6 +390,8 @@ std::shared_ptr<clips::Environment> CLIPSEnvManager::new_env(const std::string &
   get_parameter(env_name + ".log_clips_to_file", log_to_file);
   bool stdout_to_debug = false;
   get_parameter(env_name + ".redirect_stdout_to_debug", stdout_to_debug);
+  bool ignore_redefinition;
+  get_parameter("ignore_redefinition", ignore_redefinition);
 
   auto context = CLIPSEnvContext::get_context(env);
   context->env_name_ = env_name;
@@ -393,6 +407,11 @@ std::shared_ptr<clips::Environment> CLIPSEnvManager::new_env(const std::string &
       std::thread([]() { rclcpp::shutdown(); }).detach();
     },
     "cx_shutdown", nullptr);
+
+  if (!ignore_redefinition) {
+    clips::AddRedefineCallbackFunction(
+      env, "env_manager_redefine_callback", &redefine_callback, 0, this);
+  }
 
   RCLCPP_INFO(get_logger(), "Initialized new CLIPS environment: %s", env_name.c_str());
   return clips;
