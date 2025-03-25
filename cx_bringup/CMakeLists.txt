@@ -30,9 +30,6 @@ cx_generate_srv_bindings("std_srvs" "SetBool")
 # generate bindings to interface with ROS services, such as example_interfaces::action::Fibonacci
 cx_generate_action_bindings("example_interfaces" "Fibonacci")
 
-# generate protobuf plugin with linked proto files
-cx_generate_linked_protobuf_plugin_from_proto("BringupProtobufPlugin" proto/cx_bringup/SearchRequest.proto)
-
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()
