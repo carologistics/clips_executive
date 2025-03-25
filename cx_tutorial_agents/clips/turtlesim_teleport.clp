@@ -18,12 +18,16 @@
   ?*TURTLE-TELEPORT-TYPE* = "turtlesim/srv/TeleportAbsolute"
 )
 
+(deftemplate hello
+  (slot value))
+
 (defrule turtle-teleport-client-init
 " Create publisher for ros_cx_out."
 =>
   ; create the client
   (ros-msgs-create-client ?*TURTLE-SERVICE* ?*TURTLE-TELEPORT-TYPE*)
   (printout green "Opening client for " ?*TURTLE-SERVICE* crlf)
+  (assert (hello (value 1)))
 )
 
 (defrule turtle-teleport-request-teleport-mid
@@ -32,6 +36,7 @@
   (not (request ?any-id))
   (turtle-out-of-bounds)
   (time ?any-time) ; used to continuously attempt to request the service until success
+  ?f <- (hello)
   =>
   (bind ?new-req (ros-msgs-create-request ?*TURTLE-TELEPORT-TYPE*))
   (ros-msgs-set-field ?new-req "x" 5.5)
@@ -45,6 +50,7 @@
     (printout red "Start it using \"ros2 run turtlesim turtlesim_node\"" crlf)
   )
   (ros-msgs-destroy-message ?new-req)
+  (modify ?f (value 2))
 )
 (defrule turtle-teleport-done
 " Got response, delete it without reading, it is empty."

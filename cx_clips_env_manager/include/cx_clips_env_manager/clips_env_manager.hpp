@@ -88,6 +88,9 @@ public:
 private:
   std::shared_ptr<clips::Environment> new_env(const std::string & env_name);
 
+  static void redefine_callback(
+    clips::Environment * env, const char *, const char *, const char *, void * context);
+
   bool delete_env(const std::string & env_name);
   // ROS2 SERVICES
   rclcpp::Service<cx_msgs::srv::ListClipsEnvs>::SharedPtr list_envs_service_;
