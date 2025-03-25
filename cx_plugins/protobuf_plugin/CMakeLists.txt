@@ -43,13 +43,13 @@ add_library(clips_protobuf_comm SHARED src/communicator.cpp)
 target_link_libraries(
   clips_protobuf_comm protobuf::libprotobuf ProtobufComm::protobuf_comm
   ClipsNS::libclips_ns spdlog::spdlog)
-ament_target_dependencies(clips_protobuf_comm rclcpp_lifecycle)
+ament_target_dependencies(clips_protobuf_comm rclcpp_lifecycle ProtobufComm)
 
 set_property(TARGET clips_protobuf_comm PROPERTY CXX_STANDARD ${CMAKE_CXX_STANDARD})
 
 add_library(${PROJECT_NAME} SHARED src/protobuf_plugin.cpp)
 ament_target_dependencies(${PROJECT_NAME} ${dependencies})
-target_link_libraries(${PROJECT_NAME} clips_protobuf_comm)
+target_link_libraries(${PROJECT_NAME} clips_protobuf_comm  ProtobufComm::protobuf_comm)
 target_link_libraries(${PROJECT_NAME} ClipsNS::libclips_ns)
 
 # END OF PLUGINS REGISTRATION

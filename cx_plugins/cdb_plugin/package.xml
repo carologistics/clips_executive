@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>cx_cdb_plugin</name>
+  <version>0.0.1</version>
+  <description>CLIPS Debugging Plugin that allows clips execution flow to be debugged with the CLIPS Debugger</description>
+
+  <maintainer email="tim.wendt@alumni.fh-aachen.de">Tim Wendt</maintainer>
+
+  <license>Apache License 2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <build_depend>libpqxx-dev</build_depend>
+
+  <depend>rclcpp</depend>
+  <depend>pluginlib</depend>
+  <depend>cx_plugin</depend>
+  <depend>cx_utils</depend>
+  <depend>clips_vendor</depend>
+  <depend>libpqxx</depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+    <cx_plugin plugin="${prefix}/cdb_plugin.xml"/>
+  </export>
+</package>
