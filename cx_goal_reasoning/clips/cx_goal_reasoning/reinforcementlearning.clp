@@ -12,11 +12,11 @@
   (slot id (type SYMBOL))
   (slot name (type SYMBOL))
   (slot is-selected (type SYMBOL)
-                      (allowed-values TRUE FALSE)
-                      (default FALSE))
+                    (allowed-values TRUE FALSE)
+                     (default FALSE))
   (slot is-finished (type SYMBOL)
-                      (allowed-values TRUE FALSE)
-                      (default FALSE))
+                    (allowed-values TRUE FALSE)
+                    (default FALSE))
   (slot assigned-to (type SYMBOL) 
                     (default nil))
   (slot points  (type INTEGER) 
@@ -27,8 +27,8 @@
 	(slot uuid (type STRING))
   (slot actionid (type SYMBOL))
   (slot is-finished (type SYMBOL)
-                      (allowed-values TRUE FALSE)
-                      (default FALSE))
+                    (allowed-values TRUE FALSE)
+                    (default FALSE))
   (slot reward  (type INTEGER)
                 (default 0))
   (slot done  (type SYMBOL)
@@ -48,7 +48,11 @@
 
 (deftemplate rl-mode
   (slot mode  (type SYMBOL)
-              (allowed-values TRAINING EVALUATION EXECUTION))
+              (allowed-values TRAINING EXECUTION))
+)
+
+(deftemplate robot-waiting
+  (slot robot (type SYMBOL))
 )
 
 (deftemplate rl-action-selection-requested)
@@ -72,11 +76,12 @@
 (defrule rl-action-select
   (declare (salience ?*SALIENCE-RL-SELECTION*))
   (rl-mode (mode TRAINING|EVALUATION))
-	?r <- (rl-action-selection (actionid ?a))
+	(rl-action-selection (actionid ?a))
 	?next-action <- (rl-action (id ?a) (is-selected FALSE) (is-finished FALSE) (assigned-to ?robot))
+  ?rw <- (robot-waiting (robot ?robot))
 	=>
 	(printout info crlf "CXRL: Selected action " ?a  "for robot " ?robot crlf )
-	
+	(retract ?rw)
   (modify ?next-action (is-selected TRUE))
   (rl-action-selected-update-actions)
   ;(rl-action-selected-update-robots ?robot)
@@ -151,25 +156,33 @@
 	?r <- (rl-action-selection-exec (actionid ?actionid))
   ?re <- (rl-action-selection-requested)
 	?next-action <- (rl-action (id ?actionid) (is-selected FALSE) (assigned-to ?robot))
+  ?rw <- (robot-waiting (robot ?robot))
 	=>
 	(printout info crlf "CXRL: Selected action " ?actionid  "for robot " ?robot crlf )
 	
 	(retract ?re)
   (retract ?r)
+  (retract ?rw)
   (modify ?next-action (is-selected TRUE))
   (rl-action-selected-update-actions)
   ;(rl-action-selected-update-robots ?robot)
 )
 
+(defrule rl-action-finished-execution
+  (declare (salience ?*RL-SALIENCE-RL-SELECTION*))
+  (rl-mode (mode EXECUTION))
+  ?a <- (rl-action (is-finished TRUE))
+  =>
+  (retract ?a)
+)
+
 ;================== ROBOT SELECTION ==================
 
-(deftemplate robot-waiting
-  (slot robot (type SYMBOL))
-)
 
 (defrule init-robot-waiting
   (declare (salience ?*SALIENCE-ROBOT-INIT*))
   (domain-object (name ?robot) (type robot))
+  (not (rl-action (is-selected TRUE) (assigned-to ?robot)))
   (not (robot-waiting (robot ?robot)))
   => 
   (assert (robot-waiting (robot ?robot)))
@@ -208,7 +221,8 @@
 
 (defrule unassign-robot-from-finished-action
   (declare (salience ?*SALIENCE-HIGH*))
-  ?a <- (rl-action (is-finished TRUE) (assigned-to ~nil))
+  ?a <- (rl-action (is-finished TRUE) (assigned-to ?robot&~nil))
   =>
   (modify ?a (assigned-to nil))
+  (assert (robot-waiting (robot ?robot)))
 )
