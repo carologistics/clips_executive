@@ -11,15 +11,3 @@ repositories:
     type: git
     url: https://github.com/fawkesrobotics/protobuf_comm
     version: main
-  cascade_lifecycle:
-    type: git
-    url: https://github.com/fmrico/cascade_lifecycle
-    version: jazzy-devel
-  ros2_planning_system:
-    type: git
-    url: https://github.com/PlanSys2/ros2_planning_system
-    version: jazzy-devel
-  popf:
-    type: git
-    url: https://github.com/fmrico/popf
-    version: jazzy-devel
