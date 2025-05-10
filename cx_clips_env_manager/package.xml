@@ -11,7 +11,10 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
+  <depend>bond</depend>
+  <depend>bondcpp</depend>
   <depend>rclcpp</depend>
+  <depend>rclcpp_components</depend>
   <depend>rclcpp_lifecycle</depend>
   <depend>clips_vendor</depend>
   <depend>lifecycle_msgs</depend>

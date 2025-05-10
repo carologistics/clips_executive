@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Carologistics
+// Copyright (c) 2024-2025 Carologistics
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -97,10 +97,28 @@ static void log_router_exit(clips::Environment * /*env*/, int /*exit_code*/,
 
 using namespace std::placeholders;
 
-CLIPSEnvManager::CLIPSEnvManager()
-    : rclcpp_lifecycle::LifecycleNode("clips_manager") {
+CLIPSEnvManager::CLIPSEnvManager(const rclcpp::NodeOptions &options)
+    : rclcpp_lifecycle::LifecycleNode("clips_manager", options) {
   envs_.init_mutex();
   RCLCPP_INFO(get_logger(), "Initialising [%s]...", get_name());
+  // server side never times out from lifecycle manager
+  declare_parameter(bond::msg::Constants::DISABLE_HEARTBEAT_TIMEOUT_PARAM,
+                    true);
+  set_parameter(rclcpp::Parameter(
+      bond::msg::Constants::DISABLE_HEARTBEAT_TIMEOUT_PARAM, true));
+
+  cx::cx_utils::declare_parameter_if_not_declared(this, "bond_heartbeat_period",
+                                                  rclcpp::ParameterValue(0.1));
+  get_parameter("bond_heartbeat_period", bond_heartbeat_period);
+
+  bool autostart_node = false;
+  cx::cx_utils::declare_parameter_if_not_declared(
+      this, "autostart_node", rclcpp::ParameterValue(false));
+  get_parameter("autostart_node", autostart_node);
+  if (autostart_node) {
+    autostart();
+  }
+  register_rcl_preshutdown_callback();
 }
 
 CLIPSEnvManager::~CLIPSEnvManager() {
@@ -160,6 +178,7 @@ CLIPSEnvManager::on_activate(const rclcpp_lifecycle::State &state) {
     clips::RefreshAllAgendas(env.second.get_obj().get());
     clips::Run(env.second.get_obj().get(), -1);
   }
+  create_bond();
   RCLCPP_INFO(get_logger(), "Activated [%s]...", get_name());
   return CallbackReturn::SUCCESS;
 }
@@ -168,6 +187,7 @@ CallbackReturn
 CLIPSEnvManager::on_deactivate(const rclcpp_lifecycle::State &state) {
   // no action on activate for now
   (void)state;
+  RCLCPP_INFO(get_logger(), "Deactivating [%s]...", get_name());
   {
     std::scoped_lock envs_lock(*(envs_.get_mutex_instance()));
     for (auto &env : *(envs_.get_obj())) {
@@ -181,6 +201,7 @@ CLIPSEnvManager::on_deactivate(const rclcpp_lifecycle::State &state) {
   plugin_manager_.deactivate();
   create_env_service_.reset();
   destroy_env_service_.reset();
+  destroy_bond();
   RCLCPP_INFO(get_logger(), "Deactivated [%s]...", get_name());
   return CallbackReturn::SUCCESS;
 }
@@ -394,4 +415,84 @@ CLIPSEnvManager::new_env(const std::string &env_name) {
   return clips;
 }
 
+void CLIPSEnvManager::autostart() {
+  using lifecycle_msgs::msg::State;
+  autostart_timer_ = this->create_wall_timer(0s, [this]() -> void {
+    autostart_timer_->cancel();
+    RCLCPP_INFO(get_logger(), "Auto-starting node: %s", this->get_name());
+    if (configure().id() != State::PRIMARY_STATE_INACTIVE) {
+      RCLCPP_ERROR(get_logger(), "Auto-starting node %s failed to configure!",
+                   this->get_name());
+      return;
+    }
+    if (activate().id() != State::PRIMARY_STATE_ACTIVE) {
+      RCLCPP_ERROR(get_logger(), "Auto-starting node %s failed to activate!",
+                   this->get_name());
+    }
+  });
+}
+
+void CLIPSEnvManager::on_rcl_preshutdown() {
+  RCLCPP_INFO(get_logger(), "Running rcl preshutdown (%s)", this->get_name());
+
+  run_cleanups();
+
+  destroy_bond();
+}
+
+void CLIPSEnvManager::run_cleanups() {
+  /*
+   * In case this lifecycle node wasn't properly shut down, do it here.
+   * We will give the user some ability to clean up properly here, but it's
+   * best effort; i.e. we aren't trying to account for all possible states.
+   */
+  if (get_current_state().id() ==
+      lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE) {
+    this->deactivate();
+  }
+
+  if (get_current_state().id() ==
+      lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE) {
+    this->cleanup();
+  }
+}
+
+void CLIPSEnvManager::register_rcl_preshutdown_callback() {
+  rclcpp::Context::SharedPtr context = get_node_base_interface()->get_context();
+
+  rcl_preshutdown_cb_handle_ =
+      std::make_unique<rclcpp::PreShutdownCallbackHandle>(
+          context->add_pre_shutdown_callback(
+              std::bind(&CLIPSEnvManager::on_rcl_preshutdown, this)));
+}
+
+void CLIPSEnvManager::create_bond() {
+  if (bond_heartbeat_period > 0.0) {
+    RCLCPP_INFO(get_logger(), "Creating bond (%s) to lifecycle manager.",
+                this->get_name());
+
+    bond_ = std::make_unique<bond::Bond>(std::string("bond"), this->get_name(),
+                                         shared_from_this());
+
+    bond_->setHeartbeatPeriod(bond_heartbeat_period);
+    bond_->setHeartbeatTimeout(4.0);
+    bond_->start();
+  }
+}
+
+void CLIPSEnvManager::destroy_bond() {
+  if (bond_heartbeat_period > 0.0) {
+    RCLCPP_INFO(get_logger(), "Destroying bond (%s) to lifecycle manager.",
+                this->get_name());
+
+    if (bond_) {
+      bond_->breakBond();
+      bond_.reset();
+    }
+  }
+}
+
 } // namespace cx
+
+#include "rclcpp_components/register_node_macro.hpp"
+RCLCPP_COMPONENTS_REGISTER_NODE(cx::CLIPSEnvManager)

@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Carologistics
+// Copyright (c) 2024-2025 Carologistics
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -37,6 +37,9 @@
 
 #include <spdlog/spdlog.h>
 
+#include "bond/msg/constants.hpp"
+#include "bondcpp/bond.hpp"
+
 namespace cx {
 class ClipsPluginManager;
 class ClipsExecutive;
@@ -46,7 +49,7 @@ class CLIPSEnvManager : public rclcpp_lifecycle::LifecycleNode {
   friend ClipsExecutive;
 
 public:
-  CLIPSEnvManager();
+  CLIPSEnvManager(const rclcpp::NodeOptions &options = rclcpp::NodeOptions());
   ~CLIPSEnvManager();
   using CallbackReturn =
       rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
@@ -91,9 +94,23 @@ private:
       destroy_env_service_;
 
 private:
+  void create_bond();
+  void destroy_bond();
+  void autostart();
+  void register_rcl_preshutdown_callback();
+  void run_cleanups();
+  void on_rcl_preshutdown();
+
   ClipsPluginManager plugin_manager_;
 
   cx::LockSharedPtr<EnvsMap> envs_;
+
+  // Connection to tell that server is still up
+  std::unique_ptr<bond::Bond> bond_{nullptr};
+  double bond_heartbeat_period;
+  rclcpp::TimerBase::SharedPtr autostart_timer_;
+  std::unique_ptr<rclcpp::PreShutdownCallbackHandle> rcl_preshutdown_cb_handle_{
+      nullptr};
 };
 } // namespace cx
 
