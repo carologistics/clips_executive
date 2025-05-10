@@ -32,26 +32,6 @@ set(dependencies
   cx_clips_env_manager
   PkgConfig
 )
-set(dependencies_psys2
-  ament_cmake
-  rclcpp
-  plansys2_domain_expert
-  plansys2_problem_expert
-  plansys2_planner
-  plansys2_lifecycle_manager
-  PkgConfig
-)
-
-# add_executable(plansys_node
-#   src/plansys2_node.cpp
-# )
-
-add_executable(cx_node
-  src/cx_node.cpp
-)
-
-ament_target_dependencies(cx_node ${dependencies})
-target_link_libraries(cx_node ClipsNS::libclips_ns spdlog::spdlog)
 
 # generate bindings to interface with ROS messages, such as std_msgs::msg::String
 cx_generate_msg_bindings("std_msgs" "String")
@@ -75,13 +55,6 @@ install(DIRECTORY launch params clips proto DESTINATION share/${PROJECT_NAME})
 install(PROGRAMS
   scripts/test_service.py
   DESTINATION lib/${PROJECT_NAME}
-)
-
-install(TARGETS
-  cx_node
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-  RUNTIME DESTINATION lib/${PROJECT_NAME}
 )
 
 ament_export_dependencies(${dependencies})

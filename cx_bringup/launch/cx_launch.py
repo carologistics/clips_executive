@@ -1,4 +1,4 @@
-# Copyright (c) 2024 Carologistics
+# Copyright (c) 2024-2025 Carologistics
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -35,14 +35,12 @@ def launch_with_context(context, *args, **kwargs):
 
     log_level = LaunchConfiguration("log_level")
     cx_node = Node(
-        package="cx_bringup",
+        package="cx_clips_env_manager",
         executable="cx_node",
         output="screen",
         emulate_tty=True,
         namespace=namespace,
-        parameters=[
-            manager_config_file,
-        ],
+        parameters=[manager_config_file, {"autostart_node": True}],
         arguments=["--ros-args", "--log-level", log_level],
     )
     return [cx_node]
