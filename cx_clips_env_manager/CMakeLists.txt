@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.16...3.28)
 project(cx_clips_env_manager)
 
 # Default to C++20
