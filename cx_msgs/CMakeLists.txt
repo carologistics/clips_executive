@@ -12,9 +12,10 @@ find_package(action_msgs REQUIRED)
 set(SERVICES
   "srv/DestroyClipsEnv.srv"
   "srv/CreateClipsEnv.srv"
-  "srv/LoadCLIPSPlugin.srv"
-  "srv/ListCLIPSPlugin.srv"
-  "srv/UnloadCLIPSPlugin.srv"
+  "srv/ListClipsEnvs.srv"
+  "srv/LoadClipsPlugin.srv"
+  "srv/ListClipsPlugins.srv"
+  "srv/UnloadClipsPlugin.srv"
 )
 
 # set(ACTIONS

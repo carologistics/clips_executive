@@ -44,15 +44,15 @@ void ClipsPluginManager::configure(
   if (node) {
     RCLCPP_INFO(logger_, "Configuring [%s]...", name_.c_str());
 
-    load_plugin_service_ = node->create_service<cx_msgs::srv::LoadCLIPSPlugin>(
+    load_plugin_service_ = node->create_service<cx_msgs::srv::LoadClipsPlugin>(
         std::format("{}/load_plugin", name_).c_str(),
         std::bind(&ClipsPluginManager::load_plugin_cb, this, _1, _2, _3));
     unload_plugin_service_ =
-        node->create_service<cx_msgs::srv::UnloadCLIPSPlugin>(
+        node->create_service<cx_msgs::srv::UnloadClipsPlugin>(
             std::format("{}/unload_plugin", name_).c_str(),
             std::bind(&ClipsPluginManager::unload_plugin_cb, this, _1, _2, _3));
-    list_plugin_service_ = node->create_service<cx_msgs::srv::ListCLIPSPlugin>(
-        std::format("{}/list_plugin", name_).c_str(),
+    list_plugin_service_ = node->create_service<cx_msgs::srv::ListClipsPlugins>(
+        std::format("{}/list_plugins", name_).c_str(),
         std::bind(&ClipsPluginManager::list_plugin_cb, this, _1, _2, _3));
   } else {
     RCLCPP_ERROR(logger_, "Invalid parent node reference!");
@@ -147,8 +147,8 @@ void ClipsPluginManager::deactivate_env(
 
 void ClipsPluginManager::load_plugin_cb(
     const std::shared_ptr<rmw_request_id_t> request_header,
-    const std::shared_ptr<cx_msgs::srv::LoadCLIPSPlugin::Request> request,
-    const std::shared_ptr<cx_msgs::srv::LoadCLIPSPlugin::Response> response) {
+    const std::shared_ptr<cx_msgs::srv::LoadClipsPlugin::Request> request,
+    const std::shared_ptr<cx_msgs::srv::LoadClipsPlugin::Response> response) {
   (void)request_header; // ignoring request id
   std::string env_name = request->env_name;
   std::string plugin_name = request->plugin_name;
@@ -168,8 +168,8 @@ void ClipsPluginManager::load_plugin_cb(
 
 void ClipsPluginManager::unload_plugin_cb(
     const std::shared_ptr<rmw_request_id_t> request_header,
-    const std::shared_ptr<cx_msgs::srv::UnloadCLIPSPlugin::Request> request,
-    const std::shared_ptr<cx_msgs::srv::UnloadCLIPSPlugin::Response> response) {
+    const std::shared_ptr<cx_msgs::srv::UnloadClipsPlugin::Request> request,
+    const std::shared_ptr<cx_msgs::srv::UnloadClipsPlugin::Response> response) {
   (void)request_header; // ignoring request id
   std::string env_name = request->env_name;
   std::string plugin_name = request->plugin_name;
@@ -177,8 +177,12 @@ void ClipsPluginManager::unload_plugin_cb(
   if (envs_->contains(env_name)) {
     LockSharedPtr<clips::Environment> &clips = envs_->at(env_name);
     std::scoped_lock lock(*clips.get_mutex_instance());
-    if (plugins_.contains(plugin_name)) {
+    auto loaded_elem = std::find(loaded_plugins_[env_name].begin(),
+                                 loaded_plugins_[env_name].end(), plugin_name);
+    if (plugins_.contains(plugin_name) and
+        loaded_elem != loaded_plugins_[env_name].end()) {
       bool success = plugins_[plugin_name]->clips_env_destroyed(clips);
+      loaded_plugins_[env_name].erase(loaded_elem);
       response->success = success;
       if (!success) {
         response->error = "error while unloading plugin";
@@ -197,8 +201,8 @@ void ClipsPluginManager::unload_plugin_cb(
 
 void ClipsPluginManager::list_plugin_cb(
     const std::shared_ptr<rmw_request_id_t> request_header,
-    const std::shared_ptr<cx_msgs::srv::ListCLIPSPlugin::Request> request,
-    const std::shared_ptr<cx_msgs::srv::ListCLIPSPlugin::Response> response) {
+    const std::shared_ptr<cx_msgs::srv::ListClipsPlugins::Request> request,
+    const std::shared_ptr<cx_msgs::srv::ListClipsPlugins::Response> response) {
   (void)request_header; // ignoring request id
   std::string env_name = request->env_name;
   if (env_name == "") {
@@ -210,8 +214,7 @@ void ClipsPluginManager::list_plugin_cb(
   std::scoped_lock lock(*envs_.get_mutex_instance());
   if (envs_->contains(env_name)) {
     response->success = true;
-    std::vector<std::string> plugins;
-    response->plugins = plugins;
+    response->plugins = loaded_plugins_[env_name];
     return;
   } else {
     response->success = false;

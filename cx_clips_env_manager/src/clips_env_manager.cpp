@@ -16,6 +16,7 @@
 #include <format>
 #include <map>
 #include <memory>
+#include <ranges>
 #include <string>
 #include <utility>
 
@@ -137,6 +138,10 @@ CallbackReturn CLIPSEnvManager::on_configure(const rclcpp_lifecycle::State &) {
 
   RCLCPP_INFO(get_logger(), "Configuring [%s]...", get_name());
 
+  list_envs_service_ = create_service<cx_msgs::srv::ListClipsEnvs>(
+      std::string(get_name()) + "/list_envs",
+      std::bind(&CLIPSEnvManager::list_envs_callback, this, _1, _2, _3));
+
   create_env_service_ = create_service<cx_msgs::srv::CreateClipsEnv>(
       std::string(get_name()) + "/create_env",
       std::bind(&CLIPSEnvManager::create_env_callback, this, _1, _2, _3));
@@ -160,7 +165,7 @@ CallbackReturn CLIPSEnvManager::on_configure(const rclcpp_lifecycle::State &) {
     envs_.set_obj(envs);
   }
 
-  plugin_manager_.configure(node, "ClipsPluginManager", envs_);
+  plugin_manager_.configure(node, get_name(), envs_);
 
   RCLCPP_INFO(get_logger(), "Configured [%s]!", get_name());
 
@@ -221,6 +226,23 @@ CallbackReturn CLIPSEnvManager::on_error(const rclcpp_lifecycle::State &state) {
   (void)state;
   RCLCPP_INFO(get_logger(), "Error [%s]...", get_name());
   return CallbackReturn::SUCCESS;
+}
+
+void CLIPSEnvManager::list_envs_callback(
+    const std::shared_ptr<rmw_request_id_t> request_header,
+    const std::shared_ptr<cx_msgs::srv::ListClipsEnvs::Request> request,
+    const std::shared_ptr<cx_msgs::srv::ListClipsEnvs::Response> response) {
+  (void)request_header; // the request header is not used in this callback
+  (void)request;        // the request header is not used in this callback
+  {
+    std::scoped_lock lock(*envs_.get_mutex_instance());
+    auto keys =
+        std::views::keys(*envs_.get_obj()); // keys is a view, lazy-evaluated
+
+    // Materialize into a vector
+    response->envs = std::vector(keys.begin(), keys.end());
+  }
+  response->success = true;
 }
 
 void CLIPSEnvManager::create_env_callback(

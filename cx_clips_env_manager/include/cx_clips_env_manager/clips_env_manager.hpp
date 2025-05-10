@@ -34,6 +34,7 @@
 
 #include "cx_msgs/srv/create_clips_env.hpp"
 #include "cx_msgs/srv/destroy_clips_env.hpp"
+#include "cx_msgs/srv/list_clips_envs.hpp"
 
 #include <spdlog/spdlog.h>
 
@@ -67,6 +68,10 @@ public:
 
   // LockSharedPtr<clips::Environment>
   // getEnvironmentByName(const std::string &env_name);
+  void list_envs_callback(
+      const std::shared_ptr<rmw_request_id_t> request_header,
+      const std::shared_ptr<cx_msgs::srv::ListClipsEnvs::Request> request,
+      const std::shared_ptr<cx_msgs::srv::ListClipsEnvs::Response> response);
 
   void create_env_callback(
       const std::shared_ptr<rmw_request_id_t> request_header,
@@ -89,6 +94,7 @@ private:
   // &filename);
 
   // ROS2 SERVICES
+  rclcpp::Service<cx_msgs::srv::ListClipsEnvs>::SharedPtr list_envs_service_;
   rclcpp::Service<cx_msgs::srv::CreateClipsEnv>::SharedPtr create_env_service_;
   rclcpp::Service<cx_msgs::srv::DestroyClipsEnv>::SharedPtr
       destroy_env_service_;

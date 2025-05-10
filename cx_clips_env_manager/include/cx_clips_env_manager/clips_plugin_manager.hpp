@@ -28,7 +28,7 @@
 
 #include "cx_plugin/clips_plugin.hpp"
 
-#include "cx_msgs/srv/list_clips_plugin.hpp"
+#include "cx_msgs/srv/list_clips_plugins.hpp"
 #include "cx_msgs/srv/load_clips_plugin.hpp"
 #include "cx_msgs/srv/unload_clips_plugin.hpp"
 
@@ -80,28 +80,28 @@ public:
 
   void load_plugin_cb(
       const std::shared_ptr<rmw_request_id_t> request_header,
-      const std::shared_ptr<cx_msgs::srv::LoadCLIPSPlugin::Request> request,
-      const std::shared_ptr<cx_msgs::srv::LoadCLIPSPlugin::Response> response);
+      const std::shared_ptr<cx_msgs::srv::LoadClipsPlugin::Request> request,
+      const std::shared_ptr<cx_msgs::srv::LoadClipsPlugin::Response> response);
   void unload_plugin_cb(
       const std::shared_ptr<rmw_request_id_t> request_header,
-      const std::shared_ptr<cx_msgs::srv::UnloadCLIPSPlugin::Request> request,
-      const std::shared_ptr<cx_msgs::srv::UnloadCLIPSPlugin::Response>
+      const std::shared_ptr<cx_msgs::srv::UnloadClipsPlugin::Request> request,
+      const std::shared_ptr<cx_msgs::srv::UnloadClipsPlugin::Response>
           response);
   void list_plugin_cb(
       const std::shared_ptr<rmw_request_id_t> request_header,
-      const std::shared_ptr<cx_msgs::srv::ListCLIPSPlugin::Request> request,
-      const std::shared_ptr<cx_msgs::srv::ListCLIPSPlugin::Response> response);
+      const std::shared_ptr<cx_msgs::srv::ListClipsPlugins::Request> request,
+      const std::shared_ptr<cx_msgs::srv::ListClipsPlugins::Response> response);
 
 private:
   bool load_plugin_for_env(const std::string &plugin,
                            const std::string &env_name,
                            LockSharedPtr<clips::Environment> &env);
 
-  rclcpp::Service<cx_msgs::srv::LoadCLIPSPlugin>::SharedPtr
+  rclcpp::Service<cx_msgs::srv::LoadClipsPlugin>::SharedPtr
       load_plugin_service_;
-  rclcpp::Service<cx_msgs::srv::UnloadCLIPSPlugin>::SharedPtr
+  rclcpp::Service<cx_msgs::srv::UnloadClipsPlugin>::SharedPtr
       unload_plugin_service_;
-  rclcpp::Service<cx_msgs::srv::ListCLIPSPlugin>::SharedPtr
+  rclcpp::Service<cx_msgs::srv::ListClipsPlugins>::SharedPtr
       list_plugin_service_;
 
   // Pluginlib class loaders
