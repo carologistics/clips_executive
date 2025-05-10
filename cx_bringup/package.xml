@@ -13,18 +13,12 @@
 
   <build_depend>launch_ros</build_depend>
 
-  <depend>rclcpp</depend>
-  <depend>plansys2_domain_expert</depend>
-  <depend>plansys2_problem_expert</depend>
-  <depend>plansys2_planner</depend>
-  <depend>plansys2_lifecycle_manager</depend>
-  <depend>cx_clips_env_manager</depend>
-  <depend>cx_goal_reasoning</depend>
   <depend>cx_protobuf_plugin</depend>
   <depend>cx_ros_comm_gen</depend>
   <depend>pkg-config</depend>
 
   <exec_depend>launch_ros</exec_depend>
+  <exec_depend>cx_clips_env_manager</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

@@ -12,25 +12,13 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(rclcpp REQUIRED)
-find_package(plansys2_domain_expert REQUIRED)
-find_package(plansys2_problem_expert REQUIRED)
-find_package(plansys2_planner REQUIRED)
-find_package(plansys2_lifecycle_manager REQUIRED)
-find_package(cx_clips_env_manager REQUIRED)
 find_package(cx_ros_comm_gen REQUIRED)
 find_package(cx_protobuf_plugin REQUIRED)
-find_package(PkgConfig REQUIRED)
 
 set(dependencies
   ament_cmake
-  rclcpp
-  plansys2_domain_expert
-  plansys2_problem_expert
-  plansys2_planner
-  plansys2_lifecycle_manager
-  cx_clips_env_manager
-  PkgConfig
+  cx_ros_comm_gen
+  cx_protobuf_plugin
 )
 
 # generate bindings to interface with ROS messages, such as std_msgs::msg::String
