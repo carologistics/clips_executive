@@ -17,6 +17,7 @@
   <depend>pluginlib</depend>
   <depend>protobuf</depend>
   <depend>protobuf_comm</depend>
+  <depend>python3-jinja2</depend>
 
 
   <export>

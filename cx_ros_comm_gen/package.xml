@@ -10,6 +10,7 @@
 
   <license>Apache License 2.0</license>
 
+  <depend>python3-jinja2</depend>
   <buildtool_depend>ament_cmake</buildtool_depend>
   <exec_depend>python3</exec_depend>
 
