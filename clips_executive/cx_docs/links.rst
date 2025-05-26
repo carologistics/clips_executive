@@ -8,6 +8,8 @@
 .. _proto2: https://protobuf.dev/programming-guides/proto2/
 .. _lifecycle: https://design.ros2.org/articles/node_lifecycle.html
 .. _clipsmm: https://github.com/fawkesrobotics/clipsmm
+.. _Stable Baselines3: https://stable-baselines3.readthedocs.io/en/master/modules/ppo.html
+.. _Gymnasium: https://gymnasium.farama.org/index.html
 
 .. |CX| replace:: ROS2 CLIPS-Executive
 .. |APG| replace:: `Advanced Programming Guide (PDF)`_
