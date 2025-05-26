@@ -17,6 +17,7 @@ macro(_cx_generate_linked_protobuf_plugin_base name lib PROTO_FILES)
 
   find_package(Python3 REQUIRED COMPONENTS Interpreter)
   find_package(Protobuf)
+  find_package(ProtobufComm)
   find_package(ament_cmake REQUIRED)
   find_package(cx_protobuf_plugin REQUIRED)
   find_package(pluginlib REQUIRED)

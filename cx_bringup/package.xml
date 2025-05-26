@@ -15,6 +15,7 @@
 
   <depend>cx_protobuf_plugin</depend>
   <depend>cx_ros_comm_gen</depend>
+  <depend>example_interfaces</depend>
   <depend>pkg-config</depend>
 
   <exec_depend>launch_ros</exec_depend>
