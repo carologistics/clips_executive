@@ -51,6 +51,22 @@
               (allowed-values TRAINING EXECUTION))
 )
 
+(deftemplate rl-observable-object
+  (slot name (type SYMBOL))
+  (slot type (type SYMBOL))
+)
+
+(deftemplate rl-observable-predicate
+  (slot name (type SYMBOL))
+  (multislot param-names (type SYMBOL))
+  (multislot param-types (type SYMBOL))
+)
+
+(deftemplate rl-predefined-observable
+  (slot name (type SYMBOL))
+  (multislot params (type SYMBOL))
+)
+
 (deftemplate robot-waiting
   (slot robot (type SYMBOL))
 )
@@ -75,7 +91,7 @@
 
 (defrule rl-action-select
   (declare (salience ?*SALIENCE-RL-SELECTION*))
-  (rl-mode (mode TRAINING|EVALUATION))
+  (rl-mode (mode TRAINING))
 	(rl-action-selection (actionid ?a))
 	?next-action <- (rl-action (id ?a) (is-selected FALSE) (is-finished FALSE) (assigned-to ?robot))
   ?rw <- (robot-waiting (robot ?robot))
@@ -90,7 +106,7 @@
 
 (defrule rl-action-finished
   (declare (salience ?*SALIENCE-RL-SELECTION*))
-  (rl-mode (mode TRAINING|EVALUATION))
+  (rl-mode (mode TRAINING))
 	?r <- (rl-action-selection (actionid ?actionid))
 	?a <- (rl-action (id ?actionid) (is-finished TRUE) (points ?points))
 	=>
@@ -102,7 +118,7 @@
 
 (defrule rl-action-finished-episode-end
   (declare (salience (+ ?*SALIENCE-RL-SELECTION* 1)))
-  (rl-mode (mode TRAINING|EVALUATION))
+  (rl-mode (mode TRAINING))
 	?r <- (rl-action-selection (actionid ?actionid))
 	?a <- (rl-action (id ?actionid) (is-finished TRUE) (points ?points))
   ?e <- (rl-episode-end (success ?success))
@@ -122,7 +138,7 @@
 
 (defrule domain-game-finished-failure
   (declare (salience ?*SALIENCE-RL-EPISODE-END-FAILURE*))
-  (rl-mode (mode TRAINING|EVALUATION))
+  (rl-mode (mode TRAINING))
   (rl-action (is-finished TRUE))
   (not (rl-action (is-selected FALSE)))
   (not (rl-episode-end (success ?success)))
@@ -169,7 +185,7 @@
 )
 
 (defrule rl-action-finished-execution
-  (declare (salience ?*RL-SALIENCE-RL-SELECTION*))
+  (declare (salience ?*SALIENCE-RL-SELECTION*))
   (rl-mode (mode EXECUTION))
   ?a <- (rl-action (is-finished TRUE))
   =>
