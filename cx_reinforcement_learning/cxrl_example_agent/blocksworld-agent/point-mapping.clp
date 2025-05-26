@@ -1,0 +1,5 @@
+(defglobal
+    ?*POINTS-EPISODE-END-FAILURE* = -1
+    ?*POINTS-EPISODE-END-SUCCESS* = 1
+    ?*POINTS-GOAL-STACK* = 0
+)

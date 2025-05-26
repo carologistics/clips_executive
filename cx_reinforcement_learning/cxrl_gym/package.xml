@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>cxrl_gym</name>
+  <version>0.0.0</version>
+  <description>Package containing the base function cxrl_gym providing most gym-functions for reinforcement learning as well as functions for communication with the CX over ROS2 interfaces.</description>
+  <maintainer email="frank.pier@rwth-aachen.de">frankpier</maintainer>
+  <license>GPLv2+ license</license>
+
+  <depend>rclpy</depend>
+  <depend>functools</depend>
+
+  <test_depend>ament_copyright</test_depend>
+  <test_depend>ament_flake8</test_depend>
+  <test_depend>ament_pep257</test_depend>
+  <test_depend>python3-pytest</test_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>
