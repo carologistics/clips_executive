@@ -1,0 +1,31 @@
+cxrl_node/blocksworld_rl_node:
+  ros__parameters:
+    package_dir: "ros2/clips_executive_ws/src/ros2-clips-executive/cx_reinforcement_learning/cxrl_example_agent/cxrl_example_agent/"
+
+    agent_name: "BlocksworldAgent"
+    rl_mode: "TRAINING"
+    number_of_robots: 1
+
+    training:
+      retraining: false
+      max_episodes: 100
+      timesteps: 100000000
+
+    env:
+      entrypoint: "cxrl_example_agent.blocksworld_env:BlocksworldEnv"
+
+    model:
+      learning_rate: 0.0003
+      gamma: 0.99
+      gae_lambda: 0.95
+      ent_coef: 0.0
+      vf_coef: 0.5
+      max_grad_norm: 0.5
+      batch_size: 64
+      n_steps: 10
+      seed: 42
+      verbose: 1
+      wait_for_all_robots: false
+
+    
+    
