@@ -108,7 +108,7 @@ CLIPSEnvManager::CLIPSEnvManager(const rclcpp::NodeOptions &options)
       bond::msg::Constants::DISABLE_HEARTBEAT_TIMEOUT_PARAM, true));
 
   cx::cx_utils::declare_parameter_if_not_declared(this, "bond_heartbeat_period",
-                                                  rclcpp::ParameterValue(0.1));
+                                                  rclcpp::ParameterValue(0.0));
   get_parameter("bond_heartbeat_period", bond_heartbeat_period);
 
   bool autostart_node = false;
