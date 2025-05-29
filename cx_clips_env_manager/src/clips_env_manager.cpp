@@ -124,7 +124,9 @@ CLIPSEnvManager::CLIPSEnvManager(const rclcpp::NodeOptions &options)
 CLIPSEnvManager::~CLIPSEnvManager() {
   {
     std::scoped_lock envs_lock(*(envs_.get_mutex_instance()));
-    envs_.get_obj()->clear();
+    if (envs_.get_obj()) {
+      envs_.get_obj()->clear();
+    }
   }
 }
 
