@@ -1,4 +1,4 @@
-clips_manager:
+/**:
   ros__parameters:
     environments: ["cx_pddl_parser"]
     cx_pddl_parser:

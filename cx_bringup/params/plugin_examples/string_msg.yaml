@@ -1,4 +1,4 @@
-clips_manager:
+/**:
   ros__parameters:
     environments: ["cx_string_msg"]
     cx_string_msg:
