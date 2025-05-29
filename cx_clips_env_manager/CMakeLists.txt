@@ -68,12 +68,6 @@ add_library(${PROJECT_NAME} SHARED ${cx_env_manager_sources})
 ament_target_dependencies(${PROJECT_NAME} ${cx_env_manager_deps})
 target_link_libraries(${PROJECT_NAME} ClipsNS::libclips_ns cx_plugin_manager bondcpp::bondcpp ${bond_TARGETS})
 
-add_executable(clips_node src/clips_node.cpp)
-
-ament_target_dependencies(clips_node ${dependencies})
-target_link_libraries(clips_node ${PROJECT_NAME})
-target_link_libraries(clips_node spdlog::spdlog ClipsNS::libclips_ns)
-
 install(
   DIRECTORY include/
   DESTINATION include/
@@ -82,7 +76,6 @@ install(
 install(TARGETS
   ${PROJECT_NAME}
   cx_plugin_manager
-  clips_node
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION lib/${PROJECT_NAME}
