@@ -26,3 +26,10 @@ A CLIPS rule that calls ClientGoalHandle::get_status() will therefore attempt to
 If a callback is received right before, then the clips environment will stall as the function call is stuck (mutex is held by the callback function), while the callback function is stuck because it tries to acquire the lock for the clips environment (because it wants to pass the callback content to the clips environment).
 
 In these cases special care must be taken, e.g., by deferring CLIPS access out of scope of the mutexes guarding the callbacks.
+
+.. toctree::
+   :maxdepth: 2
+
+   hello_world.rst
+   ros_monitoring.rst
+   writing_a_plugin.rst
