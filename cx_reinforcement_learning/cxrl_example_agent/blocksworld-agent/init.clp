@@ -16,18 +16,29 @@
 	)
 )
 
-(deffunction predefine-observables ()
-	(assert (rl-predefined-observable (name on-table) (params block1)))
-	(assert (rl-predefined-observable (name on-table) (params block2)))
-	(assert (rl-predefined-observable (name on-table) (params block3)))
-)
-
 (deffunction observe-all-objects ()
 	(do-for-all-facts ((?do domain-object))
 		TRUE
 	(assert (rl-observable-object	(name ?do:name) 
 									(type ?do:type)))
 	)
+)
+
+(deffunction predefine-observables ()
+	(assert (rl-predefined-observable (name on-table) (params block1)))
+	(assert (rl-predefined-observable (name on-table) (params block2)))
+	(assert (rl-predefined-observable (name on-table) (params block3)))
+)
+
+(deffunction rl-generate-observations ()
+	(do-for-all-facts ((?df domain-fact))
+			TRUE
+		(assert (rl-observation (name ?df:name) (param-values ?df:param-values)))
+	)
+)
+
+(deffunction add-robot ()
+  (assert (rl-robot (name robot1)))
 )
 
 (deffunction domain-load-local-facts ()
@@ -58,6 +69,7 @@
 	(predefine-observables)
 	(observe-predicates-except-on-table)
 	(observe-all-objects)
+	(add-robot)
 	(assert (domain-facts-loaded))
 )
 

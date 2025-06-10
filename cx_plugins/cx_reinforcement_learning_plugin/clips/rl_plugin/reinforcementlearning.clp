@@ -68,8 +68,18 @@
   (multislot params (type SYMBOL))
 )
 
-(deftemplate robot-waiting
-  (slot robot (type SYMBOL))
+(deftemplate rl-observation
+  (slot name (type SYMBOL))
+  (multislot param-values (type SYMBOL))
+)
+
+(deftemplate rl-robot
+  (slot name (type SYMBOL))
+  (slot waiting (type SYMBOL) (allowed-values TRUE FALSE) (default TRUE))
+)
+
+(deftemplate rl-executability-check
+  (slot state (type SYMBOL) (allowed-values PENDING CHECKING CHECKED) (default PENDING))
 )
 
 (deftemplate rl-action-selection-requested)
@@ -92,22 +102,34 @@
 
 (defrule rl-action-select
   (declare (salience ?*SALIENCE-RL-SELECTION*))
+  ?ec <- (rl-executability-check (state CHECKED))
   (rl-mode (mode TRAINING))
 	(rl-action-selection (actionid ?a))
 	?next-action <- (rl-action (id ?a) (is-selected FALSE) (is-finished FALSE) (assigned-to ?robot))
-  ?rw <- (robot-waiting (robot ?robot))
+  ?rw <- (rl-robot (name ?robot) (waiting TRUE))
 	=>
 	(printout info crlf "CXRL: Selected action " ?a  "for robot " ?robot crlf )
-	(retract ?rw)
+	(modify ?rw (waiting FALSE))
   (modify ?next-action (is-selected TRUE))
   (rl-action-selected-update-actions)
+  (modify ?ec (state PENDING))
   ;(rl-action-selected-update-robots ?robot)
   
 )
 
+(defrule rl-executability-check-before-action-finished
+  (declare (salience ?*SALIENCE-ACTION-EXECUTABLE-CHECK*))
+  (rl-action (is-finished TRUE))
+  ?ec <- (rl-executability-check (state PENDING))
+  =>
+  (modify ?ec (state CHECKING))
+  (rl-action-selected-update-actions)
+
+)
 (defrule rl-action-finished
   (declare (salience ?*SALIENCE-RL-SELECTION*))
   (rl-mode (mode TRAINING))
+  (rl-executability-check (state CHECKED))
 	?r <- (rl-action-selection (actionid ?actionid))
 	?a <- (rl-action (id ?actionid) (is-finished TRUE) (points ?points))
 	=>
@@ -120,6 +142,7 @@
 (defrule rl-action-finished-episode-end
   (declare (salience (+ ?*SALIENCE-RL-SELECTION* 1)))
   (rl-mode (mode TRAINING))
+  (rl-executability-check (state CHECKED))
 	?r <- (rl-action-selection (actionid ?actionid))
 	?a <- (rl-action (id ?actionid) (is-finished TRUE) (points ?points))
   ?e <- (rl-episode-end (success ?success))
@@ -140,6 +163,7 @@
 (defrule domain-game-finished-failure
   (declare (salience ?*SALIENCE-RL-EPISODE-END-FAILURE*))
   (rl-mode (mode TRAINING))
+  (rl-executability-check (state CHECKED))
   (rl-action (is-finished TRUE))
   (not (rl-action (is-selected FALSE)))
   (not (rl-episode-end (success ?success)))
@@ -173,13 +197,13 @@
 	?r <- (rl-action-selection-exec (actionid ?actionid))
   ?re <- (rl-action-selection-requested)
 	?next-action <- (rl-action (id ?actionid) (is-selected FALSE) (assigned-to ?robot))
-  ?rw <- (robot-waiting (robot ?robot))
+  ?rw <- (rl-robot (name ?robot) (waiting TRUE))
 	=>
 	(printout info crlf "CXRL: Selected action " ?actionid  "for robot " ?robot crlf )
 	
 	(retract ?re)
   (retract ?r)
-  (retract ?rw)
+  (modify ?rw (waiting FALSE))
   (modify ?next-action (is-selected TRUE))
   (rl-action-selected-update-actions)
   ;(rl-action-selected-update-robots ?robot)
@@ -196,35 +220,36 @@
 ;================== ROBOT SELECTION ==================
 
 
-(defrule init-robot-waiting
-  (declare (salience ?*SALIENCE-ROBOT-INIT*))
-  (domain-object (name ?robot) (type robot))
-  (not (rl-action (is-selected TRUE) (assigned-to ?robot)))
-  (not (robot-waiting (robot ?robot)))
-  => 
-  (assert (robot-waiting (robot ?robot)))
-)
+;(defrule init-robot-waiting
+;  (declare (salience ?*SALIENCE-ROBOT-INIT*))
+;  (domain-object (name ?robot) (type robot))
+;  (not (rl-action (is-selected TRUE) (assigned-to ?robot)))
+;  (not (robot-waiting (robot ?robot)))
+;  => 
+;  (assert (robot-waiting (robot ?robot)))
+;)
 
 (defrule assign-robot-to-rl-actions
 	" Before checking rl-actions for their executability, pick a waiting robot
   that should get a new action assigned to it next. "
   (declare (salience ?*SALIENCE-ROBOT-ASSIGNMENT*))
+  (rl-executability-check (state CHECKED))
   (rl-action (id ?id) (is-selected FALSE) (assigned-to nil))
-  (robot-waiting (robot ?robot))
+  (rl-robot (name ?robot) (waiting TRUE))
   (not (rl-action (assigned-to ?robot)))
-  (not  (and (robot-waiting (robot ?robot2&:(neq ?robot2 ?robot)))
+  (not  (and (rl-robot (name ?robot2&:(neq ?robot2 ?robot)) (waiting TRUE)) 
             (rl-action (id ?id2) (is-selected FALSE) (assigned-to ?robot2))
         )
   )
   =>
   (bind ?longest-waiting 0)
   (bind ?longest-waiting-robot ?robot)
-  (delayed-do-for-all-facts ((?waiting robot-waiting))
-    TRUE
-    (if (or (eq ?longest-waiting 0) (< (fact-index ?waiting) ?longest-waiting))
+  (delayed-do-for-all-facts ((?rw rl-robot))
+    (eq ?rw:waiting TRUE)
+    (if (or (eq ?longest-waiting 0) (< (fact-index ?rw) ?longest-waiting))
      then
-      (bind ?longest-waiting-robot ?waiting:robot)
-      (bind ?longest-waiting (fact-index ?waiting))
+      (bind ?longest-waiting-robot ?rw:name)
+      (bind ?longest-waiting (fact-index ?rw))
     )
   )
   (delayed-do-for-all-facts ((?a rl-action))
@@ -233,13 +258,14 @@
     (modify ?a (assigned-to ?longest-waiting-robot))
   )
   (retract ?longest-waiting)
-  (assert (robot-waiting (robot ?longest-waiting-robot)))
+  (assert (rl-robot (name ?robot) (waiting TRUE)))
 )
 
 (defrule unassign-robot-from-finished-action
-  (declare (salience ?*SALIENCE-HIGH*))
+  (declare (salience ?*SALIENCE-RL-HIGH*))
   ?a <- (rl-action (is-finished TRUE) (assigned-to ?robot&~nil))
+  ?rw <- (rl-robot (name ?robot) (waiting FALSE))
   =>
   (modify ?a (assigned-to nil))
-  (assert (robot-waiting (robot ?robot)))
+  (modify ?rw (waiting TRUE))
 )

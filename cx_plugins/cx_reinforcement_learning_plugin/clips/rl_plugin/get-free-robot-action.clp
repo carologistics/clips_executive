@@ -45,9 +45,9 @@
     (test (eq ?uuid (cx-rl-interfaces-get-free-robot-server-goal-handle-get-goal-id ?ptr)))
 =>  
     (bind ?robot NONE)
-    (do-for-all-facts ((?rw robot-waiting))
-            TRUE
-        (bind ?r ?rw:robot)
+    (do-for-all-facts ((?rw rl-robot))
+            (eq ?rw:waiting TRUE)
+        (bind ?r ?rw:name)
         (do-for-all-facts ((?a rl-action))
                 (and    (eq ?a:is-selected FALSE)
                         (eq ?a:assigned-to ?r))

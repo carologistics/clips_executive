@@ -12,16 +12,8 @@
     (rl-action-selection-requested)
     (not (rl-action-selection))
 => 
-    (printout info "action selection demand found" crlf)
-    (printout info "Generating observation and list of executable actions" crlf)
-    (bind ?state-string "{")
-
-    (do-for-all-facts ((?df domain-fact))
-            TRUE
-        (bind ?fact-string (str-cat "\"" ?df:name "(" (create-slot-value-string ?df:param-values) ")\","))
-        (bind ?state-string (str-cat ?state-string ?fact-string))
-    )
-    (bind ?state-string (str-cat (sub-string 1 (- (str-length ?state-string) 1) ?state-string) "}"))
+    (printout info "Action selection demand found" crlf)
+    (bind ?state-string (create-observation-string))
 
     (bind ?action-list (create$))
     (do-for-all-facts ((?action rl-action))
