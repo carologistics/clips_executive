@@ -38,7 +38,7 @@
 )
 
 (defrule action-selection-abort
-    (declare (salience ?*SALIENCE-FIRST*))
+    (declare (salience ?*SALIENCE-RL-FIRST*))
     (abort-all-action-selections)
     ?ag <- (cx-rl-interfaces-action-selection-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr))
     ?as <- (rl-action-selection (actionid ?actionid) (uuid ?uuid&:(eq ?uuid (cx-rl-interfaces-action-selection-server-goal-handle-get-goal-id ?ptr))))
