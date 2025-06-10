@@ -214,7 +214,6 @@ class CXRLGym(Env):
             obs_space += values
 
         self.node.get_logger().info("Observation space size: "+str(len(obs_space)))
-        print(obs_space)
         return obs_space
 
     def reset(self, seed: int = None, options: dict[str, any] = None) -> tuple[npt.NDArray[np.float32], dict]:

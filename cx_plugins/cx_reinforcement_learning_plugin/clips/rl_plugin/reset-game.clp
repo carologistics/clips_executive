@@ -29,4 +29,5 @@
   (assert (cx-rl-interfaces-reset-cx-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr)))
   (assert (rl-mode (mode ?mode)))
   (assert (reset-game-finished))
+  (assert (rl-executability-check (state CHECKING)))
 )

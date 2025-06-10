@@ -23,6 +23,29 @@
     (return ?value-string)
 )
 
+(deffunction rl-generate-observations () )
+
+(deffunction rl-delete-observations ()
+    (do-for-all-facts ((?ob rl-observation))
+            TRUE
+        (retract ?ob)
+    )
+)
+
+(deffunction create-observation-string ()
+    (printout info "Generating environment state string" crlf)
+    (rl-generate-observations)
+    (bind ?state-string "{")
+    (do-for-all-facts ((?ob rl-observation))
+            TRUE
+        (bind ?fact-string (str-cat "\"" ?ob:name "(" (create-slot-value-string ?ob:param-values) ")\","))
+        (bind ?state-string (str-cat ?state-string ?fact-string))
+    )
+    (bind ?state-string (str-cat (sub-string 1 (- (str-length ?state-string) 1) ?state-string) "}"))
+    (rl-delete-observations)
+    (return ?state-string)
+)
+
 (defrule all-services-actions-created
     (not (saved-facts))
     (cx-rl-interfaces-set-rl-mode-service)
