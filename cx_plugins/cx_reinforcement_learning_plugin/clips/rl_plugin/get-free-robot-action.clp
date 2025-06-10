@@ -67,7 +67,7 @@
 )
 
 (defrule get-free-robot-abort
-    (declare (salience ?*SALIENCE-FIRST*))
+    (declare (salience ?*SALIENCE-RL-FIRST*))
     (abort-get-free-robot)
     ?ag <- (cx-rl-interfaces-get-free-robot-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr))
     ?gfr <- (get-free-robot (robot ?robot) (last-search ?last) (found ?found) (uuid ?uuid))
