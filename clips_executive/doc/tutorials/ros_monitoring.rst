@@ -48,8 +48,8 @@ Next, two CLIPS files can be downloaded to the ``clips`` directory:
 .. code-block:: bash
 
    cd ~/ros2/cx_tutorial_ws/src/clips_tut_agent/clips
-   wget -O tutlesim_monitor.yaml https://raw.githubusercontent.com/fawkesrobotics/ros2-clips-executive/master/tutorials/clips_tut_agent/clips/turtlesim_monitor.yaml
-   wget -O tutlesim_teleport.yaml https://raw.githubusercontent.com/fawkesrobotics/ros2-clips-executive/master/tutorials/clips_tut_agent/clips/turtlesim_teleport.yaml
+   wget -O tutlesim_monitor.clp https://raw.githubusercontent.com/fawkesrobotics/ros2-clips-executive/master/tutorials/clips_tut_agent/clips/turtlesim_monitor.clp
+   wget -O tutlesim_teleport.clp https://raw.githubusercontent.com/fawkesrobotics/ros2-clips-executive/master/tutorials/clips_tut_agent/clips/turtlesim_teleport.clp
 
 2 Configuring the |CX|
 ^^^^^^^^^^^^^^^^^^^^^^

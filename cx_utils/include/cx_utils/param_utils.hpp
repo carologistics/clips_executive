@@ -36,8 +36,8 @@ void declare_parameter_if_not_declared(
     const rcl_interfaces::msg::ParameterDescriptor &parameter_descriptor =
         rcl_interfaces::msg::ParameterDescriptor()) {
   if (!node->has_parameter(param_name)) {
-    RCLCPP_INFO(rclcpp::get_logger("cx_utils"), "Creating parameter: %s",
-                param_name.c_str());
+    RCLCPP_DEBUG(rclcpp::get_logger("cx_utils"), "Creating parameter: %s",
+                 param_name.c_str());
     node->declare_parameter(param_name, default_value, parameter_descriptor);
   }
 }
@@ -58,8 +58,8 @@ void declare_parameter_if_not_declared(
     const rcl_interfaces::msg::ParameterDescriptor &parameter_descriptor =
         rcl_interfaces::msg::ParameterDescriptor()) {
   if (!node->has_parameter(param_name)) {
-    RCLCPP_INFO(rclcpp::get_logger("cx_utils"), "Creating parameter: %s",
-                param_name.c_str());
+    RCLCPP_DEBUG(rclcpp::get_logger("cx_utils"), "Creating parameter: %s",
+                 param_name.c_str());
     node->declare_parameter(param_name, param_type, parameter_descriptor);
   }
 }
