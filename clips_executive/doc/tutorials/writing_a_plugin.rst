@@ -123,7 +123,6 @@ The ``Tf2PoseTrackerPlugin`` class inherits from ``ClipsPlugin`` base class prov
     #include <vector>
 
     #include "cx_plugin/clips_plugin.hpp"
-    #include "cx_utils/lock_shared_ptr.hpp"
 
     #include <geometry_msgs/msg/transform_stamped.hpp>
     #include <tf2_ros/buffer.h>
@@ -139,8 +138,8 @@ The ``Tf2PoseTrackerPlugin`` class inherits from ``ClipsPlugin`` base class prov
       void initialize() override;
       void finalize() override;
 
-      bool clips_env_init(LockSharedPtr<clips::Environment> &env) override;
-      bool clips_env_destroyed(LockSharedPtr<clips::Environment> &env) override;
+      bool clips_env_init(std::shared_ptr<clips::Environment> &env) override;
+      bool clips_env_destroyed(std::shared_ptr<clips::Environment> &env) override;
 
     private:
       struct PoseTracker {
@@ -166,16 +165,15 @@ The ``Tf2PoseTrackerPlugin`` class inherits from ``ClipsPlugin`` base class prov
 
     #endif // !CX_PLUGINS__TF2POSETRACKER_PLUGIN_HPP_
 
+        As such, it generally should override the functions ``initialize`` and ``finalize``, which are invoked when the plugin is loaded, as well as the function ``clips_env_init`` and ``clips_env_destoyed``, which are called each time a CLIPS environment loads and unloads the plugin.
 
-    As such, it generally should override the functions ``initialize`` and ``finalize``, which are invoked when the plugin is loaded, as well as the function ``clips_env_init`` and ``clips_env_destoyed``, which are called each time a CLIPS environment loads and unloads the plugin.
+.. code-block:: cpp
 
-    .. code-block:: cpp
+  void initialize() override;
+  void finalize() override;
 
-          void initialize() override;
-          void finalize() override;
-
-          bool clips_env_init(LockSharedPtr<clips::Environment> &env) override;
-          bool clips_env_destroyed(LockSharedPtr<clips::Environment> &env) override;
+  bool clips_env_init(std::shared_ptr<clips::Environment> &env) override;
+  bool clips_env_destroyed(std::shared_ptr<clips::Environment> &env) override;
 
 Also, it defines some data types and structures to access ``tf2`` transforms and ROS timers for periodic callbacks. The ``PoseTracker`` struct bundles a ROS timer with a managed CLIPS fact storing the last updated transform, as well as the belonging CLIPS environment.
 
@@ -286,13 +284,13 @@ Here, a fact template is declared and two user-defined functions (UDFs) are prov
 .. code-block:: cpp
 
     bool Tf2PoseTrackerPlugin::clips_env_init(
-        LockSharedPtr<clips::Environment> &env) {
-      auto context = CLIPSEnvContext::get_context(env.get_obj().get());
+        std::shared_ptr<clips::Environment> &env) {
+      auto context = CLIPSEnvContext::get_context(env.get());
       RCLCPP_DEBUG(*logger_, "Initializing plugin for environment %s",
                    context->env_name_.c_str());
 
       // define fact template
-      clips::Build(env.get_obj().get(), "(deftemplate tf2-tracked-pose \
+      clips::Build(env.get(), "(deftemplate tf2-tracked-pose \
                 (slot parent (type STRING)) \
                 (slot child (type STRING)) \
                 (slot stamp (type FLOAT)) \
@@ -303,7 +301,7 @@ Here, a fact template is declared and two user-defined functions (UDFs) are prov
 
       // user defined functions
       clips::AddUDF(
-          env.get_obj().get(), "tf2-start-periodic-lookup", "b", 3, 3, ";sy;sy;d",
+          env.get(), "tf2-start-periodic-lookup", "b", 3, 3, ";sy;sy;d",
           [](clips::Environment *env, clips::UDFContext *udfc,
              clips::UDFValue *out) {
             auto *instance = static_cast<Tf2PoseTrackerPlugin *>(udfc->context);
@@ -327,7 +325,7 @@ Here, a fact template is declared and two user-defined functions (UDFs) are prov
           "tf2_start_periodic_lookup", this);
 
       clips::AddUDF(
-          env.get_obj().get(), "tf2-stop-periodic-lookup", "b", 1, 1, ";e",
+          env.get(), "tf2-stop-periodic-lookup", "b", 1, 1, ";e",
           [](clips::Environment *env, clips::UDFContext *udfc,
              clips::UDFValue *out) {
             auto *instance = static_cast<Tf2PoseTrackerPlugin *>(udfc->context);
@@ -344,42 +342,43 @@ Here, a fact template is declared and two user-defined functions (UDFs) are prov
       return true;
     }
 
-6.1 Accessing CLIPS Environments Safely
-.......................................
-
-Importantly, the environment is provided wrapped in a ``LockSharedPtr``, wich holds both a shared pointer and a mutex. CLIPS is not thread-safe, hence interactions with CLIPS need to be guarded whenever asynchronous access happens (and must not be guarded if it happens within the main context, where the lock is already acquired).
-
-In short, locking the mutex associated with a CLIPS environment is only needed, once asynchronous operations want to interact with it.
-
-In particular, the environment is already guarded by the mutex when entering ``clips_env_init()`` (invoked by the environment manager node), and it is safe to directly interact with the provided environment in this scope.
-
-6.2 Access to Environment Context
+6.1 Access to Environment Context
 .................................
 
 The function starts with a simple debugging statement that utilizes the plugins ROS logger to print for which environment the plugin is initialized. This requires accessing the context stored in each environment managed by the |CX|, as this is where custom data, such as the user-assigned name of each environment, is stored.
 
 .. code-block::
 
-      auto context = CLIPSEnvContext::get_context(env.get_obj().get());
+      auto context = CLIPSEnvContext::get_context(env.get());
       RCLCPP_DEBUG(*logger_, "Initializing plugin for environment %s",
-                  context->env_name_.c_str());
+                   context->env_name_.c_str());
+
+6.1 CLIPS Environments and Threading
+....................................
+
+CLIPS is not thread-safe, hence interactions with CLIPS need to be guarded from concurrent access.
+
+The environment is already guarded by the mutex when entering ``clips_env_init()`` (invoked by the environment manager node), and it is safe to directly interact with the provided environment in this scope. The smae holds true for ``clips_env_destroyed()``.
+
+The mutex belonging to a CLIPS environment is stored on the heap inside of the environment context (via the member ``context->env_mtx_``).
+
 
 6.3 Constructs via Build Function
 .................................
 
-Next, the ``Build`` function is used to construct a deftemplate for the environment from a string representation.
+The ``Build`` function is used to construct a deftemplate for the environment from a string representation. This template is used to store the information obtained from transform lookups.
 
 .. code-block:: cpp
 
-      // define fact template
-      clips::Build(env.get_obj().get(), "(deftemplate tf2-tracked-pose \
-                (slot parent (type STRING)) \
-                (slot child (type STRING)) \
-                (slot stamp (type FLOAT)) \
-                (multislot translation (type FLOAT) (cardinality 3 3)) \
-                (multislot rotation (type FLOAT) (cardinality 4 4)) \
-                (slot timer (type EXTERNAL-ADDRESS)) \
-    )");
+  // define fact template
+  clips::Build(env.get(), "(deftemplate tf2-tracked-pose \
+            (slot parent (type STRING)) \
+            (slot child (type STRING)) \
+            (slot stamp (type FLOAT)) \
+            (multislot translation (type FLOAT) (cardinality 3 3)) \
+            (multislot rotation (type FLOAT) (cardinality 4 4)) \
+            (slot timer (type EXTERNAL-ADDRESS)) \
+)");
 
 
 6.4 User-Defined Functions
@@ -399,30 +398,30 @@ The corresponding ``AddUDF`` call needs the following arguments:
 
 .. code-block:: cpp
 
-      // user defined functions
-      clips::AddUDF(
-          env.get_obj().get(), "tf2-start-periodic-lookup", "b", 3, 3, ";sy;sy;d",
-          [](clips::Environment *env, clips::UDFContext *udfc,
-             clips::UDFValue *out) {
-            auto *instance = static_cast<Tf2PoseTrackerPlugin *>(udfc->context);
-            clips::UDFValue parent, child, freq;
-            using namespace clips;
-            clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &parent);
-            clips::UDFNthArgument(udfc, 2, LEXEME_BITS, &child);
-            clips::UDFNthArgument(udfc, 3, NUMBER_BITS, &freq);
+  // user defined functions
+  clips::AddUDF(
+      env.get(), "tf2-start-periodic-lookup", "b", 3, 3, ";sy;sy;d",
+      [](clips::Environment *env, clips::UDFContext *udfc,
+         clips::UDFValue *out) {
+        auto *instance = static_cast<Tf2PoseTrackerPlugin *>(udfc->context);
+        clips::UDFValue parent, child, freq;
+        using namespace clips;
+        clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &parent);
+        clips::UDFNthArgument(udfc, 2, LEXEME_BITS, &child);
+        clips::UDFNthArgument(udfc, 3, NUMBER_BITS, &freq);
 
-            try {
-              instance->start_periodic_lookup(env, parent.lexemeValue->contents,
-                                              child.lexemeValue->contents,
-                                              freq.floatValue->contents);
-              out->lexemeValue = clips::CreateBoolean(env, true);
-            } catch (std::exception &e) {
-              RCLCPP_ERROR(*instance->logger_, "Failed to create pose updater: %s",
-                           e.what());
-              out->lexemeValue = clips::CreateBoolean(env, false);
-            }
-          },
-          "tf2_start_periodic_lookup", this);
+        try {
+          instance->start_periodic_lookup(env, parent.lexemeValue->contents,
+                                          child.lexemeValue->contents,
+                                          freq.floatValue->contents);
+          out->lexemeValue = clips::CreateBoolean(env, true);
+        } catch (std::exception &e) {
+          RCLCPP_ERROR(*instance->logger_, "Failed to create pose updater: %s",
+                       e.what());
+          out->lexemeValue = clips::CreateBoolean(env, false);
+        }
+      },
+      "tf2_start_periodic_lookup", this);
 
 Inside of the lambda function, the first step is to reconstruct the passed context via casting the held void reference to the appropriate type:
 
@@ -468,7 +467,7 @@ The second UDF is populated in much of the same way, this time taking an externa
 .. code-block:: cpp
 
   clips::AddUDF(
-      env.get_obj().get(), "tf2-stop-periodic-lookup", "b", 1, 1, ";e",
+      env.get(), "tf2-stop-periodic-lookup", "b", 1, 1, ";e",
       [](clips::Environment *env, clips::UDFContext *udfc,
          clips::UDFValue *out) {
         auto *instance = static_cast<Tf2PoseTrackerPlugin *>(udfc->context);
@@ -512,8 +511,7 @@ THe start_periodic_lookup function is responsible for creating a ROS timer that 
 
               // safely access CLIPS environment
               auto context = CLIPSEnvContext::get_context(env);
-              cx::LockSharedPtr<clips::Environment> &clips = context->env_lock_ptr_;
-              std::scoped_lock clips_lock{*clips.get_mutex_instance()};
+              std::scoped_lock clips_lock{context->env_mtx_};
 
               // update exisiting fact or create new one
               bool fact_exists = clips::FactExistp(pose_tracker->pose_fact);
@@ -540,11 +538,10 @@ THe start_periodic_lookup function is responsible for creating a ROS timer that 
                 clips::FBPutSlotMultifield(
                     fact_builder, "translation",
                     clips::StringToMultifield(
-                        clips.get_obj().get(),
-                        std::format("{} {} {}", tf.transform.translation.x,
-                                    tf.transform.translation.y,
-                                    tf.transform.translation.z)
-                            .c_str()));
+                        env, std::format("{} {} {}", tf.transform.translation.x,
+                                         tf.transform.translation.y,
+                                         tf.transform.translation.z)
+                                 .c_str()));
                 clips::FBPutSlotMultifield(
                     fact_builder, "rotation",
                     clips::StringToMultifield(
@@ -604,10 +601,9 @@ In order to obtain the required mutex, the environment context is retrieved. The
 
 .. code-block:: cpp
 
-              // safely access CLIPS environment
-              auto context = CLIPSEnvContext::get_context(env);
-              cx::LockSharedPtr<clips::Environment> &clips = context->env_lock_ptr_;
-              std::scoped_lock clips_lock{*clips.get_mutex_instance()};
+          // safely access CLIPS environment
+          auto context = CLIPSEnvContext::get_context(env);
+          std::scoped_lock clips_lock{context->env_mtx_};
 
 7.2 Creating and Modifying Facts
 ................................
@@ -636,64 +632,64 @@ The ``timer`` slot is used to also hand a reference to the pose tracker object m
 
 .. code-block:: cpp
 
-                // New fact needed, build and retain it
-                clips::FactBuilder *fact_builder =
-                    clips::CreateFactBuilder(env, "tf2-tracked-pose");
-                clips::FBPutSlotCLIPSExternalAddress(
-                    fact_builder, "timer",
-                    clips::CreateCExternalAddress(env, pose_tracker.get()));
-                clips::FBPutSlotString(fact_builder, "parent", parent.c_str());
-                clips::FBPutSlotString(fact_builder, "child", child.c_str());
-                clips::FBPutSlotFloat(fact_builder, "stamp", stamp_sec);
-                clips::FBPutSlotMultifield(
-                    fact_builder, "translation",
-                    clips::StringToMultifield(
-                        clips.get_obj().get(),
-                        std::format("{} {} {}", tf.transform.translation.x,
-                                    tf.transform.translation.y,
-                                    tf.transform.translation.z)
-                            .c_str()));
-                clips::FBPutSlotMultifield(
-                    fact_builder, "rotation",
-                    clips::StringToMultifield(
-                        env, std::format("{} {} {} {}", tf.transform.rotation.x,
-                                         tf.transform.rotation.y,
-                                         tf.transform.rotation.z,
-                                         tf.transform.rotation.w)
-                                 .c_str()));
-                pose_tracker->pose_fact = clips::FBAssert(fact_builder);
-                clips::RetainFact(pose_tracker->pose_fact);
-                clips::FBDispose(fact_builder);
+            // New fact needed, build and retain it
+            clips::FactBuilder *fact_builder =
+                clips::CreateFactBuilder(env, "tf2-tracked-pose");
+            clips::FBPutSlotCLIPSExternalAddress(
+                fact_builder, "timer",
+                clips::CreateCExternalAddress(env, pose_tracker.get()));
+            clips::FBPutSlotString(fact_builder, "parent", parent.c_str());
+            clips::FBPutSlotString(fact_builder, "child", child.c_str());
+            clips::FBPutSlotFloat(fact_builder, "stamp", stamp_sec);
+            clips::FBPutSlotMultifield(
+                fact_builder, "translation",
+                clips::StringToMultifield(
+                    env, std::format("{} {} {}", tf.transform.translation.x,
+                                     tf.transform.translation.y,
+                                     tf.transform.translation.z)
+                             .c_str()));
+            clips::FBPutSlotMultifield(
+                fact_builder, "rotation",
+                clips::StringToMultifield(
+                    env, std::format("{} {} {} {}", tf.transform.rotation.x,
+                                     tf.transform.rotation.y,
+                                     tf.transform.rotation.z,
+                                     tf.transform.rotation.w)
+                             .c_str()));
+            pose_tracker->pose_fact = clips::FBAssert(fact_builder);
+            clips::RetainFact(pose_tracker->pose_fact);
+            clips::FBDispose(fact_builder);
 
 
 Similarly, if the last remembered fact still exists, the FactModifier API is used. Additionally, the old fact reference is released to mark it for garbage collection and the new reference is retained.
 
 .. code-block:: cpp
 
-                // the fact exists and can can be modified
-                clips::ReleaseFact(pose_tracker->pose_fact);
-                clips::FactModifier *fact_modifier =
-                    clips::CreateFactModifier(env, pose_tracker->pose_fact);
-                clips::FMPutSlotFloat(fact_modifier, "stamp", stamp_sec);
-                clips::FMPutSlotMultifield(
-                    fact_modifier, "translation",
-                    clips::StringToMultifield(
-                        env, std::format("{} {} {}", tf.transform.translation.x,
-                                         tf.transform.translation.y,
-                                         tf.transform.translation.z)
-                                 .c_str()));
-                clips::FMPutSlotMultifield(
-                    fact_modifier, "rotation",
-                    clips::StringToMultifield(
-                        env, std::format("{} {} {} {}", tf.transform.rotation.x,
-                                         tf.transform.rotation.y,
-                                         tf.transform.rotation.z,
-                                         tf.transform.rotation.w)
-                                 .c_str()));
-                pose_tracker->pose_fact = clips::FMModify(fact_modifier);
-                clips::RetainFact(pose_tracker->pose_fact);
-                clips::FMDispose(fact_modifier);
-              }
+          } else {
+            // the fact exists and can can be modified
+            clips::ReleaseFact(pose_tracker->pose_fact);
+            clips::FactModifier *fact_modifier =
+                clips::CreateFactModifier(env, pose_tracker->pose_fact);
+            clips::FMPutSlotFloat(fact_modifier, "stamp", stamp_sec);
+            clips::FMPutSlotMultifield(
+                fact_modifier, "translation",
+                clips::StringToMultifield(
+                    env, std::format("{} {} {}", tf.transform.translation.x,
+                                     tf.transform.translation.y,
+                                     tf.transform.translation.z)
+                             .c_str()));
+            clips::FMPutSlotMultifield(
+                fact_modifier, "rotation",
+                clips::StringToMultifield(
+                    env, std::format("{} {} {} {}", tf.transform.rotation.x,
+                                     tf.transform.rotation.y,
+                                     tf.transform.rotation.z,
+                                     tf.transform.rotation.w)
+                             .c_str()));
+            pose_tracker->pose_fact = clips::FMModify(fact_modifier);
+            clips::RetainFact(pose_tracker->pose_fact);
+            clips::FMDispose(fact_modifier);
+          }
 
 This concludes the callback function of the pose tracker, which then is stored to a vector to manage it's lifetime, completing the task to to create a pose tracker.
 
