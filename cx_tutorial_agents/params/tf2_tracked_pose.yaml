@@ -16,5 +16,5 @@
 
     files:
       plugin: "cx::FileLoadPlugin"
-      pkg_share_dirs: ["clips_tut_agent"]
+      pkg_share_dirs: ["cx_tutorial_agents"]
       load: ["clips/tf2_tracked_pose.clp"]

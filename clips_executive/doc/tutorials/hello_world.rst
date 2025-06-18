@@ -42,13 +42,13 @@ Next, you will create a package that will be popuated with CLIPS code:
 
 .. code-block:: bash
 
-    ros2 pkg create --build-type ament_cmake --license Apache-2.0 clips_tut_agent --dependencies cx_bringup
+    ros2 pkg create --build-type ament_cmake --license Apache-2.0 cx_tutorial_agents --dependencies cx_bringup
 
 In particular, let us create directories params and clips to host configuraion files and CLIPS soiurce code:
 
 .. code-block:: bash
 
-    mkdir -p ~/ros2/cx_tutorial_ws/src/clips_tut_agent/{params,clips}
+    mkdir -p ~/ros2/cx_tutorial_ws/src/cx_tutorial_agents/{params,clips}
 
 2 Install Directories via CMake
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -64,7 +64,7 @@ The full ``CMakelists.txt`` should look like this (after removing some unecessar
 .. code-block:: cmake
 
     cmake_minimum_required(VERSION 3.8)
-    project(clips_tut_agent)
+    project(cx_tutorial_agents)
 
     if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
       add_compile_options(-Wall -Wextra -Wpedantic)
@@ -86,8 +86,8 @@ Navigate to the ``clips`` directory and download the example CLIPS file using th
 
 .. code-block:: bash
 
-   cd ~/ros2/cx_tutorial_ws/src/clips_tut_agent/clips
-    wget -O hello_world.clp https://raw.githubusercontent.com/fawkesrobotics/ros2-clips-executive/master/tutorials/clips_tut_agent/clips/hello_world.clp
+   cd ~/ros2/cx_tutorial_ws/src/cx_tutorial_agents/clips
+    wget -O hello_world.clp https://raw.githubusercontent.com/fawkesrobotics/ros2-clips-executive/master/tutorials/cx_tutorial_agents/clips/hello_world.clp
 
 This adds the file ``hello_world.clp``, containing a simple rule that prints out `hello world` when it is fired:
 
@@ -110,8 +110,8 @@ To achieve  this, navigate to the ``params`` directory and download the example 
 
 .. code-block:: bash
 
-   cd ~/ros2/cx_tutorial_ws/src/clips_tut_agent/params
-   wget -O hello_world.yaml https://raw.githubusercontent.com/fawkesrobotics/ros2-clips-executive/master/tutorials/clips_tut_agent/params/hello_world.yaml
+   cd ~/ros2/cx_tutorial_ws/src/cx_tutorial_agents/params
+   wget -O hello_world.yaml https://raw.githubusercontent.com/fawkesrobotics/ros2-clips-executive/master/tutorials/cx_tutorial_agents/params/hello_world.yaml
 
 This adds the file ``hello_world.yaml`` with the following content:
 
@@ -128,7 +128,7 @@ This adds the file ``hello_world.yaml`` with the following content:
 
       files:
         plugin: "cx::FileLoadPlugin"
-        pkg_share_dirs: ["clips_tut_agent"]
+        pkg_share_dirs: ["cx_tutorial_agents"]
         load: ["clips/hello_world.clp"]
 
 The top of the file specifies the ROS node(s) for which the parameters below it applies. Here you can use a placeholder ``/**`` that matches to any node name regardless of the namespace.
@@ -160,7 +160,7 @@ The :docsite:`FileLoadPlugin <clips_executive/plugins/file_load_plugin>`, which 
 .. code-block:: yaml
       files:
         plugin: "cx::FileLoadPlugin"
-        pkg_share_dirs: ["clips_tut_agent"]
+        pkg_share_dirs: ["cx_tutorial_agents"]
         load: ["clips/hello_world.clp"]
 
 This concludes the setup for the example. The next step is to build and execute the code.
@@ -182,13 +182,13 @@ In order to run the code you can run the ``cx_node`` directly and passing the pa
 .. code-block:: bash
 
    cd ~/ros2/cx_tutorial_ws/
-   ros2 run cx_clips_env_manager cx_node  --ros-args --params-file src/clips_tut_agent/yaml/hello_world.yaml
+   ros2 run cx_clips_env_manager cx_node  --ros-args --params-file src/cx_tutorial_agents/yaml/hello_world.yaml
 
 Alternatively, you can use the launch file of the ``cx_bringup`` package, with the benefit of leveraging the ament index in order to lookup the location of the parameter file instead of relying on a full path:
 
 .. code-block:: bash
 
-   ros2 launch cx_bringup cx_launch.py manager_config:=hello_world.yaml package:=clips_tut_agent
+   ros2 launch cx_bringup cx_launch.py manager_config:=hello_world.yaml package:=cx_tutorial_agents
 
 In either case, you will see in the log output that the rule was indeed fired:
 
