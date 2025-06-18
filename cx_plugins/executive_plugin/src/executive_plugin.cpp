@@ -18,6 +18,7 @@
 
 #include <ament_index_cpp/get_package_share_directory.hpp>
 
+#include "cx_utils/clips_env_context.hpp"
 #include <cx_utils/param_utils.hpp>
 
 // To export as plugin
@@ -77,14 +78,16 @@ void ExecutivePlugin::initialize() {
   agenda_refresh_timer_ = node->create_wall_timer(publish_rate_, [this]() {
     std::scoped_lock<std::mutex> set_guard(envs_mutex_);
     for (auto &env : managed_envs) {
-      std::scoped_lock<std::mutex> env_guard(*(env.get_mutex_instance()));
+
+      auto context = CLIPSEnvContext::get_context(env);
+      std::scoped_lock<std::mutex> env_guard(context->env_mtx_);
 
       if (assert_time_) {
-        clips::AssertString(env.get_obj().get(), "(time (now))");
+        clips::AssertString(env.get(), "(time (now))");
       }
 
-      clips::RefreshAllAgendas(env.get_obj().get());
-      clips::Run(env.get_obj().get(), -1);
+      clips::RefreshAllAgendas(env.get());
+      clips::Run(env.get(), -1);
     }
     if (publish_on_refresh_) {
       clips_agenda_refresh_pub_->publish(std_msgs::msg::Empty());
@@ -96,13 +99,13 @@ std::shared_ptr<rclcpp_lifecycle::LifecycleNode> ExecutivePlugin::get_node() {
   return parent_.lock();
 }
 
-bool ExecutivePlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
+bool ExecutivePlugin::clips_env_init(std::shared_ptr<clips::Environment> &env) {
   if (publish_on_refresh_) {
     clips_agenda_refresh_pub_->on_activate();
   }
   {
     clips::AddUDF(
-        env.get_obj().get(), "now", "d", 0, 0, NULL,
+        env.get(), "now", "d", 0, 0, NULL,
         [](clips::Environment *env, clips::UDFContext *udfc,
            clips::UDFValue *out) {
           ExecutivePlugin *instance =
@@ -114,7 +117,7 @@ bool ExecutivePlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
         "clips_now", this);
 
     clips::AddUDF(
-        env.get_obj().get(), "now-systime", "d", 0, 0, NULL,
+        env.get(), "now-systime", "d", 0, 0, NULL,
         [](clips::Environment *env, clips::UDFContext * /*udfc*/,
            clips::UDFValue *out) {
           using namespace std::chrono;
@@ -127,7 +130,7 @@ bool ExecutivePlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
     std::vector<std::string> files{plugin_path_ +
                                    "/clips/cx_executive_plugin/time.clp"};
     for (const auto &f : files) {
-      if (!clips::BatchStar(env.get_obj().get(), f.c_str())) {
+      if (!clips::BatchStar(env.get(), f.c_str())) {
         RCLCPP_ERROR(*logger_,
                      "Failed to initialize CLIPS environment, "
                      "batch file '%s' failed!, aborting...",
@@ -144,20 +147,19 @@ bool ExecutivePlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
 }
 
 bool ExecutivePlugin::clips_env_destroyed(
-    LockSharedPtr<clips::Environment> &env) {
+    std::shared_ptr<clips::Environment> &env) {
   {
-    clips::RemoveUDF(env.get_obj().get(), "now");
-    clips::RemoveUDF(env.get_obj().get(), "now-systime");
+    clips::RemoveUDF(env.get(), "now");
+    clips::RemoveUDF(env.get(), "now-systime");
 
-    clips::Defrule *curr_rule =
-        clips::FindDefrule(env.get_obj().get(), "time-retract");
+    clips::Defrule *curr_rule = clips::FindDefrule(env.get(), "time-retract");
     if (curr_rule) {
-      clips::Undefrule(curr_rule, env.get_obj().get());
+      clips::Undefrule(curr_rule, env.get());
     }
     clips::Defglobal *curr_glob =
-        clips::FindDefglobal(env.get_obj().get(), "*PRIORITY-TIME-RETRACT*");
+        clips::FindDefglobal(env.get(), "*PRIORITY-TIME-RETRACT*");
     if (curr_glob) {
-      clips::Undefglobal(curr_glob, env.get_obj().get());
+      clips::Undefglobal(curr_glob, env.get());
     }
   }
 
@@ -165,8 +167,8 @@ bool ExecutivePlugin::clips_env_destroyed(
     std::scoped_lock envs_guard(envs_mutex_);
     managed_envs.erase(
         std::remove_if(managed_envs.begin(), managed_envs.end(),
-                       [&env](LockSharedPtr<clips::Environment> &obj) {
-                         return obj.get_obj().get() == env.get_obj().get();
+                       [&env](std::shared_ptr<clips::Environment> &obj) {
+                         return obj.get() == env.get();
                        }),
         managed_envs.end());
   }

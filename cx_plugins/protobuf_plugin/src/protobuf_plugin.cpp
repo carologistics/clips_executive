@@ -28,7 +28,6 @@
 #include "cx_protobuf_plugin/protobuf_plugin.hpp"
 
 #include <cx_utils/clips_env_context.hpp>
-#include <cx_utils/lock_shared_ptr.hpp>
 #include <cx_utils/param_utils.hpp>
 
 #include <cx_protobuf_plugin/communicator.hpp>
@@ -67,18 +66,18 @@ void ProtobufPlugin::initialize() {
   }
 }
 
-bool ProtobufPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
+bool ProtobufPlugin::clips_env_init(std::shared_ptr<clips::Environment> &env) {
   RCLCPP_DEBUG(*logger_, "Initializing context for plugin %s",
                plugin_name_.c_str());
-  auto context = CLIPSEnvContext::get_context(env.get_obj().get());
+  auto context = CLIPSEnvContext::get_context(env.get());
   protobuf_communicator_[context->env_name_] =
       std::make_unique<protobuf_clips::ClipsProtobufCommunicator>(
-          env.get_obj().get(), *(env.get_mutex_instance()), paths_, parent_);
+          env.get(), context->env_mtx_, paths_, parent_);
 
   std::vector<std::string> files{plugin_path_ +
                                  "/clips/cx_protobuf_plugin/protobuf.clp"};
   for (const auto &f : files) {
-    if (!clips::BatchStar(env.get_obj().get(), f.c_str())) {
+    if (!clips::BatchStar(env.get(), f.c_str())) {
       RCLCPP_ERROR(*logger_,
                    "Failed to initialize CLIPS environment, "
                    "batch file '%s' failed!, aborting...",
@@ -93,11 +92,11 @@ bool ProtobufPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
 }
 
 bool ProtobufPlugin::clips_env_destroyed(
-    LockSharedPtr<clips::Environment> &env) {
+    std::shared_ptr<clips::Environment> &env) {
 
   RCLCPP_INFO(rclcpp::get_logger(plugin_name_), "Destroying clips context!");
 
-  auto context = CLIPSEnvContext::get_context(env.get_obj().get());
+  auto context = CLIPSEnvContext::get_context(env.get());
   protobuf_communicator_.erase(context->env_name_);
   return true;
 }

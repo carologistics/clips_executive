@@ -64,16 +64,15 @@ void FileLoadPlugin::initialize() {
   }
 }
 
-bool FileLoadPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
-  auto context = CLIPSEnvContext::get_context(env.get_obj().get());
+bool FileLoadPlugin::clips_env_init(std::shared_ptr<clips::Environment> &env) {
+  auto context = CLIPSEnvContext::get_context(env.get());
   RCLCPP_INFO(*logger_, "Initializing plugin for environment %s",
               context->env_name_.c_str());
   for (const auto &f : init_files_) {
 
-    if (clips::EE_NO_ERROR != clips::Eval(env.get_obj().get(),
-                                          std::format("(load* {})", f).c_str(),
-                                          NULL)) {
-      clips::Writeln(env.get_obj().get(),
+    if (clips::EE_NO_ERROR !=
+        clips::Eval(env.get(), std::format("(load* {})", f).c_str(), NULL)) {
+      clips::Writeln(env.get(),
                      std::format("Failed to load file {}", f).c_str());
       RCLCPP_ERROR(*logger_, "Failed to load file '%s' failed!, aborting...",
                    f.c_str());
@@ -82,9 +81,9 @@ bool FileLoadPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
   }
   for (const auto &f : init_batch_files_) {
 
-    if (!clips::BatchStar(env.get_obj().get(), f.c_str())) {
+    if (!clips::BatchStar(env.get(), f.c_str())) {
       clips::Writeln(
-          env.get_obj().get(),
+          env.get(),
           std::format("Failed to initialize bach file {}", f).c_str());
       RCLCPP_ERROR(*logger_,
                    "Failed to initialize"
@@ -97,12 +96,12 @@ bool FileLoadPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
 }
 
 bool FileLoadPlugin::clips_env_destroyed(
-    LockSharedPtr<clips::Environment> &env) {
+    std::shared_ptr<clips::Environment> &env) {
   for (const auto &f : cleanup_files_) {
 
-    if (!clips::BatchStar(env.get_obj().get(), f.c_str())) {
+    if (!clips::BatchStar(env.get(), f.c_str())) {
       clips::Writeln(
-          env.get_obj().get(),
+          env.get(),
           std::format("Failed to initialize bach file {}", f).c_str());
       RCLCPP_ERROR(*logger_,
                    "Failed to initialize"

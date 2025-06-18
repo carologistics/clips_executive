@@ -20,7 +20,6 @@
 #include <string>
 
 #include "cx_plugin/clips_plugin.hpp"
-#include "cx_utils/lock_shared_ptr.hpp"
 #include <yaml-cpp/yaml.h>
 
 #include "rcl_yaml_param_parser/parser.h"
@@ -67,8 +66,8 @@ public:
 
   void initialize() override;
 
-  bool clips_env_init(LockSharedPtr<clips::Environment> &env) override;
-  bool clips_env_destroyed(LockSharedPtr<clips::Environment> &env) override;
+  bool clips_env_init(std::shared_ptr<clips::Environment> &env) override;
+  bool clips_env_destroyed(std::shared_ptr<clips::Environment> &env) override;
 
 private:
   void clips_config_load(clips::Environment *env, const std::string &file,

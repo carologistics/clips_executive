@@ -20,7 +20,6 @@
 #include <rclcpp/rclcpp.hpp>
 #include <spdlog/spdlog.h>
 
-#include "cx_utils/lock_shared_ptr.hpp"
 #include <clips_ns/clips.h>
 
 namespace cx {
@@ -43,10 +42,11 @@ private:
 class CLIPSEnvContext {
 public:
   std::string env_name_;
-  LockSharedPtr<clips::Environment> env_lock_ptr_;
+  std::mutex env_mtx_;
   CLIPSLogger logger_;
 
   static CLIPSEnvContext *get_context(clips::Environment *env);
+  static CLIPSEnvContext *get_context(std::shared_ptr<clips::Environment> &env);
 };
 
 } // namespace cx

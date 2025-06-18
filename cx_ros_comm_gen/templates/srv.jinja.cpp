@@ -26,7 +26,6 @@
 
 #include <cx_plugin/clips_plugin.hpp>
 #include "{{name_snake}}.hpp"
-#include <cx_utils/lock_shared_ptr.hpp>
 #include <cx_utils/clips_env_context.hpp>
 
 // To export as plugin
@@ -80,30 +79,30 @@ void {{name_camel}}::initialize() {
    stop_flag_ = false;
 }
 
-bool {{name_camel}}::clips_env_destroyed(LockSharedPtr<clips::Environment> &env) {
+bool {{name_camel}}::clips_env_destroyed(std::shared_ptr<clips::Environment> &env) {
 
   RCLCPP_DEBUG(*logger_,
               "Destroying clips context!");
   for(const auto& fun : function_names_) {
-     clips::RemoveUDF(env.get_obj().get(), fun.c_str());
+     clips::RemoveUDF(env.get(), fun.c_str());
   }
-  clips::Deftemplate *curr_tmpl = clips::FindDeftemplate(env.get_obj().get(), "{{name_kebab}}-client");
+  clips::Deftemplate *curr_tmpl = clips::FindDeftemplate(env.get(), "{{name_kebab}}-client");
   if(curr_tmpl) {
-    clips::Undeftemplate(curr_tmpl, env.get_obj().get());
+    clips::Undeftemplate(curr_tmpl, env.get());
   } else {
     RCLCPP_WARN(*logger_,
               "{{name_kebab}}-client can not be undefined");
   }
-  curr_tmpl = clips::FindDeftemplate(env.get_obj().get(), "{{name_kebab}}-service");
+  curr_tmpl = clips::FindDeftemplate(env.get(), "{{name_kebab}}-service");
   if(curr_tmpl) {
-    clips::Undeftemplate(curr_tmpl, env.get_obj().get());
+    clips::Undeftemplate(curr_tmpl, env.get());
   } else {
     RCLCPP_WARN(*logger_,
               "{{name_kebab}}-service can not be undefined");
   }
-  curr_tmpl = clips::FindDeftemplate(env.get_obj().get(), "{{name_kebab}}-response");
+  curr_tmpl = clips::FindDeftemplate(env.get(), "{{name_kebab}}-response");
   if(curr_tmpl) {
-    clips::Undeftemplate(curr_tmpl, env.get_obj().get());
+    clips::Undeftemplate(curr_tmpl, env.get());
   } else {
     RCLCPP_WARN(*logger_,
               "{{name_kebab}}-response can not be undefined");
@@ -112,7 +111,7 @@ bool {{name_camel}}::clips_env_destroyed(LockSharedPtr<clips::Environment> &env)
   return true;
 }
 
-bool {{name_camel}}::clips_env_init(LockSharedPtr<clips::Environment> &env) {
+bool {{name_camel}}::clips_env_init(std::shared_ptr<clips::Environment> &env) {
   RCLCPP_DEBUG(*logger_,
               "Initialising context for plugin %s",
               plugin_name_.c_str());
@@ -134,7 +133,7 @@ bool {{name_camel}}::clips_env_init(LockSharedPtr<clips::Environment> &env) {
   fun_name = "{{name_kebab}}-create-service";
   function_names_.insert(fun_name);
   clips::AddUDF(
-    env.get_obj().get(), fun_name.c_str(), "v", 1, 1, ";sy",
+    env.get(), fun_name.c_str(), "v", 1, 1, ";sy",
     [](clips::Environment *env, clips::UDFContext *udfc,
        clips::UDFValue * /*out*/) {
       auto *instance = static_cast<{{name_camel}} *>(udfc->context);
@@ -149,7 +148,7 @@ bool {{name_camel}}::clips_env_init(LockSharedPtr<clips::Environment> &env) {
   fun_name = "{{name_kebab}}-destroy-service";
   function_names_.insert(fun_name);
   clips::AddUDF(
-    env.get_obj().get(), fun_name.c_str(), "v", 1, 1, ";sy",
+    env.get(), fun_name.c_str(), "v", 1, 1, ";sy",
     [](clips::Environment *env, clips::UDFContext *udfc,
        clips::UDFValue * /*out*/) {
       auto *instance = static_cast<{{name_camel}} *>(udfc->context);
@@ -164,7 +163,7 @@ bool {{name_camel}}::clips_env_init(LockSharedPtr<clips::Environment> &env) {
   fun_name = "{{name_kebab}}-create-client";
   function_names_.insert(fun_name);
   clips::AddUDF(
-    env.get_obj().get(), fun_name.c_str(), "v", 1, 1, ";s",
+    env.get(), fun_name.c_str(), "v", 1, 1, ";s",
     [](clips::Environment *env, clips::UDFContext *udfc, clips::UDFValue * /*out*/) {
         auto *instance = static_cast<{{name_camel}} *>(udfc->context);
         clips::UDFValue service_name;
@@ -178,7 +177,7 @@ bool {{name_camel}}::clips_env_init(LockSharedPtr<clips::Environment> &env) {
   fun_name = "{{name_kebab}}-destroy-client";
   function_names_.insert(fun_name);
   clips::AddUDF(
-    env.get_obj().get(), fun_name.c_str(), "v", 1, 1, ";s",
+    env.get(), fun_name.c_str(), "v", 1, 1, ";s",
     [](clips::Environment *env, clips::UDFContext *udfc, clips::UDFValue * /*out*/) {
         auto *instance = static_cast<{{name_camel}} *>(udfc->context);
         clips::UDFValue service_name;
@@ -192,7 +191,7 @@ bool {{name_camel}}::clips_env_init(LockSharedPtr<clips::Environment> &env) {
   fun_name = "{{name_kebab}}-send-request";
   function_names_.insert(fun_name);
   clips::AddUDF(
-    env.get_obj().get(), fun_name.c_str(), "v", 2, 2, ";e;sy",
+    env.get(), fun_name.c_str(), "v", 2, 2, ";e;sy",
     [](clips::Environment *env, clips::UDFContext *udfc,
        clips::UDFValue * /*out*/) {
       auto *instance = static_cast<{{name_camel}} *>(udfc->context);
@@ -207,11 +206,11 @@ bool {{name_camel}}::clips_env_init(LockSharedPtr<clips::Environment> &env) {
 
 
   // add fact templates
-  clips::Build(env.get_obj().get(),"(deftemplate {{name_kebab}}-client \
+  clips::Build(env.get(),"(deftemplate {{name_kebab}}-client \
             (slot service (type STRING)))");
-  clips::Build(env.get_obj().get(),"(deftemplate {{name_kebab}}-service \
+  clips::Build(env.get(),"(deftemplate {{name_kebab}}-service \
             (slot name (type STRING)))");
-  clips::Build(env.get_obj().get(),"(deftemplate {{name_kebab}}-response \
+  clips::Build(env.get(),"(deftemplate {{name_kebab}}-response \
             (slot service (type STRING) ) \
             (slot msg-ptr (type EXTERNAL-ADDRESS)) \
             )");
@@ -243,7 +242,6 @@ void {{name_camel}}::send_request(clips::Environment *env, {{message_type}}::Req
   std::thread([this, req_shared, service_name, env]() {
   auto context = CLIPSEnvContext::get_context(env);
   std::string env_name = context->env_name_;
-  cx::LockSharedPtr<clips::Environment> &clips = context->env_lock_ptr_;
   bool print_warning = true;
   while (!clients_[env_name][service_name]->wait_for_service(1s)) {
     if (stop_flag_ || !rclcpp::ok()) {
@@ -266,10 +264,10 @@ void {{name_camel}}::send_request(clips::Environment *env, {{message_type}}::Req
     resp = future.get();
     responses_.try_emplace(resp.get(), resp);
   }
-   std::lock_guard<std::mutex> guard(*(clips.get_mutex_instance()));
-   clips::FactBuilder *fact_builder = clips::CreateFactBuilder(clips.get_obj().get(), "{{name_kebab}}-response");
+   std::lock_guard<std::mutex> guard(context->env_mtx_);
+   clips::FactBuilder *fact_builder = clips::CreateFactBuilder(env, "{{name_kebab}}-response");
    clips::FBPutSlotString(fact_builder,"service",service_name.c_str());
-   clips::FBPutSlotCLIPSExternalAddress(fact_builder,"msg-ptr", clips::CreateCExternalAddress(clips.get_obj().get(), resp.get()));
+   clips::FBPutSlotCLIPSExternalAddress(fact_builder,"msg-ptr", clips::CreateCExternalAddress(env, resp.get()));
    clips::FBAssert(fact_builder);
    clips::FBDispose(fact_builder);
 
@@ -360,19 +358,18 @@ void {{name_camel}}::service_callback(const std::shared_ptr<{{message_type}}::Re
     clips::Environment *env) {
   auto context = CLIPSEnvContext::get_context(env);
   std::string env_name = context->env_name_;
-  cx::LockSharedPtr<clips::Environment> &clips = context->env_lock_ptr_;
-  std::lock_guard<std::mutex> guard(*(clips.get_mutex_instance()));
+  std::lock_guard<std::mutex> guard(context->env_mtx_);
 
   // call a user-defined function
-  clips::Deffunction *dec_fun = clips::FindDeffunction(clips.get_obj().get(),"{{name_kebab}}-service-callback");
+  clips::Deffunction *dec_fun = clips::FindDeffunction(env,"{{name_kebab}}-service-callback");
   if(!dec_fun) {
     RCLCPP_WARN(*logger_, "{{name_kebab}}-service-callback not defined, skip callback");
     return;
   }
-  clips::FunctionCallBuilder *fcb = clips::CreateFunctionCallBuilder(clips.get_obj().get(),3);
+  clips::FunctionCallBuilder *fcb = clips::CreateFunctionCallBuilder(env,3);
   clips::FCBAppendString(fcb, service_name.c_str());
-  clips::FCBAppendCLIPSExternalAddress(fcb, clips::CreateCExternalAddress(clips.get_obj().get(), request.get()));
-  clips::FCBAppendCLIPSExternalAddress(fcb, clips::CreateCExternalAddress(clips.get_obj().get(), response.get()));
+  clips::FCBAppendCLIPSExternalAddress(fcb, clips::CreateCExternalAddress(env, request.get()));
+  clips::FCBAppendCLIPSExternalAddress(fcb, clips::CreateCExternalAddress(env, response.get()));
   clips::FCBCall(fcb,"{{name_kebab}}-service-callback",NULL);
   clips::FCBDispose(fcb);
 }

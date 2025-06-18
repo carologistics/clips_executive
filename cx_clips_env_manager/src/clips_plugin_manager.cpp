@@ -21,6 +21,7 @@
 #include "cx_clips_env_manager/clips_plugin_manager.hpp"
 
 #include "cx_plugin/clips_plugin.hpp"
+#include "cx_utils/clips_env_context.hpp"
 #include "cx_utils/param_utils.hpp"
 
 #include "lifecycle_msgs/msg/state.hpp"
@@ -36,10 +37,12 @@ ClipsPluginManager::~ClipsPluginManager() {}
 
 void ClipsPluginManager::configure(
     const rclcpp_lifecycle::LifecycleNode::WeakPtr &parent,
-    const std::string &name, LockSharedPtr<EnvsMap> &envs) {
+    const std::string &name, std::shared_ptr<EnvsMap> &envs,
+    std::shared_ptr<std::mutex> &map_mtx) {
   parent_ = parent;
   name_ = name;
   envs_ = envs;
+  map_mtx_ = map_mtx;
   auto node = parent_.lock();
   if (node) {
     RCLCPP_INFO(logger_, "Configuring [%s]...", name_.c_str());
@@ -60,14 +63,14 @@ void ClipsPluginManager::configure(
 }
 
 void ClipsPluginManager::activate() {
-  std::scoped_lock env_lock(*envs_.get_mutex_instance());
-  for (auto &env : *envs_.get_obj().get()) {
+  std::scoped_lock env_lock(*map_mtx_.get());
+  for (auto &env : *envs_.get()) {
     activate_env(env.first, env.second);
   }
 }
 
-void ClipsPluginManager::activate_env(const std::string &env_name,
-                                      LockSharedPtr<clips::Environment> &env) {
+void ClipsPluginManager::activate_env(
+    const std::string &env_name, std::shared_ptr<clips::Environment> &env) {
 
   RCLCPP_INFO(logger_, "Loading plugins for %s.", env_name.c_str());
   std::vector<std::string> plugins;
@@ -82,11 +85,12 @@ void ClipsPluginManager::activate_env(const std::string &env_name,
 
 bool ClipsPluginManager::load_plugin_for_env(
     const std::string &plugin, const std::string &env_name,
-    LockSharedPtr<clips::Environment> &env) {
+    std::shared_ptr<clips::Environment> &env) {
   bool success = false;
   auto node = parent_.lock();
   if (plugins_.contains(plugin)) {
-    std::scoped_lock lock(*env.get_mutex_instance());
+    auto context = CLIPSEnvContext::get_context(env);
+    std::scoped_lock lock(context->env_mtx_);
     success = plugins_[plugin]->clips_env_init(env);
   } else {
     std::string plugin_type;
@@ -102,7 +106,9 @@ bool ClipsPluginManager::load_plugin_for_env(
                 plugin.c_str(), plugin_type.c_str());
     // Insert loaded plugin to the plugins map
     plugins_.insert({plugin, std::move(plugin_instance)});
-    std::scoped_lock lock(*env.get_mutex_instance());
+
+    auto context = CLIPSEnvContext::get_context(env);
+    std::scoped_lock lock(context->env_mtx_);
     success = plugins_[plugin]->clips_env_init(env);
   }
   if (success) {
@@ -113,8 +119,8 @@ bool ClipsPluginManager::load_plugin_for_env(
 
 void ClipsPluginManager::deactivate() {
   {
-    std::scoped_lock env_lock(*envs_.get_mutex_instance());
-    for (auto &env : *envs_.get_obj().get()) {
+    std::scoped_lock env_lock(*map_mtx_.get());
+    for (auto &env : *envs_.get()) {
       deactivate_env(env.first, env.second);
     }
   }
@@ -136,10 +142,11 @@ void ClipsPluginManager::deactivate() {
 }
 
 void ClipsPluginManager::deactivate_env(
-    const std::string &env_name, LockSharedPtr<clips::Environment> &env) {
+    const std::string &env_name, std::shared_ptr<clips::Environment> &env) {
+  auto context = CLIPSEnvContext::get_context(env);
   for (const auto &plugin :
        std::ranges::reverse_view(loaded_plugins_[env_name])) {
-    std::scoped_lock env_lock(*env.get_mutex_instance());
+    std::scoped_lock env_lock(context->env_mtx_);
     plugins_[plugin]->clips_env_destroyed(env);
     RCLCPP_INFO(logger_, "[%s] Deactivated!", plugin.c_str());
   }
@@ -152,9 +159,9 @@ void ClipsPluginManager::load_plugin_cb(
   (void)request_header; // ignoring request id
   std::string env_name = request->env_name;
   std::string plugin_name = request->plugin_name;
-  std::scoped_lock env_lock(*envs_.get_mutex_instance());
+  std::scoped_lock env_lock(*map_mtx_);
   if (envs_->contains(env_name)) {
-    LockSharedPtr<clips::Environment> &clips = envs_->at(env_name);
+    std::shared_ptr<clips::Environment> &clips = envs_->at(env_name);
     response->success = load_plugin_for_env(plugin_name, env_name, clips);
     if (!response->success) {
       response->error = "error while loading plugin";
@@ -173,10 +180,11 @@ void ClipsPluginManager::unload_plugin_cb(
   (void)request_header; // ignoring request id
   std::string env_name = request->env_name;
   std::string plugin_name = request->plugin_name;
-  std::scoped_lock env_lock(*envs_.get_mutex_instance());
+  std::scoped_lock env_lock(*map_mtx_);
   if (envs_->contains(env_name)) {
-    LockSharedPtr<clips::Environment> &clips = envs_->at(env_name);
-    std::scoped_lock lock(*clips.get_mutex_instance());
+    std::shared_ptr<clips::Environment> &clips = envs_->at(env_name);
+    auto context = CLIPSEnvContext::get_context(clips);
+    std::scoped_lock lock(context->env_mtx_);
     auto loaded_elem = std::find(loaded_plugins_[env_name].begin(),
                                  loaded_plugins_[env_name].end(), plugin_name);
     if (plugins_.contains(plugin_name) and
@@ -211,7 +219,7 @@ void ClipsPluginManager::list_plugin_cb(
     response->plugins = plugins;
     return;
   }
-  std::scoped_lock lock(*envs_.get_mutex_instance());
+  std::scoped_lock lock(*map_mtx_);
   if (envs_->contains(env_name)) {
     response->success = true;
     response->plugins = loaded_plugins_[env_name];

@@ -19,7 +19,6 @@
 #include <vector>
 
 #include "cx_plugin/clips_plugin.hpp"
-#include "cx_utils/lock_shared_ptr.hpp"
 
 #include <geometry_msgs/msg/transform_stamped.hpp>
 #include <tf2_ros/buffer.h>
@@ -35,8 +34,8 @@ public:
   void initialize() override;
   void finalize() override;
 
-  bool clips_env_init(LockSharedPtr<clips::Environment> &env) override;
-  bool clips_env_destroyed(LockSharedPtr<clips::Environment> &env) override;
+  bool clips_env_init(std::shared_ptr<clips::Environment> &env) override;
+  bool clips_env_destroyed(std::shared_ptr<clips::Environment> &env) override;
 
 private:
   struct PoseTracker {

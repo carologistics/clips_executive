@@ -155,4 +155,11 @@ CLIPSEnvContext *CLIPSEnvContext::get_context(clips::Environment *env) {
   return (CLIPSEnvContext *)GetEnvironmentData(env, USER_ENVIRONMENT_DATA);
 }
 
+CLIPSEnvContext *
+CLIPSEnvContext::get_context(std::shared_ptr<clips::Environment> &env) {
+  using namespace clips;
+  return (CLIPSEnvContext *)GetEnvironmentData(env.get(),
+                                               USER_ENVIRONMENT_DATA);
+}
+
 } // namespace cx

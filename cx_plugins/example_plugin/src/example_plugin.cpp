@@ -30,16 +30,16 @@ void ExamplePlugin::initialize() {
   logger_ = std::make_unique<rclcpp::Logger>(rclcpp::get_logger(plugin_name_));
 }
 
-bool ExamplePlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
-  auto context = CLIPSEnvContext::get_context(env.get_obj().get());
+bool ExamplePlugin::clips_env_init(std::shared_ptr<clips::Environment> &env) {
+  auto context = CLIPSEnvContext::get_context(env.get());
   RCLCPP_INFO(*logger_, "Initializing plugin for environment %s",
               context->env_name_.c_str());
   return true;
 }
 
 bool ExamplePlugin::clips_env_destroyed(
-    LockSharedPtr<clips::Environment> &env) {
-  auto context = CLIPSEnvContext::get_context(env.get_obj().get());
+    std::shared_ptr<clips::Environment> &env) {
+  auto context = CLIPSEnvContext::get_context(env.get());
   RCLCPP_INFO(*logger_, "Destroying plugin for environment %s",
               context->env_name_.c_str());
   return true;

@@ -27,7 +27,6 @@
 
 #include "cx_pddl_parser_plugin/pddl_parser_plugin.hpp"
 #include "cx_plugin/clips_plugin.hpp"
-#include "cx_utils/lock_shared_ptr.hpp"
 
 #include <cx_utils/clips_env_context.hpp>
 
@@ -45,19 +44,20 @@ void PddlParserPlugin::initialize() {
   logger_ = std::make_unique<rclcpp::Logger>(rclcpp::get_logger(plugin_name_));
 }
 
-bool PddlParserPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
+bool PddlParserPlugin::clips_env_init(
+    std::shared_ptr<clips::Environment> &env) {
   RCLCPP_DEBUG(rclcpp::get_logger(plugin_name_), "Initializing plugin %s",
                plugin_name_.c_str());
-  auto context = CLIPSEnvContext::get_context(env.get_obj().get());
+  auto context = CLIPSEnvContext::get_context(env.get());
   std::string env_name = context->env_name_;
 
   pddl_parsers_[env_name] =
-      std::make_unique<clips_pddl_parser::ClipsPddlParser>(
-          env.get_obj().get(), *(env.get_mutex_instance()));
+      std::make_unique<clips_pddl_parser::ClipsPddlParser>(env.get(),
+                                                           context->env_mtx_);
   std::vector<std::string> files{plugin_path_ +
                                  "/clips/cx_pddl_parser_plugin/domain.clp"};
   for (const auto &f : files) {
-    if (!clips::BatchStar(env.get_obj().get(), f.c_str())) {
+    if (!clips::BatchStar(env.get(), f.c_str())) {
       RCLCPP_ERROR(*logger_,
                    "Failed to initialize CLIPS environment, "
                    "batch file '%s' failed!, aborting...",
@@ -69,8 +69,8 @@ bool PddlParserPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
 }
 
 bool PddlParserPlugin::clips_env_destroyed(
-    LockSharedPtr<clips::Environment> &env) {
-  auto context = CLIPSEnvContext::get_context(env.get_obj().get());
+    std::shared_ptr<clips::Environment> &env) {
+  auto context = CLIPSEnvContext::get_context(env.get());
   std::string env_name = context->env_name_;
 
   RCLCPP_DEBUG(rclcpp::get_logger(plugin_name_), "Destroying clips context!");
