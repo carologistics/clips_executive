@@ -417,7 +417,7 @@ Using the launch file of the ``cx_bringup`` package, you can start the CLIPS env
 
 .. code-block:: bash
 
-    ros2 launch cx_bringup cx_launch.py manager_config:=.yaml package:=clips_tut_agent
+    ros2 launch cx_bringup cx_launch.py manager_config:=turtlesim.yaml package:=clips_tut_agent
 
 Run the turtlesim simulation in a different terminal:
 
