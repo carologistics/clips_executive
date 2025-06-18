@@ -1,0 +1,6 @@
+pddl_msgs/Action action
+---
+bool success
+bool sat
+string error
+string[] unsatisfied_conditions
