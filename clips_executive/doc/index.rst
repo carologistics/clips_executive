@@ -6,6 +6,7 @@ The |CX| offers an integration for CLIPS with the ROS ecosystem for developing k
 
 CLIPS
 +++++
+
 `CLIPS`_ (C Language Integrated Production System) is a rule-based programming language designed for building expert systems. It was developed in the 1980s by NASA to provide a portable, efficient, and easy-to-use environment for developing knowledge-based applications.
 CLIPS uses a production rule system, where knowledge is represented as if-then rules. These rules operate on facts, which represent data or conditions in the system. The inference engine (based on the `Rete algorithm`_) matches rules against facts and executes the applicable rules based on a conflict resolution strategy.
 Once no rules can be activated anymore, the execution is halted.
