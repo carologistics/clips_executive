@@ -1,0 +1,4 @@
+pddl_msgs/Object[] objects
+---
+bool success
+string error
