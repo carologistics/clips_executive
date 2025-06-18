@@ -100,7 +100,8 @@ using namespace std::placeholders;
 
 CLIPSEnvManager::CLIPSEnvManager(const rclcpp::NodeOptions &options)
     : rclcpp_lifecycle::LifecycleNode("clips_manager", options) {
-  envs_.init_mutex();
+  envs_ = std::make_shared<EnvsMap>();
+  map_mtx_ = std::make_shared<std::mutex>();
   RCLCPP_INFO(get_logger(), "Initialising [%s]...", get_name());
   // server side never times out from lifecycle manager
   declare_parameter(bond::msg::Constants::DISABLE_HEARTBEAT_TIMEOUT_PARAM,
@@ -124,9 +125,9 @@ CLIPSEnvManager::CLIPSEnvManager(const rclcpp::NodeOptions &options)
 
 CLIPSEnvManager::~CLIPSEnvManager() {
   {
-    std::scoped_lock envs_lock(*(envs_.get_mutex_instance()));
-    if (envs_.get_obj()) {
-      envs_.get_obj()->clear();
+    std::scoped_lock envs_lock(*map_mtx_);
+    if (envs_.get()) {
+      envs_->clear();
     }
   }
 }
@@ -150,22 +151,17 @@ CallbackReturn CLIPSEnvManager::on_configure(const rclcpp_lifecycle::State &) {
       std::string(get_name()) + "/destroy_env",
       std::bind(&CLIPSEnvManager::destroy_env_callback, this, _1, _2, _3));
 
-  std::shared_ptr<EnvsMap> envs = std::make_shared<EnvsMap>();
-
   auto node = shared_from_this();
   std::vector<std::string> config_envs;
   cx::cx_utils::declare_parameter_if_not_declared(
       node, "environments", rclcpp::ParameterValue(config_envs));
   get_parameter("environments", config_envs);
+  std::scoped_lock envs_lock(*map_mtx_);
   for (const auto &env_name : config_envs) {
-    envs->insert({env_name, new_env(env_name)});
-  }
-  {
-    std::scoped_lock envs_lock(*(envs_.get_mutex_instance()));
-    envs_.set_obj(envs);
+    envs_->insert({env_name, new_env(env_name)});
   }
 
-  plugin_manager_.configure(node, get_name(), envs_);
+  plugin_manager_.configure(node, get_name(), envs_, map_mtx_);
 
   RCLCPP_INFO(get_logger(), "Configured [%s]!", get_name());
 
@@ -178,12 +174,13 @@ CLIPSEnvManager::on_activate(const rclcpp_lifecycle::State &state) {
   (void)state;
   RCLCPP_INFO(get_logger(), "Activating [%s]...", get_name());
   plugin_manager_.activate();
-  std::scoped_lock envs_lock(*(envs_.get_mutex_instance()));
-  for (auto &env : *(envs_.get_obj())) {
-    std::scoped_lock env_lock(*(env.second.get_mutex_instance()));
-    clips::Reset(env.second.get_obj().get());
-    clips::RefreshAllAgendas(env.second.get_obj().get());
-    clips::Run(env.second.get_obj().get(), -1);
+  std::scoped_lock envs_lock(*map_mtx_);
+  for (auto &env : *envs_) {
+    auto context = CLIPSEnvContext::get_context(env.second);
+    std::scoped_lock env_lock(context->env_mtx_);
+    clips::Reset(env.second.get());
+    clips::RefreshAllAgendas(env.second.get());
+    clips::Run(env.second.get(), -1);
   }
   create_bond();
   RCLCPP_INFO(get_logger(), "Activated [%s]...", get_name());
@@ -196,13 +193,15 @@ CLIPSEnvManager::on_deactivate(const rclcpp_lifecycle::State &state) {
   (void)state;
   RCLCPP_INFO(get_logger(), "Deactivating [%s]...", get_name());
   {
-    std::scoped_lock envs_lock(*(envs_.get_mutex_instance()));
-    for (auto &env : *(envs_.get_obj())) {
-      std::scoped_lock env_lock(*(env.second.get_mutex_instance()));
-      clips::AssertString(env.second.get_obj().get(), "(executive-finalize)");
+    std::scoped_lock envs_lock(*map_mtx_);
+    for (auto &env : *envs_) {
 
-      clips::RefreshAllAgendas(env.second.get_obj().get());
-      clips::Run(env.second.get_obj().get(), -1);
+      auto context = CLIPSEnvContext::get_context(env.second);
+      std::scoped_lock env_lock(context->env_mtx_);
+      clips::AssertString(env.second.get(), "(executive-finalize)");
+
+      clips::RefreshAllAgendas(env.second.get());
+      clips::Run(env.second.get(), -1);
     }
   }
   plugin_manager_.deactivate();
@@ -235,9 +234,9 @@ void CLIPSEnvManager::list_envs_callback(
   (void)request_header; // the request header is not used in this callback
   (void)request;        // the request header is not used in this callback
   {
-    std::scoped_lock lock(*envs_.get_mutex_instance());
+    std::scoped_lock lock(*map_mtx_.get());
     auto keys =
-        std::views::keys(*envs_.get_obj()); // keys is a view, lazy-evaluated
+        std::views::keys(*envs_.get()); // keys is a view, lazy-evaluated
 
     // Materialize into a vector
     response->envs = std::vector(keys.begin(), keys.end());
@@ -253,7 +252,7 @@ void CLIPSEnvManager::create_env_callback(
 
   bool env_exists = false;
   {
-    std::scoped_lock lock(*envs_.get_mutex_instance());
+    std::scoped_lock lock(*map_mtx_.get());
     env_exists = (envs_->find(request->env_name) != envs_->end());
   }
   if (env_exists) {
@@ -264,13 +263,13 @@ void CLIPSEnvManager::create_env_callback(
     response->success = false;
     response->error = "Enviroment " + request->env_name + " already exists!";
   } else {
-    LockSharedPtr<clips::Environment> clips = new_env(request->log_name);
+    std::shared_ptr<clips::Environment> clips = new_env(request->env_name);
 
     const std::string &env_name = request->env_name;
 
     if (clips) {
       {
-        std::scoped_lock lock(*envs_.get_mutex_instance());
+        std::scoped_lock lock(*map_mtx_.get());
         envs_->insert({env_name, clips});
       }
       plugin_manager_.activate_env(env_name, clips);
@@ -305,25 +304,26 @@ bool CLIPSEnvManager::delete_env(const std::string &env_name) {
 
   bool env_exists = false;
   {
-    std::scoped_lock lock(*envs_.get_mutex_instance());
+    std::scoped_lock lock(*map_mtx_.get());
     env_exists = (envs_->find(env_name) != envs_->end());
   }
   if (env_exists) {
 
-    LockSharedPtr<clips::Environment> env;
+    std::shared_ptr<clips::Environment> env;
     {
-      std::scoped_lock lock(*envs_.get_mutex_instance());
+      std::scoped_lock lock(*map_mtx_.get());
       env = envs_->at(env_name);
     }
     plugin_manager_.deactivate_env(env_name, env);
     {
-      std::scoped_lock env_lock(*env.get_mutex_instance());
-      clips::DeleteRouter(env.get_obj().get(), (char *)ROUTER_NAME);
-      clips::DestroyEnvironment(env.get_obj().get());
+      auto context = CLIPSEnvContext::get_context(env);
+      std::scoped_lock env_lock(context->env_mtx_);
+      clips::DeleteRouter(env.get(), (char *)ROUTER_NAME);
+      clips::DestroyEnvironment(env.get());
     }
 
     {
-      std::scoped_lock lock(*envs_.get_mutex_instance());
+      std::scoped_lock lock(*map_mtx_.get());
       envs_->erase(env_name);
     }
 
@@ -384,15 +384,12 @@ clips::WatchItem get_watch_item_from_string(const std::string &watch_str) {
   throw std::invalid_argument("Unknown watch item: " + watch_str);
 }
 
-cx::LockSharedPtr<clips::Environment>
+std::shared_ptr<clips::Environment>
 CLIPSEnvManager::new_env(const std::string &env_name) {
 
-  std::shared_ptr<clips::Environment> new_env(clips::CreateEnvironment());
+  std::shared_ptr<clips::Environment> clips(clips::CreateEnvironment());
 
-  LockSharedPtr<clips::Environment> clips(std::move(new_env));
-  clips::Environment *env = clips.get_obj().get();
-  // Only place to init the env mutex
-  clips.init_mutex();
+  clips::Environment *env = clips.get();
   // no locking needed, as env is not shared yet
   // silent clips by default
   clips::Unwatch(env, clips::WatchItem::ALL);
@@ -416,7 +413,7 @@ CLIPSEnvManager::new_env(const std::string &env_name) {
   get_parameter(env_name + ".watch", watch_info);
   for (const auto &w : watch_info) {
     clips::WatchItem watch_item = get_watch_item_from_string(w);
-    clips::Watch(clips.get_obj().get(), watch_item);
+    clips::Watch(clips.get(), watch_item);
   }
   bool log_to_file = false;
   get_parameter(env_name + ".log_clips_to_file", log_to_file);
@@ -425,7 +422,6 @@ CLIPSEnvManager::new_env(const std::string &env_name) {
 
   auto context = CLIPSEnvContext::get_context(env);
   context->env_name_ = env_name;
-  context->env_lock_ptr_ = clips;
   // mem allocated already, so construct object in-place
   new (&context->logger_)
       CLIPSLogger(env_name.c_str(), log_to_file, stdout_to_debug);

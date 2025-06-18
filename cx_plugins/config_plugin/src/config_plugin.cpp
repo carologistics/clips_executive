@@ -30,14 +30,14 @@ void ConfigPlugin::initialize() {
   logger_ = std::make_unique<rclcpp::Logger>(rclcpp::get_logger(plugin_name_));
 }
 
-bool ConfigPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
+bool ConfigPlugin::clips_env_init(std::shared_ptr<clips::Environment> &env) {
   RCLCPP_DEBUG(*logger_, "Initialising context");
 
   std::string clips_path =
       ament_index_cpp::get_package_share_directory("cx_config_plugin") +
       "/clips/cx_config_plugin/ff-config.clp";
 
-  if (!clips::BatchStar(env.get_obj().get(), clips_path.c_str())) {
+  if (!clips::BatchStar(env.get(), clips_path.c_str())) {
     RCLCPP_ERROR(*logger_,
                  "Failed to initialize CLIPS environment, "
                  "batch file '%s' failed!, aborting...",
@@ -45,7 +45,7 @@ bool ConfigPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
     return false;
   }
   clips::AddUDF(
-      env.get_obj().get(), "config-load", "v", 2, 2, ";sy;sy",
+      env.get(), "config-load", "v", 2, 2, ";sy;sy",
       [](clips::Environment *env, clips::UDFContext *udfc,
          clips::UDFValue * /*out*/) {
         ConfigPlugin *instance = static_cast<ConfigPlugin *>(udfc->context);
@@ -61,15 +61,15 @@ bool ConfigPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
   return true;
 }
 
-bool ConfigPlugin::clips_env_destroyed(LockSharedPtr<clips::Environment> &env) {
+bool ConfigPlugin::clips_env_destroyed(
+    std::shared_ptr<clips::Environment> &env) {
 
   RCLCPP_DEBUG(*logger_, "Destroying clips context");
 
-  clips::RemoveUDF(env.get_obj().get(), "config-load");
-  clips::Deftemplate *curr_tmpl =
-      clips::FindDeftemplate(env.get_obj().get(), "conval");
+  clips::RemoveUDF(env.get(), "config-load");
+  clips::Deftemplate *curr_tmpl = clips::FindDeftemplate(env.get(), "conval");
   if (curr_tmpl) {
-    clips::Undeftemplate(curr_tmpl, env.get_obj().get());
+    clips::Undeftemplate(curr_tmpl, env.get());
   }
   return true;
 }

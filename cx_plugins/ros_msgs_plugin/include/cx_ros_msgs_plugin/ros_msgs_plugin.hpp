@@ -18,7 +18,6 @@
 #include <string>
 
 #include "cx_plugin/clips_plugin.hpp"
-#include "cx_utils/lock_shared_ptr.hpp"
 #include <rosidl_typesupport_introspection_cpp/message_introspection.hpp>
 
 #include <rclcpp/generic_client.hpp>
@@ -33,8 +32,8 @@ public:
   void initialize();
   void finalize();
 
-  bool clips_env_init(LockSharedPtr<clips::Environment> &env) override;
-  bool clips_env_destroyed(LockSharedPtr<clips::Environment> &env) override;
+  bool clips_env_init(std::shared_ptr<clips::Environment> &env) override;
+  bool clips_env_destroyed(std::shared_ptr<clips::Environment> &env) override;
 
 private:
   struct MessageInfo {

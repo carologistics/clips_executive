@@ -19,8 +19,6 @@
 #include <map>
 #include <string>
 
-#include "cx_utils/lock_shared_ptr.hpp"
-
 #include "pluginlib/class_loader.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
@@ -59,7 +57,7 @@ public:
    *
    * \return true iff the initialization succeeded
    */
-  virtual bool clips_env_init(LockSharedPtr<clips::Environment> &env) = 0;
+  virtual bool clips_env_init(std::shared_ptr<clips::Environment> &env) = 0;
 
   /// Called once for every managed Clips environment on shutting down the
   /// environment.
@@ -68,7 +66,8 @@ public:
    * before usage in other threads.
    * \return true iff the initialization succeeded
    */
-  virtual bool clips_env_destroyed(LockSharedPtr<clips::Environment> &env) = 0;
+  virtual bool
+  clips_env_destroyed(std::shared_ptr<clips::Environment> &env) = 0;
 
   std::string get_plugin_name() const;
 

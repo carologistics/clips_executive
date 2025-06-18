@@ -86,15 +86,15 @@ void RosMsgsPlugin::finalize() {
   stop_flag_ = true;
 }
 
-bool RosMsgsPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
-  auto context = CLIPSEnvContext::get_context(env.get_obj().get());
+bool RosMsgsPlugin::clips_env_init(std::shared_ptr<clips::Environment> &env) {
+  auto context = CLIPSEnvContext::get_context(env.get());
   RCLCPP_DEBUG(*logger_, "Initializing plugin for environment %s",
                context->env_name_.c_str());
 
   std::string fun_name = "ros-msgs-get-field";
   function_names_.insert(fun_name);
   clips::AddUDF(
-      env.get_obj().get(), fun_name.c_str(), "*", 2, 2, ";e;sy",
+      env.get(), fun_name.c_str(), "*", 2, 2, ";e;sy",
       [](clips::Environment *env, clips::UDFContext *udfc,
          clips::UDFValue *out) {
         auto *instance = static_cast<RosMsgsPlugin *>(udfc->context);
@@ -110,7 +110,7 @@ bool RosMsgsPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
   fun_name = "ros-msgs-set-field";
   function_names_.insert(fun_name);
   clips::AddUDF(
-      env.get_obj().get(), fun_name.c_str(), "v", 3, 3, ";e;sy;*",
+      env.get(), fun_name.c_str(), "v", 3, 3, ";e;sy;*",
       [](clips::Environment *env, clips::UDFContext *udfc,
          clips::UDFValue * /*out*/) {
         auto *instance = static_cast<RosMsgsPlugin *>(udfc->context);
@@ -128,7 +128,7 @@ bool RosMsgsPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
   fun_name = "ros-msgs-create-message";
   function_names_.insert(fun_name);
   clips::AddUDF(
-      env.get_obj().get(), fun_name.c_str(), "e", 1, 1, ";sy",
+      env.get(), fun_name.c_str(), "e", 1, 1, ";sy",
       [](clips::Environment *env, clips::UDFContext *udfc,
          clips::UDFValue *out) {
         auto *instance = static_cast<RosMsgsPlugin *>(udfc->context);
@@ -142,7 +142,7 @@ bool RosMsgsPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
   fun_name = "ros-msgs-create-request";
   function_names_.insert(fun_name);
   clips::AddUDF(
-      env.get_obj().get(), fun_name.c_str(), "e", 1, 1, ";sy",
+      env.get(), fun_name.c_str(), "e", 1, 1, ";sy",
       [](clips::Environment *env, clips::UDFContext *udfc,
          clips::UDFValue *out) {
         auto *instance = static_cast<RosMsgsPlugin *>(udfc->context);
@@ -156,7 +156,7 @@ bool RosMsgsPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
   fun_name = "ros-msgs-create-publisher";
   function_names_.insert(fun_name);
   clips::AddUDF(
-      env.get_obj().get(), fun_name.c_str(), "v", 2, 2, ";sy;sy",
+      env.get(), fun_name.c_str(), "v", 2, 2, ";sy;sy",
       [](clips::Environment *env, clips::UDFContext *udfc,
          clips::UDFValue * /*out*/) {
         auto *instance = static_cast<RosMsgsPlugin *>(udfc->context);
@@ -174,7 +174,7 @@ bool RosMsgsPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
   fun_name = "ros-msgs-destroy-publisher";
   function_names_.insert(fun_name);
   clips::AddUDF(
-      env.get_obj().get(), fun_name.c_str(), "v", 1, 1, ";sy",
+      env.get(), fun_name.c_str(), "v", 1, 1, ";sy",
       [](clips::Environment *env, clips::UDFContext *udfc,
          clips::UDFValue * /*out*/) {
         auto *instance = static_cast<RosMsgsPlugin *>(udfc->context);
@@ -189,7 +189,7 @@ bool RosMsgsPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
   fun_name = "ros-msgs-publish";
   function_names_.insert(fun_name);
   clips::AddUDF(
-      env.get_obj().get(), fun_name.c_str(), "v", 2, 2, ";e;sy",
+      env.get(), fun_name.c_str(), "v", 2, 2, ";e;sy",
       [](clips::Environment *env, clips::UDFContext *udfc,
          clips::UDFValue * /*out*/) {
         auto *instance = static_cast<RosMsgsPlugin *>(udfc->context);
@@ -206,7 +206,7 @@ bool RosMsgsPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
   fun_name = "ros-msgs-destroy-message";
   function_names_.insert(fun_name);
   clips::AddUDF(
-      env.get_obj().get(), fun_name.c_str(), "v", 1, 1, ";e",
+      env.get(), fun_name.c_str(), "v", 1, 1, ";e",
       [](clips::Environment * /*env*/, clips::UDFContext *udfc,
          clips::UDFValue * /*out*/) {
         auto *instance = static_cast<RosMsgsPlugin *>(udfc->context);
@@ -221,7 +221,7 @@ bool RosMsgsPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
   fun_name = "ros-msgs-create-subscription";
   function_names_.insert(fun_name);
   clips::AddUDF(
-      env.get_obj().get(), fun_name.c_str(), "v", 2, 2, ";sy;sy",
+      env.get(), fun_name.c_str(), "v", 2, 2, ";sy;sy",
       [](clips::Environment *env, clips::UDFContext *udfc,
          clips::UDFValue * /*out*/) {
         auto *instance = static_cast<RosMsgsPlugin *>(udfc->context);
@@ -239,7 +239,7 @@ bool RosMsgsPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
   fun_name = "ros-msgs-destroy-subscription";
   function_names_.insert(fun_name);
   clips::AddUDF(
-      env.get_obj().get(), fun_name.c_str(), "v", 1, 1, ";s",
+      env.get(), fun_name.c_str(), "v", 1, 1, ";s",
       [](clips::Environment *env, clips::UDFContext *udfc,
          clips::UDFValue * /*out*/) {
         auto *instance = static_cast<RosMsgsPlugin *>(udfc->context);
@@ -254,7 +254,7 @@ bool RosMsgsPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
   fun_name = "ros-msgs-create-client";
   function_names_.insert(fun_name);
   clips::AddUDF(
-      env.get_obj().get(), fun_name.c_str(), "v", 2, 2, ";sy;sy",
+      env.get(), fun_name.c_str(), "v", 2, 2, ";sy;sy",
       [](clips::Environment *env, clips::UDFContext *udfc,
          clips::UDFValue * /*out*/) {
         auto *instance = static_cast<RosMsgsPlugin *>(udfc->context);
@@ -272,7 +272,7 @@ bool RosMsgsPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
   fun_name = "ros-msgs-destroy-client";
   function_names_.insert(fun_name);
   clips::AddUDF(
-      env.get_obj().get(), fun_name.c_str(), "v", 1, 1, ";sy",
+      env.get(), fun_name.c_str(), "v", 1, 1, ";sy",
       [](clips::Environment *env, clips::UDFContext *udfc,
          clips::UDFValue * /*out*/) {
         auto *instance = static_cast<RosMsgsPlugin *>(udfc->context);
@@ -287,7 +287,7 @@ bool RosMsgsPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
   fun_name = "ros-msgs-async-send-request";
   function_names_.insert(fun_name);
   clips::AddUDF(
-      env.get_obj().get(), fun_name.c_str(), "bl", 2, 2, ";e;sy",
+      env.get(), fun_name.c_str(), "bl", 2, 2, ";e;sy",
       [](clips::Environment *env, clips::UDFContext *udfc,
          clips::UDFValue *out) {
         auto *instance = static_cast<RosMsgsPlugin *>(udfc->context);
@@ -303,20 +303,20 @@ bool RosMsgsPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
       "async-send-request", this);
 
   // add fact templates
-  clips::Build(env.get_obj().get(), "(deftemplate ros-msgs-subscription \
+  clips::Build(env.get(), "(deftemplate ros-msgs-subscription \
             (slot topic (type STRING)) \
             (slot type (type STRING)))");
-  clips::Build(env.get_obj().get(), "(deftemplate ros-msgs-publisher \
+  clips::Build(env.get(), "(deftemplate ros-msgs-publisher \
             (slot topic (type STRING)) \
             (slot type (type STRING)))");
-  clips::Build(env.get_obj().get(), "(deftemplate ros-msgs-client \
+  clips::Build(env.get(), "(deftemplate ros-msgs-client \
             (slot service (type STRING)) \
             (slot type (type STRING)))");
-  clips::Build(env.get_obj().get(), "(deftemplate ros-msgs-message \
+  clips::Build(env.get(), "(deftemplate ros-msgs-message \
             (slot topic (type STRING) ) \
             (slot msg-ptr (type EXTERNAL-ADDRESS)) \
             )");
-  clips::Build(env.get_obj().get(), "(deftemplate ros-msgs-response \
+  clips::Build(env.get(), "(deftemplate ros-msgs-response \
             (slot service (type STRING) ) \
             (slot request-id (type INTEGER) ) \
             (slot msg-ptr (type EXTERNAL-ADDRESS)) \
@@ -326,38 +326,38 @@ bool RosMsgsPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
 }
 
 bool RosMsgsPlugin::clips_env_destroyed(
-    LockSharedPtr<clips::Environment> &env) {
+    std::shared_ptr<clips::Environment> &env) {
   for (const auto &fun : function_names_) {
-    clips::RemoveUDF(env.get_obj().get(), fun.c_str());
+    clips::RemoveUDF(env.get(), fun.c_str());
   }
   clips::Deftemplate *curr_tmpl =
-      clips::FindDeftemplate(env.get_obj().get(), "ros-msgs-subscription");
+      clips::FindDeftemplate(env.get(), "ros-msgs-subscription");
   if (curr_tmpl) {
-    clips::Undeftemplate(curr_tmpl, env.get_obj().get());
+    clips::Undeftemplate(curr_tmpl, env.get());
   } else {
     RCLCPP_WARN(*logger_, "ros-msgs-subscription cant be undefined");
   }
-  curr_tmpl = clips::FindDeftemplate(env.get_obj().get(), "ros-msgs-publisher");
+  curr_tmpl = clips::FindDeftemplate(env.get(), "ros-msgs-publisher");
   if (curr_tmpl) {
-    clips::Undeftemplate(curr_tmpl, env.get_obj().get());
+    clips::Undeftemplate(curr_tmpl, env.get());
   } else {
     RCLCPP_WARN(*logger_, "ros-msgs-publisher cant be undefined");
   }
-  curr_tmpl = clips::FindDeftemplate(env.get_obj().get(), "ros-msgs-message");
+  curr_tmpl = clips::FindDeftemplate(env.get(), "ros-msgs-message");
   if (curr_tmpl) {
-    clips::Undeftemplate(curr_tmpl, env.get_obj().get());
+    clips::Undeftemplate(curr_tmpl, env.get());
   } else {
     RCLCPP_WARN(*logger_, "ros-msgs-message cant be undefined");
   }
-  curr_tmpl = clips::FindDeftemplate(env.get_obj().get(), "ros-msgs-client");
+  curr_tmpl = clips::FindDeftemplate(env.get(), "ros-msgs-client");
   if (curr_tmpl) {
-    clips::Undeftemplate(curr_tmpl, env.get_obj().get());
+    clips::Undeftemplate(curr_tmpl, env.get());
   } else {
     RCLCPP_WARN(*logger_, "ros-msgs-client cant be undefined");
   }
-  curr_tmpl = clips::FindDeftemplate(env.get_obj().get(), "ros-msgs-response");
+  curr_tmpl = clips::FindDeftemplate(env.get(), "ros-msgs-response");
   if (curr_tmpl) {
-    clips::Undeftemplate(curr_tmpl, env.get_obj().get());
+    clips::Undeftemplate(curr_tmpl, env.get());
   } else {
     RCLCPP_WARN(*logger_, "ros-msgs-response cant be undefined");
   }
@@ -485,8 +485,7 @@ void RosMsgsPlugin::topic_callback(
     const std::string &topic_name, const std::string &msg_type,
     clips::Environment *env) {
   auto context = CLIPSEnvContext::get_context(env);
-  cx::LockSharedPtr<clips::Environment> &clips = context->env_lock_ptr_;
-  std::scoped_lock clips_lock{*clips.get_mutex_instance()};
+  std::scoped_lock clips_lock{context->env_mtx_};
   std::shared_ptr<MessageInfo> deserialized_msg;
   {
     std::scoped_lock map_lock{map_mtx_};
@@ -502,13 +501,12 @@ void RosMsgsPlugin::topic_callback(
 
   // assert the newest message
   clips::FactBuilder *fact_builder =
-      clips::CreateFactBuilder(clips.get_obj().get(), "ros-msgs-message");
+      clips::CreateFactBuilder(env, "ros-msgs-message");
   clips::FBPutSlotString(fact_builder, "topic", topic_name.c_str());
   clips::FBPutSlotString(fact_builder, "type", msg_type.c_str());
   clips::FBPutSlotCLIPSExternalAddress(
       fact_builder, "msg-ptr",
-      clips::CreateCExternalAddress(clips.get_obj().get(),
-                                    deserialized_msg.get()));
+      clips::CreateCExternalAddress(env, deserialized_msg.get()));
   clips::FBAssert(fact_builder);
   clips::FBDispose(fact_builder);
 }
@@ -1110,7 +1108,6 @@ clips::UDFValue RosMsgsPlugin::send_request(clips::Environment *env,
   rclcpp::GenericClient::SharedFuture fut = future_and_id.future.share();
   std::thread([this, env, service_name, env_name, id, fut]() {
     auto context = CLIPSEnvContext::get_context(env);
-    cx::LockSharedPtr<clips::Environment> &clips = context->env_lock_ptr_;
     std::shared_ptr<void> resp = fut.get();
     std::shared_ptr<MessageInfo> response_info;
     {
@@ -1134,15 +1131,14 @@ clips::UDFValue RosMsgsPlugin::send_request(clips::Environment *env,
       messages_[response_info.get()] = response_info;
     }
     {
-      std::lock_guard<std::mutex> guard(*(clips.get_mutex_instance()));
+      std::lock_guard<std::mutex> guard(context->env_mtx_);
       clips::FactBuilder *fact_builder =
-          clips::CreateFactBuilder(clips.get_obj().get(), "ros-msgs-response");
+          clips::CreateFactBuilder(env, "ros-msgs-response");
       clips::FBPutSlotString(fact_builder, "service", service_name.c_str());
       clips::FBPutSlotInteger(fact_builder, "request-id", id);
       clips::FBPutSlotCLIPSExternalAddress(
           fact_builder, "msg-ptr",
-          clips::CreateCExternalAddress(clips.get_obj().get(),
-                                        response_info.get()));
+          clips::CreateCExternalAddress(env, response_info.get()));
       clips::FBAssert(fact_builder);
       clips::FBDispose(fact_builder);
     }

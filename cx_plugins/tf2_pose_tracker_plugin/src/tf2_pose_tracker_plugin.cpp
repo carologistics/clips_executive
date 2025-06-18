@@ -62,13 +62,13 @@ void Tf2PoseTrackerPlugin::finalize() {
 }
 
 bool Tf2PoseTrackerPlugin::clips_env_init(
-    LockSharedPtr<clips::Environment> &env) {
-  auto context = CLIPSEnvContext::get_context(env.get_obj().get());
+    std::shared_ptr<clips::Environment> &env) {
+  auto context = CLIPSEnvContext::get_context(env.get());
   RCLCPP_DEBUG(*logger_, "Initializing plugin for environment %s",
                context->env_name_.c_str());
 
   // define fact template
-  clips::Build(env.get_obj().get(), "(deftemplate tf2-tracked-pose \
+  clips::Build(env.get(), "(deftemplate tf2-tracked-pose \
             (slot parent (type STRING)) \
             (slot child (type STRING)) \
             (slot stamp (type FLOAT)) \
@@ -79,7 +79,7 @@ bool Tf2PoseTrackerPlugin::clips_env_init(
 
   // user defined functions
   clips::AddUDF(
-      env.get_obj().get(), "tf2-start-periodic-lookup", "b", 3, 3, ";sy;sy;d",
+      env.get(), "tf2-start-periodic-lookup", "b", 3, 3, ";sy;sy;d",
       [](clips::Environment *env, clips::UDFContext *udfc,
          clips::UDFValue *out) {
         auto *instance = static_cast<Tf2PoseTrackerPlugin *>(udfc->context);
@@ -103,7 +103,7 @@ bool Tf2PoseTrackerPlugin::clips_env_init(
       "tf2_start_periodic_lookup", this);
 
   clips::AddUDF(
-      env.get_obj().get(), "tf2-stop-periodic-lookup", "b", 1, 1, ";e",
+      env.get(), "tf2-stop-periodic-lookup", "b", 1, 1, ";e",
       [](clips::Environment *env, clips::UDFContext *udfc,
          clips::UDFValue *out) {
         auto *instance = static_cast<Tf2PoseTrackerPlugin *>(udfc->context);
@@ -121,11 +121,11 @@ bool Tf2PoseTrackerPlugin::clips_env_init(
 }
 
 bool Tf2PoseTrackerPlugin::clips_env_destroyed(
-    LockSharedPtr<clips::Environment> &env) {
-  auto context = CLIPSEnvContext::get_context(env.get_obj().get());
+    std::shared_ptr<clips::Environment> &env) {
+  auto context = CLIPSEnvContext::get_context(env.get());
   RCLCPP_INFO(*logger_, "Destroying plugin for environment %s",
               context->env_name_.c_str());
-  clips::Environment *env_ptr = env.get_obj().get();
+  clips::Environment *env_ptr = env.get();
   auto rm_it =
       std::remove_if(pose_trackers_.begin(), pose_trackers_.end(),
                      [this, env_ptr](const std::shared_ptr<PoseTracker> &p) {
@@ -140,12 +140,12 @@ bool Tf2PoseTrackerPlugin::clips_env_destroyed(
   }
 
   clips::Deftemplate *curr_tmpl =
-      clips::FindDeftemplate(env.get_obj().get(), "tf2-tracked-pose");
+      clips::FindDeftemplate(env.get(), "tf2-tracked-pose");
   if (curr_tmpl) {
-    clips::Undeftemplate(curr_tmpl, env.get_obj().get());
+    clips::Undeftemplate(curr_tmpl, env.get());
   }
-  clips::RemoveUDF(env.get_obj().get(), "tf2-start-periodic-lookup");
-  clips::RemoveUDF(env.get_obj().get(), "tf2-stop-periodic-lookup");
+  clips::RemoveUDF(env.get(), "tf2-start-periodic-lookup");
+  clips::RemoveUDF(env.get(), "tf2-stop-periodic-lookup");
   return true;
 }
 
@@ -169,8 +169,7 @@ void Tf2PoseTrackerPlugin::start_periodic_lookup(clips::Environment *env,
 
           // safely access CLIPS environment
           auto context = CLIPSEnvContext::get_context(env);
-          cx::LockSharedPtr<clips::Environment> &clips = context->env_lock_ptr_;
-          std::scoped_lock clips_lock{*clips.get_mutex_instance()};
+          std::scoped_lock clips_lock{context->env_mtx_};
 
           // update exisiting fact or create new one
           bool fact_exists = clips::FactExistp(pose_tracker->pose_fact);
@@ -197,11 +196,10 @@ void Tf2PoseTrackerPlugin::start_periodic_lookup(clips::Environment *env,
             clips::FBPutSlotMultifield(
                 fact_builder, "translation",
                 clips::StringToMultifield(
-                    clips.get_obj().get(),
-                    std::format("{} {} {}", tf.transform.translation.x,
-                                tf.transform.translation.y,
-                                tf.transform.translation.z)
-                        .c_str()));
+                    env, std::format("{} {} {}", tf.transform.translation.x,
+                                     tf.transform.translation.y,
+                                     tf.transform.translation.z)
+                             .c_str()));
             clips::FBPutSlotMultifield(
                 fact_builder, "rotation",
                 clips::StringToMultifield(

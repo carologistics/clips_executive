@@ -38,15 +38,16 @@ void AmentIndexPlugin::initialize() {
   logger_ = std::make_unique<rclcpp::Logger>(rclcpp::get_logger(plugin_name_));
 }
 
-bool AmentIndexPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
-  auto context = CLIPSEnvContext::get_context(env.get_obj().get());
+bool AmentIndexPlugin::clips_env_init(
+    std::shared_ptr<clips::Environment> &env) {
+  auto context = CLIPSEnvContext::get_context(env.get());
   RCLCPP_DEBUG(*logger_, "Initializing plugin for environment %s",
                context->env_name_.c_str());
   std::string fun_name;
   fun_name = "ament-index-get-package-prefix";
   function_names_.emplace(fun_name);
   clips::AddUDF(
-      env.get_obj().get(), fun_name.c_str(), "sb", 1, 1, ";sy",
+      env.get(), fun_name.c_str(), "sb", 1, 1, ";sy",
       [](clips::Environment *env, clips::UDFContext *udfc,
          clips::UDFValue *out) {
         auto instance = static_cast<AmentIndexPlugin *>(udfc->context);
@@ -68,7 +69,7 @@ bool AmentIndexPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
   fun_name = "ament-index-get-package-share-directory";
   function_names_.emplace(fun_name);
   clips::AddUDF(
-      env.get_obj().get(), fun_name.c_str(), "sb", 1, 1, ";sy",
+      env.get(), fun_name.c_str(), "sb", 1, 1, ";sy",
       [](clips::Environment *env, clips::UDFContext *udfc,
          clips::UDFValue *out) {
         auto instance = static_cast<AmentIndexPlugin *>(udfc->context);
@@ -90,7 +91,7 @@ bool AmentIndexPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
   fun_name = "ament-index-get-packages-with-prefixes";
   function_names_.emplace(fun_name);
   clips::AddUDF(
-      env.get_obj().get(), fun_name.c_str(), "mb", 0, 0, NULL,
+      env.get(), fun_name.c_str(), "mb", 0, 0, NULL,
       [](clips::Environment *env, clips::UDFContext *udfc,
          clips::UDFValue *out) {
         auto instance = static_cast<AmentIndexPlugin *>(udfc->context);
@@ -116,7 +117,7 @@ bool AmentIndexPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
   fun_name = "ament-index-get-resource";
   function_names_.emplace(fun_name);
   clips::AddUDF(
-      env.get_obj().get(), fun_name.c_str(), "bm", 2, 2, ";sy;sy",
+      env.get(), fun_name.c_str(), "bm", 2, 2, ";sy;sy",
       [](clips::Environment *env, clips::UDFContext *udfc,
          clips::UDFValue *out) {
         auto instance = static_cast<AmentIndexPlugin *>(udfc->context);
@@ -146,7 +147,7 @@ bool AmentIndexPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
   fun_name = "ament-index-get-resources";
   function_names_.emplace(fun_name);
   clips::AddUDF(
-      env.get_obj().get(), fun_name.c_str(), "mb", 1, 1, "sy",
+      env.get(), fun_name.c_str(), "mb", 1, 1, "sy",
       [](clips::Environment *env, clips::UDFContext *udfc,
          clips::UDFValue *out) {
         auto instance = static_cast<AmentIndexPlugin *>(udfc->context);
@@ -175,7 +176,7 @@ bool AmentIndexPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
   fun_name = "ament-index-get-search-paths";
   function_names_.emplace(fun_name);
   clips::AddUDF(
-      env.get_obj().get(), fun_name.c_str(), "m", 0, 0, NULL,
+      env.get(), fun_name.c_str(), "m", 0, 0, NULL,
       [](clips::Environment *env, clips::UDFContext * /*udfc*/,
          clips::UDFValue *out) {
         auto paths = ament_index_cpp::get_search_paths();
@@ -192,7 +193,7 @@ bool AmentIndexPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
   fun_name = "ament-index-has-resource";
   function_names_.emplace(fun_name);
   clips::AddUDF(
-      env.get_obj().get(), fun_name.c_str(), "b", 2, 2, ";sy;sy",
+      env.get(), fun_name.c_str(), "b", 2, 2, ";sy;sy",
       [](clips::Environment *env, clips::UDFContext *udfc,
          clips::UDFValue *out) {
         auto instance = static_cast<AmentIndexPlugin *>(udfc->context);
@@ -217,12 +218,12 @@ bool AmentIndexPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
 }
 
 bool AmentIndexPlugin::clips_env_destroyed(
-    LockSharedPtr<clips::Environment> &env) {
-  auto context = CLIPSEnvContext::get_context(env.get_obj().get());
+    std::shared_ptr<clips::Environment> &env) {
+  auto context = CLIPSEnvContext::get_context(env.get());
   RCLCPP_INFO(*logger_, "Destroying plugin for environment %s",
               context->env_name_.c_str());
   for (const auto &fun : function_names_) {
-    clips::RemoveUDF(env.get_obj().get(), fun.c_str());
+    clips::RemoveUDF(env.get(), fun.c_str());
   }
   return true;
 }

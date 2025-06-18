@@ -37,7 +37,7 @@
 
 namespace cx {
 using EnvsMap =
-    std::unordered_map<std::string, cx::LockSharedPtr<clips::Environment>>;
+    std::unordered_map<std::string, std::shared_ptr<clips::Environment>>;
 
 class ClipsPluginManager {
 public:
@@ -47,7 +47,8 @@ public:
   using PluginsMap = std::unordered_map<std::string, cx::ClipsPlugin::Ptr>;
 
   void configure(const rclcpp_lifecycle::LifecycleNode::WeakPtr &parent,
-                 const std::string &name, LockSharedPtr<EnvsMap> &envs);
+                 const std::string &name, std::shared_ptr<EnvsMap> &envs,
+                 std::shared_ptr<std::mutex> &map_mtx);
   /**
    * @brief Cleanup resources
    */
@@ -58,14 +59,14 @@ public:
    */
   void activate();
   void activate_env(const std::string &env_name,
-                    LockSharedPtr<clips::Environment> &env);
+                    std::shared_ptr<clips::Environment> &env);
 
   /**
    * @brief Deactivate plugin manager
    */
   void deactivate();
   void deactivate_env(const std::string &env_name,
-                      LockSharedPtr<clips::Environment> &env);
+                      std::shared_ptr<clips::Environment> &env);
 
   /**
    * @brief Reset plugin manager
@@ -95,7 +96,7 @@ public:
 private:
   bool load_plugin_for_env(const std::string &plugin,
                            const std::string &env_name,
-                           LockSharedPtr<clips::Environment> &env);
+                           std::shared_ptr<clips::Environment> &env);
 
   rclcpp::Service<cx_msgs::srv::LoadClipsPlugin>::SharedPtr
       load_plugin_service_;
@@ -108,7 +109,8 @@ private:
   pluginlib::ClassLoader<cx::ClipsPlugin> pg_loader_;
   std::vector<std::string> plugin_ids_;
 
-  LockSharedPtr<EnvsMap> envs_;
+  std::shared_ptr<EnvsMap> envs_;
+  std::shared_ptr<std::mutex> map_mtx_;
 
   std::unordered_map<std::string, std::vector<std::string>> loaded_plugins_;
 

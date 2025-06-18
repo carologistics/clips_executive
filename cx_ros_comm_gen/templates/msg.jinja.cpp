@@ -25,7 +25,6 @@
 
 #include "cx_plugin/clips_plugin.hpp"
 #include "{{name_snake}}.hpp"
-#include "cx_utils/lock_shared_ptr.hpp"
 #include "cx_utils/clips_env_context.hpp"
 
 // To export as plugin
@@ -77,30 +76,30 @@ void {{name_camel}}::initialize() {
    cb_group_ = node->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
 }
 
-bool {{name_camel}}::clips_env_destroyed(LockSharedPtr<clips::Environment> &env) {
+bool {{name_camel}}::clips_env_destroyed(std::shared_ptr<clips::Environment> &env) {
 
   RCLCPP_DEBUG(*logger_,
               "Destroying clips context!");
   for(const auto& fun : function_names_) {
-     clips::RemoveUDF(env.get_obj().get(), fun.c_str());
+     clips::RemoveUDF(env.get(), fun.c_str());
   }
-  clips::Deftemplate *curr_tmpl = clips::FindDeftemplate(env.get_obj().get(), "{{name_kebab}}-subscription");
+  clips::Deftemplate *curr_tmpl = clips::FindDeftemplate(env.get(), "{{name_kebab}}-subscription");
   if(curr_tmpl) {
-    clips::Undeftemplate(curr_tmpl, env.get_obj().get());
+    clips::Undeftemplate(curr_tmpl, env.get());
   } else {
     RCLCPP_WARN(*logger_,
               "{{name_kebab}}-subscription cant be undefined");
   }
-  curr_tmpl = clips::FindDeftemplate(env.get_obj().get(), "{{name_kebab}}-publisher");
+  curr_tmpl = clips::FindDeftemplate(env.get(), "{{name_kebab}}-publisher");
   if(curr_tmpl) {
-    clips::Undeftemplate(curr_tmpl, env.get_obj().get());
+    clips::Undeftemplate(curr_tmpl, env.get());
   } else {
     RCLCPP_WARN(*logger_,
               "{{name_kebab}}-publisher cant be undefined");
   }
-  curr_tmpl = clips::FindDeftemplate(env.get_obj().get(), "{{name_kebab}}-message");
+  curr_tmpl = clips::FindDeftemplate(env.get(), "{{name_kebab}}-message");
   if(curr_tmpl) {
-    clips::Undeftemplate(curr_tmpl, env.get_obj().get());
+    clips::Undeftemplate(curr_tmpl, env.get());
   } else {
     RCLCPP_WARN(*logger_,
               "{{name_kebab}}-msg cant be undefined");
@@ -108,7 +107,7 @@ bool {{name_camel}}::clips_env_destroyed(LockSharedPtr<clips::Environment> &env)
   return true;
 }
 
-bool {{name_camel}}::clips_env_init(LockSharedPtr<clips::Environment> &env) {
+bool {{name_camel}}::clips_env_init(std::shared_ptr<clips::Environment> &env) {
   RCLCPP_DEBUG(*logger_,
               "Initializing context for plugin %s",
               plugin_name_.c_str());
@@ -123,7 +122,7 @@ bool {{name_camel}}::clips_env_init(LockSharedPtr<clips::Environment> &env) {
   fun_name = "{{name_kebab}}-create-message";
   function_names_.insert(fun_name);
   clips::AddUDF(
-    env.get_obj().get(), fun_name.c_str(), "e", 0, 0, "",
+    env.get(), fun_name.c_str(), "e", 0, 0, "",
     [](clips::Environment *env, clips::UDFContext *udfc,
        clips::UDFValue *out) {
       auto *instance = static_cast<{{name_camel}} *>(udfc->context);
@@ -135,7 +134,7 @@ bool {{name_camel}}::clips_env_init(LockSharedPtr<clips::Environment> &env) {
   fun_name = "{{name_kebab}}-create-publisher";
   function_names_.insert(fun_name);
   clips::AddUDF(
-    env.get_obj().get(), fun_name.c_str(), "v", 1, 1, ";sy",
+    env.get(), fun_name.c_str(), "v", 1, 1, ";sy",
     [](clips::Environment *env, clips::UDFContext *udfc,
        clips::UDFValue * /*out*/) {
       auto *instance = static_cast<{{name_camel}} *>(udfc->context);
@@ -150,7 +149,7 @@ bool {{name_camel}}::clips_env_init(LockSharedPtr<clips::Environment> &env) {
   fun_name = "{{name_kebab}}-destroy-publisher";
   function_names_.insert(fun_name);
   clips::AddUDF(
-    env.get_obj().get(), fun_name.c_str(), "v", 1, 1, ";sy",
+    env.get(), fun_name.c_str(), "v", 1, 1, ";sy",
     [](clips::Environment *env, clips::UDFContext *udfc,
        clips::UDFValue * /*out*/) {
       auto *instance = static_cast<{{name_camel}} *>(udfc->context);
@@ -165,7 +164,7 @@ bool {{name_camel}}::clips_env_init(LockSharedPtr<clips::Environment> &env) {
   fun_name = "{{name_kebab}}-publish";
   function_names_.insert(fun_name);
   clips::AddUDF(
-    env.get_obj().get(), fun_name.c_str(), "v", 2, 2, ";e;sy",
+    env.get(), fun_name.c_str(), "v", 2, 2, ";e;sy",
     [](clips::Environment *env, clips::UDFContext *udfc,
        clips::UDFValue * /*out*/) {
       auto *instance = static_cast<{{name_camel}} *>(udfc->context);
@@ -181,7 +180,7 @@ bool {{name_camel}}::clips_env_init(LockSharedPtr<clips::Environment> &env) {
   fun_name = "{{name_kebab}}-destroy-message";
   function_names_.insert(fun_name);
   clips::AddUDF(
-    env.get_obj().get(), fun_name.c_str(), "v", 1, 1, ";e",
+    env.get(), fun_name.c_str(), "v", 1, 1, ";e",
     [](clips::Environment */*env*/, clips::UDFContext *udfc,
        clips::UDFValue * /*out*/) {
       auto *instance = static_cast<{{name_camel}} *>(udfc->context);
@@ -196,7 +195,7 @@ bool {{name_camel}}::clips_env_init(LockSharedPtr<clips::Environment> &env) {
   fun_name = "{{name_kebab}}-create-subscription";
   function_names_.insert(fun_name);
   clips::AddUDF(
-    env.get_obj().get(), fun_name.c_str(), "v", 1, 1, ";s",
+    env.get(), fun_name.c_str(), "v", 1, 1, ";s",
     [](clips::Environment *env, clips::UDFContext *udfc, clips::UDFValue * /*out*/) {
         auto *instance = static_cast<{{name_camel}} *>(udfc->context);
         clips::UDFValue topic;
@@ -210,7 +209,7 @@ bool {{name_camel}}::clips_env_init(LockSharedPtr<clips::Environment> &env) {
   fun_name = "{{name_kebab}}-destroy-subscription";
   function_names_.insert(fun_name);
   clips::AddUDF(
-    env.get_obj().get(), fun_name.c_str(), "v", 1, 1, ";s",
+    env.get(), fun_name.c_str(), "v", 1, 1, ";s",
     [](clips::Environment *env, clips::UDFContext *udfc, clips::UDFValue * /*out*/) {
         auto *instance = static_cast<{{name_camel}} *>(udfc->context);
         clips::UDFValue topic;
@@ -223,11 +222,11 @@ bool {{name_camel}}::clips_env_init(LockSharedPtr<clips::Environment> &env) {
 
 
   // add fact templates
-  clips::Build(env.get_obj().get(),"(deftemplate {{name_kebab}}-subscription \
+  clips::Build(env.get(),"(deftemplate {{name_kebab}}-subscription \
             (slot topic (type STRING)))");
-  clips::Build(env.get_obj().get(),"(deftemplate {{name_kebab}}-publisher \
+  clips::Build(env.get(),"(deftemplate {{name_kebab}}-publisher \
             (slot topic (type STRING)))");
-  clips::Build(env.get_obj().get(),"(deftemplate {{name_kebab}}-message \
+  clips::Build(env.get(),"(deftemplate {{name_kebab}}-message \
             (slot topic (type STRING) ) \
             (slot msg-ptr (type EXTERNAL-ADDRESS)) \
             )");
@@ -326,17 +325,16 @@ void {{name_camel}}::unsubscribe_from_topic(clips::Environment *env,
 void {{name_camel}}::topic_callback(
     const {{message_type}}::SharedPtr msg, std::string topic_name, clips::Environment *env) {
   auto context = CLIPSEnvContext::get_context(env);
-  cx::LockSharedPtr<clips::Environment> &clips = context->env_lock_ptr_;
-  std::scoped_lock clips_lock{*clips.get_mutex_instance()};
+  std::scoped_lock clips_lock{context->env_mtx_};
   {
     std::scoped_lock map_lock{map_mtx_};
     messages_[msg.get()] = msg;
   }
 
   // assert the newest message
-  clips::FactBuilder *fact_builder = clips::CreateFactBuilder(clips.get_obj().get(), "{{name_kebab}}-message");
+  clips::FactBuilder *fact_builder = clips::CreateFactBuilder(env, "{{name_kebab}}-message");
   clips::FBPutSlotString(fact_builder,"topic",topic_name.c_str());
-  clips::FBPutSlotCLIPSExternalAddress(fact_builder,"msg-ptr", clips::CreateCExternalAddress(clips.get_obj().get(), msg.get()));
+  clips::FBPutSlotCLIPSExternalAddress(fact_builder,"msg-ptr", clips::CreateCExternalAddress(env, msg.get()));
   clips::FBAssert(fact_builder);
   clips::FBDispose(fact_builder);
 }

@@ -98,7 +98,7 @@ clips::UDFValue {{name_camel}}::{{template_type|snake_case}}{{snake_type_sep}}ge
 {%- if template_part == "registration" %}
   function_names_.insert("{{name_kebab}}-{{template_type|kebab_case}}{{kebab_type_sep}}get-field");
   clips::AddUDF(
-      env.get_obj().get(), "{{name_kebab}}-{{template_type|kebab_case}}{{kebab_type_sep}}get-field", "*", 2, 2, ";e;sy",
+      env.get(), "{{name_kebab}}-{{template_type|kebab_case}}{{kebab_type_sep}}get-field", "*", 2, 2, ";e;sy",
       [](clips::Environment *env, clips::UDFContext *udfc,
          clips::UDFValue *out) {
         auto *instance = static_cast<{{name_camel}} *>(udfc->context);

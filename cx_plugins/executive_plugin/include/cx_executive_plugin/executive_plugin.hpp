@@ -18,7 +18,6 @@
 #include <string>
 
 #include "cx_plugin/clips_plugin.hpp"
-#include "cx_utils/lock_shared_ptr.hpp"
 
 #include <std_msgs/msg/empty.hpp>
 
@@ -32,8 +31,8 @@ public:
   void initialize() override;
   void finalize() override;
 
-  bool clips_env_init(LockSharedPtr<clips::Environment> &clips) override;
-  bool clips_env_destroyed(LockSharedPtr<clips::Environment> &clips) override;
+  bool clips_env_init(std::shared_ptr<clips::Environment> &clips) override;
+  bool clips_env_destroyed(std::shared_ptr<clips::Environment> &clips) override;
 
   std::shared_ptr<rclcpp_lifecycle::LifecycleNode> get_node();
 
@@ -53,7 +52,7 @@ private:
 
   std::unique_ptr<rclcpp::Logger> logger_;
 
-  std::vector<LockSharedPtr<clips::Environment>> managed_envs;
+  std::vector<std::shared_ptr<clips::Environment>> managed_envs;
   std::mutex envs_mutex_;
 };
 } // namespace cx

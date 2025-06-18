@@ -27,7 +27,6 @@
 #include <string>
 
 #include "cx_plugin/clips_plugin.hpp"
-#include "cx_utils/lock_shared_ptr.hpp"
 
 #include "rclcpp/rclcpp.hpp"
 #include {{message_include_path}}
@@ -42,8 +41,8 @@ public:
   void initialize() override;
   void finalize() override;
 
-  bool clips_env_init(LockSharedPtr<clips::Environment> &env) override;
-  bool clips_env_destroyed(LockSharedPtr<clips::Environment> &env) override;
+  bool clips_env_init(std::shared_ptr<clips::Environment> &env) override;
+  bool clips_env_destroyed(std::shared_ptr<clips::Environment> &env) override;
 
 private:
   rclcpp::CallbackGroup::SharedPtr cb_group_;
