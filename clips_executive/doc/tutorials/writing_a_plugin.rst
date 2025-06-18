@@ -20,7 +20,7 @@ This allows users to customize CLIPS to their needs.
 Prerequisites
 -------------
 
-This tutorial extends the ``cx_tut_agent`` package created in the :doc:`previous tutorial <hello_world>`.
+This tutorial extends the ``cx_tutorial_agents`` package created in the :doc:`previous tutorial <hello_world>`.
 Additionally, it requires the :rosdoc:`turtlesim` package, which provides a minimal simulation environment to interact with and the :rosdoc:`turtle_tf2_py` package to obtain transforms from the simulation.
 
 The introductory tutorial for :rostut:`pluginlib <Tutorials/Beginner-Client-Libraries/Pluginlib.html>` is a helpful resource to get a general understanding of ``pluginlib`` plugins, as those are not discussed in detail here.
@@ -49,12 +49,12 @@ This involves:
 1 Obtaining the Files
 ^^^^^^^^^^^^^^^^^^^^^
 
-Navigate to the ``params`` directory of the ``clips_tut_agent`` package from the :doc:`Hello World tutorial <hello_world>` and download the configuration file using the following command:
+Navigate to the ``params`` directory of the ``cx_tutorial_agents`` package from the :doc:`Hello World tutorial <hello_world>` and download the configuration file using the following command:
 
 .. code-block:: bash
 
-   cd ~/ros2/cx_tutorial_ws/src/clips_tut_agent/params
-   wget -O tf2_tracked_pose.yaml https://raw.githubusercontent.com/fawkesrobotics/ros2-clips-executive/master/tutorials/clips_tut_agent/params/tf2_tracked_pose.yaml
+   cd ~/ros2/cx_tutorial_ws/src/cx_tutorial_agents/params
+   wget -O tf2_tracked_pose.yaml https://raw.githubusercontent.com/fawkesrobotics/ros2-clips-executive/master/tutorials/cx_tutorial_agents/params/tf2_tracked_pose.yaml
 
 This adds the file ``tf2_tracked_pose.yaml`` for setting up the |CX| for this tutorial.
 
@@ -62,8 +62,8 @@ Next, a CLIPS file ``tf2_tracked_pose.clp`` can be downloaded to the ``clips`` d
 
 .. code-block:: bash
 
-   cd ~/ros2/cx_tutorial_ws/src/clips_tut_agent/clips
-   wget -O tf2_tracked_pose.clp https://raw.githubusercontent.com/fawkesrobotics/ros2-clips-executive/master/tutorials/clips_tut_agent/clips/tf2_tracked_pose.clp
+   cd ~/ros2/cx_tutorial_ws/src/cx_tutorial_agents/clips
+   wget -O tf2_tracked_pose.clp https://raw.githubusercontent.com/fawkesrobotics/ros2-clips-executive/master/tutorials/cx_tutorial_agents/clips/tf2_tracked_pose.clp
 
 The plugin code is taken from the :docsite:`Tf2PoseTrackerPlugin <clips_executive/plugins/tf2_pose_tracker_plugin>`. The code can be found on :source-master:`GitHub <cx_plugins/tf2_pose_tracker_plugin>`.
 
@@ -738,6 +738,12 @@ In a second terminal run the example setup for the plugin:
 
 .. code-block:: terminal
 
-    ros2 launch cx_bringup cx_launch.py manager_config:=tf2_tracked_pose.yaml package:=clips_tut_agent
+    ros2 launch cx_bringup cx_launch.py manager_config:=tf2_tracked_pose.yaml package:=cx_tutorial_agents
 
 It will track the pose of turtle1 with a frequency of 0.2 hz and stop the tracking after 5 updates.
+
+Optionally, open a third terminal to control the turtle:
+
+.. code-block:: terminal
+
+    ros2 run turtlesim turtle_teleop_key

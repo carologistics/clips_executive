@@ -16,6 +16,6 @@
 
     files:
       plugin: "cx::FileLoadPlugin"
-      pkg_share_dirs: ["clips_tut_agent"]
+      pkg_share_dirs: ["cx_tutorial_agents"]
       load: ["clips/turtlesim_monitor.clp",
              "clips/turtlesim_teleport.clp"]
