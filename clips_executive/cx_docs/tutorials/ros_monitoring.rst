@@ -470,7 +470,7 @@ Next Steps
 ----------
 
 You can check out the other plugins offered by the |CX| :docsite:`here <clips_executive/plugins>`.
-Also, you can learn how to :doc:`write your own CLIPS plugin <write_a_plugin>`.
+Also, you can learn how to :doc:`write your own CLIPS plugin <writing_a_plugin>`.
 
 Related Content
 ---------------

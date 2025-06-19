@@ -1,6 +1,8 @@
 .. _plugins:
+
 CLIPS Plugins
 =============
+
 The |CX| can dynamically load `pluginlib`_ plugins, which act as an interface for users to apply the CLIPS C++ API (See the |APG|), e.g., to inject user-defined functions into CLIPS environments.
 
 Plugins are specializations of of the :docsite:`cx_plugin` base class and are handled as follows:
@@ -12,7 +14,7 @@ Plugins are specializations of of the :docsite:`cx_plugin` base class and are ha
  - On destruction of a plugin, the `finalize()` function is called exactly once.
  - Before a plugin is destroyed, it is unloaded from all environments.
 
-See also the tutorial on :ref:`Writing a Plugin` to learn how to write your own plugins.
+See also the tutorial on :ref:`Writing a Plugin <writing_a_plugin>` to learn how to write your own plugins.
 
 The |CX| provides several plugins out-of-the-box that are described here.
 
@@ -20,6 +22,7 @@ In the following, the virtual functions and their purpose are described.
 
 initialize()
 ++++++++++++
+
 This function is called exactly once when a plugin is loaded, before it actually provides it's features to CLIPS environments.
 
 Typical uses include

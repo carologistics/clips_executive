@@ -1,4 +1,5 @@
 .. _usage_tf2_pose_tracker_plugin:
+
 TF2 Pose Tracker Plugin
 #######################
 
@@ -64,13 +65,13 @@ It requires the :rosdoc:`turtlesim` package, which provides a minimal simulation
 
 Open a terminal and start the tf2 turtlesim demo:
 
-.. code-block:: terminal
+.. code-block:: bash
 
     ros2 launch turtle_tf2_py turtle_tf2_demo.launch.py
 
 In a second terminal run the example setup for the plugin:
 
-.. code-block:: terminal
+.. code-block:: bash
 
     ros2 launch cx_bringup cx_launch.py manager_config:=tf2_tracked_pose.yaml package:=cx_tutorial_agents
 
@@ -78,7 +79,7 @@ It will track the pose of turtle1 with a frequency of 0.2 hz and stop the tracki
 
 Optionally, open a third terminal to control the turtle:
 
-.. code-block:: terminal
+.. code-block:: bash
 
     ros2 run turtlesim turtle_teleop_key
 

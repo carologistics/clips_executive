@@ -158,6 +158,7 @@ Further, the watch level of CLIPS is configured (see |BPG|) to monitor both fact
 The :docsite:`FileLoadPlugin <clips_executive/plugins/file_load_plugin>`, which can load files to CLIPS environments. It is configured to look for files in the current package and to load the file created above.
 
 .. code-block:: yaml
+
       files:
         plugin: "cx::FileLoadPlugin"
         pkg_share_dirs: ["cx_tutorial_agents"]

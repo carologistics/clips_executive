@@ -1,7 +1,8 @@
 .. _main:
 
 ROS 2 Clips-Executive
-======================
+=====================
+
 The |CX| offers an integration for CLIPS with the ROS ecosystem for developing knowledge-based applications.
 
 CLIPS
@@ -45,7 +46,6 @@ All new code is released under Apache 2.0 license, while some optional modules t
 .. toctree::
    :hidden:
 
-   index.rst
    getting_started/index.rst
    plugins/index.rst
    plugin_generator/index.rst
