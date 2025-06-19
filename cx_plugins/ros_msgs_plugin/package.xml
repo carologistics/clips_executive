@@ -3,11 +3,11 @@
 <package format="3">
   <name>cx_ros_msgs_plugin</name>
   <version>0.1.0</version>
-  <description>CLIPS plugin for using generic ROS topics via introspection API.</description>
+  <description>CLIPS plugin for using generic ROS topics via introspection API</description>
 
   <maintainer email="viehmann@kbsg.rwth-aachen.de">Tarik Viehmann</maintainer>
 
-  <license>Apache License 2.0</license>
+  <license>Apache-2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 

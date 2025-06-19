@@ -46,7 +46,7 @@ macro(_cx_generate_linked_protobuf_plugin_base name lib PROTO_FILES)
 
       # Create a shared library for the generated protobuf files
       add_library(${snake_case_name}_proto_messages SHARED ${PROTO_SRCS} ${PROTO_HDRS})
-      target_link_libraries(${snake_case_name}_proto_messages PUBLIC protobuf::libprotobuf)
+      target_link_libraries(${snake_case_name}_proto_messages PUBLIC protobuf::libprotobuf ProtobufComm::protobuf_comm)
       target_include_directories(${snake_case_name}_proto_messages PUBLIC ${Protobuf_INCLUDE_DIRS})
       install(TARGETS
         ${snake_case_name}_proto_messages

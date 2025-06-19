@@ -12,20 +12,12 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(PkgConfig REQUIRED)
-find_package(cx_utils REQUIRED)
-find_package(cx_msgs REQUIRED)
 find_package(pluginlib REQUIRED)
-find_package(rclcpp_lifecycle REQUIRED)
 find_package(clips_vendor REQUIRED)
 find_package(clips REQUIRED)
 
 set(dependencies
   ament_cmake
-  PkgConfig
-  cx_utils
-  cx_msgs
-  rclcpp_lifecycle
   pluginlib
 )
 
