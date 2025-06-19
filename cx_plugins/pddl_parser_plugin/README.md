@@ -17,7 +17,7 @@ clips_manager:
 ```
 ## CLIPS Features
 This plugin adds deftemplates and deffunctions as listed below:
-##### Deftemplates
+### Deftemplates
 ```lisp
 (deftemplate domain-object-type
   "A type in the domain. The type obj must be super-type of all types."
@@ -99,7 +99,7 @@ This plugin adds deftemplates and deffunctions as listed below:
 )
 ```
 
-##### Functions
+### Functions
 ```lisp
 ; Parse a PDDL domain by representing it through the templated facts above.
 (parse-pddl-domain ?formula ?output-id)

@@ -20,7 +20,7 @@ This plugin defines user-defined functions that are described below.
 Refer to the [ament_index_cpp API](https://docs.ros.org/en/rolling/p/ament_index_cpp/generated/index.html) for detailed information.
 
 Note that all functions catch potential exceptions thrown by `ament_index_cpp` and return `FALSE` in that case.
-##### Functions
+### Functions
 ```lisp
 (bind ?ret (ament-index-get-package-prefix ?package-name))
 ; example args: "cx_bringup"
