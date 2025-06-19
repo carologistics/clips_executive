@@ -1,6 +1,6 @@
 Usage
 #####
-This ducument assumes you have the |CX| installed and sourced in your environment.
+This document assumes you have the |CX| installed and sourced in your environment.
 
 ROS Node
 ++++++++
@@ -13,7 +13,7 @@ The |CX| mainly provides a ROS `lifecycle`_ node (:docsite:`Package <cx_clips_en
 
 It provides a clear execution flow guided through it's lifecycle states:
 
- * On being configured, it parses all parameters to determine the environmnents and plugins to load. It initializes the environments and plugins.
+ * On being configured, it parses all parameters to determine the environments and plugins to load. It initializes the environments and plugins.
  * On being activated, it first loads all requested plugins, before calling **(reset)**  in the environments, refreshing all agendas and calling **(run)** to start rule execution.
  * On being deactivated, it first asserts a ``(executive-finalize)`` fact before refreshing all agendas and calling **(run)** one more time to allow cleanup routines to execute before shutdown.
 

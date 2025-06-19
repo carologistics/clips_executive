@@ -78,7 +78,7 @@ A minimal working example is provided by the :docsite:`cx_bringup` package. Run 
 
     ros2 launch cx_bringup cx_launch.py manager_config:=plugin_examples/string_msg.yaml
 
-It creates a ``std_msgs/msg/String`` supscription on topic ``/ros_cx_in`` and prints out any text send over it.
+It creates a ``std_msgs/msg/String`` subscription on topic ``/ros_cx_in`` and prints out any text send over it.
 Additionally, it creates a publisher on ``/ros_cx_out`` that publishes ``Hello World`` whenever something is received over the ``/ros_cx_in`` topic.
 
 Configuration

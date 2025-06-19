@@ -142,7 +142,7 @@ The following functions are called at the appropriate places if they are defined
   ; If the function does not exist, every goal is automatically accepted (ACCEPT_AND_EXECUTE)
   (bind ?response-int (<package-kebab>-<action-kebab>-handle-goal-callback ?server-name-str ?goal-ptr ?uuid-str))
 
-; Gets called for each server receiving a cancelation request, needs to return one of these integers:
+; Gets called for each server receiving a cancellation request, needs to return one of these integers:
 ; (return 0) ; REJECT
 ; (return 1) ; ACCEPT
 ; If the function does not exist, every request is automatically accepted (ACCEPT)

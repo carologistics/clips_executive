@@ -11,4 +11,4 @@ The |CX| provides the following services to dynamically manage environments and 
 - */ns/node/list_plugins* for listing all plugins loaded in an environment.
 
 Whenever an environment is created, the |CX| reads the respective configuration parameters.
-Similarly, the first time a plugin is loaded (through a service call or on startup), it is instanciated using the current parameters. Subsequently loading or unloading of the plugin does not update the parameters (as it is only instanciated once).
+Similarly, the first time a plugin is loaded (through a service call or on startup), it is instantiated using the current parameters. Subsequently loading or unloading of the plugin does not update the parameters (as it is only instantiated once).

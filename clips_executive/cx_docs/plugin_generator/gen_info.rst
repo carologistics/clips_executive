@@ -49,9 +49,9 @@ In that case it is necessary to also generate bindings for the nested messages.
 Object Lifetimes and CLIPS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Since clips stores objects via void pointers, dynamic object lifetime management via `std::shared_ptr` does not work direcly from within CLIPS.
+Since clips stores objects via void pointers, dynamic object lifetime management via `std::shared_ptr` does not work directly from within CLIPS.
 Instead, object lifetimes need to be managed more explicitly through the usage of `create` and `destroy` functions.
 
 It is advised to clean up all objects as soon as they are not needed anymore in order to free up memory.
 
-This is mostly straight-forward in case of short lifetimes (e.g., creating a message and immidiately sending it), but can be a bit tricky in case of long-lasting references, such as goals and goal handles in action clients/servers. In particular, it is adviced to clean up resources belonging to a goal to only be cleaned up once the goal is fully processed and either rejected or finished.
+This is mostly straight-forward in case of short lifetimes (e.g., creating a message and immediately sending it), but can be a bit tricky in case of long-lasting references, such as goals and goal handles in action clients/servers. In particular, it is advised to clean up resources belonging to a goal to only be cleaned up once the goal is fully processed and either rejected or finished.
