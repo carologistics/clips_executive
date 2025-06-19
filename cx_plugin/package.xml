@@ -7,14 +7,11 @@
 
   <maintainer email="viehmann@kbsg.rwth-aachen.de">Tarik Viehmann</maintainer>
 
-  <license>Apache License 2.0</license>
+  <license>Apache-2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <depend>pkg-config</depend>
   <depend>cx_utils</depend>
-  <depend>rclcpp_lifecycle</depend>
-  <depend>cx_msgs</depend>
   <depend>clips_vendor</depend>
   <depend>pluginlib</depend>
 

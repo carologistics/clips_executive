@@ -13,7 +13,6 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(ament_index_cpp REQUIRED)
-find_package(rclcpp REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(cx_plugin REQUIRED)
 find_package(cx_utils REQUIRED)
@@ -22,7 +21,6 @@ find_package(clips REQUIRED)
 
 set(dependencies
   ament_cmake
-  rclcpp
   pluginlib
   cx_plugin
   cx_utils

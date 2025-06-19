@@ -8,12 +8,13 @@
 
   <maintainer email="viehmann@kbsg.rwth-aachen.de">Tarik Viehmann</maintainer>
 
-  <license>Apache License 2.0</license>
+  <license>Apache-2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>rclcpp</depend>
   <depend>spdlog</depend>
+  <depend>fmt</depend>
   <depend>clips_vendor</depend>
 
   <test_depend>ament_lint_auto</test_depend>
