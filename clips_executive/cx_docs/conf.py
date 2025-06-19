@@ -50,7 +50,7 @@ if local:
     }
 extlinks_detect_hardcoded_links = True
 todo_include_todos = True
-exclude_patterns = ["_build", "links.rst"]
+exclude_patterns = ["docs_build", "links.rst"]
 # Read link all targets from file
 rst_epilog = ""
 with open("links.rst") as f:

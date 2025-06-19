@@ -22,7 +22,7 @@ settings:
   ## TODO(wjwwood): provide a concrete example of this (relative path?)
 
   ## If this is not specified explicitly, it defaults to 'true'.
-  generate_package_index: false
+  generate_package_index: true
 
   ## This setting is relevant mostly if the standard Python package layout cannot
   ## be assumed for 'sphinx-apidoc' invocation. The user can provide the path
@@ -64,5 +64,6 @@ builders:
     name: 'clips_executive',
     ## This path is relative to output staging.
     doxygen_xml_directory: 'generated/doxygen/xml',
-    output_dir: ''
+    output_dir: '',
+    sphinx_sourcedir: cx_docs/
   }

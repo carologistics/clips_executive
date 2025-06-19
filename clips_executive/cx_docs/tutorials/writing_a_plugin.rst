@@ -1,3 +1,5 @@
+.. _writing_a_plugin:
+
 Writing a Plugin for TF Monitoring
 ##################################
 
@@ -165,7 +167,7 @@ The ``Tf2PoseTrackerPlugin`` class inherits from ``ClipsPlugin`` base class prov
 
     #endif // !CX_PLUGINS__TF2POSETRACKER_PLUGIN_HPP_
 
-        As such, it generally should override the functions ``initialize`` and ``finalize``, which are invoked when the plugin is loaded, as well as the function ``clips_env_init`` and ``clips_env_destoyed``, which are called each time a CLIPS environment loads and unloads the plugin.
+As such, it generally should override the functions ``initialize`` and ``finalize``, which are invoked when the plugin is loaded, as well as the function ``clips_env_init`` and ``clips_env_destoyed``, which are called each time a CLIPS environment loads and unloads the plugin.
 
 .. code-block:: cpp
 
@@ -378,7 +380,7 @@ The ``Build`` function is used to construct a deftemplate for the environment fr
             (multislot translation (type FLOAT) (cardinality 3 3)) \
             (multislot rotation (type FLOAT) (cardinality 4 4)) \
             (slot timer (type EXTERNAL-ADDRESS)) \
-)");
+  )");
 
 
 6.4 User-Defined Functions
@@ -462,7 +464,7 @@ The CLIPS arguments are converted to their native C++ types, before they are pas
 
 The output parameter is populated by creating a boolean indicating the success of the attempted helper function call.
 
-The second UDF is populated in much of the same way, this time taking an external address (void *) as argument, which needs to be casted to it's expected type.
+The second UDF is populated in much of the same way, this time taking an external address (``void *``) as argument, which needs to be casted to it's expected type.
 
 .. code-block:: cpp
 
@@ -730,13 +732,13 @@ When locating the stored ``PoseTracker``, it's timer is cancelled and the associ
 
 Open a terminal and start the tf2 turtlesim demo:
 
-.. code-block:: terminal
+.. code-block:: bash
 
     ros2 launch turtle_tf2_py turtle_tf2_demo.launch.py
 
 In a second terminal run the example setup for the plugin:
 
-.. code-block:: terminal
+.. code-block:: bash
 
     ros2 launch cx_bringup cx_launch.py manager_config:=tf2_tracked_pose.yaml package:=cx_tutorial_agents
 
@@ -744,6 +746,6 @@ It will track the pose of turtle1 with a frequency of 0.2 hz and stop the tracki
 
 Optionally, open a third terminal to control the turtle:
 
-.. code-block:: terminal
+.. code-block:: bash
 
     ros2 run turtlesim turtle_teleop_key

@@ -16,6 +16,7 @@ Configuration
 *************
 
 .. _refresh_rate:
+
 :`refresh_rate`:
 
   ============ =======
@@ -41,6 +42,7 @@ Configuration
     Mainly useful for debug purposes to measure the actual refresh rate.
 
 .. _assert_time:
+
 :`assert_time`:
 
   ============ =======
