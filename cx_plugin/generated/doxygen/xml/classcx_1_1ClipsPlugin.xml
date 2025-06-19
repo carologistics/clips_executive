@@ -27,7 +27,7 @@
         <name>ClipsPluginManager</name>
         <qualifiedname>cx::ClipsPlugin::ClipsPluginManager</qualifiedname>
         <param>
-          <type><ref refid="classcx_1_1ClipsPluginManager" kindref="compound" external="/home/runner/work/ros2-clips-executive/ros2-clips-executive/cross_reference/cx_clips_env_manager/cx_clips_env_manager.tag">ClipsPluginManager</ref></type>
+          <type><ref refid="classcx_1_1ClipsPluginManager" kindref="compound" external="/home/runner/work/clips-executive/clips-executive/cross_reference/cx_clips_env_manager/cx_clips_env_manager.tag">ClipsPluginManager</ref></type>
         </param>
         <briefdescription>
         </briefdescription>
@@ -234,7 +234,7 @@
 <para>Clips Plugin. </para>
     </briefdescription>
     <detaileddescription>
-<para>This base class provides the interface for clips plugins that are managed by the <ref refid="classcx_1_1ClipsPluginManager" kindref="compound" external="/home/runner/work/ros2-clips-executive/ros2-clips-executive/cross_reference/cx_clips_env_manager/cx_clips_env_manager.tag">ClipsPluginManager</ref>.</para>
+<para>This base class provides the interface for clips plugins that are managed by the <ref refid="classcx_1_1ClipsPluginManager" kindref="compound" external="/home/runner/work/clips-executive/clips-executive/cross_reference/cx_clips_env_manager/cx_clips_env_manager.tag">ClipsPluginManager</ref>.</para>
 <para>Inherit from this class and export your class as plugin via pluginlib. </para>
     </detaileddescription>
     <location file="include/cx_plugin/clips_plugin.hpp" line="34" column="1" bodyfile="include/cx_plugin/clips_plugin.hpp" bodystart="34" bodyend="85"/>

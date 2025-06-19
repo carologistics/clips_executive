@@ -227,7 +227,7 @@ Further, the watch level of CLIPS is configured (see <a class="reference externa
 <span class="w">  </span><span class="nt">watch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facts&quot;</span><span class="p p-Indicator">,</span><span class="s">&quot;rules&quot;</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
-<p>The <a class="reference external" href="https://fawkesrobotics.github.io/ros2-clips-executive/clips_executive/plugins/file_load_plugin">FileLoadPlugin</a>, which can load files to CLIPS environments. It is configured to look for files in the current package and to load the file created above.</p>
+<p>The <a class="reference external" href="https://carologistics.github.io/clips-executive/clips_executive/plugins/file_load_plugin">FileLoadPlugin</a>, which can load files to CLIPS environments. It is configured to look for files in the current package and to load the file created above.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">files</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::FileLoadPlugin&quot;</span>
 <span class="w">  </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_tutorial_agents&quot;</span><span class="p p-Indicator">]</span>
@@ -269,7 +269,7 @@ ros2<span class="w"> </span>run<span class="w"> </span>cx_clips_env_manager<span
 <span class="o">[</span>&lt;timestamp&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>hello_world<span class="o">]</span><span class="w"> </span><span class="o">[</span>info<span class="o">]</span><span class="w"> </span>hello<span class="w"> </span>world
 </pre></div>
 </div>
-<p>Once the run is completed, the node idles until it is shut down, which then causes the ROS2 CLIPS-Executive to assert the <code class="docutils literal notranslate"><span class="pre">executive-finalize</span></code> fact and then to run the inference engine again (see <a class="reference external" href="https://fawkesrobotics.github.io/ros2-clips-executive/Usage">Usage</a>).</p>
+<p>Once the run is completed, the node idles until it is shut down, which then causes the ROS2 CLIPS-Executive to assert the <code class="docutils literal notranslate"><span class="pre">executive-finalize</span></code> fact and then to run the inference engine again (see <a class="reference external" href="https://carologistics.github.io/clips-executive/Usage">Usage</a>).</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">[</span>&lt;timestamp&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>hello_world<span class="o">]</span><span class="w"> </span><span class="o">[</span>info<span class="o">]</span><span class="w"> </span><span class="o">==</span>&gt;<span class="w"> </span>f-1<span class="w">     </span><span class="o">(</span>executive-finalize<span class="o">)</span>
 </pre></div>
 </div>

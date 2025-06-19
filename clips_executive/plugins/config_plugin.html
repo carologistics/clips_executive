@@ -101,7 +101,7 @@
              
   <section id="yaml-configuration-plugin">
 <span id="usage-config-plugin"></span><h1>YAML Configuration Plugin<a class="headerlink" href="#yaml-configuration-plugin" title="Link to this heading"></a></h1>
-<p>Source code on <a class="reference external" href="https://github.com/fawkesrobotics/ros2-clips-executive/blob/master/cx_plugins/config_plugin">GitHub</a>.</p>
+<p>Source code on <a class="reference external" href="https://github.com/carologistics/clips-executive/blob/master/cx_plugins/config_plugin">GitHub</a>.</p>
 <div class="admonition-plugin-class admonition">
 <p class="admonition-title">Plugin Class</p>
 <p>cx::ConfigPlugin</p>
@@ -138,14 +138,14 @@
 </section>
 <section id="usage-example">
 <h2>Usage Example<a class="headerlink" href="#usage-example" title="Link to this heading"></a></h2>
-<p>A minimal working example is provided by the <a class="reference external" href="https://fawkesrobotics.github.io/ros2-clips-executive/cx_bringup">cx_bringup</a> package. Run it via:</p>
+<p>A minimal working example is provided by the <a class="reference external" href="https://carologistics.github.io/clips-executive/cx_bringup">cx_bringup</a> package. Run it via:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>cx_bringup<span class="w"> </span>cx_launch.py<span class="w"> </span>manager_config:<span class="o">=</span>plugin_examples/config.yaml
 </pre></div>
 </div>
 <p>It loads the used environment manager configuration file into CLIPS and prints the corresponding facts.</p>
 <section id="id1">
 <h3>Configuration<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
-<p>File <a class="reference external" href="https://github.com/fawkesrobotics/ros2-clips-executive/blob/master/cx_bringup/params/plugin_examples/config.yaml">cx_bringup/params/plugin_examples/config.yaml</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips-executive/blob/master/cx_bringup/params/plugin_examples/config.yaml">cx_bringup/params/plugin_examples/config.yaml</a>.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">clips_manager</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_config&quot;</span><span class="p p-Indicator">]</span>
@@ -168,7 +168,7 @@
 </section>
 <section id="code">
 <h3>Code<a class="headerlink" href="#code" title="Link to this heading"></a></h3>
-<p>File <a class="reference external" href="https://github.com/fawkesrobotics/ros2-clips-executive/blob/master/cx_bringup/clips/plugin_examples/config.clp">cx_bringup/clips/plugin_examples/config.clp</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips-executive/blob/master/cx_bringup/clips/plugin_examples/config.clp">cx_bringup/clips/plugin_examples/config.clp</a>.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">load-bringup-config</span>
 <span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">confval</span><span class="p">))</span>
 <span class="w">  </span><span class="nv">=&gt;</span>

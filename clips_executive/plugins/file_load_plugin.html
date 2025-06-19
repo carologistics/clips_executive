@@ -101,7 +101,7 @@
              
   <section id="file-load-plugin">
 <span id="usage-file-load-plugin"></span><h1>File Load Plugin<a class="headerlink" href="#file-load-plugin" title="Link to this heading"></a></h1>
-<p>Source code on <a class="reference external" href="https://github.com/fawkesrobotics/ros2-clips-executive/blob/master/cx_plugins/file_load_plugin">GitHub</a>.</p>
+<p>Source code on <a class="reference external" href="https://github.com/carologistics/clips-executive/blob/master/cx_plugins/file_load_plugin">GitHub</a>.</p>
 <div class="admonition-plugin-class admonition">
 <p class="admonition-title">Plugin Class</p>
 <p>cx::FileLoadPlugin</p>
@@ -192,13 +192,13 @@ E.g., when using batch, a missing closing parenthesis <code class="docutils lite
 </section>
 <section id="usage-example">
 <h2>Usage Example<a class="headerlink" href="#usage-example" title="Link to this heading"></a></h2>
-<p>A minimal working example is provided by the <a class="reference external" href="https://fawkesrobotics.github.io/ros2-clips-executive/cx_bringup">cx_bringup</a> package. Run it via:</p>
+<p>A minimal working example is provided by the <a class="reference external" href="https://carologistics.github.io/clips-executive/cx_bringup">cx_bringup</a> package. Run it via:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>cx_bringup<span class="w"> </span>cx_launch.py<span class="w"> </span>manager_config:<span class="o">=</span>plugin_examples/file_load.yaml
 </pre></div>
 </div>
 <section id="id1">
 <h3>Configuration<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
-<p>File <a class="reference external" href="https://github.com/fawkesrobotics/ros2-clips-executive/blob/master/cx_bringup/params/plugin_examples/file_load.yaml">cx_bringup/params/plugin_examples/file_load.yaml</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips-executive/blob/master/cx_bringup/params/plugin_examples/file_load.yaml">cx_bringup/params/plugin_examples/file_load.yaml</a>.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">clips_manager</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_file_load&quot;</span><span class="p p-Indicator">]</span>
@@ -217,7 +217,7 @@ E.g., when using batch, a missing closing parenthesis <code class="docutils lite
 </section>
 <section id="code">
 <h3>Code<a class="headerlink" href="#code" title="Link to this heading"></a></h3>
-<p>File <a class="reference external" href="https://github.com/fawkesrobotics/ros2-clips-executive/blob/master/cx_bringup/clips/plugin_examples/file-load.clp">cx_bringup/clips/plugin_examples/file-load.clp</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips-executive/blob/master/cx_bringup/clips/plugin_examples/file-load.clp">cx_bringup/clips/plugin_examples/file-load.clp</a>.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">hello-world</span>
 <span class="w">   </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">hello</span><span class="p">))</span>
 <span class="w">   </span><span class="nv">=&gt;</span>
@@ -231,11 +231,11 @@ E.g., when using batch, a missing closing parenthesis <code class="docutils lite
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>File <a class="reference external" href="https://github.com/fawkesrobotics/ros2-clips-executive/blob/master/cx_bringup/clips/plugin_examples/file-load-batch.clp">cx_bringup/clips/plugin_examples/file-load-batch.clp</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips-executive/blob/master/cx_bringup/clips/plugin_examples/file-load-batch.clp">cx_bringup/clips/plugin_examples/file-load-batch.clp</a>.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">yellow</span><span class="w"> </span><span class="s">&quot;batch&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>File <a class="reference external" href="https://github.com/fawkesrobotics/ros2-clips-executive/blob/master/cx_bringup/clips/plugin_examples/file-load-cleanup-batch.clp">cx_bringup/clips/plugin_examples/file-load-cleanup-batch.clp</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips-executive/blob/master/cx_bringup/clips/plugin_examples/file-load-cleanup-batch.clp">cx_bringup/clips/plugin_examples/file-load-cleanup-batch.clp</a>.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; file-load-cleanup-batch.clp</span>
 
 <span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">yellow</span><span class="w"> </span><span class="s">&quot;cleanup batch&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>

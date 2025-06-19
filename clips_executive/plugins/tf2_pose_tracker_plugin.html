@@ -101,7 +101,7 @@
              
   <section id="tf2-pose-tracker-plugin">
 <span id="usage-tf2-pose-tracker-plugin"></span><h1>TF2 Pose Tracker Plugin<a class="headerlink" href="#tf2-pose-tracker-plugin" title="Link to this heading"></a></h1>
-<p>Source code on <a class="reference external" href="https://github.com/fawkesrobotics/ros2-clips-executive/blob/master/cx_plugins/tf2_pose_tracker-plugin">GitHub</a>.</p>
+<p>Source code on <a class="reference external" href="https://github.com/carologistics/clips-executive/blob/master/cx_plugins/tf2_pose_tracker-plugin">GitHub</a>.</p>
 <div class="admonition-plugin-class admonition">
 <p class="admonition-title">Plugin Class</p>
 <p>cx::Tf2PoseTrackerPlugin</p>
@@ -157,8 +157,8 @@
 </section>
 <section id="usage-example">
 <h2>Usage Example<a class="headerlink" href="#usage-example" title="Link to this heading"></a></h2>
-<p>This plugin is discussed in more depth in the <a class="reference external" href="https://fawkesrobotics.github.io/ros2-clips-executive/plugins/writing_a_plugin.rst">Writing a Plugin for TF Monitoring Tutorial</a></p>
-<p>A minimal working example is provided by the <a class="reference external" href="https://fawkesrobotics.github.io/ros2-clips-executive/cx_tutorial_agents">cx_tutorial_agents</a> package.
+<p>This plugin is discussed in more depth in the <a class="reference external" href="https://carologistics.github.io/clips-executive/plugins/writing_a_plugin.rst">Writing a Plugin for TF Monitoring Tutorial</a></p>
+<p>A minimal working example is provided by the <a class="reference external" href="https://carologistics.github.io/clips-executive/cx_tutorial_agents">cx_tutorial_agents</a> package.
 It requires the <a class="reference external" href="https://docs.ros.org/en/humble/p/turtlesim">turtlesim</a> package, which provides a minimal simulation environment to interact with and the <a class="reference external" href="https://docs.ros.org/en/humble/p/turtle_tf2_py">turtle_tf2_py</a> package to obtain transforms from the simulation.</p>
 <p>Open a terminal and start the tf2 turtlesim demo:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>turtle_tf2_py<span class="w"> </span>turtle_tf2_demo.launch.py
@@ -175,7 +175,7 @@ It requires the <a class="reference external" href="https://docs.ros.org/en/humb
 </div>
 <section id="id1">
 <h3>Configuration<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
-<p>File <a class="reference external" href="https://github.com/fawkesrobotics/ros2-clips-executive/blob/master/cx_tutorial_agents/params/tf2_tracked_pose.yaml">cx_tutorial_agents/params/tf2_tracked_pose.yaml</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips-executive/blob/master/cx_tutorial_agents/params/tf2_tracked_pose.yaml">cx_tutorial_agents/params/tf2_tracked_pose.yaml</a>.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">/**</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">autostart_node</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
@@ -201,7 +201,7 @@ It requires the <a class="reference external" href="https://docs.ros.org/en/humb
 </section>
 <section id="code">
 <h3>Code<a class="headerlink" href="#code" title="Link to this heading"></a></h3>
-<p>File <a class="reference external" href="https://github.com/fawkesrobotics/ros2-clips-executive/blob/master/cx_tutorial_agents/clips/tf2_tracked_pose.clp">cx_tutorial_agents/clips/tf2_tracked_pose.clp</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips-executive/blob/master/cx_tutorial_agents/clips/tf2_tracked_pose.clp">cx_tutorial_agents/clips/tf2_tracked_pose.clp</a>.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">counter</span><span class="w"> </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">iteration</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">)))</span>
 
 

@@ -102,7 +102,7 @@
              
   <section id="generic-ros-msg-plugin">
 <span id="usage-ros-msgs-plugin"></span><h1>Generic ROS Msg Plugin<a class="headerlink" href="#generic-ros-msg-plugin" title="Link to this heading"></a></h1>
-<p>Source code on <a class="reference external" href="https://github.com/fawkesrobotics/ros2-clips-executive/blob/master/cx_plugins/ros_msgs_plugin">GitHub</a>.</p>
+<p>Source code on <a class="reference external" href="https://github.com/carologistics/clips-executive/blob/master/cx_plugins/ros_msgs_plugin">GitHub</a>.</p>
 <div class="admonition-plugin-class admonition">
 <p class="admonition-title">Plugin Class</p>
 <p>cx::RosMsgsPlugin</p>
@@ -230,7 +230,7 @@ See the example below:</p>
 </section>
 <section id="usage-example-1-publishers-and-subscribers">
 <h2>Usage Example 1: Publishers and Subscribers<a class="headerlink" href="#usage-example-1-publishers-and-subscribers" title="Link to this heading"></a></h2>
-<p>A minimal working example is provided by the <a class="reference external" href="https://fawkesrobotics.github.io/ros2-clips-executive/cx_bringup">cx_bringup</a> package. Run it via:</p>
+<p>A minimal working example is provided by the <a class="reference external" href="https://carologistics.github.io/clips-executive/cx_bringup">cx_bringup</a> package. Run it via:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>cx_bringup<span class="w"> </span>cx_launch.py<span class="w"> </span>manager_config:<span class="o">=</span>plugin_examples/ros_msgs.yaml
 </pre></div>
 </div>
@@ -238,7 +238,7 @@ See the example below:</p>
 Additionally, it creates a publisher on <code class="docutils literal notranslate"><span class="pre">/ros_cx_out</span></code> that publishes <code class="docutils literal notranslate"><span class="pre">Hello</span> <span class="pre">World</span></code> whenever something is received over the <code class="docutils literal notranslate"><span class="pre">/ros_cx_in</span></code> topic.</p>
 <section id="id1">
 <h3>Configuration<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
-<p>File <a class="reference external" href="https://github.com/fawkesrobotics/ros2-clips-executive/blob/master/cx_bringup/params/plugin_examples/ros_msgs.yaml">cx_bringup/params/plugin_examples/ros_msgs.yaml</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips-executive/blob/master/cx_bringup/params/plugin_examples/ros_msgs.yaml">cx_bringup/params/plugin_examples/ros_msgs.yaml</a>.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">clips_manager</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_ros_msgs&quot;</span><span class="p p-Indicator">]</span>
@@ -261,7 +261,7 @@ Additionally, it creates a publisher on <code class="docutils literal notranslat
 </section>
 <section id="code">
 <h3>Code<a class="headerlink" href="#code" title="Link to this heading"></a></h3>
-<p>File <a class="reference external" href="https://github.com/fawkesrobotics/ros2-clips-executive/blob/master/cx_bringup/clips/plugin_examples/ros-msgs.clp">cx_bringup/clips/plugin_examples/ros-msgs.clp</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips-executive/blob/master/cx_bringup/clips/plugin_examples/ros-msgs.clp">cx_bringup/clips/plugin_examples/ros-msgs.clp</a>.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">ros-msgs-pub-init</span>
 <span class="s">&quot; Create publisher for ros_cx_out.&quot;</span>
 <span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-publisher</span><span class="w"> </span><span class="p">(</span><span class="nv">topic</span><span class="w"> </span><span class="s">&quot;ros_cx_out&quot;</span><span class="p">)))</span>
@@ -330,7 +330,7 @@ Additionally, it creates a publisher on <code class="docutils literal notranslat
 </section>
 <section id="usage-example-2-service-client">
 <h2>Usage Example 2: Service Client<a class="headerlink" href="#usage-example-2-service-client" title="Link to this heading"></a></h2>
-<p>A minimal working example is provided by the <a class="reference external" href="https://fawkesrobotics.github.io/ros2-clips-executive/cx_bringup">cx_bringup</a> package. Run it via:</p>
+<p>A minimal working example is provided by the <a class="reference external" href="https://carologistics.github.io/clips-executive/cx_bringup">cx_bringup</a> package. Run it via:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>cx_bringup<span class="w"> </span>cx_launch.py<span class="w"> </span>manager_config:<span class="o">=</span>plugin_examples/ros_msgs_client.yaml
 </pre></div>
 </div>
@@ -341,7 +341,7 @@ Additionally, it creates a publisher on <code class="docutils literal notranslat
 </div>
 <section id="id2">
 <h3>Configuration<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
-<p>File <a class="reference external" href="https://github.com/fawkesrobotics/ros2-clips-executive/blob/master/cx_bringup/params/plugin_examples/ros_msgs_client.yaml">cx_bringup/params/plugin_examples/ros_msgs_client.yaml</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips-executive/blob/master/cx_bringup/params/plugin_examples/ros_msgs_client.yaml">cx_bringup/params/plugin_examples/ros_msgs_client.yaml</a>.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">clips_manager</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_ros_msgs_client&quot;</span><span class="p p-Indicator">]</span>
@@ -364,7 +364,7 @@ Additionally, it creates a publisher on <code class="docutils literal notranslat
 </section>
 <section id="id3">
 <h3>Code<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
-<p>File <a class="reference external" href="https://github.com/fawkesrobotics/ros2-clips-executive/blob/master/cx_bringup/clips/plugin_examples/ros-msgs.clp">cx_bringup/clips/plugin_examples/ros-msgs.clp</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips-executive/blob/master/cx_bringup/clips/plugin_examples/ros-msgs.clp">cx_bringup/clips/plugin_examples/ros-msgs.clp</a>.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">ros-msgs-client-init</span>
 <span class="s">&quot; Create publisher for ros_cx_out.&quot;</span>
 <span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-client</span><span class="w"> </span><span class="p">(</span><span class="nv">service</span><span class="w"> </span><span class="s">&quot;ros_cx_client&quot;</span><span class="p">)))</span>

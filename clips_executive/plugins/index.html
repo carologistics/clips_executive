@@ -106,7 +106,7 @@
 <span id="plugins"></span><h1>CLIPS Plugins<a class="headerlink" href="#clips-plugins" title="Link to this heading"></a></h1>
 <p>The ROS2 CLIPS-Executive can dynamically load <a class="reference external" href="https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Pluginlib.html">pluginlib</a> plugins, which act as an interface for users to apply the CLIPS C++ API (See the <a class="reference external" href="https://clipsrules.net/documentation/v641/apg641.pdf">Advanced Programming Guide (PDF)</a>), e.g., to inject user-defined functions into CLIPS environments.</p>
 <dl class="simple">
-<dt>Plugins are specializations of of the <a class="reference external" href="https://fawkesrobotics.github.io/ros2-clips-executive/cx_plugin">cx_plugin</a> base class and are handled as follows:</dt><dd><ul class="simple">
+<dt>Plugins are specializations of of the <a class="reference external" href="https://carologistics.github.io/clips-executive/cx_plugin">cx_plugin</a> base class and are handled as follows:</dt><dd><ul class="simple">
 <li><p>Each plugin is initialized exactly once before it is loaded into environments by calling it’s <code class="docutils literal notranslate"><span class="pre">initialize()</span></code> function.</p></li>
 <li><p>When an environment is loaded, all specified plugins are <strong>loaded in order</strong> of the respective plugins parameter.</p></li>
 <li><p>Whenever an environment needs to load a plugin, it’s <code class="docutils literal notranslate"><span class="pre">clips_env_init()</span></code> function is called once. Loading the same plugin again before unloading it first, results in an error (and the function is not called again).</p></li>
