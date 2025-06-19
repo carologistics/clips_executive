@@ -15,10 +15,12 @@ find_package(ament_cmake REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(clips_vendor REQUIRED)
 find_package(clips REQUIRED)
+find_package(rclcpp_lifecycle REQUIRED)
 
 set(dependencies
   ament_cmake
   pluginlib
+  rclcpp_lifecycle
 )
 
 set(CX_PLUGIN_SOURCES
