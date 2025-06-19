@@ -14,7 +14,6 @@
     <includes local="yes">lifecycle_msgs/msg/state.hpp</includes>
     <includes local="yes">lifecycle_msgs/msg/transition.hpp</includes>
     <includes refid="clips__plugin__manager_8hpp" local="yes">cx_clips_env_manager/clips_plugin_manager.hpp</includes>
-    <includes local="yes">cx_utils/lock_shared_ptr.hpp</includes>
     <includes local="yes">cx_msgs/srv/create_clips_env.hpp</includes>
     <includes local="yes">cx_msgs/srv/destroy_clips_env.hpp</includes>
     <includes local="yes">cx_msgs/srv/list_clips_envs.hpp</includes>
@@ -61,8 +60,6 @@
         </childnode>
         <childnode refid="26" relation="include">
         </childnode>
-        <childnode refid="27" relation="include">
-        </childnode>
       </node>
       <node id="13">
         <label>cx_clips_env_manager/clips_plugin_manager.hpp</label>
@@ -99,19 +96,19 @@
       <node id="2">
         <label>algorithm</label>
       </node>
-      <node id="26">
+      <node id="25">
         <label>bond/msg/constants.hpp</label>
       </node>
-      <node id="27">
+      <node id="26">
         <label>bondcpp/bond.hpp</label>
       </node>
-      <node id="22">
+      <node id="21">
         <label>cx_msgs/srv/create_clips_env.hpp</label>
       </node>
-      <node id="23">
+      <node id="22">
         <label>cx_msgs/srv/destroy_clips_env.hpp</label>
       </node>
-      <node id="24">
+      <node id="23">
         <label>cx_msgs/srv/list_clips_envs.hpp</label>
       </node>
       <node id="16">
@@ -125,9 +122,6 @@
       </node>
       <node id="15">
         <label>cx_plugin/clips_plugin.hpp</label>
-      </node>
-      <node id="21">
-        <label>cx_utils/lock_shared_ptr.hpp</label>
       </node>
       <node id="11">
         <label>lifecycle_msgs/msg/state.hpp</label>
@@ -162,7 +156,7 @@
       <node id="6">
         <label>set</label>
       </node>
-      <node id="25">
+      <node id="24">
         <label>spdlog/spdlog.h</label>
       </node>
       <node id="7">
@@ -211,86 +205,86 @@
 <codeline lineno="30"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;lifecycle_msgs/msg/transition.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="31"><highlight class="normal"></highlight></codeline>
 <codeline lineno="32"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;cx_clips_env_manager/clips_plugin_manager.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="33"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;cx_utils/lock_shared_ptr.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="34"><highlight class="normal"></highlight></codeline>
-<codeline lineno="35"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;cx_msgs/srv/create_clips_env.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="36"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;cx_msgs/srv/destroy_clips_env.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="37"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;cx_msgs/srv/list_clips_envs.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="38"><highlight class="normal"></highlight></codeline>
-<codeline lineno="39"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;spdlog/spdlog.h&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="40"><highlight class="normal"></highlight></codeline>
-<codeline lineno="41"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;bond/msg/constants.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="42"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;bondcpp/bond.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="43"><highlight class="normal"></highlight></codeline>
-<codeline lineno="44"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">cx<sp/>{</highlight></codeline>
-<codeline lineno="45"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">ClipsPluginManager;</highlight></codeline>
-<codeline lineno="46"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">ClipsExecutive;</highlight></codeline>
-<codeline lineno="47"><highlight class="normal"></highlight></codeline>
-<codeline lineno="48" refid="classcx_1_1CLIPSEnvManager" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classcx_1_1CLIPSEnvManager" kindref="compound">CLIPSEnvManager</ref><sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/>rclcpp_lifecycle::LifecycleNode<sp/>{</highlight></codeline>
-<codeline lineno="49"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">friend</highlight><highlight class="normal"><sp/><ref refid="classcx_1_1ClipsPluginManager" kindref="compound">ClipsPluginManager</ref>;</highlight></codeline>
-<codeline lineno="50"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">friend</highlight><highlight class="normal"><sp/>ClipsExecutive;</highlight></codeline>
-<codeline lineno="51"><highlight class="normal"></highlight></codeline>
-<codeline lineno="52"><highlight class="normal"></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
-<codeline lineno="53"><highlight class="normal"><sp/><sp/><ref refid="classcx_1_1CLIPSEnvManager" kindref="compound">CLIPSEnvManager</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>rclcpp::NodeOptions<sp/>&amp;options<sp/>=<sp/>rclcpp::NodeOptions());</highlight></codeline>
-<codeline lineno="54"><highlight class="normal"><sp/><sp/><ref refid="classcx_1_1CLIPSEnvManager" kindref="compound">~CLIPSEnvManager</ref>();</highlight></codeline>
-<codeline lineno="55"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">CallbackReturn<sp/>=</highlight></codeline>
-<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;</highlight></codeline>
-<codeline lineno="57"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>using<sp/>EnvsMap<sp/>=<sp/>std::unordered_map&lt;std::string,</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="58"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>cx::LockSharedPtr&lt;clips::Environment&gt;&gt;;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="59"><highlight class="normal"></highlight></codeline>
-<codeline lineno="60"><highlight class="normal"><sp/><sp/>CallbackReturn<sp/>on_configure(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>rclcpp_lifecycle::State<sp/>&amp;state);</highlight></codeline>
-<codeline lineno="61"><highlight class="normal"><sp/><sp/>CallbackReturn<sp/>on_activate(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>rclcpp_lifecycle::State<sp/>&amp;state);</highlight></codeline>
-<codeline lineno="62"><highlight class="normal"><sp/><sp/>CallbackReturn<sp/>on_deactivate(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>rclcpp_lifecycle::State<sp/>&amp;state);</highlight></codeline>
-<codeline lineno="63"><highlight class="normal"><sp/><sp/>CallbackReturn<sp/>on_shutdown(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>rclcpp_lifecycle::State<sp/>&amp;state);</highlight></codeline>
-<codeline lineno="64"><highlight class="normal"><sp/><sp/>CallbackReturn<sp/>on_error(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>rclcpp_lifecycle::State<sp/>&amp;state);</highlight></codeline>
-<codeline lineno="65"><highlight class="normal"></highlight></codeline>
-<codeline lineno="66"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>std::map&lt;std::string,<sp/>LockSharedPtr&lt;clips::Environment&gt;&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="67"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>getEnvironments()<sp/>const;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="68"><highlight class="normal"></highlight></codeline>
-<codeline lineno="69"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>LockSharedPtr&lt;clips::Environment&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="70"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>getEnvironmentByName(const<sp/>std::string<sp/>&amp;env_name);</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="71"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>list_envs_callback(</highlight></codeline>
-<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;rmw_request_id_t&gt;<sp/>request_header,</highlight></codeline>
-<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;cx_msgs::srv::ListClipsEnvs::Request&gt;<sp/>request,</highlight></codeline>
-<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;cx_msgs::srv::ListClipsEnvs::Response&gt;<sp/>response);</highlight></codeline>
-<codeline lineno="75"><highlight class="normal"></highlight></codeline>
-<codeline lineno="76"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>create_env_callback(</highlight></codeline>
-<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;rmw_request_id_t&gt;<sp/>request_header,</highlight></codeline>
-<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;cx_msgs::srv::CreateClipsEnv::Request&gt;<sp/>request,</highlight></codeline>
-<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;cx_msgs::srv::CreateClipsEnv::Response&gt;<sp/>response);</highlight></codeline>
-<codeline lineno="80"><highlight class="normal"></highlight></codeline>
-<codeline lineno="81"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>destroy_env_callback(</highlight></codeline>
-<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;rmw_request_id_t&gt;<sp/>request_header,</highlight></codeline>
-<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;cx_msgs::srv::DestroyClipsEnv::Request&gt;<sp/>request,</highlight></codeline>
-<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;cx_msgs::srv::DestroyClipsEnv::Response&gt;<sp/>response);</highlight></codeline>
-<codeline lineno="85"><highlight class="normal"></highlight></codeline>
-<codeline lineno="86"><highlight class="normal"></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
-<codeline lineno="87"><highlight class="normal"><sp/><sp/>LockSharedPtr&lt;clips::Environment&gt;<sp/>new_env(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;env_name);</highlight></codeline>
-<codeline lineno="88"><highlight class="normal"></highlight></codeline>
-<codeline lineno="89"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>delete_env(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;env_name);</highlight></codeline>
-<codeline lineno="90"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>void<sp/>assert_plugins(LockSharedPtr&lt;clips::Environment&gt;<sp/>&amp;clips,</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="91"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>bool<sp/>immediate_assert);</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="92"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>void<sp/>add_functions(const<sp/>std::string<sp/>&amp;env_name);</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="93"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>bool<sp/>guarded_load(LockSharedPtr&lt;clips::Environment&gt;<sp/>&amp;env,<sp/>const<sp/>std::string</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="94"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>&amp;filename);</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="95"><highlight class="normal"></highlight></codeline>
-<codeline lineno="96"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>ROS2<sp/>SERVICES</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="97"><highlight class="normal"><sp/><sp/>rclcpp::Service&lt;cx_msgs::srv::ListClipsEnvs&gt;::SharedPtr<sp/>list_envs_service_;</highlight></codeline>
-<codeline lineno="98"><highlight class="normal"><sp/><sp/>rclcpp::Service&lt;cx_msgs::srv::CreateClipsEnv&gt;::SharedPtr<sp/>create_env_service_;</highlight></codeline>
-<codeline lineno="99"><highlight class="normal"><sp/><sp/>rclcpp::Service&lt;cx_msgs::srv::DestroyClipsEnv&gt;::SharedPtr</highlight></codeline>
-<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>destroy_env_service_;</highlight></codeline>
-<codeline lineno="101"><highlight class="normal"></highlight></codeline>
-<codeline lineno="102"><highlight class="normal"></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
-<codeline lineno="103"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>create_bond();</highlight></codeline>
-<codeline lineno="104"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>destroy_bond();</highlight></codeline>
-<codeline lineno="105"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>autostart();</highlight></codeline>
-<codeline lineno="106"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>register_rcl_preshutdown_callback();</highlight></codeline>
-<codeline lineno="107"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>run_cleanups();</highlight></codeline>
-<codeline lineno="108"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>on_rcl_preshutdown();</highlight></codeline>
-<codeline lineno="109"><highlight class="normal"></highlight></codeline>
-<codeline lineno="110"><highlight class="normal"><sp/><sp/><ref refid="classcx_1_1ClipsPluginManager" kindref="compound">ClipsPluginManager</ref><sp/>plugin_manager_;</highlight></codeline>
-<codeline lineno="111"><highlight class="normal"></highlight></codeline>
-<codeline lineno="112"><highlight class="normal"><sp/><sp/>cx::LockSharedPtr&lt;EnvsMap&gt;<sp/>envs_;</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;cx_msgs/srv/create_clips_env.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;cx_msgs/srv/destroy_clips_env.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;cx_msgs/srv/list_clips_envs.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;spdlog/spdlog.h&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;bond/msg/constants.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;bondcpp/bond.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">cx<sp/>{</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">ClipsPluginManager;</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">ClipsExecutive;</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight></codeline>
+<codeline lineno="47" refid="classcx_1_1CLIPSEnvManager" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classcx_1_1CLIPSEnvManager" kindref="compound">CLIPSEnvManager</ref><sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/>rclcpp_lifecycle::LifecycleNode<sp/>{</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">friend</highlight><highlight class="normal"><sp/><ref refid="classcx_1_1ClipsPluginManager" kindref="compound">ClipsPluginManager</ref>;</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">friend</highlight><highlight class="normal"><sp/>ClipsExecutive;</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><ref refid="classcx_1_1CLIPSEnvManager" kindref="compound">CLIPSEnvManager</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>rclcpp::NodeOptions<sp/>&amp;options<sp/>=<sp/>rclcpp::NodeOptions());</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><ref refid="classcx_1_1CLIPSEnvManager" kindref="compound">~CLIPSEnvManager</ref>();</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">CallbackReturn<sp/>=</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>using<sp/>EnvsMap<sp/>=<sp/>std::unordered_map&lt;std::string,</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>cx::LockSharedPtr&lt;clips::Environment&gt;&gt;;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/>CallbackReturn<sp/>on_configure(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>rclcpp_lifecycle::State<sp/>&amp;state);</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/>CallbackReturn<sp/>on_activate(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>rclcpp_lifecycle::State<sp/>&amp;state);</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/>CallbackReturn<sp/>on_deactivate(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>rclcpp_lifecycle::State<sp/>&amp;state);</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/>CallbackReturn<sp/>on_shutdown(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>rclcpp_lifecycle::State<sp/>&amp;state);</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/>CallbackReturn<sp/>on_error(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>rclcpp_lifecycle::State<sp/>&amp;state);</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"></highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>std::map&lt;std::string,<sp/>LockSharedPtr&lt;clips::Environment&gt;&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>getEnvironments()<sp/>const;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="67"><highlight class="normal"></highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>LockSharedPtr&lt;clips::Environment&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>getEnvironmentByName(const<sp/>std::string<sp/>&amp;env_name);</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>list_envs_callback(</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;rmw_request_id_t&gt;<sp/>request_header,</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;cx_msgs::srv::ListClipsEnvs::Request&gt;<sp/>request,</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;cx_msgs::srv::ListClipsEnvs::Response&gt;<sp/>response);</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"></highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>create_env_callback(</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;rmw_request_id_t&gt;<sp/>request_header,</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;cx_msgs::srv::CreateClipsEnv::Request&gt;<sp/>request,</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;cx_msgs::srv::CreateClipsEnv::Response&gt;<sp/>response);</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"></highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>destroy_env_callback(</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;rmw_request_id_t&gt;<sp/>request_header,</highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;cx_msgs::srv::DestroyClipsEnv::Request&gt;<sp/>request,</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;cx_msgs::srv::DestroyClipsEnv::Response&gt;<sp/>response);</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/>std::shared_ptr&lt;clips::Environment&gt;<sp/>new_env(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;env_name);</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"></highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>delete_env(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;env_name);</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>void<sp/>assert_plugins(LockSharedPtr&lt;clips::Environment&gt;<sp/>&amp;clips,</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>bool<sp/>immediate_assert);</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>void<sp/>add_functions(const<sp/>std::string<sp/>&amp;env_name);</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>bool<sp/>guarded_load(LockSharedPtr&lt;clips::Environment&gt;<sp/>&amp;env,<sp/>const<sp/>std::string</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>&amp;filename);</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="94"><highlight class="normal"></highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>ROS2<sp/>SERVICES</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/>rclcpp::Service&lt;cx_msgs::srv::ListClipsEnvs&gt;::SharedPtr<sp/>list_envs_service_;</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/>rclcpp::Service&lt;cx_msgs::srv::CreateClipsEnv&gt;::SharedPtr<sp/>create_env_service_;</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/>rclcpp::Service&lt;cx_msgs::srv::DestroyClipsEnv&gt;::SharedPtr</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>destroy_env_service_;</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"></highlight></codeline>
+<codeline lineno="101"><highlight class="normal"></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>create_bond();</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>destroy_bond();</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>autostart();</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>register_rcl_preshutdown_callback();</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>run_cleanups();</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>on_rcl_preshutdown();</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"></highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/><ref refid="classcx_1_1ClipsPluginManager" kindref="compound">ClipsPluginManager</ref><sp/>plugin_manager_;</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"></highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/>std::shared_ptr&lt;EnvsMap&gt;<sp/>envs_;</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/>std::shared_ptr&lt;std::mutex&gt;<sp/>map_mtx_;</highlight></codeline>
 <codeline lineno="113"><highlight class="normal"></highlight></codeline>
 <codeline lineno="114"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Connection<sp/>to<sp/>tell<sp/>that<sp/>server<sp/>is<sp/>still<sp/>up</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="115"><highlight class="normal"><sp/><sp/>std::unique_ptr&lt;bond::Bond&gt;<sp/>bond_{</highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">};</highlight></codeline>

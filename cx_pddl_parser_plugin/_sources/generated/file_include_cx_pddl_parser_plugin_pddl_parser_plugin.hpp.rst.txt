@@ -34,8 +34,6 @@ Includes
 
 - ``cx_plugin/clips_plugin.hpp``
 
-- ``cx_utils/lock_shared_ptr.hpp``
-
 - ``map``
 
 - ``memory``

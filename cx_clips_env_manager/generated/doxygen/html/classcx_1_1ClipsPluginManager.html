@@ -90,9 +90,9 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>PluginsMap</b> = std
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a425b712eb2e583867a74809da1006396" id="r_a425b712eb2e583867a74809da1006396"><td class="memItemLeft" align="right" valign="top"><a id="a425b712eb2e583867a74809da1006396" name="a425b712eb2e583867a74809da1006396"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>configure</b> (const rclcpp_lifecycle::LifecycleNode::WeakPtr &amp;parent, const std::string &amp;name, LockSharedPtr&lt; EnvsMap &gt; &amp;envs)</td></tr>
-<tr class="separator:a425b712eb2e583867a74809da1006396"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ebd6b5644c9ddfd9cc0f1f08ddf4443" id="r_a6ebd6b5644c9ddfd9cc0f1f08ddf4443"><td class="memItemLeft" align="right" valign="top"><a id="a6ebd6b5644c9ddfd9cc0f1f08ddf4443" name="a6ebd6b5644c9ddfd9cc0f1f08ddf4443"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>configure</b> (const rclcpp_lifecycle::LifecycleNode::WeakPtr &amp;parent, const std::string &amp;name, std::shared_ptr&lt; EnvsMap &gt; &amp;envs, std::shared_ptr&lt; std::mutex &gt; &amp;map_mtx)</td></tr>
+<tr class="separator:a6ebd6b5644c9ddfd9cc0f1f08ddf4443"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a406358de5ccc5b4aab6a1b78b7b51b60" id="r_a406358de5ccc5b4aab6a1b78b7b51b60"><td class="memItemLeft" align="right" valign="top"><a id="a406358de5ccc5b4aab6a1b78b7b51b60" name="a406358de5ccc5b4aab6a1b78b7b51b60"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>cleanup</b> ()</td></tr>
 <tr class="memdesc:a406358de5ccc5b4aab6a1b78b7b51b60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cleanup resources. <br /></td></tr>
@@ -101,16 +101,16 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>cleanup</b> ()</td></
 void&#160;</td><td class="memItemRight" valign="bottom"><b>activate</b> ()</td></tr>
 <tr class="memdesc:a8fa97cdff583af75930a085c2c57f9da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Activate plugin manager. <br /></td></tr>
 <tr class="separator:a8fa97cdff583af75930a085c2c57f9da"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a85d1a2236ef1b10f2984d3ef9330b7a7" id="r_a85d1a2236ef1b10f2984d3ef9330b7a7"><td class="memItemLeft" align="right" valign="top"><a id="a85d1a2236ef1b10f2984d3ef9330b7a7" name="a85d1a2236ef1b10f2984d3ef9330b7a7"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>activate_env</b> (const std::string &amp;env_name, LockSharedPtr&lt; clips::Environment &gt; &amp;env)</td></tr>
-<tr class="separator:a85d1a2236ef1b10f2984d3ef9330b7a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a653c867e58c3b063f514c2f1f78817fd" id="r_a653c867e58c3b063f514c2f1f78817fd"><td class="memItemLeft" align="right" valign="top"><a id="a653c867e58c3b063f514c2f1f78817fd" name="a653c867e58c3b063f514c2f1f78817fd"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>activate_env</b> (const std::string &amp;env_name, std::shared_ptr&lt; clips::Environment &gt; &amp;env)</td></tr>
+<tr class="separator:a653c867e58c3b063f514c2f1f78817fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a561ff83f760a6e9a7852625a0a114a9a" id="r_a561ff83f760a6e9a7852625a0a114a9a"><td class="memItemLeft" align="right" valign="top"><a id="a561ff83f760a6e9a7852625a0a114a9a" name="a561ff83f760a6e9a7852625a0a114a9a"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>deactivate</b> ()</td></tr>
 <tr class="memdesc:a561ff83f760a6e9a7852625a0a114a9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deactivate plugin manager. <br /></td></tr>
 <tr class="separator:a561ff83f760a6e9a7852625a0a114a9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae71e812a14ac68b4688bf72a981901c7" id="r_ae71e812a14ac68b4688bf72a981901c7"><td class="memItemLeft" align="right" valign="top"><a id="ae71e812a14ac68b4688bf72a981901c7" name="ae71e812a14ac68b4688bf72a981901c7"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>deactivate_env</b> (const std::string &amp;env_name, LockSharedPtr&lt; clips::Environment &gt; &amp;env)</td></tr>
-<tr class="separator:ae71e812a14ac68b4688bf72a981901c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3da86533a8fb0aeba1426c9539e2d73e" id="r_a3da86533a8fb0aeba1426c9539e2d73e"><td class="memItemLeft" align="right" valign="top"><a id="a3da86533a8fb0aeba1426c9539e2d73e" name="a3da86533a8fb0aeba1426c9539e2d73e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>deactivate_env</b> (const std::string &amp;env_name, std::shared_ptr&lt; clips::Environment &gt; &amp;env)</td></tr>
+<tr class="separator:a3da86533a8fb0aeba1426c9539e2d73e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea194d3c4da6b3d3a2e6df14e4f97a72" id="r_aea194d3c4da6b3d3a2e6df14e4f97a72"><td class="memItemLeft" align="right" valign="top"><a id="aea194d3c4da6b3d3a2e6df14e4f97a72" name="aea194d3c4da6b3d3a2e6df14e4f97a72"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> ()</td></tr>
 <tr class="memdesc:aea194d3c4da6b3d3a2e6df14e4f97a72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset plugin manager. <br /></td></tr>

@@ -28,8 +28,6 @@ Classes
 
 - :ref:`exhale_class_classcx_1_1CLIPSLogger`
 
-- :ref:`exhale_class_classcx_1_1LockSharedPtr`
-
 
 Functions
 ---------

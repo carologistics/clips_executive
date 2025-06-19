@@ -9,25 +9,25 @@
             <type>typename NodeT</type>
           </param>
         </templateparamlist>
-        <type><ref refid="classcx_1_1LockSharedPtr" kindref="compound">void</ref></type>
+        <type>void</type>
         <definition>void cx::cx_utils::declare_parameter_if_not_declared</definition>
         <argsstring>(NodeT node, const std::string &amp;param_name, const rclcpp::ParameterValue &amp;default_value, const rcl_interfaces::msg::ParameterDescriptor &amp;parameter_descriptor=rcl_interfaces::msg::ParameterDescriptor())</argsstring>
         <name>declare_parameter_if_not_declared</name>
         <qualifiedname>cx::cx_utils::declare_parameter_if_not_declared</qualifiedname>
         <param>
-          <type><ref refid="classcx_1_1LockSharedPtr" kindref="compound">NodeT</ref></type>
+          <type>NodeT</type>
           <declname>node</declname>
         </param>
         <param>
-          <type><ref refid="classcx_1_1LockSharedPtr" kindref="compound">const</ref> std::string &amp;</type>
+          <type>const std::string &amp;</type>
           <declname>param_name</declname>
         </param>
         <param>
-          <type><ref refid="classcx_1_1LockSharedPtr" kindref="compound">const</ref> rclcpp::ParameterValue &amp;</type>
+          <type>const rclcpp::ParameterValue &amp;</type>
           <declname>default_value</declname>
         </param>
         <param>
-          <type><ref refid="classcx_1_1LockSharedPtr" kindref="compound">const</ref> rcl_interfaces::msg::ParameterDescriptor &amp;</type>
+          <type>const rcl_interfaces::msg::ParameterDescriptor &amp;</type>
           <declname>parameter_descriptor</declname>
           <defval>rcl_interfaces::msg::ParameterDescriptor()</defval>
         </param>
@@ -46,25 +46,25 @@
             <type>typename NodeT</type>
           </param>
         </templateparamlist>
-        <type><ref refid="classcx_1_1LockSharedPtr" kindref="compound">void</ref></type>
+        <type>void</type>
         <definition>void cx::cx_utils::declare_parameter_if_not_declared</definition>
         <argsstring>(NodeT node, const std::string &amp;param_name, const rclcpp::ParameterType &amp;param_type, const rcl_interfaces::msg::ParameterDescriptor &amp;parameter_descriptor=rcl_interfaces::msg::ParameterDescriptor())</argsstring>
         <name>declare_parameter_if_not_declared</name>
         <qualifiedname>cx::cx_utils::declare_parameter_if_not_declared</qualifiedname>
         <param>
-          <type><ref refid="classcx_1_1LockSharedPtr" kindref="compound">NodeT</ref></type>
+          <type>NodeT</type>
           <declname>node</declname>
         </param>
         <param>
-          <type><ref refid="classcx_1_1LockSharedPtr" kindref="compound">const</ref> std::string &amp;</type>
+          <type>const std::string &amp;</type>
           <declname>param_name</declname>
         </param>
         <param>
-          <type><ref refid="classcx_1_1LockSharedPtr" kindref="compound">const</ref> rclcpp::ParameterType &amp;</type>
+          <type>const rclcpp::ParameterType &amp;</type>
           <declname>param_type</declname>
         </param>
         <param>
-          <type><ref refid="classcx_1_1LockSharedPtr" kindref="compound">const</ref> rcl_interfaces::msg::ParameterDescriptor &amp;</type>
+          <type>const rcl_interfaces::msg::ParameterDescriptor &amp;</type>
           <declname>parameter_descriptor</declname>
           <defval>rcl_interfaces::msg::ParameterDescriptor()</defval>
         </param>
@@ -89,11 +89,11 @@
         <name>get_plugin_type_param</name>
         <qualifiedname>cx::cx_utils::get_plugin_type_param</qualifiedname>
         <param>
-          <type><ref refid="classcx_1_1LockSharedPtr" kindref="compound">NodeT</ref></type>
+          <type>NodeT</type>
           <declname>node</declname>
         </param>
         <param>
-          <type><ref refid="classcx_1_1LockSharedPtr" kindref="compound">const</ref> std::string &amp;</type>
+          <type>const std::string &amp;</type>
           <declname>plugin_name</declname>
         </param>
         <briefdescription>
@@ -127,17 +127,17 @@
         <location file="include/cx_utils/param_utils.hpp" line="78" column="13" bodyfile="include/cx_utils/param_utils.hpp" bodystart="78" bodyend="97"/>
       </memberdef>
       <memberdef kind="function" id="param__utils_8hpp_1ad7831d222c35339ea9ba003b800cf891" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
-        <type><ref refid="classcx_1_1LockSharedPtr" kindref="compound">void</ref></type>
+        <type>void</type>
         <definition>void cx::cx_utils::resolve_files</definition>
         <argsstring>(const std::vector&lt; std::string &gt; &amp;files_in, const std::vector&lt; std::string &gt; &amp;share_dirs, std::vector&lt; std::string &gt; &amp;files_out)</argsstring>
         <name>resolve_files</name>
         <qualifiedname>cx::cx_utils::resolve_files</qualifiedname>
         <param>
-          <type><ref refid="classcx_1_1LockSharedPtr" kindref="compound">const</ref> std::vector&lt; std::string &gt; &amp;</type>
+          <type>const std::vector&lt; std::string &gt; &amp;</type>
           <declname>files_in</declname>
         </param>
         <param>
-          <type><ref refid="classcx_1_1LockSharedPtr" kindref="compound">const</ref> std::vector&lt; std::string &gt; &amp;</type>
+          <type>const std::vector&lt; std::string &gt; &amp;</type>
           <declname>share_dirs</declname>
         </param>
         <param>

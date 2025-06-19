@@ -105,10 +105,10 @@ Collaboration diagram for cx::ConfigPlugin:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a3a94284e0f08bd7a6b2612438d7c55e6" id="r_a3a94284e0f08bd7a6b2612438d7c55e6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcx_1_1ConfigPlugin.html#a3a94284e0f08bd7a6b2612438d7c55e6">initialize</a> () override</td></tr>
 <tr class="separator:a3a94284e0f08bd7a6b2612438d7c55e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b9ba4726e7bc02ba5e899499da752a0" id="r_a2b9ba4726e7bc02ba5e899499da752a0"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcx_1_1ConfigPlugin.html#a2b9ba4726e7bc02ba5e899499da752a0">clips_env_init</a> (LockSharedPtr&lt; clips::Environment &gt; &amp;env) override</td></tr>
-<tr class="separator:a2b9ba4726e7bc02ba5e899499da752a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6ca27a0f54626711042088c74c899b72" id="r_a6ca27a0f54626711042088c74c899b72"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcx_1_1ConfigPlugin.html#a6ca27a0f54626711042088c74c899b72">clips_env_destroyed</a> (LockSharedPtr&lt; clips::Environment &gt; &amp;env) override</td></tr>
-<tr class="separator:a6ca27a0f54626711042088c74c899b72"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e51afbf559f9b53969e36549bd314ad" id="r_a9e51afbf559f9b53969e36549bd314ad"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcx_1_1ConfigPlugin.html#a9e51afbf559f9b53969e36549bd314ad">clips_env_init</a> (std::shared_ptr&lt; clips::Environment &gt; &amp;env) override</td></tr>
+<tr class="separator:a9e51afbf559f9b53969e36549bd314ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5426411e51fae61b6b7924b753718051" id="r_a5426411e51fae61b6b7924b753718051"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcx_1_1ConfigPlugin.html#a5426411e51fae61b6b7924b753718051">clips_env_destroyed</a> (std::shared_ptr&lt; clips::Environment &gt; &amp;env) override</td></tr>
+<tr class="separator:a5426411e51fae61b6b7924b753718051"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classcx_1_1ClipsPlugin"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classcx_1_1ClipsPlugin')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el"  href="http://docs.ros.org/en/latest/p/cx_plugin/generated/doxygen/html/classcx_1_1ClipsPlugin.html">cx::ClipsPlugin</a></td></tr>
 <tr class="memitem:a3aa0e046356cc938b853e414c539cb60 inherit pub_methods_classcx_1_1ClipsPlugin" id="r_a3aa0e046356cc938b853e414c539cb60"><td class="memItemLeft" align="right" valign="top">
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="elRef" href="http://docs.ros.org/en/latest/p/cx_plugin/generated/doxygen/html/classcx_1_1ClipsPlugin.html#a3aa0e046356cc938b853e414c539cb60">finalize</a> ()</td></tr>
@@ -125,8 +125,8 @@ rclcpp_lifecycle::LifecycleNode::WeakPtr&#160;</td><td class="memItemRight" vali
 <tr class="separator:a5c9c64f5ab925a688f022554d3985342 inherit pro_attribs_classcx_1_1ClipsPlugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a6ca27a0f54626711042088c74c899b72" name="a6ca27a0f54626711042088c74c899b72"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6ca27a0f54626711042088c74c899b72">&#9670;&#160;</a></span>clips_env_destroyed()</h2>
+<a id="a5426411e51fae61b6b7924b753718051" name="a5426411e51fae61b6b7924b753718051"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5426411e51fae61b6b7924b753718051">&#9670;&#160;</a></span>clips_env_destroyed()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -137,7 +137,7 @@ rclcpp_lifecycle::LifecycleNode::WeakPtr&#160;</td><td class="memItemRight" vali
         <tr>
           <td class="memname">bool cx::ConfigPlugin::clips_env_destroyed </td>
           <td>(</td>
-          <td class="paramtype">LockSharedPtr&lt; clips::Environment &gt; &amp;&#160;</td>
+          <td class="paramtype">std::shared_ptr&lt; clips::Environment &gt; &amp;&#160;</td>
           <td class="paramname"><em>env</em></td><td>)</td>
           <td></td>
         </tr>
@@ -149,12 +149,12 @@ rclcpp_lifecycle::LifecycleNode::WeakPtr&#160;</td><td class="memItemRight" vali
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="elRef" href="http://docs.ros.org/en/latest/p/cx_plugin/generated/doxygen/html/classcx_1_1ClipsPlugin.html#acd6b69af115c20027831a5014a43cbe0">cx::ClipsPlugin</a>.</p>
+<p>Implements <a class="elRef" href="http://docs.ros.org/en/latest/p/cx_plugin/generated/doxygen/html/classcx_1_1ClipsPlugin.html#a503dc794d932be7047a2d9c3901c61df">cx::ClipsPlugin</a>.</p>
 
 </div>
 </div>
-<a id="a2b9ba4726e7bc02ba5e899499da752a0" name="a2b9ba4726e7bc02ba5e899499da752a0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2b9ba4726e7bc02ba5e899499da752a0">&#9670;&#160;</a></span>clips_env_init()</h2>
+<a id="a9e51afbf559f9b53969e36549bd314ad" name="a9e51afbf559f9b53969e36549bd314ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e51afbf559f9b53969e36549bd314ad">&#9670;&#160;</a></span>clips_env_init()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -165,7 +165,7 @@ rclcpp_lifecycle::LifecycleNode::WeakPtr&#160;</td><td class="memItemRight" vali
         <tr>
           <td class="memname">bool cx::ConfigPlugin::clips_env_init </td>
           <td>(</td>
-          <td class="paramtype">LockSharedPtr&lt; clips::Environment &gt; &amp;&#160;</td>
+          <td class="paramtype">std::shared_ptr&lt; clips::Environment &gt; &amp;&#160;</td>
           <td class="paramname"><em>env</em></td><td>)</td>
           <td></td>
         </tr>
@@ -177,7 +177,7 @@ rclcpp_lifecycle::LifecycleNode::WeakPtr&#160;</td><td class="memItemRight" vali
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="elRef" href="http://docs.ros.org/en/latest/p/cx_plugin/generated/doxygen/html/classcx_1_1ClipsPlugin.html#ae76613ee6d5866e5ffb7b8ac14aaaa03">cx::ClipsPlugin</a>.</p>
+<p>Implements <a class="elRef" href="http://docs.ros.org/en/latest/p/cx_plugin/generated/doxygen/html/classcx_1_1ClipsPlugin.html#ae0bf2f3822f20d250a1763bb2f7b1b8c">cx::ClipsPlugin</a>.</p>
 
 </div>
 </div>

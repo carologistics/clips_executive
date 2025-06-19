@@ -140,8 +140,8 @@ to CLIPS, e.g., protobuf messages along with functions to access their content.<
 <li><p>Initialization of Environmnent-agnostic class members.</p></li>
 </ol>
 </section>
-<section id="clips-env-init-locksharedptrclips-environment-env">
-<h4>clips_env_init(LockSharedPtr<a class="reference external" href="clips::Environment">clips::Environment</a> &amp;env)<a class="headerlink" href="#clips-env-init-locksharedptrclips-environment-env" title="Link to this heading"></a></h4>
+<section id="clips-env-init-std-shared-ptrclips-environment-env">
+<h4>clips_env_init(std::shared_ptr<a class="reference external" href="clips::Environment">clips::Environment</a> &amp;env)<a class="headerlink" href="#clips-env-init-std-shared-ptrclips-environment-env" title="Link to this heading"></a></h4>
 <p>Called once for every environment the plugin is loaded into.</p>
 <p>Typically this is used to inject user-defined functions, define templates etc.</p>
 <p>It should return <code class="docutils literal notranslate"><span class="pre">true</span></code>, if the initialization of the environment was successful. If it returns <code class="docutils literal notranslate"><span class="pre">false</span></code>, then the plugin manager will call <code class="docutils literal notranslate"><span class="pre">clips_env_destroyed</span></code> to allow proper cleanup.</p>
@@ -151,45 +151,25 @@ to CLIPS, e.g., protobuf messages along with functions to access their content.<
 <p>This in particular means that all asserted facts and instances are deleted and it makes no sense to directly assert facts in this function.</p>
 <p>If your plugin should provide initial facts, it should therefore use <code class="docutils literal notranslate"><span class="pre">deffacts</span></code> instead, which would assert the facts on reset.</p>
 </section>
-<section id="multithreading-and-clips">
-<h5>Multithreading and CLIPS<a class="headerlink" href="#multithreading-and-clips" title="Link to this heading"></a></h5>
-<p>The passed environment is wrapped in an object containing a mutex.
-<strong>Operations on CLIPS environments are not thread-safe</strong>, hence this mutex should be used to guard any scope that accesses the environment from a different thread.</p>
-<p>Note that it <strong>must not guard the scope within clips_env_init</strong>, as the plugin manager already guards the environment.</p>
-<p>It also <strong>must not guard the scope inside of CLIPS user-defined functions</strong>, as they are called from within the CLIPS engine, hence are already guarded by the CLIPS-Executive when it calls the <code class="docutils literal notranslate"><span class="pre">run</span></code> command for the environment.</p>
-<p>Also, be aware that CLIPS will evaluate the LHS of rules any time the fact base changes, which can easily cause deadlocks if not handled properly in multi-threaded plugins.
-Consider this example from <strong>cx_ros_msgs_plugin</strong> which allows interactions with ROS topics:</p>
-<ol class="arabic simple">
-<li><p>The asynchronous subscription callbacks adds messages and meta-data to an unordered map, which needs to be guarded by a mutex <code class="docutils literal notranslate"><span class="pre">map_mtx_</span></code> as multiple write operations could occur at the same time when multi-threaded executors and reentrant callback groups are used.
-Additionally, the messages are asserted as facts (holding a reference to the message) in the callback.</p></li>
-<li><p>The <strong>ros-msgs-get-field</strong> UDF allows to retrieve fields of messages. As fields may contain messages, this again might need to store meta-data, hence it also needs to lock <code class="docutils literal notranslate"><span class="pre">map_mtx_</span></code>.</p></li>
-</ol>
-<p>A simple implementation using a scoped lock for the entire scope of the callback and the entire scope of <strong>ros-msgs-get-field</strong> could cause a deadlock if the ros-msgs-get-field function is called on the left-hand side of a rule, e.g., like this:</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">deadlock-example</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-subscription</span><span class="w"> </span><span class="p">(</span><span class="nv">topic</span><span class="w"> </span><span class="nv">?sub</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">?msg-f</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-message</span><span class="w"> </span><span class="p">(</span><span class="nv">topic</span><span class="w"> </span><span class="nv">?sub</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">msg-ptr</span><span class="w"> </span><span class="nv">?inc-msg</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">test</span><span class="w"> </span><span class="p">(</span><span class="nb">and</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-get-field</span><span class="w"> </span><span class="nv">?inc-msg</span><span class="w"> </span><span class="s">&quot;velocity&quot;</span><span class="p">))))</span>
-<span class="o">...</span>
-</pre></div>
-</div>
-<p>The assertion of the fact in the callback triggers the conditional check in the rule which therefore tries to lock <code class="docutils literal notranslate"><span class="pre">map_mtx_</span></code> blocked by the callback function itself.</p>
-</section>
-<section id="environment-context">
-<h5>Environment Context<a class="headerlink" href="#environment-context" title="Link to this heading"></a></h5>
-<p>Each environment also holds an instance of the <code class="docutils literal notranslate"><span class="pre">CLIPSEnvContext</span></code> class from the <strong>cx_utils</strong> package that can be retrieved via a static function:</p>
+<section id="environment-context-and-multithreading">
+<h5>Environment Context and Multithreading<a class="headerlink" href="#environment-context-and-multithreading" title="Link to this heading"></a></h5>
+<p>Each environment also holds an instance of the <code class="docutils literal notranslate"><span class="pre">CLIPSEnvContext</span></code> class from the <strong>cx_utils</strong> package that can be retrieved via static functions:</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">cx</span><span class="o">::</span><span class="n">CLIPSEnvContext</span><span class="o">::</span><span class="n">get_context</span><span class="p">(</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="w"> </span><span class="o">*</span><span class="n">env</span><span class="p">)</span>
+<span class="n">cx</span><span class="o">::</span><span class="n">CLIPSEnvContext</span><span class="o">::</span><span class="n">get_context</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="o">&gt;</span><span class="w"> </span><span class="n">env</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>This instance contains the name and the environment as well as the LockSharedPtr to the environment.</p>
-<p>Hence, if you plan on performing any asynchronous tasks that are triggered from CLIPS user-defined functions (which provide only a raw pointer to an environment), you can retrieve the mutex via this additional context to ensure thread-safe guarding of the CLIPS environment.</p>
+<p>This instance contains the name and the environment as well as a mutex to guardthe environment.</p>
+<p><strong>Operations on CLIPS environments are not thread-safe</strong>, hence each environment interaction needs to be guarded by this mutex.
+This is mainly relevant for plugins handling asynchronous operations.
+Directly accessing the environment in <strong>clips_env_init</strong> or <strong>clips_env_destroyed</strong> is safe, because the plugin manager already guards the environments with the mutex (do <strong>not</strong> attempt to lock the mutex in this context or it will block).</p>
+<p>Similarly, if a plugin provides a C++ function to a CLIPS environment, it’s body will be scoped through whatever context that invoked the function (e.g., the CLIPS environment manager through invoking the inference engine via <code class="docutils literal notranslate"><span class="pre">(run)</span></code>).</p>
 </section>
 </section>
-<section id="clips-env-destroyed-locksharedptrclips-environment-env">
-<h4>clips_env_destroyed(LockSharedPtr<a class="reference external" href="clips::Environment">clips::Environment</a> &amp;env)<a class="headerlink" href="#clips-env-destroyed-locksharedptrclips-environment-env" title="Link to this heading"></a></h4>
+<section id="clips-env-destroyed-std-shared-ptrclips-environment-env">
+<h4>clips_env_destroyed(std::shared_ptr<a class="reference external" href="clips::Environment">clips::Environment</a> &amp;env)<a class="headerlink" href="#clips-env-destroyed-std-shared-ptrclips-environment-env" title="Link to this heading"></a></h4>
 <p>Called once for every environment that needs to unload a previously loaded plugin’s feature.
 Also is called when a <code class="docutils literal notranslate"><span class="pre">clips_env_init</span></code> call returns <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p>
 <p>Typically this is used to undefine user-defined functions, templates, etc.</p>
-<p>Note that the environment <strong>must not guard the scope within clips_env_destroyed</strong>, as the plugin manager already guards the environment.</p>
 </section>
 <section id="finalize">
 <h4>finalize()<a class="headerlink" href="#finalize" title="Link to this heading"></a></h4>

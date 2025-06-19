@@ -19,14 +19,14 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="102" column="17" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="102" bodyend="107"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="101" column="17" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="101" bodyend="106"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="101" column="3" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="101" bodyend="108"/>
+    <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="100" column="3" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="100" bodyend="107"/>
     <listofallmembers>
       <member refid="structcx_1_1RosMsgsPlugin_1_1MessageInfoHasher_1a29694b8acaa4ca1fd5ab32126d976c1e" prot="public" virt="non-virtual"><scope>cx::RosMsgsPlugin::MessageInfoHasher</scope><name>operator()</name></member>
     </listofallmembers>

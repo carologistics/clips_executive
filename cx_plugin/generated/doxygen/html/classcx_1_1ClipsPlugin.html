@@ -98,11 +98,11 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>initialize</b
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>finalize</b> ()</td></tr>
 <tr class="memdesc:a3aa0e046356cc938b853e414c539cb60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called once for each plugin when it is unloaded. <br /></td></tr>
 <tr class="separator:a3aa0e046356cc938b853e414c539cb60"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae76613ee6d5866e5ffb7b8ac14aaaa03" id="r_ae76613ee6d5866e5ffb7b8ac14aaaa03"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcx_1_1ClipsPlugin.html#ae76613ee6d5866e5ffb7b8ac14aaaa03">clips_env_init</a> (LockSharedPtr&lt; clips::Environment &gt; &amp;env)=0</td></tr>
-<tr class="memdesc:ae76613ee6d5866e5ffb7b8ac14aaaa03"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after initialize once for every managed Clips environment.  <br /></td></tr>
-<tr class="separator:ae76613ee6d5866e5ffb7b8ac14aaaa03"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acd6b69af115c20027831a5014a43cbe0" id="r_acd6b69af115c20027831a5014a43cbe0"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcx_1_1ClipsPlugin.html#acd6b69af115c20027831a5014a43cbe0">clips_env_destroyed</a> (LockSharedPtr&lt; clips::Environment &gt; &amp;env)=0</td></tr>
-<tr class="separator:acd6b69af115c20027831a5014a43cbe0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0bf2f3822f20d250a1763bb2f7b1b8c" id="r_ae0bf2f3822f20d250a1763bb2f7b1b8c"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcx_1_1ClipsPlugin.html#ae0bf2f3822f20d250a1763bb2f7b1b8c">clips_env_init</a> (std::shared_ptr&lt; clips::Environment &gt; &amp;env)=0</td></tr>
+<tr class="memdesc:ae0bf2f3822f20d250a1763bb2f7b1b8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after initialize once for every managed Clips environment.  <br /></td></tr>
+<tr class="separator:ae0bf2f3822f20d250a1763bb2f7b1b8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a503dc794d932be7047a2d9c3901c61df" id="r_a503dc794d932be7047a2d9c3901c61df"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcx_1_1ClipsPlugin.html#a503dc794d932be7047a2d9c3901c61df">clips_env_destroyed</a> (std::shared_ptr&lt; clips::Environment &gt; &amp;env)=0</td></tr>
+<tr class="separator:a503dc794d932be7047a2d9c3901c61df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb1a9459c0b47aeac9ed24861732baad" id="r_acb1a9459c0b47aeac9ed24861732baad"><td class="memItemLeft" align="right" valign="top"><a id="acb1a9459c0b47aeac9ed24861732baad" name="acb1a9459c0b47aeac9ed24861732baad"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>get_plugin_name</b> () const</td></tr>
 <tr class="separator:acb1a9459c0b47aeac9ed24861732baad"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -129,8 +129,8 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>ClipsPluginManager</
 <p>This base class provides the interface for clips plugins that are managed by the <a class="elRef" href="http://docs.ros.org/en/latest/p/cx_clips_env_manager/generated/doxygen/html/classcx_1_1ClipsPluginManager.html">ClipsPluginManager</a>.</p>
 <p>Inherit from this class and export your class as plugin via pluginlib. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="acd6b69af115c20027831a5014a43cbe0" name="acd6b69af115c20027831a5014a43cbe0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acd6b69af115c20027831a5014a43cbe0">&#9670;&#160;</a></span>clips_env_destroyed()</h2>
+<a id="a503dc794d932be7047a2d9c3901c61df" name="a503dc794d932be7047a2d9c3901c61df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a503dc794d932be7047a2d9c3901c61df">&#9670;&#160;</a></span>clips_env_destroyed()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -141,7 +141,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>ClipsPluginManager</
         <tr>
           <td class="memname">virtual bool cx::ClipsPlugin::clips_env_destroyed </td>
           <td>(</td>
-          <td class="paramtype">LockSharedPtr&lt; clips::Environment &gt; &amp;&#160;</td>
+          <td class="paramtype">std::shared_ptr&lt; clips::Environment &gt; &amp;&#160;</td>
           <td class="paramname"><em>env</em></td><td>)</td>
           <td></td>
         </tr>
@@ -162,8 +162,8 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>ClipsPluginManager</
 
 </div>
 </div>
-<a id="ae76613ee6d5866e5ffb7b8ac14aaaa03" name="ae76613ee6d5866e5ffb7b8ac14aaaa03"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae76613ee6d5866e5ffb7b8ac14aaaa03">&#9670;&#160;</a></span>clips_env_init()</h2>
+<a id="ae0bf2f3822f20d250a1763bb2f7b1b8c" name="ae0bf2f3822f20d250a1763bb2f7b1b8c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae0bf2f3822f20d250a1763bb2f7b1b8c">&#9670;&#160;</a></span>clips_env_init()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -174,7 +174,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>ClipsPluginManager</
         <tr>
           <td class="memname">virtual bool cx::ClipsPlugin::clips_env_init </td>
           <td>(</td>
-          <td class="paramtype">LockSharedPtr&lt; clips::Environment &gt; &amp;&#160;</td>
+          <td class="paramtype">std::shared_ptr&lt; clips::Environment &gt; &amp;&#160;</td>
           <td class="paramname"><em>env</em></td><td>)</td>
           <td></td>
         </tr>

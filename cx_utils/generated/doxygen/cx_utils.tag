@@ -8,16 +8,4 @@
     <name>cx::CLIPSLogger</name>
     <filename>classcx_1_1CLIPSLogger.html</filename>
   </compound>
-  <compound kind="class">
-    <name>cx::LockSharedPtr</name>
-    <filename>classcx_1_1LockSharedPtr.html</filename>
-    <templarg>class T</templarg>
-    <member kind="function">
-      <type>std::shared_ptr&lt; T &gt;</type>
-      <name>operator-&gt;</name>
-      <anchorfile>classcx_1_1LockSharedPtr.html</anchorfile>
-      <anchor>af04ac9428dff30c22056025d1f5f9578</anchor>
-      <arglist>() const</arglist>
-    </member>
-  </compound>
 </tagfile>

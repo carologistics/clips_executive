@@ -20,7 +20,7 @@ This typically involves interleaving runs of the CLIPS inference engine with oth
 Prerequisites
 -------------
 
-This tutorial extends the ``cx_tut_agent`` package created in the :doc:`previous tutorial <hello_world>`.
+This tutorial extends the ``cx_tutorial_agents`` package created in the :doc:`previous tutorial <hello_world>`.
 Additionally, it requires the :rosdoc:`turtlesim` package, which provides a minimal simulation environment to interact with.
 
 Continuous Monitoring
@@ -34,12 +34,12 @@ Whenever the pose is outside of the bounding box, a request to the teleport serv
 1 Obtaining the Files
 ^^^^^^^^^^^^^^^^^^^^^
 
-Navigate to the ``params`` directory of the ``clips_tut_agent`` package from the :doc:`Hello World tutorial <hello_world>` and download the configuration file using the following command:
+Navigate to the ``params`` directory of the ``cx_tutorial_agents`` package from the :doc:`Hello World tutorial <hello_world>` and download the configuration file using the following command:
 
 .. code-block:: bash
 
-   cd ~/ros2/cx_tutorial_ws/src/clips_tut_agent/params
-   wget -O tutlesim.yaml https://raw.githubusercontent.com/fawkesrobotics/ros2-clips-executive/master/tutorials/clips_tut_agent/params/turtlesim.yaml
+   cd ~/ros2/cx_tutorial_ws/src/cx_tutorial_agents/params
+   wget -O tutlesim.yaml https://raw.githubusercontent.com/fawkesrobotics/ros2-clips-executive/master/tutorials/cx_tutorial_agents/params/turtlesim.yaml
 
 This adds the file ``turtlesim.yaml``.
 
@@ -47,9 +47,9 @@ Next, two CLIPS files can be downloaded to the ``clips`` directory:
 
 .. code-block:: bash
 
-   cd ~/ros2/cx_tutorial_ws/src/clips_tut_agent/clips
-   wget -O tutlesim_monitor.clp https://raw.githubusercontent.com/fawkesrobotics/ros2-clips-executive/master/tutorials/clips_tut_agent/clips/turtlesim_monitor.clp
-   wget -O tutlesim_teleport.clp https://raw.githubusercontent.com/fawkesrobotics/ros2-clips-executive/master/tutorials/clips_tut_agent/clips/turtlesim_teleport.clp
+   cd ~/ros2/cx_tutorial_ws/src/cx_tutorial_agents/clips
+   wget -O tutlesim_monitor.clp https://raw.githubusercontent.com/fawkesrobotics/ros2-clips-executive/master/tutorials/cx_tutorial_agents/clips/turtlesim_monitor.clp
+   wget -O tutlesim_teleport.clp https://raw.githubusercontent.com/fawkesrobotics/ros2-clips-executive/master/tutorials/cx_tutorial_agents/clips/turtlesim_teleport.clp
 
 2 Configuring the |CX|
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -83,7 +83,7 @@ The following configuration is used to achieve this:
 
       files:
         plugin: "cx::FileLoadPlugin"
-        pkg_share_dirs: ["clips_tut_agent"]
+        pkg_share_dirs: ["cx_tutorial_agents"]
         load: ["clips/turtlesim_monitor.clp",
                "clips/turtlesim_teleport.clp"]
 
@@ -126,7 +126,7 @@ Lastly, the :docsite:`FileLoadPlugin <clips_executive/plugins/file_load_plugin>`
 
       files:
         plugin: "cx::FileLoadPlugin"
-        pkg_share_dirs: ["clips_tut_agent"]
+        pkg_share_dirs: ["cx_tutorial_agents"]
         load: ["clips/turtlesim_monitor.clp",
                "clips/turtlesim_teleport.clp"]
 
@@ -417,7 +417,7 @@ Using the launch file of the ``cx_bringup`` package, you can start the CLIPS env
 
 .. code-block:: bash
 
-    ros2 launch cx_bringup cx_launch.py manager_config:=.yaml package:=clips_tut_agent
+    ros2 launch cx_bringup cx_launch.py manager_config:=turtlesim.yaml package:=cx_tutorial_agents
 
 Run the turtlesim simulation in a different terminal:
 
@@ -470,7 +470,7 @@ Next Steps
 ----------
 
 You can check out the other plugins offered by the |CX| :docsite:`here <clips_executive/plugins>`.
-Also, you can learn how to :doc:`write your own CLIPS plugin <write_a_plugin>`.
+Also, you can learn how to :doc:`write your own CLIPS plugin <writing_a_plugin>`.
 
 Related Content
 ---------------

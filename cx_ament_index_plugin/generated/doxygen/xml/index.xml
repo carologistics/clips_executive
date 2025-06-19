@@ -6,8 +6,8 @@
     <member refid="classcx_1_1AmentIndexPlugin_1ab793db99488017449bec149dc35045fd" kind="function"><name>AmentIndexPlugin</name></member>
     <member refid="classcx_1_1AmentIndexPlugin_1a7c3ffc00bbed58f238090a5f3ee79122" kind="function"><name>~AmentIndexPlugin</name></member>
     <member refid="classcx_1_1AmentIndexPlugin_1a0cd21481cc7a72d8638f834d3eb333f8" kind="function"><name>initialize</name></member>
-    <member refid="classcx_1_1AmentIndexPlugin_1ad58f4fad55929e2ef9869b20558d1c5f" kind="function"><name>clips_env_init</name></member>
-    <member refid="classcx_1_1AmentIndexPlugin_1a2440c884e373529f8f699eaabd42dd56" kind="function"><name>clips_env_destroyed</name></member>
+    <member refid="classcx_1_1AmentIndexPlugin_1aff7f47425bbf47e54f4cfeb4393ca1c2" kind="function"><name>clips_env_init</name></member>
+    <member refid="classcx_1_1AmentIndexPlugin_1ad251b11951223c12644c0fb5206135ec" kind="function"><name>clips_env_destroyed</name></member>
   </compound>
   <compound refid="namespacecx" kind="namespace"><name>cx</name>
   </compound>

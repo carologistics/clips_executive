@@ -12,7 +12,6 @@
     <innerclass refid="classcx_1_1ExamplePlugin" prot="public">cx::ExamplePlugin</innerclass>
     <innerclass refid="classcx_1_1ExecutivePlugin" prot="public">cx::ExecutivePlugin</innerclass>
     <innerclass refid="classcx_1_1FileLoadPlugin" prot="public">cx::FileLoadPlugin</innerclass>
-    <innerclass refid="classcx_1_1LockSharedPtr" prot="public">cx::LockSharedPtr</innerclass>
     <innerclass refid="classcx_1_1PddlParserPlugin" prot="public">cx::PddlParserPlugin</innerclass>
     <innerclass refid="classcx_1_1ProtobufPlugin" prot="public">cx::ProtobufPlugin</innerclass>
     <innerclass refid="classcx_1_1RosMsgsPlugin" prot="public">cx::RosMsgsPlugin</innerclass>
@@ -75,7 +74,7 @@
         <name>generate_rnd_string</name>
         <qualifiedname>cx::generate_rnd_string</qualifiedname>
         <param>
-          <type><ref refid="classcx_1_1LockSharedPtr" kindref="compound">int</ref></type>
+          <type>int</type>
           <declname>length</declname>
         </param>
         <briefdescription>
@@ -91,6 +90,6 @@
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="include/cx_utils/clips_env_context.hpp" line="26" column="1"/>
+    <location file="include/cx_utils/clips_env_context.hpp" line="25" column="1"/>
   </compounddef>
 </doxygen>

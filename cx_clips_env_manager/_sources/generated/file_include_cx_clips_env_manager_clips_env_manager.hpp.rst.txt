@@ -44,8 +44,6 @@ Includes
 
 - ``cx_msgs/srv/list_clips_envs.hpp``
 
-- ``cx_utils/lock_shared_ptr.hpp``
-
 - ``lifecycle_msgs/msg/state.hpp``
 
 - ``lifecycle_msgs/msg/transition.hpp``

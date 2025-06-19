@@ -35,8 +35,8 @@
     <member refid="classcx_1_1RosMsgsPlugin_1a179582c3ae1c1ad7bf5917514bf65911" kind="function"><name>~RosMsgsPlugin</name></member>
     <member refid="classcx_1_1RosMsgsPlugin_1aa172b6316fa790bdeab73a356bdcf6e3" kind="function"><name>initialize</name></member>
     <member refid="classcx_1_1RosMsgsPlugin_1a6a17dc12fa6aef7198d05dba1fc4bc12" kind="function"><name>finalize</name></member>
-    <member refid="classcx_1_1RosMsgsPlugin_1a37d7f4e2fc74b4ee4c76ef9afd60988d" kind="function"><name>clips_env_init</name></member>
-    <member refid="classcx_1_1RosMsgsPlugin_1ab7e6edd6ba5e7925500aa0dce7b9baf4" kind="function"><name>clips_env_destroyed</name></member>
+    <member refid="classcx_1_1RosMsgsPlugin_1a9c74da31ed5a8c89dc2315109d079d1a" kind="function"><name>clips_env_init</name></member>
+    <member refid="classcx_1_1RosMsgsPlugin_1aaf8f3f5c7deb344fc1b91c2850d8bc68" kind="function"><name>clips_env_destroyed</name></member>
     <member refid="classcx_1_1RosMsgsPlugin_1a34eb1287e8f01a38ece5c7437ecdcc11" kind="function"><name>create_message</name></member>
     <member refid="classcx_1_1RosMsgsPlugin_1aaaabb1083d1509f697c2f743090c1242" kind="function"><name>destroy_msg</name></member>
     <member refid="classcx_1_1RosMsgsPlugin_1a8d8728435dd9d1e3637f8c1fcbaa3a05" kind="function"><name>create_request</name></member>

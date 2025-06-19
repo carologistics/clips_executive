@@ -21,7 +21,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="File lock_shared_ptr.hpp" href="file_include_cx_utils_lock_shared_ptr.hpp.html" />
+    <link rel="next" title="File param_utils.hpp" href="file_include_cx_utils_param_utils.hpp.html" />
     <link rel="prev" title="File clips_env_context.hpp" href="file_include_cx_utils_clips_env_context.hpp.html" /> 
 </head>
 
@@ -60,7 +60,6 @@
 <li class="toctree-l3"><a class="reference internal" href="index.html#classes-and-structs">Classes and Structs</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="classcx_1_1CLIPSEnvContext.html">Class CLIPSEnvContext</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classcx_1_1CLIPSLogger.html">Class CLIPSLogger</a></li>
-<li class="toctree-l4"><a class="reference internal" href="classcx_1_1LockSharedPtr.html">Template Class LockSharedPtr</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="index.html#functions">Functions</a><ul>
@@ -84,7 +83,6 @@
 </li>
 <li class="toctree-l3 current"><a class="reference internal" href="index.html#files">Files</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="file_include_cx_utils_clips_env_context.hpp.html">File clips_env_context.hpp</a></li>
-<li class="toctree-l4"><a class="reference internal" href="file_include_cx_utils_lock_shared_ptr.hpp.html">File lock_shared_ptr.hpp</a></li>
 <li class="toctree-l4"><a class="reference internal" href="file_include_cx_utils_param_utils.hpp.html">File param_utils.hpp</a></li>
 <li class="toctree-l4"><a class="reference internal" href="file_include_cx_utils_string_utils.hpp.html">File string_utils.hpp</a></li>
 </ul>
@@ -153,7 +151,6 @@
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;rclcpp/rclcpp.hpp&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;spdlog/spdlog.h&gt;</span>
 
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;cx_utils/lock_shared_ptr.hpp&quot;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;clips_ns/clips.h&gt;</span>
 
 <span class="k">namespace</span><span class="w"> </span><span class="nn">cx</span><span class="w"> </span><span class="p">{</span>
@@ -176,10 +173,11 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">CLIPSEnvContext</span><span class="w"> </span><span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
 <span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">env_name_</span><span class="p">;</span>
-<span class="w">  </span><span class="n">LockSharedPtr</span><span class="o">&lt;</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="o">&gt;</span><span class="w"> </span><span class="n">env_lock_ptr_</span><span class="p">;</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="w"> </span><span class="n">env_mtx_</span><span class="p">;</span>
 <span class="w">  </span><span class="n">CLIPSLogger</span><span class="w"> </span><span class="n">logger_</span><span class="p">;</span>
 
 <span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="n">CLIPSEnvContext</span><span class="w"> </span><span class="o">*</span><span class="nf">get_context</span><span class="p">(</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="w"> </span><span class="o">*</span><span class="n">env</span><span class="p">);</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="n">CLIPSEnvContext</span><span class="w"> </span><span class="o">*</span><span class="nf">get_context</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">env</span><span class="p">);</span>
 <span class="p">};</span>
 
 <span class="p">}</span><span class="w"> </span><span class="c1">// namespace cx</span>
@@ -194,7 +192,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="file_include_cx_utils_clips_env_context.hpp.html" class="btn btn-neutral float-left" title="File clips_env_context.hpp" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="file_include_cx_utils_lock_shared_ptr.hpp.html" class="btn btn-neutral float-right" title="File lock_shared_ptr.hpp" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="file_include_cx_utils_param_utils.hpp.html" class="btn btn-neutral float-right" title="File param_utils.hpp" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

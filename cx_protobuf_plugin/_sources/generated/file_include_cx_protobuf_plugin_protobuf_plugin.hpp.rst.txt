@@ -34,8 +34,6 @@ Includes
 
 - ``cx_protobuf_plugin/communicator.hpp`` (:ref:`file_include_cx_protobuf_plugin_communicator.hpp`)
 
-- ``cx_utils/lock_shared_ptr.hpp``
-
 - ``map``
 
 - ``memory``

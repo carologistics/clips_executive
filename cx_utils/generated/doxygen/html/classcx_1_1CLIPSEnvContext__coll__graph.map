@@ -1,9 +1,7 @@
 <map id="cx::CLIPSEnvContext" name="cx::CLIPSEnvContext">
-<area shape="rect" id="Node000001" title=" " alt="" coords="91,108,247,133"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,13,64,38"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="52,48,67,66,86,82,108,95,132,105,130,110,106,100,82,86,64,69,48,51"/>
-<area shape="rect" id="Node000003" href="$classcx_1_1LockSharedPtr.html" title=" " alt="" coords="88,5,251,45"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="172,59,172,108,167,108,167,59"/>
-<area shape="rect" id="Node000004" href="$classcx_1_1CLIPSLogger.html" title=" " alt="" coords="275,13,400,38"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="318,50,296,69,271,86,213,110,211,105,268,82,293,64,315,45"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="14,93,170,119"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,64,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="37,44,44,68,55,81,69,91,66,95,51,85,39,71,32,45"/>
+<area shape="rect" id="Node000003" href="$classcx_1_1CLIPSLogger.html" title=" " alt="" coords="88,5,213,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="140,44,124,71,104,95,100,92,119,68,136,42"/>
 </map>

@@ -18,7 +18,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="ROS Interface Plugin Generator" href="../plugin_generator/index.html" />
+    <link rel="next" title="TF2 Pose Tracker Plugin" href="tf2_pose_tracker_plugin.html" />
     <link rel="prev" title="Protobuf Plugin" href="protobuf_plugin.html" /> 
 </head>
 
@@ -47,35 +47,32 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/index.html">Getting Started</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">CLIPS Plugins</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="cx_ament_index.html">Ament Index Plugin</a></li>
-<li class="toctree-l2"><a class="reference internal" href="executive_plugin.html">Continuous Execution Plugin</a></li>
-<li class="toctree-l2"><a class="reference internal" href="config_plugin.html">YAML Configuration Plugin</a></li>
-<li class="toctree-l2"><a class="reference internal" href="file_load_plugin.html">File Load Plugin</a></li>
-<li class="toctree-l2"><a class="reference internal" href="protobuf_plugin.html">Protobuf Plugin</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Generic ROS Msg Plugin</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#configuration">Configuration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#features">Features</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#facts">Facts</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#functions">Functions</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#message-lifetimes">Message Lifetimes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#initialize">initialize()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#clips-env-init">clips_env_init()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#clips-env-destroyed">clips_env_destroyed()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#finalize">finalize()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#pitfalls-and-considerations">Pitfalls and Considerations</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#available-plugins">Available Plugins</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cx_ament_index.html">Ament Index Plugin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="executive_plugin.html">Continuous Execution Plugin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="config_plugin.html">YAML Configuration Plugin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="file_load_plugin.html">File Load Plugin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="protobuf_plugin.html">Protobuf Plugin</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Generic ROS Msg Plugin</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#configuration">Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#features">Features</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#usage-example-1-publishers-and-subscribers">Usage Example 1: Publishers and Subscribers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#usage-example-2-service-client">Usage Example 2: Service Client</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#usage-example-1-publishers-and-subscribers">Usage Example 1: Publishers and Subscribers</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#id1">Configuration</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#code">Code</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#usage-example-2-service-client">Usage Example 2: Service Client</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#id2">Configuration</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id3">Code</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="tf2_pose_tracker_plugin.html">TF2 Pose Tracker Plugin</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../plugin_generator/index.html">ROS Interface Plugin Generator</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../standards.html">Standard Documents</a></li>
 </ul>
 
         </div>
@@ -437,7 +434,7 @@ Additionally, it creates a publisher on <code class="docutils literal notranslat
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="protobuf_plugin.html" class="btn btn-neutral float-left" title="Protobuf Plugin" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../plugin_generator/index.html" class="btn btn-neutral float-right" title="ROS Interface Plugin Generator" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="tf2_pose_tracker_plugin.html" class="btn btn-neutral float-right" title="TF2 Pose Tracker Plugin" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -2,9 +2,10 @@
 <doxygenindex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="index.xsd" version="1.9.8" xml:lang="en-US">
   <compound refid="classcx_1_1CLIPSEnvContext" kind="class"><name>cx::CLIPSEnvContext</name>
     <member refid="classcx_1_1CLIPSEnvContext_1ad1c67e36e0f50a0612a6a8b27f091999" kind="variable"><name>env_name_</name></member>
-    <member refid="classcx_1_1CLIPSEnvContext_1ad91c6256d14fad9530df8e872df84ed8" kind="variable"><name>env_lock_ptr_</name></member>
+    <member refid="classcx_1_1CLIPSEnvContext_1a062a2781d611ba4c980121f287da4b85" kind="variable"><name>env_mtx_</name></member>
     <member refid="classcx_1_1CLIPSEnvContext_1a5f879804216e90ec49fbda6e5b6c3e48" kind="variable"><name>logger_</name></member>
     <member refid="classcx_1_1CLIPSEnvContext_1a641c2466c193ef0d61c8b9837b67f912" kind="function"><name>get_context</name></member>
+    <member refid="classcx_1_1CLIPSEnvContext_1adc8a28f3406289ea8e8019804f49d2ca" kind="function"><name>get_context</name></member>
   </compound>
   <compound refid="classcx_1_1CLIPSLogger" kind="class"><name>cx::CLIPSLogger</name>
     <member refid="classcx_1_1CLIPSLogger_1aa248c97461aba811624fb955a10771f4" kind="variable"><name>component_</name></member>
@@ -16,24 +17,6 @@
     <member refid="classcx_1_1CLIPSLogger_1a820920ac2ee52d84c19fd7f3fe46d0c0" kind="function"><name>CLIPSLogger</name></member>
     <member refid="classcx_1_1CLIPSLogger_1af10d0d05436c9c20fe4bd339fee161e4" kind="function"><name>~CLIPSLogger</name></member>
     <member refid="classcx_1_1CLIPSLogger_1ab0ecbf1459675aac82e4c8a8dda38fc9" kind="function"><name>log</name></member>
-  </compound>
-  <compound refid="classcx_1_1LockSharedPtr" kind="class"><name>cx::LockSharedPtr</name>
-    <member refid="classcx_1_1LockSharedPtr_1a50bdc116e1da191f87b44f64d248f997" kind="variable"><name>obj</name></member>
-    <member refid="classcx_1_1LockSharedPtr_1ae0776d89704bbff1e6978e9b35cde692" kind="variable"><name>objmutex</name></member>
-    <member refid="classcx_1_1LockSharedPtr_1ad549a434b9411a0d6c8c328346356a3b" kind="variable"><name>numbers</name></member>
-    <member refid="classcx_1_1LockSharedPtr_1a855e4e22e7a209c542f27dbb373ee683" kind="function"><name>LockSharedPtr</name></member>
-    <member refid="classcx_1_1LockSharedPtr_1a3cdde160202e567d01e6f8600b185b90" kind="function"><name>~LockSharedPtr</name></member>
-    <member refid="classcx_1_1LockSharedPtr_1a978aeabfc8b050cde64120adf481097a" kind="function"><name>LockSharedPtr</name></member>
-    <member refid="classcx_1_1LockSharedPtr_1ae25951a3c86fa26b4332ced338c43cd1" kind="function"><name>LockSharedPtr</name></member>
-    <member refid="classcx_1_1LockSharedPtr_1a2b159030bdc4cf6db60a7f9805b09a43" kind="function"><name>LockSharedPtr</name></member>
-    <member refid="classcx_1_1LockSharedPtr_1a673c94965ae58a70a4a2b99df572baeb" kind="function"><name>operator=</name></member>
-    <member refid="classcx_1_1LockSharedPtr_1a7b827ecef8aab7aa6114bcd9c16b99b5" kind="function"><name>operator=</name></member>
-    <member refid="classcx_1_1LockSharedPtr_1af04ac9428dff30c22056025d1f5f9578" kind="function"><name>operator-&gt;</name></member>
-    <member refid="classcx_1_1LockSharedPtr_1a94b751ca94f15ff85d69721283216f9d" kind="function"><name>init_mutex</name></member>
-    <member refid="classcx_1_1LockSharedPtr_1a000fc6d328cb59384cb1329edb243bec" kind="function"><name>operator bool</name></member>
-    <member refid="classcx_1_1LockSharedPtr_1a1f45ebfbad1fde537741386715a0da33" kind="function"><name>get_mutex_instance</name></member>
-    <member refid="classcx_1_1LockSharedPtr_1a5c5703b81ede8b98f61d6b07f39d823c" kind="function"><name>get_obj</name></member>
-    <member refid="classcx_1_1LockSharedPtr_1af0c33b42083d75eaeacc130eaa84944f" kind="function"><name>set_obj</name></member>
   </compound>
   <compound refid="namespacecx" kind="namespace"><name>cx</name>
     <member refid="string__utils_8hpp_1a8d8a6edcb760b28dacf2804884ef1e62" kind="variable"><name>chars</name></member>
@@ -48,8 +31,6 @@
     <member refid="param__utils_8hpp_1ad7831d222c35339ea9ba003b800cf891" kind="function"><name>resolve_files</name></member>
   </compound>
   <compound refid="clips__env__context_8hpp" kind="file"><name>clips_env_context.hpp</name>
-  </compound>
-  <compound refid="lock__shared__ptr_8hpp" kind="file"><name>lock_shared_ptr.hpp</name>
   </compound>
   <compound refid="param__utils_8hpp" kind="file"><name>param_utils.hpp</name>
   </compound>

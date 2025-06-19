@@ -5,7 +5,6 @@
     <includes local="no">clips_ns/clips.h</includes>
     <includes local="no">map</includes>
     <includes local="no">string</includes>
-    <includes local="yes">cx_utils/lock_shared_ptr.hpp</includes>
     <includes local="yes">pluginlib/class_loader.hpp</includes>
     <includes local="yes">rclcpp_lifecycle/lifecycle_node.hpp</includes>
     <incdepgraph>
@@ -22,22 +21,17 @@
         </childnode>
         <childnode refid="6" relation="include">
         </childnode>
-        <childnode refid="7" relation="include">
-        </childnode>
       </node>
       <node id="2">
         <label>clips_ns/clips.h</label>
       </node>
-      <node id="5">
-        <label>cx_utils/lock_shared_ptr.hpp</label>
-      </node>
       <node id="3">
         <label>map</label>
       </node>
-      <node id="6">
+      <node id="5">
         <label>pluginlib/class_loader.hpp</label>
       </node>
-      <node id="7">
+      <node id="6">
         <label>rclcpp_lifecycle/lifecycle_node.hpp</label>
       </node>
       <node id="4">
@@ -72,46 +66,45 @@
 <codeline lineno="19"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;map&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="20"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="21"><highlight class="normal"></highlight></codeline>
-<codeline lineno="22"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;cx_utils/lock_shared_ptr.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="23"><highlight class="normal"></highlight></codeline>
-<codeline lineno="24"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;pluginlib/class_loader.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="25"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;rclcpp_lifecycle/lifecycle_node.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;pluginlib/class_loader.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;rclcpp_lifecycle/lifecycle_node.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">cx<sp/>{</highlight></codeline>
 <codeline lineno="26"><highlight class="normal"></highlight></codeline>
-<codeline lineno="27"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">cx<sp/>{</highlight></codeline>
 <codeline lineno="28"><highlight class="normal"></highlight></codeline>
-<codeline lineno="30"><highlight class="normal"></highlight></codeline>
-<codeline lineno="36" refid="classcx_1_1ClipsPlugin" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classcx_1_1ClipsPlugin" kindref="compound">ClipsPlugin</ref><sp/>{</highlight></codeline>
-<codeline lineno="37"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">friend</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classcx_1_1ClipsPluginManager" kindref="compound" external="/home/runner/work/ros2-clips-executive/ros2-clips-executive/cross_reference/cx_clips_env_manager/cx_clips_env_manager.tag">ClipsPluginManager</ref>;</highlight></codeline>
-<codeline lineno="38"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">Ptr<sp/>=<sp/>pluginlib::UniquePtr&lt;cx::ClipsPlugin&gt;;</highlight></codeline>
-<codeline lineno="39"><highlight class="normal"></highlight></codeline>
-<codeline lineno="40"><highlight class="normal"></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
-<codeline lineno="41"><highlight class="normal"><sp/><sp/><ref refid="classcx_1_1ClipsPlugin" kindref="compound">ClipsPlugin</ref>();</highlight></codeline>
-<codeline lineno="42"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">virtual</highlight><highlight class="normal"><sp/><ref refid="classcx_1_1ClipsPlugin" kindref="compound">~ClipsPlugin</ref>();</highlight></codeline>
-<codeline lineno="43"><highlight class="normal"></highlight></codeline>
-<codeline lineno="45" refid="classcx_1_1ClipsPlugin_1a6bdb6ad84acf811daf6facf8a5497e2f" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">virtual</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classcx_1_1ClipsPlugin_1a6bdb6ad84acf811daf6facf8a5497e2f" kindref="member">initialize</ref>();</highlight></codeline>
-<codeline lineno="47" refid="classcx_1_1ClipsPlugin_1a3aa0e046356cc938b853e414c539cb60" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">virtual</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classcx_1_1ClipsPlugin_1a3aa0e046356cc938b853e414c539cb60" kindref="member">finalize</ref>();</highlight></codeline>
+<codeline lineno="34" refid="classcx_1_1ClipsPlugin" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classcx_1_1ClipsPlugin" kindref="compound">ClipsPlugin</ref><sp/>{</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">friend</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classcx_1_1ClipsPluginManager" kindref="compound" external="/home/runner/work/ros2-clips-executive/ros2-clips-executive/cross_reference/cx_clips_env_manager/cx_clips_env_manager.tag">ClipsPluginManager</ref>;</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">Ptr<sp/>=<sp/>pluginlib::UniquePtr&lt;cx::ClipsPlugin&gt;;</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><ref refid="classcx_1_1ClipsPlugin" kindref="compound">ClipsPlugin</ref>();</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">virtual</highlight><highlight class="normal"><sp/><ref refid="classcx_1_1ClipsPlugin" kindref="compound">~ClipsPlugin</ref>();</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight></codeline>
+<codeline lineno="43" refid="classcx_1_1ClipsPlugin_1a6bdb6ad84acf811daf6facf8a5497e2f" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">virtual</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classcx_1_1ClipsPlugin_1a6bdb6ad84acf811daf6facf8a5497e2f" kindref="member">initialize</ref>();</highlight></codeline>
+<codeline lineno="45" refid="classcx_1_1ClipsPlugin_1a3aa0e046356cc938b853e414c539cb60" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">virtual</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classcx_1_1ClipsPlugin_1a3aa0e046356cc938b853e414c539cb60" kindref="member">finalize</ref>();</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight></codeline>
 <codeline lineno="48"><highlight class="normal"></highlight></codeline>
-<codeline lineno="50"><highlight class="normal"></highlight></codeline>
-<codeline lineno="62" refid="classcx_1_1ClipsPlugin_1ae76613ee6d5866e5ffb7b8ac14aaaa03" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">virtual</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classcx_1_1ClipsPlugin_1ae76613ee6d5866e5ffb7b8ac14aaaa03" kindref="member">clips_env_init</ref>(LockSharedPtr&lt;clips::Environment&gt;<sp/>&amp;env)<sp/>=<sp/>0;</highlight></codeline>
-<codeline lineno="63"><highlight class="normal"></highlight></codeline>
-<codeline lineno="66"><highlight class="normal"></highlight></codeline>
-<codeline lineno="71" refid="classcx_1_1ClipsPlugin_1acd6b69af115c20027831a5014a43cbe0" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">virtual</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classcx_1_1ClipsPlugin_1acd6b69af115c20027831a5014a43cbe0" kindref="member">clips_env_destroyed</ref>(LockSharedPtr&lt;clips::Environment&gt;<sp/>&amp;env)<sp/>=<sp/>0;</highlight></codeline>
-<codeline lineno="72"><highlight class="normal"></highlight></codeline>
-<codeline lineno="73"><highlight class="normal"><sp/><sp/>std::string<sp/>get_plugin_name()<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="74"><highlight class="normal"></highlight></codeline>
-<codeline lineno="75"><highlight class="normal"></highlight><highlight class="keyword">protected</highlight><highlight class="normal">:</highlight></codeline>
-<codeline lineno="77" refid="classcx_1_1ClipsPlugin_1aace7c9a1941b76a19a23e6881ec26906" refkind="member"><highlight class="normal"><sp/><sp/>std::string<sp/><ref refid="classcx_1_1ClipsPlugin_1aace7c9a1941b76a19a23e6881ec26906" kindref="member">plugin_name_</ref>;</highlight></codeline>
-<codeline lineno="78"><highlight class="normal"></highlight></codeline>
-<codeline lineno="80" refid="classcx_1_1ClipsPlugin_1a5c9c64f5ab925a688f022554d3985342" refkind="member"><highlight class="normal"><sp/><sp/>rclcpp_lifecycle::LifecycleNode::WeakPtr<sp/><ref refid="classcx_1_1ClipsPlugin_1a5c9c64f5ab925a688f022554d3985342" kindref="member">parent_</ref>;</highlight></codeline>
-<codeline lineno="81"><highlight class="normal"></highlight></codeline>
-<codeline lineno="82"><highlight class="normal"></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
-<codeline lineno="84"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classcx_1_1ClipsPlugin_1a6bdb6ad84acf811daf6facf8a5497e2f" kindref="member">initialize</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>rclcpp_lifecycle::LifecycleNode::WeakPtr<sp/>parent,</highlight></codeline>
-<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;plugin_name);</highlight></codeline>
-<codeline lineno="86"><highlight class="normal">};</highlight></codeline>
-<codeline lineno="87"><highlight class="normal"></highlight></codeline>
-<codeline lineno="88"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>cx</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="89"><highlight class="normal"></highlight></codeline>
-<codeline lineno="90"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight><highlight class="comment">//<sp/>!_CX_PLUGIN_CLIPS_PLUGIN_HPP</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="60" refid="classcx_1_1ClipsPlugin_1ae0bf2f3822f20d250a1763bb2f7b1b8c" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">virtual</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/><ref refid="classcx_1_1ClipsPlugin_1ae0bf2f3822f20d250a1763bb2f7b1b8c" kindref="member">clips_env_init</ref>(std::shared_ptr&lt;clips::Environment&gt;<sp/>&amp;env)<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">virtual</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="70" refid="classcx_1_1ClipsPlugin_1a503dc794d932be7047a2d9c3901c61df" refkind="member"><highlight class="normal"><sp/><sp/><ref refid="classcx_1_1ClipsPlugin_1a503dc794d932be7047a2d9c3901c61df" kindref="member">clips_env_destroyed</ref>(std::shared_ptr&lt;clips::Environment&gt;<sp/>&amp;env)<sp/>=<sp/>0;</highlight></codeline>
+<codeline lineno="71"><highlight class="normal"></highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/>std::string<sp/>get_plugin_name()<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"><highlight class="normal"></highlight><highlight class="keyword">protected</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="76" refid="classcx_1_1ClipsPlugin_1aace7c9a1941b76a19a23e6881ec26906" refkind="member"><highlight class="normal"><sp/><sp/>std::string<sp/><ref refid="classcx_1_1ClipsPlugin_1aace7c9a1941b76a19a23e6881ec26906" kindref="member">plugin_name_</ref>;</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"></highlight></codeline>
+<codeline lineno="79" refid="classcx_1_1ClipsPlugin_1a5c9c64f5ab925a688f022554d3985342" refkind="member"><highlight class="normal"><sp/><sp/>rclcpp_lifecycle::LifecycleNode::WeakPtr<sp/><ref refid="classcx_1_1ClipsPlugin_1a5c9c64f5ab925a688f022554d3985342" kindref="member">parent_</ref>;</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"></highlight></codeline>
+<codeline lineno="81"><highlight class="normal"></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classcx_1_1ClipsPlugin_1a6bdb6ad84acf811daf6facf8a5497e2f" kindref="member">initialize</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>rclcpp_lifecycle::LifecycleNode::WeakPtr<sp/>parent,</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;plugin_name);</highlight></codeline>
+<codeline lineno="85"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"></highlight></codeline>
+<codeline lineno="87"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>cx</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="88"><highlight class="normal"></highlight></codeline>
+<codeline lineno="89"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight><highlight class="comment">//<sp/>!_CX_PLUGIN_CLIPS_PLUGIN_HPP</highlight><highlight class="normal"></highlight></codeline>
     </programlisting>
     <location file="include/cx_plugin/clips_plugin.hpp"/>
   </compounddef>

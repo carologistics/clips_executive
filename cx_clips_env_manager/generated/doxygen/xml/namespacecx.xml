@@ -5,9 +5,9 @@
     <innerclass refid="classcx_1_1CLIPSEnvManager" prot="public">cx::CLIPSEnvManager</innerclass>
     <innerclass refid="classcx_1_1ClipsPluginManager" prot="public">cx::ClipsPluginManager</innerclass>
     <sectiondef kind="typedef">
-      <memberdef kind="typedef" id="clips__plugin__manager_8hpp_1a6e41636630926d99d74705252267fdc7" prot="public" static="no">
-        <type>std::unordered_map&lt; std::string, cx::LockSharedPtr&lt; clips::Environment &gt; &gt;</type>
-        <definition>using cx::EnvsMap = typedef std::unordered_map&lt;std::string, cx::LockSharedPtr&lt;clips::Environment&gt; &gt;</definition>
+      <memberdef kind="typedef" id="clips__plugin__manager_8hpp_1a15775e833b3def16a8b176cdba13d665" prot="public" static="no">
+        <type>std::unordered_map&lt; std::string, std::shared_ptr&lt; clips::Environment &gt; &gt;</type>
+        <definition>using cx::EnvsMap = typedef std::unordered_map&lt;std::string, std::shared_ptr&lt;clips::Environment&gt; &gt;</definition>
         <argsstring></argsstring>
         <name>EnvsMap</name>
         <qualifiedname>cx::EnvsMap</qualifiedname>
@@ -24,6 +24,6 @@
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="44" column="1"/>
+    <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="43" column="1"/>
   </compounddef>
 </doxygen>

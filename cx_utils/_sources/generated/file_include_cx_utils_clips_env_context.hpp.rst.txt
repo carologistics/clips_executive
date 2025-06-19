@@ -32,8 +32,6 @@ Includes
 
 - ``clips_ns/clips.h``
 
-- ``cx_utils/lock_shared_ptr.hpp`` (:ref:`file_include_cx_utils_lock_shared_ptr.hpp`)
-
 - ``rclcpp/rclcpp.hpp``
 
 - ``spdlog/spdlog.h``

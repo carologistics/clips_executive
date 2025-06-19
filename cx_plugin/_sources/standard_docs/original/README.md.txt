@@ -25,7 +25,7 @@ Typical uses include
 1) Reading of parameters from specified in the parent node.
 2) Initialization of Environmnent-agnostic class members.
 
-### clips_env_init(LockSharedPtr<clips::Environment> &env)
+### clips_env_init(std::shared_ptr<clips::Environment> &env)
 Called once for every environment the plugin is loaded into.
 
 Typically this is used to inject user-defined functions, define templates etc.
@@ -39,47 +39,26 @@ This in particular means that all asserted facts and instances are deleted and i
 
 If your plugin should provide initial facts, it should therefore use `deffacts` instead, which would assert the facts on reset.
 
-#### Multithreading and CLIPS
-The passed environment is wrapped in an object containing a mutex.
-**Operations on CLIPS environments are not thread-safe**, hence this mutex should be used to guard any scope that accesses the environment from a different thread.
+#### Environment Context and Multithreading
 
-Note that it **must not guard the scope within clips_env_init**, as the plugin manager already guards the environment.
-
-It also **must not guard the scope inside of CLIPS user-defined functions**, as they are called from within the CLIPS engine, hence are already guarded by the CLIPS-Executive when it calls the `run` command for the environment.
-
-Also, be aware that CLIPS will evaluate the LHS of rules any time the fact base changes, which can easily cause deadlocks if not handled properly in multi-threaded plugins.
-Consider this example from **cx_ros_msgs_plugin** which allows interactions with ROS topics:
-1. The asynchronous subscription callbacks adds messages and meta-data to an unordered map, which needs to be guarded by a mutex `map_mtx_` as multiple write operations could occur at the same time when multi-threaded executors and reentrant callback groups are used.
-Additionally, the messages are asserted as facts (holding a reference to the message) in the callback.
-2. The **ros-msgs-get-field** UDF allows to retrieve fields of messages. As fields may contain messages, this again might need to store meta-data, hence it also needs to lock `map_mtx_`.
-
-A simple implementation using a scoped lock for the entire scope of the callback and the entire scope of **ros-msgs-get-field** could cause a deadlock if the ros-msgs-get-field function is called on the left-hand side of a rule, e.g., like this:
-```lisp
-(defrule deadlock-example
-  (ros-msgs-subscription (topic ?sub))
-  ?msg-f <- (ros-msgs-message (topic ?sub) (msg-ptr ?inc-msg))
-  (test (and (= 0 (ros-msgs-get-field ?inc-msg "velocity"))))
-...
-```
-The assertion of the fact in the callback triggers the conditional check in the rule which therefore tries to lock `map_mtx_` blocked by the callback function itself.
-
-#### Environment Context
-
-Each environment also holds an instance of the `CLIPSEnvContext` class from the **cx_utils** package that can be retrieved via a static function:
+Each environment also holds an instance of the `CLIPSEnvContext` class from the **cx_utils** package that can be retrieved via static functions:
 ```c++
 cx::CLIPSEnvContext::get_context(clips::Environment *env)
+cx::CLIPSEnvContext::get_context(std::shared_ptr<clips::Environment> env)
 ```
-This instance contains the name and the environment as well as the LockSharedPtr to the environment.
+This instance contains the name and the environment as well as a mutex to guardthe environment.
 
-Hence, if you plan on performing any asynchronous tasks that are triggered from CLIPS user-defined functions (which provide only a raw pointer to an environment), you can retrieve the mutex via this additional context to ensure thread-safe guarding of the CLIPS environment.
+**Operations on CLIPS environments are not thread-safe**, hence each environment interaction needs to be guarded by this mutex.
+This is mainly relevant for plugins handling asynchronous operations.
+Directly accessing the environment in **clips_env_init** or **clips_env_destroyed** is safe, because the plugin manager already guards the environments with the mutex (do **not** attempt to lock the mutex in this context or it will block).
 
-### clips_env_destroyed(LockSharedPtr<clips::Environment> &env)
+Similarly, if a plugin provides a C++ function to a CLIPS environment, it's body will be scoped through whatever context that invoked the function (e.g., the CLIPS environment manager through invoking the inference engine via ``(run)``).
+
+### clips_env_destroyed(std::shared_ptr<clips::Environment> &env)
 Called once for every environment that needs to unload a previously loaded plugin's feature.
 Also is called when a `clips_env_init` call returns `false`.
 
 Typically this is used to undefine user-defined functions, templates, etc.
-
-Note that the environment **must not guard the scope within clips_env_destroyed**, as the plugin manager already guards the environment.
 
 ### finalize()
 This function is called exactly once when a plugin is finally unloaded again, hence all resources should be freed for a graceful destruction of the object.

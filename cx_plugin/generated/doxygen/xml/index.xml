@@ -9,8 +9,8 @@
     <member refid="classcx_1_1ClipsPlugin_1a5307ca4a8e112257ee6c1902822d7ce1" kind="function"><name>~ClipsPlugin</name></member>
     <member refid="classcx_1_1ClipsPlugin_1a6bdb6ad84acf811daf6facf8a5497e2f" kind="function"><name>initialize</name></member>
     <member refid="classcx_1_1ClipsPlugin_1a3aa0e046356cc938b853e414c539cb60" kind="function"><name>finalize</name></member>
-    <member refid="classcx_1_1ClipsPlugin_1ae76613ee6d5866e5ffb7b8ac14aaaa03" kind="function"><name>clips_env_init</name></member>
-    <member refid="classcx_1_1ClipsPlugin_1acd6b69af115c20027831a5014a43cbe0" kind="function"><name>clips_env_destroyed</name></member>
+    <member refid="classcx_1_1ClipsPlugin_1ae0bf2f3822f20d250a1763bb2f7b1b8c" kind="function"><name>clips_env_init</name></member>
+    <member refid="classcx_1_1ClipsPlugin_1a503dc794d932be7047a2d9c3901c61df" kind="function"><name>clips_env_destroyed</name></member>
     <member refid="classcx_1_1ClipsPlugin_1acb1a9459c0b47aeac9ed24861732baad" kind="function"><name>get_plugin_name</name></member>
     <member refid="classcx_1_1ClipsPlugin_1a61690874f940acc67d0d7d04e0a4c077" kind="function"><name>initialize</name></member>
   </compound>

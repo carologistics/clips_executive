@@ -15,21 +15,21 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_utils/clips_env_context.hpp" line="45" column="15" bodyfile="include/cx_utils/clips_env_context.hpp" bodystart="45" bodyend="-1"/>
+        <location file="include/cx_utils/clips_env_context.hpp" line="44" column="15" bodyfile="include/cx_utils/clips_env_context.hpp" bodystart="44" bodyend="-1"/>
       </memberdef>
-      <memberdef kind="variable" id="classcx_1_1CLIPSEnvContext_1ad91c6256d14fad9530df8e872df84ed8" prot="public" static="no" mutable="no">
-        <type><ref refid="classcx_1_1LockSharedPtr" kindref="compound">LockSharedPtr</ref>&lt; clips::Environment &gt;</type>
-        <definition>LockSharedPtr&lt;clips::Environment&gt; cx::CLIPSEnvContext::env_lock_ptr_</definition>
+      <memberdef kind="variable" id="classcx_1_1CLIPSEnvContext_1a062a2781d611ba4c980121f287da4b85" prot="public" static="no" mutable="no">
+        <type>std::mutex</type>
+        <definition>std::mutex cx::CLIPSEnvContext::env_mtx_</definition>
         <argsstring></argsstring>
-        <name>env_lock_ptr_</name>
-        <qualifiedname>cx::CLIPSEnvContext::env_lock_ptr_</qualifiedname>
+        <name>env_mtx_</name>
+        <qualifiedname>cx::CLIPSEnvContext::env_mtx_</qualifiedname>
         <briefdescription>
         </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_utils/clips_env_context.hpp" line="46" column="17" bodyfile="include/cx_utils/clips_env_context.hpp" bodystart="46" bodyend="-1"/>
+        <location file="include/cx_utils/clips_env_context.hpp" line="45" column="14" bodyfile="include/cx_utils/clips_env_context.hpp" bodystart="45" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1CLIPSEnvContext_1a5f879804216e90ec49fbda6e5b6c3e48" prot="public" static="no" mutable="no">
         <type><ref refid="classcx_1_1CLIPSLogger" kindref="compound">CLIPSLogger</ref></type>
@@ -43,7 +43,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_utils/clips_env_context.hpp" line="47" column="15" bodyfile="include/cx_utils/clips_env_context.hpp" bodystart="47" bodyend="-1"/>
+        <location file="include/cx_utils/clips_env_context.hpp" line="46" column="15" bodyfile="include/cx_utils/clips_env_context.hpp" bodystart="46" bodyend="-1"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="public-static-func">
@@ -63,6 +63,24 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
+        <location file="include/cx_utils/clips_env_context.hpp" line="48" column="26"/>
+      </memberdef>
+      <memberdef kind="function" id="classcx_1_1CLIPSEnvContext_1adc8a28f3406289ea8e8019804f49d2ca" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="classcx_1_1CLIPSEnvContext" kindref="compound">CLIPSEnvContext</ref> *</type>
+        <definition>static CLIPSEnvContext * cx::CLIPSEnvContext::get_context</definition>
+        <argsstring>(std::shared_ptr&lt; clips::Environment &gt; &amp;env)</argsstring>
+        <name>get_context</name>
+        <qualifiedname>cx::CLIPSEnvContext::get_context</qualifiedname>
+        <param>
+          <type>std::shared_ptr&lt; clips::Environment &gt; &amp;</type>
+          <declname>env</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
         <location file="include/cx_utils/clips_env_context.hpp" line="49" column="26"/>
       </memberdef>
     </sectiondef>
@@ -71,10 +89,6 @@
     <detaileddescription>
     </detaileddescription>
     <collaborationgraph>
-      <node id="3">
-        <label>cx::LockSharedPtr&lt; clips::Environment &gt;</label>
-        <link refid="classcx_1_1LockSharedPtr"/>
-      </node>
       <node id="1">
         <label>cx::CLIPSEnvContext</label>
         <link refid="classcx_1_1CLIPSEnvContext"/>
@@ -82,13 +96,10 @@
           <edgelabel>env_name_</edgelabel>
         </childnode>
         <childnode refid="3" relation="usage">
-          <edgelabel>env_lock_ptr_</edgelabel>
-        </childnode>
-        <childnode refid="4" relation="usage">
           <edgelabel>logger_</edgelabel>
         </childnode>
       </node>
-      <node id="4">
+      <node id="3">
         <label>cx::CLIPSLogger</label>
         <link refid="classcx_1_1CLIPSLogger"/>
       </node>
@@ -96,11 +107,12 @@
         <label>string</label>
       </node>
     </collaborationgraph>
-    <location file="include/cx_utils/clips_env_context.hpp" line="43" column="1" bodyfile="include/cx_utils/clips_env_context.hpp" bodystart="43" bodyend="50"/>
+    <location file="include/cx_utils/clips_env_context.hpp" line="42" column="1" bodyfile="include/cx_utils/clips_env_context.hpp" bodystart="42" bodyend="50"/>
     <listofallmembers>
-      <member refid="classcx_1_1CLIPSEnvContext_1ad91c6256d14fad9530df8e872df84ed8" prot="public" virt="non-virtual"><scope>cx::CLIPSEnvContext</scope><name>env_lock_ptr_</name></member>
+      <member refid="classcx_1_1CLIPSEnvContext_1a062a2781d611ba4c980121f287da4b85" prot="public" virt="non-virtual"><scope>cx::CLIPSEnvContext</scope><name>env_mtx_</name></member>
       <member refid="classcx_1_1CLIPSEnvContext_1ad1c67e36e0f50a0612a6a8b27f091999" prot="public" virt="non-virtual"><scope>cx::CLIPSEnvContext</scope><name>env_name_</name></member>
       <member refid="classcx_1_1CLIPSEnvContext_1a641c2466c193ef0d61c8b9837b67f912" prot="public" virt="non-virtual"><scope>cx::CLIPSEnvContext</scope><name>get_context</name></member>
+      <member refid="classcx_1_1CLIPSEnvContext_1adc8a28f3406289ea8e8019804f49d2ca" prot="public" virt="non-virtual"><scope>cx::CLIPSEnvContext</scope><name>get_context</name></member>
       <member refid="classcx_1_1CLIPSEnvContext_1a5f879804216e90ec49fbda6e5b6c3e48" prot="public" virt="non-virtual"><scope>cx::CLIPSEnvContext</scope><name>logger_</name></member>
     </listofallmembers>
   </compounddef>

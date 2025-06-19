@@ -4,7 +4,6 @@
     <compoundname>executive_plugin.hpp</compoundname>
     <includes local="no">string</includes>
     <includes local="yes">cx_plugin/clips_plugin.hpp</includes>
-    <includes local="yes">cx_utils/lock_shared_ptr.hpp</includes>
     <includes local="no">std_msgs/msg/empty.hpp</includes>
     <incdepgraph>
       <node id="1">
@@ -16,16 +15,11 @@
         </childnode>
         <childnode refid="4" relation="include">
         </childnode>
-        <childnode refid="5" relation="include">
-        </childnode>
       </node>
       <node id="3">
         <label>cx_plugin/clips_plugin.hpp</label>
       </node>
       <node id="4">
-        <label>cx_utils/lock_shared_ptr.hpp</label>
-      </node>
-      <node id="5">
         <label>std_msgs/msg/empty.hpp</label>
       </node>
       <node id="2">
@@ -59,47 +53,46 @@
 <codeline lineno="18"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string&gt;</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="19"><highlight class="normal"></highlight></codeline>
 <codeline lineno="20"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;cx_plugin/clips_plugin.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="21"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;cx_utils/lock_shared_ptr.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="22"><highlight class="normal"></highlight></codeline>
-<codeline lineno="23"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;std_msgs/msg/empty.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="24"><highlight class="normal"></highlight></codeline>
-<codeline lineno="25"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">cx<sp/>{</highlight></codeline>
-<codeline lineno="26"><highlight class="normal"></highlight></codeline>
-<codeline lineno="27" refid="classcx_1_1ExecutivePlugin" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classcx_1_1ExecutivePlugin" kindref="compound">ExecutivePlugin</ref><sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/><ref refid="classcx_1_1ClipsPlugin" kindref="compound" external="/home/runner/work/ros2-clips-executive/ros2-clips-executive/cross_reference/cx_plugin/cx_plugin.tag">ClipsPlugin</ref><sp/>{</highlight></codeline>
-<codeline lineno="28"><highlight class="normal"></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
-<codeline lineno="29"><highlight class="normal"><sp/><sp/><ref refid="classcx_1_1ExecutivePlugin" kindref="compound">ExecutivePlugin</ref>();</highlight></codeline>
-<codeline lineno="30"><highlight class="normal"><sp/><sp/><ref refid="classcx_1_1ExecutivePlugin" kindref="compound">~ExecutivePlugin</ref>();</highlight></codeline>
-<codeline lineno="31"><highlight class="normal"></highlight></codeline>
-<codeline lineno="32"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>initialize()<sp/></highlight><highlight class="keyword">override</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="33"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>finalize()<sp/></highlight><highlight class="keyword">override</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="34"><highlight class="normal"></highlight></codeline>
-<codeline lineno="35"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>clips_env_init(LockSharedPtr&lt;clips::Environment&gt;<sp/>&amp;clips)<sp/></highlight><highlight class="keyword">override</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="36"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>clips_env_destroyed(LockSharedPtr&lt;clips::Environment&gt;<sp/>&amp;clips)<sp/></highlight><highlight class="keyword">override</highlight><highlight class="normal">;</highlight></codeline>
-<codeline lineno="37"><highlight class="normal"></highlight></codeline>
-<codeline lineno="38"><highlight class="normal"><sp/><sp/>std::shared_ptr&lt;rclcpp_lifecycle::LifecycleNode&gt;<sp/>get_node();</highlight></codeline>
-<codeline lineno="39"><highlight class="normal"></highlight></codeline>
-<codeline lineno="40"><highlight class="normal"></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
-<codeline lineno="41"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>refresh_rate_;</highlight></codeline>
-<codeline lineno="42"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>assert_time_;</highlight></codeline>
-<codeline lineno="43"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>publish_on_refresh_;</highlight></codeline>
-<codeline lineno="44"><highlight class="normal"></highlight></codeline>
-<codeline lineno="45"><highlight class="normal"><sp/><sp/>std::string<sp/>plugin_path_;</highlight></codeline>
-<codeline lineno="46"><highlight class="normal"></highlight></codeline>
-<codeline lineno="47"><highlight class="normal"><sp/><sp/>rclcpp::TimerBase::SharedPtr<sp/>agenda_refresh_timer_;</highlight></codeline>
-<codeline lineno="48"><highlight class="normal"></highlight></codeline>
-<codeline lineno="49"><highlight class="normal"><sp/><sp/>rclcpp_lifecycle::LifecyclePublisher&lt;std_msgs::msg::Empty&gt;::SharedPtr</highlight></codeline>
-<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>clips_agenda_refresh_pub_;</highlight></codeline>
-<codeline lineno="51"><highlight class="normal"></highlight></codeline>
-<codeline lineno="52"><highlight class="normal"><sp/><sp/>std::chrono::nanoseconds<sp/>publish_rate_;</highlight></codeline>
-<codeline lineno="53"><highlight class="normal"></highlight></codeline>
-<codeline lineno="54"><highlight class="normal"><sp/><sp/>std::unique_ptr&lt;rclcpp::Logger&gt;<sp/>logger_;</highlight></codeline>
-<codeline lineno="55"><highlight class="normal"></highlight></codeline>
-<codeline lineno="56"><highlight class="normal"><sp/><sp/>std::vector&lt;LockSharedPtr&lt;clips::Environment&gt;&gt;<sp/>managed_envs;</highlight></codeline>
-<codeline lineno="57"><highlight class="normal"><sp/><sp/>std::mutex<sp/>envs_mutex_;</highlight></codeline>
-<codeline lineno="58"><highlight class="normal">};</highlight></codeline>
-<codeline lineno="59"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>cx</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="60"><highlight class="normal"></highlight></codeline>
-<codeline lineno="61"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight><highlight class="comment">//<sp/>!CX_PLUGINS__EXECUTIVEPLUGIN_HPP_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;std_msgs/msg/empty.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">cx<sp/>{</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26" refid="classcx_1_1ExecutivePlugin" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classcx_1_1ExecutivePlugin" kindref="compound">ExecutivePlugin</ref><sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/><ref refid="classcx_1_1ClipsPlugin" kindref="compound" external="/home/runner/work/ros2-clips-executive/ros2-clips-executive/cross_reference/cx_plugin/cx_plugin.tag">ClipsPlugin</ref><sp/>{</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><ref refid="classcx_1_1ExecutivePlugin" kindref="compound">ExecutivePlugin</ref>();</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><ref refid="classcx_1_1ExecutivePlugin" kindref="compound">~ExecutivePlugin</ref>();</highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>initialize()<sp/></highlight><highlight class="keyword">override</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>finalize()<sp/></highlight><highlight class="keyword">override</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>clips_env_init(std::shared_ptr&lt;clips::Environment&gt;<sp/>&amp;clips)<sp/></highlight><highlight class="keyword">override</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>clips_env_destroyed(std::shared_ptr&lt;clips::Environment&gt;<sp/>&amp;clips)<sp/></highlight><highlight class="keyword">override</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/>std::shared_ptr&lt;rclcpp_lifecycle::LifecycleNode&gt;<sp/>get_node();</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>refresh_rate_;</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>assert_time_;</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>publish_on_refresh_;</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/>std::string<sp/>plugin_path_;</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/>rclcpp::TimerBase::SharedPtr<sp/>agenda_refresh_timer_;</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/>rclcpp_lifecycle::LifecyclePublisher&lt;std_msgs::msg::Empty&gt;::SharedPtr</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>clips_agenda_refresh_pub_;</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/>std::chrono::nanoseconds<sp/>publish_rate_;</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/>std::unique_ptr&lt;rclcpp::Logger&gt;<sp/>logger_;</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/>std::vector&lt;std::shared_ptr&lt;clips::Environment&gt;&gt;<sp/>managed_envs;</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/>std::mutex<sp/>envs_mutex_;</highlight></codeline>
+<codeline lineno="57"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="58"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>cx</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight><highlight class="comment">//<sp/>!CX_PLUGINS__EXECUTIVEPLUGIN_HPP_</highlight><highlight class="normal"></highlight></codeline>
     </programlisting>
     <location file="include/cx_executive_plugin/executive_plugin.hpp"/>
   </compounddef>

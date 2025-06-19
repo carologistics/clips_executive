@@ -16,7 +16,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="41" column="7" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="41" bodyend="-1"/>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="40" column="7" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="40" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1ExecutivePlugin_1a1988b7afe7afdadd19c2b6cf816003ad" prot="private" static="no" mutable="no">
         <type>bool</type>
@@ -30,7 +30,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="42" column="8" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="42" bodyend="-1"/>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="41" column="8" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="41" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1ExecutivePlugin_1ab71bf309cf37db4dede7409cd951dbd0" prot="private" static="no" mutable="no">
         <type>bool</type>
@@ -44,7 +44,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="43" column="8" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="43" bodyend="-1"/>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="42" column="8" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="42" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1ExecutivePlugin_1a18257588998f3734d386edf8b3b786b4" prot="private" static="no" mutable="no">
         <type>std::string</type>
@@ -58,7 +58,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="45" column="15" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="45" bodyend="-1"/>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="44" column="15" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="44" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1ExecutivePlugin_1a0690d9a7dbb520fe4cf35e4786c9c6c9" prot="private" static="no" mutable="no">
         <type>rclcpp::TimerBase::SharedPtr</type>
@@ -72,7 +72,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="47" column="32" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="47" bodyend="-1"/>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="46" column="32" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="46" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1ExecutivePlugin_1a93c9e12fdfe8ff047d16430cedbce58a" prot="private" static="no" mutable="no">
         <type>rclcpp_lifecycle::LifecyclePublisher&lt; std_msgs::msg::Empty &gt;::SharedPtr</type>
@@ -86,7 +86,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="50" column="7" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="50" bodyend="-1"/>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="49" column="7" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="49" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1ExecutivePlugin_1a90bcf01585ac247ea2dad0528f21bdf1" prot="private" static="no" mutable="no">
         <type>std::chrono::nanoseconds</type>
@@ -100,7 +100,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="52" column="28" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="52" bodyend="-1"/>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="51" column="28" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="51" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1ExecutivePlugin_1a8f8400444d958aee6b58f82069f3875c" prot="private" static="no" mutable="no">
         <type>std::unique_ptr&lt; rclcpp::Logger &gt;</type>
@@ -114,11 +114,11 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="54" column="19" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="54" bodyend="-1"/>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="53" column="19" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="53" bodyend="-1"/>
       </memberdef>
-      <memberdef kind="variable" id="classcx_1_1ExecutivePlugin_1a7af5f484cf51c499d7c44f680e66f122" prot="private" static="no" mutable="no">
-        <type>std::vector&lt; LockSharedPtr&lt; clips::Environment &gt; &gt;</type>
-        <definition>std::vector&lt;LockSharedPtr&lt;clips::Environment&gt; &gt; cx::ExecutivePlugin::managed_envs</definition>
+      <memberdef kind="variable" id="classcx_1_1ExecutivePlugin_1aa74acd07450f023f7c588f7225786feb" prot="private" static="no" mutable="no">
+        <type>std::vector&lt; std::shared_ptr&lt; clips::Environment &gt; &gt;</type>
+        <definition>std::vector&lt;std::shared_ptr&lt;clips::Environment&gt; &gt; cx::ExecutivePlugin::managed_envs</definition>
         <argsstring></argsstring>
         <name>managed_envs</name>
         <qualifiedname>cx::ExecutivePlugin::managed_envs</qualifiedname>
@@ -128,7 +128,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="56" column="15" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="56" bodyend="-1"/>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="55" column="15" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="55" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1ExecutivePlugin_1a469ff11c8f0923b65d8aee55c2394542" prot="private" static="no" mutable="no">
         <type>std::mutex</type>
@@ -142,7 +142,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="57" column="14" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="57" bodyend="-1"/>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="56" column="14" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="56" bodyend="-1"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="public-func">
@@ -158,7 +158,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="29" column="3"/>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="28" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1ExecutivePlugin_1ae35c4e0ed6a6a27b3b38df4ec23abc3d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -172,7 +172,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="30" column="3"/>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="29" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1ExecutivePlugin_1a05c41e5b7f22ea76d35870c7904cbe45" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
         <type>void</type>
@@ -187,7 +187,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="32" column="8"/>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="31" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1ExecutivePlugin_1acb14d613c62ba47ab41edbc2749a2d6a" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
         <type>void</type>
@@ -202,17 +202,36 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="33" column="8"/>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="32" column="8"/>
       </memberdef>
-      <memberdef kind="function" id="classcx_1_1ExecutivePlugin_1a937771362f6c1d684f58da0c19835514" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+      <memberdef kind="function" id="classcx_1_1ExecutivePlugin_1a0bc70e96725fdc585aed292ad140bb73" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
         <type>bool</type>
         <definition>bool cx::ExecutivePlugin::clips_env_init</definition>
-        <argsstring>(LockSharedPtr&lt; clips::Environment &gt; &amp;clips) override</argsstring>
+        <argsstring>(std::shared_ptr&lt; clips::Environment &gt; &amp;clips) override</argsstring>
         <name>clips_env_init</name>
         <qualifiedname>cx::ExecutivePlugin::clips_env_init</qualifiedname>
-        <reimplements refid="classcx_1_1ClipsPlugin_1ae76613ee6d5866e5ffb7b8ac14aaaa03">clips_env_init</reimplements>
+        <reimplements refid="classcx_1_1ClipsPlugin_1ae0bf2f3822f20d250a1763bb2f7b1b8c">clips_env_init</reimplements>
         <param>
-          <type>LockSharedPtr&lt; clips::Environment &gt; &amp;</type>
+          <type>std::shared_ptr&lt; clips::Environment &gt; &amp;</type>
+          <declname>clips</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="34" column="8"/>
+      </memberdef>
+      <memberdef kind="function" id="classcx_1_1ExecutivePlugin_1ae999953f3ae358b120edb66b5d291fb9" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type>bool</type>
+        <definition>bool cx::ExecutivePlugin::clips_env_destroyed</definition>
+        <argsstring>(std::shared_ptr&lt; clips::Environment &gt; &amp;clips) override</argsstring>
+        <name>clips_env_destroyed</name>
+        <qualifiedname>cx::ExecutivePlugin::clips_env_destroyed</qualifiedname>
+        <reimplements refid="classcx_1_1ClipsPlugin_1a503dc794d932be7047a2d9c3901c61df">clips_env_destroyed</reimplements>
+        <param>
+          <type>std::shared_ptr&lt; clips::Environment &gt; &amp;</type>
           <declname>clips</declname>
         </param>
         <briefdescription>
@@ -222,25 +241,6 @@
         <inbodydescription>
         </inbodydescription>
         <location file="include/cx_executive_plugin/executive_plugin.hpp" line="35" column="8"/>
-      </memberdef>
-      <memberdef kind="function" id="classcx_1_1ExecutivePlugin_1a63944b60c5fb30dac6b675344a2f1c41" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
-        <type>bool</type>
-        <definition>bool cx::ExecutivePlugin::clips_env_destroyed</definition>
-        <argsstring>(LockSharedPtr&lt; clips::Environment &gt; &amp;clips) override</argsstring>
-        <name>clips_env_destroyed</name>
-        <qualifiedname>cx::ExecutivePlugin::clips_env_destroyed</qualifiedname>
-        <reimplements refid="classcx_1_1ClipsPlugin_1acd6b69af115c20027831a5014a43cbe0">clips_env_destroyed</reimplements>
-        <param>
-          <type>LockSharedPtr&lt; clips::Environment &gt; &amp;</type>
-          <declname>clips</declname>
-        </param>
-        <briefdescription>
-        </briefdescription>
-        <detaileddescription>
-        </detaileddescription>
-        <inbodydescription>
-        </inbodydescription>
-        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="36" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1ExecutivePlugin_1ab5dfb1b989dc4b9bcb5e865b1f7fcfd9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::shared_ptr&lt; rclcpp_lifecycle::LifecycleNode &gt;</type>
@@ -254,7 +254,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="38" column="19"/>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="37" column="19"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
@@ -285,20 +285,20 @@
         </childnode>
       </node>
     </collaborationgraph>
-    <location file="include/cx_executive_plugin/executive_plugin.hpp" line="27" column="1" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="27" bodyend="58"/>
+    <location file="include/cx_executive_plugin/executive_plugin.hpp" line="26" column="1" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="26" bodyend="57"/>
     <listofallmembers>
       <member refid="classcx_1_1ExecutivePlugin_1a0690d9a7dbb520fe4cf35e4786c9c6c9" prot="private" virt="non-virtual"><scope>cx::ExecutivePlugin</scope><name>agenda_refresh_timer_</name></member>
       <member refid="classcx_1_1ExecutivePlugin_1a1988b7afe7afdadd19c2b6cf816003ad" prot="private" virt="non-virtual"><scope>cx::ExecutivePlugin</scope><name>assert_time_</name></member>
       <member refid="classcx_1_1ExecutivePlugin_1a93c9e12fdfe8ff047d16430cedbce58a" prot="private" virt="non-virtual"><scope>cx::ExecutivePlugin</scope><name>clips_agenda_refresh_pub_</name></member>
-      <member refid="classcx_1_1ExecutivePlugin_1a63944b60c5fb30dac6b675344a2f1c41" prot="public" virt="virtual"><scope>cx::ExecutivePlugin</scope><name>clips_env_destroyed</name></member>
-      <member refid="classcx_1_1ExecutivePlugin_1a937771362f6c1d684f58da0c19835514" prot="public" virt="virtual"><scope>cx::ExecutivePlugin</scope><name>clips_env_init</name></member>
+      <member refid="classcx_1_1ExecutivePlugin_1ae999953f3ae358b120edb66b5d291fb9" prot="public" virt="virtual"><scope>cx::ExecutivePlugin</scope><name>clips_env_destroyed</name></member>
+      <member refid="classcx_1_1ExecutivePlugin_1a0bc70e96725fdc585aed292ad140bb73" prot="public" virt="virtual"><scope>cx::ExecutivePlugin</scope><name>clips_env_init</name></member>
       <member refid="classcx_1_1ExecutivePlugin_1a469ff11c8f0923b65d8aee55c2394542" prot="private" virt="non-virtual"><scope>cx::ExecutivePlugin</scope><name>envs_mutex_</name></member>
       <member refid="classcx_1_1ExecutivePlugin_1acb40de58ad887327a054a1818c46d0f9" prot="public" virt="non-virtual"><scope>cx::ExecutivePlugin</scope><name>ExecutivePlugin</name></member>
       <member refid="classcx_1_1ExecutivePlugin_1acb14d613c62ba47ab41edbc2749a2d6a" prot="public" virt="virtual"><scope>cx::ExecutivePlugin</scope><name>finalize</name></member>
       <member refid="classcx_1_1ExecutivePlugin_1ab5dfb1b989dc4b9bcb5e865b1f7fcfd9" prot="public" virt="non-virtual"><scope>cx::ExecutivePlugin</scope><name>get_node</name></member>
       <member refid="classcx_1_1ExecutivePlugin_1a05c41e5b7f22ea76d35870c7904cbe45" prot="public" virt="virtual"><scope>cx::ExecutivePlugin</scope><name>initialize</name></member>
       <member refid="classcx_1_1ExecutivePlugin_1a8f8400444d958aee6b58f82069f3875c" prot="private" virt="non-virtual"><scope>cx::ExecutivePlugin</scope><name>logger_</name></member>
-      <member refid="classcx_1_1ExecutivePlugin_1a7af5f484cf51c499d7c44f680e66f122" prot="private" virt="non-virtual"><scope>cx::ExecutivePlugin</scope><name>managed_envs</name></member>
+      <member refid="classcx_1_1ExecutivePlugin_1aa74acd07450f023f7c588f7225786feb" prot="private" virt="non-virtual"><scope>cx::ExecutivePlugin</scope><name>managed_envs</name></member>
       <member refid="classcx_1_1ClipsPlugin_1a5c9c64f5ab925a688f022554d3985342" prot="protected" virt="non-virtual"><scope>cx::ExecutivePlugin</scope><name>parent_</name></member>
       <member refid="classcx_1_1ClipsPlugin_1aace7c9a1941b76a19a23e6881ec26906" prot="protected" virt="non-virtual"><scope>cx::ExecutivePlugin</scope><name>plugin_name_</name></member>
       <member refid="classcx_1_1ExecutivePlugin_1a18257588998f3734d386edf8b3b786b4" prot="private" virt="non-virtual"><scope>cx::ExecutivePlugin</scope><name>plugin_path_</name></member>

@@ -5,8 +5,8 @@
     <member refid="classcx_1_1ExamplePlugin_1a65b39ee0843555da144a467d775963c6" kind="function"><name>ExamplePlugin</name></member>
     <member refid="classcx_1_1ExamplePlugin_1ab2d8bbcf9a53d43c7892204da9ed6761" kind="function"><name>~ExamplePlugin</name></member>
     <member refid="classcx_1_1ExamplePlugin_1a824fc9bb9a281676900c762cf044726f" kind="function"><name>initialize</name></member>
-    <member refid="classcx_1_1ExamplePlugin_1af75196845173639f8aa873663b58d78c" kind="function"><name>clips_env_init</name></member>
-    <member refid="classcx_1_1ExamplePlugin_1a65feccc57f53d7b85bec68b50244a23a" kind="function"><name>clips_env_destroyed</name></member>
+    <member refid="classcx_1_1ExamplePlugin_1a4f2e15220568109de375b9cdceed35ce" kind="function"><name>clips_env_init</name></member>
+    <member refid="classcx_1_1ExamplePlugin_1a3fcf77f6a9e728ecd34ced4aa2d0cacf" kind="function"><name>clips_env_destroyed</name></member>
   </compound>
   <compound refid="namespacecx" kind="namespace"><name>cx</name>
   </compound>

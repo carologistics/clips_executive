@@ -15,7 +15,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_tf2_pose_tracker_plugin/tf2_pose_tracker_plugin.hpp" line="43" column="34" bodyfile="include/cx_tf2_pose_tracker_plugin/tf2_pose_tracker_plugin.hpp" bodystart="43" bodyend="-1"/>
+        <location file="include/cx_tf2_pose_tracker_plugin/tf2_pose_tracker_plugin.hpp" line="42" column="34" bodyfile="include/cx_tf2_pose_tracker_plugin/tf2_pose_tracker_plugin.hpp" bodystart="42" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structcx_1_1Tf2PoseTrackerPlugin_1_1PoseTracker_1a2f5e3231d0dd30cb556ebb98cca8fcf8" prot="public" static="no" mutable="no">
         <type>clips::Fact *</type>
@@ -29,7 +29,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_tf2_pose_tracker_plugin/tf2_pose_tracker_plugin.hpp" line="44" column="17" bodyfile="include/cx_tf2_pose_tracker_plugin/tf2_pose_tracker_plugin.hpp" bodystart="44" bodyend="-1"/>
+        <location file="include/cx_tf2_pose_tracker_plugin/tf2_pose_tracker_plugin.hpp" line="43" column="17" bodyfile="include/cx_tf2_pose_tracker_plugin/tf2_pose_tracker_plugin.hpp" bodystart="43" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structcx_1_1Tf2PoseTrackerPlugin_1_1PoseTracker_1a97aa40caf06e2c3024575e6c977762b4" prot="public" static="no" mutable="no">
         <type>clips::Environment *</type>
@@ -43,14 +43,14 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_tf2_pose_tracker_plugin/tf2_pose_tracker_plugin.hpp" line="45" column="24" bodyfile="include/cx_tf2_pose_tracker_plugin/tf2_pose_tracker_plugin.hpp" bodystart="45" bodyend="-1"/>
+        <location file="include/cx_tf2_pose_tracker_plugin/tf2_pose_tracker_plugin.hpp" line="44" column="24" bodyfile="include/cx_tf2_pose_tracker_plugin/tf2_pose_tracker_plugin.hpp" bodystart="44" bodyend="-1"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="include/cx_tf2_pose_tracker_plugin/tf2_pose_tracker_plugin.hpp" line="42" column="3" bodyfile="include/cx_tf2_pose_tracker_plugin/tf2_pose_tracker_plugin.hpp" bodystart="42" bodyend="46"/>
+    <location file="include/cx_tf2_pose_tracker_plugin/tf2_pose_tracker_plugin.hpp" line="41" column="3" bodyfile="include/cx_tf2_pose_tracker_plugin/tf2_pose_tracker_plugin.hpp" bodystart="41" bodyend="45"/>
     <listofallmembers>
       <member refid="structcx_1_1Tf2PoseTrackerPlugin_1_1PoseTracker_1a97aa40caf06e2c3024575e6c977762b4" prot="public" virt="non-virtual"><scope>cx::Tf2PoseTrackerPlugin::PoseTracker</scope><name>env</name></member>
       <member refid="structcx_1_1Tf2PoseTrackerPlugin_1_1PoseTracker_1a2f5e3231d0dd30cb556ebb98cca8fcf8" prot="public" virt="non-virtual"><scope>cx::Tf2PoseTrackerPlugin::PoseTracker</scope><name>pose_fact</name></member>

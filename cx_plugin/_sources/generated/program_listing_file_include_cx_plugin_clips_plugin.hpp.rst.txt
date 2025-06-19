@@ -31,8 +31,6 @@ Program Listing for File clips_plugin.hpp
    #include <map>
    #include <string>
    
-   #include "cx_utils/lock_shared_ptr.hpp"
-   
    #include "pluginlib/class_loader.hpp"
    #include "rclcpp_lifecycle/lifecycle_node.hpp"
    
@@ -51,10 +49,11 @@ Program Listing for File clips_plugin.hpp
      virtual void finalize();
    
    
-     virtual bool clips_env_init(LockSharedPtr<clips::Environment> &env) = 0;
+     virtual bool clips_env_init(std::shared_ptr<clips::Environment> &env) = 0;
    
    
-     virtual bool clips_env_destroyed(LockSharedPtr<clips::Environment> &env) = 0;
+     virtual bool
+     clips_env_destroyed(std::shared_ptr<clips::Environment> &env) = 0;
    
      std::string get_plugin_name() const;
    

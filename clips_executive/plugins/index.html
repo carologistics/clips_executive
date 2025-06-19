@@ -47,16 +47,35 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/index.html">Getting Started</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">CLIPS Plugins</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="cx_ament_index.html">Ament Index Plugin</a></li>
-<li class="toctree-l2"><a class="reference internal" href="executive_plugin.html">Continuous Execution Plugin</a></li>
-<li class="toctree-l2"><a class="reference internal" href="config_plugin.html">YAML Configuration Plugin</a></li>
-<li class="toctree-l2"><a class="reference internal" href="file_load_plugin.html">File Load Plugin</a></li>
-<li class="toctree-l2"><a class="reference internal" href="protobuf_plugin.html">Protobuf Plugin</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ros_msgs_plugin.html">Generic ROS Msg Plugin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#initialize">initialize()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#clips-env-init">clips_env_init()</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#environment-reset">Environment Reset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#environment-context-and-multithreading">Environment Context and Multithreading</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#clips-env-destroyed">clips_env_destroyed()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#finalize">finalize()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pitfalls-and-considerations">Pitfalls and Considerations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#injected-functions-should-not-be-blocking">Injected functions should not be blocking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#keep-your-locking-scopes-as-tight-as-possible">Keep your locking scopes as tight as possible</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#be-aware-of-hidden-locks">Be aware of hidden locks</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#available-plugins">Available Plugins</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cx_ament_index.html">Ament Index Plugin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="executive_plugin.html">Continuous Execution Plugin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="config_plugin.html">YAML Configuration Plugin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="file_load_plugin.html">File Load Plugin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="protobuf_plugin.html">Protobuf Plugin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ros_msgs_plugin.html">Generic ROS Msg Plugin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tf2_pose_tracker_plugin.html">TF2 Pose Tracker Plugin</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../plugin_generator/index.html">ROS Interface Plugin Generator</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../standards.html">Standard Documents</a></li>
 </ul>
 
         </div>
@@ -98,8 +117,89 @@
 </ul>
 </dd>
 </dl>
-<p>See also the tutorial on <span class="xref std std-ref">Writing a Plugin</span> to learn how to write your own plugins.</p>
+<p>See also the tutorial on <a class="reference internal" href="../tutorials/writing_a_plugin.html#writing-a-plugin"><span class="std std-ref">Writing a Plugin</span></a> to learn how to write your own plugins.</p>
 <p>The ROS2 CLIPS-Executive provides several plugins out-of-the-box that are described here.</p>
+<p>In the following, the virtual functions and their purpose are described.</p>
+<section id="initialize">
+<h2>initialize()<a class="headerlink" href="#initialize" title="Link to this heading"></a></h2>
+<p>This function is called exactly once when a plugin is loaded, before it actually provides it’s features to CLIPS environments.</p>
+<p>Typical uses include
+1) Reading of parameters from specified in the parent node.
+2) Initialization of Environmnent-agnostic class members.</p>
+</section>
+<section id="clips-env-init">
+<h2>clips_env_init()<a class="headerlink" href="#clips-env-init" title="Link to this heading"></a></h2>
+<p>Called once for every environment the plugin is loaded into.</p>
+<p>Typically this is used to inject user-defined functions, define templates etc.</p>
+<p>It should return <cite>true</cite>, if the initialization of the environment was successful. If it returns <cite>false</cite>, then the plugin manager will call <cite>clips_env_destroyed</cite> to allow proper cleanup.</p>
+<section id="environment-reset">
+<h3>Environment Reset<a class="headerlink" href="#environment-reset" title="Link to this heading"></a></h3>
+<p>However, be aware that each environment is reset afterwards on startup.</p>
+<p>This in particular means that all asserted facts and instances are deleted and it makes no sense to directly assert facts in this function.</p>
+<p>If your plugin should provide initial facts, it should therefore use <cite>deffacts</cite> instead, which would assert the facts on reset.</p>
+</section>
+<section id="environment-context-and-multithreading">
+<h3>Environment Context and Multithreading<a class="headerlink" href="#environment-context-and-multithreading" title="Link to this heading"></a></h3>
+<p>Each environment also holds an instance of the <cite>CLIPSEnvContext</cite> class from the <strong>cx_utils</strong> package that can be retrieved via static functions:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">cx</span><span class="o">::</span><span class="n">CLIPSEnvContext</span><span class="o">::</span><span class="n">get_context</span><span class="p">(</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="w"> </span><span class="o">*</span><span class="n">env</span><span class="p">)</span>
+<span class="n">cx</span><span class="o">::</span><span class="n">CLIPSEnvContext</span><span class="o">::</span><span class="n">get_context</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="o">&gt;</span><span class="w"> </span><span class="n">env</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This instance contains the name and the environment as well as a mutex to guardthe environment.</p>
+<p><strong>Operations on CLIPS environments are not thread-safe</strong>, hence each environment interaction needs to be guarded by this mutex.
+This is mainly relevant for plugins handling asynchronous operations.
+Directly accessing the environment in <strong>clips_env_init</strong> or <strong>clips_env_destroyed</strong> is safe, because the plugin manager already guards the environments with the mutex (do <strong>not</strong> attempt to lock the mutex in this context or it will block).</p>
+<p>Similarly, if a plugin provides a C++ function to a CLIPS environment, it’s body will be scoped through whatever context that invoked the function (e.g., the CLIPS environment manager through invoking the inference engine via <code class="docutils literal notranslate"><span class="pre">(run)</span></code>).</p>
+</section>
+</section>
+<section id="clips-env-destroyed">
+<h2>clips_env_destroyed()<a class="headerlink" href="#clips-env-destroyed" title="Link to this heading"></a></h2>
+<p>Called once for every environment that needs to unload a previously loaded plugin’s feature.
+Also is called when a <cite>clips_env_init</cite> call returns <cite>false</cite>.</p>
+<p>Typically this is used to undefine user-defined functions, templates, etc.</p>
+</section>
+<section id="finalize">
+<h2>finalize()<a class="headerlink" href="#finalize" title="Link to this heading"></a></h2>
+<p>This function is called exactly once when a plugin is finally unloaded again, hence all resources should be freed for a graceful destruction of the object.</p>
+</section>
+<section id="pitfalls-and-considerations">
+<h2>Pitfalls and Considerations<a class="headerlink" href="#pitfalls-and-considerations" title="Link to this heading"></a></h2>
+<p>Below are some lessons learned when developingthe core plugins of the ROS2 CLIPS-Executive. They might be a useful read for some.</p>
+<section id="injected-functions-should-not-be-blocking">
+<h3>Injected functions should not be blocking<a class="headerlink" href="#injected-functions-should-not-be-blocking" title="Link to this heading"></a></h3>
+<p>In order to ensure running a responsive CLIPS application, make sure the injected functions are executing fast. Long-lasting operations should rather be dispatched by a function and then asynchronously handled once they finish. This allows the inference engine to continue operating while heavy computations or time-consuming sub-routines are processed.</p>
+</section>
+<section id="keep-your-locking-scopes-as-tight-as-possible">
+<h3>Keep your locking scopes as tight as possible<a class="headerlink" href="#keep-your-locking-scopes-as-tight-as-possible" title="Link to this heading"></a></h3>
+<p>When writing complex plugins with asynchronous operations, be sure to scope your guarded regions well.</p>
+<p>A common pitfall may occur when plugins also need to guard data structures from concurrent access using some mutex, while also handling CLIPS access.</p>
+<p>Consider this example from <strong>cx_ros_msgs_plugin</strong> which allows interactions with ROS topics:</p>
+<ol class="arabic simple">
+<li><p>The asynchronous subscription callbacks adds messages and meta-data to an unordered map, which needs to be guarded by a mutex <cite>map_mtx_</cite> as multiple write operations could occur at the same time when multi-threaded executors and reentrant callback groups are used. Additionally, the messages are asserted as facts (holding a reference to the message) in the callback.</p></li>
+<li><p>The <strong>ros-msgs-get-field</strong> UDF allows to retrieve fields of messages. As fields may contain messages, this again might need to store meta-data, hence it also needs to lock <cite>map_mtx_</cite>.</p></li>
+</ol>
+<p>A bad implementation using a scoped lock for the entire scope of the callback and the entire scope of <strong>ros-msgs-get-field</strong> could cause a deadlock if the ros-msgs-get-field function is called on the left-hand side of a rule, e.g., like this:</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">deadlock-example</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-subscription</span><span class="w"> </span><span class="p">(</span><span class="nv">topic</span><span class="w"> </span><span class="nv">?sub</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">?msg-f</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-message</span><span class="w"> </span><span class="p">(</span><span class="nv">topic</span><span class="w"> </span><span class="nv">?sub</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">msg-ptr</span><span class="w"> </span><span class="nv">?inc-msg</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">test</span><span class="w"> </span><span class="p">(</span><span class="nb">and</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-get-field</span><span class="w"> </span><span class="nv">?inc-msg</span><span class="w"> </span><span class="s">&quot;velocity&quot;</span><span class="p">))))</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>The assertion of the fact in the callback triggers the conditional check in the rule which therefore tries to lock <cite>map_mtx_</cite> blocked by the callback function itself. Hence, make sure to keep the scopes of any mutex as tight as possible!</p>
+</section>
+<section id="be-aware-of-hidden-locks">
+<h3>Be aware of hidden locks<a class="headerlink" href="#be-aware-of-hidden-locks" title="Link to this heading"></a></h3>
+<p>It can be tricky to interface between ROS callbacks and CLIPS environments, especially if locks are guarding said callbacks that are not visible to the end user.
+As CLIPS environment access must also guarded by locks (as access is not thread-safe), this can easily create deadlocks in situations, where other functions can be called from clips that also try to acquire the lock held by a callback.</p>
+<p>Example: The feedback callback for action clients is guarded by a mutex that is also used by client goal handles to access members in a thread-safe manner (such as get_status()).</p>
+<p>A CLIPS rule that calls ClientGoalHandle::get_status() will therefore attempt to lock such a mutex while the clips lock is being held by the thread running the clips environment.
+If a callback is received right before, then the clips environment will stall as the function call is stuck (mutex is held by the callback function), while the callback function is stuck because it tries to acquire the lock for the clips environment (because it wants to pass the callback content to the clips environment).</p>
+<p>In these cases special care must be taken, e.g., by deferring CLIPS access out of scope of the mutexes guarding the callbacks.</p>
+</section>
+</section>
+<section id="available-plugins">
+<h2>Available Plugins<a class="headerlink" href="#available-plugins" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="cx_ament_index.html">Ament Index Plugin</a><ul>
@@ -140,8 +240,15 @@
 <li class="toctree-l2"><a class="reference internal" href="ros_msgs_plugin.html#usage-example-2-service-client">Usage Example 2: Service Client</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="tf2_pose_tracker_plugin.html">TF2 Pose Tracker Plugin</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tf2_pose_tracker_plugin.html#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tf2_pose_tracker_plugin.html#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tf2_pose_tracker_plugin.html#usage-example">Usage Example</a></li>
+</ul>
+</li>
 </ul>
 </div>
+</section>
 </section>
 
 

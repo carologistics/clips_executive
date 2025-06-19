@@ -16,7 +16,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="48" column="15" bodyfile="include/cx_protobuf_plugin/protobuf_plugin.hpp" bodystart="48" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="47" column="15" bodyfile="include/cx_protobuf_plugin/protobuf_plugin.hpp" bodystart="47" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1ProtobufPlugin_1a8566ee2ea96b0ea330843248460dd3f0" prot="private" static="no" mutable="no">
         <type>std::unordered_map&lt; std::string, std::unique_ptr&lt; <ref refid="classprotobuf__clips_1_1ClipsProtobufCommunicator" kindref="compound">protobuf_clips::ClipsProtobufCommunicator</ref> &gt; &gt;</type>
@@ -30,7 +30,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="51" column="7" bodyfile="include/cx_protobuf_plugin/protobuf_plugin.hpp" bodystart="51" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="50" column="7" bodyfile="include/cx_protobuf_plugin/protobuf_plugin.hpp" bodystart="50" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1ProtobufPlugin_1adbe5d25d6dab82a6a1fbb0358dbd8e7c" prot="private" static="no" mutable="no">
         <type>std::unique_ptr&lt; rclcpp::Logger &gt;</type>
@@ -44,7 +44,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="52" column="19" bodyfile="include/cx_protobuf_plugin/protobuf_plugin.hpp" bodystart="52" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="51" column="19" bodyfile="include/cx_protobuf_plugin/protobuf_plugin.hpp" bodystart="51" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1ProtobufPlugin_1ab7f72938408d508409d3b02fd8e931f9" prot="private" static="no" mutable="no">
         <type>std::string</type>
@@ -58,7 +58,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="54" column="15" bodyfile="include/cx_protobuf_plugin/protobuf_plugin.hpp" bodystart="54" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="53" column="15" bodyfile="include/cx_protobuf_plugin/protobuf_plugin.hpp" bodystart="53" bodyend="-1"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="public-func">
@@ -74,7 +74,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="39" column="3"/>
+        <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="38" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1ProtobufPlugin_1a04c4a8972dd9f41fc26d353db8eb9edb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -88,7 +88,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="40" column="3"/>
+        <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="39" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1ProtobufPlugin_1ab5eb056301769dedaa901227fba09b62" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
         <type>void</type>
@@ -103,17 +103,36 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="42" column="8"/>
+        <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="41" column="8"/>
       </memberdef>
-      <memberdef kind="function" id="classcx_1_1ProtobufPlugin_1a7dac6c90fa0d633fcec51e91a1252066" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+      <memberdef kind="function" id="classcx_1_1ProtobufPlugin_1a6345ea8427adb7a1069e834fc4af5ffe" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
         <type>bool</type>
         <definition>bool cx::ProtobufPlugin::clips_env_init</definition>
-        <argsstring>(LockSharedPtr&lt; clips::Environment &gt; &amp;env) override</argsstring>
+        <argsstring>(std::shared_ptr&lt; clips::Environment &gt; &amp;env) override</argsstring>
         <name>clips_env_init</name>
         <qualifiedname>cx::ProtobufPlugin::clips_env_init</qualifiedname>
-        <reimplements refid="classcx_1_1ClipsPlugin_1ae76613ee6d5866e5ffb7b8ac14aaaa03">clips_env_init</reimplements>
+        <reimplements refid="classcx_1_1ClipsPlugin_1ae0bf2f3822f20d250a1763bb2f7b1b8c">clips_env_init</reimplements>
         <param>
-          <type>LockSharedPtr&lt; clips::Environment &gt; &amp;</type>
+          <type>std::shared_ptr&lt; clips::Environment &gt; &amp;</type>
+          <declname>env</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="43" column="8"/>
+      </memberdef>
+      <memberdef kind="function" id="classcx_1_1ProtobufPlugin_1a5bc2e2fd90be5b7eb821aaa8d3762264" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type>bool</type>
+        <definition>bool cx::ProtobufPlugin::clips_env_destroyed</definition>
+        <argsstring>(std::shared_ptr&lt; clips::Environment &gt; &amp;env) override</argsstring>
+        <name>clips_env_destroyed</name>
+        <qualifiedname>cx::ProtobufPlugin::clips_env_destroyed</qualifiedname>
+        <reimplements refid="classcx_1_1ClipsPlugin_1a503dc794d932be7047a2d9c3901c61df">clips_env_destroyed</reimplements>
+        <param>
+          <type>std::shared_ptr&lt; clips::Environment &gt; &amp;</type>
           <declname>env</declname>
         </param>
         <briefdescription>
@@ -123,25 +142,6 @@
         <inbodydescription>
         </inbodydescription>
         <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="44" column="8"/>
-      </memberdef>
-      <memberdef kind="function" id="classcx_1_1ProtobufPlugin_1a40bc98d5938de8d450a23d45f25b5aa3" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
-        <type>bool</type>
-        <definition>bool cx::ProtobufPlugin::clips_env_destroyed</definition>
-        <argsstring>(LockSharedPtr&lt; clips::Environment &gt; &amp;env) override</argsstring>
-        <name>clips_env_destroyed</name>
-        <qualifiedname>cx::ProtobufPlugin::clips_env_destroyed</qualifiedname>
-        <reimplements refid="classcx_1_1ClipsPlugin_1acd6b69af115c20027831a5014a43cbe0">clips_env_destroyed</reimplements>
-        <param>
-          <type>LockSharedPtr&lt; clips::Environment &gt; &amp;</type>
-          <declname>env</declname>
-        </param>
-        <briefdescription>
-        </briefdescription>
-        <detaileddescription>
-        </detaileddescription>
-        <inbodydescription>
-        </inbodydescription>
-        <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="45" column="8"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
@@ -172,10 +172,10 @@
         </childnode>
       </node>
     </collaborationgraph>
-    <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="37" column="1" bodyfile="include/cx_protobuf_plugin/protobuf_plugin.hpp" bodystart="37" bodyend="55"/>
+    <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="36" column="1" bodyfile="include/cx_protobuf_plugin/protobuf_plugin.hpp" bodystart="36" bodyend="54"/>
     <listofallmembers>
-      <member refid="classcx_1_1ProtobufPlugin_1a40bc98d5938de8d450a23d45f25b5aa3" prot="public" virt="virtual"><scope>cx::ProtobufPlugin</scope><name>clips_env_destroyed</name></member>
-      <member refid="classcx_1_1ProtobufPlugin_1a7dac6c90fa0d633fcec51e91a1252066" prot="public" virt="virtual"><scope>cx::ProtobufPlugin</scope><name>clips_env_init</name></member>
+      <member refid="classcx_1_1ProtobufPlugin_1a5bc2e2fd90be5b7eb821aaa8d3762264" prot="public" virt="virtual"><scope>cx::ProtobufPlugin</scope><name>clips_env_destroyed</name></member>
+      <member refid="classcx_1_1ProtobufPlugin_1a6345ea8427adb7a1069e834fc4af5ffe" prot="public" virt="virtual"><scope>cx::ProtobufPlugin</scope><name>clips_env_init</name></member>
       <member refid="classcx_1_1ClipsPlugin_1a3aa0e046356cc938b853e414c539cb60" prot="public" virt="virtual"><scope>cx::ProtobufPlugin</scope><name>finalize</name></member>
       <member refid="classcx_1_1ProtobufPlugin_1ab5eb056301769dedaa901227fba09b62" prot="public" virt="virtual"><scope>cx::ProtobufPlugin</scope><name>initialize</name></member>
       <member refid="classcx_1_1ProtobufPlugin_1adbe5d25d6dab82a6a1fbb0358dbd8e7c" prot="private" virt="non-virtual"><scope>cx::ProtobufPlugin</scope><name>logger_</name></member>

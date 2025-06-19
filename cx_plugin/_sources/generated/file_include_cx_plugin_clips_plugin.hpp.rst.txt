@@ -32,8 +32,6 @@ Includes
 
 - ``clips_ns/clips.h``
 
-- ``cx_utils/lock_shared_ptr.hpp``
-
 - ``map``
 
 - ``pluginlib/class_loader.hpp``

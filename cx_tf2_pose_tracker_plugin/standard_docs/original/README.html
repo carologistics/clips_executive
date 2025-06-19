@@ -77,6 +77,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../README.html">README</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../README.html#cx-tf2-pose-tracker-plugin">cx_tf2_pose_tracker_plugin</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../README.html#usage">Usage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../README.html#clips-features">CLIPS Features</a></li>
 </ul>
 </li>
 </ul>
@@ -132,6 +133,34 @@ It’s configuration parameters are depicted in this example setup below.</p>
 <span class="w">      </span><span class="nt">spin_thread</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </pre></div>
 </div>
+</section>
+<section id="clips-features">
+<h2>CLIPS Features<a class="headerlink" href="#clips-features" title="Link to this heading"></a></h2>
+<p>This plugin adds deftemplates and deffunctions as listed below:</p>
+<section id="deftemplates">
+<h3>Deftemplates<a class="headerlink" href="#deftemplates" title="Link to this heading"></a></h3>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; Asserted and modified by the periodic lookup started with tf2-start-periodic-lookup.</span>
+<span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">tf2-tracked-pose</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">parent</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">child</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">stamp</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">FLOAT</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">translation</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">FLOAT</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">cardinality</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">rotation</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">FLOAT</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">cardinality</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">4</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">timer</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">EXTERNAL-ADDRESS</span><span class="p">))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; Start a ROS timer to periodically lookup the pose of ?child-frame relative to ?parent-frame.</span>
+<span class="c1">; Returns TRUE if timer was created successfully, FALSE otherwise.</span>
+<span class="p">(</span><span class="nv">tf2-start-periodic-lookup</span><span class="w"> </span><span class="nv">?parent-frame</span><span class="w"> </span><span class="nv">?child-frame</span><span class="w"> </span><span class="nv">?frequency-hz</span><span class="p">)</span><span class="w">   </span><span class="c1">; example-args: &quot;map&quot; &quot;base_link&quot; 2.0</span>
+<span class="c1">; Stop a started ROS timer using the timer of the associated tf2-tracked-pose fact.</span>
+<span class="p">(</span><span class="nv">tf2-stop-periodic-lookup</span><span class="w"> </span><span class="nv">?timer-ptr</span><span class="p">)</span><span class="w"> </span><span class="c1">; example args: &lt;Pointer-C-0x7f1550001d20&gt;</span>
+</pre></div>
+</div>
+</section>
 </section>
 </section>
 

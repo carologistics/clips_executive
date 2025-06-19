@@ -1,9 +1,0 @@
-plugin_generator/
-=================
-
-.. toctree::
-   :caption: Documentation in this subdirectory
-   :maxdepth: 2
-   :glob:
-
-   user_docs/plugin_generator/*

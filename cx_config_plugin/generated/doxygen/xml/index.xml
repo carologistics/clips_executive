@@ -15,8 +15,8 @@
     <member refid="classcx_1_1ConfigPlugin_1a9f6d97b75a0fd36e195d83daebee8d16" kind="function"><name>ConfigPlugin</name></member>
     <member refid="classcx_1_1ConfigPlugin_1ab0534ed851f16ee6eb92f6a0676881b3" kind="function"><name>~ConfigPlugin</name></member>
     <member refid="classcx_1_1ConfigPlugin_1a3a94284e0f08bd7a6b2612438d7c55e6" kind="function"><name>initialize</name></member>
-    <member refid="classcx_1_1ConfigPlugin_1a2b9ba4726e7bc02ba5e899499da752a0" kind="function"><name>clips_env_init</name></member>
-    <member refid="classcx_1_1ConfigPlugin_1a6ca27a0f54626711042088c74c899b72" kind="function"><name>clips_env_destroyed</name></member>
+    <member refid="classcx_1_1ConfigPlugin_1a9e51afbf559f9b53969e36549bd314ad" kind="function"><name>clips_env_init</name></member>
+    <member refid="classcx_1_1ConfigPlugin_1a5426411e51fae61b6b7924b753718051" kind="function"><name>clips_env_destroyed</name></member>
     <member refid="classcx_1_1ConfigPlugin_1abc4c39d5def91dc249564e515533ef0f" kind="function"><name>clips_config_load</name></member>
     <member refid="classcx_1_1ConfigPlugin_1a90ecabcfa93cf85465b70c5bf7c92a2d" kind="function"><name>getScalarType</name></member>
     <member refid="classcx_1_1ConfigPlugin_1a8652f7c03aca9b9c68a17a992a5a4edd" kind="function"><name>iterateThroughYamlRecuresively</name></member>

@@ -77,8 +77,8 @@
     <member refid="classcx_1_1ProtobufPlugin_1acb3c24b60d86534ad381ab5b7919ecbb" kind="function"><name>ProtobufPlugin</name></member>
     <member refid="classcx_1_1ProtobufPlugin_1a04c4a8972dd9f41fc26d353db8eb9edb" kind="function"><name>~ProtobufPlugin</name></member>
     <member refid="classcx_1_1ProtobufPlugin_1ab5eb056301769dedaa901227fba09b62" kind="function"><name>initialize</name></member>
-    <member refid="classcx_1_1ProtobufPlugin_1a7dac6c90fa0d633fcec51e91a1252066" kind="function"><name>clips_env_init</name></member>
-    <member refid="classcx_1_1ProtobufPlugin_1a40bc98d5938de8d450a23d45f25b5aa3" kind="function"><name>clips_env_destroyed</name></member>
+    <member refid="classcx_1_1ProtobufPlugin_1a6345ea8427adb7a1069e834fc4af5ffe" kind="function"><name>clips_env_init</name></member>
+    <member refid="classcx_1_1ProtobufPlugin_1a5bc2e2fd90be5b7eb821aaa8d3762264" kind="function"><name>clips_env_destroyed</name></member>
   </compound>
   <compound refid="namespacecx" kind="namespace"><name>cx</name>
   </compound>

@@ -108,10 +108,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aa172b6316fa790bdeab73a356bdcf6e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6a17dc12fa6aef7198d05dba1fc4bc12" id="r_a6a17dc12fa6aef7198d05dba1fc4bc12"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcx_1_1RosMsgsPlugin.html#a6a17dc12fa6aef7198d05dba1fc4bc12">finalize</a> ()</td></tr>
 <tr class="separator:a6a17dc12fa6aef7198d05dba1fc4bc12"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a37d7f4e2fc74b4ee4c76ef9afd60988d" id="r_a37d7f4e2fc74b4ee4c76ef9afd60988d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcx_1_1RosMsgsPlugin.html#a37d7f4e2fc74b4ee4c76ef9afd60988d">clips_env_init</a> (LockSharedPtr&lt; clips::Environment &gt; &amp;env) override</td></tr>
-<tr class="separator:a37d7f4e2fc74b4ee4c76ef9afd60988d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab7e6edd6ba5e7925500aa0dce7b9baf4" id="r_ab7e6edd6ba5e7925500aa0dce7b9baf4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcx_1_1RosMsgsPlugin.html#ab7e6edd6ba5e7925500aa0dce7b9baf4">clips_env_destroyed</a> (LockSharedPtr&lt; clips::Environment &gt; &amp;env) override</td></tr>
-<tr class="separator:ab7e6edd6ba5e7925500aa0dce7b9baf4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c74da31ed5a8c89dc2315109d079d1a" id="r_a9c74da31ed5a8c89dc2315109d079d1a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcx_1_1RosMsgsPlugin.html#a9c74da31ed5a8c89dc2315109d079d1a">clips_env_init</a> (std::shared_ptr&lt; clips::Environment &gt; &amp;env) override</td></tr>
+<tr class="separator:a9c74da31ed5a8c89dc2315109d079d1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf8f3f5c7deb344fc1b91c2850d8bc68" id="r_aaf8f3f5c7deb344fc1b91c2850d8bc68"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcx_1_1RosMsgsPlugin.html#aaf8f3f5c7deb344fc1b91c2850d8bc68">clips_env_destroyed</a> (std::shared_ptr&lt; clips::Environment &gt; &amp;env) override</td></tr>
+<tr class="separator:aaf8f3f5c7deb344fc1b91c2850d8bc68"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -124,8 +124,8 @@ rclcpp_lifecycle::LifecycleNode::WeakPtr&#160;</td><td class="memItemRight" vali
 <tr class="separator:a5c9c64f5ab925a688f022554d3985342 inherit pro_attribs_classcx_1_1ClipsPlugin"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ab7e6edd6ba5e7925500aa0dce7b9baf4" name="ab7e6edd6ba5e7925500aa0dce7b9baf4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab7e6edd6ba5e7925500aa0dce7b9baf4">&#9670;&#160;</a></span>clips_env_destroyed()</h2>
+<a id="aaf8f3f5c7deb344fc1b91c2850d8bc68" name="aaf8f3f5c7deb344fc1b91c2850d8bc68"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf8f3f5c7deb344fc1b91c2850d8bc68">&#9670;&#160;</a></span>clips_env_destroyed()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -136,7 +136,7 @@ rclcpp_lifecycle::LifecycleNode::WeakPtr&#160;</td><td class="memItemRight" vali
         <tr>
           <td class="memname">bool cx::RosMsgsPlugin::clips_env_destroyed </td>
           <td>(</td>
-          <td class="paramtype">LockSharedPtr&lt; clips::Environment &gt; &amp;&#160;</td>
+          <td class="paramtype">std::shared_ptr&lt; clips::Environment &gt; &amp;&#160;</td>
           <td class="paramname"><em>env</em></td><td>)</td>
           <td></td>
         </tr>
@@ -148,12 +148,12 @@ rclcpp_lifecycle::LifecycleNode::WeakPtr&#160;</td><td class="memItemRight" vali
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="elRef" href="http://docs.ros.org/en/latest/p/cx_plugin/generated/doxygen/html/classcx_1_1ClipsPlugin.html#acd6b69af115c20027831a5014a43cbe0">cx::ClipsPlugin</a>.</p>
+<p>Implements <a class="elRef" href="http://docs.ros.org/en/latest/p/cx_plugin/generated/doxygen/html/classcx_1_1ClipsPlugin.html#a503dc794d932be7047a2d9c3901c61df">cx::ClipsPlugin</a>.</p>
 
 </div>
 </div>
-<a id="a37d7f4e2fc74b4ee4c76ef9afd60988d" name="a37d7f4e2fc74b4ee4c76ef9afd60988d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a37d7f4e2fc74b4ee4c76ef9afd60988d">&#9670;&#160;</a></span>clips_env_init()</h2>
+<a id="a9c74da31ed5a8c89dc2315109d079d1a" name="a9c74da31ed5a8c89dc2315109d079d1a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c74da31ed5a8c89dc2315109d079d1a">&#9670;&#160;</a></span>clips_env_init()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -164,7 +164,7 @@ rclcpp_lifecycle::LifecycleNode::WeakPtr&#160;</td><td class="memItemRight" vali
         <tr>
           <td class="memname">bool cx::RosMsgsPlugin::clips_env_init </td>
           <td>(</td>
-          <td class="paramtype">LockSharedPtr&lt; clips::Environment &gt; &amp;&#160;</td>
+          <td class="paramtype">std::shared_ptr&lt; clips::Environment &gt; &amp;&#160;</td>
           <td class="paramname"><em>env</em></td><td>)</td>
           <td></td>
         </tr>
@@ -176,7 +176,7 @@ rclcpp_lifecycle::LifecycleNode::WeakPtr&#160;</td><td class="memItemRight" vali
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="elRef" href="http://docs.ros.org/en/latest/p/cx_plugin/generated/doxygen/html/classcx_1_1ClipsPlugin.html#ae76613ee6d5866e5ffb7b8ac14aaaa03">cx::ClipsPlugin</a>.</p>
+<p>Implements <a class="elRef" href="http://docs.ros.org/en/latest/p/cx_plugin/generated/doxygen/html/classcx_1_1ClipsPlugin.html#ae0bf2f3822f20d250a1763bb2f7b1b8c">cx::ClipsPlugin</a>.</p>
 
 </div>
 </div>

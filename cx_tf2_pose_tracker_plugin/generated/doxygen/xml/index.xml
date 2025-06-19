@@ -15,8 +15,8 @@
     <member refid="classcx_1_1Tf2PoseTrackerPlugin_1a86e11d80e0f1fda9867b8a82b537fb91" kind="function"><name>~Tf2PoseTrackerPlugin</name></member>
     <member refid="classcx_1_1Tf2PoseTrackerPlugin_1ad245aab10e6779bf0545f7c3aa896016" kind="function"><name>initialize</name></member>
     <member refid="classcx_1_1Tf2PoseTrackerPlugin_1a0b088fd93e664152fb87850436869167" kind="function"><name>finalize</name></member>
-    <member refid="classcx_1_1Tf2PoseTrackerPlugin_1a499d5da891bcf608c23060d9de8404c2" kind="function"><name>clips_env_init</name></member>
-    <member refid="classcx_1_1Tf2PoseTrackerPlugin_1afe188fe1328dafb6ef8e1ea6eb391bf3" kind="function"><name>clips_env_destroyed</name></member>
+    <member refid="classcx_1_1Tf2PoseTrackerPlugin_1a0d2b715b29193c33aeb3e502e2c09243" kind="function"><name>clips_env_init</name></member>
+    <member refid="classcx_1_1Tf2PoseTrackerPlugin_1a7f614cb97dee1438c26cadb6aab5a968" kind="function"><name>clips_env_destroyed</name></member>
     <member refid="classcx_1_1Tf2PoseTrackerPlugin_1a7cfa5d7b5700898c07340508e96033ec" kind="function"><name>start_periodic_lookup</name></member>
     <member refid="classcx_1_1Tf2PoseTrackerPlugin_1af071854bbb4bb001a544436538462c27" kind="function"><name>stop_periodic_lookup</name></member>
   </compound>

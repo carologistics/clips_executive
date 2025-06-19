@@ -151,7 +151,7 @@
 <codeline lineno="37"><highlight class="normal"></highlight></codeline>
 <codeline lineno="38"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">cx<sp/>{</highlight></codeline>
 <codeline lineno="39"><highlight class="normal"></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">EnvsMap<sp/>=</highlight></codeline>
-<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/>std::unordered_map&lt;std::string,<sp/>cx::LockSharedPtr&lt;clips::Environment&gt;&gt;;</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/>std::unordered_map&lt;std::string,<sp/>std::shared_ptr&lt;clips::Environment&gt;&gt;;</highlight></codeline>
 <codeline lineno="41"><highlight class="normal"></highlight></codeline>
 <codeline lineno="42" refid="classcx_1_1ClipsPluginManager" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classcx_1_1ClipsPluginManager" kindref="compound">ClipsPluginManager</ref><sp/>{</highlight></codeline>
 <codeline lineno="43"><highlight class="normal"></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
@@ -161,70 +161,72 @@
 <codeline lineno="47"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">using<sp/></highlight><highlight class="normal">PluginsMap<sp/>=<sp/>std::unordered_map&lt;std::string,<sp/>cx::ClipsPlugin::Ptr&gt;;</highlight></codeline>
 <codeline lineno="48"><highlight class="normal"></highlight></codeline>
 <codeline lineno="49"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>configure(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>rclcpp_lifecycle::LifecycleNode::WeakPtr<sp/>&amp;parent,</highlight></codeline>
-<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;name,<sp/>LockSharedPtr&lt;EnvsMap&gt;<sp/>&amp;envs);</highlight></codeline>
-<codeline lineno="54" refid="classcx_1_1ClipsPluginManager_1a406358de5ccc5b4aab6a1b78b7b51b60" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classcx_1_1ClipsPluginManager_1a406358de5ccc5b4aab6a1b78b7b51b60" kindref="member">cleanup</ref>();</highlight></codeline>
-<codeline lineno="55"><highlight class="normal"></highlight></codeline>
-<codeline lineno="59" refid="classcx_1_1ClipsPluginManager_1a8fa97cdff583af75930a085c2c57f9da" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classcx_1_1ClipsPluginManager_1a8fa97cdff583af75930a085c2c57f9da" kindref="member">activate</ref>();</highlight></codeline>
-<codeline lineno="60"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>activate_env(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;env_name,</highlight></codeline>
-<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>LockSharedPtr&lt;clips::Environment&gt;<sp/>&amp;env);</highlight></codeline>
-<codeline lineno="62"><highlight class="normal"></highlight></codeline>
-<codeline lineno="66" refid="classcx_1_1ClipsPluginManager_1a561ff83f760a6e9a7852625a0a114a9a" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classcx_1_1ClipsPluginManager_1a561ff83f760a6e9a7852625a0a114a9a" kindref="member">deactivate</ref>();</highlight></codeline>
-<codeline lineno="67"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>deactivate_env(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;env_name,</highlight></codeline>
-<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>LockSharedPtr&lt;clips::Environment&gt;<sp/>&amp;env);</highlight></codeline>
-<codeline lineno="69"><highlight class="normal"></highlight></codeline>
-<codeline lineno="73" refid="classcx_1_1ClipsPluginManager_1aea194d3c4da6b3d3a2e6df14e4f97a72" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classcx_1_1ClipsPluginManager_1aea194d3c4da6b3d3a2e6df14e4f97a72" kindref="member">reset</ref>();</highlight></codeline>
-<codeline lineno="74"><highlight class="normal"></highlight></codeline>
-<codeline lineno="75"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>plugin_init_context(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;env_name,</highlight></codeline>
-<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;plugin_name);</highlight></codeline>
-<codeline lineno="77"><highlight class="normal"></highlight></codeline>
-<codeline lineno="78"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>clips_request_plugin(clips::Environment<sp/>*env,<sp/>clips::UDFValue<sp/>*out,</highlight></codeline>
-<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;plugin_name);</highlight></codeline>
-<codeline lineno="80"><highlight class="normal"></highlight></codeline>
-<codeline lineno="81"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>load_plugin_cb(</highlight></codeline>
-<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;rmw_request_id_t&gt;<sp/>request_header,</highlight></codeline>
-<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;cx_msgs::srv::LoadClipsPlugin::Request&gt;<sp/>request,</highlight></codeline>
-<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;cx_msgs::srv::LoadClipsPlugin::Response&gt;<sp/>response);</highlight></codeline>
-<codeline lineno="85"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>unload_plugin_cb(</highlight></codeline>
-<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;rmw_request_id_t&gt;<sp/>request_header,</highlight></codeline>
-<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;cx_msgs::srv::UnloadClipsPlugin::Request&gt;<sp/>request,</highlight></codeline>
-<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;cx_msgs::srv::UnloadClipsPlugin::Response&gt;</highlight></codeline>
-<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>response);</highlight></codeline>
-<codeline lineno="90"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>list_plugin_cb(</highlight></codeline>
-<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;rmw_request_id_t&gt;<sp/>request_header,</highlight></codeline>
-<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;cx_msgs::srv::ListClipsPlugins::Request&gt;<sp/>request,</highlight></codeline>
-<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;cx_msgs::srv::ListClipsPlugins::Response&gt;<sp/>response);</highlight></codeline>
-<codeline lineno="94"><highlight class="normal"></highlight></codeline>
-<codeline lineno="95"><highlight class="normal"></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
-<codeline lineno="96"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>load_plugin_for_env(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;plugin,</highlight></codeline>
-<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;env_name,</highlight></codeline>
-<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>LockSharedPtr&lt;clips::Environment&gt;<sp/>&amp;env);</highlight></codeline>
-<codeline lineno="99"><highlight class="normal"></highlight></codeline>
-<codeline lineno="100"><highlight class="normal"><sp/><sp/>rclcpp::Service&lt;cx_msgs::srv::LoadClipsPlugin&gt;::SharedPtr</highlight></codeline>
-<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>load_plugin_service_;</highlight></codeline>
-<codeline lineno="102"><highlight class="normal"><sp/><sp/>rclcpp::Service&lt;cx_msgs::srv::UnloadClipsPlugin&gt;::SharedPtr</highlight></codeline>
-<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>unload_plugin_service_;</highlight></codeline>
-<codeline lineno="104"><highlight class="normal"><sp/><sp/>rclcpp::Service&lt;cx_msgs::srv::ListClipsPlugins&gt;::SharedPtr</highlight></codeline>
-<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>list_plugin_service_;</highlight></codeline>
-<codeline lineno="106"><highlight class="normal"></highlight></codeline>
-<codeline lineno="107"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Pluginlib<sp/>class<sp/>loaders</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="108"><highlight class="normal"><sp/><sp/>pluginlib::ClassLoader&lt;cx::ClipsPlugin&gt;<sp/>pg_loader_;</highlight></codeline>
-<codeline lineno="109"><highlight class="normal"><sp/><sp/>std::vector&lt;std::string&gt;<sp/>plugin_ids_;</highlight></codeline>
-<codeline lineno="110"><highlight class="normal"></highlight></codeline>
-<codeline lineno="111"><highlight class="normal"><sp/><sp/>LockSharedPtr&lt;EnvsMap&gt;<sp/>envs_;</highlight></codeline>
-<codeline lineno="112"><highlight class="normal"></highlight></codeline>
-<codeline lineno="113"><highlight class="normal"><sp/><sp/>std::unordered_map&lt;std::string,<sp/>std::vector&lt;std::string&gt;&gt;<sp/>loaded_plugins_;</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;name,<sp/>std::shared_ptr&lt;EnvsMap&gt;<sp/>&amp;envs,</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::shared_ptr&lt;std::mutex&gt;<sp/>&amp;map_mtx);</highlight></codeline>
+<codeline lineno="55" refid="classcx_1_1ClipsPluginManager_1a406358de5ccc5b4aab6a1b78b7b51b60" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classcx_1_1ClipsPluginManager_1a406358de5ccc5b4aab6a1b78b7b51b60" kindref="member">cleanup</ref>();</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"></highlight></codeline>
+<codeline lineno="60" refid="classcx_1_1ClipsPluginManager_1a8fa97cdff583af75930a085c2c57f9da" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classcx_1_1ClipsPluginManager_1a8fa97cdff583af75930a085c2c57f9da" kindref="member">activate</ref>();</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>activate_env(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;env_name,</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::shared_ptr&lt;clips::Environment&gt;<sp/>&amp;env);</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="67" refid="classcx_1_1ClipsPluginManager_1a561ff83f760a6e9a7852625a0a114a9a" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classcx_1_1ClipsPluginManager_1a561ff83f760a6e9a7852625a0a114a9a" kindref="member">deactivate</ref>();</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>deactivate_env(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;env_name,</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::shared_ptr&lt;clips::Environment&gt;<sp/>&amp;env);</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"></highlight></codeline>
+<codeline lineno="74" refid="classcx_1_1ClipsPluginManager_1aea194d3c4da6b3d3a2e6df14e4f97a72" refkind="member"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><ref refid="classcx_1_1ClipsPluginManager_1aea194d3c4da6b3d3a2e6df14e4f97a72" kindref="member">reset</ref>();</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"></highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>plugin_init_context(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;env_name,</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;plugin_name);</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>clips_request_plugin(clips::Environment<sp/>*env,<sp/>clips::UDFValue<sp/>*out,</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;plugin_name);</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"></highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>load_plugin_cb(</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;rmw_request_id_t&gt;<sp/>request_header,</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;cx_msgs::srv::LoadClipsPlugin::Request&gt;<sp/>request,</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;cx_msgs::srv::LoadClipsPlugin::Response&gt;<sp/>response);</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>unload_plugin_cb(</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;rmw_request_id_t&gt;<sp/>request_header,</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;cx_msgs::srv::UnloadClipsPlugin::Request&gt;<sp/>request,</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;cx_msgs::srv::UnloadClipsPlugin::Response&gt;</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>response);</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>list_plugin_cb(</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;rmw_request_id_t&gt;<sp/>request_header,</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;cx_msgs::srv::ListClipsPlugins::Request&gt;<sp/>request,</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::shared_ptr&lt;cx_msgs::srv::ListClipsPlugins::Response&gt;<sp/>response);</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"></highlight></codeline>
+<codeline lineno="96"><highlight class="normal"></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>load_plugin_for_env(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;plugin,</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;env_name,</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::shared_ptr&lt;clips::Environment&gt;<sp/>&amp;env);</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"></highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/>rclcpp::Service&lt;cx_msgs::srv::LoadClipsPlugin&gt;::SharedPtr</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>load_plugin_service_;</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/>rclcpp::Service&lt;cx_msgs::srv::UnloadClipsPlugin&gt;::SharedPtr</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>unload_plugin_service_;</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/>rclcpp::Service&lt;cx_msgs::srv::ListClipsPlugins&gt;::SharedPtr</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>list_plugin_service_;</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"></highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Pluginlib<sp/>class<sp/>loaders</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/>pluginlib::ClassLoader&lt;cx::ClipsPlugin&gt;<sp/>pg_loader_;</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/>std::vector&lt;std::string&gt;<sp/>plugin_ids_;</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"></highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/>std::shared_ptr&lt;EnvsMap&gt;<sp/>envs_;</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/>std::shared_ptr&lt;std::mutex&gt;<sp/>map_mtx_;</highlight></codeline>
 <codeline lineno="114"><highlight class="normal"></highlight></codeline>
-<codeline lineno="115"><highlight class="normal"><sp/><sp/>PluginsMap<sp/>plugins_;</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/>std::unordered_map&lt;std::string,<sp/>std::vector&lt;std::string&gt;&gt;<sp/>loaded_plugins_;</highlight></codeline>
 <codeline lineno="116"><highlight class="normal"></highlight></codeline>
-<codeline lineno="117"><highlight class="normal"><sp/><sp/>std::string<sp/>name_;</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/>PluginsMap<sp/>plugins_;</highlight></codeline>
 <codeline lineno="118"><highlight class="normal"></highlight></codeline>
-<codeline lineno="119"><highlight class="normal"><sp/><sp/>rclcpp::Logger<sp/>logger_{rclcpp::get_logger(</highlight><highlight class="stringliteral">&quot;CLIPSPluginManager&quot;</highlight><highlight class="normal">)};</highlight></codeline>
-<codeline lineno="120"><highlight class="normal"><sp/><sp/>rclcpp_lifecycle::LifecycleNode::WeakPtr<sp/>parent_;</highlight></codeline>
-<codeline lineno="121"><highlight class="normal">};</highlight></codeline>
-<codeline lineno="122"><highlight class="normal"></highlight></codeline>
-<codeline lineno="123"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>cx</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/>std::string<sp/>name_;</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"></highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/>rclcpp::Logger<sp/>logger_{rclcpp::get_logger(</highlight><highlight class="stringliteral">&quot;CLIPSPluginManager&quot;</highlight><highlight class="normal">)};</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/>rclcpp_lifecycle::LifecycleNode::WeakPtr<sp/>parent_;</highlight></codeline>
+<codeline lineno="123"><highlight class="normal">};</highlight></codeline>
 <codeline lineno="124"><highlight class="normal"></highlight></codeline>
-<codeline lineno="125"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight><highlight class="comment">//<sp/>!CX_PLUGINS_CLIPS_PLUGIN_MANAGER_HPP_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="125"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>cx</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="126"><highlight class="normal"></highlight></codeline>
+<codeline lineno="127"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight><highlight class="comment">//<sp/>!CX_PLUGINS_CLIPS_PLUGIN_MANAGER_HPP_</highlight><highlight class="normal"></highlight></codeline>
     </programlisting>
     <location file="include/cx_clips_env_manager/clips_plugin_manager.hpp"/>
   </compounddef>

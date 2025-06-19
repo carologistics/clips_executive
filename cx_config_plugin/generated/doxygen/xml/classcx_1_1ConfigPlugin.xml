@@ -16,7 +16,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_config_plugin/config_plugin.hpp" line="86" column="19" bodyfile="include/cx_config_plugin/config_plugin.hpp" bodystart="86" bodyend="-1"/>
+        <location file="include/cx_config_plugin/config_plugin.hpp" line="85" column="19" bodyfile="include/cx_config_plugin/config_plugin.hpp" bodystart="85" bodyend="-1"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="public-func">
@@ -32,7 +32,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_config_plugin/config_plugin.hpp" line="65" column="3"/>
+        <location file="include/cx_config_plugin/config_plugin.hpp" line="64" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1ConfigPlugin_1ab0534ed851f16ee6eb92f6a0676881b3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -46,7 +46,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_config_plugin/config_plugin.hpp" line="66" column="3"/>
+        <location file="include/cx_config_plugin/config_plugin.hpp" line="65" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1ConfigPlugin_1a3a94284e0f08bd7a6b2612438d7c55e6" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
         <type>void</type>
@@ -61,17 +61,36 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_config_plugin/config_plugin.hpp" line="68" column="8"/>
+        <location file="include/cx_config_plugin/config_plugin.hpp" line="67" column="8"/>
       </memberdef>
-      <memberdef kind="function" id="classcx_1_1ConfigPlugin_1a2b9ba4726e7bc02ba5e899499da752a0" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+      <memberdef kind="function" id="classcx_1_1ConfigPlugin_1a9e51afbf559f9b53969e36549bd314ad" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
         <type>bool</type>
         <definition>bool cx::ConfigPlugin::clips_env_init</definition>
-        <argsstring>(LockSharedPtr&lt; clips::Environment &gt; &amp;env) override</argsstring>
+        <argsstring>(std::shared_ptr&lt; clips::Environment &gt; &amp;env) override</argsstring>
         <name>clips_env_init</name>
         <qualifiedname>cx::ConfigPlugin::clips_env_init</qualifiedname>
-        <reimplements refid="classcx_1_1ClipsPlugin_1ae76613ee6d5866e5ffb7b8ac14aaaa03">clips_env_init</reimplements>
+        <reimplements refid="classcx_1_1ClipsPlugin_1ae0bf2f3822f20d250a1763bb2f7b1b8c">clips_env_init</reimplements>
         <param>
-          <type>LockSharedPtr&lt; clips::Environment &gt; &amp;</type>
+          <type>std::shared_ptr&lt; clips::Environment &gt; &amp;</type>
+          <declname>env</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_config_plugin/config_plugin.hpp" line="69" column="8"/>
+      </memberdef>
+      <memberdef kind="function" id="classcx_1_1ConfigPlugin_1a5426411e51fae61b6b7924b753718051" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type>bool</type>
+        <definition>bool cx::ConfigPlugin::clips_env_destroyed</definition>
+        <argsstring>(std::shared_ptr&lt; clips::Environment &gt; &amp;env) override</argsstring>
+        <name>clips_env_destroyed</name>
+        <qualifiedname>cx::ConfigPlugin::clips_env_destroyed</qualifiedname>
+        <reimplements refid="classcx_1_1ClipsPlugin_1a503dc794d932be7047a2d9c3901c61df">clips_env_destroyed</reimplements>
+        <param>
+          <type>std::shared_ptr&lt; clips::Environment &gt; &amp;</type>
           <declname>env</declname>
         </param>
         <briefdescription>
@@ -81,25 +100,6 @@
         <inbodydescription>
         </inbodydescription>
         <location file="include/cx_config_plugin/config_plugin.hpp" line="70" column="8"/>
-      </memberdef>
-      <memberdef kind="function" id="classcx_1_1ConfigPlugin_1a6ca27a0f54626711042088c74c899b72" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
-        <type>bool</type>
-        <definition>bool cx::ConfigPlugin::clips_env_destroyed</definition>
-        <argsstring>(LockSharedPtr&lt; clips::Environment &gt; &amp;env) override</argsstring>
-        <name>clips_env_destroyed</name>
-        <qualifiedname>cx::ConfigPlugin::clips_env_destroyed</qualifiedname>
-        <reimplements refid="classcx_1_1ClipsPlugin_1acd6b69af115c20027831a5014a43cbe0">clips_env_destroyed</reimplements>
-        <param>
-          <type>LockSharedPtr&lt; clips::Environment &gt; &amp;</type>
-          <declname>env</declname>
-        </param>
-        <briefdescription>
-        </briefdescription>
-        <detaileddescription>
-        </detaileddescription>
-        <inbodydescription>
-        </inbodydescription>
-        <location file="include/cx_config_plugin/config_plugin.hpp" line="71" column="8"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="private-func">
@@ -127,7 +127,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_config_plugin/config_plugin.hpp" line="74" column="8"/>
+        <location file="include/cx_config_plugin/config_plugin.hpp" line="73" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1ConfigPlugin_1a90ecabcfa93cf85465b70c5bf7c92a2d" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::string</type>
@@ -145,7 +145,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_config_plugin/config_plugin.hpp" line="77" column="15"/>
+        <location file="include/cx_config_plugin/config_plugin.hpp" line="76" column="15"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1ConfigPlugin_1a8652f7c03aca9b9c68a17a992a5a4edd" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -171,7 +171,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_config_plugin/config_plugin.hpp" line="79" column="8"/>
+        <location file="include/cx_config_plugin/config_plugin.hpp" line="78" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1ConfigPlugin_1a74135f6a1a9f1f793196cc529c993f3d" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -197,7 +197,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_config_plugin/config_plugin.hpp" line="83" column="8"/>
+        <location file="include/cx_config_plugin/config_plugin.hpp" line="82" column="8"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
@@ -228,11 +228,11 @@
         </childnode>
       </node>
     </collaborationgraph>
-    <location file="include/cx_config_plugin/config_plugin.hpp" line="63" column="1" bodyfile="include/cx_config_plugin/config_plugin.hpp" bodystart="63" bodyend="87"/>
+    <location file="include/cx_config_plugin/config_plugin.hpp" line="62" column="1" bodyfile="include/cx_config_plugin/config_plugin.hpp" bodystart="62" bodyend="86"/>
     <listofallmembers>
       <member refid="classcx_1_1ConfigPlugin_1abc4c39d5def91dc249564e515533ef0f" prot="private" virt="non-virtual"><scope>cx::ConfigPlugin</scope><name>clips_config_load</name></member>
-      <member refid="classcx_1_1ConfigPlugin_1a6ca27a0f54626711042088c74c899b72" prot="public" virt="virtual"><scope>cx::ConfigPlugin</scope><name>clips_env_destroyed</name></member>
-      <member refid="classcx_1_1ConfigPlugin_1a2b9ba4726e7bc02ba5e899499da752a0" prot="public" virt="virtual"><scope>cx::ConfigPlugin</scope><name>clips_env_init</name></member>
+      <member refid="classcx_1_1ConfigPlugin_1a5426411e51fae61b6b7924b753718051" prot="public" virt="virtual"><scope>cx::ConfigPlugin</scope><name>clips_env_destroyed</name></member>
+      <member refid="classcx_1_1ConfigPlugin_1a9e51afbf559f9b53969e36549bd314ad" prot="public" virt="virtual"><scope>cx::ConfigPlugin</scope><name>clips_env_init</name></member>
       <member refid="classcx_1_1ConfigPlugin_1a9f6d97b75a0fd36e195d83daebee8d16" prot="public" virt="non-virtual"><scope>cx::ConfigPlugin</scope><name>ConfigPlugin</name></member>
       <member refid="classcx_1_1ClipsPlugin_1a3aa0e046356cc938b853e414c539cb60" prot="public" virt="virtual"><scope>cx::ConfigPlugin</scope><name>finalize</name></member>
       <member refid="classcx_1_1ConfigPlugin_1a90ecabcfa93cf85465b70c5bf7c92a2d" prot="private" virt="non-virtual"><scope>cx::ConfigPlugin</scope><name>getScalarType</name></member>

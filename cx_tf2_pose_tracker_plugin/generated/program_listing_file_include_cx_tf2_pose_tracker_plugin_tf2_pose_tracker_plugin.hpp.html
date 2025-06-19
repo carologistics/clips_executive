@@ -79,6 +79,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../standard_docs/README.html">README</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../standard_docs/README.html#cx-tf2-pose-tracker-plugin">cx_tf2_pose_tracker_plugin</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../standard_docs/README.html#usage">Usage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../standard_docs/README.html#clips-features">CLIPS Features</a></li>
 </ul>
 </li>
 </ul>
@@ -140,7 +141,6 @@
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span>
 
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;cx_plugin/clips_plugin.hpp&quot;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;cx_utils/lock_shared_ptr.hpp&quot;</span>
 
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;geometry_msgs/msg/transform_stamped.hpp&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;tf2_ros/buffer.h&gt;</span>
@@ -156,8 +156,8 @@
 <span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">initialize</span><span class="p">()</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
 <span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">finalize</span><span class="p">()</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
 
-<span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="nf">clips_env_init</span><span class="p">(</span><span class="n">LockSharedPtr</span><span class="o">&lt;</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">env</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
-<span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="nf">clips_env_destroyed</span><span class="p">(</span><span class="n">LockSharedPtr</span><span class="o">&lt;</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">env</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="nf">clips_env_init</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">env</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="nf">clips_env_destroyed</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">env</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
 
 <span class="k">private</span><span class="o">:</span>
 <span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">PoseTracker</span><span class="w"> </span><span class="p">{</span>

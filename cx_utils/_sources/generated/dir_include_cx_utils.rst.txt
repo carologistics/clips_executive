@@ -17,7 +17,6 @@ Files
 -----
 
 - :ref:`file_include_cx_utils_clips_env_context.hpp`
-- :ref:`file_include_cx_utils_lock_shared_ptr.hpp`
 - :ref:`file_include_cx_utils_param_utils.hpp`
 - :ref:`file_include_cx_utils_string_utils.hpp`
 

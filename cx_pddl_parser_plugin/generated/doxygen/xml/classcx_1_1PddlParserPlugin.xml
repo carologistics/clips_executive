@@ -16,7 +16,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_pddl_parser_plugin/pddl_parser_plugin.hpp" line="47" column="7" bodyfile="include/cx_pddl_parser_plugin/pddl_parser_plugin.hpp" bodystart="47" bodyend="-1"/>
+        <location file="include/cx_pddl_parser_plugin/pddl_parser_plugin.hpp" line="46" column="7" bodyfile="include/cx_pddl_parser_plugin/pddl_parser_plugin.hpp" bodystart="46" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1PddlParserPlugin_1af1932a35461b382f142a82923e414582" prot="private" static="no" mutable="no">
         <type>std::unique_ptr&lt; rclcpp::Logger &gt;</type>
@@ -30,7 +30,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_pddl_parser_plugin/pddl_parser_plugin.hpp" line="49" column="19" bodyfile="include/cx_pddl_parser_plugin/pddl_parser_plugin.hpp" bodystart="49" bodyend="-1"/>
+        <location file="include/cx_pddl_parser_plugin/pddl_parser_plugin.hpp" line="48" column="19" bodyfile="include/cx_pddl_parser_plugin/pddl_parser_plugin.hpp" bodystart="48" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1PddlParserPlugin_1adc124c92f58fadb6ed841063d90e207c" prot="private" static="no" mutable="no">
         <type>std::string</type>
@@ -44,7 +44,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_pddl_parser_plugin/pddl_parser_plugin.hpp" line="51" column="15" bodyfile="include/cx_pddl_parser_plugin/pddl_parser_plugin.hpp" bodystart="51" bodyend="-1"/>
+        <location file="include/cx_pddl_parser_plugin/pddl_parser_plugin.hpp" line="50" column="15" bodyfile="include/cx_pddl_parser_plugin/pddl_parser_plugin.hpp" bodystart="50" bodyend="-1"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="public-func">
@@ -60,7 +60,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_pddl_parser_plugin/pddl_parser_plugin.hpp" line="37" column="3"/>
+        <location file="include/cx_pddl_parser_plugin/pddl_parser_plugin.hpp" line="36" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1PddlParserPlugin_1af5d6553ebb76e95d78f86efad0161367" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -74,7 +74,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_pddl_parser_plugin/pddl_parser_plugin.hpp" line="38" column="3"/>
+        <location file="include/cx_pddl_parser_plugin/pddl_parser_plugin.hpp" line="37" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1PddlParserPlugin_1addafd3c0d44e47effc3e31082a6591aa" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
         <type>void</type>
@@ -89,17 +89,36 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_pddl_parser_plugin/pddl_parser_plugin.hpp" line="40" column="8"/>
+        <location file="include/cx_pddl_parser_plugin/pddl_parser_plugin.hpp" line="39" column="8"/>
       </memberdef>
-      <memberdef kind="function" id="classcx_1_1PddlParserPlugin_1abda882933bd3b037f68d6f2bd3efd6a4" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+      <memberdef kind="function" id="classcx_1_1PddlParserPlugin_1aebd400bc50582301861cfd895b9850b4" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
         <type>bool</type>
         <definition>bool cx::PddlParserPlugin::clips_env_init</definition>
-        <argsstring>(LockSharedPtr&lt; clips::Environment &gt; &amp;env) override</argsstring>
+        <argsstring>(std::shared_ptr&lt; clips::Environment &gt; &amp;env) override</argsstring>
         <name>clips_env_init</name>
         <qualifiedname>cx::PddlParserPlugin::clips_env_init</qualifiedname>
-        <reimplements refid="classcx_1_1ClipsPlugin_1ae76613ee6d5866e5ffb7b8ac14aaaa03">clips_env_init</reimplements>
+        <reimplements refid="classcx_1_1ClipsPlugin_1ae0bf2f3822f20d250a1763bb2f7b1b8c">clips_env_init</reimplements>
         <param>
-          <type>LockSharedPtr&lt; clips::Environment &gt; &amp;</type>
+          <type>std::shared_ptr&lt; clips::Environment &gt; &amp;</type>
+          <declname>env</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_pddl_parser_plugin/pddl_parser_plugin.hpp" line="41" column="8"/>
+      </memberdef>
+      <memberdef kind="function" id="classcx_1_1PddlParserPlugin_1a4ae179e49c248b068ada7e7da72d6316" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type>bool</type>
+        <definition>bool cx::PddlParserPlugin::clips_env_destroyed</definition>
+        <argsstring>(std::shared_ptr&lt; clips::Environment &gt; &amp;env) override</argsstring>
+        <name>clips_env_destroyed</name>
+        <qualifiedname>cx::PddlParserPlugin::clips_env_destroyed</qualifiedname>
+        <reimplements refid="classcx_1_1ClipsPlugin_1a503dc794d932be7047a2d9c3901c61df">clips_env_destroyed</reimplements>
+        <param>
+          <type>std::shared_ptr&lt; clips::Environment &gt; &amp;</type>
           <declname>env</declname>
         </param>
         <briefdescription>
@@ -109,25 +128,6 @@
         <inbodydescription>
         </inbodydescription>
         <location file="include/cx_pddl_parser_plugin/pddl_parser_plugin.hpp" line="42" column="8"/>
-      </memberdef>
-      <memberdef kind="function" id="classcx_1_1PddlParserPlugin_1a15e4cf2f93d9fe22da64681898f32b57" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
-        <type>bool</type>
-        <definition>bool cx::PddlParserPlugin::clips_env_destroyed</definition>
-        <argsstring>(LockSharedPtr&lt; clips::Environment &gt; &amp;env) override</argsstring>
-        <name>clips_env_destroyed</name>
-        <qualifiedname>cx::PddlParserPlugin::clips_env_destroyed</qualifiedname>
-        <reimplements refid="classcx_1_1ClipsPlugin_1acd6b69af115c20027831a5014a43cbe0">clips_env_destroyed</reimplements>
-        <param>
-          <type>LockSharedPtr&lt; clips::Environment &gt; &amp;</type>
-          <declname>env</declname>
-        </param>
-        <briefdescription>
-        </briefdescription>
-        <detaileddescription>
-        </detaileddescription>
-        <inbodydescription>
-        </inbodydescription>
-        <location file="include/cx_pddl_parser_plugin/pddl_parser_plugin.hpp" line="43" column="8"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
@@ -158,10 +158,10 @@
         </childnode>
       </node>
     </collaborationgraph>
-    <location file="include/cx_pddl_parser_plugin/pddl_parser_plugin.hpp" line="35" column="1" bodyfile="include/cx_pddl_parser_plugin/pddl_parser_plugin.hpp" bodystart="35" bodyend="52"/>
+    <location file="include/cx_pddl_parser_plugin/pddl_parser_plugin.hpp" line="34" column="1" bodyfile="include/cx_pddl_parser_plugin/pddl_parser_plugin.hpp" bodystart="34" bodyend="51"/>
     <listofallmembers>
-      <member refid="classcx_1_1PddlParserPlugin_1a15e4cf2f93d9fe22da64681898f32b57" prot="public" virt="virtual"><scope>cx::PddlParserPlugin</scope><name>clips_env_destroyed</name></member>
-      <member refid="classcx_1_1PddlParserPlugin_1abda882933bd3b037f68d6f2bd3efd6a4" prot="public" virt="virtual"><scope>cx::PddlParserPlugin</scope><name>clips_env_init</name></member>
+      <member refid="classcx_1_1PddlParserPlugin_1a4ae179e49c248b068ada7e7da72d6316" prot="public" virt="virtual"><scope>cx::PddlParserPlugin</scope><name>clips_env_destroyed</name></member>
+      <member refid="classcx_1_1PddlParserPlugin_1aebd400bc50582301861cfd895b9850b4" prot="public" virt="virtual"><scope>cx::PddlParserPlugin</scope><name>clips_env_init</name></member>
       <member refid="classcx_1_1ClipsPlugin_1a3aa0e046356cc938b853e414c539cb60" prot="public" virt="virtual"><scope>cx::PddlParserPlugin</scope><name>finalize</name></member>
       <member refid="classcx_1_1PddlParserPlugin_1addafd3c0d44e47effc3e31082a6591aa" prot="public" virt="virtual"><scope>cx::PddlParserPlugin</scope><name>initialize</name></member>
       <member refid="classcx_1_1PddlParserPlugin_1af1932a35461b382f142a82923e414582" prot="private" virt="non-virtual"><scope>cx::PddlParserPlugin</scope><name>logger_</name></member>

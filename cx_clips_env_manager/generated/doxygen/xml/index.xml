@@ -8,7 +8,8 @@
     <member refid="classcx_1_1CLIPSEnvManager_1a70307c2cf54d1a5d37a60681dc9bb7ee" kind="variable"><name>create_env_service_</name></member>
     <member refid="classcx_1_1CLIPSEnvManager_1a58b19af7491458b96bacad28759cbadc" kind="variable"><name>destroy_env_service_</name></member>
     <member refid="classcx_1_1CLIPSEnvManager_1abd10ad0d97eb9f86af36472dc99752cc" kind="variable"><name>plugin_manager_</name></member>
-    <member refid="classcx_1_1CLIPSEnvManager_1addefe8f6c667150227b946183513b123" kind="variable"><name>envs_</name></member>
+    <member refid="classcx_1_1CLIPSEnvManager_1aff0fecc3081fe81b076dfc127a44c35a" kind="variable"><name>envs_</name></member>
+    <member refid="classcx_1_1CLIPSEnvManager_1a25b79bda2aa97629f30389879e24898d" kind="variable"><name>map_mtx_</name></member>
     <member refid="classcx_1_1CLIPSEnvManager_1abc25b1134c52125229479854e3b2180c" kind="variable"><name>bond_</name></member>
     <member refid="classcx_1_1CLIPSEnvManager_1a549c26b7a1ca2ad6b3b5123fbce7eeb4" kind="variable"><name>bond_heartbeat_period</name></member>
     <member refid="classcx_1_1CLIPSEnvManager_1ab9df32715bd23f0163731e81c8fac226" kind="variable"><name>autostart_timer_</name></member>
@@ -23,7 +24,7 @@
     <member refid="classcx_1_1CLIPSEnvManager_1ae9fc66dbd61c0813ee48cae2c4b8da6e" kind="function"><name>list_envs_callback</name></member>
     <member refid="classcx_1_1CLIPSEnvManager_1a370e4a10ea2c9c73fe906dc7743c0683" kind="function"><name>create_env_callback</name></member>
     <member refid="classcx_1_1CLIPSEnvManager_1a64b1bf75f60c37ea7e4d0baf130a67cf" kind="function"><name>destroy_env_callback</name></member>
-    <member refid="classcx_1_1CLIPSEnvManager_1aeca4db678b4829e57ac6831e4d16ae5f" kind="function"><name>new_env</name></member>
+    <member refid="classcx_1_1CLIPSEnvManager_1ad103f8aa8d15aaf56075c7ecdb21602f" kind="function"><name>new_env</name></member>
     <member refid="classcx_1_1CLIPSEnvManager_1aa0f323f3d81a4672dc4790b8998f6c84" kind="function"><name>delete_env</name></member>
     <member refid="classcx_1_1CLIPSEnvManager_1a57da58050635cd37c7768c274e312fc4" kind="function"><name>create_bond</name></member>
     <member refid="classcx_1_1CLIPSEnvManager_1a6023bbebaa7ea3b232e141bf4cdeaeda" kind="function"><name>destroy_bond</name></member>
@@ -39,7 +40,8 @@
     <member refid="classcx_1_1ClipsPluginManager_1a8e015e9ab00fabb638bdc9fb1ee188fb" kind="variable"><name>list_plugin_service_</name></member>
     <member refid="classcx_1_1ClipsPluginManager_1af099616095b575c90698b24244f0fbea" kind="variable"><name>pg_loader_</name></member>
     <member refid="classcx_1_1ClipsPluginManager_1a897e157cdb9e565085a7628d7089d244" kind="variable"><name>plugin_ids_</name></member>
-    <member refid="classcx_1_1ClipsPluginManager_1a448cf1a3f760396086dea3408cc9fbd6" kind="variable"><name>envs_</name></member>
+    <member refid="classcx_1_1ClipsPluginManager_1afa6366775899fc6c68868b3757e96f15" kind="variable"><name>envs_</name></member>
+    <member refid="classcx_1_1ClipsPluginManager_1a77dde31dcab5045f748d0809ccb346f2" kind="variable"><name>map_mtx_</name></member>
     <member refid="classcx_1_1ClipsPluginManager_1adac5f35e880ecdbd703c94d8b900689b" kind="variable"><name>loaded_plugins_</name></member>
     <member refid="classcx_1_1ClipsPluginManager_1a18e41035afb75f72a7a96fef749ca99c" kind="variable"><name>plugins_</name></member>
     <member refid="classcx_1_1ClipsPluginManager_1ac2412e6d836dd111483185bf2f38caa4" kind="variable"><name>name_</name></member>
@@ -47,22 +49,22 @@
     <member refid="classcx_1_1ClipsPluginManager_1a6b59a6a29782d61bee1c16bd6d3b9025" kind="variable"><name>parent_</name></member>
     <member refid="classcx_1_1ClipsPluginManager_1aedddb2fe6e43190a90fdf023b7406e47" kind="function"><name>ClipsPluginManager</name></member>
     <member refid="classcx_1_1ClipsPluginManager_1aff64874f50a08b8ddbf1f25d3f377c73" kind="function"><name>~ClipsPluginManager</name></member>
-    <member refid="classcx_1_1ClipsPluginManager_1a425b712eb2e583867a74809da1006396" kind="function"><name>configure</name></member>
+    <member refid="classcx_1_1ClipsPluginManager_1a6ebd6b5644c9ddfd9cc0f1f08ddf4443" kind="function"><name>configure</name></member>
     <member refid="classcx_1_1ClipsPluginManager_1a406358de5ccc5b4aab6a1b78b7b51b60" kind="function"><name>cleanup</name></member>
     <member refid="classcx_1_1ClipsPluginManager_1a8fa97cdff583af75930a085c2c57f9da" kind="function"><name>activate</name></member>
-    <member refid="classcx_1_1ClipsPluginManager_1a85d1a2236ef1b10f2984d3ef9330b7a7" kind="function"><name>activate_env</name></member>
+    <member refid="classcx_1_1ClipsPluginManager_1a653c867e58c3b063f514c2f1f78817fd" kind="function"><name>activate_env</name></member>
     <member refid="classcx_1_1ClipsPluginManager_1a561ff83f760a6e9a7852625a0a114a9a" kind="function"><name>deactivate</name></member>
-    <member refid="classcx_1_1ClipsPluginManager_1ae71e812a14ac68b4688bf72a981901c7" kind="function"><name>deactivate_env</name></member>
+    <member refid="classcx_1_1ClipsPluginManager_1a3da86533a8fb0aeba1426c9539e2d73e" kind="function"><name>deactivate_env</name></member>
     <member refid="classcx_1_1ClipsPluginManager_1aea194d3c4da6b3d3a2e6df14e4f97a72" kind="function"><name>reset</name></member>
     <member refid="classcx_1_1ClipsPluginManager_1a06d8c9482d8de825670fe5e5c6469a27" kind="function"><name>plugin_init_context</name></member>
     <member refid="classcx_1_1ClipsPluginManager_1a224eb043e4fda0964dfc9df0791a2960" kind="function"><name>clips_request_plugin</name></member>
     <member refid="classcx_1_1ClipsPluginManager_1a8c5028fe65f59eac2cdea6e3c18bb2e4" kind="function"><name>load_plugin_cb</name></member>
     <member refid="classcx_1_1ClipsPluginManager_1afcccbd2a2a530125134d963bd61beb72" kind="function"><name>unload_plugin_cb</name></member>
     <member refid="classcx_1_1ClipsPluginManager_1aba205fddb2cfa776d7a61b1f8ef66cda" kind="function"><name>list_plugin_cb</name></member>
-    <member refid="classcx_1_1ClipsPluginManager_1a4e7bc076e401470899102ed32f0b5605" kind="function"><name>load_plugin_for_env</name></member>
+    <member refid="classcx_1_1ClipsPluginManager_1af791f8bd001b50ccc4271d9a383e32c7" kind="function"><name>load_plugin_for_env</name></member>
   </compound>
   <compound refid="namespacecx" kind="namespace"><name>cx</name>
-    <member refid="clips__plugin__manager_8hpp_1a6e41636630926d99d74705252267fdc7" kind="typedef"><name>EnvsMap</name></member>
+    <member refid="clips__plugin__manager_8hpp_1a15775e833b3def16a8b176cdba13d665" kind="typedef"><name>EnvsMap</name></member>
   </compound>
   <compound refid="namespacerclcpp__lifecycle" kind="namespace"><name>rclcpp_lifecycle</name>
   </compound>

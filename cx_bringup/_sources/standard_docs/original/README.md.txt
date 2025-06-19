@@ -1,5 +1,5 @@
 # cx_bringup
----
+
 Provides an example bringup mechanism for CX applications.
 
 This package includes configuration files to showcase the different plugins `params` folder.

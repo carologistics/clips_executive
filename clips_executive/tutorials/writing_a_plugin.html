@@ -18,6 +18,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Standard Documents" href="../standards.html" />
     <link rel="prev" title="Continuous Monitoring" href="ros_monitoring.html" /> 
 </head>
 
@@ -68,6 +69,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../standards.html">Standard Documents</a></li>
 </ul>
 
         </div>
@@ -96,43 +98,43 @@
            <div itemprop="articleBody">
              
   <section id="writing-a-plugin-for-tf-monitoring">
-<h1>Writing a Plugin for TF Monitoring<a class="headerlink" href="#writing-a-plugin-for-tf-monitoring" title="Link to this heading"></a></h1>
+<span id="writing-a-plugin"></span><h1>Writing a Plugin for TF Monitoring<a class="headerlink" href="#writing-a-plugin-for-tf-monitoring" title="Link to this heading"></a></h1>
 <p><strong>Goal:</strong> Implement a CLIPS Plugin to observe transforms of a turtle from turtlesim</p>
 <p><strong>Tutorial level:</strong> Advanced</p>
 <p><strong>Time:</strong> 45 minutes</p>
 <nav class="contents local" id="contents">
 <p class="topic-title">Contents</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#background" id="id3">Background</a></p></li>
-<li><p><a class="reference internal" href="#prerequisites" id="id4">Prerequisites</a></p></li>
-<li><p><a class="reference internal" href="#tf-monitoring-plugin" id="id5">TF Monitoring Plugin</a></p>
+<li><p><a class="reference internal" href="#background" id="id1">Background</a></p></li>
+<li><p><a class="reference internal" href="#prerequisites" id="id2">Prerequisites</a></p></li>
+<li><p><a class="reference internal" href="#tf-monitoring-plugin" id="id3">TF Monitoring Plugin</a></p>
 <ul>
-<li><p><a class="reference internal" href="#obtaining-the-files" id="id6">1 Obtaining the Files</a></p></li>
-<li><p><a class="reference internal" href="#plugin-package-setup" id="id7">2 Plugin Package Setup</a></p></li>
-<li><p><a class="reference internal" href="#plugin-class-structure" id="id8">3 Plugin Class Structure</a></p></li>
-<li><p><a class="reference internal" href="#opening-ros-interfaces-on-initialize" id="id9">4 Opening ROS Interfaces on initialize()</a></p></li>
-<li><p><a class="reference internal" href="#cleaning-up-references-on-finalize" id="id10">5 Cleaning Up References On finalize()</a></p></li>
-<li><p><a class="reference internal" href="#adding-templates-and-functions-in-clips-env-init" id="id11">6 Adding Templates and Functions in clips_env_init()</a></p></li>
-<li><p><a class="reference internal" href="#cleaning-up-with-the-help-of-stop-periodic-lookup" id="id12">8 Cleaning Up with the Help of stop_periodic_lookup()</a></p></li>
-<li><p><a class="reference internal" href="#running-the-code" id="id13">9 Running The Code</a></p></li>
+<li><p><a class="reference internal" href="#obtaining-the-files" id="id4">1 Obtaining the Files</a></p></li>
+<li><p><a class="reference internal" href="#plugin-package-setup" id="id5">2 Plugin Package Setup</a></p></li>
+<li><p><a class="reference internal" href="#plugin-class-structure" id="id6">3 Plugin Class Structure</a></p></li>
+<li><p><a class="reference internal" href="#opening-ros-interfaces-on-initialize" id="id7">4 Opening ROS Interfaces on initialize()</a></p></li>
+<li><p><a class="reference internal" href="#cleaning-up-references-on-finalize" id="id8">5 Cleaning Up References On finalize()</a></p></li>
+<li><p><a class="reference internal" href="#adding-templates-and-functions-in-clips-env-init" id="id9">6 Adding Templates and Functions in clips_env_init()</a></p></li>
+<li><p><a class="reference internal" href="#cleaning-up-with-the-help-of-stop-periodic-lookup" id="id10">8 Cleaning Up with the Help of stop_periodic_lookup()</a></p></li>
+<li><p><a class="reference internal" href="#running-the-code" id="id11">9 Running The Code</a></p></li>
 </ul>
 </li>
 </ul>
 </nav>
 <section id="background">
-<h2><a class="toc-backref" href="#id3" role="doc-backlink">Background</a><a class="headerlink" href="#background" title="Link to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Background</a><a class="headerlink" href="#background" title="Link to this heading"></a></h2>
 <p>Plugins can be used to access CLIPS environments via their C++ API, as detailed in the <a class="reference external" href="https://clipsrules.net/documentation/v641/apg641.pdf">Advanced Programming Guide (PDF)</a>.
 This allows users to customize CLIPS to their needs.</p>
 </section>
 <section id="prerequisites">
-<h2><a class="toc-backref" href="#id4" role="doc-backlink">Prerequisites</a><a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h2>
-<p>This tutorial extends the <code class="docutils literal notranslate"><span class="pre">cx_tut_agent</span></code> package created in the <a class="reference internal" href="hello_world.html"><span class="doc">previous tutorial</span></a>.
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Prerequisites</a><a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h2>
+<p>This tutorial extends the <code class="docutils literal notranslate"><span class="pre">cx_tutorial_agents</span></code> package created in the <a class="reference internal" href="hello_world.html"><span class="doc">previous tutorial</span></a>.
 Additionally, it requires the <a class="reference external" href="https://docs.ros.org/en/humble/p/turtlesim">turtlesim</a> package, which provides a minimal simulation environment to interact with and the <a class="reference external" href="https://docs.ros.org/en/humble/p/turtle_tf2_py">turtle_tf2_py</a> package to obtain transforms from the simulation.</p>
 <p>The introductory tutorial for <a class="reference external" href="https://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Pluginlib.html">pluginlib</a> is a helpful resource to get a general understanding of <code class="docutils literal notranslate"><span class="pre">pluginlib</span></code> plugins, as those are not discussed in detail here.</p>
 <p>Similarly, the introduction to <a class="reference external" href="https://docs.ros.org/en/humble/Tutorials/Intermediate/Tf2/Writing-A-Tf2-Listener-Cpp.html">tf2 listeners</a>  explains the basics for observing transforms via <code class="docutils literal notranslate"><span class="pre">tf2</span></code>, which is utilized in this tutorial.</p>
 </section>
 <section id="tf-monitoring-plugin">
-<h2><a class="toc-backref" href="#id5" role="doc-backlink">TF Monitoring Plugin</a><a class="headerlink" href="#tf-monitoring-plugin" title="Link to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">TF Monitoring Plugin</a><a class="headerlink" href="#tf-monitoring-plugin" title="Link to this heading"></a></h2>
 <p>The objective of this tutorial is to write a custom CLIPS plugin that asynchronously injects poses obtained from a transform tree into a running CLIPS environment.</p>
 <p>This involves:</p>
 <ul class="simple">
@@ -148,22 +150,22 @@ Additionally, it requires the <a class="reference external" href="https://docs.r
 When working with the API you should familiarize yourself with the <a class="reference external" href="https://docs.ros.org/en/humble/p/clips_vendor">clips_vendor</a> package and the namespaced CLIPS target it provides, as well as the <a class="reference external" href="https://clipsrules.net/documentation/v641/apg641.pdf">Advanced Programming Guide (PDF)</a>, which is the reference manual for all public interfaces of CLIPS.</p>
 </div>
 <section id="obtaining-the-files">
-<h3><a class="toc-backref" href="#id6" role="doc-backlink">1 Obtaining the Files</a><a class="headerlink" href="#obtaining-the-files" title="Link to this heading"></a></h3>
-<p>Navigate to the <code class="docutils literal notranslate"><span class="pre">params</span></code> directory of the <code class="docutils literal notranslate"><span class="pre">clips_tut_agent</span></code> package from the <a class="reference internal" href="hello_world.html"><span class="doc">Hello World tutorial</span></a> and download the configuration file using the following command:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>~/ros2/cx_tutorial_ws/src/clips_tut_agent/params
-wget<span class="w"> </span>-O<span class="w"> </span>tf2_tracked_pose.yaml<span class="w"> </span>https://raw.githubusercontent.com/fawkesrobotics/ros2-clips-executive/master/tutorials/clips_tut_agent/params/tf2_tracked_pose.yaml
+<h3><a class="toc-backref" href="#id4" role="doc-backlink">1 Obtaining the Files</a><a class="headerlink" href="#obtaining-the-files" title="Link to this heading"></a></h3>
+<p>Navigate to the <code class="docutils literal notranslate"><span class="pre">params</span></code> directory of the <code class="docutils literal notranslate"><span class="pre">cx_tutorial_agents</span></code> package from the <a class="reference internal" href="hello_world.html"><span class="doc">Hello World tutorial</span></a> and download the configuration file using the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>~/ros2/cx_tutorial_ws/src/cx_tutorial_agents/params
+wget<span class="w"> </span>-O<span class="w"> </span>tf2_tracked_pose.yaml<span class="w"> </span>https://raw.githubusercontent.com/fawkesrobotics/ros2-clips-executive/master/tutorials/cx_tutorial_agents/params/tf2_tracked_pose.yaml
 </pre></div>
 </div>
 <p>This adds the file <code class="docutils literal notranslate"><span class="pre">tf2_tracked_pose.yaml</span></code> for setting up the ROS2 CLIPS-Executive for this tutorial.</p>
 <p>Next, a CLIPS file <code class="docutils literal notranslate"><span class="pre">tf2_tracked_pose.clp</span></code> can be downloaded to the <code class="docutils literal notranslate"><span class="pre">clips</span></code> directory, providing a minimal example to test the plugin:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>~/ros2/cx_tutorial_ws/src/clips_tut_agent/clips
-wget<span class="w"> </span>-O<span class="w"> </span>tf2_tracked_pose.clp<span class="w"> </span>https://raw.githubusercontent.com/fawkesrobotics/ros2-clips-executive/master/tutorials/clips_tut_agent/clips/tf2_tracked_pose.clp
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>~/ros2/cx_tutorial_ws/src/cx_tutorial_agents/clips
+wget<span class="w"> </span>-O<span class="w"> </span>tf2_tracked_pose.clp<span class="w"> </span>https://raw.githubusercontent.com/fawkesrobotics/ros2-clips-executive/master/tutorials/cx_tutorial_agents/clips/tf2_tracked_pose.clp
 </pre></div>
 </div>
 <p>The plugin code is taken from the <a class="reference external" href="https://fawkesrobotics.github.io/ros2-clips-executive/clips_executive/plugins/tf2_pose_tracker_plugin">Tf2PoseTrackerPlugin</a>. The code can be found on <a class="reference external" href="https://github.com/fawkesrobotics/ros2-clips-executive/blob/master/cx_plugins/tf2_pose_tracker_plugin">GitHub</a>.</p>
 </section>
 <section id="plugin-package-setup">
-<h3><a class="toc-backref" href="#id7" role="doc-backlink">2 Plugin Package Setup</a><a class="headerlink" href="#plugin-package-setup" title="Link to this heading"></a></h3>
+<h3><a class="toc-backref" href="#id5" role="doc-backlink">2 Plugin Package Setup</a><a class="headerlink" href="#plugin-package-setup" title="Link to this heading"></a></h3>
 <p>The plugin resides in it’s own ROS package, hence it has an appropriate <code class="docutils literal notranslate"><span class="pre">package.xml</span></code> and <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>. Additionally, each plugin comes with a plugin description that needs to be properly exported. See the
 <a class="reference external" href="https://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Pluginlib.html">beginner tutorial on pluginlib</a> for a general introduction to <code class="docutils literal notranslate"><span class="pre">pluginlib</span></code> plugins.</p>
 <p>Each plugin of the ROS2 CLIPS-Executive uses  the <code class="docutils literal notranslate"><span class="pre">cx::ClipsPlugin</span></code> as base class, provided by the <code class="docutils literal notranslate"><span class="pre">cx_plugin</span></code> package. The plugin for this tutorial is defined as a class <code class="docutils literal notranslate"><span class="pre">cx::Tf2PoseTrackerPlugin</span></code> and resides in the <code class="docutils literal notranslate"><span class="pre">cx_tf2_pose_tracker_plugin</span></code> package. The description file is shown below:</p>
@@ -195,7 +197,7 @@ wget<span class="w"> </span>-O<span class="w"> </span>tf2_tracked_pose.clp<span 
 </div>
 </section>
 <section id="plugin-class-structure">
-<h3><a class="toc-backref" href="#id8" role="doc-backlink">3 Plugin Class Structure</a><a class="headerlink" href="#plugin-class-structure" title="Link to this heading"></a></h3>
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">3 Plugin Class Structure</a><a class="headerlink" href="#plugin-class-structure" title="Link to this heading"></a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">Tf2PoseTrackerPlugin</span></code> class inherits from <code class="docutils literal notranslate"><span class="pre">ClipsPlugin</span></code> base class provided by the <code class="docutils literal notranslate"><span class="pre">cx_plugin</span></code> package.</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#ifndef CX_PLUGINS__TF2POSETRACKER_PLUGIN_HPP_</span>
 <span class="cp">#define CX_PLUGINS__TF2POSETRACKER_PLUGIN_HPP_</span>
@@ -204,7 +206,6 @@ wget<span class="w"> </span>-O<span class="w"> </span>tf2_tracked_pose.clp<span 
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span>
 
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;cx_plugin/clips_plugin.hpp&quot;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;cx_utils/lock_shared_ptr.hpp&quot;</span>
 
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;geometry_msgs/msg/transform_stamped.hpp&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;tf2_ros/buffer.h&gt;</span>
@@ -220,8 +221,8 @@ wget<span class="w"> </span>-O<span class="w"> </span>tf2_tracked_pose.clp<span 
 <span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">initialize</span><span class="p">()</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
 <span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">finalize</span><span class="p">()</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
 
-<span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="nf">clips_env_init</span><span class="p">(</span><span class="n">LockSharedPtr</span><span class="o">&lt;</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">env</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
-<span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="nf">clips_env_destroyed</span><span class="p">(</span><span class="n">LockSharedPtr</span><span class="o">&lt;</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">env</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="nf">clips_env_init</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">env</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="nf">clips_env_destroyed</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">env</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
 
 <span class="k">private</span><span class="o">:</span>
 <span class="w">  </span><span class="k">struct</span><span class="w"> </span><span class="nc">PoseTracker</span><span class="w"> </span><span class="p">{</span>
@@ -246,17 +247,14 @@ wget<span class="w"> </span>-O<span class="w"> </span>tf2_tracked_pose.clp<span 
 <span class="p">}</span><span class="w"> </span><span class="c1">// namespace cx</span>
 
 <span class="cp">#endif </span><span class="c1">// !CX_PLUGINS__TF2POSETRACKER_PLUGIN_HPP_</span>
+</pre></div>
+</div>
+<p>As such, it generally should override the functions <code class="docutils literal notranslate"><span class="pre">initialize</span></code> and <code class="docutils literal notranslate"><span class="pre">finalize</span></code>, which are invoked when the plugin is loaded, as well as the function <code class="docutils literal notranslate"><span class="pre">clips_env_init</span></code> and <code class="docutils literal notranslate"><span class="pre">clips_env_destoyed</span></code>, which are called each time a CLIPS environment loads and unloads the plugin.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">initialize</span><span class="p">()</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">finalize</span><span class="p">()</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
 
-
-<span class="n">As</span><span class="w"> </span><span class="n">such</span><span class="p">,</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="n">generally</span><span class="w"> </span><span class="n">should</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">functions</span><span class="w"> </span><span class="err">``</span><span class="n">initialize</span><span class="err">``</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="err">``</span><span class="n">finalize</span><span class="err">``</span><span class="p">,</span><span class="w"> </span><span class="n">which</span><span class="w"> </span><span class="n">are</span><span class="w"> </span><span class="n">invoked</span><span class="w"> </span><span class="n">when</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">plugin</span><span class="w"> </span><span class="n">is</span><span class="w"> </span><span class="n">loaded</span><span class="p">,</span><span class="w"> </span><span class="n">as</span><span class="w"> </span><span class="n">well</span><span class="w"> </span><span class="n">as</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">function</span><span class="w"> </span><span class="err">``</span><span class="n">clips_env_init</span><span class="err">``</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="err">``</span><span class="n">clips_env_destoyed</span><span class="err">``</span><span class="p">,</span><span class="w"> </span><span class="n">which</span><span class="w"> </span><span class="n">are</span><span class="w"> </span><span class="n">called</span><span class="w"> </span><span class="n">each</span><span class="w"> </span><span class="n">time</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">CLIPS</span><span class="w"> </span><span class="n">environment</span><span class="w"> </span><span class="n">loads</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">unloads</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">plugin</span><span class="p">.</span>
-
-<span class="p">..</span><span class="w"> </span><span class="n">code</span><span class="o">-</span><span class="n">block</span><span class="o">::</span><span class="w"> </span><span class="n">cpp</span>
-
-<span class="w">      </span><span class="kt">void</span><span class="w"> </span><span class="n">initialize</span><span class="p">()</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
-<span class="w">      </span><span class="kt">void</span><span class="w"> </span><span class="nf">finalize</span><span class="p">()</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
-
-<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="nf">clips_env_init</span><span class="p">(</span><span class="n">LockSharedPtr</span><span class="o">&lt;</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">env</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
-<span class="w">      </span><span class="kt">bool</span><span class="w"> </span><span class="nf">clips_env_destroyed</span><span class="p">(</span><span class="n">LockSharedPtr</span><span class="o">&lt;</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">env</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
+<span class="kt">bool</span><span class="w"> </span><span class="nf">clips_env_init</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">env</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
+<span class="kt">bool</span><span class="w"> </span><span class="nf">clips_env_destroyed</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">env</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
 </pre></div>
 </div>
 <p>Also, it defines some data types and structures to access <code class="docutils literal notranslate"><span class="pre">tf2</span></code> transforms and ROS timers for periodic callbacks. The <code class="docutils literal notranslate"><span class="pre">PoseTracker</span></code> struct bundles a ROS timer with a managed CLIPS fact storing the last updated transform, as well as the belonging CLIPS environment.</p>
@@ -279,7 +277,7 @@ wget<span class="w"> </span>-O<span class="w"> </span>tf2_tracked_pose.clp<span 
 </div>
 </section>
 <section id="opening-ros-interfaces-on-initialize">
-<h3><a class="toc-backref" href="#id9" role="doc-backlink">4 Opening ROS Interfaces on initialize()</a><a class="headerlink" href="#opening-ros-interfaces-on-initialize" title="Link to this heading"></a></h3>
+<h3><a class="toc-backref" href="#id7" role="doc-backlink">4 Opening ROS Interfaces on initialize()</a><a class="headerlink" href="#opening-ros-interfaces-on-initialize" title="Link to this heading"></a></h3>
 <p>Plugin initialization involves all steps that should be done, before any CLIPS environment can utilize it’s features.</p>
 <p>Here, the transform listener is initialized with the help of the parent lifecycle node of the ROS2 CLIPS-Executive, provided from the base class.</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">Tf2PoseTrackerPlugin::initialize</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -317,7 +315,7 @@ This is why the ROS logger is wrapped in a smart pointer (so it can be default-c
 </div>
 </section>
 <section id="cleaning-up-references-on-finalize">
-<h3><a class="toc-backref" href="#id10" role="doc-backlink">5 Cleaning Up References On finalize()</a><a class="headerlink" href="#cleaning-up-references-on-finalize" title="Link to this heading"></a></h3>
+<h3><a class="toc-backref" href="#id8" role="doc-backlink">5 Cleaning Up References On finalize()</a><a class="headerlink" href="#cleaning-up-references-on-finalize" title="Link to this heading"></a></h3>
 <p>During finalize the plugin cleans up all data structures it manages, in this cas the transform listener with the associated buffer and callback group as well as all managed ROS timers for tracking specific poses.</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">Tf2PoseTrackerPlugin::finalize</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="c1">// release all memory and cancel all timers</span>
@@ -342,17 +340,17 @@ This is why the ROS logger is wrapped in a smart pointer (so it can be default-c
 </div>
 </section>
 <section id="adding-templates-and-functions-in-clips-env-init">
-<h3><a class="toc-backref" href="#id11" role="doc-backlink">6 Adding Templates and Functions in clips_env_init()</a><a class="headerlink" href="#adding-templates-and-functions-in-clips-env-init" title="Link to this heading"></a></h3>
+<h3><a class="toc-backref" href="#id9" role="doc-backlink">6 Adding Templates and Functions in clips_env_init()</a><a class="headerlink" href="#adding-templates-and-functions-in-clips-env-init" title="Link to this heading"></a></h3>
 <p>Upon loading a plugin into an environment, the <code class="docutils literal notranslate"><span class="pre">clips_env_init()</span></code> function is invoked.</p>
 <p>Here, a fact template is declared and two user-defined functions (UDFs) are provided to the environment.</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">bool</span><span class="w"> </span><span class="nf">Tf2PoseTrackerPlugin::clips_env_init</span><span class="p">(</span>
-<span class="w">    </span><span class="n">LockSharedPtr</span><span class="o">&lt;</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">env</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CLIPSEnvContext</span><span class="o">::</span><span class="n">get_context</span><span class="p">(</span><span class="n">env</span><span class="p">.</span><span class="n">get_obj</span><span class="p">().</span><span class="n">get</span><span class="p">());</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">env</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CLIPSEnvContext</span><span class="o">::</span><span class="n">get_context</span><span class="p">(</span><span class="n">env</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
 <span class="w">  </span><span class="n">RCLCPP_DEBUG</span><span class="p">(</span><span class="o">*</span><span class="n">logger_</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Initializing plugin for environment %s&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="n">context</span><span class="o">-&gt;</span><span class="n">env_name_</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
 
 <span class="w">  </span><span class="c1">// define fact template</span>
-<span class="w">  </span><span class="n">clips</span><span class="o">::</span><span class="n">Build</span><span class="p">(</span><span class="n">env</span><span class="p">.</span><span class="n">get_obj</span><span class="p">().</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;(deftemplate tf2-tracked-pose \</span>
+<span class="w">  </span><span class="n">clips</span><span class="o">::</span><span class="n">Build</span><span class="p">(</span><span class="n">env</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;(deftemplate tf2-tracked-pose \</span>
 <span class="s">            (slot parent (type STRING)) \</span>
 <span class="s">            (slot child (type STRING)) \</span>
 <span class="s">            (slot stamp (type FLOAT)) \</span>
@@ -363,7 +361,7 @@ This is why the ROS logger is wrapped in a smart pointer (so it can be default-c
 
 <span class="w">  </span><span class="c1">// user defined functions</span>
 <span class="w">  </span><span class="n">clips</span><span class="o">::</span><span class="n">AddUDF</span><span class="p">(</span>
-<span class="w">      </span><span class="n">env</span><span class="p">.</span><span class="n">get_obj</span><span class="p">().</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;tf2-start-periodic-lookup&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;b&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;;sy;sy;d&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="n">env</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;tf2-start-periodic-lookup&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;b&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;;sy;sy;d&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="p">[](</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="w"> </span><span class="o">*</span><span class="n">env</span><span class="p">,</span><span class="w"> </span><span class="n">clips</span><span class="o">::</span><span class="n">UDFContext</span><span class="w"> </span><span class="o">*</span><span class="n">udfc</span><span class="p">,</span>
 <span class="w">         </span><span class="n">clips</span><span class="o">::</span><span class="n">UDFValue</span><span class="w"> </span><span class="o">*</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="o">*</span><span class="n">instance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">Tf2PoseTrackerPlugin</span><span class="w"> </span><span class="o">*&gt;</span><span class="p">(</span><span class="n">udfc</span><span class="o">-&gt;</span><span class="n">context</span><span class="p">);</span>
@@ -387,7 +385,7 @@ This is why the ROS logger is wrapped in a smart pointer (so it can be default-c
 <span class="w">      </span><span class="s">&quot;tf2_start_periodic_lookup&quot;</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">);</span>
 
 <span class="w">  </span><span class="n">clips</span><span class="o">::</span><span class="n">AddUDF</span><span class="p">(</span>
-<span class="w">      </span><span class="n">env</span><span class="p">.</span><span class="n">get_obj</span><span class="p">().</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;tf2-stop-periodic-lookup&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;b&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;;e&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="n">env</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;tf2-stop-periodic-lookup&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;b&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;;e&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="p">[](</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="w"> </span><span class="o">*</span><span class="n">env</span><span class="p">,</span><span class="w"> </span><span class="n">clips</span><span class="o">::</span><span class="n">UDFContext</span><span class="w"> </span><span class="o">*</span><span class="n">udfc</span><span class="p">,</span>
 <span class="w">         </span><span class="n">clips</span><span class="o">::</span><span class="n">UDFValue</span><span class="w"> </span><span class="o">*</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="o">*</span><span class="n">instance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">Tf2PoseTrackerPlugin</span><span class="w"> </span><span class="o">*&gt;</span><span class="p">(</span><span class="n">udfc</span><span class="o">-&gt;</span><span class="n">context</span><span class="p">);</span>
@@ -405,32 +403,32 @@ This is why the ROS logger is wrapped in a smart pointer (so it can be default-c
 <span class="p">}</span>
 </pre></div>
 </div>
-<section id="accessing-clips-environments-safely">
-<h4>6.1 Accessing CLIPS Environments Safely<a class="headerlink" href="#accessing-clips-environments-safely" title="Link to this heading"></a></h4>
-<p>Importantly, the environment is provided wrapped in a <code class="docutils literal notranslate"><span class="pre">LockSharedPtr</span></code>, wich holds both a shared pointer and a mutex. CLIPS is not thread-safe, hence interactions with CLIPS need to be guarded whenever asynchronous access happens (and must not be guarded if it happens within the main context, where the lock is already acquired).</p>
-<p>In short, locking the mutex associated with a CLIPS environment is only needed, once asynchronous operations want to interact with it.</p>
-<p>In particular, the environment is already guarded by the mutex when entering <code class="docutils literal notranslate"><span class="pre">clips_env_init()</span></code> (invoked by the environment manager node), and it is safe to directly interact with the provided environment in this scope.</p>
-</section>
 <section id="access-to-environment-context">
-<h4>6.2 Access to Environment Context<a class="headerlink" href="#access-to-environment-context" title="Link to this heading"></a></h4>
+<h4>6.1 Access to Environment Context<a class="headerlink" href="#access-to-environment-context" title="Link to this heading"></a></h4>
 <p>The function starts with a simple debugging statement that utilizes the plugins ROS logger to print for which environment the plugin is initialized. This requires accessing the context stored in each environment managed by the ROS2 CLIPS-Executive, as this is where custom data, such as the user-assigned name of each environment, is stored.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">auto</span> <span class="n">context</span> <span class="o">=</span> <span class="n">CLIPSEnvContext</span><span class="p">::</span><span class="n">get_context</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">get_obj</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">());</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">auto</span> <span class="n">context</span> <span class="o">=</span> <span class="n">CLIPSEnvContext</span><span class="p">::</span><span class="n">get_context</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">get</span><span class="p">());</span>
 <span class="n">RCLCPP_DEBUG</span><span class="p">(</span><span class="o">*</span><span class="n">logger_</span><span class="p">,</span> <span class="s2">&quot;Initializing plugin for environment </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-            <span class="n">context</span><span class="o">-&gt;</span><span class="n">env_name_</span><span class="o">.</span><span class="n">c_str</span><span class="p">());</span>
+             <span class="n">context</span><span class="o">-&gt;</span><span class="n">env_name_</span><span class="o">.</span><span class="n">c_str</span><span class="p">());</span>
 </pre></div>
 </div>
 </section>
+<section id="clips-environments-and-threading">
+<h4>6.1 CLIPS Environments and Threading<a class="headerlink" href="#clips-environments-and-threading" title="Link to this heading"></a></h4>
+<p>CLIPS is not thread-safe, hence interactions with CLIPS need to be guarded from concurrent access.</p>
+<p>The environment is already guarded by the mutex when entering <code class="docutils literal notranslate"><span class="pre">clips_env_init()</span></code> (invoked by the environment manager node), and it is safe to directly interact with the provided environment in this scope. The smae holds true for <code class="docutils literal notranslate"><span class="pre">clips_env_destroyed()</span></code>.</p>
+<p>The mutex belonging to a CLIPS environment is stored on the heap inside of the environment context (via the member <code class="docutils literal notranslate"><span class="pre">context-&gt;env_mtx_</span></code>).</p>
+</section>
 <section id="constructs-via-build-function">
 <h4>6.3 Constructs via Build Function<a class="headerlink" href="#constructs-via-build-function" title="Link to this heading"></a></h4>
-<p>Next, the <code class="docutils literal notranslate"><span class="pre">Build</span></code> function is used to construct a deftemplate for the environment from a string representation.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="c1">// define fact template</span>
-<span class="w">  </span><span class="n">clips</span><span class="o">::</span><span class="n">Build</span><span class="p">(</span><span class="n">env</span><span class="p">.</span><span class="n">get_obj</span><span class="p">().</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;(deftemplate tf2-tracked-pose \</span>
-<span class="s">            (slot parent (type STRING)) \</span>
-<span class="s">            (slot child (type STRING)) \</span>
-<span class="s">            (slot stamp (type FLOAT)) \</span>
-<span class="s">            (multislot translation (type FLOAT) (cardinality 3 3)) \</span>
-<span class="s">            (multislot rotation (type FLOAT) (cardinality 4 4)) \</span>
-<span class="s">            (slot timer (type EXTERNAL-ADDRESS)) \</span>
+<p>The <code class="docutils literal notranslate"><span class="pre">Build</span></code> function is used to construct a deftemplate for the environment from a string representation. This template is used to store the information obtained from transform lookups.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// define fact template</span>
+<span class="n">clips</span><span class="o">::</span><span class="n">Build</span><span class="p">(</span><span class="n">env</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;(deftemplate tf2-tracked-pose \</span>
+<span class="s">          (slot parent (type STRING)) \</span>
+<span class="s">          (slot child (type STRING)) \</span>
+<span class="s">          (slot stamp (type FLOAT)) \</span>
+<span class="s">          (multislot translation (type FLOAT) (cardinality 3 3)) \</span>
+<span class="s">          (multislot rotation (type FLOAT) (cardinality 4 4)) \</span>
+<span class="s">          (slot timer (type EXTERNAL-ADDRESS)) \</span>
 <span class="s">)&quot;</span><span class="p">);</span>
 </pre></div>
 </div>
@@ -451,7 +449,7 @@ The corresponding <code class="docutils literal notranslate"><span class="pre">A
 </ul>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// user defined functions</span>
 <span class="n">clips</span><span class="o">::</span><span class="n">AddUDF</span><span class="p">(</span>
-<span class="w">    </span><span class="n">env</span><span class="p">.</span><span class="n">get_obj</span><span class="p">().</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;tf2-start-periodic-lookup&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;b&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;;sy;sy;d&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">env</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;tf2-start-periodic-lookup&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;b&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;;sy;sy;d&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="p">[](</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="w"> </span><span class="o">*</span><span class="n">env</span><span class="p">,</span><span class="w"> </span><span class="n">clips</span><span class="o">::</span><span class="n">UDFContext</span><span class="w"> </span><span class="o">*</span><span class="n">udfc</span><span class="p">,</span>
 <span class="w">       </span><span class="n">clips</span><span class="o">::</span><span class="n">UDFValue</span><span class="w"> </span><span class="o">*</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="o">*</span><span class="n">instance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">Tf2PoseTrackerPlugin</span><span class="w"> </span><span class="o">*&gt;</span><span class="p">(</span><span class="n">udfc</span><span class="o">-&gt;</span><span class="n">context</span><span class="p">);</span>
@@ -506,9 +504,9 @@ The CLIPS arguments are converted to their native C++ types, before they are pas
 </pre></div>
 </div>
 <p>The output parameter is populated by creating a boolean indicating the success of the attempted helper function call.</p>
-<p>The second UDF is populated in much of the same way, this time taking an external address (void <a href="#id1"><span class="problematic" id="id2">*</span></a>) as argument, which needs to be casted to it’s expected type.</p>
+<p>The second UDF is populated in much of the same way, this time taking an external address (<code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span></code>) as argument, which needs to be casted to it’s expected type.</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">clips</span><span class="o">::</span><span class="n">AddUDF</span><span class="p">(</span>
-<span class="w">    </span><span class="n">env</span><span class="p">.</span><span class="n">get_obj</span><span class="p">().</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;tf2-stop-periodic-lookup&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;b&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;;e&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">env</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;tf2-stop-periodic-lookup&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;b&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;;e&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="p">[](</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="w"> </span><span class="o">*</span><span class="n">env</span><span class="p">,</span><span class="w"> </span><span class="n">clips</span><span class="o">::</span><span class="n">UDFContext</span><span class="w"> </span><span class="o">*</span><span class="n">udfc</span><span class="p">,</span>
 <span class="w">       </span><span class="n">clips</span><span class="o">::</span><span class="n">UDFValue</span><span class="w"> </span><span class="o">*</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="o">*</span><span class="n">instance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">Tf2PoseTrackerPlugin</span><span class="w"> </span><span class="o">*&gt;</span><span class="p">(</span><span class="n">udfc</span><span class="o">-&gt;</span><span class="n">context</span><span class="p">);</span>
@@ -549,8 +547,7 @@ The CLIPS arguments are converted to their native C++ types, before they are pas
 
 <span class="w">          </span><span class="c1">// safely access CLIPS environment</span>
 <span class="w">          </span><span class="k">auto</span><span class="w"> </span><span class="n">context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CLIPSEnvContext</span><span class="o">::</span><span class="n">get_context</span><span class="p">(</span><span class="n">env</span><span class="p">);</span>
-<span class="w">          </span><span class="n">cx</span><span class="o">::</span><span class="n">LockSharedPtr</span><span class="o">&lt;</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">clips</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">context</span><span class="o">-&gt;</span><span class="n">env_lock_ptr_</span><span class="p">;</span>
-<span class="w">          </span><span class="n">std</span><span class="o">::</span><span class="n">scoped_lock</span><span class="w"> </span><span class="n">clips_lock</span><span class="p">{</span><span class="o">*</span><span class="n">clips</span><span class="p">.</span><span class="n">get_mutex_instance</span><span class="p">()};</span>
+<span class="w">          </span><span class="n">std</span><span class="o">::</span><span class="n">scoped_lock</span><span class="w"> </span><span class="n">clips_lock</span><span class="p">{</span><span class="n">context</span><span class="o">-&gt;</span><span class="n">env_mtx_</span><span class="p">};</span>
 
 <span class="w">          </span><span class="c1">// update exisiting fact or create new one</span>
 <span class="w">          </span><span class="kt">bool</span><span class="w"> </span><span class="n">fact_exists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">clips</span><span class="o">::</span><span class="n">FactExistp</span><span class="p">(</span><span class="n">pose_tracker</span><span class="o">-&gt;</span><span class="n">pose_fact</span><span class="p">);</span>
@@ -577,11 +574,10 @@ The CLIPS arguments are converted to their native C++ types, before they are pas
 <span class="w">            </span><span class="n">clips</span><span class="o">::</span><span class="n">FBPutSlotMultifield</span><span class="p">(</span>
 <span class="w">                </span><span class="n">fact_builder</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;translation&quot;</span><span class="p">,</span>
 <span class="w">                </span><span class="n">clips</span><span class="o">::</span><span class="n">StringToMultifield</span><span class="p">(</span>
-<span class="w">                    </span><span class="n">clips</span><span class="p">.</span><span class="n">get_obj</span><span class="p">().</span><span class="n">get</span><span class="p">(),</span>
-<span class="w">                    </span><span class="n">std</span><span class="o">::</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;{} {} {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">tf</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">translation</span><span class="p">.</span><span class="n">x</span><span class="p">,</span>
-<span class="w">                                </span><span class="n">tf</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">translation</span><span class="p">.</span><span class="n">y</span><span class="p">,</span>
-<span class="w">                                </span><span class="n">tf</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">translation</span><span class="p">.</span><span class="n">z</span><span class="p">)</span>
-<span class="w">                        </span><span class="p">.</span><span class="n">c_str</span><span class="p">()));</span>
+<span class="w">                    </span><span class="n">env</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;{} {} {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">tf</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">translation</span><span class="p">.</span><span class="n">x</span><span class="p">,</span>
+<span class="w">                                     </span><span class="n">tf</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">translation</span><span class="p">.</span><span class="n">y</span><span class="p">,</span>
+<span class="w">                                     </span><span class="n">tf</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">translation</span><span class="p">.</span><span class="n">z</span><span class="p">)</span>
+<span class="w">                             </span><span class="p">.</span><span class="n">c_str</span><span class="p">()));</span>
 <span class="w">            </span><span class="n">clips</span><span class="o">::</span><span class="n">FBPutSlotMultifield</span><span class="p">(</span>
 <span class="w">                </span><span class="n">fact_builder</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;rotation&quot;</span><span class="p">,</span>
 <span class="w">                </span><span class="n">clips</span><span class="o">::</span><span class="n">StringToMultifield</span><span class="p">(</span>
@@ -638,8 +634,7 @@ Since the ROS2 CLIPS-Executive itself is ran via a <a class="reference external"
 <p>In order to obtain the required mutex, the environment context is retrieved. Then a scoped lock protects the remainder of this scope.</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// safely access CLIPS environment</span>
 <span class="k">auto</span><span class="w"> </span><span class="n">context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CLIPSEnvContext</span><span class="o">::</span><span class="n">get_context</span><span class="p">(</span><span class="n">env</span><span class="p">);</span>
-<span class="n">cx</span><span class="o">::</span><span class="n">LockSharedPtr</span><span class="o">&lt;</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">clips</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">context</span><span class="o">-&gt;</span><span class="n">env_lock_ptr_</span><span class="p">;</span>
-<span class="n">std</span><span class="o">::</span><span class="n">scoped_lock</span><span class="w"> </span><span class="n">clips_lock</span><span class="p">{</span><span class="o">*</span><span class="n">clips</span><span class="p">.</span><span class="n">get_mutex_instance</span><span class="p">()};</span>
+<span class="n">std</span><span class="o">::</span><span class="n">scoped_lock</span><span class="w"> </span><span class="n">clips_lock</span><span class="p">{</span><span class="n">context</span><span class="o">-&gt;</span><span class="n">env_mtx_</span><span class="p">};</span>
 </pre></div>
 </div>
 </section>
@@ -675,11 +670,10 @@ The <code class="docutils literal notranslate"><span class="pre">timer</span></c
 <span class="n">clips</span><span class="o">::</span><span class="n">FBPutSlotMultifield</span><span class="p">(</span>
 <span class="w">    </span><span class="n">fact_builder</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;translation&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="n">clips</span><span class="o">::</span><span class="n">StringToMultifield</span><span class="p">(</span>
-<span class="w">        </span><span class="n">clips</span><span class="p">.</span><span class="n">get_obj</span><span class="p">().</span><span class="n">get</span><span class="p">(),</span>
-<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;{} {} {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">tf</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">translation</span><span class="p">.</span><span class="n">x</span><span class="p">,</span>
-<span class="w">                    </span><span class="n">tf</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">translation</span><span class="p">.</span><span class="n">y</span><span class="p">,</span>
-<span class="w">                    </span><span class="n">tf</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">translation</span><span class="p">.</span><span class="n">z</span><span class="p">)</span>
-<span class="w">            </span><span class="p">.</span><span class="n">c_str</span><span class="p">()));</span>
+<span class="w">        </span><span class="n">env</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;{} {} {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">tf</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">translation</span><span class="p">.</span><span class="n">x</span><span class="p">,</span>
+<span class="w">                         </span><span class="n">tf</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">translation</span><span class="p">.</span><span class="n">y</span><span class="p">,</span>
+<span class="w">                         </span><span class="n">tf</span><span class="p">.</span><span class="n">transform</span><span class="p">.</span><span class="n">translation</span><span class="p">.</span><span class="n">z</span><span class="p">)</span>
+<span class="w">                 </span><span class="p">.</span><span class="n">c_str</span><span class="p">()));</span>
 <span class="n">clips</span><span class="o">::</span><span class="n">FBPutSlotMultifield</span><span class="p">(</span>
 <span class="w">    </span><span class="n">fact_builder</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;rotation&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="n">clips</span><span class="o">::</span><span class="n">StringToMultifield</span><span class="p">(</span>
@@ -694,7 +688,8 @@ The <code class="docutils literal notranslate"><span class="pre">timer</span></c
 </pre></div>
 </div>
 <p>Similarly, if the last remembered fact still exists, the FactModifier API is used. Additionally, the old fact reference is released to mark it for garbage collection and the new reference is retained.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="c1">// the fact exists and can can be modified</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="c1">// the fact exists and can can be modified</span>
 <span class="w">  </span><span class="n">clips</span><span class="o">::</span><span class="n">ReleaseFact</span><span class="p">(</span><span class="n">pose_tracker</span><span class="o">-&gt;</span><span class="n">pose_fact</span><span class="p">);</span>
 <span class="w">  </span><span class="n">clips</span><span class="o">::</span><span class="n">FactModifier</span><span class="w"> </span><span class="o">*</span><span class="n">fact_modifier</span><span class="w"> </span><span class="o">=</span>
 <span class="w">      </span><span class="n">clips</span><span class="o">::</span><span class="n">CreateFactModifier</span><span class="p">(</span><span class="n">env</span><span class="p">,</span><span class="w"> </span><span class="n">pose_tracker</span><span class="o">-&gt;</span><span class="n">pose_fact</span><span class="p">);</span>
@@ -728,7 +723,7 @@ The <code class="docutils literal notranslate"><span class="pre">timer</span></c
 </section>
 </section>
 <section id="cleaning-up-with-the-help-of-stop-periodic-lookup">
-<h3><a class="toc-backref" href="#id12" role="doc-backlink">8 Cleaning Up with the Help of stop_periodic_lookup()</a><a class="headerlink" href="#cleaning-up-with-the-help-of-stop-periodic-lookup" title="Link to this heading"></a></h3>
+<h3><a class="toc-backref" href="#id10" role="doc-backlink">8 Cleaning Up with the Help of stop_periodic_lookup()</a><a class="headerlink" href="#cleaning-up-with-the-help-of-stop-periodic-lookup" title="Link to this heading"></a></h3>
 <p>The last thing that is left is to stop the pose tracker on demand, given the raw reference to it (as stored previously in the <code class="docutils literal notranslate"><span class="pre">timer</span></code> slot).
 When locating the stored <code class="docutils literal notranslate"><span class="pre">PoseTracker</span></code>, it’s timer is cancelled and the associated fact is released for garbage collection (but not retracted), before it is removed from the vector, which cleans up the object.</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">bool</span><span class="w"> </span><span class="nf">Tf2PoseTrackerPlugin::stop_periodic_lookup</span><span class="p">(</span><span class="n">PoseTracker</span><span class="w"> </span><span class="o">*</span><span class="n">pose_tracker</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
@@ -753,16 +748,20 @@ When locating the stored <code class="docutils literal notranslate"><span class=
 </div>
 </section>
 <section id="running-the-code">
-<h3><a class="toc-backref" href="#id13" role="doc-backlink">9 Running The Code</a><a class="headerlink" href="#running-the-code" title="Link to this heading"></a></h3>
+<h3><a class="toc-backref" href="#id11" role="doc-backlink">9 Running The Code</a><a class="headerlink" href="#running-the-code" title="Link to this heading"></a></h3>
 <p>Open a terminal and start the tf2 turtlesim demo:</p>
-<div class="highlight-terminal notranslate"><div class="highlight"><pre><span></span>ros2 launch turtle_tf2_py turtle_tf2_demo.launch.py
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>turtle_tf2_py<span class="w"> </span>turtle_tf2_demo.launch.py
 </pre></div>
 </div>
 <p>In a second terminal run the example setup for the plugin:</p>
-<div class="highlight-terminal notranslate"><div class="highlight"><pre><span></span>ros2 launch cx_bringup cx_launch.py manager_config:=tf2_tracked_pose.yaml package:=clips_tut_agent
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>cx_bringup<span class="w"> </span>cx_launch.py<span class="w"> </span>manager_config:<span class="o">=</span>tf2_tracked_pose.yaml<span class="w"> </span>package:<span class="o">=</span>cx_tutorial_agents
 </pre></div>
 </div>
 <p>It will track the pose of turtle1 with a frequency of 0.2 hz and stop the tracking after 5 updates.</p>
+<p>Optionally, open a third terminal to control the turtle:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>turtlesim<span class="w"> </span>turtle_teleop_key
+</pre></div>
+</div>
 </section>
 </section>
 </section>
@@ -772,6 +771,7 @@ When locating the stored <code class="docutils literal notranslate"><span class=
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="ros_monitoring.html" class="btn btn-neutral float-left" title="Continuous Monitoring" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../standards.html" class="btn btn-neutral float-right" title="Standard Documents" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

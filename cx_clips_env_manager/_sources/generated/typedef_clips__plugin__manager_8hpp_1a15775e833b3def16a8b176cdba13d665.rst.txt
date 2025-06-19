@@ -1,0 +1,14 @@
+.. _exhale_typedef_clips__plugin__manager_8hpp_1a15775e833b3def16a8b176cdba13d665:
+
+Typedef cx::EnvsMap
+===================
+
+- Defined in :ref:`file_include_cx_clips_env_manager_clips_plugin_manager.hpp`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: cx::EnvsMap
+   :project: cx_clips_env_manager Doxygen Project

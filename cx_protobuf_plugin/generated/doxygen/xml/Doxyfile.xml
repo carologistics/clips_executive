@@ -347,14 +347,14 @@
   </option>
   <option  id='SKIP_FUNCTION_MACROS' default='yes' type='bool'><value>YES</value></option>
   <option  id='TAGFILES' default='no' type='stringlist'>
-    <value><![CDATA[/home/runner/work/ros2-clips-executive/ros2-clips-executive/cross_reference/cx_file_load_plugin/cx_file_load_plugin.tag=http://docs.ros.org/en/latest/p/cx_file_load_plugin/generated/doxygen/html]]></value>
-    <value><![CDATA[/home/runner/work/ros2-clips-executive/ros2-clips-executive/cross_reference/cx_ament_index_plugin/cx_ament_index_plugin.tag=http://docs.ros.org/en/latest/p/cx_ament_index_plugin/generated/doxygen/html]]></value>
-    <value><![CDATA[/home/runner/work/ros2-clips-executive/ros2-clips-executive/cross_reference/cx_plugin/cx_plugin.tag=http://docs.ros.org/en/latest/p/cx_plugin/generated/doxygen/html]]></value>
-    <value><![CDATA[/home/runner/work/ros2-clips-executive/ros2-clips-executive/cross_reference/cx_config_plugin/cx_config_plugin.tag=http://docs.ros.org/en/latest/p/cx_config_plugin/generated/doxygen/html]]></value>
     <value><![CDATA[/home/runner/work/ros2-clips-executive/ros2-clips-executive/cross_reference/cx_executive_plugin/cx_executive_plugin.tag=http://docs.ros.org/en/latest/p/cx_executive_plugin/generated/doxygen/html]]></value>
     <value><![CDATA[/home/runner/work/ros2-clips-executive/ros2-clips-executive/cross_reference/cx_example_plugin/cx_example_plugin.tag=http://docs.ros.org/en/latest/p/cx_example_plugin/generated/doxygen/html]]></value>
-    <value><![CDATA[/home/runner/work/ros2-clips-executive/ros2-clips-executive/cross_reference/cx_clips_env_manager/cx_clips_env_manager.tag=http://docs.ros.org/en/latest/p/cx_clips_env_manager/generated/doxygen/html]]></value>
+    <value><![CDATA[/home/runner/work/ros2-clips-executive/ros2-clips-executive/cross_reference/cx_ament_index_plugin/cx_ament_index_plugin.tag=http://docs.ros.org/en/latest/p/cx_ament_index_plugin/generated/doxygen/html]]></value>
+    <value><![CDATA[/home/runner/work/ros2-clips-executive/ros2-clips-executive/cross_reference/cx_file_load_plugin/cx_file_load_plugin.tag=http://docs.ros.org/en/latest/p/cx_file_load_plugin/generated/doxygen/html]]></value>
+    <value><![CDATA[/home/runner/work/ros2-clips-executive/ros2-clips-executive/cross_reference/cx_plugin/cx_plugin.tag=http://docs.ros.org/en/latest/p/cx_plugin/generated/doxygen/html]]></value>
     <value><![CDATA[/home/runner/work/ros2-clips-executive/ros2-clips-executive/cross_reference/cx_pddl_parser_plugin/cx_pddl_parser_plugin.tag=http://docs.ros.org/en/latest/p/cx_pddl_parser_plugin/generated/doxygen/html]]></value>
+    <value><![CDATA[/home/runner/work/ros2-clips-executive/ros2-clips-executive/cross_reference/cx_config_plugin/cx_config_plugin.tag=http://docs.ros.org/en/latest/p/cx_config_plugin/generated/doxygen/html]]></value>
+    <value><![CDATA[/home/runner/work/ros2-clips-executive/ros2-clips-executive/cross_reference/cx_clips_env_manager/cx_clips_env_manager.tag=http://docs.ros.org/en/latest/p/cx_clips_env_manager/generated/doxygen/html]]></value>
   </option>
   <option  id='GENERATE_TAGFILE' default='no' type='string'><value><![CDATA[/home/runner/work/ros2-clips-executive/ros2-clips-executive/docs_build/cx_protobuf_plugin/cx_protobuf_plugin-public-cc-api/doxygen_output/cx_protobuf_plugin.tag]]></value></option>
   <option  id='ALLEXTERNALS' default='yes' type='bool'><value>NO</value></option>

@@ -57,7 +57,6 @@
 <li class="toctree-l3"><a class="reference internal" href="generated/index.html#classes-and-structs">Classes and Structs</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="generated/classcx_1_1CLIPSEnvContext.html">Class CLIPSEnvContext</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/classcx_1_1CLIPSLogger.html">Class CLIPSLogger</a></li>
-<li class="toctree-l4"><a class="reference internal" href="generated/classcx_1_1LockSharedPtr.html">Template Class LockSharedPtr</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="generated/index.html#functions">Functions</a><ul>
@@ -81,7 +80,6 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="generated/index.html#files">Files</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="generated/file_include_cx_utils_clips_env_context.hpp.html">File clips_env_context.hpp</a></li>
-<li class="toctree-l4"><a class="reference internal" href="generated/file_include_cx_utils_lock_shared_ptr.hpp.html">File lock_shared_ptr.hpp</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/file_include_cx_utils_param_utils.hpp.html">File param_utils.hpp</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/file_include_cx_utils_string_utils.hpp.html">File string_utils.hpp</a></li>
 </ul>
@@ -136,11 +134,11 @@
 </li>
       <li><a href="generated/classcx_1_1CLIPSEnvContext.html#_CPPv4N2cx15CLIPSEnvContextE">cx::CLIPSEnvContext (C++ class)</a>
 </li>
-      <li><a href="generated/classcx_1_1CLIPSEnvContext.html#_CPPv4N2cx15CLIPSEnvContext13env_lock_ptr_E">cx::CLIPSEnvContext::env_lock_ptr_ (C++ member)</a>
+      <li><a href="generated/classcx_1_1CLIPSEnvContext.html#_CPPv4N2cx15CLIPSEnvContext8env_mtx_E">cx::CLIPSEnvContext::env_mtx_ (C++ member)</a>
 </li>
       <li><a href="generated/classcx_1_1CLIPSEnvContext.html#_CPPv4N2cx15CLIPSEnvContext9env_name_E">cx::CLIPSEnvContext::env_name_ (C++ member)</a>
 </li>
-      <li><a href="generated/classcx_1_1CLIPSEnvContext.html#_CPPv4N2cx15CLIPSEnvContext11get_contextEPN5clips11EnvironmentE">cx::CLIPSEnvContext::get_context (C++ function)</a>
+      <li><a href="generated/classcx_1_1CLIPSEnvContext.html#_CPPv4N2cx15CLIPSEnvContext11get_contextEPN5clips11EnvironmentE">cx::CLIPSEnvContext::get_context (C++ function)</a>, <a href="generated/classcx_1_1CLIPSEnvContext.html#_CPPv4N2cx15CLIPSEnvContext11get_contextERNSt10shared_ptrIN5clips11EnvironmentEEE">[1]</a>
 </li>
       <li><a href="generated/classcx_1_1CLIPSEnvContext.html#_CPPv4N2cx15CLIPSEnvContext7logger_E">cx::CLIPSEnvContext::logger_ (C++ member)</a>
 </li>
@@ -148,6 +146,8 @@
 </li>
       <li><a href="generated/classcx_1_1CLIPSLogger.html#_CPPv4N2cx11CLIPSLogger11CLIPSLoggerEPKcbb">cx::CLIPSLogger::CLIPSLogger (C++ function)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="generated/classcx_1_1CLIPSLogger.html#_CPPv4N2cx11CLIPSLogger3logEPKcPKc">cx::CLIPSLogger::log (C++ function)</a>
 </li>
       <li><a href="generated/classcx_1_1CLIPSLogger.html#_CPPv4N2cx11CLIPSLoggerD0Ev">cx::CLIPSLogger::~CLIPSLogger (C++ function)</a>
@@ -158,31 +158,9 @@
 </li>
       <li><a href="generated/function_param__utils_8hpp_1ad7831d222c35339ea9ba003b800cf891.html#_CPPv4N2cx8cx_utils13resolve_filesERKNSt6vectorINSt6stringEEERKNSt6vectorINSt6stringEEERNSt6vectorINSt6stringEEE">cx::cx_utils::resolve_files (C++ function)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="generated/function_string__utils_8hpp_1a59c4b9715ff132a1ac5adcde1c341ff6.html#_CPPv4N2cx19generate_rnd_stringEi">cx::generate_rnd_string (C++ function)</a>
 </li>
       <li><a href="generated/function_string__utils_8hpp_1a1810683f407b6fadb41a3b8f1df0fd8a.html#_CPPv4N2cx9generatorEF2rdvE">cx::generator (C++ function)</a>
-</li>
-      <li><a href="generated/classcx_1_1LockSharedPtr.html#_CPPv4I0EN2cx13LockSharedPtrE">cx::LockSharedPtr (C++ class)</a>
-</li>
-      <li><a href="generated/classcx_1_1LockSharedPtr.html#_CPPv4N2cx13LockSharedPtr18get_mutex_instanceEv">cx::LockSharedPtr::get_mutex_instance (C++ function)</a>
-</li>
-      <li><a href="generated/classcx_1_1LockSharedPtr.html#_CPPv4N2cx13LockSharedPtr7get_objEv">cx::LockSharedPtr::get_obj (C++ function)</a>
-</li>
-      <li><a href="generated/classcx_1_1LockSharedPtr.html#_CPPv4N2cx13LockSharedPtr10init_mutexEv">cx::LockSharedPtr::init_mutex (C++ function)</a>
-</li>
-      <li><a href="generated/classcx_1_1LockSharedPtr.html#_CPPv4N2cx13LockSharedPtr13LockSharedPtrERK13LockSharedPtrI1TE">cx::LockSharedPtr::LockSharedPtr (C++ function)</a>, <a href="generated/classcx_1_1LockSharedPtr.html#_CPPv4N2cx13LockSharedPtr13LockSharedPtrERR13LockSharedPtrI1TE">[1]</a>, <a href="generated/classcx_1_1LockSharedPtr.html#_CPPv4N2cx13LockSharedPtr13LockSharedPtrERRNSt10shared_ptrI1TEE">[2]</a>, <a href="generated/classcx_1_1LockSharedPtr.html#_CPPv4N2cx13LockSharedPtr13LockSharedPtrEv">[3]</a>
-</li>
-      <li><a href="generated/classcx_1_1LockSharedPtr.html#_CPPv4NK2cx13LockSharedPtrcvbEv">cx::LockSharedPtr::operator bool (C++ function)</a>
-</li>
-      <li><a href="generated/classcx_1_1LockSharedPtr.html#_CPPv4NK2cx13LockSharedPtrptEv">cx::LockSharedPtr::operator-&gt; (C++ function)</a>
-</li>
-      <li><a href="generated/classcx_1_1LockSharedPtr.html#_CPPv4N2cx13LockSharedPtraSERK13LockSharedPtrI1TE">cx::LockSharedPtr::operator= (C++ function)</a>, <a href="generated/classcx_1_1LockSharedPtr.html#_CPPv4N2cx13LockSharedPtraSERR13LockSharedPtrI1TE">[1]</a>
-</li>
-      <li><a href="generated/classcx_1_1LockSharedPtr.html#_CPPv4N2cx13LockSharedPtr7set_objENSt10shared_ptrI1TEE">cx::LockSharedPtr::set_obj (C++ function)</a>
-</li>
-      <li><a href="generated/classcx_1_1LockSharedPtr.html#_CPPv4N2cx13LockSharedPtrD0Ev">cx::LockSharedPtr::~LockSharedPtr (C++ function)</a>
 </li>
       <li><a href="generated/variable_string__utils_8hpp_1ab55bf494ff071923012e9f7982c967d6.html#_CPPv4N2cx2rdE">cx::rd (C++ member)</a>
 </li>

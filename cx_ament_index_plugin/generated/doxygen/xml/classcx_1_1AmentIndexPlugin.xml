@@ -16,7 +16,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ament_index_plugin/ament_index_plugin.hpp" line="36" column="19" bodyfile="include/cx_ament_index_plugin/ament_index_plugin.hpp" bodystart="36" bodyend="-1"/>
+        <location file="include/cx_ament_index_plugin/ament_index_plugin.hpp" line="35" column="19" bodyfile="include/cx_ament_index_plugin/ament_index_plugin.hpp" bodystart="35" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1AmentIndexPlugin_1ab8f575c1e2b532accb489966eaba0743" prot="private" static="no" mutable="no">
         <type>std::unordered_set&lt; std::string &gt;</type>
@@ -30,7 +30,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ament_index_plugin/ament_index_plugin.hpp" line="37" column="22" bodyfile="include/cx_ament_index_plugin/ament_index_plugin.hpp" bodystart="37" bodyend="-1"/>
+        <location file="include/cx_ament_index_plugin/ament_index_plugin.hpp" line="36" column="22" bodyfile="include/cx_ament_index_plugin/ament_index_plugin.hpp" bodystart="36" bodyend="-1"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="public-func">
@@ -46,7 +46,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ament_index_plugin/ament_index_plugin.hpp" line="27" column="3"/>
+        <location file="include/cx_ament_index_plugin/ament_index_plugin.hpp" line="26" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1AmentIndexPlugin_1a7c3ffc00bbed58f238090a5f3ee79122" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -60,7 +60,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ament_index_plugin/ament_index_plugin.hpp" line="28" column="3"/>
+        <location file="include/cx_ament_index_plugin/ament_index_plugin.hpp" line="27" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1AmentIndexPlugin_1a0cd21481cc7a72d8638f834d3eb333f8" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
         <type>void</type>
@@ -75,17 +75,36 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ament_index_plugin/ament_index_plugin.hpp" line="30" column="8"/>
+        <location file="include/cx_ament_index_plugin/ament_index_plugin.hpp" line="29" column="8"/>
       </memberdef>
-      <memberdef kind="function" id="classcx_1_1AmentIndexPlugin_1ad58f4fad55929e2ef9869b20558d1c5f" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+      <memberdef kind="function" id="classcx_1_1AmentIndexPlugin_1aff7f47425bbf47e54f4cfeb4393ca1c2" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
         <type>bool</type>
         <definition>bool cx::AmentIndexPlugin::clips_env_init</definition>
-        <argsstring>(LockSharedPtr&lt; clips::Environment &gt; &amp;env) override</argsstring>
+        <argsstring>(std::shared_ptr&lt; clips::Environment &gt; &amp;env) override</argsstring>
         <name>clips_env_init</name>
         <qualifiedname>cx::AmentIndexPlugin::clips_env_init</qualifiedname>
-        <reimplements refid="classcx_1_1ClipsPlugin_1ae76613ee6d5866e5ffb7b8ac14aaaa03">clips_env_init</reimplements>
+        <reimplements refid="classcx_1_1ClipsPlugin_1ae0bf2f3822f20d250a1763bb2f7b1b8c">clips_env_init</reimplements>
         <param>
-          <type>LockSharedPtr&lt; clips::Environment &gt; &amp;</type>
+          <type>std::shared_ptr&lt; clips::Environment &gt; &amp;</type>
+          <declname>env</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_ament_index_plugin/ament_index_plugin.hpp" line="31" column="8"/>
+      </memberdef>
+      <memberdef kind="function" id="classcx_1_1AmentIndexPlugin_1ad251b11951223c12644c0fb5206135ec" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type>bool</type>
+        <definition>bool cx::AmentIndexPlugin::clips_env_destroyed</definition>
+        <argsstring>(std::shared_ptr&lt; clips::Environment &gt; &amp;env) override</argsstring>
+        <name>clips_env_destroyed</name>
+        <qualifiedname>cx::AmentIndexPlugin::clips_env_destroyed</qualifiedname>
+        <reimplements refid="classcx_1_1ClipsPlugin_1a503dc794d932be7047a2d9c3901c61df">clips_env_destroyed</reimplements>
+        <param>
+          <type>std::shared_ptr&lt; clips::Environment &gt; &amp;</type>
           <declname>env</declname>
         </param>
         <briefdescription>
@@ -95,25 +114,6 @@
         <inbodydescription>
         </inbodydescription>
         <location file="include/cx_ament_index_plugin/ament_index_plugin.hpp" line="32" column="8"/>
-      </memberdef>
-      <memberdef kind="function" id="classcx_1_1AmentIndexPlugin_1a2440c884e373529f8f699eaabd42dd56" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
-        <type>bool</type>
-        <definition>bool cx::AmentIndexPlugin::clips_env_destroyed</definition>
-        <argsstring>(LockSharedPtr&lt; clips::Environment &gt; &amp;env) override</argsstring>
-        <name>clips_env_destroyed</name>
-        <qualifiedname>cx::AmentIndexPlugin::clips_env_destroyed</qualifiedname>
-        <reimplements refid="classcx_1_1ClipsPlugin_1acd6b69af115c20027831a5014a43cbe0">clips_env_destroyed</reimplements>
-        <param>
-          <type>LockSharedPtr&lt; clips::Environment &gt; &amp;</type>
-          <declname>env</declname>
-        </param>
-        <briefdescription>
-        </briefdescription>
-        <detaileddescription>
-        </detaileddescription>
-        <inbodydescription>
-        </inbodydescription>
-        <location file="include/cx_ament_index_plugin/ament_index_plugin.hpp" line="33" column="8"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
@@ -144,11 +144,11 @@
         <link refid="classcx_1_1ClipsPlugin" external="/home/runner/work/ros2-clips-executive/ros2-clips-executive/cross_reference/cx_plugin/cx_plugin.tag"/>
       </node>
     </collaborationgraph>
-    <location file="include/cx_ament_index_plugin/ament_index_plugin.hpp" line="25" column="1" bodyfile="include/cx_ament_index_plugin/ament_index_plugin.hpp" bodystart="25" bodyend="38"/>
+    <location file="include/cx_ament_index_plugin/ament_index_plugin.hpp" line="24" column="1" bodyfile="include/cx_ament_index_plugin/ament_index_plugin.hpp" bodystart="24" bodyend="37"/>
     <listofallmembers>
       <member refid="classcx_1_1AmentIndexPlugin_1ab793db99488017449bec149dc35045fd" prot="public" virt="non-virtual"><scope>cx::AmentIndexPlugin</scope><name>AmentIndexPlugin</name></member>
-      <member refid="classcx_1_1AmentIndexPlugin_1a2440c884e373529f8f699eaabd42dd56" prot="public" virt="virtual"><scope>cx::AmentIndexPlugin</scope><name>clips_env_destroyed</name></member>
-      <member refid="classcx_1_1AmentIndexPlugin_1ad58f4fad55929e2ef9869b20558d1c5f" prot="public" virt="virtual"><scope>cx::AmentIndexPlugin</scope><name>clips_env_init</name></member>
+      <member refid="classcx_1_1AmentIndexPlugin_1ad251b11951223c12644c0fb5206135ec" prot="public" virt="virtual"><scope>cx::AmentIndexPlugin</scope><name>clips_env_destroyed</name></member>
+      <member refid="classcx_1_1AmentIndexPlugin_1aff7f47425bbf47e54f4cfeb4393ca1c2" prot="public" virt="virtual"><scope>cx::AmentIndexPlugin</scope><name>clips_env_init</name></member>
       <member refid="classcx_1_1ClipsPlugin_1a3aa0e046356cc938b853e414c539cb60" prot="public" virt="virtual"><scope>cx::AmentIndexPlugin</scope><name>finalize</name></member>
       <member refid="classcx_1_1AmentIndexPlugin_1ab8f575c1e2b532accb489966eaba0743" prot="private" virt="non-virtual"><scope>cx::AmentIndexPlugin</scope><name>function_names_</name></member>
       <member refid="classcx_1_1AmentIndexPlugin_1a0cd21481cc7a72d8638f834d3eb333f8" prot="public" virt="virtual"><scope>cx::AmentIndexPlugin</scope><name>initialize</name></member>

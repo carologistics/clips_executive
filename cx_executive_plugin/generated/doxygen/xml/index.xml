@@ -9,14 +9,14 @@
     <member refid="classcx_1_1ExecutivePlugin_1a93c9e12fdfe8ff047d16430cedbce58a" kind="variable"><name>clips_agenda_refresh_pub_</name></member>
     <member refid="classcx_1_1ExecutivePlugin_1a90bcf01585ac247ea2dad0528f21bdf1" kind="variable"><name>publish_rate_</name></member>
     <member refid="classcx_1_1ExecutivePlugin_1a8f8400444d958aee6b58f82069f3875c" kind="variable"><name>logger_</name></member>
-    <member refid="classcx_1_1ExecutivePlugin_1a7af5f484cf51c499d7c44f680e66f122" kind="variable"><name>managed_envs</name></member>
+    <member refid="classcx_1_1ExecutivePlugin_1aa74acd07450f023f7c588f7225786feb" kind="variable"><name>managed_envs</name></member>
     <member refid="classcx_1_1ExecutivePlugin_1a469ff11c8f0923b65d8aee55c2394542" kind="variable"><name>envs_mutex_</name></member>
     <member refid="classcx_1_1ExecutivePlugin_1acb40de58ad887327a054a1818c46d0f9" kind="function"><name>ExecutivePlugin</name></member>
     <member refid="classcx_1_1ExecutivePlugin_1ae35c4e0ed6a6a27b3b38df4ec23abc3d" kind="function"><name>~ExecutivePlugin</name></member>
     <member refid="classcx_1_1ExecutivePlugin_1a05c41e5b7f22ea76d35870c7904cbe45" kind="function"><name>initialize</name></member>
     <member refid="classcx_1_1ExecutivePlugin_1acb14d613c62ba47ab41edbc2749a2d6a" kind="function"><name>finalize</name></member>
-    <member refid="classcx_1_1ExecutivePlugin_1a937771362f6c1d684f58da0c19835514" kind="function"><name>clips_env_init</name></member>
-    <member refid="classcx_1_1ExecutivePlugin_1a63944b60c5fb30dac6b675344a2f1c41" kind="function"><name>clips_env_destroyed</name></member>
+    <member refid="classcx_1_1ExecutivePlugin_1a0bc70e96725fdc585aed292ad140bb73" kind="function"><name>clips_env_init</name></member>
+    <member refid="classcx_1_1ExecutivePlugin_1ae999953f3ae358b120edb66b5d291fb9" kind="function"><name>clips_env_destroyed</name></member>
     <member refid="classcx_1_1ExecutivePlugin_1ab5dfb1b989dc4b9bcb5e865b1f7fcfd9" kind="function"><name>get_node</name></member>
   </compound>
   <compound refid="namespacecx" kind="namespace"><name>cx</name>

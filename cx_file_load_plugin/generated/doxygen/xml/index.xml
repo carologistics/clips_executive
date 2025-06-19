@@ -8,8 +8,8 @@
     <member refid="classcx_1_1FileLoadPlugin_1a1c2fcafd3c88629552c50f1d25dd90dd" kind="function"><name>FileLoadPlugin</name></member>
     <member refid="classcx_1_1FileLoadPlugin_1a71369a6ef262d182bfa5d2cf15378878" kind="function"><name>~FileLoadPlugin</name></member>
     <member refid="classcx_1_1FileLoadPlugin_1a48211a04b1e027c12da02383342adcc0" kind="function"><name>initialize</name></member>
-    <member refid="classcx_1_1FileLoadPlugin_1a5822e72d9a5620382dfbd298d76c69f0" kind="function"><name>clips_env_init</name></member>
-    <member refid="classcx_1_1FileLoadPlugin_1a03e336134f9287d38f39caa2cd547ff0" kind="function"><name>clips_env_destroyed</name></member>
+    <member refid="classcx_1_1FileLoadPlugin_1a151a3d3d68aae53e1db9b9f30c55d86a" kind="function"><name>clips_env_init</name></member>
+    <member refid="classcx_1_1FileLoadPlugin_1a437634437106fcc1b1367327c721c26c" kind="function"><name>clips_env_destroyed</name></member>
   </compound>
   <compound refid="namespacecx" kind="namespace"><name>cx</name>
   </compound>

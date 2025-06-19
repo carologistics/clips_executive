@@ -86,30 +86,31 @@ Collaboration diagram for cx::CLIPSEnvContext:</div>
 <div class="dyncontent">
 <div class="center"><img src="classcx_1_1CLIPSEnvContext__coll__graph.png" border="0" usemap="#acx_1_1CLIPSEnvContext_coll__map" alt="Collaboration graph"/></div>
 <map name="acx_1_1CLIPSEnvContext_coll__map" id="acx_1_1CLIPSEnvContext_coll__map">
-<area shape="rect" title=" " alt="" coords="91,108,247,133"/>
-<area shape="rect" title=" " alt="" coords="5,13,64,38"/>
-<area shape="poly" title=" " alt="" coords="52,48,67,66,86,82,108,95,132,105,130,110,106,100,82,86,64,69,48,51"/>
-<area shape="rect" href="classcx_1_1LockSharedPtr.html" title=" " alt="" coords="88,5,251,45"/>
-<area shape="poly" title=" " alt="" coords="172,59,172,108,167,108,167,59"/>
-<area shape="rect" href="classcx_1_1CLIPSLogger.html" title=" " alt="" coords="275,13,400,38"/>
-<area shape="poly" title=" " alt="" coords="318,50,296,69,271,86,213,110,211,105,268,82,293,64,315,45"/>
+<area shape="rect" title=" " alt="" coords="14,93,170,119"/>
+<area shape="rect" title=" " alt="" coords="5,5,64,31"/>
+<area shape="poly" title=" " alt="" coords="37,44,44,68,55,81,69,91,66,95,51,85,39,71,32,45"/>
+<area shape="rect" href="classcx_1_1CLIPSLogger.html" title=" " alt="" coords="88,5,213,31"/>
+<area shape="poly" title=" " alt="" coords="140,44,124,71,104,95,100,92,119,68,136,42"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a641c2466c193ef0d61c8b9837b67f912" id="r_a641c2466c193ef0d61c8b9837b67f912"><td class="memItemLeft" align="right" valign="top"><a id="a641c2466c193ef0d61c8b9837b67f912" name="a641c2466c193ef0d61c8b9837b67f912"></a>
-<a class="el" href="classcx_1_1LockSharedPtr.html">static</a> <a class="el" href="classcx_1_1CLIPSEnvContext.html">CLIPSEnvContext</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>get_context</b> (clips::Environment *<a class="el" href="classcx_1_1LockSharedPtr.html">env</a>)</td></tr>
+static <a class="el" href="classcx_1_1CLIPSEnvContext.html">CLIPSEnvContext</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>get_context</b> (clips::Environment *env)</td></tr>
 <tr class="separator:a641c2466c193ef0d61c8b9837b67f912"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc8a28f3406289ea8e8019804f49d2ca" id="r_adc8a28f3406289ea8e8019804f49d2ca"><td class="memItemLeft" align="right" valign="top"><a id="adc8a28f3406289ea8e8019804f49d2ca" name="adc8a28f3406289ea8e8019804f49d2ca"></a>
+static <a class="el" href="classcx_1_1CLIPSEnvContext.html">CLIPSEnvContext</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>get_context</b> (std::shared_ptr&lt; clips::Environment &gt; &amp;env)</td></tr>
+<tr class="separator:adc8a28f3406289ea8e8019804f49d2ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:ad1c67e36e0f50a0612a6a8b27f091999" id="r_ad1c67e36e0f50a0612a6a8b27f091999"><td class="memItemLeft" align="right" valign="top"><a id="ad1c67e36e0f50a0612a6a8b27f091999" name="ad1c67e36e0f50a0612a6a8b27f091999"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>env_name_</b></td></tr>
 <tr class="separator:ad1c67e36e0f50a0612a6a8b27f091999"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad91c6256d14fad9530df8e872df84ed8" id="r_ad91c6256d14fad9530df8e872df84ed8"><td class="memItemLeft" align="right" valign="top"><a id="ad91c6256d14fad9530df8e872df84ed8" name="ad91c6256d14fad9530df8e872df84ed8"></a>
-<a class="el" href="classcx_1_1LockSharedPtr.html">LockSharedPtr</a>&lt; clips::Environment &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>env_lock_ptr_</b></td></tr>
-<tr class="separator:ad91c6256d14fad9530df8e872df84ed8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a062a2781d611ba4c980121f287da4b85" id="r_a062a2781d611ba4c980121f287da4b85"><td class="memItemLeft" align="right" valign="top"><a id="a062a2781d611ba4c980121f287da4b85" name="a062a2781d611ba4c980121f287da4b85"></a>
+std::mutex&#160;</td><td class="memItemRight" valign="bottom"><b>env_mtx_</b></td></tr>
+<tr class="separator:a062a2781d611ba4c980121f287da4b85"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5f879804216e90ec49fbda6e5b6c3e48" id="r_a5f879804216e90ec49fbda6e5b6c3e48"><td class="memItemLeft" align="right" valign="top"><a id="a5f879804216e90ec49fbda6e5b6c3e48" name="a5f879804216e90ec49fbda6e5b6c3e48"></a>
 <a class="el" href="classcx_1_1CLIPSLogger.html">CLIPSLogger</a>&#160;</td><td class="memItemRight" valign="bottom"><b>logger_</b></td></tr>
 <tr class="separator:a5f879804216e90ec49fbda6e5b6c3e48"><td class="memSeparator" colspan="2">&#160;</td></tr>

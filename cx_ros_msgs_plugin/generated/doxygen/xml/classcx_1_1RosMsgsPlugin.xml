@@ -18,7 +18,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="188" column="19" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="188" bodyend="-1"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="187" column="19" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="187" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1RosMsgsPlugin_1aaad2b357ccd2f77bfc2e08d346e7fbe8" prot="private" static="no" mutable="no">
         <type>rclcpp::CallbackGroup::SharedPtr</type>
@@ -32,7 +32,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="190" column="36" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="190" bodyend="-1"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="189" column="36" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="189" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1RosMsgsPlugin_1a06bb79b0afd6aae0b54c8aea7b01b44a" prot="private" static="no" mutable="no">
         <type>std::unordered_set&lt; std::string &gt;</type>
@@ -46,7 +46,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="192" column="22" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="192" bodyend="-1"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="191" column="22" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="191" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1RosMsgsPlugin_1a339366cf10d8f6f284454379d90148b2" prot="private" static="no" mutable="no">
         <type>std::map&lt; std::string, std::map&lt; std::string, std::shared_ptr&lt; rclcpp::GenericSubscription &gt; &gt; &gt;</type>
@@ -60,7 +60,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="197" column="7" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="197" bodyend="-1"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="196" column="7" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="196" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1RosMsgsPlugin_1a5a5daed99de5a7242e9e83d7e7ec455b" prot="private" static="no" mutable="no">
         <type>std::map&lt; std::string, std::map&lt; std::string, std::shared_ptr&lt; rclcpp::GenericPublisher &gt; &gt; &gt;</type>
@@ -74,7 +74,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="202" column="7" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="202" bodyend="-1"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="201" column="7" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="201" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1RosMsgsPlugin_1a505257dfa296e07d77645cd1f338865d" prot="private" static="no" mutable="no">
         <type>std::unordered_map&lt; std::string, std::shared_ptr&lt; rcpputils::SharedLibrary &gt; &gt;</type>
@@ -88,7 +88,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="205" column="7" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="205" bodyend="-1"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="204" column="7" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="204" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1RosMsgsPlugin_1ae586916966473e6f89deb9dadfd2238f" prot="private" static="no" mutable="no">
         <type>std::mutex</type>
@@ -102,7 +102,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="207" column="14" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="207" bodyend="-1"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="206" column="14" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="206" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1RosMsgsPlugin_1aad844bb413e0965f88eeba78c642b310" prot="private" static="no" mutable="no">
         <type>bool</type>
@@ -116,7 +116,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="208" column="8" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="208" bodyend="-1"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="207" column="8" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="207" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1RosMsgsPlugin_1a72d36324b642cc96a991aa209126f731" prot="private" static="no" mutable="no">
         <type>std::unordered_map&lt; void *, std::shared_ptr&lt; MessageInfo &gt; &gt;</type>
@@ -130,7 +130,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="210" column="22" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="210" bodyend="-1"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="209" column="22" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="209" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1RosMsgsPlugin_1a74bc98fa6681903a660447b779986f52" prot="private" static="no" mutable="no">
         <type>std::unordered_map&lt; void *, std::vector&lt; std::shared_ptr&lt; MessageInfo &gt; &gt; &gt;</type>
@@ -144,7 +144,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="213" column="7" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="213" bodyend="-1"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="212" column="7" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="212" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1RosMsgsPlugin_1a8368f7e49f07727e19f561b34eb7730e" prot="private" static="no" mutable="no">
         <type>std::unordered_map&lt; std::string, const rosidl_message_type_support_t * &gt;</type>
@@ -158,7 +158,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="216" column="7" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="216" bodyend="-1"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="215" column="7" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="215" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1RosMsgsPlugin_1a539933a98e6a6a49a6526e6aae58e0f5" prot="private" static="no" mutable="no">
         <type>std::map&lt; std::string, std::map&lt; std::string, std::shared_ptr&lt; rclcpp::GenericClient &gt; &gt; &gt;</type>
@@ -172,7 +172,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="221" column="7" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="221" bodyend="-1"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="220" column="7" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="220" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1RosMsgsPlugin_1a91d17a9ad33fd8ae3f395753c393ac42" prot="private" static="no" mutable="no">
         <type>std::map&lt; std::string, std::unordered_map&lt; std::string, std::string &gt; &gt;</type>
@@ -186,7 +186,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="224" column="7" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="224" bodyend="-1"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="223" column="7" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="223" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1RosMsgsPlugin_1a57a48362df14a4a22fce6980de3a5b90" prot="private" static="no" mutable="no">
         <type>std::unordered_map&lt; std::string, const rosidl_service_type_support_t * &gt;</type>
@@ -200,7 +200,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="226" column="7" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="226" bodyend="-1"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="225" column="7" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="225" bodyend="-1"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="public-func">
@@ -216,7 +216,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="30" column="3"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="29" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1RosMsgsPlugin_1a179582c3ae1c1ad7bf5917514bf65911" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -230,7 +230,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="31" column="3"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="30" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1RosMsgsPlugin_1aa172b6316fa790bdeab73a356bdcf6e3" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
         <type>void</type>
@@ -245,7 +245,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="33" column="8"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="32" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1RosMsgsPlugin_1a6a17dc12fa6aef7198d05dba1fc4bc12" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
         <type>void</type>
@@ -260,17 +260,36 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="34" column="8"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="33" column="8"/>
       </memberdef>
-      <memberdef kind="function" id="classcx_1_1RosMsgsPlugin_1a37d7f4e2fc74b4ee4c76ef9afd60988d" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+      <memberdef kind="function" id="classcx_1_1RosMsgsPlugin_1a9c74da31ed5a8c89dc2315109d079d1a" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
         <type>bool</type>
         <definition>bool cx::RosMsgsPlugin::clips_env_init</definition>
-        <argsstring>(LockSharedPtr&lt; clips::Environment &gt; &amp;env) override</argsstring>
+        <argsstring>(std::shared_ptr&lt; clips::Environment &gt; &amp;env) override</argsstring>
         <name>clips_env_init</name>
         <qualifiedname>cx::RosMsgsPlugin::clips_env_init</qualifiedname>
-        <reimplements refid="classcx_1_1ClipsPlugin_1ae76613ee6d5866e5ffb7b8ac14aaaa03">clips_env_init</reimplements>
+        <reimplements refid="classcx_1_1ClipsPlugin_1ae0bf2f3822f20d250a1763bb2f7b1b8c">clips_env_init</reimplements>
         <param>
-          <type>LockSharedPtr&lt; clips::Environment &gt; &amp;</type>
+          <type>std::shared_ptr&lt; clips::Environment &gt; &amp;</type>
+          <declname>env</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="35" column="8"/>
+      </memberdef>
+      <memberdef kind="function" id="classcx_1_1RosMsgsPlugin_1aaf8f3f5c7deb344fc1b91c2850d8bc68" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type>bool</type>
+        <definition>bool cx::RosMsgsPlugin::clips_env_destroyed</definition>
+        <argsstring>(std::shared_ptr&lt; clips::Environment &gt; &amp;env) override</argsstring>
+        <name>clips_env_destroyed</name>
+        <qualifiedname>cx::RosMsgsPlugin::clips_env_destroyed</qualifiedname>
+        <reimplements refid="classcx_1_1ClipsPlugin_1a503dc794d932be7047a2d9c3901c61df">clips_env_destroyed</reimplements>
+        <param>
+          <type>std::shared_ptr&lt; clips::Environment &gt; &amp;</type>
           <declname>env</declname>
         </param>
         <briefdescription>
@@ -280,25 +299,6 @@
         <inbodydescription>
         </inbodydescription>
         <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="36" column="8"/>
-      </memberdef>
-      <memberdef kind="function" id="classcx_1_1RosMsgsPlugin_1ab7e6edd6ba5e7925500aa0dce7b9baf4" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
-        <type>bool</type>
-        <definition>bool cx::RosMsgsPlugin::clips_env_destroyed</definition>
-        <argsstring>(LockSharedPtr&lt; clips::Environment &gt; &amp;env) override</argsstring>
-        <name>clips_env_destroyed</name>
-        <qualifiedname>cx::RosMsgsPlugin::clips_env_destroyed</qualifiedname>
-        <reimplements refid="classcx_1_1ClipsPlugin_1acd6b69af115c20027831a5014a43cbe0">clips_env_destroyed</reimplements>
-        <param>
-          <type>LockSharedPtr&lt; clips::Environment &gt; &amp;</type>
-          <declname>env</declname>
-        </param>
-        <briefdescription>
-        </briefdescription>
-        <detaileddescription>
-        </detaileddescription>
-        <inbodydescription>
-        </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="37" column="8"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="private-func">
@@ -322,7 +322,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="110" column="19"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="109" column="19"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1RosMsgsPlugin_1aaaabb1083d1509f697c2f743090c1242" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -340,7 +340,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="112" column="8"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="111" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1RosMsgsPlugin_1a8d8728435dd9d1e3637f8c1fcbaa3a05" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>clips::UDFValue</type>
@@ -362,7 +362,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="113" column="19"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="112" column="19"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1RosMsgsPlugin_1a2caf464562d233a78f07db5126cd35d1" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>clips::UDFValue</type>
@@ -388,7 +388,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="116" column="19"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="115" column="19"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1RosMsgsPlugin_1a8dd75c0ff9576064ee581d7760558bd8" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::shared_ptr&lt; MessageInfo &gt;</type>
@@ -410,7 +410,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="119" column="19"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="118" column="19"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1RosMsgsPlugin_1a7a595c869419d289edbc79a0cecc486f" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>clips::CLIPSValue</type>
@@ -436,7 +436,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="122" column="21"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="121" column="21"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1RosMsgsPlugin_1a15e239db1787f34937abb6c577ae2cb3" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>clips::UDFValue</type>
@@ -466,7 +466,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="125" column="19"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="124" column="19"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1RosMsgsPlugin_1a26ff626d77298fe154ed8c35d94055a9" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -496,7 +496,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="128" column="8"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="127" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1RosMsgsPlugin_1ab50021d356f1f12d4389533920bd974d" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -526,7 +526,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="133" column="8"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="132" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1RosMsgsPlugin_1af00069db8b446c5ed89f734b6e91646a" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -560,7 +560,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="138" column="8"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="137" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1RosMsgsPlugin_1a3ec123d0ce60adf5f699a346b77fd715" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -586,7 +586,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="143" column="8"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="142" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1RosMsgsPlugin_1a631e2fddfb6d7d07dca9f3d750205013" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::shared_ptr&lt; RosMsgsPlugin::MessageInfo &gt;</type>
@@ -604,7 +604,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="148" column="3"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="147" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1RosMsgsPlugin_1a70ce8455d4915270c27971d29c8c5b8c" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -634,7 +634,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="150" column="8"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="149" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1RosMsgsPlugin_1ad881e3e2c808c5d29fc514baafb31cc8" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -656,7 +656,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="153" column="8"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="152" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1RosMsgsPlugin_1aad9708e0479a64b622360d2ce13f4148" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -682,7 +682,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="156" column="8"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="155" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1RosMsgsPlugin_1a4b99a3f0e765bd53118fc827f27da3b3" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -704,7 +704,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="159" column="8"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="158" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1RosMsgsPlugin_1ae7497f509f176b7d2c2efd5632ddbe70" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -730,7 +730,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="161" column="8"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="160" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1RosMsgsPlugin_1ad9ce370716455d7391a5b803d23d1161" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -756,7 +756,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="164" column="8"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="163" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1RosMsgsPlugin_1aabeb519eef52e8a611826ea9600655a4" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -778,7 +778,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="167" column="8"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="166" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1RosMsgsPlugin_1ab8567663784dfe04a9622fef6540453d" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>clips::UDFValue</type>
@@ -804,7 +804,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="168" column="19"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="167" column="19"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1RosMsgsPlugin_1a26bdaac87b2dba2eb4260ecad671a3cb" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::string</type>
@@ -822,7 +822,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="171" column="15"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="170" column="15"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1RosMsgsPlugin_1a72f1de19540d16507bbfd05b4c989240" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>const rosidl_typesupport_introspection_cpp::MessageMembers *</type>
@@ -840,7 +840,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="174" column="3"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="173" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1RosMsgsPlugin_1a45450de119755c9034b634681231eedf" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::shared_ptr&lt; MessageInfo &gt;</type>
@@ -862,7 +862,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="177" column="3"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="176" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1RosMsgsPlugin_1aec1785cc3352de18ea1302e5308cde66" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>rclcpp::SerializedMessage</type>
@@ -884,7 +884,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="180" column="29"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="179" column="29"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1RosMsgsPlugin_1aa3a80e5be2eb1513afa365b49d4ebbda" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -910,7 +910,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="183" column="8"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="182" column="8"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
@@ -941,13 +941,13 @@
         </childnode>
       </node>
     </collaborationgraph>
-    <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="28" column="1" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="28" bodyend="227"/>
+    <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="27" column="1" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="27" bodyend="226"/>
     <listofallmembers>
       <member refid="classcx_1_1RosMsgsPlugin_1aaad2b357ccd2f77bfc2e08d346e7fbe8" prot="private" virt="non-virtual"><scope>cx::RosMsgsPlugin</scope><name>cb_group_</name></member>
       <member refid="classcx_1_1RosMsgsPlugin_1a91d17a9ad33fd8ae3f395753c393ac42" prot="private" virt="non-virtual"><scope>cx::RosMsgsPlugin</scope><name>client_types_</name></member>
       <member refid="classcx_1_1RosMsgsPlugin_1a539933a98e6a6a49a6526e6aae58e0f5" prot="private" virt="non-virtual"><scope>cx::RosMsgsPlugin</scope><name>clients_</name></member>
-      <member refid="classcx_1_1RosMsgsPlugin_1ab7e6edd6ba5e7925500aa0dce7b9baf4" prot="public" virt="virtual"><scope>cx::RosMsgsPlugin</scope><name>clips_env_destroyed</name></member>
-      <member refid="classcx_1_1RosMsgsPlugin_1a37d7f4e2fc74b4ee4c76ef9afd60988d" prot="public" virt="virtual"><scope>cx::RosMsgsPlugin</scope><name>clips_env_init</name></member>
+      <member refid="classcx_1_1RosMsgsPlugin_1aaf8f3f5c7deb344fc1b91c2850d8bc68" prot="public" virt="virtual"><scope>cx::RosMsgsPlugin</scope><name>clips_env_destroyed</name></member>
+      <member refid="classcx_1_1RosMsgsPlugin_1a9c74da31ed5a8c89dc2315109d079d1a" prot="public" virt="virtual"><scope>cx::RosMsgsPlugin</scope><name>clips_env_init</name></member>
       <member refid="classcx_1_1RosMsgsPlugin_1ab50021d356f1f12d4389533920bd974d" prot="private" virt="non-virtual"><scope>cx::RosMsgsPlugin</scope><name>clips_to_ros_value</name></member>
       <member refid="classcx_1_1RosMsgsPlugin_1a631e2fddfb6d7d07dca9f3d750205013" prot="private" virt="non-virtual"><scope>cx::RosMsgsPlugin</scope><name>create_deserialized_msg</name></member>
       <member refid="classcx_1_1RosMsgsPlugin_1a34eb1287e8f01a38ece5c7437ecdcc11" prot="private" virt="non-virtual"><scope>cx::RosMsgsPlugin</scope><name>create_message</name></member>

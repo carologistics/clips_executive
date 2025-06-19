@@ -42,7 +42,6 @@ Program Listing for File clips_env_manager.hpp
    #include "lifecycle_msgs/msg/transition.hpp"
    
    #include "cx_clips_env_manager/clips_plugin_manager.hpp"
-   #include "cx_utils/lock_shared_ptr.hpp"
    
    #include "cx_msgs/srv/create_clips_env.hpp"
    #include "cx_msgs/srv/destroy_clips_env.hpp"
@@ -96,7 +95,7 @@ Program Listing for File clips_env_manager.hpp
          const std::shared_ptr<cx_msgs::srv::DestroyClipsEnv::Response> response);
    
    private:
-     LockSharedPtr<clips::Environment> new_env(const std::string &env_name);
+     std::shared_ptr<clips::Environment> new_env(const std::string &env_name);
    
      bool delete_env(const std::string &env_name);
      // void assert_plugins(LockSharedPtr<clips::Environment> &clips,
@@ -121,7 +120,8 @@ Program Listing for File clips_env_manager.hpp
    
      ClipsPluginManager plugin_manager_;
    
-     cx::LockSharedPtr<EnvsMap> envs_;
+     std::shared_ptr<EnvsMap> envs_;
+     std::shared_ptr<std::mutex> map_mtx_;
    
      // Connection to tell that server is still up
      std::unique_ptr<bond::Bond> bond_{nullptr};

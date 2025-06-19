@@ -60,7 +60,6 @@
 <li class="toctree-l3 current"><a class="reference internal" href="index.html#classes-and-structs">Classes and Structs</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">Class CLIPSEnvContext</a></li>
 <li class="toctree-l4"><a class="reference internal" href="classcx_1_1CLIPSLogger.html">Class CLIPSLogger</a></li>
-<li class="toctree-l4"><a class="reference internal" href="classcx_1_1LockSharedPtr.html">Template Class LockSharedPtr</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="index.html#functions">Functions</a><ul>
@@ -84,7 +83,6 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="index.html#files">Files</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="file_include_cx_utils_clips_env_context.hpp.html">File clips_env_context.hpp</a></li>
-<li class="toctree-l4"><a class="reference internal" href="file_include_cx_utils_lock_shared_ptr.hpp.html">File lock_shared_ptr.hpp</a></li>
 <li class="toctree-l4"><a class="reference internal" href="file_include_cx_utils_param_utils.hpp.html">File param_utils.hpp</a></li>
 <li class="toctree-l4"><a class="reference internal" href="file_include_cx_utils_string_utils.hpp.html">File string_utils.hpp</a></li>
 </ul>
@@ -145,8 +143,8 @@
 <dd></dd></dl>
 
 <dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N2cx15CLIPSEnvContext13env_lock_ptr_E">
-<span id="_CPPv3N2cx15CLIPSEnvContext13env_lock_ptr_E"></span><span id="_CPPv2N2cx15CLIPSEnvContext13env_lock_ptr_E"></span><span id="cx::CLIPSEnvContext::env_lock_ptr___LockSharedPtr:clips::Environment:"></span><span class="target" id="classcx_1_1CLIPSEnvContext_1ad91c6256d14fad9530df8e872df84ed8"></span><a class="reference internal" href="classcx_1_1LockSharedPtr.html#_CPPv4I0EN2cx13LockSharedPtrE" title="cx::LockSharedPtr"><span class="n"><span class="pre">LockSharedPtr</span></span></a><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">clips</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Environment</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">env_lock_ptr_</span></span></span><a class="headerlink" href="#_CPPv4N2cx15CLIPSEnvContext13env_lock_ptr_E" title="Link to this definition"></a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N2cx15CLIPSEnvContext8env_mtx_E">
+<span id="_CPPv3N2cx15CLIPSEnvContext8env_mtx_E"></span><span id="_CPPv2N2cx15CLIPSEnvContext8env_mtx_E"></span><span id="cx::CLIPSEnvContext::env_mtx___std::mutex"></span><span class="target" id="classcx_1_1CLIPSEnvContext_1a062a2781d611ba4c980121f287da4b85"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mutex</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">env_mtx_</span></span></span><a class="headerlink" href="#_CPPv4N2cx15CLIPSEnvContext8env_mtx_E" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp var">
@@ -160,6 +158,11 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N2cx15CLIPSEnvContext11get_contextEPN5clips11EnvironmentE">
 <span id="_CPPv3N2cx15CLIPSEnvContext11get_contextEPN5clips11EnvironmentE"></span><span id="_CPPv2N2cx15CLIPSEnvContext11get_contextEPN5clips11EnvironmentE"></span><span id="cx::CLIPSEnvContext::get_context__clips::EnvironmentP"></span><span class="target" id="classcx_1_1CLIPSEnvContext_1a641c2466c193ef0d61c8b9837b67f912"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N2cx15CLIPSEnvContextE" title="cx::CLIPSEnvContext"><span class="n"><span class="pre">CLIPSEnvContext</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_context</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">clips</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Environment</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">env</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N2cx15CLIPSEnvContext11get_contextEPN5clips11EnvironmentE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N2cx15CLIPSEnvContext11get_contextERNSt10shared_ptrIN5clips11EnvironmentEEE">
+<span id="_CPPv3N2cx15CLIPSEnvContext11get_contextERNSt10shared_ptrIN5clips11EnvironmentEEE"></span><span id="_CPPv2N2cx15CLIPSEnvContext11get_contextERNSt10shared_ptrIN5clips11EnvironmentEEE"></span><span id="cx::CLIPSEnvContext::get_context__std::shared_ptr:clips::Environment:R"></span><span class="target" id="classcx_1_1CLIPSEnvContext_1adc8a28f3406289ea8e8019804f49d2ca"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N2cx15CLIPSEnvContextE" title="cx::CLIPSEnvContext"><span class="n"><span class="pre">CLIPSEnvContext</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">get_context</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">clips</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Environment</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">env</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N2cx15CLIPSEnvContext11get_contextERNSt10shared_ptrIN5clips11EnvironmentEEE" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 </div>

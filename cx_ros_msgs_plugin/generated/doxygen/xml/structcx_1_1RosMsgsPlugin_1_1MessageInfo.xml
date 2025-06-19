@@ -15,7 +15,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="41" column="21" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="41" bodyend="-1"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="40" column="21" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="40" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structcx_1_1RosMsgsPlugin_1_1MessageInfo_1a873d64d3e1b99cc09d9dbecef4cc397e" prot="public" static="no" mutable="no">
         <type>void *</type>
@@ -29,7 +29,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="42" column="10" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="42" bodyend="-1"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="41" column="10" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="41" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structcx_1_1RosMsgsPlugin_1_1MessageInfo_1a76b39346d285fa3462c66cdc9134da4c" prot="public" static="no" mutable="no">
         <type>const rosidl_typesupport_introspection_cpp::MessageMembers *</type>
@@ -43,7 +43,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="43" column="64" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="43" bodyend="-1"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="42" column="64" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="42" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structcx_1_1RosMsgsPlugin_1_1MessageInfo_1a07e1f717c293a473a45c9b07bd6ab703" prot="public" static="no" mutable="no">
         <type>bool</type>
@@ -57,7 +57,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="44" column="10" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="44" bodyend="-1"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="43" column="10" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="43" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="structcx_1_1RosMsgsPlugin_1_1MessageInfo_1a11e61b22b9041966810ec518c3603729" prot="public" static="no" mutable="no">
         <type>rcutils_allocator_t</type>
@@ -71,7 +71,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="45" column="25" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="45" bodyend="-1"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="44" column="25" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="44" bodyend="-1"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="public-func">
@@ -96,7 +96,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="47" column="5" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="47" bodyend="66"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="46" column="5" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="46" bodyend="65"/>
       </memberdef>
       <memberdef kind="function" id="structcx_1_1RosMsgsPlugin_1_1MessageInfo_1a0971c1ce7808d48f8c74f11a9fe6e676" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type></type>
@@ -118,7 +118,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="67" column="5" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="67" bodyend="73"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="66" column="5" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="66" bodyend="72"/>
       </memberdef>
       <memberdef kind="function" id="structcx_1_1RosMsgsPlugin_1_1MessageInfo_1a1b77d2a6711f053e31fe217cb319b7ff" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type></type>
@@ -132,7 +132,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="75" column="5" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="75" bodyend="83"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="74" column="5" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="74" bodyend="82"/>
       </memberdef>
       <memberdef kind="function" id="structcx_1_1RosMsgsPlugin_1_1MessageInfo_1a21ab9cf1b6f37879b00b2e44f07d46b6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -149,7 +149,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="86" column="5"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="85" column="5"/>
       </memberdef>
       <memberdef kind="function" id="structcx_1_1RosMsgsPlugin_1_1MessageInfo_1af0566cbc5c9d63f92e568522bf90bf5c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>MessageInfo &amp;</type>
@@ -166,7 +166,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="87" column="17"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="86" column="17"/>
       </memberdef>
       <memberdef kind="function" id="structcx_1_1RosMsgsPlugin_1_1MessageInfo_1a5f003287f70a90882b4a8253ca615a53" prot="public" static="no" const="no" explicit="no" inline="yes" noexcept="yes" virt="non-virtual">
         <type></type>
@@ -184,14 +184,14 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="90" column="5" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="90" bodyend="99"/>
+        <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="89" column="5" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="89" bodyend="98"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="40" column="3" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="40" bodyend="100"/>
+    <location file="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" line="39" column="3" bodyfile="include/cx_ros_msgs_plugin/ros_msgs_plugin.hpp" bodystart="39" bodyend="99"/>
     <listofallmembers>
       <member refid="structcx_1_1RosMsgsPlugin_1_1MessageInfo_1a11e61b22b9041966810ec518c3603729" prot="public" virt="non-virtual"><scope>cx::RosMsgsPlugin::MessageInfo</scope><name>allocator</name></member>
       <member refid="structcx_1_1RosMsgsPlugin_1_1MessageInfo_1a97b712a771a26f4c6ec8918746fc9cd7" prot="public" virt="non-virtual"><scope>cx::RosMsgsPlugin::MessageInfo</scope><name>external_created_ptr</name></member>

@@ -63,7 +63,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="index.html#typedefs">Typedefs</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="typedef_clips__plugin__manager_8hpp_1a6e41636630926d99d74705252267fdc7.html">Typedef cx::EnvsMap</a></li>
+<li class="toctree-l4"><a class="reference internal" href="typedef_clips__plugin__manager_8hpp_1a15775e833b3def16a8b176cdba13d665.html">Typedef cx::EnvsMap</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="index.html#directories">Directories</a><ul>
@@ -160,7 +160,6 @@
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;lifecycle_msgs/msg/transition.hpp&quot;</span>
 
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;cx_clips_env_manager/clips_plugin_manager.hpp&quot;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;cx_utils/lock_shared_ptr.hpp&quot;</span>
 
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;cx_msgs/srv/create_clips_env.hpp&quot;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;cx_msgs/srv/destroy_clips_env.hpp&quot;</span>
@@ -214,7 +213,7 @@
 <span class="w">      </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">cx_msgs</span><span class="o">::</span><span class="n">srv</span><span class="o">::</span><span class="n">DestroyClipsEnv</span><span class="o">::</span><span class="n">Response</span><span class="o">&gt;</span><span class="w"> </span><span class="n">response</span><span class="p">);</span>
 
 <span class="k">private</span><span class="o">:</span>
-<span class="w">  </span><span class="n">LockSharedPtr</span><span class="o">&lt;</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="o">&gt;</span><span class="w"> </span><span class="n">new_env</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="n">env_name</span><span class="p">);</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="o">&gt;</span><span class="w"> </span><span class="n">new_env</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="n">env_name</span><span class="p">);</span>
 
 <span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="nf">delete_env</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="n">env_name</span><span class="p">);</span>
 <span class="w">  </span><span class="c1">// void assert_plugins(LockSharedPtr&lt;clips::Environment&gt; &amp;clips,</span>
@@ -239,7 +238,8 @@
 
 <span class="w">  </span><span class="n">ClipsPluginManager</span><span class="w"> </span><span class="n">plugin_manager_</span><span class="p">;</span>
 
-<span class="w">  </span><span class="n">cx</span><span class="o">::</span><span class="n">LockSharedPtr</span><span class="o">&lt;</span><span class="n">EnvsMap</span><span class="o">&gt;</span><span class="w"> </span><span class="n">envs_</span><span class="p">;</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">EnvsMap</span><span class="o">&gt;</span><span class="w"> </span><span class="n">envs_</span><span class="p">;</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span><span class="w"> </span><span class="n">map_mtx_</span><span class="p">;</span>
 
 <span class="w">  </span><span class="c1">// Connection to tell that server is still up</span>
 <span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">bond</span><span class="o">::</span><span class="n">Bond</span><span class="o">&gt;</span><span class="w"> </span><span class="n">bond_</span><span class="p">{</span><span class="k">nullptr</span><span class="p">};</span>

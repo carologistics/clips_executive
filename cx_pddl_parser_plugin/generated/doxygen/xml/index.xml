@@ -25,8 +25,8 @@
     <member refid="classcx_1_1PddlParserPlugin_1acd6d6975e001357e40cc4eebdf3fe15d" kind="function"><name>PddlParserPlugin</name></member>
     <member refid="classcx_1_1PddlParserPlugin_1af5d6553ebb76e95d78f86efad0161367" kind="function"><name>~PddlParserPlugin</name></member>
     <member refid="classcx_1_1PddlParserPlugin_1addafd3c0d44e47effc3e31082a6591aa" kind="function"><name>initialize</name></member>
-    <member refid="classcx_1_1PddlParserPlugin_1abda882933bd3b037f68d6f2bd3efd6a4" kind="function"><name>clips_env_init</name></member>
-    <member refid="classcx_1_1PddlParserPlugin_1a15e4cf2f93d9fe22da64681898f32b57" kind="function"><name>clips_env_destroyed</name></member>
+    <member refid="classcx_1_1PddlParserPlugin_1aebd400bc50582301861cfd895b9850b4" kind="function"><name>clips_env_init</name></member>
+    <member refid="classcx_1_1PddlParserPlugin_1a4ae179e49c248b068ada7e7da72d6316" kind="function"><name>clips_env_destroyed</name></member>
   </compound>
   <compound refid="classclips__pddl__parser_1_1PreconditionToCLIPSFactVisitor" kind="class"><name>clips_pddl_parser::PreconditionToCLIPSFactVisitor</name>
     <member refid="classclips__pddl__parser_1_1PreconditionToCLIPSFactVisitor_1a2148bbd9d8ba7fdbcd088deb3294c8ac" kind="variable"><name>parent_</name></member>

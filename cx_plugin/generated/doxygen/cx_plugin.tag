@@ -21,15 +21,15 @@
       <type>virtual bool</type>
       <name>clips_env_init</name>
       <anchorfile>classcx_1_1ClipsPlugin.html</anchorfile>
-      <anchor>ae76613ee6d5866e5ffb7b8ac14aaaa03</anchor>
-      <arglist>(LockSharedPtr&lt; clips::Environment &gt; &amp;env)=0</arglist>
+      <anchor>ae0bf2f3822f20d250a1763bb2f7b1b8c</anchor>
+      <arglist>(std::shared_ptr&lt; clips::Environment &gt; &amp;env)=0</arglist>
     </member>
     <member kind="function" virtualness="pure">
       <type>virtual bool</type>
       <name>clips_env_destroyed</name>
       <anchorfile>classcx_1_1ClipsPlugin.html</anchorfile>
-      <anchor>acd6b69af115c20027831a5014a43cbe0</anchor>
-      <arglist>(LockSharedPtr&lt; clips::Environment &gt; &amp;env)=0</arglist>
+      <anchor>a503dc794d932be7047a2d9c3901c61df</anchor>
+      <arglist>(std::shared_ptr&lt; clips::Environment &gt; &amp;env)=0</arglist>
     </member>
     <member kind="variable" protection="protected">
       <type>std::string</type>
