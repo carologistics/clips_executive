@@ -16,7 +16,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_config_plugin/config_plugin.hpp" line="85" column="19" bodyfile="include/cx_config_plugin/config_plugin.hpp" bodystart="85" bodyend="-1"/>
+        <location file="include/cx_config_plugin/config_plugin.hpp" line="83" column="19" bodyfile="include/cx_config_plugin/config_plugin.hpp" bodystart="83" bodyend="-1"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="public-func">
@@ -32,7 +32,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_config_plugin/config_plugin.hpp" line="64" column="3"/>
+        <location file="include/cx_config_plugin/config_plugin.hpp" line="62" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1ConfigPlugin_1ab0534ed851f16ee6eb92f6a0676881b3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -46,7 +46,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_config_plugin/config_plugin.hpp" line="65" column="3"/>
+        <location file="include/cx_config_plugin/config_plugin.hpp" line="63" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1ConfigPlugin_1a3a94284e0f08bd7a6b2612438d7c55e6" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
         <type>void</type>
@@ -61,7 +61,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_config_plugin/config_plugin.hpp" line="67" column="8"/>
+        <location file="include/cx_config_plugin/config_plugin.hpp" line="65" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1ConfigPlugin_1a9e51afbf559f9b53969e36549bd314ad" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
         <type>bool</type>
@@ -80,7 +80,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_config_plugin/config_plugin.hpp" line="69" column="8"/>
+        <location file="include/cx_config_plugin/config_plugin.hpp" line="67" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1ConfigPlugin_1a5426411e51fae61b6b7924b753718051" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
         <type>bool</type>
@@ -99,7 +99,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_config_plugin/config_plugin.hpp" line="70" column="8"/>
+        <location file="include/cx_config_plugin/config_plugin.hpp" line="68" column="8"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="private-func">
@@ -127,7 +127,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_config_plugin/config_plugin.hpp" line="73" column="8"/>
+        <location file="include/cx_config_plugin/config_plugin.hpp" line="71" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1ConfigPlugin_1a90ecabcfa93cf85465b70c5bf7c92a2d" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::string</type>
@@ -145,7 +145,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_config_plugin/config_plugin.hpp" line="76" column="15"/>
+        <location file="include/cx_config_plugin/config_plugin.hpp" line="74" column="15"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1ConfigPlugin_1a8652f7c03aca9b9c68a17a992a5a4edd" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -171,7 +171,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_config_plugin/config_plugin.hpp" line="78" column="8"/>
+        <location file="include/cx_config_plugin/config_plugin.hpp" line="76" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1ConfigPlugin_1a74135f6a1a9f1f793196cc529c993f3d" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -197,7 +197,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_config_plugin/config_plugin.hpp" line="82" column="8"/>
+        <location file="include/cx_config_plugin/config_plugin.hpp" line="80" column="8"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
@@ -207,7 +207,7 @@
     <inheritancegraph>
       <node id="2">
         <label>cx::ClipsPlugin</label>
-        <link refid="classcx_1_1ClipsPlugin" external="/home/runner/work/clips-executive/clips-executive/cross_reference/cx_plugin/cx_plugin.tag"/>
+        <link refid="classcx_1_1ClipsPlugin" external="/home/runner/work/clips_executive/clips_executive/cross_reference/cx_plugin/cx_plugin.tag"/>
       </node>
       <node id="1">
         <label>cx::ConfigPlugin</label>
@@ -219,7 +219,7 @@
     <collaborationgraph>
       <node id="2">
         <label>cx::ClipsPlugin</label>
-        <link refid="classcx_1_1ClipsPlugin" external="/home/runner/work/clips-executive/clips-executive/cross_reference/cx_plugin/cx_plugin.tag"/>
+        <link refid="classcx_1_1ClipsPlugin" external="/home/runner/work/clips_executive/clips_executive/cross_reference/cx_plugin/cx_plugin.tag"/>
       </node>
       <node id="1">
         <label>cx::ConfigPlugin</label>
@@ -228,7 +228,7 @@
         </childnode>
       </node>
     </collaborationgraph>
-    <location file="include/cx_config_plugin/config_plugin.hpp" line="62" column="1" bodyfile="include/cx_config_plugin/config_plugin.hpp" bodystart="62" bodyend="86"/>
+    <location file="include/cx_config_plugin/config_plugin.hpp" line="60" column="1" bodyfile="include/cx_config_plugin/config_plugin.hpp" bodystart="60" bodyend="84"/>
     <listofallmembers>
       <member refid="classcx_1_1ConfigPlugin_1abc4c39d5def91dc249564e515533ef0f" prot="private" virt="non-virtual"><scope>cx::ConfigPlugin</scope><name>clips_config_load</name></member>
       <member refid="classcx_1_1ConfigPlugin_1a5426411e51fae61b6b7924b753718051" prot="public" virt="virtual"><scope>cx::ConfigPlugin</scope><name>clips_env_destroyed</name></member>

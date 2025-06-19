@@ -147,8 +147,6 @@
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;cx_plugin/clips_plugin.hpp&quot;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;yaml-cpp/yaml.h&gt;</span>
 
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;rcl_yaml_param_parser/parser.h&quot;</span>
-
 <span class="c1">// HACKY WAY TO DETERMINE SCALAR TYPE AS YAML-CPP DOESN&#39;T OFFER THAT..</span>
 <span class="k">namespace</span><span class="w"> </span><span class="nn">YAML</span><span class="w"> </span><span class="p">{</span>
 <span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">T</span><span class="o">&gt;</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">as_if</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
@@ -228,7 +226,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright The &lt;cx_config_plugin&gt; Contributors. License: Apache License 2.0.</p>
+    <p>&#169; Copyright The &lt;cx_config_plugin&gt; Contributors. License: Apache-2.0.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

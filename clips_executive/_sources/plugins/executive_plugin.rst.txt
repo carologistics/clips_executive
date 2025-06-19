@@ -10,7 +10,7 @@ Source code on :source-master:`GitHub <cx_plugins/executive_plugin>`.
   cx::ExecutivePlugin
 
 This plugin provides continuous execution of CLIPS environments.
-Additionally, it enables reasoning about the current ros and system time.
+Additionally, it enables reasoning about the current ROS and system time.
 
 Configuration
 *************
@@ -52,7 +52,7 @@ Configuration
   ============ =======
 
   Description
-    Whether the latest ros time as fact into the CLIPS environment on each iteration.
+    Whether the latest ROS time as fact into the CLIPS environment on each iteration.
 
 
 Features

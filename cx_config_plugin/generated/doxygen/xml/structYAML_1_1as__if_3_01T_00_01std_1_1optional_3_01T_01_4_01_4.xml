@@ -20,7 +20,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_config_plugin/config_plugin.hpp" line="31" column="14" bodyfile="include/cx_config_plugin/config_plugin.hpp" bodystart="31" bodyend="-1"/>
+        <location file="include/cx_config_plugin/config_plugin.hpp" line="29" column="14" bodyfile="include/cx_config_plugin/config_plugin.hpp" bodystart="29" bodyend="-1"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="public-func">
@@ -40,7 +40,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_config_plugin/config_plugin.hpp" line="30" column="12" bodyfile="include/cx_config_plugin/config_plugin.hpp" bodystart="30" bodyend="30"/>
+        <location file="include/cx_config_plugin/config_plugin.hpp" line="28" column="12" bodyfile="include/cx_config_plugin/config_plugin.hpp" bodystart="28" bodyend="28"/>
       </memberdef>
       <memberdef kind="function" id="structYAML_1_1as__if_3_01T_00_01std_1_1optional_3_01T_01_4_01_4_1a290f7c1d06e0a9c83028f262ed41e200" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
         <type>const std::optional&lt; T &gt;</type>
@@ -54,14 +54,14 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_config_plugin/config_plugin.hpp" line="33" column="23" bodyfile="include/cx_config_plugin/config_plugin.hpp" bodystart="33" bodyend="40"/>
+        <location file="include/cx_config_plugin/config_plugin.hpp" line="31" column="23" bodyfile="include/cx_config_plugin/config_plugin.hpp" bodystart="31" bodyend="38"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="include/cx_config_plugin/config_plugin.hpp" line="29" column="12" bodyfile="include/cx_config_plugin/config_plugin.hpp" bodystart="29" bodyend="41"/>
+    <location file="include/cx_config_plugin/config_plugin.hpp" line="27" column="12" bodyfile="include/cx_config_plugin/config_plugin.hpp" bodystart="27" bodyend="39"/>
     <listofallmembers>
       <member refid="structYAML_1_1as__if_3_01T_00_01std_1_1optional_3_01T_01_4_01_4_1a3445bdd4ed73d790ec557c60b0c01533" prot="public" virt="non-virtual"><scope>YAML::as_if&lt; T, std::optional&lt; T &gt; &gt;</scope><name>as_if</name></member>
       <member refid="structYAML_1_1as__if_3_01T_00_01std_1_1optional_3_01T_01_4_01_4_1ae14c0c7c49b2d3af7b679c6f856a4329" prot="public" virt="non-virtual"><scope>YAML::as_if&lt; T, std::optional&lt; T &gt; &gt;</scope><name>node</name></member>

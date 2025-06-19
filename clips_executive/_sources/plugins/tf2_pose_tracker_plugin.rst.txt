@@ -19,7 +19,7 @@ Configuration
   ============= =======
   Type          Default
   ------------- -------
-  boolean       true
+  bool          true
   ============= =======
 
   Description

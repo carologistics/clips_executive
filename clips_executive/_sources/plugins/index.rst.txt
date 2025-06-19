@@ -27,7 +27,7 @@ This function is called exactly once when a plugin is loaded, before it actually
 
 Typical uses include
 1) Reading of parameters from specified in the parent node.
-2) Initialization of Environmnent-agnostic class members.
+2) Initialization of environment-agnostic class members.
 
 clips_env_init()
 ++++++++++++++++
@@ -57,7 +57,7 @@ Each environment also holds an instance of the `CLIPSEnvContext` class from the 
     cx::CLIPSEnvContext::get_context(clips::Environment *env)
     cx::CLIPSEnvContext::get_context(std::shared_ptr<clips::Environment> env)
 
-This instance contains the name and the environment as well as a mutex to guardthe environment.
+This instance contains the name and the environment as well as a mutex to guard the environment.
 
 **Operations on CLIPS environments are not thread-safe**, hence each environment interaction needs to be guarded by this mutex.
 This is mainly relevant for plugins handling asynchronous operations.
@@ -97,7 +97,7 @@ A common pitfall may occur when plugins also need to guard data structures from 
 
 Consider this example from **cx_ros_msgs_plugin** which allows interactions with ROS topics:
 
-#. The asynchronous subscription callbacks adds messages and meta-data to an unordered map, which needs to be guarded by a mutex `map_mtx_` as multiple write operations could occur at the same time when multi-threaded executors and reentrant callback groups are used. Additionally, the messages are asserted as facts (holding a reference to the message) in the callback.
+#. The asynchronous subscription callbacks adds messages and meta-data to an unordered map, which needs to be guarded by a mutex `map_mtx_` as multiple write operations could occur at the same time when multi-threaded executors and re-entrant callback groups are used. Additionally, the messages are asserted as facts (holding a reference to the message) in the callback.
 #. The **ros-msgs-get-field** UDF allows to retrieve fields of messages. As fields may contain messages, this again might need to store meta-data, hence it also needs to lock `map_mtx_`.
 
 A bad implementation using a scoped lock for the entire scope of the callback and the entire scope of **ros-msgs-get-field** could cause a deadlock if the ros-msgs-get-field function is called on the left-hand side of a rule, e.g., like this:

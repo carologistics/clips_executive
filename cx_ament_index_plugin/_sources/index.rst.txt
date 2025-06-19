@@ -3,7 +3,7 @@
 cx_ament_index_plugin
 =====================
 
-CLIPS plugin for accessing ament_index via ament_index_cpp.
+CLIPS plugin for accessing ament_index via ament_index_cpp
 
 .. toctree::
    :maxdepth: 2

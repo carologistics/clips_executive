@@ -91,7 +91,7 @@
              
   <section id="usage">
 <h1>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h1>
-<p>This ducument assumes you have the ROS2 CLIPS-Executive installed and sourced in your environment.</p>
+<p>This document assumes you have the ROS2 CLIPS-Executive installed and sourced in your environment.</p>
 <section id="ros-node">
 <h2>ROS Node<a class="headerlink" href="#ros-node" title="Link to this heading"></a></h2>
 <p>The ROS2 CLIPS-Executive mainly provides a ROS <a class="reference external" href="https://design.ros2.org/articles/node_lifecycle.html">lifecycle</a> node (<a class="reference external" href="https://carologistics.github.io/clips-executive/cx_clips_env_manager">Package</a>, <a class="reference external" href="https://github.com/carologistics/clips-executive/blob/master/cx_clips_env_manager">Github</a>) that manages a CLIPS instance and has the following responsibilities:</p>
@@ -105,7 +105,7 @@
 <p>It provides a clear execution flow guided through it’s lifecycle states:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>On being configured, it parses all parameters to determine the environmnents and plugins to load. It initializes the environments and plugins.</p></li>
+<li><p>On being configured, it parses all parameters to determine the environments and plugins to load. It initializes the environments and plugins.</p></li>
 <li><p>On being activated, it first loads all requested plugins, before calling <strong>(reset)</strong>  in the environments, refreshing all agendas and calling <strong>(run)</strong> to start rule execution.</p></li>
 <li><p>On being deactivated, it first asserts a <code class="docutils literal notranslate"><span class="pre">(executive-finalize)</span></code> fact before refreshing all agendas and calling <strong>(run)</strong> one more time to allow cleanup routines to execute before shutdown.</p></li>
 </ul>

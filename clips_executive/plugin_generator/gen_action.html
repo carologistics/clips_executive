@@ -231,7 +231,7 @@
 <span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?response-int</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-handle-goal-callback</span><span class="w"> </span><span class="nv">?server-name-str</span><span class="w"> </span><span class="nv">?goal-ptr</span><span class="w"> </span><span class="nv">?uuid-str</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>; Gets called for each server receiving a cancelation request, needs to return one of these integers:
+<p>; Gets called for each server receiving a cancellation request, needs to return one of these integers:
 ; (return 0) ; REJECT
 ; (return 1) ; ACCEPT
 ; If the function does not exist, every request is automatically accepted (ACCEPT)

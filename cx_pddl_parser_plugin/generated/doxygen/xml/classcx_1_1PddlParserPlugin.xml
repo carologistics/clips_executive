@@ -137,7 +137,7 @@
     <inheritancegraph>
       <node id="2">
         <label>cx::ClipsPlugin</label>
-        <link refid="classcx_1_1ClipsPlugin" external="/home/runner/work/clips-executive/clips-executive/cross_reference/cx_plugin/cx_plugin.tag"/>
+        <link refid="classcx_1_1ClipsPlugin" external="/home/runner/work/clips_executive/clips_executive/cross_reference/cx_plugin/cx_plugin.tag"/>
       </node>
       <node id="1">
         <label>cx::PddlParserPlugin</label>
@@ -149,7 +149,7 @@
     <collaborationgraph>
       <node id="2">
         <label>cx::ClipsPlugin</label>
-        <link refid="classcx_1_1ClipsPlugin" external="/home/runner/work/clips-executive/clips-executive/cross_reference/cx_plugin/cx_plugin.tag"/>
+        <link refid="classcx_1_1ClipsPlugin" external="/home/runner/work/clips_executive/clips_executive/cross_reference/cx_plugin/cx_plugin.tag"/>
       </node>
       <node id="1">
         <label>cx::PddlParserPlugin</label>

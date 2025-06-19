@@ -198,7 +198,7 @@
 </section>
 <section id="message-lifetimes">
 <h3>Message Lifetimes<a class="headerlink" href="#message-lifetimes" title="Link to this heading"></a></h3>
-<p>Since clips stores objects via void pointers, dynamic object lifetime management via <cite>std::shared_ptr</cite> does not work direcly from within CLIPS.
+<p>Since clips stores objects via void pointers, dynamic object lifetime management via <cite>std::shared_ptr</cite> does not work directly from within CLIPS.
 Instead, object lifetimes need to be managed more explicitly through the usage of <cite>create</cite> and <cite>destroy</cite> functions.</p>
 <p>It is advised to clean up all objects as soon as they are not needed anymore in order to free up memory.</p>
 <p>Note that when processing nested messages, the message obtained via <strong>ros-msgs-get-field</strong> is not allocating new memory, but rather points to the memory of the parent message.
@@ -234,7 +234,7 @@ See the example below:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>cx_bringup<span class="w"> </span>cx_launch.py<span class="w"> </span>manager_config:<span class="o">=</span>plugin_examples/ros_msgs.yaml
 </pre></div>
 </div>
-<p>It creates a <code class="docutils literal notranslate"><span class="pre">std_msgs/msg/String</span></code> supscription on topic <code class="docutils literal notranslate"><span class="pre">/ros_cx_in</span></code> and prints out any text send over it.
+<p>It creates a <code class="docutils literal notranslate"><span class="pre">std_msgs/msg/String</span></code> subscription on topic <code class="docutils literal notranslate"><span class="pre">/ros_cx_in</span></code> and prints out any text send over it.
 Additionally, it creates a publisher on <code class="docutils literal notranslate"><span class="pre">/ros_cx_out</span></code> that publishes <code class="docutils literal notranslate"><span class="pre">Hello</span> <span class="pre">World</span></code> whenever something is received over the <code class="docutils literal notranslate"><span class="pre">/ros_cx_in</span></code> topic.</p>
 <section id="id1">
 <h3>Configuration<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>

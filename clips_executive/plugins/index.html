@@ -125,7 +125,7 @@
 <p>This function is called exactly once when a plugin is loaded, before it actually provides it’s features to CLIPS environments.</p>
 <p>Typical uses include
 1) Reading of parameters from specified in the parent node.
-2) Initialization of Environmnent-agnostic class members.</p>
+2) Initialization of environment-agnostic class members.</p>
 </section>
 <section id="clips-env-init">
 <h2>clips_env_init()<a class="headerlink" href="#clips-env-init" title="Link to this heading"></a></h2>
@@ -145,7 +145,7 @@
 <span class="n">cx</span><span class="o">::</span><span class="n">CLIPSEnvContext</span><span class="o">::</span><span class="n">get_context</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="o">&gt;</span><span class="w"> </span><span class="n">env</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>This instance contains the name and the environment as well as a mutex to guardthe environment.</p>
+<p>This instance contains the name and the environment as well as a mutex to guard the environment.</p>
 <p><strong>Operations on CLIPS environments are not thread-safe</strong>, hence each environment interaction needs to be guarded by this mutex.
 This is mainly relevant for plugins handling asynchronous operations.
 Directly accessing the environment in <strong>clips_env_init</strong> or <strong>clips_env_destroyed</strong> is safe, because the plugin manager already guards the environments with the mutex (do <strong>not</strong> attempt to lock the mutex in this context or it will block).</p>
@@ -175,7 +175,7 @@ Also is called when a <cite>clips_env_init</cite> call returns <cite>false</cite
 <p>A common pitfall may occur when plugins also need to guard data structures from concurrent access using some mutex, while also handling CLIPS access.</p>
 <p>Consider this example from <strong>cx_ros_msgs_plugin</strong> which allows interactions with ROS topics:</p>
 <ol class="arabic simple">
-<li><p>The asynchronous subscription callbacks adds messages and meta-data to an unordered map, which needs to be guarded by a mutex <cite>map_mtx_</cite> as multiple write operations could occur at the same time when multi-threaded executors and reentrant callback groups are used. Additionally, the messages are asserted as facts (holding a reference to the message) in the callback.</p></li>
+<li><p>The asynchronous subscription callbacks adds messages and meta-data to an unordered map, which needs to be guarded by a mutex <cite>map_mtx_</cite> as multiple write operations could occur at the same time when multi-threaded executors and re-entrant callback groups are used. Additionally, the messages are asserted as facts (holding a reference to the message) in the callback.</p></li>
 <li><p>The <strong>ros-msgs-get-field</strong> UDF allows to retrieve fields of messages. As fields may contain messages, this again might need to store meta-data, hence it also needs to lock <cite>map_mtx_</cite>.</p></li>
 </ol>
 <p>A bad implementation using a scoped lock for the entire scope of the callback and the entire scope of <strong>ros-msgs-get-field</strong> could cause a deadlock if the ros-msgs-get-field function is called on the left-hand side of a rule, e.g., like this:</p>

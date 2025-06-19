@@ -3,7 +3,7 @@
 cx_msgs
 =======
 
-Messages, Services and Action files for ROS2 Clips-Executive
+ROS interfaces for ROS2 CLIPS-Executive
 
 .. toctree::
    :maxdepth: 2

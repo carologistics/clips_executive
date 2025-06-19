@@ -34,8 +34,6 @@ Program Listing for File config_plugin.hpp
    #include "cx_plugin/clips_plugin.hpp"
    #include <yaml-cpp/yaml.h>
    
-   #include "rcl_yaml_param_parser/parser.h"
-   
    // HACKY WAY TO DETERMINE SCALAR TYPE AS YAML-CPP DOESN'T OFFER THAT..
    namespace YAML {
    template <typename T> struct as_if<T, std::optional<T>> {

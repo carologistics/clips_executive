@@ -75,7 +75,7 @@ Given an environment `env`, these are the configuration options:
   ============== =======
 
   Description
-    If set to *true*, each environment creates a log file <env-name>_<timestamp>.log in the ROS log directory contianing all CLIPS output.
+    If set to *true*, each environment creates a log file <env-name>_<timestamp>.log in the ROS log directory containing all CLIPS output.
 
 :env.watch:
 

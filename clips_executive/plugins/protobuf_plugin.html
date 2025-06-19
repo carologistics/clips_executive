@@ -144,7 +144,7 @@
 </table>
 <dl class="simple">
 <dt>Description</dt><dd><p>Location to directories containing .proto files. The messages found in the given directories are registered automatically for usage.
-Supports absoulte paths or relavice paths using the share directories specified above.</p>
+Supports absolute paths or relative paths using the share directories specified above.</p>
 </dd>
 </dl>
 </dd>
@@ -152,9 +152,9 @@ Supports absoulte paths or relavice paths using the share directories specified 
 </section>
 <section id="features">
 <h2>Features<a class="headerlink" href="#features" title="Link to this heading"></a></h2>
-<p>The utilized <a class="reference external" href="https://carologistics.github.io/clips-executive/protobuf_comm">protobuf_comm</a> library (de)-serializes proto uisng a framing protocol that other communication endpoints therefore need to adhere to, as well.
+<p>The utilized <a class="reference external" href="https://carologistics.github.io/clips-executive/protobuf_comm">protobuf_comm</a> library (de)-serializes proto using a framing protocol that other communication endpoints therefore need to adhere to, as well.
 Refer to it’s documentation to get details on the layout of the frame headers.</p>
-<p>It requires messages using <a class="reference external" href="https://protobuf.dev/programming-guides/proto2/">proto2</a> syntax that additionally define a <code class="docutils literal notranslate"><span class="pre">CompType</span></code> enum acting as a unique identifier (using a tumple <code class="docutils literal notranslate"><span class="pre">COMP_ID</span></code> and <code class="docutils literal notranslate"><span class="pre">MESSAGE_TYPE</span></code>.
+<p>It requires messages using <a class="reference external" href="https://protobuf.dev/programming-guides/proto2/">proto2</a> syntax that additionally define a <code class="docutils literal notranslate"><span class="pre">CompType</span></code> enum acting as a unique identifier (using a tmple <code class="docutils literal notranslate"><span class="pre">COMP_ID</span></code> and <code class="docutils literal notranslate"><span class="pre">MESSAGE_TYPE</span></code>.
 An example message is depicted below:</p>
 <div class="highlight-proto notranslate"><div class="highlight"><pre><span></span><span class="kd">message</span><span class="w"> </span><span class="nc">SearchRequest</span><span class="w"> </span><span class="p">{</span>
 <span class="w">  </span><span class="kd">enum</span><span class="w"> </span><span class="n">CompType</span><span class="w"> </span><span class="p">{</span>
@@ -170,7 +170,7 @@ An example message is depicted below:</p>
 <h3>Registering Messages<a class="headerlink" href="#registering-messages" title="Link to this heading"></a></h3>
 <p>Messages need to be registered before they can be used.
 The easiest way is to utilize the configuration options to specify directories that host proto definitions (<code class="docutils literal notranslate"><span class="pre">.proto</span></code> files).
-This automatically registers all found messageswhen the plugin is loaded in a CLIPS environment.</p>
+This automatically registers all found messages when the plugin is loaded in a CLIPS environment.</p>
 <p>It is also possible to instead register types explicitly by looking them up from a linked library.
 However, this requires to build a shared library from proto files and then link it together with the <a class="reference external" href="https://carologistics.github.io/clips-executive/cx_protobuf_plugin">cx_protobuf_plugin</a> plugin, creating a new linked plugin.</p>
 <p>In order to accomplish this, this plugin offers two cmake macros:</p>

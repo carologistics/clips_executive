@@ -3,7 +3,7 @@
 cx_ros_msgs_plugin
 ==================
 
-CLIPS plugin for using generic ROS topics via introspection API.
+CLIPS plugin for using generic ROS topics via introspection API
 
 .. toctree::
    :maxdepth: 2

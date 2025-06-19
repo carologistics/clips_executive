@@ -140,7 +140,7 @@ Additionally, it requires the <a class="reference external" href="https://docs.r
 <ul class="simple">
 <li><p>Setting up a class that derives from the base plugin definition.</p></li>
 <li><p>Adding a TF listener to query the transform tree on demand.</p></li>
-<li><p>Providing a CLIPS template for storing tf data, as well as CLIPS functions for starting and stopping periodic tf lookups.</p></li>
+<li><p>Providing a CLIPS template for storing TF data, as well as CLIPS functions for starting and stopping periodic TF lookups.</p></li>
 <li><p>Managing asynchronous callbacks to update the fact base as needed.</p></li>
 <li><p>Handling CLIPS data and garbage collection.</p></li>
 </ul>
@@ -187,7 +187,7 @@ wget<span class="w"> </span>-O<span class="w"> </span>tf2_tracked_pose.clp<span 
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>Also, the plugin needs to link against the namespaced CLIPS target provided by the <a class="reference external" href="https://docs.ros.org/en/humble/p/clips_vendor">clips_vendor</a> package, which is used thoughout the ROS2 CLIPS-Executive to interface with CLIPS.</p>
+<p>Also, the plugin needs to link against the namespaced CLIPS target provided by the <a class="reference external" href="https://docs.ros.org/en/humble/p/clips_vendor">clips_vendor</a> package, which is used throughout the ROS2 CLIPS-Executive to interface with CLIPS.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This target wraps the original CLIPS code with a namespace <code class="docutils literal notranslate"><span class="pre">clips::</span></code>, hence the CLIPS features documented in the <a class="reference external" href="https://clipsrules.net/documentation/v641/apg641.pdf">Advanced Programming Guide (PDF)</a> require the namespace prefix.</p>
@@ -301,7 +301,7 @@ wget<span class="w"> </span>-O<span class="w"> </span>tf2_tracked_pose.clp<span 
 </pre></div>
 </div>
 <p>Note that plugins must provide default constructors. Information is only passed to a plugin after construction.
-This is why the ROS logger is wrapped in a smart pointer (so it can be default-constructed), and only instanciated on the <code class="docutils literal notranslate"><span class="pre">initialize()</span></code> call, at which the actual plugin name is known (provided by the base class via <code class="docutils literal notranslate"><span class="pre">plugin_name_</span></code>).</p>
+This is why the ROS logger is wrapped in a smart pointer (so it can be default-constructed), and only instantiated on the <code class="docutils literal notranslate"><span class="pre">initialize()</span></code> call, at which the actual plugin name is known (provided by the base class via <code class="docutils literal notranslate"><span class="pre">plugin_name_</span></code>).</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">logger_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">rclcpp</span><span class="o">::</span><span class="n">Logger</span><span class="o">&gt;</span><span class="p">(</span><span class="n">rclcpp</span><span class="o">::</span><span class="n">get_logger</span><span class="p">(</span><span class="n">plugin_name_</span><span class="p">));</span>
 </pre></div>
 </div>
@@ -415,7 +415,7 @@ This is why the ROS logger is wrapped in a smart pointer (so it can be default-c
 <section id="clips-environments-and-threading">
 <h4>6.1 CLIPS Environments and Threading<a class="headerlink" href="#clips-environments-and-threading" title="Link to this heading"></a></h4>
 <p>CLIPS is not thread-safe, hence interactions with CLIPS need to be guarded from concurrent access.</p>
-<p>The environment is already guarded by the mutex when entering <code class="docutils literal notranslate"><span class="pre">clips_env_init()</span></code> (invoked by the environment manager node), and it is safe to directly interact with the provided environment in this scope. The smae holds true for <code class="docutils literal notranslate"><span class="pre">clips_env_destroyed()</span></code>.</p>
+<p>The environment is already guarded by the mutex when entering <code class="docutils literal notranslate"><span class="pre">clips_env_init()</span></code> (invoked by the environment manager node), and it is safe to directly interact with the provided environment in this scope. The same holds true for <code class="docutils literal notranslate"><span class="pre">clips_env_destroyed()</span></code>.</p>
 <p>The mutex belonging to a CLIPS environment is stored on the heap inside of the environment context (via the member <code class="docutils literal notranslate"><span class="pre">context-&gt;env_mtx_</span></code>).</p>
 </section>
 <section id="constructs-via-build-function">
@@ -504,7 +504,7 @@ The CLIPS arguments are converted to their native C++ types, before they are pas
 </pre></div>
 </div>
 <p>The output parameter is populated by creating a boolean indicating the success of the attempted helper function call.</p>
-<p>The second UDF is populated in much of the same way, this time taking an external address (<code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span></code>) as argument, which needs to be casted to it’s expected type.</p>
+<p>The second UDF is populated in much of the same way, this time taking an external address (<code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span></code>) as argument, which needs to be cast to it’s expected type.</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">clips</span><span class="o">::</span><span class="n">AddUDF</span><span class="p">(</span>
 <span class="w">    </span><span class="n">env</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;tf2-stop-periodic-lookup&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;b&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;;e&quot;</span><span class="p">,</span>
 <span class="w">    </span><span class="p">[](</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="w"> </span><span class="o">*</span><span class="n">env</span><span class="p">,</span><span class="w"> </span><span class="n">clips</span><span class="o">::</span><span class="n">UDFContext</span><span class="w"> </span><span class="o">*</span><span class="n">udfc</span><span class="p">,</span>
@@ -526,7 +526,7 @@ The CLIPS arguments are converted to their native C++ types, before they are pas
 <p>The body of each UDF can safely access CLIPS because the context that invokes the function should ensure that the environment is locked already, typically this is the <code class="docutils literal notranslate"><span class="pre">ExecutivePlugin</span></code> that handles the CLIPS inference engine runs. Do not try to lock the environment again within the execution scope of a UDF.</p>
 </div>
 <p>7 Asynchronous Handling of CLIPS facts in start_periodic_lookup()</p>
-<p>THe start_periodic_lookup function is responsible for creating a ROS timer that queries the transform tree and updates a fact to store the latest update to the retrieved pose.</p>
+<p>The start_periodic_lookup function is responsible for creating a ROS timer that queries the transform tree and updates a fact to store the latest update to the retrieved pose.</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">Tf2PoseTrackerPlugin::start_periodic_lookup</span><span class="p">(</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="w"> </span><span class="o">*</span><span class="n">env</span><span class="p">,</span>
 <span class="w">                                                 </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="n">parent</span><span class="p">,</span>
 <span class="w">                                                 </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="n">child</span><span class="p">,</span>

@@ -3,7 +3,7 @@
 cx_bringup
 ==========
 
-Central CX bringup scripts and parameters for nodes
+Central CX bringup scripts and parameters for launching CLIPS example programs
 
 .. toctree::
    :maxdepth: 2

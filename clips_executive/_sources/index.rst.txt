@@ -39,7 +39,7 @@ This project is inspired by the original CLIPS-Executive from the `Fawkes roboti
 
 However, while the original CLIPS-Executive presents itself as a goal reasoning framework, this project focuses on generalized CLIPS usage foremost.
 
-It is mostly rewritten from scratch, including a different design philosophy, direct CLIPS 6.4 support via the clips_vendor provider (instead of relying on `clipsmm`_), a more robust CLIPS extension management and new CLIPS existensions.
+It is mostly rewritten from scratch, including a different design philosophy, direct CLIPS 6.4 support via the clips_vendor provider (instead of relying on `clipsmm`_), as well as a more robust CLIPS extension management via plugins.
 
 All new code is released under Apache 2.0 license, while some optional modules that were derived from fawkes are licensed under the GPLv2+ license.
 
