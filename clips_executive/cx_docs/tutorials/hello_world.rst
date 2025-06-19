@@ -37,14 +37,14 @@ For the reminder of this tutorial, it is assumed that you work in a dedicated wo
 
     mkdir -p ~/ros2/cx_tutorial_ws/src
 
-Next, you will create a package that will be popuated with CLIPS code:
+Next, you will create a package that will be populated with CLIPS code:
 
 
 .. code-block:: bash
 
     ros2 pkg create --build-type ament_cmake --license Apache-2.0 cx_tutorial_agents --dependencies cx_bringup
 
-In particular, let us create directories params and clips to host configuraion files and CLIPS soiurce code:
+In particular, let us create directories params and clips to host configuration files and CLIPS source code:
 
 .. code-block:: bash
 
@@ -59,7 +59,7 @@ Make sure the new directories are also installed with the package by adding the 
 
     install(DIRECTORY params clips DESTINATION share/${PROJECT_NAME})
 
-The full ``CMakelists.txt`` should look like this (after removing some unecessary sections):
+The full ``CMakelists.txt`` should look like this (after removing some unnecessary sections):
 
 .. code-block:: cmake
 
@@ -199,7 +199,7 @@ In either case, you will see in the log output that the rule was indeed fired:
     [cx_node-1] [hello_world] [INFO] FIRE    1 hello-world: *
     [cx_node-1] hello_world] [INFO] hello world
 
-Additionally, a log is created in the ros logging directory (typically in ``~/.ros/log``), forwarding the respective CLIPS logs of the ``hello_world`` environment to a file ``hello_world_<timestamp>.log``. After executing the example, the log file will contain the following lines:
+Additionally, a log is created in the ROS logging directory (typically in ``~/.ros/log``), forwarding the respective CLIPS logs of the ``hello_world`` environment to a file ``hello_world_<timestamp>.log``. After executing the example, the log file will contain the following lines:
 
 
 .. code-block:: bash
@@ -225,7 +225,7 @@ Once the run is completed, the node idles until it is shut down, which then caus
 Summary
 -------
 
-You created a package with your first custom configuration for the |CX|, including some CLIPS code. This involved preparing directories for confoiguration and CLIPS files via CMake, a yaml configuration to setup a CLIPS environment with the ``FileLoadPlugin`` and finally a CLIPS file defining a simple rule to print hello world.
+You created a package with your first custom configuration for the |CX|, including some CLIPS code. This involved preparing directories for configuration and CLIPS files via CMake, a yaml configuration to setup a CLIPS environment with the ``FileLoadPlugin`` and finally a CLIPS file defining a simple rule to print hello world.
 
 Next Steps
 ----------

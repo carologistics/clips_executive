@@ -49,7 +49,7 @@ Configuration
     Specify files to load using CLIPS batch* command when the plugin is loaded. This happens after the files specified in ``load`` are loaded.
     Supports absolute paths or relative paths using the share directories specified above.
 
-:`clenaup_batch`:
+:`cleanup_batch`:
 
   ============= =======
   Type          Default
@@ -72,7 +72,7 @@ For the difference between ``load*`` and ``batch*`` please consult the CLIPS |BP
 .. Note::
 
   It is recommended to use load over batch whenever possible due to the superior error handling of load.
-  E.g., when using batch, a missing closing parenthesis ``)``  may lead to a silent faliure as CLIPS treats this as an uncompleted command and waits for another closing parenthesis to appear before actually processing the input.
+  E.g., when using batch, a missing closing parenthesis ``)``  may lead to a silent failure as CLIPS treats this as an uncompleted command and waits for another closing parenthesis to appear before actually processing the input.
 
 Usage Example
 *************

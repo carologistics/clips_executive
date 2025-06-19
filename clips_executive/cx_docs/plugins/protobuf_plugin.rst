@@ -39,16 +39,16 @@ Configuration
 
   Description
     Location to directories containing .proto files. The messages found in the given directories are registered automatically for usage.
-    Supports absoulte paths or relavice paths using the share directories specified above.
+    Supports absolute paths or relative paths using the share directories specified above.
 
 
 Features
 ********
 
-The utilized :docsite:`protobuf_comm` library (de)-serializes proto uisng a framing protocol that other communication endpoints therefore need to adhere to, as well.
+The utilized :docsite:`protobuf_comm` library (de)-serializes proto using a framing protocol that other communication endpoints therefore need to adhere to, as well.
 Refer to it's documentation to get details on the layout of the frame headers.
 
-It requires messages using `proto2`_ syntax that additionally define a ``CompType`` enum acting as a unique identifier (using a tumple ``COMP_ID`` and ``MESSAGE_TYPE``.
+It requires messages using `proto2`_ syntax that additionally define a ``CompType`` enum acting as a unique identifier (using a tmple ``COMP_ID`` and ``MESSAGE_TYPE``.
 An example message is depicted below:
 
 .. code-block:: proto
@@ -68,7 +68,7 @@ Registering Messages
 
 Messages need to be registered before they can be used.
 The easiest way is to utilize the configuration options to specify directories that host proto definitions (``.proto`` files).
-This automatically registers all found messageswhen the plugin is loaded in a CLIPS environment.
+This automatically registers all found messages when the plugin is loaded in a CLIPS environment.
 
 It is also possible to instead register types explicitly by looking them up from a linked library.
 However, this requires to build a shared library from proto files and then link it together with the :docsite:`cx_protobuf_plugin` plugin, creating a new linked plugin.

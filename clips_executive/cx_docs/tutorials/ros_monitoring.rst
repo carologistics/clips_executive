@@ -14,7 +14,7 @@ Continuous Monitoring
 Background
 ----------
 
-CLIPS can be used to continuouly monitor and control a robotic system.
+CLIPS can be used to continuously monitor and control a robotic system.
 This typically involves interleaving runs of the CLIPS inference engine with other components, e.g., to obtain feedback from ROS.
 
 Prerequisites
@@ -261,7 +261,7 @@ Lastly, the rule ``turtle-pose-destroy-subscription`` closes the subscription wh
 4 Teleporting the Turtle
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-The file ``turtlesim_teleport.clp`` contains a set of rule that will teleport the turtle back to the center of the canvas, whenever it leaves the safe area, as indidicated by the ``(turtle-out-of-bounds)`` fact.
+The file ``turtlesim_teleport.clp`` contains a set of rule that will teleport the turtle back to the center of the canvas, whenever it leaves the safe area, as indicated by the ``(turtle-out-of-bounds)`` fact.
 
 .. code:: lisp
 
@@ -463,7 +463,7 @@ When attempting to hit the canvas border you will see the turtle spawning back t
 Summary
 -------
 
-You leveraged the ``ExecutivePlugin`` to subsequently run the CLIPS inference engine indefinitevely. Together with the ``RosMsgsPlugin`` this enabled you to receive the latest updates from ROS topics in CLIPS.
+You leveraged the ``ExecutivePlugin`` to subsequently run the CLIPS inference engine indefinitely. Together with the ``RosMsgsPlugin`` this enabled you to receive the latest updates from ROS topics in CLIPS.
 You utilized this to monitor the turtlesim simulator in order to prevent the turtle from hitting the canvas border.
 
 Next Steps

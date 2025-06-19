@@ -38,7 +38,7 @@ This involves:
 
 * Setting up a class that derives from the base plugin definition.
 * Adding a TF listener to query the transform tree on demand.
-* Providing a CLIPS template for storing tf data, as well as CLIPS functions for starting and stopping periodic tf lookups.
+* Providing a CLIPS template for storing TF data, as well as CLIPS functions for starting and stopping periodic TF lookups.
 * Managing asynchronous callbacks to update the fact base as needed.
 * Handling CLIPS data and garbage collection.
 
@@ -99,7 +99,7 @@ In the ``CMakeLists.txt``, the description file needs to be properly exported
       DESTINATION share/${PROJECT_NAME}
     )
 
-Also, the plugin needs to link against the namespaced CLIPS target provided by the :rosdoc:`clips_vendor` package, which is used thoughout the |CX| to interface with CLIPS.
+Also, the plugin needs to link against the namespaced CLIPS target provided by the :rosdoc:`clips_vendor` package, which is used throughout the |CX| to interface with CLIPS.
 
 .. note::
 
@@ -230,7 +230,7 @@ Here, the transform listener is initialized with the help of the parent lifecycl
     }
 
 Note that plugins must provide default constructors. Information is only passed to a plugin after construction.
-This is why the ROS logger is wrapped in a smart pointer (so it can be default-constructed), and only instanciated on the ``initialize()`` call, at which the actual plugin name is known (provided by the base class via ``plugin_name_``).
+This is why the ROS logger is wrapped in a smart pointer (so it can be default-constructed), and only instantiated on the ``initialize()`` call, at which the actual plugin name is known (provided by the base class via ``plugin_name_``).
 
 .. code-block:: cpp
 
@@ -360,7 +360,7 @@ The function starts with a simple debugging statement that utilizes the plugins 
 
 CLIPS is not thread-safe, hence interactions with CLIPS need to be guarded from concurrent access.
 
-The environment is already guarded by the mutex when entering ``clips_env_init()`` (invoked by the environment manager node), and it is safe to directly interact with the provided environment in this scope. The smae holds true for ``clips_env_destroyed()``.
+The environment is already guarded by the mutex when entering ``clips_env_init()`` (invoked by the environment manager node), and it is safe to directly interact with the provided environment in this scope. The same holds true for ``clips_env_destroyed()``.
 
 The mutex belonging to a CLIPS environment is stored on the heap inside of the environment context (via the member ``context->env_mtx_``).
 
@@ -464,7 +464,7 @@ The CLIPS arguments are converted to their native C++ types, before they are pas
 
 The output parameter is populated by creating a boolean indicating the success of the attempted helper function call.
 
-The second UDF is populated in much of the same way, this time taking an external address (``void *``) as argument, which needs to be casted to it's expected type.
+The second UDF is populated in much of the same way, this time taking an external address (``void *``) as argument, which needs to be cast to it's expected type.
 
 .. code-block:: cpp
 
@@ -489,7 +489,7 @@ The second UDF is populated in much of the same way, this time taking an externa
 
 7 Asynchronous Handling of CLIPS facts in start_periodic_lookup()
 
-THe start_periodic_lookup function is responsible for creating a ROS timer that queries the transform tree and updates a fact to store the latest update to the retrieved pose.
+The start_periodic_lookup function is responsible for creating a ROS timer that queries the transform tree and updates a fact to store the latest update to the retrieved pose.
 
 .. code-block:: cpp
 
