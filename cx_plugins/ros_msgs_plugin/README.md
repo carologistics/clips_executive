@@ -19,7 +19,7 @@ clips_manager:
 ## CLIPS Features
 This plugin defines deftemplates and user-defined functions that are described below.
 
-##### Deftemplates
+### Deftemplates
 ```lisp
 ; Asserted by the create-subscription function.
 ; Retracted by the destroy-subscription function.
@@ -42,7 +42,7 @@ This plugin defines deftemplates and user-defined functions that are described b
   (slot msg-ptr (type EXTERNAL-ADDRESS)) example: <Pointer-C-0x7f1550001d20>
 )
 ```
-##### Functions
+### Functions
 ```lisp
 ; Create and destroy publishers and subscribers.
 (ros-msgs-create-publisher ?topic-name ?msg-type)    ; example args: "/cx_string_out" "std_msgs/msg/String"

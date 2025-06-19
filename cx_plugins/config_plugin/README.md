@@ -17,7 +17,7 @@ clips_manager:
 ## CLIPS Features
 This plugin adds deftemplates and deffunctions as listed below:
 
-##### Deftemplates
+### Deftemplates
 ```lisp
 ; Asserted by the config-load function for each configuration value in the parsed yaml file.
 (deftemplate confval
@@ -29,7 +29,7 @@ This plugin adds deftemplates and deffunctions as listed below:
 )
 ```
 
-##### Functions
+### Functions
 ```lisp
 ; Load all config values from a file (absolute path) given a prefix and store tjhem into (confval) facts.
 ; The prefix determines tha resulting path in the confval facts.

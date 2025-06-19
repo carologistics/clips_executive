@@ -40,7 +40,7 @@ cx_generate_linked_protobuf_plugin_from_lib(NEW_PLUGIN_NAME SHARED_LIBRARY_TARGE
 This plugin defines deftemplates, rules and user-defined functions that are described below.
 
 It allows two differnet way of communication. Either via broadcast peers or via client server connection.
-##### Deftemplates
+### Deftemplates
 ```lisp
 ; Asserted by the create-subscription function.
 ; Retracted by the destroy-subscription function.
@@ -84,7 +84,7 @@ It allows two differnet way of communication. Either via broadcast peers or via 
   (slot message (type STRING))
 )
 ```
-##### Defrules
+### Defrules
 It defines defrules and a defglobal to clean up the fact once the end of the agenda is reached:
 ```lisp
 (defglobal
@@ -117,7 +117,7 @@ It defines defrules and a defglobal to clean up the fact once the end of the age
   (retract ?pf)
 )
 ```
-##### Functions
+### Functions
 ```lisp
 ; functions for processing messages:
 (bind ?res (pb-field-names ?msg))

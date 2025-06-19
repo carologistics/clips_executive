@@ -22,7 +22,7 @@ clips_manager:
 ## CLIPS Features
 This plugin adds deftemplates and deffunctions as listed below:
 
-##### Deftemplates
+### Deftemplates
 ```lisp
 ; Asserted and modified by the periodic lookup started with tf2-start-periodic-lookup.
 (deftemplate tf2-tracked-pose
@@ -35,7 +35,7 @@ This plugin adds deftemplates and deffunctions as listed below:
 )
 ```
 
-##### Functions
+### Functions
 ```lisp
 ; Start a ROS timer to periodically lookup the pose of ?child-frame relative to ?parent-frame.
 ; Returns TRUE if timer was created successfully, FALSE otherwise.
