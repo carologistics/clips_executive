@@ -1,7 +1,0 @@
-<class_libraries>
-  <library path="cx_pddl_parser_plugin">
-    <class type="cx::PddlParserPlugin" base_class_type="cx::ClipsPlugin">
-      <description>Clips Plugin providing pddl file parsing to the Clips Environment</description>
-    </class>
-  </library>
-</class_libraries>
