@@ -1,7 +1,7 @@
 <class_libraries>
   <library path="cx_protobuf_plugin">
     <class type="cx::ProtobufPlugin" base_class_type="cx::ClipsPlugin">
-      <description>Clips Plugin providing Protobuf-based communication</description>
+      <description>CLIPS Plugin providing Protobuf-based communication</description>
     </class>
   </library>
 </class_libraries>

@@ -3,11 +3,11 @@
 <package format="3">
   <name>cx_protobuf_plugin</name>
   <version>0.1.0</version>
-  <description>Consists of all plugins that provide functionality to CLIPS and an implemented manager unit</description>
+  <description>CX plugin to send and receive protobuf messages</description>
 
   <maintainer email="viehmann@kbsg.rwth-aachen.de">Tarik Viehmann</maintainer>
 
-  <license>GPLv2+ license</license>
+  <license>GPL-2.0-or-later</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
