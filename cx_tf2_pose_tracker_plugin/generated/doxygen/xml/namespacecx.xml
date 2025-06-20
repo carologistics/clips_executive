@@ -10,7 +10,6 @@
     <innerclass refid="classcx_1_1ExamplePlugin" prot="public">cx::ExamplePlugin</innerclass>
     <innerclass refid="classcx_1_1ExecutivePlugin" prot="public">cx::ExecutivePlugin</innerclass>
     <innerclass refid="classcx_1_1FileLoadPlugin" prot="public">cx::FileLoadPlugin</innerclass>
-    <innerclass refid="classcx_1_1PddlParserPlugin" prot="public">cx::PddlParserPlugin</innerclass>
     <innerclass refid="classcx_1_1ProtobufPlugin" prot="public">cx::ProtobufPlugin</innerclass>
     <innerclass refid="classcx_1_1RosMsgsPlugin" prot="public">cx::RosMsgsPlugin</innerclass>
     <innerclass refid="classcx_1_1Tf2PoseTrackerPlugin" prot="public">cx::Tf2PoseTrackerPlugin</innerclass>

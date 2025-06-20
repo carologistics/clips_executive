@@ -3,7 +3,7 @@
 cx_protobuf_plugin
 ==================
 
-Consists of all plugins that provide functionality to CLIPS and an implemented manager unit
+CX plugin to send and receive protobuf messages
 
 .. toctree::
    :maxdepth: 2

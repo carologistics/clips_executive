@@ -2,7 +2,7 @@ var indexSectionsWithContent =
 {
   0: "acdefiprsty",
   1: "acefprt",
-  2: "cpy",
+  2: "py",
   3: "acdfirs",
   4: "p"
 };

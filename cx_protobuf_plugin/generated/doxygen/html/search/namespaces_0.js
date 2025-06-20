@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['clips_5fpddl_5fparser_0',['clips_pddl_parser',['http://docs.ros.org/en/latest/p/cx_pddl_parser_plugin/generated/doxygen/html/classclips__pddl__parser_1_1ClipsPddlParser.html',1,'']]]
+  ['yaml_0',['YAML',['http://docs.ros.org/en/latest/p/cx_config_plugin/generated/doxygen/html/structYAML_1_1as__if_3_01std_1_1string_00_01std_1_1optional_3_01std_1_1string_01_4_01_4.html',1,'']]]
 ];

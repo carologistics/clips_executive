@@ -3,7 +3,7 @@
   <option  id='DOXYFILE_ENCODING' default='yes' type='string'><value><![CDATA[UTF-8]]></value></option>
   <option  id='PROJECT_NAME' default='no' type='string'><value><![CDATA[cx_protobuf_plugin]]></value></option>
   <option  id='PROJECT_NUMBER' default='no' type='string'><value><![CDATA[0.1.0]]></value></option>
-  <option  id='PROJECT_BRIEF' default='no' type='string'><value><![CDATA["Consists of all plugins that provide functionality to CLIPS and an implemented manager unit"]]></value></option>
+  <option  id='PROJECT_BRIEF' default='no' type='string'><value><![CDATA["CX plugin to send and receive protobuf messages"]]></value></option>
   <option  id='PROJECT_LOGO' default='yes' type='string'><value><![CDATA[]]></value></option>
   <option  id='OUTPUT_DIRECTORY' default='no' type='string'><value><![CDATA[/home/runner/work/clips_executive/clips_executive/docs_build/cx_protobuf_plugin/cx_protobuf_plugin-public-cc-api/doxygen_output]]></value></option>
   <option  id='CREATE_SUBDIRS' default='yes' type='bool'><value>NO</value></option>
@@ -352,7 +352,6 @@
     <value><![CDATA[/home/runner/work/clips_executive/clips_executive/cross_reference/cx_ament_index_plugin/cx_ament_index_plugin.tag=http://docs.ros.org/en/latest/p/cx_ament_index_plugin/generated/doxygen/html]]></value>
     <value><![CDATA[/home/runner/work/clips_executive/clips_executive/cross_reference/cx_file_load_plugin/cx_file_load_plugin.tag=http://docs.ros.org/en/latest/p/cx_file_load_plugin/generated/doxygen/html]]></value>
     <value><![CDATA[/home/runner/work/clips_executive/clips_executive/cross_reference/cx_plugin/cx_plugin.tag=http://docs.ros.org/en/latest/p/cx_plugin/generated/doxygen/html]]></value>
-    <value><![CDATA[/home/runner/work/clips_executive/clips_executive/cross_reference/cx_pddl_parser_plugin/cx_pddl_parser_plugin.tag=http://docs.ros.org/en/latest/p/cx_pddl_parser_plugin/generated/doxygen/html]]></value>
     <value><![CDATA[/home/runner/work/clips_executive/clips_executive/cross_reference/cx_config_plugin/cx_config_plugin.tag=http://docs.ros.org/en/latest/p/cx_config_plugin/generated/doxygen/html]]></value>
     <value><![CDATA[/home/runner/work/clips_executive/clips_executive/cross_reference/cx_clips_env_manager/cx_clips_env_manager.tag=http://docs.ros.org/en/latest/p/cx_clips_env_manager/generated/doxygen/html]]></value>
   </option>

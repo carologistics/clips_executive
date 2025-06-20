@@ -1,9 +1,8 @@
 var searchData=
 [
   ['clipsenvmanager_0',['CLIPSEnvManager',['http://docs.ros.org/en/latest/p/cx_clips_env_manager/generated/doxygen/html/classcx_1_1CLIPSEnvManager.html',1,'cx']]],
-  ['clipspddlparser_1',['ClipsPddlParser',['http://docs.ros.org/en/latest/p/cx_pddl_parser_plugin/generated/doxygen/html/classclips__pddl__parser_1_1ClipsPddlParser.html',1,'clips_pddl_parser']]],
-  ['clipsplugin_2',['ClipsPlugin',['http://docs.ros.org/en/latest/p/cx_plugin/generated/doxygen/html/classcx_1_1ClipsPlugin.html',1,'cx']]],
-  ['clipspluginmanager_3',['ClipsPluginManager',['http://docs.ros.org/en/latest/p/cx_clips_env_manager/generated/doxygen/html/classcx_1_1ClipsPluginManager.html',1,'cx']]],
-  ['clipsprotobufcommunicator_4',['ClipsProtobufCommunicator',['../classprotobuf__clips_1_1ClipsProtobufCommunicator.html',1,'protobuf_clips']]],
-  ['configplugin_5',['ConfigPlugin',['http://docs.ros.org/en/latest/p/cx_config_plugin/generated/doxygen/html/classcx_1_1ConfigPlugin.html',1,'cx']]]
+  ['clipsplugin_1',['ClipsPlugin',['http://docs.ros.org/en/latest/p/cx_plugin/generated/doxygen/html/classcx_1_1ClipsPlugin.html',1,'cx']]],
+  ['clipspluginmanager_2',['ClipsPluginManager',['http://docs.ros.org/en/latest/p/cx_clips_env_manager/generated/doxygen/html/classcx_1_1ClipsPluginManager.html',1,'cx']]],
+  ['clipsprotobufcommunicator_3',['ClipsProtobufCommunicator',['../classprotobuf__clips_1_1ClipsProtobufCommunicator.html',1,'protobuf_clips']]],
+  ['configplugin_4',['ConfigPlugin',['http://docs.ros.org/en/latest/p/cx_config_plugin/generated/doxygen/html/classcx_1_1ConfigPlugin.html',1,'cx']]]
 ];
