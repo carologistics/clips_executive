@@ -1,0 +1,32 @@
+/**:
+  ros__parameters:
+    autostart_node: true
+    environments: ["pddl_agent"]
+
+    pddl_agent:
+      plugins: ["executive","ros_msgs",
+                "ament_index",
+                "plan_temporal_action",
+                "timed_plan_action_msg",
+                 "files"]
+      log_clips_to_file: true
+      watch: ["facts", "rules"]
+
+    ament_index:
+      plugin: "cx::AmentIndexPlugin"
+
+    executive:
+      plugin: "cx::ExecutivePlugin"
+
+    ros_msgs:
+      plugin: "cx::RosMsgsPlugin"
+
+    files:
+      plugin: "cx::FileLoadPlugin"
+      pkg_share_dirs: ["pddl_agent_example"]
+      load: ["clips/agent.clp"]
+
+    plan_temporal_action:
+      plugin: "cx::CXPddlMsgsPlanTemporalPlugin"
+    timed_plan_action_msg:
+      plugin: "cx::CXPddlMsgsTimedPlanActionPlugin"
