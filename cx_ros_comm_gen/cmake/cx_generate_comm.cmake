@@ -20,6 +20,7 @@ macro(cx_generate_bindings package msg_name type)
 
   find_package(Python3 REQUIRED COMPONENTS Interpreter)
   find_package(cx_plugin REQUIRED)
+  find_package(cx_utils REQUIRED)
   find_package(${package} REQUIRED)
   find_package(pluginlib REQUIRED)
   find_package(clips_vendor REQUIRED)
@@ -55,7 +56,7 @@ macro(cx_generate_bindings package msg_name type)
   add_library(${plugin_name} SHARED ${plugin_name}.cpp)
   set_property(TARGET ${plugin_name} PROPERTY CXX_STANDARD 20)
   target_link_libraries(${plugin_name} ClipsNS::libclips_ns)
-  ament_target_dependencies(${plugin_name} cx_plugin pluginlib ${package} ${extra_deps})
+  ament_target_dependencies(${plugin_name} cx_plugin cx_utils pluginlib ${package} ${extra_deps})
   install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/${plugin_name}.hpp
     DESTINATION include/
