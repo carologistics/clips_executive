@@ -30,6 +30,11 @@
 #include "unicode/ucnv.h"
 #include "unicode/unistr.h"
 
+#ifdef MORE_STUFF
+#include <rclcpp/create_generic_service.hpp>
+#include <rclcpp_action/create_generic_client.hpp>
+#endif
+
 // To export as plugin
 #include "pluginlib/class_list_macros.hpp"
 
@@ -257,6 +262,45 @@ bool RosMsgsPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
     },
     "create_new_client", this);
 
+#ifdef MORE_STUFF
+  fun_name = "ros-msgs-create-action-client";
+  function_names_.insert(fun_name);
+  clips::AddUDF(
+      env.get(), fun_name.c_str(), "v", 2, 2, ";sy;sy",
+      [](clips::Environment *env, clips::UDFContext *udfc,
+         clips::UDFValue * /*out*/) {
+        auto *instance = static_cast<RosMsgsPlugin *>(udfc->context);
+        clips::UDFValue action_server;
+        clips::UDFValue type;
+        using namespace clips;
+        clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &action_server);
+        clips::UDFNthArgument(udfc, 2, LEXEME_BITS, &type);
+
+        instance->create_new_action_client(env,
+                                           action_server.lexemeValue->contents,
+                                           type.lexemeValue->contents);
+      },
+      "create_new_action_client", this);
+
+  fun_name = "ros-msgs-create-service";
+  function_names_.insert(fun_name);
+  clips::AddUDF(
+      env.get(), fun_name.c_str(), "v", 2, 2, ";sy;sy",
+      [](clips::Environment *env, clips::UDFContext *udfc,
+         clips::UDFValue * /*out*/) {
+        auto *instance = static_cast<RosMsgsPlugin *>(udfc->context);
+        clips::UDFValue service;
+        clips::UDFValue type;
+        using namespace clips;
+        clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &service);
+        clips::UDFNthArgument(udfc, 2, LEXEME_BITS, &type);
+
+        instance->create_new_service(env, service.lexemeValue->contents,
+                                     type.lexemeValue->contents);
+      },
+      "create_new_service", this);
+#endif
+
   fun_name = "ros-msgs-destroy-client";
   function_names_.insert(fun_name);
   clips::AddUDF(
@@ -288,48 +332,32 @@ bool RosMsgsPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
     "async-send-request", this);
 
   // add fact templates
-  clips::Build(
-    env.get(),
-    R"(
-(deftemplate ros-msgs-subscription
-    (slot topic (type STRING))
-    (slot type (type STRING)))
-)");
-
-  clips::Build(
-    env.get(),
-    R"(
-(deftemplate ros-msgs-publisher
-    (slot topic (type STRING))
-    (slot type (type STRING)))
-)");
-
-  clips::Build(
-    env.get(),
-    R"(
-(deftemplate ros-msgs-client
-    (slot service (type STRING))
-    (slot type (type STRING)))
-)");
-
-  clips::Build(
-    env.get(),
-    R"(
-(deftemplate ros-msgs-message
-    (slot topic (type STRING))
-    (slot msg-ptr (type EXTERNAL-ADDRESS))
-)
-)");
-
-  clips::Build(
-    env.get(),
-    R"(
-(deftemplate ros-msgs-response
-    (slot service (type STRING))
-    (slot request-id (type INTEGER))
-    (slot msg-ptr (type EXTERNAL-ADDRESS))
-)
-)");
+  clips::Build(env.get(), "(deftemplate ros-msgs-subscription \
+            (slot topic (type STRING)) \
+            (slot type (type STRING)))");
+  clips::Build(env.get(), "(deftemplate ros-msgs-publisher \
+            (slot topic (type STRING)) \
+            (slot type (type STRING)))");
+  clips::Build(env.get(), "(deftemplate ros-msgs-client \
+            (slot service (type STRING)) \
+            (slot type (type STRING)))");
+#ifdef MORE_STUFF
+  clips::Build(env.get(), "(deftemplate ros-msgs-service \
+            (slot service (type STRING)) \
+            (slot type (type STRING)))");
+  clips::Build(env.get(), "(deftemplate ros-msgs-action-client \
+            (slot server (type STRING)) \
+            (slot type (type STRING)))");
+#endif
+  clips::Build(env.get(), "(deftemplate ros-msgs-message \
+            (slot topic (type STRING) ) \
+            (slot msg-ptr (type EXTERNAL-ADDRESS)) \
+            )");
+  clips::Build(env.get(), "(deftemplate ros-msgs-response \
+            (slot service (type STRING) ) \
+            (slot request-id (type INTEGER) ) \
+            (slot msg-ptr (type EXTERNAL-ADDRESS)) \
+            )");
 
   return true;
 }
@@ -363,6 +391,20 @@ bool RosMsgsPlugin::clips_env_destroyed(std::shared_ptr<clips::Environment> & en
   } else {
     RCLCPP_WARN(*logger_, "ros-msgs-client cant be undefined");
   }
+#ifdef MORE_STUFF
+  curr_tmpl = clips::FindDeftemplate(env.get(), "ros-msgs-service");
+  if (curr_tmpl) {
+    clips::Undeftemplate(curr_tmpl, env.get());
+  } else {
+    RCLCPP_WARN(*logger_, "ros-msgs-client cant be undefined");
+  }
+  curr_tmpl = clips::FindDeftemplate(env.get(), "ros-msgs-action-client");
+  if (curr_tmpl) {
+    clips::Undeftemplate(curr_tmpl, env.get());
+  } else {
+    RCLCPP_WARN(*logger_, "ros-msgs-client cant be undefined");
+  }
+#endif
   curr_tmpl = clips::FindDeftemplate(env.get(), "ros-msgs-response");
   if (curr_tmpl) {
     clips::Undeftemplate(curr_tmpl, env.get());
@@ -617,8 +659,190 @@ void RosMsgsPlugin::create_new_client(
   }
 }
 
-void RosMsgsPlugin::destroy_client(clips::Environment * env, const std::string & service_name)
-{
+#ifdef MORE_STUFF
+void RosMsgsPlugin::create_new_action_client(
+    clips::Environment *env, const std::string &action_server_name,
+    const std::string &action_type) {
+  auto context = CLIPSEnvContext::get_context(env);
+  std::string env_name = context->env_name_;
+
+  auto node = parent_.lock();
+  if (!node) {
+    RCLCPP_ERROR(*logger_, "Invalid reference to parent node");
+  }
+
+  std::map<std::__cxx11::basic_string<char>,
+           std::shared_ptr<rclcpp_action::GenericClient>>::iterator it;
+  {
+    map_mtx_.lock();
+    it = action_clients_[env_name].find(action_server_name);
+  }
+
+  if (it != action_clients_[env_name].end()) {
+    map_mtx_.unlock();
+    RCLCPP_WARN(*logger_, "Already registered to action client for %s",
+                action_server_name.c_str());
+  } else {
+    RCLCPP_DEBUG(*logger_, "Creating action client for %s",
+                 action_server_name.c_str());
+
+    if (!libs_.contains(action_type)) {
+      libs_[action_type] = rclcpp::get_typesupport_library(
+          action_type, "rosidl_typesupport_cpp");
+    }
+    if (!action_type_support_cache_.contains(action_type)) {
+      action_type_support_cache_[action_type] =
+          rclcpp::get_action_typesupport_handle(
+              action_type, "rosidl_typesupport_cpp", *libs_[action_type]);
+    }
+    action_types_[env_name][action_server_name] = action_type;
+
+    action_clients_[context->env_name_][action_server_name] =
+        rclcpp_action::create_generic_client(
+            node->get_node_base_interface(), node->get_node_graph_interface(),
+            node->get_node_logging_interface(),
+            node->get_node_waitables_interface(), action_server_name,
+            action_type, cb_group_);
+    map_mtx_.unlock();
+    clips::AssertString(env, ("(ros-msgs-action-client (server \"" +
+                              action_server_name + "\") (type \"" +
+                              action_type + "\"))")
+                                 .c_str());
+  }
+}
+
+void RosMsgsPlugin::create_new_service(clips::Environment *env,
+                                       const std::string &service_name,
+                                       const std::string &service_type) {
+  auto context = CLIPSEnvContext::get_context(env);
+  std::string env_name = context->env_name_;
+
+  auto node = parent_.lock();
+  if (!node) {
+    RCLCPP_ERROR(*logger_, "Invalid reference to parent node");
+  }
+
+  std::map<std::__cxx11::basic_string<char>,
+           std::shared_ptr<rclcpp::GenericService>>::iterator it;
+  {
+    map_mtx_.lock();
+    it = services_[env_name].find(service_name);
+  }
+
+  if (it != services_[env_name].end()) {
+    map_mtx_.unlock();
+    RCLCPP_WARN(*logger_, "Already registered to service %s",
+                service_name.c_str());
+  } else {
+    RCLCPP_DEBUG(*logger_, "Creating service %s", service_name.c_str());
+
+    if (!libs_.contains(service_type)) {
+      libs_[service_type] = rclcpp::get_typesupport_library(
+          service_type, "rosidl_typesupport_cpp");
+    }
+    if (!service_type_support_cache_.contains(service_type)) {
+      service_type_support_cache_[service_type] =
+          rclcpp::get_service_typesupport_handle(
+              service_type, "rosidl_typesupport_cpp", *libs_[service_type]);
+    }
+    client_types_[env_name][service_name] = service_type;
+    auto callback = [this, env, service_name](
+                        rclcpp::GenericService::SharedRequest request,
+                        rclcpp::GenericService::SharedResponse response) {
+      service_callback(env, service_name, request, response);
+    };
+
+    services_[context->env_name_][service_name] =
+        rclcpp::create_generic_service(node->get_node_base_interface(),
+                                       node->get_node_services_interface(),
+                                       service_name, service_type, callback,
+                                       rclcpp::QoS(10), cb_group_);
+
+    map_mtx_.unlock();
+    clips::AssertString(env, ("(ros-msgs-service (service \"" + service_name +
+                              "\") (type \"" + service_type + "\"))")
+                                 .c_str());
+  }
+}
+
+void RosMsgsPlugin::service_callback(
+    clips::Environment *env, const std::string service_name,
+    rclcpp::GenericService::SharedRequest request,
+    rclcpp::GenericService::SharedResponse response) {
+  auto context = CLIPSEnvContext::get_context(env);
+  std::string env_name = context->env_name_;
+  std::string response_msg_type;
+  std::string service_type;
+
+  std::shared_ptr<MessageInfo> request_info;
+  std::shared_ptr<MessageInfo> response_info;
+  {
+    std::scoped_lock map_lock{map_mtx_};
+    service_type = client_types_[env_name][service_name];
+    auto *introspection_type_support = get_service_typesupport_handle(
+        service_type_support_cache_[service_type],
+        rosidl_typesupport_introspection_cpp::typesupport_identifier);
+    auto *request_introspection_info = static_cast<
+        const rosidl_typesupport_introspection_cpp::MessageMembers *>(
+        introspection_type_support->request_typesupport->data);
+    auto *response_introspection_info = static_cast<
+        const rosidl_typesupport_introspection_cpp::MessageMembers *>(
+        introspection_type_support->response_typesupport->data);
+    request_info =
+        std::make_shared<MessageInfo>(request_introspection_info, request);
+    std::string request_msg_type = get_msg_type(request_introspection_info);
+    if (!request_info) {
+      RCLCPP_ERROR(*logger_,
+                   "failed to process request (service: %s request type: %s)",
+                   service_name.c_str(), request_msg_type.c_str());
+      return;
+    }
+    response_info = std::make_shared<MessageInfo>(response_introspection_info);
+    response_msg_type = get_msg_type(response_introspection_info);
+    if (!response_info) {
+      RCLCPP_ERROR(*logger_,
+                   "failed to process response (service: %s response type: %s)",
+                   service_name.c_str(), response_msg_type.c_str());
+      return;
+    }
+
+    messages_[request_info.get()] = request_info;
+    messages_[response_info.get()] = response_info;
+  }
+  {
+    std::lock_guard<std::mutex> guard(context->env_mtx_);
+    std::string fun_name = service_name + "-service-callback";
+
+    // call a user-defined function
+    clips::Deffunction *dec_fun = clips::FindDeffunction(env, fun_name.c_str());
+    if (!dec_fun) {
+      RCLCPP_WARN(*logger_, "%s not defined, skip callback", fun_name.c_str());
+      return;
+    }
+    clips::FunctionCallBuilder *fcb = clips::CreateFunctionCallBuilder(env, 3);
+    clips::FCBAppendString(fcb, service_name.c_str());
+    clips::FCBAppendCLIPSExternalAddress(
+        fcb, clips::CreateCExternalAddress(env, request_info.get()));
+    clips::FCBAppendCLIPSExternalAddress(
+        fcb, clips::CreateCExternalAddress(env, response_info.get()));
+    clips::FCBCall(fcb, fun_name.c_str(), NULL);
+    clips::FCBDispose(fcb);
+  }
+  // Create the serialized response
+  rclcpp::SerializedMessage serialized =
+      serialize_srv_response(response_info, service_type);
+
+  // Cast the generic response to the real type and assign
+  auto typed_response =
+      std::static_pointer_cast<rclcpp::SerializedMessage>(response);
+  *typed_response = serialized;
+  destroy_msg(request_info.get());
+  destroy_msg(response_info.get());
+}
+#endif
+
+void RosMsgsPlugin::destroy_client(clips::Environment *env,
+                                   const std::string &service_name) {
   auto context = CLIPSEnvContext::get_context(env);
   std::string env_name = context->env_name_;
   map_mtx_.lock();
@@ -677,9 +901,29 @@ rclcpp::SerializedMessage RosMsgsPlugin::serialize_msg(
   return typed_serialized_msg;
 }
 
-void RosMsgsPlugin::publish_to_topic(
-  clips::Environment * env, void * deserialized_msg, const std::string & topic_name)
-{
+rclcpp::SerializedMessage
+RosMsgsPlugin::serialize_srv_response(std::shared_ptr<MessageInfo> msg_info,
+                                      const std::string &srv_type) {
+  rclcpp::SerializedMessage serialized_msg;
+  auto *introspection_type_support = get_service_typesupport_handle(
+      service_type_support_cache_[srv_type],
+      rosidl_typesupport_introspection_cpp::typesupport_identifier);
+  rmw_ret_t ret = rmw_serialize(
+      msg_info->msg_ptr, introspection_type_support->response_typesupport,
+      &serialized_msg.get_rcl_serialized_message());
+
+  if (ret != RMW_RET_OK) {
+    RCLCPP_ERROR(*logger_, "Failed to serialize message: %s",
+                 rmw_get_error_string().str);
+    return {};
+  }
+
+  return serialized_msg;
+}
+
+void RosMsgsPlugin::publish_to_topic(clips::Environment *env,
+                                     void *deserialized_msg,
+                                     const std::string &topic_name) {
   auto scoped_lock = std::scoped_lock{map_mtx_};
   auto context = CLIPSEnvContext::get_context(env);
 
