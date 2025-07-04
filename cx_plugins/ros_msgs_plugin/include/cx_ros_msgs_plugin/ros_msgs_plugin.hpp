@@ -21,6 +21,11 @@
 #include <rosidl_typesupport_introspection_cpp/message_introspection.hpp>
 
 #include <rclcpp/generic_client.hpp>
+#define MORE_STUFF
+#ifdef MORE_STUFF
+#include <rclcpp/generic_service.hpp>
+#include <rclcpp_action/generic_client.hpp>
+#endif
 
 namespace cx {
 
@@ -164,6 +169,14 @@ private:
                          const std::string &service_name,
                          const std::string &service_type);
   void destroy_client(clips::Environment *env, const std::string &service_name);
+#ifdef MORE_STUFF
+  void create_new_action_client(clips::Environment *env,
+                                const std::string &service_name,
+                                const std::string &service_type);
+  void create_new_service(clips::Environment *env,
+                          const std::string &service_name,
+                          const std::string &service_type);
+#endif
   clips::UDFValue send_request(clips::Environment *env, void *deserialized_msg,
                                const std::string &service_name);
 
@@ -178,6 +191,9 @@ private:
 
   rclcpp::SerializedMessage serialize_msg(std::shared_ptr<MessageInfo> msg_info,
                                           const std::string &msg_type);
+  rclcpp::SerializedMessage
+  serialize_srv_response(std::shared_ptr<MessageInfo> msg_info,
+                         const std::string &msg_type);
 
   void move_field_to_parent(
       void *parent_msg,
@@ -218,11 +234,34 @@ private:
   std::map<std::string,
            std::map<std::string, std::shared_ptr<rclcpp::GenericClient>>>
       clients_;
+#ifdef MORE_STUFF
+  // env -> (action_server_name -> client)
+  std::map<std::string,
+           std::map<std::string, std::shared_ptr<rclcpp_action::GenericClient>>>
+      action_clients_;
+  // env -> (service_name -> service)
+  std::map<std::string,
+           std::map<std::string, std::shared_ptr<rclcpp::GenericService>>>
+      services_;
+  // env -> (action_server_name -> action_type)
+  std::map<std::string, std::unordered_map<std::string, std::string>>
+      action_types_;
+  std::unordered_map<std::string, const rosidl_action_type_support_t *>
+      action_type_support_cache_;
+#endif
   // env -> (service_name -> service_type)
   std::map<std::string, std::unordered_map<std::string, std::string>>
       client_types_;
+  // TODO: client_types_ actually also used for service providers, rename if it
+  // works
   std::unordered_map<std::string, const rosidl_service_type_support_t *>
       service_type_support_cache_;
+
+#ifdef MORE_STUFF
+  void service_callback(clips::Environment *env, const std::string service_name,
+                        rclcpp::GenericService::SharedRequest request,
+                        rclcpp::GenericService::SharedResponse response);
+#endif
 };
 } // namespace cx
 
