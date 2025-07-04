@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Carologistics
+// Copyright (c) 2024-2025 Carologistics
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -88,14 +88,20 @@ private:
 
     // Enable move constructor and move assignment for efficiency
     MessageInfo(MessageInfo &&other) noexcept
-        : msg_ptr(other.msg_ptr), members(other.members) {
+        : external_created_ptr(other.external_created_ptr),
+          msg_ptr(other.msg_ptr), members(other.members),
+          is_sub_msg(other.is_sub_msg), allocator(other.allocator) {
       RCLCPP_WARN(rclcpp::get_logger("MESSAGE INFO"), "ASSIGN");
       other.msg_ptr = nullptr;
+      other.external_created_ptr.reset();
+      other.members = nullptr;
+      other.is_sub_msg = false;
     }
   };
   struct MessageInfoHasher {
     std::size_t operator()(const MessageInfo &key) const {
-      return std::hash<void *>()(key.msg_ptr) ^
+      return std::hash<void *>()(key.external_created_ptr.get()) ^
+             std::hash<void *>()(key.msg_ptr) ^
              std::hash<const rosidl_typesupport_introspection_cpp::
                            MessageMembers *>()(key.members);
     }
@@ -203,7 +209,8 @@ private:
   // MessageInfo* -> shared_ptr holding the MessageInfo*
   std::unordered_map<void *, std::shared_ptr<MessageInfo>> messages_;
   // parent msg MessageInfo* -> nested msg MessageInfo*
-  std::unordered_map<void *, std::vector<void *>> sub_messages_;
+  std::unordered_map<void *, std::vector<std::shared_ptr<MessageInfo>>>
+      sub_messages_;
   // message_type -> message_info
   std::unordered_map<std::string, const rosidl_message_type_support_t *>
       type_support_cache_;
