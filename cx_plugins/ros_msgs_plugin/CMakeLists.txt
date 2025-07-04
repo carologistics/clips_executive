@@ -22,10 +22,12 @@ find_package(rosidl_typesupport_cpp REQUIRED)
 find_package(rosidl_typesupport_introspection_cpp REQUIRED)
 find_package(rcutils REQUIRED)
 find_package(ICU REQUIRED COMPONENTS uc i18n)
+find_package(rclcpp_action REQUIRED)
 
 set(dependencies
   ament_cmake
   rclcpp
+  rclcpp_action
   pluginlib
   cx_plugin
   cx_utils
