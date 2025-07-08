@@ -12,4 +12,4 @@ The **cx_reinforcement_learning** package features the `CXRLGym` class utilizing
 .. toctree::
    :maxdepth: 2
 
-   as_using_rl.rst
+   blocksworld.rst
