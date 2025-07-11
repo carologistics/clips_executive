@@ -2,7 +2,7 @@
 <doxyfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="doxyfile.xsd" version="1.9.8" xml:lang="en-US">
   <option  id='DOXYFILE_ENCODING' default='yes' type='string'><value><![CDATA[UTF-8]]></value></option>
   <option  id='PROJECT_NAME' default='no' type='string'><value><![CDATA[cx_file_load_plugin]]></value></option>
-  <option  id='PROJECT_NUMBER' default='no' type='string'><value><![CDATA[0.1.0]]></value></option>
+  <option  id='PROJECT_NUMBER' default='no' type='string'><value><![CDATA[0.1.1]]></value></option>
   <option  id='PROJECT_BRIEF' default='no' type='string'><value><![CDATA["CLIPS plugin that can load CLIPS code via load* and batch*"]]></value></option>
   <option  id='PROJECT_LOGO' default='yes' type='string'><value><![CDATA[]]></value></option>
   <option  id='OUTPUT_DIRECTORY' default='no' type='string'><value><![CDATA[/home/runner/work/clips_executive/clips_executive/docs_build/cx_file_load_plugin/cx_file_load_plugin-public-cc-api/doxygen_output]]></value></option>
@@ -348,11 +348,11 @@
   <option  id='SKIP_FUNCTION_MACROS' default='yes' type='bool'><value>YES</value></option>
   <option  id='TAGFILES' default='no' type='stringlist'>
     <value><![CDATA[/home/runner/work/clips_executive/clips_executive/cross_reference/cx_executive_plugin/cx_executive_plugin.tag=http://docs.ros.org/en/latest/p/cx_executive_plugin/generated/doxygen/html]]></value>
-    <value><![CDATA[/home/runner/work/clips_executive/clips_executive/cross_reference/cx_example_plugin/cx_example_plugin.tag=http://docs.ros.org/en/latest/p/cx_example_plugin/generated/doxygen/html]]></value>
     <value><![CDATA[/home/runner/work/clips_executive/clips_executive/cross_reference/cx_ament_index_plugin/cx_ament_index_plugin.tag=http://docs.ros.org/en/latest/p/cx_ament_index_plugin/generated/doxygen/html]]></value>
+    <value><![CDATA[/home/runner/work/clips_executive/clips_executive/cross_reference/cx_example_plugin/cx_example_plugin.tag=http://docs.ros.org/en/latest/p/cx_example_plugin/generated/doxygen/html]]></value>
     <value><![CDATA[/home/runner/work/clips_executive/clips_executive/cross_reference/cx_plugin/cx_plugin.tag=http://docs.ros.org/en/latest/p/cx_plugin/generated/doxygen/html]]></value>
-    <value><![CDATA[/home/runner/work/clips_executive/clips_executive/cross_reference/cx_config_plugin/cx_config_plugin.tag=http://docs.ros.org/en/latest/p/cx_config_plugin/generated/doxygen/html]]></value>
     <value><![CDATA[/home/runner/work/clips_executive/clips_executive/cross_reference/cx_clips_env_manager/cx_clips_env_manager.tag=http://docs.ros.org/en/latest/p/cx_clips_env_manager/generated/doxygen/html]]></value>
+    <value><![CDATA[/home/runner/work/clips_executive/clips_executive/cross_reference/cx_config_plugin/cx_config_plugin.tag=http://docs.ros.org/en/latest/p/cx_config_plugin/generated/doxygen/html]]></value>
   </option>
   <option  id='GENERATE_TAGFILE' default='no' type='string'><value><![CDATA[/home/runner/work/clips_executive/clips_executive/docs_build/cx_file_load_plugin/cx_file_load_plugin-public-cc-api/doxygen_output/cx_file_load_plugin.tag]]></value></option>
   <option  id='ALLEXTERNALS' default='yes' type='bool'><value>NO</value></option>
