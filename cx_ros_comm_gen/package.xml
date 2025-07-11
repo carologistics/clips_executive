@@ -11,6 +11,8 @@
   <license>Apache-2.0</license>
 
   <depend>python3-jinja2</depend>
+  <exec_depend>rosidl_runtime_py</exec_depend>
+  <exec_depend>ament_index_python</exec_depend>
   <buildtool_depend>ament_cmake</buildtool_depend>
   <exec_depend>python3</exec_depend>
   <exec_depend>cx_plugin</exec_depend>
