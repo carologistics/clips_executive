@@ -18,6 +18,7 @@
 
 #include <map>
 #include <memory>
+#include <queue>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -183,6 +184,13 @@ private:
   void create_new_service(clips::Environment *env,
                           const std::string &service_name,
                           const std::string &service_type);
+  clips::UDFValue create_goal_request(clips::Environment *env,
+                                      const std::string &action_type);
+
+  clips::UDFValue async_send_new_goal(clips::Environment *env,
+                                      const std::string &action_server,
+                                      void *goal_request);
+
 #endif
   clips::UDFValue send_request(clips::Environment *env, void *deserialized_msg,
                                const std::string &service_name);
@@ -247,6 +255,14 @@ private:
       action_types_;
   std::unordered_map<std::string, const rosidl_action_type_support_t *>
       action_type_support_cache_;
+
+  std::queue<std::function<void()>> task_queue_;
+  std::unordered_map<void *,
+                     std::shared_ptr<rclcpp_action::GenericClientGoalHandle>>
+      client_goal_handles_;
+  std::thread clips_worker_thread_;
+  std::condition_variable cv_;
+  std::mutex queue_mutex_;
 #endif
   // env -> (service_name -> service_type)
   std::map<std::string, std::unordered_map<std::string, std::string>>

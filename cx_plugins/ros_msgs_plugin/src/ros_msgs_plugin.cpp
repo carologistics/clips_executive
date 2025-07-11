@@ -146,15 +146,16 @@ bool RosMsgsPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
   fun_name = "ros-msgs-create-request";
   function_names_.insert(fun_name);
   clips::AddUDF(
-    env.get(), fun_name.c_str(), "e", 1, 1, ";sy",
-    [](clips::Environment * env, clips::UDFContext * udfc, clips::UDFValue * out) {
-      auto * instance = static_cast<RosMsgsPlugin *>(udfc->context);
-      clips::UDFValue type;
-      using namespace clips;  // NOLINT
-      clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &type);
-      *out = instance->create_request(env, type.lexemeValue->contents);
-    },
-    "create_message", this);
+      env.get(), fun_name.c_str(), "e", 1, 1, ";sy",
+      [](clips::Environment *env, clips::UDFContext *udfc,
+         clips::UDFValue *out) {
+        auto *instance = static_cast<RosMsgsPlugin *>(udfc->context);
+        clips::UDFValue type;
+        using namespace clips; // NOLINT
+        clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &type);
+        *out = instance->create_request(env, type.lexemeValue->contents);
+      },
+      "create_request", this);
 
   fun_name = "ros-msgs-create-publisher";
   function_names_.insert(fun_name);
@@ -281,6 +282,38 @@ bool RosMsgsPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
                                            type.lexemeValue->contents);
       },
       "create_new_action_client", this);
+
+  fun_name = "ros-msgs-create-goal-request";
+  function_names_.insert(fun_name);
+  clips::AddUDF(
+      env.get(), fun_name.c_str(), "e", 1, 1, ";sy",
+      [](clips::Environment *env, clips::UDFContext *udfc,
+         clips::UDFValue *out) {
+        auto *instance = static_cast<RosMsgsPlugin *>(udfc->context);
+        clips::UDFValue type;
+        using namespace clips;
+        clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &type);
+        *out = instance->create_goal_request(env, type.lexemeValue->contents);
+      },
+      "create_goal", this);
+
+  fun_name = "ros-msgs-async-send-goal";
+  function_names_.insert(fun_name);
+  clips::AddUDF(
+      env.get(), fun_name.c_str(), "e", 1, 1, ";sy",
+      [](clips::Environment *env, clips::UDFContext *udfc,
+         clips::UDFValue *out) {
+        auto *instance = static_cast<RosMsgsPlugin *>(udfc->context);
+        clips::UDFValue action_server;
+        clips::UDFValue goal_request;
+        using namespace clips;
+        clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &action_server);
+        clips::UDFNthArgument(udfc, 2, EXTERNAL_ADDRESS_BIT, &goal_request);
+        *out = instance->async_send_new_goal(
+            env, action_server.lexemeValue->contents,
+            goal_request.externalAddressValue->contents);
+      },
+      "async_send_goal", this);
 
   fun_name = "ros-msgs-create-service";
   function_names_.insert(fun_name);
@@ -747,9 +780,13 @@ void RosMsgsPlugin::create_new_service(clips::Environment *env,
     }
     client_types_[env_name][service_name] = service_type;
     auto callback = [this, env, service_name](
+                        std::shared_ptr<rmw_request_id_t> header,
                         rclcpp::GenericService::SharedRequest request,
                         rclcpp::GenericService::SharedResponse response) {
       service_callback(env, service_name, request, response);
+      auto context = CLIPSEnvContext::get_context(env);
+      services_[context->env_name_][service_name]->send_response(*header,
+                                                                 response);
     };
 
     services_[context->env_name_][service_name] =
@@ -797,7 +834,8 @@ void RosMsgsPlugin::service_callback(
                    service_name.c_str(), request_msg_type.c_str());
       return;
     }
-    response_info = std::make_shared<MessageInfo>(response_introspection_info);
+    response_info =
+        std::make_shared<MessageInfo>(response_introspection_info, response);
     response_msg_type = get_msg_type(response_introspection_info);
     if (!response_info) {
       RCLCPP_ERROR(*logger_,
@@ -828,16 +866,219 @@ void RosMsgsPlugin::service_callback(
     clips::FCBCall(fcb, fun_name.c_str(), NULL);
     clips::FCBDispose(fcb);
   }
-  // Create the serialized response
-  rclcpp::SerializedMessage serialized =
-      serialize_srv_response(response_info, service_type);
-
-  // Cast the generic response to the real type and assign
-  auto typed_response =
-      std::static_pointer_cast<rclcpp::SerializedMessage>(response);
-  *typed_response = serialized;
   destroy_msg(request_info.get());
-  destroy_msg(response_info.get());
+}
+
+clips::UDFValue
+RosMsgsPlugin::create_goal_request(clips::Environment *env,
+                                   const std::string &action_type) {
+  auto scoped_lock = std::scoped_lock{map_mtx_};
+  std::shared_ptr<MessageInfo> ptr;
+
+  if (!libs_.contains(action_type)) {
+    RCLCPP_DEBUG(*logger_,
+                 "Create new action information on goal request creation");
+    libs_[action_type] =
+        rclcpp::get_typesupport_library(action_type, "rosidl_typesupport_cpp");
+    action_type_support_cache_[action_type] =
+        rclcpp::get_action_typesupport_handle(
+            action_type, "rosidl_typesupport_cpp", *libs_[action_type]);
+  }
+  auto *introspection_type_support = get_service_typesupport_handle(
+      action_type_support_cache_[action_type]->goal_service_type_support,
+      rosidl_typesupport_introspection_cpp::typesupport_identifier);
+  auto *introspection_info =
+      static_cast<const rosidl_typesupport_introspection_cpp::MessageMembers *>(
+          introspection_type_support->request_typesupport->data);
+  ptr = std::make_shared<RosMsgsPlugin::MessageInfo>(introspection_info);
+  messages_[ptr.get()] = ptr;
+  clips::UDFValue res;
+  res.externalAddressValue =
+      clips::CreateCExternalAddress(env, (void *)ptr.get());
+  return res;
+}
+
+clips::UDFValue
+RosMsgsPlugin::async_send_new_goal(clips::Environment *env,
+                                   const std::string &action_server,
+                                   void *deserialized_goal) {
+  using namespace std::chrono_literals;
+  // Handle the request asynchronously to not block clips engine potentially
+  // endlessly
+  std::thread([this, env, deserialized_goal, action_server]() {
+    auto context = CLIPSEnvContext::get_context(env);
+    auto scoped_lock = std::scoped_lock{map_mtx_};
+    clips::UDFValue result;
+    if (!messages_.contains(deserialized_goal)) {
+      RCLCPP_ERROR(*logger_, "Failed to publish invalid msg pointer");
+      result.value = clips::CreateBoolean(env, false);
+      return result;
+    }
+    std::shared_ptr<MessageInfo> msg_info = messages_[deserialized_goal];
+    std::string msg_type = get_msg_type(msg_info->members);
+    std::string env_name = context->env_name_;
+    bool print_warning = true;
+    while (
+        !stop_flag_ &&
+        !action_clients_[env_name][action_server]->wait_for_action_server(1s)) {
+      if (stop_flag_ || !rclcpp::ok()) {
+        RCLCPP_ERROR(*logger_,
+                     "Interrupted while waiting for the server. Exiting.");
+        result.value = clips::CreateBoolean(env, false);
+        return result;
+      }
+      if (print_warning) {
+        RCLCPP_WARN(*logger_, "server %s not available, start waiting",
+                    action_server.c_str());
+        print_warning = false;
+      }
+      RCLCPP_DEBUG(*logger_, "server %s not available, waiting again...",
+                   action_server.c_str());
+    }
+    if (!print_warning) {
+      RCLCPP_INFO(*logger_, "server %s is finally reachable",
+                  action_server.c_str());
+    }
+    std::lock_guard<std::mutex> guard(context->env_mtx_);
+    if (stop_flag_) {
+      RCLCPP_DEBUG(*logger_, "Shutdown during async call.");
+      result.value = clips::CreateBoolean(env, false);
+      return result;
+    }
+    rclcpp_action::GenericClient::SendGoalOptions send_goal_options;
+    send_goal_options.goal_response_callback =
+        [this, context, env, action_server](
+            const std::shared_ptr<rclcpp_action::GenericClientGoalHandle>
+                &goal_handle) {
+          std::scoped_lock map_lock{map_mtx_};
+          task_queue_.push([this, context, env, action_server, goal_handle]() {
+            std::lock_guard<std::mutex> guard(context->env_mtx_);
+            {
+              std::scoped_lock map_lock{map_mtx_};
+              client_goal_handles_.try_emplace(goal_handle.get(), goal_handle);
+            }
+            clips::FactBuilder *fact_builder =
+                clips::CreateFactBuilder(env, "ros-msgs-goal-response");
+            clips::FBPutSlotString(fact_builder, "server",
+                                   action_server.c_str());
+            clips::FBPutSlotCLIPSExternalAddress(
+                fact_builder, "client-goal-handle-ptr",
+                clips::CreateCExternalAddress(env, goal_handle.get()));
+            clips::FBAssert(fact_builder);
+            clips::FBDispose(fact_builder);
+          });
+          cv_.notify_one(); // Notify the worker thread
+        };
+
+    send_goal_options
+        .feedback_callback = [this, context, env, action_server](
+                                 std::shared_ptr<
+                                     rclcpp_action::GenericClientGoalHandle>
+                                     goal_handle,
+                                 const void *feedback) {
+      // this indirection is necessary as the feedback callback is called while
+      // an internal lock is acquired. The same lock is acquired in calls lige
+      // get_status(). This can cause a deadlock if get_status() is called from
+      // within clips right after a callback is received. clips lock is still
+      // held, hence callback can't proceed, but internal lock is already
+      // ackquired when this callback is invoked.
+      std::lock_guard<std::mutex> lock(queue_mutex_);
+      task_queue_.push([this, context, env, action_server, goal_handle,
+                        feedback]() {
+        // Enqueue the task to avoid directly locking the handle_mutex_ in a
+        // callback
+        std::shared_ptr<MessageInfo> ptr;
+        std::lock_guard<std::mutex> guard(context->env_mtx_);
+        {
+          std::scoped_lock map_lock{map_mtx_};
+          std::string action_type =
+              action_types_[context->env_name_][action_server];
+          auto *introspection_type_support =
+              rclcpp::get_action_typesupport_handle(
+                  action_type,
+                  rosidl_typesupport_introspection_cpp::typesupport_identifier,
+                  *libs_[action_type].get());
+          auto *introspection_info = static_cast<
+              const rosidl_typesupport_introspection_cpp::MessageMembers *>(
+              introspection_type_support->feedback_message_type_support->data);
+          ptr = std::make_shared<RosMsgsPlugin::MessageInfo>(introspection_info,
+                                                             feedback);
+          messages_[ptr.get()] = ptr;
+          client_goal_handles_.try_emplace(goal_handle.get(), goal_handle);
+        }
+        clips::FactBuilder *fact_builder =
+            clips::CreateFactBuilder(env, "ros-msgs-goal-feedback");
+        clips::FBPutSlotString(fact_builder, "server", action_server.c_str());
+        clips::FBPutSlotCLIPSExternalAddress(
+            fact_builder, "client-goal-handle-ptr",
+            clips::CreateCExternalAddress(env, goal_handle.get()));
+        clips::FBPutSlotCLIPSExternalAddress(
+            fact_builder, "feedback-ptr",
+            clips::CreateCExternalAddress(env, ptr.get()));
+        clips::FBAssert(fact_builder);
+        clips::FBDispose(fact_builder);
+      });
+      cv_.notify_one(); // Notify the worker thread
+    };
+
+    send_goal_options
+        .result_callback = [this, context, env, action_server](
+                               const rclcpp_action::GenericClientGoalHandle::
+                                   WrappedResult &wrapped_result) {
+      task_queue_.push([this, context, env, action_server, wrapped_result]() {
+        std::lock_guard<std::mutex> guard(context->env_mtx_);
+        std::shared_ptr<MessageInfo> result_msg;
+        {
+          std::scoped_lock map_lock{map_mtx_};
+          std::string action_type =
+              action_types_[context->env_name_][action_server];
+          // TODO: convert wrapped_result.result into MessageInfo
+          auto *introspection_type_support =
+              rclcpp::get_action_typesupport_handle(
+                  action_type,
+                  rosidl_typesupport_introspection_cpp::typesupport_identifier,
+                  *libs_[action_type].get());
+          auto *introspection_info = static_cast<
+              const rosidl_typesupport_introspection_cpp::MessageMembers *>(
+              introspection_type_support->result_service_type_support
+                  ->response_typesupport->data);
+          result_msg = std::make_shared<RosMsgsPlugin::MessageInfo>(
+              introspection_info, wrapped_result.result);
+          messages_.try_emplace(result_msg.get(), result_msg);
+        }
+        clips::FactBuilder *fact_builder =
+            clips::CreateFactBuilder(env, "ros-msgs-wrapped-result");
+        clips::FBPutSlotString(fact_builder, "server", action_server.c_str());
+        clips::FBPutSlotString(
+            fact_builder, "goal-id",
+            rclcpp_action::to_string(wrapped_result.goal_id).c_str());
+        std::string code_str = "UNKNOWN";
+        switch (wrapped_result.code) {
+        case rclcpp_action::GenericClientGoalHandle::ResultCode::UNKNOWN:
+          break;
+        case rclcpp_action::GenericClientGoalHandle::ResultCode::SUCCEEDED:
+          code_str = "SUCCEEDED";
+          break;
+        case rclcpp_action::GenericClientGoalHandle::ResultCode::CANCELED:
+          code_str = "CANCELED";
+          break;
+        case rclcpp_action::GenericClientGoalHandle::ResultCode::ABORTED:
+          code_str = "ABORTED";
+          break;
+        }
+        clips::FBPutSlotSymbol(fact_builder, "code", code_str.c_str());
+        clips::FBPutSlotCLIPSExternalAddress(
+            fact_builder, "result-ptr",
+            clips::CreateCExternalAddress(env, result_msg.get()));
+        clips::FBAssert(fact_builder);
+        clips::FBDispose(fact_builder);
+      });
+      cv_.notify_one(); // Notify the worker thread
+    };
+    std::shared_ptr<MessageInfo> goal_info = messages_[deserialized_goal];
+    action_clients_[env_name][action_server]->async_send_goal(
+        deserialized_goal, goal_info->members->size_of_, send_goal_options);
+  }).detach();
 }
 #endif
 
