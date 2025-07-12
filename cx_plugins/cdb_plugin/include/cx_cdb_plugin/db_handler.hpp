@@ -14,6 +14,7 @@
 
 #include <iomanip>
 #include <pqxx/pqxx>
+#undef RANGES
 
 namespace cx {
 struct DBHandlerConfig {

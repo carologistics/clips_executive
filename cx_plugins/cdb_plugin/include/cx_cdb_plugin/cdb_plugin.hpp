@@ -19,6 +19,11 @@
 
 namespace cx {
 
+struct fact_assert {
+    long long tick;
+    std::string value;
+};
+
 class CDBPlugin : public ClipsPlugin {
   public:
     CDBPlugin();
@@ -33,8 +38,14 @@ class CDBPlugin : public ClipsPlugin {
     bool clips_env_destroyed(std::shared_ptr<clips::Environment> &env) override;
 
   private:
+    std::string clips_fact_to_json(clips::Fact *f);
+    inline void AtomicPrint(CDBPlugin *cdb_plugin, const char *slotname,
+                            unsigned short type, clips::CLIPSValue *value);
     std::unique_ptr<rclcpp::Logger> logger_;
     bool started_ = false;
+    long long tick_ = 0;
+    inline long long get_tick() { return tick_++; }
+    // std::vector<>
 };
 } // namespace cx
 

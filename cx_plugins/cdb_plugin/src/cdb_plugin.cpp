@@ -33,6 +33,8 @@
 #include <iomanip>
 #include <memory>
 
+#include <nlohmann/json.hpp>
+
 // To export as plugin
 #include "pluginlib/class_list_macros.hpp"
 
@@ -96,9 +98,9 @@ bool CDBPlugin::clips_env_init(std::shared_ptr<clips::Environment> &env) {
     CLIPSEnvContext *context = CLIPSEnvContext::get_context(env.get());
     RCLCPP_INFO(*logger_, "Initializing plugin for environment %s",
                 context->env_name_.c_str());
-    // clips::AddAssertFunction(env.get_obj().get(), "cdb_assert_callback",
-    // &cdb_assert_callback, 0, this);
-    // clips::AddBeforeRuleFiresFunction(env.get_obj().get(),
+    clips::AddAssertFunction(env.get(), "cdb_assert_callback",
+                             &cdb_assert_callback, 0, this);
+    // clips::AddBeforeRuleFiresFunction(env.get(),
     // "cdb_before_rule_callback",  &cdb_before_rule_callback, 0, this);
 
     DBHandlerConfig config = {hostname, port, username, password, db_name};
@@ -135,12 +137,107 @@ void CDBPlugin::cdb_before_rule_callback(clips::Environment *env,
     }
 }
 
+void CDBPlugin::AtomicPrint(CDBPlugin *cdb_plugin, const char *slotname,
+                            unsigned short type, clips::CLIPSValue *value) {
+    switch (type) {
+    case FLOAT_TYPE: {
+        RCLCPP_INFO(*cdb_plugin->logger_, "Slot %s: %f", slotname,
+                    value->floatValue->contents);
+        break;
+    }
+    case INTEGER_TYPE: {
+        RCLCPP_INFO(*cdb_plugin->logger_, "Slot %s: %lli", slotname,
+                    value->integerValue->contents);
+        break;
+    }
+    case SYMBOL_TYPE: {
+        RCLCPP_INFO(*cdb_plugin->logger_, "Slot %s: %s", slotname,
+                    value->lexemeValue->contents);
+        break;
+    }
+    case STRING_TYPE:
+        RCLCPP_INFO(*cdb_plugin->logger_, "Slot %s: %s", slotname,
+                    value->lexemeValue->contents);
+        break;
+    case EXTERNAL_ADDRESS_TYPE:
+        RCLCPP_INFO(*cdb_plugin->logger_, "Slot %s: %p", slotname,
+                    value->externalAddressValue->contents);
+        break;
+    case VOID_TYPE:
+        RCLCPP_INFO(*cdb_plugin->logger_, "Slot %s: is void", slotname);
+        break;
+    default:
+        RCLCPP_INFO(*cdb_plugin->logger_, "Slot %s: is unknown", slotname);
+    }
+}
+
+std::string CDBPlugin::clips_fact_to_json(clips::Fact *f) { return ""; }
 void CDBPlugin::cdb_assert_callback(clips::Environment *env, void *fact,
                                     void *context) {
     CDBPlugin *cdb_plugin = static_cast<CDBPlugin *>(context);
     clips::Fact *f = static_cast<clips::Fact *>(fact);
     clips::StringBuilder *sb = clips::CreateStringBuilder(env, 1024);
     clips::FactPPForm(f, sb, false);
+    // From factmngr.c void PrintFact(...)
+    /*=========================================*/
+    /* Print a deftemplate (non-ordered) fact. */
+    /*=========================================*/
+
+    if (f->whichDeftemplate->implied == false) {
+        clips::Deftemplate *deftemplate = f->whichDeftemplate;
+        const char *deftemplate_name = deftemplate->header.name->contents;
+        struct clips::templateSlot *slotPtr = deftemplate->slotList;
+        clips::CLIPSValue *sublist = f->theProposition.contents;
+        int i = 0;
+        while (slotPtr != NULL) {
+            const char *slotname = slotPtr->slotName->contents;
+            clips::CLIPSValue *value = &sublist[i];
+            if (slotPtr->multislot) {
+                clips::Multifield *theSegment = value->multifieldValue;
+                ;
+                clips::CLIPSValue *theMultifield = theSegment->contents;
+
+                size_t range = theSegment->length;
+                for (size_t j = 0; j < range; j++) {
+                    cdb_plugin->AtomicPrint(cdb_plugin, slotname,
+                                            theMultifield[0 + j].header->type,
+                                            &theMultifield[j]);
+                }
+
+            } else {
+                unsigned short type = ((clips::TypeHeader *)value->value)->type;
+                cdb_plugin->AtomicPrint(cdb_plugin, slotname, type, value);
+            }
+            slotPtr = slotPtr->next;
+            i++;
+        }
+        // RCLCPP_INFO(*cdb_plugin->logger_, "Fact %lld asserted with content:
+        // %s",
+        //             f->factIndex, deftemplate_name);
+        // PrintTemplateFact(theEnv,logicalName,factPtr,separateLines,ignoreDefaults,changeMap);
+
+        // return;
+    }
+
+    /*==============================*/
+    /* Print an ordered fact (which */
+    /* has an implied deftemplate). */
+    /*==============================*/
+
+    // WriteString(theEnv,logicalName,"(");
+
+    // WriteString(theEnv,logicalName,factPtr->whichDeftemplate->header.name->contents);
+
+    // theMultifield = factPtr->theProposition.contents[0].multifieldValue;
+    // if (theMultifield->length != 0)
+    //   {
+    //    WriteString(theEnv,logicalName," ");
+    //    PrintMultifieldDriver(theEnv,logicalName,theMultifield,0,
+    //                          theMultifield->length,false);
+    //   }
+
+    // WriteString(theEnv,logicalName,")");
+
     RCLCPP_INFO(*cdb_plugin->logger_, "Fact %lld asserted with content: %s",
                 f->factIndex, sb->contents);
 }
