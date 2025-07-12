@@ -12,6 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <pqxx/pqxx>
+#undef RANGES
+// RANGES is defined in clips_ns/clips.h, which causes issues with
+// pqxx/pqxx
 #include "cx_cdb_plugin/cdb_plugin.hpp"
 #include "cx_cdb_plugin/db_handler.hpp"
 #include <bits/types/struct_tm.h>
@@ -59,7 +63,7 @@ void CDBPlugin::initialize() {
         rclcpp::ParameterValue(std::string()));
 }
 
-bool CDBPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
+bool CDBPlugin::clips_env_init(std::shared_ptr<clips::Environment> &env) {
     std::shared_ptr<rclcpp_lifecycle::LifecycleNode> node = parent_.lock();
     std::string hostname;
     int port;
@@ -89,8 +93,7 @@ bool CDBPlugin::clips_env_init(LockSharedPtr<clips::Environment> &env) {
     oss << std::put_time(&tm, "%Y_%m_%dt%H_%M_%S");
     db_name = "cdb_" + oss.str();
 
-    CLIPSEnvContext *context =
-        CLIPSEnvContext::get_context(env.get_obj().get());
+    CLIPSEnvContext *context = CLIPSEnvContext::get_context(env.get());
     RCLCPP_INFO(*logger_, "Initializing plugin for environment %s",
                 context->env_name_.c_str());
     // clips::AddAssertFunction(env.get_obj().get(), "cdb_assert_callback",
@@ -142,9 +145,8 @@ void CDBPlugin::cdb_assert_callback(clips::Environment *env, void *fact,
                 f->factIndex, sb->contents);
 }
 
-bool CDBPlugin::clips_env_destroyed(LockSharedPtr<clips::Environment> &env) {
-    CLIPSEnvContext *context =
-        CLIPSEnvContext::get_context(env.get_obj().get());
+bool CDBPlugin::clips_env_destroyed(std::shared_ptr<clips::Environment> &env) {
+    CLIPSEnvContext *context = CLIPSEnvContext::get_context(env.get());
     RCLCPP_INFO(*logger_, "Destroying plugin for environment %s",
                 context->env_name_.c_str());
     return true;

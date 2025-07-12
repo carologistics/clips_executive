@@ -16,7 +16,6 @@
 #define CX_PLUGINS__CDB_PLUGIN_HPP_
 
 #include "cx_plugin/clips_plugin.hpp"
-#include "cx_utils/lock_shared_ptr.hpp"
 
 namespace cx {
 
@@ -30,8 +29,8 @@ class CDBPlugin : public ClipsPlugin {
     static void cdb_assert_callback(clips::Environment *, void *, void *);
     static void cdb_before_rule_callback(clips::Environment *,
                                          clips::Activation *, void *);
-    bool clips_env_init(LockSharedPtr<clips::Environment> &env) override;
-    bool clips_env_destroyed(LockSharedPtr<clips::Environment> &env) override;
+    bool clips_env_init(std::shared_ptr<clips::Environment> &env) override;
+    bool clips_env_destroyed(std::shared_ptr<clips::Environment> &env) override;
 
   private:
     std::unique_ptr<rclcpp::Logger> logger_;
