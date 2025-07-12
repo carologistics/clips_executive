@@ -17,6 +17,9 @@
 
 #include "cx_plugin/clips_plugin.hpp"
 
+#include <memory>
+#include <nlohmann/json.hpp>
+
 namespace cx {
 
 struct fact_assert {
@@ -38,9 +41,11 @@ class CDBPlugin : public ClipsPlugin {
     bool clips_env_destroyed(std::shared_ptr<clips::Environment> &env) override;
 
   private:
+    inline nlohmann::json slot_value_to_json(unsigned short type,
+                                             clips::CLIPSValue *value);
+    inline std::vector<nlohmann::json>
+    multifield_to_json_list(clips::Multifield *theSegment);
     std::string clips_fact_to_json(clips::Fact *f);
-    inline void AtomicPrint(CDBPlugin *cdb_plugin, const char *slotname,
-                            unsigned short type, clips::CLIPSValue *value);
     std::unique_ptr<rclcpp::Logger> logger_;
     bool started_ = false;
     long long tick_ = 0;

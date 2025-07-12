@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <format>
+#include <nlohmann/json_fwd.hpp>
 #include <pqxx/pqxx>
+#include <vector>
 #undef RANGES
 // RANGES is defined in clips_ns/clips.h, which causes issues with
 // pqxx/pqxx
@@ -32,8 +35,6 @@
 #include <cx_utils/param_utils.hpp>
 #include <iomanip>
 #include <memory>
-
-#include <nlohmann/json.hpp>
 
 // To export as plugin
 #include "pluginlib/class_list_macros.hpp"
@@ -137,109 +138,111 @@ void CDBPlugin::cdb_before_rule_callback(clips::Environment *env,
     }
 }
 
-void CDBPlugin::AtomicPrint(CDBPlugin *cdb_plugin, const char *slotname,
-                            unsigned short type, clips::CLIPSValue *value) {
+nlohmann::json CDBPlugin::slot_value_to_json(unsigned short type,
+                                             clips::CLIPSValue *value) {
+    nlohmann::json json;
     switch (type) {
     case FLOAT_TYPE: {
-        RCLCPP_INFO(*cdb_plugin->logger_, "Slot %s: %f", slotname,
-                    value->floatValue->contents);
+        json["value"] = value->floatValue->contents;
+        json["type"] = "FLOAT";
         break;
     }
     case INTEGER_TYPE: {
-        RCLCPP_INFO(*cdb_plugin->logger_, "Slot %s: %lli", slotname,
-                    value->integerValue->contents);
+        json["value"] = value->integerValue->contents;
+        json["type"] = "INTEGER";
+        break;
+    }
+    case STRING_TYPE: {
+        json["value"] = value->lexemeValue->contents;
+        json["type"] = "STRING";
         break;
     }
     case SYMBOL_TYPE: {
-        RCLCPP_INFO(*cdb_plugin->logger_, "Slot %s: %s", slotname,
-                    value->lexemeValue->contents);
+        json["value"] = value->lexemeValue->contents;
+        json["type"] = "SYMBOL";
         break;
     }
-    case STRING_TYPE:
-        RCLCPP_INFO(*cdb_plugin->logger_, "Slot %s: %s", slotname,
-                    value->lexemeValue->contents);
+    case EXTERNAL_ADDRESS_TYPE: {
+        json["type"] = "EXTERNAL_ADDRESS";
+        // auto test = (value->externalAddressValue->contents);
+        // json[field_name] = std::format("%p", test);
+        // TODO
         break;
-    case EXTERNAL_ADDRESS_TYPE:
-        RCLCPP_INFO(*cdb_plugin->logger_, "Slot %s: %p", slotname,
-                    value->externalAddressValue->contents);
+    }
+    case VOID_TYPE: {
+        json["type"] = "VOID";
         break;
-    case VOID_TYPE:
-        RCLCPP_INFO(*cdb_plugin->logger_, "Slot %s: is void", slotname);
-        break;
+    }
     default:
-        RCLCPP_INFO(*cdb_plugin->logger_, "Slot %s: is unknown", slotname);
+        json["type"] = "UNKNOWN";
     }
+    return json;
 }
 
-std::string CDBPlugin::clips_fact_to_json(clips::Fact *f) { return ""; }
-void CDBPlugin::cdb_assert_callback(clips::Environment *env, void *fact,
-                                    void *context) {
-    CDBPlugin *cdb_plugin = static_cast<CDBPlugin *>(context);
-    clips::Fact *f = static_cast<clips::Fact *>(fact);
-    clips::StringBuilder *sb = clips::CreateStringBuilder(env, 1024);
-    clips::FactPPForm(f, sb, false);
-    // From factmngr.c void PrintFact(...)
-    /*=========================================*/
-    /* Print a deftemplate (non-ordered) fact. */
-    /*=========================================*/
+std::vector<nlohmann::json>
+CDBPlugin::multifield_to_json_list(clips::Multifield *theSegment) {
+    clips::CLIPSValue *theMultifield = theSegment->contents;
+    size_t range = theSegment->length;
+    std::vector<nlohmann::json> json_list;
+    for (size_t j = 0; j < range; j++) {
+        json_list.push_back(slot_value_to_json(theMultifield[j].header->type,
+                                               &theMultifield[j]));
+    }
+    return json_list;
+}
 
+std::string CDBPlugin::clips_fact_to_json(clips::Fact *f) {
+    nlohmann::json json;
+    clips::Deftemplate *deftemplate = f->whichDeftemplate;
+    const char *deftemplate_name = deftemplate->header.name->contents;
+    json["deftemplate"] = deftemplate_name;
+    // Logic stolen from factmngr.c void PrintFact(...)
     if (f->whichDeftemplate->implied == false) {
-        clips::Deftemplate *deftemplate = f->whichDeftemplate;
-        const char *deftemplate_name = deftemplate->header.name->contents;
+        /*=========================================*/
+        /* Print a deftemplate (non-ordered) fact. */
+        /*=========================================*/
+        std::vector<nlohmann::json> slots;
         struct clips::templateSlot *slotPtr = deftemplate->slotList;
         clips::CLIPSValue *sublist = f->theProposition.contents;
         int i = 0;
         while (slotPtr != NULL) {
+            nlohmann::json slot_json;
             const char *slotname = slotPtr->slotName->contents;
             clips::CLIPSValue *value = &sublist[i];
             if (slotPtr->multislot) {
                 clips::Multifield *theSegment = value->multifieldValue;
-                ;
-                clips::CLIPSValue *theMultifield = theSegment->contents;
-
-                size_t range = theSegment->length;
-                for (size_t j = 0; j < range; j++) {
-                    cdb_plugin->AtomicPrint(cdb_plugin, slotname,
-                                            theMultifield[0 + j].header->type,
-                                            &theMultifield[j]);
-                }
+                slot_json["value"] = multifield_to_json_list(theSegment);
+                slot_json["type"] = "MULTIFIELD";
 
             } else {
                 unsigned short type = ((clips::TypeHeader *)value->value)->type;
-                cdb_plugin->AtomicPrint(cdb_plugin, slotname, type, value);
+                slot_json = slot_value_to_json(type, value);
             }
             slotPtr = slotPtr->next;
             i++;
+            slot_json["name"] = slotname;
+            slots.push_back(slot_json);
         }
-        // RCLCPP_INFO(*cdb_plugin->logger_, "Fact %lld asserted with content:
-        // %s",
-        //             f->factIndex, deftemplate_name);
-        // PrintTemplateFact(theEnv,logicalName,factPtr,separateLines,ignoreDefaults,changeMap);
-
-        // return;
+        json["slots"] = slots;
+    } else {
+        /*==============================*/
+        /* Print an ordered fact (which */
+        /* has an implied deftemplate). */
+        /*==============================*/
+        clips::Multifield *theSegment =
+            f->theProposition.contents[0].multifieldValue;
+        json["value"] = multifield_to_json_list(theSegment);
+        json["type"] = "MULTIFIELD";
     }
+    return json.dump();
+}
+void CDBPlugin::cdb_assert_callback(clips::Environment *env, void *fact,
+                                    void *context) {
+    CDBPlugin *cdb_plugin = static_cast<CDBPlugin *>(context);
+    clips::Fact *f = static_cast<clips::Fact *>(fact);
 
-    /*==============================*/
-    /* Print an ordered fact (which */
-    /* has an implied deftemplate). */
-    /*==============================*/
-
-    // WriteString(theEnv,logicalName,"(");
-
-    // WriteString(theEnv,logicalName,factPtr->whichDeftemplate->header.name->contents);
-
-    // theMultifield = factPtr->theProposition.contents[0].multifieldValue;
-    // if (theMultifield->length != 0)
-    //   {
-    //    WriteString(theEnv,logicalName," ");
-    //    PrintMultifieldDriver(theEnv,logicalName,theMultifield,0,
-    //                          theMultifield->length,false);
-    //   }
-
-    // WriteString(theEnv,logicalName,")");
-
-    RCLCPP_INFO(*cdb_plugin->logger_, "Fact %lld asserted with content: %s",
-                f->factIndex, sb->contents);
+    RCLCPP_INFO(*cdb_plugin->logger_, "Fact %lld asserted with json %s",
+                f->factIndex, cdb_plugin->clips_fact_to_json(f).c_str());
 }
 
 bool CDBPlugin::clips_env_destroyed(std::shared_ptr<clips::Environment> &env) {
