@@ -1,3 +1,4 @@
+// TODO DEFGLOB
 // Copyright (c) 2024-2025 Carologistics
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -96,7 +97,44 @@ bool CDBPlugin::clips_env_init(std::shared_ptr<clips::Environment> &env) {
     oss << std::put_time(&tm, "%Y_%m_%dt%H_%M_%S");
     db_name = "cdb_" + oss.str();
 
+    clips::Defmodule *theModule;
+    clips::Defrule *theRule;
+    clips::Defglobal *theDefGlobal;
+    clips::Deffunction *theDefFunction;
+    clips::Deftemplate *theDefTemplate;
+
+
     CLIPSEnvContext *context = CLIPSEnvContext::get_context(env.get());
+    for (theModule = clips::GetNextDefmodule(env.get(), NULL);
+         theModule != NULL;
+         theModule = clips::GetNextDefmodule(env.get(), theModule)) {
+
+        SetCurrentModule(env.get(), theModule);
+        for (theRule = clips::GetNextDefrule(env.get(), NULL); theRule != NULL;
+             theRule = clips::GetNextDefrule(env.get(), theRule)) {
+            RCLCPP_INFO(*logger_, "Sailiance %i", theRule->salience);
+            RCLCPP_INFO(*logger_, "NAH %s", theRule->header.ppForm);
+            RCLCPP_INFO(*logger_, "name %s", theRule->header.name->contents);
+        }
+        for (theDefGlobal = clips::GetNextDefglobal(env.get(), NULL); theDefGlobal != NULL;
+             theDefGlobal = clips::GetNextDefglobal(env.get(), theDefGlobal)) {
+            RCLCPP_INFO(*logger_, "HALLO %s", theDefGlobal->header.ppForm);
+            RCLCPP_INFO(*logger_, "HALLO %s", slot_value_to_json(theDefGlobal->header.constructType, &theDefGlobal->current).dump().c_str());
+            RCLCPP_INFO(*logger_, "name %s", theDefGlobal->header.name->contents);
+        }
+        for (theDefFunction = clips::GetNextDeffunction(env.get(), NULL); theDefFunction != NULL;
+             theDefFunction = clips::GetNextDeffunction(env.get(), theDefFunction)) {
+            RCLCPP_INFO(*logger_, "NAH %s", theDefFunction->header.ppForm);
+            RCLCPP_INFO(*logger_, "name %s", theDefFunction->header.name->contents);
+        }
+        for (theDefTemplate = clips::GetNextDeftemplate(env.get(), NULL); theDefTemplate != NULL;
+             theDefTemplate = clips::GetNextDeftemplate(env.get(), theDefTemplate)) {
+            RCLCPP_INFO(*logger_, "NAH %s", theDefTemplate->header.ppForm);
+            RCLCPP_INFO(*logger_, "name %s", theDefTemplate->header.name->contents);
+        }
+    }
+
+
     RCLCPP_INFO(*logger_, "Initializing plugin for environment %s",
                 context->env_name_.c_str());
     clips::AddAssertFunction(env.get(), "cdb_assert_callback",
@@ -236,7 +274,7 @@ std::string CDBPlugin::clips_fact_to_json(clips::Fact *f) {
     }
     return json.dump();
 }
-void CDBPlugin::cdb_assert_callback(clips::Environment *env, void *fact,
+void CDBPlugin::cdb_assert_callback(clips::Environment *, void *fact,
                                     void *context) {
     CDBPlugin *cdb_plugin = static_cast<CDBPlugin *>(context);
     clips::Fact *f = static_cast<clips::Fact *>(fact);

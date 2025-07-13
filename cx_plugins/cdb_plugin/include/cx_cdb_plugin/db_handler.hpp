@@ -29,6 +29,16 @@ class DBHandler {
     DBHandler(DBHandlerConfig config, bool create_db = true);
     ~DBHandler();
 
+    void assert_fact(long long id, std::string fact_json, long long tick);
+    void retract_fact(long long id, long long tick);
+    void update_fact(long long id, std::string fact_json, long long tick);
+    void add_rule(std::string name, std::string module_name, std::string definition);
+    void add_funtion(std::string name, std::string module_name, std::string definition);
+    void add_defglobal(std::string name, std::string module_name, std::string definition);
+    void add_deftemplate(std::string name, std::string module_name, std::string definition);
+    void add_rule_fired(std::string name, std::string modulle, std::vector<long long> basis, long long tick);
+
+
     bool init_db(DBHandlerConfig config);
 
   private:

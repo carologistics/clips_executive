@@ -50,7 +50,6 @@ class CDBPlugin : public ClipsPlugin {
     bool started_ = false;
     long long tick_ = 0;
     inline long long get_tick() { return tick_++; }
-    // std::vector<>
 };
 } // namespace cx
 
