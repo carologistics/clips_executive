@@ -61,7 +61,6 @@ void RosMsgsPlugin::initialize()
           continue;
         }
         task = std::move(task_queue_.front());
-        RCLCPP_INFO(*logger_, "I DO TASK");
         task_queue_.pop();
       }
       task();
@@ -408,6 +407,10 @@ bool RosMsgsPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
             (slot service (type STRING) ) \
             (slot request-id (type INTEGER) ) \
             (slot msg-ptr (type EXTERNAL-ADDRESS)) \
+            )");
+  clips::Build(env.get(), "(deftemplate ros-msgs-action-response \
+            (slot server (type STRING) ) \
+            (slot client-goal-handle-ptr (type EXTERNAL-ADDRESS) ) \
             )");
   clips::Build(env.get(), "(deftemplate ros-msgs-wrapped-result \
             (slot server (type STRING) ) \
@@ -920,8 +923,6 @@ clips::UDFValue RosMsgsPlugin::create_goal(clips::Environment *env,
   for (size_t i = 0; i < members->member_count_; ++i) {
     const auto &member = members->members_[i];
     if (strcmp(member.name_, "goal") == 0) {
-      RCLCPP_INFO(*logger_, "goal namespace %s, goal type %s",
-                  members->message_namespace_, members->message_name_);
       const rosidl_message_type_support_t *type_support = member.members_;
       if (type_support) {
         // Get the members of the nested message
@@ -939,26 +940,11 @@ clips::UDFValue RosMsgsPlugin::create_goal(clips::Environment *env,
               rclcpp::get_message_typesupport_handle(
                   message_type, "rosidl_typesupport_cpp", *libs_[message_type]);
         }
-        RCLCPP_INFO(*logger_, "I CREATE A GOAL");
         ptr = std::make_shared<MessageInfo>(nested_members);
-      } else {
-        RCLCPP_INFO(*logger_, "NO TYPE_SUPPORT");
       }
-      //	ptr =
-      // std::make_shared<RosMsgsPlugin::MessageInfo>(member.members_);
-      //	messages_[ptr.get()] = ptr;
-      //	clips::UDFValue res;
-      //	res.externalAddressValue =
-      //	    clips::CreateCExternalAddress(env, (void *)ptr.get());
-      //	return res;
-    } else {
-      RCLCPP_INFO(*logger_, "member.name_: %s vs goal", member.name_);
     }
   }
-  // TODO: fix return type
   clips::UDFValue res;
-  // ptr = std::make_shared<RosMsgsPlugin::MessageInfo>(members);
-  RCLCPP_INFO(*logger_, "ptr: %p", ptr.get());
   messages_[ptr.get()] = ptr;
   res.externalAddressValue =
       clips::CreateCExternalAddress(env, (void *)ptr.get());
@@ -979,7 +965,6 @@ void RosMsgsPlugin::deep_copy_msg(
     for (uint32_t i = 0; i < sub_members->member_count_; ++i) {
       const rosidl_typesupport_introspection_cpp::MessageMember *sub_member =
           &sub_members->members_[i];
-      RCLCPP_INFO(*logger_, "I ITERATE %i %s", i, sub_member->name_);
 
       // Calculate the offset for the source and target members
       const void *source_field_ptr =
@@ -1103,7 +1088,6 @@ void RosMsgsPlugin::deep_copy_msg(
         if (sub_member->is_array_) {
           if (!sub_member->is_upper_bound_) {
             // Dynamically-sized array of int32 (std::vector<int32_t>)
-            new (target_field_ptr) std::vector<int32_t>();
             const auto *source_vector =
                 reinterpret_cast<const std::vector<int32_t> *>(
                     source_field_ptr);
@@ -1404,7 +1388,6 @@ void RosMsgsPlugin::async_send_new_goal(clips::Environment *env,
     auto context = CLIPSEnvContext::get_context(env);
     auto scoped_lock = std::scoped_lock{map_mtx_};
     if (!messages_.contains(deserialized_goal)) {
-      RCLCPP_INFO(*logger_, "ptr: %p", deserialized_goal);
       RCLCPP_ERROR(*logger_, "Failed to send goal, invalid msg pointer");
     }
     std::shared_ptr<MessageInfo> msg_info = messages_[deserialized_goal];
@@ -1441,15 +1424,13 @@ void RosMsgsPlugin::async_send_new_goal(clips::Environment *env,
                 &goal_handle) {
           std::scoped_lock map_lock{map_mtx_};
           task_queue_.push([this, context, env, action_server, goal_handle]() {
-            RCLCPP_INFO(*logger_, "response callback task started for %s",
-                        action_server.c_str());
             {
               std::scoped_lock map_lock{map_mtx_};
               client_goal_handles_.try_emplace(goal_handle.get(), goal_handle);
             }
             std::lock_guard<std::mutex> guard(context->env_mtx_);
             clips::FactBuilder *fact_builder =
-                clips::CreateFactBuilder(env, "ros-msgs-goal-response");
+                clips::CreateFactBuilder(env, "ros-msgs-action-response");
             clips::FBPutSlotString(fact_builder, "server",
                                    action_server.c_str());
             clips::FBPutSlotCLIPSExternalAddress(
@@ -1505,11 +1486,6 @@ void RosMsgsPlugin::async_send_new_goal(clips::Environment *env,
                           *libs_[message_type]);
                 }
                 ptr = std::make_shared<MessageInfo>(nested_members);
-                auto temp_obj =
-                    static_cast<const std::vector<int32_t> *>(feedback);
-                for (const auto &obj : *temp_obj) {
-                  RCLCPP_INFO(*logger_, "VAL %i", obj);
-                }
                 deep_copy_msg(feedback, ptr->msg_ptr, nested_members);
                 messages_[ptr.get()] = ptr;
               }
@@ -1524,16 +1500,8 @@ void RosMsgsPlugin::async_send_new_goal(clips::Environment *env,
           std::lock_guard<std::mutex> lock(queue_mutex_);
           task_queue_.push([this, context, env, action_server, goal_handle,
                             feedback, ptr]() {
-            auto temp_obj2 =
-                static_cast<const std::vector<int32_t> *>(feedback);
-            for (const auto &obj : *temp_obj2) {
-              RCLCPP_INFO(*logger_, "VAL %i", obj);
-            }
-            RCLCPP_INFO(*logger_, "feedback callback task started for %s",
-                        action_server.c_str());
             // Enqueue the task to avoid directly locking the handle_mutex_ in a
             // callback
-
             std::lock_guard<std::mutex> clips_guard(context->env_mtx_);
             clips::FactBuilder *fact_builder =
                 clips::CreateFactBuilder(env, "ros-msgs-feedback");
@@ -1556,18 +1524,11 @@ void RosMsgsPlugin::async_send_new_goal(clips::Environment *env,
                                const rclcpp_action::GenericClientGoalHandle::
                                    WrappedResult &wrapped_result) {
       task_queue_.push([this, context, env, action_server, wrapped_result]() {
-        RCLCPP_INFO(*logger_, "result callback task started for %s",
-                    action_server.c_str());
         std::shared_ptr<MessageInfo> result_msg;
         {
           std::scoped_lock map_lock{map_mtx_};
           std::string action_type =
               action_types_[context->env_name_][action_server];
-          // TODO: convert wrapped_result.result into MessageInfo
-          for (const auto &stuff : libs_) {
-            RCLCPP_INFO(*logger_, "libs_ content %s", stuff.first.c_str());
-          }
-          RCLCPP_INFO(*logger_, "result callback %s", action_type.c_str());
 
           auto *introspection_type_support = get_service_typesupport_handle(
               action_type_support_cache_[action_type]
@@ -1580,48 +1541,28 @@ void RosMsgsPlugin::async_send_new_goal(clips::Environment *env,
           for (size_t i = 0; i < members->member_count_; ++i) {
             const auto &member = members->members_[i];
             if (strcmp(member.name_, "result") == 0) {
-              RCLCPP_INFO(*logger_, "member.name_: %s vs result", member.name_);
-              RCLCPP_INFO(*logger_, "result namespace %s, result type %s",
-                          members->message_namespace_, members->message_name_);
               const rosidl_message_type_support_t *type_support =
                   member.members_;
-              if (type_support) {
-                // Get the members of the nested message
-                const rosidl_typesupport_introspection_cpp::MessageMembers
-                    *nested_members =
-                        static_cast<const rosidl_typesupport_introspection_cpp::
-                                        MessageMembers *>(type_support->data);
-                std::string message_type = get_msg_type(nested_members);
-                if (!libs_.contains(message_type)) {
-                  libs_[message_type] = rclcpp::get_typesupport_library(
-                      message_type, "rosidl_typesupport_cpp");
-                }
-                if (!type_support_cache_.contains(message_type)) {
-                  type_support_cache_[message_type] =
-                      rclcpp::get_message_typesupport_handle(
-                          message_type, "rosidl_typesupport_cpp",
-                          *libs_[message_type]);
-                }
-                RCLCPP_INFO(*logger_, "I CREATE A RESULT");
-                // ptr = std::make_shared<MessageInfo>(nested_members);
-                //
-                result_msg = std::make_shared<RosMsgsPlugin::MessageInfo>(
-                    nested_members);
-                deep_copy_msg(wrapped_result.result, result_msg->msg_ptr,
-                              nested_members);
-                RCLCPP_INFO(*logger_, "DONE CREATING A RESULT");
-              } else {
-                RCLCPP_INFO(*logger_, "NO TYPE_SUPPORT");
+              // Get the members of the nested message
+              const rosidl_typesupport_introspection_cpp::MessageMembers
+                  *nested_members =
+                      static_cast<const rosidl_typesupport_introspection_cpp::
+                                      MessageMembers *>(type_support->data);
+              std::string message_type = get_msg_type(nested_members);
+              if (!libs_.contains(message_type)) {
+                libs_[message_type] = rclcpp::get_typesupport_library(
+                    message_type, "rosidl_typesupport_cpp");
               }
-              //	ptr =
-              // std::make_shared<RosMsgsPlugin::MessageInfo>(member.members_);
-              //	messages_[ptr.get()] = ptr;
-              //	clips::UDFValue res;
-              //	res.externalAddressValue =
-              //	    clips::CreateCExternalAddress(env, (void
-              //*)ptr.get()); 	return res;
-            } else {
-              RCLCPP_INFO(*logger_, "member.name_: %s vs result", member.name_);
+              if (!type_support_cache_.contains(message_type)) {
+                type_support_cache_[message_type] =
+                    rclcpp::get_message_typesupport_handle(
+                        message_type, "rosidl_typesupport_cpp",
+                        *libs_[message_type]);
+              }
+              result_msg =
+                  std::make_shared<RosMsgsPlugin::MessageInfo>(nested_members);
+              deep_copy_msg(wrapped_result.result, result_msg->msg_ptr,
+                            nested_members);
             }
           }
           messages_.try_emplace(result_msg.get(), result_msg);
@@ -1657,8 +1598,8 @@ void RosMsgsPlugin::async_send_new_goal(clips::Environment *env,
       cv_.notify_one(); // Notify the worker thread
     };
     std::shared_ptr<MessageInfo> goal_info = messages_[deserialized_goal];
-    RCLCPP_INFO(*logger_, "Sending Goal for %s of size %i",
-                action_server.c_str(), goal_info->members->size_of_);
+    RCLCPP_DEBUG(*logger_, "Sending Goal for %s of size %li",
+                 action_server.c_str(), goal_info->members->size_of_);
     action_clients_[env_name][action_server]->async_send_goal(
         messages_[deserialized_goal]->msg_ptr, goal_info->members->size_of_,
         send_goal_options);
