@@ -102,6 +102,20 @@ void RosMsgsPlugin::finalize()
     }
     clients_.clear();
   }
+  if (client_goal_handles_.size() > 0) {
+    client_goal_handles_.clear();
+  }
+  if (action_clients_.size() > 0) {
+    for (const auto &client_map : action_clients_) {
+      for (const auto &client : client_map.second) {
+        RCLCPP_WARN(
+            *logger_,
+            "Environment %s has open %s action clients, cleaning up ...",
+            client_map.first.c_str(), client.first.c_str());
+      }
+    }
+    action_clients_.clear();
+  }
   cb_group_.reset();
   if (messages_.size() > 0) {
     RCLCPP_WARN(*logger_, "Found %li message(s), cleaning up ...", messages_.size());
@@ -109,6 +123,11 @@ void RosMsgsPlugin::finalize()
   }
   sub_messages_.clear();
   stop_flag_ = true;
+  cv_.notify_all();
+
+  if (clips_worker_thread_.joinable()) {
+    clips_worker_thread_.join();
+  }
 }
 
 bool RosMsgsPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
