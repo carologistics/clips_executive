@@ -50,6 +50,23 @@ void RosMsgsPlugin::initialize()
   logger_ = std::make_unique<rclcpp::Logger>(rclcpp::get_logger(plugin_name_));
   auto node = parent_.lock();
   cb_group_ = node->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
+
+  clips_worker_thread_ = std::thread([this]() {
+    while (!stop_flag_) {
+      std::function<void()> task;
+      {
+        std::unique_lock<std::mutex> lock(queue_mutex_);
+        cv_.wait(lock, [&] { return !task_queue_.empty() || stop_flag_; });
+        if (stop_flag_) {
+          continue;
+        }
+        task = std::move(task_queue_.front());
+        RCLCPP_INFO(*logger_, "I DO TASK");
+        task_queue_.pop();
+      }
+      task();
+    }
+  });
 }
 
 void RosMsgsPlugin::finalize()
@@ -293,23 +310,24 @@ bool RosMsgsPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
         clips::UDFValue type;
         using namespace clips;
         clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &type);
-        *out = instance->create_goal_request(env, type.lexemeValue->contents);
+        *out = instance->create_goal(env, type.lexemeValue->contents);
       },
       "create_goal", this);
 
   fun_name = "ros-msgs-async-send-goal";
   function_names_.insert(fun_name);
   clips::AddUDF(
-      env.get(), fun_name.c_str(), "e", 1, 1, ";sy",
+      env.get(), fun_name.c_str(), "v", 2, 2, ";e;sy",
       [](clips::Environment *env, clips::UDFContext *udfc,
          clips::UDFValue *out) {
+        (void)out;
         auto *instance = static_cast<RosMsgsPlugin *>(udfc->context);
         clips::UDFValue action_server;
         clips::UDFValue goal_request;
         using namespace clips;
-        clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &action_server);
-        clips::UDFNthArgument(udfc, 2, EXTERNAL_ADDRESS_BIT, &goal_request);
-        *out = instance->async_send_new_goal(
+        clips::UDFNthArgument(udfc, 1, EXTERNAL_ADDRESS_BIT, &goal_request);
+        clips::UDFNthArgument(udfc, 2, LEXEME_BITS, &action_server);
+        instance->async_send_new_goal(
             env, action_server.lexemeValue->contents,
             goal_request.externalAddressValue->contents);
       },
@@ -391,7 +409,17 @@ bool RosMsgsPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
             (slot request-id (type INTEGER) ) \
             (slot msg-ptr (type EXTERNAL-ADDRESS)) \
             )");
-
+  clips::Build(env.get(), "(deftemplate ros-msgs-wrapped-result \
+            (slot server (type STRING) ) \
+            (slot goal-id (type STRING) ) \
+            (slot code (type SYMBOL) (allowed-values UNKNOWN SUCCEEDED CANCELED  ABORTED)) \
+            (slot result-ptr (type EXTERNAL-ADDRESS)) \
+            )");
+  clips::Build(env.get(), "(deftemplate ros-msgs-feedback \
+            (slot server (type STRING) ) \
+            (slot client-goal-handle-ptr (type EXTERNAL-ADDRESS) ) \
+            (slot feedback-ptr (type EXTERNAL-ADDRESS)) \
+            )");
   return true;
 }
 
@@ -869,9 +897,8 @@ void RosMsgsPlugin::service_callback(
   destroy_msg(request_info.get());
 }
 
-clips::UDFValue
-RosMsgsPlugin::create_goal_request(clips::Environment *env,
-                                   const std::string &action_type) {
+clips::UDFValue RosMsgsPlugin::create_goal(clips::Environment *env,
+                                           const std::string &action_type) {
   auto scoped_lock = std::scoped_lock{map_mtx_};
   std::shared_ptr<MessageInfo> ptr;
 
@@ -887,32 +914,498 @@ RosMsgsPlugin::create_goal_request(clips::Environment *env,
   auto *introspection_type_support = get_service_typesupport_handle(
       action_type_support_cache_[action_type]->goal_service_type_support,
       rosidl_typesupport_introspection_cpp::typesupport_identifier);
-  auto *introspection_info =
+  auto *members =
       static_cast<const rosidl_typesupport_introspection_cpp::MessageMembers *>(
           introspection_type_support->request_typesupport->data);
-  ptr = std::make_shared<RosMsgsPlugin::MessageInfo>(introspection_info);
-  messages_[ptr.get()] = ptr;
+  for (size_t i = 0; i < members->member_count_; ++i) {
+    const auto &member = members->members_[i];
+    if (strcmp(member.name_, "goal") == 0) {
+      RCLCPP_INFO(*logger_, "goal namespace %s, goal type %s",
+                  members->message_namespace_, members->message_name_);
+      const rosidl_message_type_support_t *type_support = member.members_;
+      if (type_support) {
+        // Get the members of the nested message
+        const rosidl_typesupport_introspection_cpp::MessageMembers
+            *nested_members = static_cast<
+                const rosidl_typesupport_introspection_cpp::MessageMembers *>(
+                type_support->data);
+        std::string message_type = get_msg_type(nested_members);
+        if (!libs_.contains(message_type)) {
+          libs_[message_type] = rclcpp::get_typesupport_library(
+              message_type, "rosidl_typesupport_cpp");
+        }
+        if (!type_support_cache_.contains(message_type)) {
+          type_support_cache_[message_type] =
+              rclcpp::get_message_typesupport_handle(
+                  message_type, "rosidl_typesupport_cpp", *libs_[message_type]);
+        }
+        RCLCPP_INFO(*logger_, "I CREATE A GOAL");
+        ptr = std::make_shared<MessageInfo>(nested_members);
+      } else {
+        RCLCPP_INFO(*logger_, "NO TYPE_SUPPORT");
+      }
+      //	ptr =
+      // std::make_shared<RosMsgsPlugin::MessageInfo>(member.members_);
+      //	messages_[ptr.get()] = ptr;
+      //	clips::UDFValue res;
+      //	res.externalAddressValue =
+      //	    clips::CreateCExternalAddress(env, (void *)ptr.get());
+      //	return res;
+    } else {
+      RCLCPP_INFO(*logger_, "member.name_: %s vs goal", member.name_);
+    }
+  }
+  // TODO: fix return type
   clips::UDFValue res;
+  // ptr = std::make_shared<RosMsgsPlugin::MessageInfo>(members);
+  RCLCPP_INFO(*logger_, "ptr: %p", ptr.get());
+  messages_[ptr.get()] = ptr;
   res.externalAddressValue =
       clips::CreateCExternalAddress(env, (void *)ptr.get());
   return res;
 }
+void RosMsgsPlugin::deep_copy_msg(
+    const void *src, void *dest,
+    const rosidl_typesupport_introspection_cpp::MessageMembers *members) {
+  for (size_t i = 0; i < members->member_count_; ++i) {
+    const auto &member = members->members_[i];
 
-clips::UDFValue
-RosMsgsPlugin::async_send_new_goal(clips::Environment *env,
-                                   const std::string &action_server,
-                                   void *deserialized_goal) {
+    // Obtain introspection information for the type of the submessage
+    const rosidl_typesupport_introspection_cpp::MessageMembers *sub_members =
+        members;
+
+    // Move fields from the source sub-message to the target sub-message in
+    // parent
+    for (uint32_t i = 0; i < sub_members->member_count_; ++i) {
+      const rosidl_typesupport_introspection_cpp::MessageMember *sub_member =
+          &sub_members->members_[i];
+      RCLCPP_INFO(*logger_, "I ITERATE %i %s", i, sub_member->name_);
+
+      // Calculate the offset for the source and target members
+      const void *source_field_ptr =
+          reinterpret_cast<const uint8_t *>(src) + sub_member->offset_;
+      void *target_field_ptr =
+          reinterpret_cast<uint8_t *>(dest) + sub_member->offset_;
+
+      switch (sub_member->type_id_) {
+      case rosidl_typesupport_introspection_cpp::ROS_TYPE_BOOL: {
+        if (sub_member->is_array_) {
+          if (!sub_member->is_upper_bound_) {
+            // Dynamically-sized array of bool (std::vector<bool>)
+            const auto *source_vector =
+                reinterpret_cast<const std::vector<bool> *>(source_field_ptr);
+            auto *target_vector =
+                reinterpret_cast<std::vector<bool> *>(target_field_ptr);
+            *target_vector = *source_vector;
+          } else {
+            // Fixed-size array
+            std::memcpy(target_field_ptr, source_field_ptr,
+                        sub_member->array_size_ * sizeof(bool));
+          }
+        } else {
+          // Single bool
+          std::memcpy(target_field_ptr, source_field_ptr, sizeof(bool));
+        }
+        break;
+      }
+
+      case rosidl_typesupport_introspection_cpp::ROS_TYPE_INT8: {
+        if (sub_member->is_array_) {
+          if (!sub_member->is_upper_bound_) {
+            // Dynamically-sized array of int8 (std::vector<int8_t>)
+            const auto *source_vector =
+                reinterpret_cast<const std::vector<int8_t> *>(source_field_ptr);
+            auto *target_vector =
+                reinterpret_cast<std::vector<int8_t> *>(target_field_ptr);
+            *target_vector = *source_vector;
+          } else {
+            // Fixed-size array
+            std::memcpy(target_field_ptr, source_field_ptr,
+                        sub_member->array_size_ * sizeof(int8_t));
+          }
+        } else {
+          // Single int8
+          std::memcpy(target_field_ptr, source_field_ptr, sizeof(int8_t));
+        }
+        break;
+      }
+
+      case rosidl_typesupport_introspection_cpp::ROS_TYPE_UINT8:
+      case rosidl_typesupport_introspection_cpp::ROS_TYPE_OCTET: {
+        if (sub_member->is_array_) {
+          if (!sub_member->is_upper_bound_) {
+            // Dynamically-sized array of uint8 (std::vector<uint8_t>)
+            new (target_field_ptr) std::vector<uint8_t>();
+
+            const auto *source_vector =
+                reinterpret_cast<const std::vector<uint8_t> *>(
+                    source_field_ptr);
+            auto *target_vector =
+                reinterpret_cast<std::vector<uint8_t> *>(target_field_ptr);
+            *target_vector = *source_vector;
+          } else {
+            // Fixed-size array
+            std::memcpy(target_field_ptr, source_field_ptr,
+                        sub_member->array_size_ * sizeof(uint8_t));
+          }
+        } else {
+          // Single uint8
+          std::memcpy(target_field_ptr, source_field_ptr, sizeof(uint8_t));
+        }
+        break;
+      }
+
+      case rosidl_typesupport_introspection_cpp::ROS_TYPE_INT16: {
+        if (sub_member->is_array_) {
+          if (!sub_member->is_upper_bound_) {
+            // Dynamically-sized array of int16 (std::vector<int16_t>)
+            const auto *source_vector =
+                reinterpret_cast<const std::vector<int16_t> *>(
+                    source_field_ptr);
+            auto *target_vector =
+                reinterpret_cast<std::vector<int16_t> *>(target_field_ptr);
+            *target_vector = *source_vector;
+          } else {
+            // Fixed-size array
+            std::memcpy(target_field_ptr, source_field_ptr,
+                        sub_member->array_size_ * sizeof(int16_t));
+          }
+        } else {
+          // Single int16
+          std::memcpy(target_field_ptr, source_field_ptr, sizeof(int16_t));
+        }
+        break;
+      }
+
+      case rosidl_typesupport_introspection_cpp::ROS_TYPE_UINT16: {
+        if (sub_member->is_array_) {
+          if (!sub_member->is_upper_bound_) {
+            // Dynamically-sized array of uint16 (std::vector<uint16_t>)
+            const auto *source_vector =
+                reinterpret_cast<const std::vector<uint16_t> *>(
+                    source_field_ptr);
+            auto *target_vector =
+                reinterpret_cast<std::vector<uint16_t> *>(target_field_ptr);
+            *target_vector = *source_vector;
+          } else {
+            // Fixed-size array
+            std::memcpy(target_field_ptr, source_field_ptr,
+                        sub_member->array_size_ * sizeof(uint16_t));
+          }
+        } else {
+          // Single uint16
+          std::memcpy(target_field_ptr, source_field_ptr, sizeof(uint16_t));
+        }
+        break;
+      }
+
+      case rosidl_typesupport_introspection_cpp::ROS_TYPE_INT32: {
+        if (sub_member->is_array_) {
+          if (!sub_member->is_upper_bound_) {
+            // Dynamically-sized array of int32 (std::vector<int32_t>)
+            new (target_field_ptr) std::vector<int32_t>();
+            const auto *source_vector =
+                reinterpret_cast<const std::vector<int32_t> *>(
+                    source_field_ptr);
+            auto *target_vector =
+                reinterpret_cast<std::vector<int32_t> *>(target_field_ptr);
+            *target_vector = *source_vector;
+          } else {
+            // Fixed-size array
+            std::memcpy(target_field_ptr, source_field_ptr,
+                        sub_member->array_size_ * sizeof(int32_t));
+          }
+        } else {
+          // Single int32
+          std::memcpy(target_field_ptr, source_field_ptr, sizeof(int32_t));
+        }
+        break;
+      }
+
+      case rosidl_typesupport_introspection_cpp::ROS_TYPE_UINT32: {
+        if (sub_member->is_array_) {
+          if (!sub_member->is_upper_bound_) {
+            // Dynamically-sized array of int32 (std::vector<uint32_t>)
+            const auto *source_vector =
+                reinterpret_cast<const std::vector<uint32_t> *>(
+                    source_field_ptr);
+            auto *target_vector =
+                reinterpret_cast<std::vector<uint32_t> *>(target_field_ptr);
+            *target_vector = *source_vector;
+          } else {
+            // Fixed-size array
+            std::memcpy(target_field_ptr, source_field_ptr,
+                        sub_member->array_size_ * sizeof(uint32_t));
+          }
+        } else {
+          // Single int32
+          std::memcpy(target_field_ptr, source_field_ptr, sizeof(uint32_t));
+        }
+        break;
+      }
+
+      case rosidl_typesupport_introspection_cpp::ROS_TYPE_INT64: {
+        if (sub_member->is_array_) {
+          if (!sub_member->is_upper_bound_) {
+            // Dynamically-sized array of int64 (std::vector<int64_t>)
+            const auto *source_vector =
+                reinterpret_cast<const std::vector<int64_t> *>(
+                    source_field_ptr);
+            auto *target_vector =
+                reinterpret_cast<std::vector<int64_t> *>(target_field_ptr);
+            *target_vector = *source_vector;
+          } else {
+            // Fixed-size array
+            std::memcpy(target_field_ptr, source_field_ptr,
+                        sub_member->array_size_ * sizeof(int64_t));
+          }
+        } else {
+          // Single int64
+          std::memcpy(target_field_ptr, source_field_ptr, sizeof(int64_t));
+        }
+        break;
+      }
+
+      case rosidl_typesupport_introspection_cpp::ROS_TYPE_UINT64: {
+        if (sub_member->is_array_) {
+          if (!sub_member->is_upper_bound_) {
+            // Dynamically-sized array of int64 (std::vector<uint64_t>)
+            const auto *source_vector =
+                reinterpret_cast<const std::vector<uint64_t> *>(
+                    source_field_ptr);
+            auto *target_vector =
+                reinterpret_cast<std::vector<uint64_t> *>(target_field_ptr);
+            *target_vector = *source_vector;
+          } else {
+            // Fixed-size array
+            std::memcpy(target_field_ptr, source_field_ptr,
+                        sub_member->array_size_ * sizeof(uint64_t));
+          }
+        } else {
+          // Single int64
+          std::memcpy(target_field_ptr, source_field_ptr, sizeof(uint64_t));
+        }
+        break;
+      }
+
+      case rosidl_typesupport_introspection_cpp::ROS_TYPE_FLOAT: {
+        if (sub_member->is_array_) {
+          if (!sub_member->is_upper_bound_) {
+            // Dynamically-sized array of int64 (std::vector<float>)
+            const auto *source_vector =
+                reinterpret_cast<const std::vector<float> *>(source_field_ptr);
+            auto *target_vector =
+                reinterpret_cast<std::vector<float> *>(target_field_ptr);
+            *target_vector = *source_vector;
+          } else {
+            // Fixed-size array
+            std::memcpy(target_field_ptr, source_field_ptr,
+                        sub_member->array_size_ * sizeof(float));
+          }
+        } else {
+          // Single int64
+          std::memcpy(target_field_ptr, source_field_ptr, sizeof(float));
+        }
+        break;
+      }
+
+      case rosidl_typesupport_introspection_cpp::ROS_TYPE_DOUBLE: {
+        if (sub_member->is_array_) {
+          if (!sub_member->is_upper_bound_) {
+            // Dynamically-sized array of int64 (std::vector<double>)
+            const auto *source_vector =
+                reinterpret_cast<const std::vector<double> *>(source_field_ptr);
+            auto *target_vector =
+                reinterpret_cast<std::vector<double> *>(target_field_ptr);
+            *target_vector = *source_vector;
+          } else {
+            // Fixed-size array
+            std::memcpy(target_field_ptr, source_field_ptr,
+                        sub_member->array_size_ * sizeof(double));
+          }
+        } else {
+          // Single int64
+          std::memcpy(target_field_ptr, source_field_ptr, sizeof(double));
+        }
+        break;
+      }
+
+      case rosidl_typesupport_introspection_cpp::ROS_TYPE_LONG_DOUBLE: {
+        if (sub_member->is_array_) {
+          if (!sub_member->is_upper_bound_) {
+            // Dynamically-sized array of int64 (std::vector<long double>)
+            const auto *source_vector =
+                reinterpret_cast<const std::vector<long double> *>(
+                    source_field_ptr);
+            auto *target_vector =
+                reinterpret_cast<std::vector<long double> *>(target_field_ptr);
+            *target_vector = *source_vector;
+          } else {
+            // Fixed-size array
+            std::memcpy(target_field_ptr, source_field_ptr,
+                        sub_member->array_size_ * sizeof(long double));
+          }
+        } else {
+          // Single int64
+          std::memcpy(target_field_ptr, source_field_ptr, sizeof(long double));
+        }
+        break;
+      }
+
+      case rosidl_typesupport_introspection_cpp::ROS_TYPE_STRING: {
+        if (sub_member->is_array_) {
+          if (!sub_member->is_upper_bound_) {
+            // Dynamically-sized array of strings (std::vector<std::string>)
+            const auto *source_vector =
+                reinterpret_cast<const std::vector<std::string> *>(
+                    source_field_ptr);
+            auto *target_vector =
+                reinterpret_cast<std::vector<std::string> *>(target_field_ptr);
+            *target_vector = *source_vector;
+          } else {
+            // Fixed-size array of strings
+            const auto source_array =
+                reinterpret_cast<const std::string *>(source_field_ptr);
+            auto target_array =
+                reinterpret_cast<std::string *>(target_field_ptr);
+            for (size_t i = 0; i < sub_member->array_size_; ++i) {
+              target_array[i] = source_array[i];
+            }
+          }
+        } else {
+          // Single string (std::string)
+          const auto *source_str =
+              reinterpret_cast<const std::string *>(source_field_ptr);
+          auto *target_str = reinterpret_cast<std::string *>(target_field_ptr);
+          *target_str = *source_str;
+        }
+        break;
+      }
+      case rosidl_typesupport_introspection_cpp::ROS_TYPE_CHAR: {
+        if (sub_member->is_array_) {
+          if (!sub_member->is_upper_bound_) {
+            // Dynamically-sized array (std::vector<char>)
+            const auto *source_vector =
+                reinterpret_cast<const std::vector<char> *>(source_field_ptr);
+            auto *target_vector =
+                reinterpret_cast<std::vector<char> *>(target_field_ptr);
+            *target_vector = *source_vector;
+          } else {
+            // Fixed-size array
+            std::memcpy(target_field_ptr, source_field_ptr,
+                        sub_member->array_size_ * sizeof(char));
+          }
+        } else {
+          // Single char
+          std::memcpy(target_field_ptr, source_field_ptr, sizeof(char));
+        }
+        break;
+      }
+
+      case rosidl_typesupport_introspection_cpp::ROS_TYPE_WCHAR: {
+        if (sub_member->is_array_) {
+          if (!sub_member->is_upper_bound_) {
+            // Dynamically-sized array (std::vector<wchar_t>)
+            const auto *source_vector =
+                reinterpret_cast<const std::vector<wchar_t> *>(
+                    source_field_ptr);
+            auto *target_vector =
+                reinterpret_cast<std::vector<wchar_t> *>(target_field_ptr);
+            *target_vector = *source_vector;
+          } else {
+            // Fixed-size array
+            std::memcpy(target_field_ptr, source_field_ptr,
+                        sub_member->array_size_ * sizeof(wchar_t));
+          }
+        } else {
+          // Single wchar_t
+          std::memcpy(target_field_ptr, source_field_ptr, sizeof(wchar_t));
+        }
+        break;
+      }
+
+      case rosidl_typesupport_introspection_cpp::ROS_TYPE_WSTRING: {
+        if (sub_member->is_array_) {
+          if (!sub_member->is_upper_bound_) {
+            // Dynamically-sized array (std::vector<wchar_t>)
+            const auto *source_vector =
+                reinterpret_cast<const std::vector<wchar_t> *>(
+                    source_field_ptr);
+            auto *target_vector =
+                reinterpret_cast<std::vector<wchar_t> *>(target_field_ptr);
+            *target_vector = *source_vector;
+          } else {
+            // Fixed-size array
+            std::memcpy(target_field_ptr, source_field_ptr,
+                        sub_member->array_size_ * sizeof(wchar_t));
+          }
+        } else {
+          // Single wstring (using std::wstring)
+          const auto *source_string =
+              reinterpret_cast<const std::wstring *>(source_field_ptr);
+          auto *target_string =
+              reinterpret_cast<std::wstring *>(target_field_ptr);
+          *target_string = *source_string;
+        }
+        break;
+      }
+
+      case rosidl_typesupport_introspection_cpp::ROS_TYPE_MESSAGE: {
+        const auto *sub_members = static_cast<
+            const rosidl_typesupport_introspection_cpp::MessageMembers *>(
+            member.members_->data);
+
+        if (member.is_array_) {
+          if (!member.is_upper_bound_) {
+            // Dynamically-sized array of sub-messages
+            const auto *source_vector =
+                reinterpret_cast<const std::vector<void *> *>(source_field_ptr);
+            auto *target_vector =
+                reinterpret_cast<std::vector<void *> *>(target_field_ptr);
+            target_vector->resize(source_vector->size());
+
+            for (size_t i = 0; i < source_vector->size(); ++i) {
+              deep_copy_msg(source_vector->at(i), target_vector->at(i),
+                            sub_members);
+            }
+          } else {
+            // Fixed-size array of sub-messages
+            const auto source_array =
+                reinterpret_cast<const void *const *>(source_field_ptr);
+            auto target_array = reinterpret_cast<void **>(target_field_ptr);
+
+            for (size_t i = 0; i < member.array_size_; ++i) {
+              deep_copy_msg(source_array[i], target_array[i], sub_members);
+            }
+          }
+        } else {
+          // Single nested sub-message
+          for (size_t j = 0; j < sub_members->member_count_; ++j) {
+            deep_copy_msg(source_field_ptr, target_field_ptr, sub_members);
+          }
+        }
+        break;
+      }
+
+      default:
+        throw std::runtime_error("Unsupported field type.");
+      }
+    }
+  }
+}
+
+void RosMsgsPlugin::async_send_new_goal(clips::Environment *env,
+                                        const std::string &action_server,
+                                        void *deserialized_goal) {
   using namespace std::chrono_literals;
   // Handle the request asynchronously to not block clips engine potentially
   // endlessly
   std::thread([this, env, deserialized_goal, action_server]() {
     auto context = CLIPSEnvContext::get_context(env);
     auto scoped_lock = std::scoped_lock{map_mtx_};
-    clips::UDFValue result;
     if (!messages_.contains(deserialized_goal)) {
-      RCLCPP_ERROR(*logger_, "Failed to publish invalid msg pointer");
-      result.value = clips::CreateBoolean(env, false);
-      return result;
+      RCLCPP_INFO(*logger_, "ptr: %p", deserialized_goal);
+      RCLCPP_ERROR(*logger_, "Failed to send goal, invalid msg pointer");
     }
     std::shared_ptr<MessageInfo> msg_info = messages_[deserialized_goal];
     std::string msg_type = get_msg_type(msg_info->members);
@@ -924,8 +1417,6 @@ RosMsgsPlugin::async_send_new_goal(clips::Environment *env,
       if (stop_flag_ || !rclcpp::ok()) {
         RCLCPP_ERROR(*logger_,
                      "Interrupted while waiting for the server. Exiting.");
-        result.value = clips::CreateBoolean(env, false);
-        return result;
       }
       if (print_warning) {
         RCLCPP_WARN(*logger_, "server %s not available, start waiting",
@@ -942,8 +1433,6 @@ RosMsgsPlugin::async_send_new_goal(clips::Environment *env,
     std::lock_guard<std::mutex> guard(context->env_mtx_);
     if (stop_flag_) {
       RCLCPP_DEBUG(*logger_, "Shutdown during async call.");
-      result.value = clips::CreateBoolean(env, false);
-      return result;
     }
     rclcpp_action::GenericClient::SendGoalOptions send_goal_options;
     send_goal_options.goal_response_callback =
@@ -952,11 +1441,13 @@ RosMsgsPlugin::async_send_new_goal(clips::Environment *env,
                 &goal_handle) {
           std::scoped_lock map_lock{map_mtx_};
           task_queue_.push([this, context, env, action_server, goal_handle]() {
-            std::lock_guard<std::mutex> guard(context->env_mtx_);
+            RCLCPP_INFO(*logger_, "response callback task started for %s",
+                        action_server.c_str());
             {
               std::scoped_lock map_lock{map_mtx_};
               client_goal_handles_.try_emplace(goal_handle.get(), goal_handle);
             }
+            std::lock_guard<std::mutex> guard(context->env_mtx_);
             clips::FactBuilder *fact_builder =
                 clips::CreateFactBuilder(env, "ros-msgs-goal-response");
             clips::FBPutSlotString(fact_builder, "server",
@@ -970,82 +1461,172 @@ RosMsgsPlugin::async_send_new_goal(clips::Environment *env,
           cv_.notify_one(); // Notify the worker thread
         };
 
-    send_goal_options
-        .feedback_callback = [this, context, env, action_server](
-                                 std::shared_ptr<
-                                     rclcpp_action::GenericClientGoalHandle>
-                                     goal_handle,
-                                 const void *feedback) {
-      // this indirection is necessary as the feedback callback is called while
-      // an internal lock is acquired. The same lock is acquired in calls lige
-      // get_status(). This can cause a deadlock if get_status() is called from
-      // within clips right after a callback is received. clips lock is still
-      // held, hence callback can't proceed, but internal lock is already
-      // ackquired when this callback is invoked.
-      std::lock_guard<std::mutex> lock(queue_mutex_);
-      task_queue_.push([this, context, env, action_server, goal_handle,
-                        feedback]() {
-        // Enqueue the task to avoid directly locking the handle_mutex_ in a
-        // callback
-        std::shared_ptr<MessageInfo> ptr;
-        std::lock_guard<std::mutex> guard(context->env_mtx_);
-        {
-          std::scoped_lock map_lock{map_mtx_};
-          std::string action_type =
-              action_types_[context->env_name_][action_server];
-          auto *introspection_type_support =
-              rclcpp::get_action_typesupport_handle(
-                  action_type,
-                  rosidl_typesupport_introspection_cpp::typesupport_identifier,
-                  *libs_[action_type].get());
-          auto *introspection_info = static_cast<
-              const rosidl_typesupport_introspection_cpp::MessageMembers *>(
-              introspection_type_support->feedback_message_type_support->data);
-          ptr = std::make_shared<RosMsgsPlugin::MessageInfo>(introspection_info,
-                                                             feedback);
-          messages_[ptr.get()] = ptr;
-          client_goal_handles_.try_emplace(goal_handle.get(), goal_handle);
-        }
-        clips::FactBuilder *fact_builder =
-            clips::CreateFactBuilder(env, "ros-msgs-goal-feedback");
-        clips::FBPutSlotString(fact_builder, "server", action_server.c_str());
-        clips::FBPutSlotCLIPSExternalAddress(
-            fact_builder, "client-goal-handle-ptr",
-            clips::CreateCExternalAddress(env, goal_handle.get()));
-        clips::FBPutSlotCLIPSExternalAddress(
-            fact_builder, "feedback-ptr",
-            clips::CreateCExternalAddress(env, ptr.get()));
-        clips::FBAssert(fact_builder);
-        clips::FBDispose(fact_builder);
-      });
-      cv_.notify_one(); // Notify the worker thread
-    };
+    send_goal_options.feedback_callback =
+        [this, context, env, action_server](
+            std::shared_ptr<rclcpp_action::GenericClientGoalHandle> goal_handle,
+            const void *feedback) {
+          // the feedback ptr will be freed after this function is called
+          // process it before deferring CLIPS logic to worker thread
+          std::shared_ptr<MessageInfo> ptr;
+          {
+            std::scoped_lock map_lock{map_mtx_};
+
+            std::string action_type =
+                action_types_[context->env_name_][action_server];
+            auto *introspection_type_support = get_message_typesupport_handle(
+                action_type_support_cache_[action_type]
+                    ->feedback_message_type_support,
+                rosidl_typesupport_introspection_cpp::typesupport_identifier);
+
+            auto *members = static_cast<
+                const rosidl_typesupport_introspection_cpp::MessageMembers *>(
+                introspection_type_support->data);
+
+            // the introspection information wraps the actual feedback message
+            // with a message containing goal_id and the feedback as members
+            for (size_t i = 0; i < members->member_count_; ++i) {
+              const auto &member = members->members_[i];
+              if (strcmp(member.name_, "feedback") == 0) {
+                const rosidl_message_type_support_t *type_support =
+                    member.members_;
+                const rosidl_typesupport_introspection_cpp::MessageMembers
+                    *nested_members =
+                        static_cast<const rosidl_typesupport_introspection_cpp::
+                                        MessageMembers *>(type_support->data);
+                std::string message_type = get_msg_type(nested_members);
+                if (!libs_.contains(message_type)) {
+                  libs_[message_type] = rclcpp::get_typesupport_library(
+                      message_type, "rosidl_typesupport_cpp");
+                }
+                if (!type_support_cache_.contains(message_type)) {
+                  type_support_cache_[message_type] =
+                      rclcpp::get_message_typesupport_handle(
+                          message_type, "rosidl_typesupport_cpp",
+                          *libs_[message_type]);
+                }
+                ptr = std::make_shared<MessageInfo>(nested_members);
+                auto temp_obj =
+                    static_cast<const std::vector<int32_t> *>(feedback);
+                for (const auto &obj : *temp_obj) {
+                  RCLCPP_INFO(*logger_, "VAL %i", obj);
+                }
+                deep_copy_msg(feedback, ptr->msg_ptr, nested_members);
+                messages_[ptr.get()] = ptr;
+              }
+            }
+          }
+          // this indirection is necessary as the feedback callback is called
+          // while an internal lock is acquired. The same lock is acquired in
+          // calls lige get_status(). This can cause a deadlock if get_status()
+          // is called from within clips right after a callback is received.
+          // clips lock is still held, hence callback can't proceed, but
+          // internal lock is already acquired when this callback is invoked.
+          std::lock_guard<std::mutex> lock(queue_mutex_);
+          task_queue_.push([this, context, env, action_server, goal_handle,
+                            feedback, ptr]() {
+            auto temp_obj2 =
+                static_cast<const std::vector<int32_t> *>(feedback);
+            for (const auto &obj : *temp_obj2) {
+              RCLCPP_INFO(*logger_, "VAL %i", obj);
+            }
+            RCLCPP_INFO(*logger_, "feedback callback task started for %s",
+                        action_server.c_str());
+            // Enqueue the task to avoid directly locking the handle_mutex_ in a
+            // callback
+
+            std::lock_guard<std::mutex> clips_guard(context->env_mtx_);
+            clips::FactBuilder *fact_builder =
+                clips::CreateFactBuilder(env, "ros-msgs-feedback");
+            clips::FBPutSlotString(fact_builder, "server",
+                                   action_server.c_str());
+            clips::FBPutSlotCLIPSExternalAddress(
+                fact_builder, "client-goal-handle-ptr",
+                clips::CreateCExternalAddress(env, goal_handle.get()));
+            clips::FBPutSlotCLIPSExternalAddress(
+                fact_builder, "feedback-ptr",
+                clips::CreateCExternalAddress(env, ptr.get()));
+            clips::FBAssert(fact_builder);
+            clips::FBDispose(fact_builder);
+          });
+          cv_.notify_one(); // Notify the worker thread
+        };
 
     send_goal_options
         .result_callback = [this, context, env, action_server](
                                const rclcpp_action::GenericClientGoalHandle::
                                    WrappedResult &wrapped_result) {
       task_queue_.push([this, context, env, action_server, wrapped_result]() {
-        std::lock_guard<std::mutex> guard(context->env_mtx_);
+        RCLCPP_INFO(*logger_, "result callback task started for %s",
+                    action_server.c_str());
         std::shared_ptr<MessageInfo> result_msg;
         {
           std::scoped_lock map_lock{map_mtx_};
           std::string action_type =
               action_types_[context->env_name_][action_server];
           // TODO: convert wrapped_result.result into MessageInfo
-          auto *introspection_type_support =
-              rclcpp::get_action_typesupport_handle(
-                  action_type,
-                  rosidl_typesupport_introspection_cpp::typesupport_identifier,
-                  *libs_[action_type].get());
-          auto *introspection_info = static_cast<
+          for (const auto &stuff : libs_) {
+            RCLCPP_INFO(*logger_, "libs_ content %s", stuff.first.c_str());
+          }
+          RCLCPP_INFO(*logger_, "result callback %s", action_type.c_str());
+
+          auto *introspection_type_support = get_service_typesupport_handle(
+              action_type_support_cache_[action_type]
+                  ->result_service_type_support,
+              rosidl_typesupport_introspection_cpp::typesupport_identifier);
+
+          auto *members = static_cast<
               const rosidl_typesupport_introspection_cpp::MessageMembers *>(
-              introspection_type_support->result_service_type_support
-                  ->response_typesupport->data);
-          result_msg = std::make_shared<RosMsgsPlugin::MessageInfo>(
-              introspection_info, wrapped_result.result);
+              introspection_type_support->response_typesupport->data);
+          for (size_t i = 0; i < members->member_count_; ++i) {
+            const auto &member = members->members_[i];
+            if (strcmp(member.name_, "result") == 0) {
+              RCLCPP_INFO(*logger_, "member.name_: %s vs result", member.name_);
+              RCLCPP_INFO(*logger_, "result namespace %s, result type %s",
+                          members->message_namespace_, members->message_name_);
+              const rosidl_message_type_support_t *type_support =
+                  member.members_;
+              if (type_support) {
+                // Get the members of the nested message
+                const rosidl_typesupport_introspection_cpp::MessageMembers
+                    *nested_members =
+                        static_cast<const rosidl_typesupport_introspection_cpp::
+                                        MessageMembers *>(type_support->data);
+                std::string message_type = get_msg_type(nested_members);
+                if (!libs_.contains(message_type)) {
+                  libs_[message_type] = rclcpp::get_typesupport_library(
+                      message_type, "rosidl_typesupport_cpp");
+                }
+                if (!type_support_cache_.contains(message_type)) {
+                  type_support_cache_[message_type] =
+                      rclcpp::get_message_typesupport_handle(
+                          message_type, "rosidl_typesupport_cpp",
+                          *libs_[message_type]);
+                }
+                RCLCPP_INFO(*logger_, "I CREATE A RESULT");
+                // ptr = std::make_shared<MessageInfo>(nested_members);
+                //
+                result_msg = std::make_shared<RosMsgsPlugin::MessageInfo>(
+                    nested_members);
+                deep_copy_msg(wrapped_result.result, result_msg->msg_ptr,
+                              nested_members);
+                RCLCPP_INFO(*logger_, "DONE CREATING A RESULT");
+              } else {
+                RCLCPP_INFO(*logger_, "NO TYPE_SUPPORT");
+              }
+              //	ptr =
+              // std::make_shared<RosMsgsPlugin::MessageInfo>(member.members_);
+              //	messages_[ptr.get()] = ptr;
+              //	clips::UDFValue res;
+              //	res.externalAddressValue =
+              //	    clips::CreateCExternalAddress(env, (void
+              //*)ptr.get()); 	return res;
+            } else {
+              RCLCPP_INFO(*logger_, "member.name_: %s vs result", member.name_);
+            }
+          }
           messages_.try_emplace(result_msg.get(), result_msg);
         }
+        std::lock_guard<std::mutex> guard(context->env_mtx_);
         clips::FactBuilder *fact_builder =
             clips::CreateFactBuilder(env, "ros-msgs-wrapped-result");
         clips::FBPutSlotString(fact_builder, "server", action_server.c_str());
@@ -1076,8 +1657,11 @@ RosMsgsPlugin::async_send_new_goal(clips::Environment *env,
       cv_.notify_one(); // Notify the worker thread
     };
     std::shared_ptr<MessageInfo> goal_info = messages_[deserialized_goal];
+    RCLCPP_INFO(*logger_, "Sending Goal for %s of size %i",
+                action_server.c_str(), goal_info->members->size_of_);
     action_clients_[env_name][action_server]->async_send_goal(
-        deserialized_goal, goal_info->members->size_of_, send_goal_options);
+        messages_[deserialized_goal]->msg_ptr, goal_info->members->size_of_,
+        send_goal_options);
   }).detach();
 }
 #endif
@@ -1140,26 +1724,6 @@ rclcpp::SerializedMessage RosMsgsPlugin::serialize_msg(
     serialized_msg.buffer_capacity;
   typed_serialized_msg.get_rcl_serialized_message().buffer_length = serialized_msg.buffer_length;
   return typed_serialized_msg;
-}
-
-rclcpp::SerializedMessage
-RosMsgsPlugin::serialize_srv_response(std::shared_ptr<MessageInfo> msg_info,
-                                      const std::string &srv_type) {
-  rclcpp::SerializedMessage serialized_msg;
-  auto *introspection_type_support = get_service_typesupport_handle(
-      service_type_support_cache_[srv_type],
-      rosidl_typesupport_introspection_cpp::typesupport_identifier);
-  rmw_ret_t ret = rmw_serialize(
-      msg_info->msg_ptr, introspection_type_support->response_typesupport,
-      &serialized_msg.get_rcl_serialized_message());
-
-  if (ret != RMW_RET_OK) {
-    RCLCPP_ERROR(*logger_, "Failed to serialize message: %s",
-                 rmw_get_error_string().str);
-    return {};
-  }
-
-  return serialized_msg;
 }
 
 void RosMsgsPlugin::publish_to_topic(clips::Environment *env,

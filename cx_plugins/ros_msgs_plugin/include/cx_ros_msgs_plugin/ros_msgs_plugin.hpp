@@ -184,12 +184,12 @@ private:
   void create_new_service(clips::Environment *env,
                           const std::string &service_name,
                           const std::string &service_type);
-  clips::UDFValue create_goal_request(clips::Environment *env,
-                                      const std::string &action_type);
+  clips::UDFValue create_goal(clips::Environment *env,
+                              const std::string &action_type);
 
-  clips::UDFValue async_send_new_goal(clips::Environment *env,
-                                      const std::string &action_server,
-                                      void *goal_request);
+  void async_send_new_goal(clips::Environment *env,
+                           const std::string &action_server,
+                           void *goal_request);
 
 #endif
   clips::UDFValue send_request(clips::Environment *env, void *deserialized_msg,
@@ -204,9 +204,6 @@ private:
 
   rclcpp::SerializedMessage serialize_msg(std::shared_ptr<MessageInfo> msg_info,
                                           const std::string &msg_type);
-  rclcpp::SerializedMessage
-  serialize_srv_response(std::shared_ptr<MessageInfo> msg_info,
-                         const std::string &msg_type);
 
   void move_field_to_parent(
     void * parent_msg, const rosidl_typesupport_introspection_cpp::MessageMember * parent_member,
@@ -276,6 +273,9 @@ private:
   void service_callback(clips::Environment *env, const std::string service_name,
                         rclcpp::GenericService::SharedRequest request,
                         rclcpp::GenericService::SharedResponse response);
+  void
+  deep_copy_msg(const void *src, void *dest,
+                const rosidl_typesupport_introspection_cpp::MessageMembers *);
 #endif
 };
 }  // namespace cx
