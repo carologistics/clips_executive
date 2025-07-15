@@ -23,6 +23,7 @@ find_package(rosidl_typesupport_introspection_cpp REQUIRED)
 find_package(rcutils REQUIRED)
 find_package(ICU REQUIRED COMPONENTS uc i18n)
 find_package(rclcpp_action REQUIRED)
+find_package(action_msgs REQUIRED)
 
 set(dependencies
   ament_cmake
@@ -35,6 +36,7 @@ set(dependencies
   clips
   rosidl_typesupport_cpp
   rosidl_typesupport_introspection_cpp
+  action_msgs
   rcutils
   ICU
 )

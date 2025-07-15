@@ -179,8 +179,22 @@ private:
   void destroy_client(clips::Environment *env, const std::string &service_name);
 #ifdef MORE_STUFF
   void create_new_action_client(clips::Environment *env,
-                                const std::string &service_name,
-                                const std::string &service_type);
+                                const std::string &server_name,
+                                const std::string &server_type);
+  void destroy_action_client(clips::Environment *env,
+                             const std::string &server_name);
+  void destroy_client_goal_handle(void *client_goal_handle);
+
+  clips::UDFValue client_goal_handle_get_goal_id(clips::Environment *env,
+                                                 clips::UDFContext *udfc,
+                                                 void *client_goal_handle);
+
+  clips::UDFValue client_goal_handle_get_goal_stamp(clips::Environment *env,
+                                                    clips::UDFContext *udfc,
+                                                    void *client_goal_handle);
+  clips::UDFValue client_goal_handle_get_status(clips::Environment *env,
+                                                clips::UDFContext *udfc,
+                                                void *client_goal_handle);
   void create_new_service(clips::Environment *env,
                           const std::string &service_name,
                           const std::string &service_type);

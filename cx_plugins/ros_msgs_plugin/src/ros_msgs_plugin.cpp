@@ -31,8 +31,10 @@
 #include "unicode/unistr.h"
 
 #ifdef MORE_STUFF
+#include "action_msgs/msg/goal_status.hpp"
 #include <rclcpp/create_generic_service.hpp>
 #include <rclcpp_action/create_generic_client.hpp>
+
 #endif
 
 // To export as plugin
@@ -299,6 +301,22 @@ bool RosMsgsPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
       },
       "create_new_action_client", this);
 
+  fun_name = "ros-msgs-destroy-action-client";
+  function_names_.insert(fun_name);
+  clips::AddUDF(
+      env.get(), fun_name.c_str(), "v", 1, 1, ";sy",
+      [](clips::Environment *env, clips::UDFContext *udfc,
+         clips::UDFValue * /*out*/) {
+        auto *instance = static_cast<RosMsgsPlugin *>(udfc->context);
+        clips::UDFValue action_server;
+        using namespace clips;
+        clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &action_server);
+
+        instance->destroy_action_client(env,
+                                        action_server.lexemeValue->contents);
+      },
+      "destroy_action_client", this);
+
   fun_name = "ros-msgs-create-goal-request";
   function_names_.insert(fun_name);
   clips::AddUDF(
@@ -331,6 +349,56 @@ bool RosMsgsPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
             goal_request.externalAddressValue->contents);
       },
       "async_send_goal", this);
+
+  fun_name = "ros-msgs-destroy-client-goal-handle";
+  function_names_.insert(fun_name);
+  clips::AddUDF(
+      env.get(), fun_name.c_str(), "v", 1, 1, ";e",
+      [](clips::Environment *env, clips::UDFContext *udfc,
+         clips::UDFValue *out) {
+        (void)env;
+        (void)out;
+        auto *instance = static_cast<RosMsgsPlugin *>(udfc->context);
+        clips::UDFValue client_goal_handle;
+        using namespace clips;
+        clips::UDFNthArgument(udfc, 1, EXTERNAL_ADDRESS_BIT,
+                              &client_goal_handle);
+        instance->destroy_client_goal_handle(
+            client_goal_handle.externalAddressValue->contents);
+      },
+      "destroy_client_goal_handle", this);
+
+  fun_name = "ros-msgs-client-goal-handle-get-goal-id";
+  function_names_.insert(fun_name);
+  clips::AddUDF(
+      env.get(), fun_name.c_str(), "y", 1, 1, ";e",
+      [](clips::Environment *env, clips::UDFContext *udfc,
+         clips::UDFValue *out) {
+        auto *instance = static_cast<RosMsgsPlugin *>(udfc->context);
+        clips::UDFValue client_goal_handle;
+        using namespace clips;
+        clips::UDFNthArgument(udfc, 1, EXTERNAL_ADDRESS_BIT,
+                              &client_goal_handle);
+        *out = instance->client_goal_handle_get_goal_id(
+            env, udfc, client_goal_handle.externalAddressValue->contents);
+      },
+      "client_goal_handle_get_goal_id", this);
+
+  fun_name = "ros-msgs-client-goal-handle-get-goal-stamp";
+  function_names_.insert(fun_name);
+  clips::AddUDF(
+      env.get(), fun_name.c_str(), "d", 1, 1, ";e",
+      [](clips::Environment *env, clips::UDFContext *udfc,
+         clips::UDFValue *out) {
+        auto *instance = static_cast<RosMsgsPlugin *>(udfc->context);
+        clips::UDFValue client_goal_handle;
+        using namespace clips;
+        clips::UDFNthArgument(udfc, 1, EXTERNAL_ADDRESS_BIT,
+                              &client_goal_handle);
+        *out = instance->client_goal_handle_get_goal_stamp(
+            env, udfc, client_goal_handle.externalAddressValue->contents);
+      },
+      "client_goal_handle_get_goal_stamp", this);
 
   fun_name = "ros-msgs-create-service";
   function_names_.insert(fun_name);
@@ -408,13 +476,14 @@ bool RosMsgsPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
             (slot request-id (type INTEGER) ) \
             (slot msg-ptr (type EXTERNAL-ADDRESS)) \
             )");
+#ifdef MORE_STUFF
   clips::Build(env.get(), "(deftemplate ros-msgs-action-response \
             (slot server (type STRING) ) \
             (slot client-goal-handle-ptr (type EXTERNAL-ADDRESS) ) \
             )");
   clips::Build(env.get(), "(deftemplate ros-msgs-wrapped-result \
             (slot server (type STRING) ) \
-            (slot goal-id (type STRING) ) \
+            (slot goal-id (type SYMBOL) ) \
             (slot code (type SYMBOL) (allowed-values UNKNOWN SUCCEEDED CANCELED  ABORTED)) \
             (slot result-ptr (type EXTERNAL-ADDRESS)) \
             )");
@@ -423,6 +492,7 @@ bool RosMsgsPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
             (slot client-goal-handle-ptr (type EXTERNAL-ADDRESS) ) \
             (slot feedback-ptr (type EXTERNAL-ADDRESS)) \
             )");
+#endif
   return true;
 }
 
@@ -460,13 +530,31 @@ bool RosMsgsPlugin::clips_env_destroyed(std::shared_ptr<clips::Environment> & en
   if (curr_tmpl) {
     clips::Undeftemplate(curr_tmpl, env.get());
   } else {
-    RCLCPP_WARN(*logger_, "ros-msgs-client cant be undefined");
+    RCLCPP_WARN(*logger_, "ros-msgs-service cant be undefined");
   }
   curr_tmpl = clips::FindDeftemplate(env.get(), "ros-msgs-action-client");
   if (curr_tmpl) {
     clips::Undeftemplate(curr_tmpl, env.get());
   } else {
-    RCLCPP_WARN(*logger_, "ros-msgs-client cant be undefined");
+    RCLCPP_WARN(*logger_, "ros-msgs-action-client cant be undefined");
+  }
+  curr_tmpl = clips::FindDeftemplate(env.get(), "ros-msgs-action-response");
+  if (curr_tmpl) {
+    clips::Undeftemplate(curr_tmpl, env.get());
+  } else {
+    RCLCPP_WARN(*logger_, "ros-msgs-action-response cant be undefined");
+  }
+  curr_tmpl = clips::FindDeftemplate(env.get(), "ros-msgs-wrapped-result");
+  if (curr_tmpl) {
+    clips::Undeftemplate(curr_tmpl, env.get());
+  } else {
+    RCLCPP_WARN(*logger_, "ros-msgs-wrapped-result cant be undefined");
+  }
+  curr_tmpl = clips::FindDeftemplate(env.get(), "ros-msgs-feedback");
+  if (curr_tmpl) {
+    clips::Undeftemplate(curr_tmpl, env.get());
+  } else {
+    RCLCPP_WARN(*logger_, "ros-msgs-feedback cant be undefined");
   }
 #endif
   curr_tmpl = clips::FindDeftemplate(env.get(), "ros-msgs-response");
@@ -1571,7 +1659,7 @@ void RosMsgsPlugin::async_send_new_goal(clips::Environment *env,
         clips::FactBuilder *fact_builder =
             clips::CreateFactBuilder(env, "ros-msgs-wrapped-result");
         clips::FBPutSlotString(fact_builder, "server", action_server.c_str());
-        clips::FBPutSlotString(
+        clips::FBPutSlotSymbol(
             fact_builder, "goal-id",
             rclcpp_action::to_string(wrapped_result.goal_id).c_str());
         std::string code_str = "UNKNOWN";
@@ -1640,10 +1728,135 @@ void RosMsgsPlugin::destroy_client(clips::Environment *env,
   }
 }
 
-rclcpp::SerializedMessage RosMsgsPlugin::serialize_msg(
-  std::shared_ptr<MessageInfo> msg_info, const std::string & msg_type)
-{
-  rmw_serialized_message_t serialized_msg = rmw_get_zero_initialized_serialized_message();
+#ifdef MORE_STUFF
+void RosMsgsPlugin::destroy_action_client(clips::Environment *env,
+                                          const std::string &server_name) {
+  auto context = CLIPSEnvContext::get_context(env);
+  std::string env_name = context->env_name_;
+  map_mtx_.lock();
+  auto outer_it = action_clients_.find(env_name);
+  if (outer_it != action_clients_.end()) {
+    // Check if server_name exists in the inner map
+    auto &inner_map = outer_it->second;
+    auto inner_it = inner_map.find(server_name);
+    if (inner_it != inner_map.end()) {
+      // Remove the server_name entry from the inner map
+      RCLCPP_DEBUG(*logger_, "Destroying action client for server %s",
+                   server_name.c_str());
+      inner_map.erase(inner_it);
+      map_mtx_.unlock();
+      clips::Eval(
+          env,
+          ("(do-for-all-facts ((?f ros-msgs-action-client)) (eq (str-cat "
+           "?f:server) (str-cat \"" +
+           server_name + "\"))  (retract ?f))")
+              .c_str(),
+          NULL);
+    } else {
+      map_mtx_.unlock();
+      RCLCPP_WARN(*logger_, "Action client %s not found in environment %s",
+                  server_name.c_str(), env_name.c_str());
+    }
+  } else {
+    map_mtx_.unlock();
+    RCLCPP_WARN(*logger_, "Environment %s not found", env_name.c_str());
+  }
+}
+
+void RosMsgsPlugin::destroy_client_goal_handle(void *client_goal_handle) {
+  client_goal_handles_.erase(client_goal_handle);
+}
+
+clips::UDFValue
+RosMsgsPlugin::client_goal_handle_get_goal_id(clips::Environment *env,
+                                              clips::UDFContext *udfc,
+                                              void *client_goal_handle) {
+  std::scoped_lock map_lock{map_mtx_};
+  clips::UDFValue res;
+  auto typed_goal_handle = client_goal_handles_.at(client_goal_handle);
+  if (!typed_goal_handle) {
+    RCLCPP_ERROR(*logger_,
+                 "client-goal-handle-get-goal-id: Invalid pointer to handle");
+    clips::UDFThrowError(udfc);
+    return res;
+  }
+  rclcpp_action::GoalUUID goal_id = typed_goal_handle->get_goal_id();
+  res.lexemeValue =
+      clips::CreateSymbol(env, rclcpp_action::to_string(goal_id).c_str());
+  res.begin = 0;
+  res.range = -1;
+  return res;
+}
+
+clips::UDFValue
+RosMsgsPlugin::client_goal_handle_get_goal_stamp(clips::Environment *env,
+                                                 clips::UDFContext *udfc,
+                                                 void *client_goal_handle) {
+  std::scoped_lock map_lock{map_mtx_};
+  clips::UDFValue res;
+  auto typed_goal_handle = client_goal_handles_.at(client_goal_handle);
+  if (!typed_goal_handle) {
+    RCLCPP_ERROR(
+        *logger_,
+        "client-goal-handle-get-goal-stamp: Invalid pointer to handle");
+    clips::UDFThrowError(udfc);
+    return res;
+  }
+  res.floatValue =
+      clips::CreateFloat(env, typed_goal_handle->get_goal_stamp().seconds());
+  res.begin = 0;
+  res.range = -1;
+  return res;
+}
+
+clips::UDFValue
+RosMsgsPlugin::client_goal_handle_get_status(clips::Environment *env,
+                                             clips::UDFContext *udfc,
+                                             void *client_goal_handle) {
+  std::scoped_lock map_lock{map_mtx_};
+  clips::UDFValue res;
+  auto typed_goal_handle = client_goal_handles_.at(client_goal_handle);
+  if (!typed_goal_handle) {
+    RCLCPP_ERROR(*logger_,
+                 "client-goal-handle-get-status: Invalid pointer to handle");
+    clips::UDFThrowError(udfc);
+    return res;
+  }
+  std::string code_str = "UNKNOWN";
+  switch (typed_goal_handle->get_status()) {
+  case action_msgs::msg::GoalStatus::STATUS_UNKNOWN:
+    break;
+  case action_msgs::msg::GoalStatus::STATUS_SUCCEEDED:
+    code_str = "SUCCEEDED";
+    break;
+  case action_msgs::msg::GoalStatus::STATUS_CANCELED:
+    code_str = "CANCELED";
+    break;
+  case action_msgs::msg::GoalStatus::STATUS_ABORTED:
+    code_str = "ABORTED";
+    break;
+  case action_msgs::msg::GoalStatus::STATUS_ACCEPTED:
+    code_str = "ACCEPTED";
+    break;
+  case action_msgs::msg::GoalStatus::STATUS_EXECUTING:
+    code_str = "EXECUTING";
+    break;
+  case action_msgs::msg::GoalStatus::STATUS_CANCELING:
+    code_str = "CANCELING";
+    break;
+  }
+  res.lexemeValue = clips::CreateSymbol(env, code_str.c_str());
+  res.begin = 0;
+  res.range = -1;
+  return res;
+}
+#endif
+
+rclcpp::SerializedMessage
+RosMsgsPlugin::serialize_msg(std::shared_ptr<MessageInfo> msg_info,
+                             const std::string &msg_type) {
+  rmw_serialized_message_t serialized_msg =
+      rmw_get_zero_initialized_serialized_message();
 
   const size_t initial_capacity = msg_info->members->size_of_;
   ;
