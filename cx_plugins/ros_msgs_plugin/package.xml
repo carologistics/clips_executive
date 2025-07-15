@@ -18,6 +18,7 @@
   <depend>clips_vendor</depend>
   <depend>rosidl_typesupport_cpp</depend>
   <depend>rosidl_typesupport_introspection_cpp</depend>
+  <depend>action_msgs</depend>
   <depend>rcutils</depend>
   <!-- for unicode support -->
   <depend>libicu-dev</depend>
