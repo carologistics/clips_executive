@@ -2,8 +2,8 @@
 Changelog for package cx_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.2 (2025-07-16)
+------------------
 * cx_msgs: clean up unnecessary dependencies
 * Contributors: Tarik Viehmann
 
