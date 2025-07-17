@@ -24,6 +24,7 @@
 
 (defrule pddl-init-plan-client
     (not (pddl-planning-client-created))
+    (pddl-services-loaded)
     =>
     (pddl-msgs-plan-temporal-create-client (str-cat "/pddl_manager" "/temp_plan"))
     (assert (pddl-planning-client-created))
@@ -34,7 +35,7 @@
 (defrule pddl-add-instance
 	(ros-msgs-client (service ?service&:(eq ?service (str-cat "/pddl_manager" "/add_pddl_instance"))) (type ?type))
 	(not (pddl-loaded))
-    (pddl-services-loaded)
+    (pddl-planning-client-created)
 	=>
 	(bind ?new-req (ros-msgs-create-request ?type))
 	(ros-msgs-set-field ?new-req "name" "test") ;instance of name test
@@ -50,6 +51,7 @@
 (defrule pddl-add-instance-result
 	(ros-msgs-client (service ?s&:(eq ?s (str-cat "/pddl_manager" "/add_pddl_instance"))) (type ?type))
 	?msg-f <- (ros-msgs-response (service ?s) (msg-ptr ?ptr) (request-id ?id))
+    (pddl-loaded)
 	=>
     (bind ?success (ros-msgs-get-field ?ptr "success"))
     (bind ?error (ros-msgs-get-field ?ptr "error"))
@@ -60,13 +62,14 @@
     )
     (ros-msgs-destroy-message ?ptr)
     (retract ?msg-f)
+    (assert (pddl-loaded-confirmed))
 )
 
 ; ---------------- GET CURRENT FLUENTS ------------------
 
 (defrule pddl-get-fluents
     (ros-msgs-client (service ?s&:(eq ?s (str-cat "/pddl_manager" "/get_fluents"))) (type ?type))
-    (pddl-loaded)
+    (pddl-loaded-confirmed)
     (not (pddl-fluents-requested))
     =>
     (bind ?new-req (ros-msgs-create-request ?type))
@@ -163,6 +166,7 @@
 (defrule pddl-plan
     (pddl-msgs-plan-temporal-client (server ?server&:(eq ?server "/pddl_manager/temp_plan")))
     (not (planned))
+    (pddl-goals-set)
     =>
     (printout green "Start planning" crlf)
     (bind ?goal (pddl-msgs-plan-temporal-goal-create))
