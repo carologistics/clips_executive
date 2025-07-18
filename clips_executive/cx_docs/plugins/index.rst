@@ -137,4 +137,5 @@ Available Plugins
    file_load_plugin.rst
    protobuf_plugin.rst
    ros_msgs_plugin.rst
+   ros_param_plugin.rst
    tf2_pose_tracker_plugin.rst
