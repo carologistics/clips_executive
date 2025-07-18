@@ -47,3 +47,4 @@ Note that all functions catch potential exceptions thrown by `ament_index_cpp` a
 
 (bind ?prefix (ament-index-get-search-paths))
 ; example ret: ("/opt/ros/<ros-distro>" "<path-to-other-prefix>" ...)
+```
