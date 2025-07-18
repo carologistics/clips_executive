@@ -16,6 +16,7 @@
 #include "cx_utils/clips_env_context.hpp"
 
 #include "rclcpp/logging.hpp"
+#include <filesystem>
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 
@@ -38,16 +39,27 @@ CLIPSLogger::CLIPSLogger(const char *component, bool log_to_file,
   auto now = std::chrono::system_clock::now();
   std::time_t now_time = std::chrono::system_clock::to_time_t(now);
 
-  std::ostringstream oss;
-  oss << std::put_time(std::localtime(&now_time), "%Y-%m-%d-%H-%M-%S");
-
-  std::string formatted_time = oss.str();
   if (log_to_file) {
-    clips_logger_ = spdlog::basic_logger_st(
-        (component_ ? (std::string)component_ : "CLIPS"),
-        (rclcpp::get_logging_directory().string() + "/" +
-         (component_ ? (std::string)component_ : "clips") + "_" +
-         formatted_time + ".log"));
+    std::ostringstream oss;
+    oss << std::put_time(std::localtime(&now_time), "%Y-%m-%d-%H-%M-%S");
+
+    std::string formatted_time = oss.str();
+    std::string base_name = component_ ? std::string(component_) : "clips";
+    std::string log_filename = rclcpp::get_logging_directory().string() + "/" +
+                               base_name + "_" + formatted_time + ".log";
+    clips_logger_ = spdlog::basic_logger_st(base_name, log_filename);
+    std::string symlink_path = rclcpp::get_logging_directory().string() + "/" +
+                               base_name + "_latest.log";
+
+    namespace fs = std::filesystem;
+    try {
+      if (fs::exists(symlink_path) || fs::is_symlink(symlink_path)) {
+        fs::remove(symlink_path);
+      }
+      fs::create_symlink(log_filename, symlink_path);
+    } catch (const std::exception &e) {
+      std::cerr << "Failed to create symlink: " << e.what() << std::endl;
+    }
   } else {
     // Disable the logger by setting the log level to a level that filters out
     // all messages
