@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygenindex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="index.xsd" version="1.9.8" xml:lang="en-US">
+  <compound refid="classcx_1_1RosParamPlugin" kind="class"><name>cx::RosParamPlugin</name>
+    <member refid="classcx_1_1RosParamPlugin_1aabb188de9d29de9649da5e588c47a862" kind="variable"><name>logger_</name></member>
+    <member refid="classcx_1_1RosParamPlugin_1af9d013b79e44e7161a9574307a135e21" kind="function"><name>RosParamPlugin</name></member>
+    <member refid="classcx_1_1RosParamPlugin_1a7b62597a86e74eb39b8113f0cba9087c" kind="function"><name>~RosParamPlugin</name></member>
+    <member refid="classcx_1_1RosParamPlugin_1abade68dca06952f8e6580e0adf32ee45" kind="function"><name>initialize</name></member>
+    <member refid="classcx_1_1RosParamPlugin_1ac0efd291b6cb17ea4a0b79e6575f6cbf" kind="function"><name>clips_env_init</name></member>
+    <member refid="classcx_1_1RosParamPlugin_1a503cdfc3ead3f3486a210d207a56cf7a" kind="function"><name>clips_env_destroyed</name></member>
+    <member refid="classcx_1_1RosParamPlugin_1acb1e9694f31c1ad6d2fdf51af8fb86d9" kind="function"><name>get_ros_param</name></member>
+  </compound>
+  <compound refid="namespacecx" kind="namespace"><name>cx</name>
+  </compound>
+  <compound refid="ros__param__plugin_8hpp" kind="file"><name>ros_param_plugin.hpp</name>
+  </compound>
+  <compound refid="dir_00f05691c42b71b69b202fd52bd38d39" kind="dir"><name>include/cx_ros_param_plugin</name>
+  </compound>
+  <compound refid="dir_d44c64559bbebec7f509842c48db8b23" kind="dir"><name>include</name>
+  </compound>
+</doxygenindex>

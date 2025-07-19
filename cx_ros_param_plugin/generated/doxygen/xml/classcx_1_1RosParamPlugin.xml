@@ -1,0 +1,175 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="classcx_1_1RosParamPlugin" kind="class" language="C++" prot="public">
+    <compoundname>cx::RosParamPlugin</compoundname>
+    <basecompoundref refid="classcx_1_1ClipsPlugin" prot="public" virt="non-virtual">cx::ClipsPlugin</basecompoundref>
+    <sectiondef kind="private-attrib">
+      <memberdef kind="variable" id="classcx_1_1RosParamPlugin_1aabb188de9d29de9649da5e588c47a862" prot="private" static="no" mutable="no">
+        <type>std::unique_ptr&lt; rclcpp::Logger &gt;</type>
+        <definition>std::unique_ptr&lt;rclcpp::Logger&gt; cx::RosParamPlugin::logger_</definition>
+        <argsstring></argsstring>
+        <name>logger_</name>
+        <qualifiedname>cx::RosParamPlugin::logger_</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_ros_param_plugin/ros_param_plugin.hpp" line="35" column="19" bodyfile="include/cx_ros_param_plugin/ros_param_plugin.hpp" bodystart="35" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-func">
+      <memberdef kind="function" id="classcx_1_1RosParamPlugin_1af9d013b79e44e7161a9574307a135e21" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>cx::RosParamPlugin::RosParamPlugin</definition>
+        <argsstring>()</argsstring>
+        <name>RosParamPlugin</name>
+        <qualifiedname>cx::RosParamPlugin::RosParamPlugin</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_ros_param_plugin/ros_param_plugin.hpp" line="26" column="3"/>
+      </memberdef>
+      <memberdef kind="function" id="classcx_1_1RosParamPlugin_1a7b62597a86e74eb39b8113f0cba9087c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>cx::RosParamPlugin::~RosParamPlugin</definition>
+        <argsstring>()</argsstring>
+        <name>~RosParamPlugin</name>
+        <qualifiedname>cx::RosParamPlugin::~RosParamPlugin</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_ros_param_plugin/ros_param_plugin.hpp" line="27" column="3"/>
+      </memberdef>
+      <memberdef kind="function" id="classcx_1_1RosParamPlugin_1abade68dca06952f8e6580e0adf32ee45" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type>void</type>
+        <definition>void cx::RosParamPlugin::initialize</definition>
+        <argsstring>() override</argsstring>
+        <name>initialize</name>
+        <qualifiedname>cx::RosParamPlugin::initialize</qualifiedname>
+        <reimplements refid="classcx_1_1ClipsPlugin_1a6bdb6ad84acf811daf6facf8a5497e2f">initialize</reimplements>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_ros_param_plugin/ros_param_plugin.hpp" line="29" column="8"/>
+      </memberdef>
+      <memberdef kind="function" id="classcx_1_1RosParamPlugin_1ac0efd291b6cb17ea4a0b79e6575f6cbf" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type>bool</type>
+        <definition>bool cx::RosParamPlugin::clips_env_init</definition>
+        <argsstring>(std::shared_ptr&lt; clips::Environment &gt; &amp;env) override</argsstring>
+        <name>clips_env_init</name>
+        <qualifiedname>cx::RosParamPlugin::clips_env_init</qualifiedname>
+        <reimplements refid="classcx_1_1ClipsPlugin_1ae0bf2f3822f20d250a1763bb2f7b1b8c">clips_env_init</reimplements>
+        <param>
+          <type>std::shared_ptr&lt; clips::Environment &gt; &amp;</type>
+          <declname>env</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_ros_param_plugin/ros_param_plugin.hpp" line="31" column="8"/>
+      </memberdef>
+      <memberdef kind="function" id="classcx_1_1RosParamPlugin_1a503cdfc3ead3f3486a210d207a56cf7a" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
+        <type>bool</type>
+        <definition>bool cx::RosParamPlugin::clips_env_destroyed</definition>
+        <argsstring>(std::shared_ptr&lt; clips::Environment &gt; &amp;env) override</argsstring>
+        <name>clips_env_destroyed</name>
+        <qualifiedname>cx::RosParamPlugin::clips_env_destroyed</qualifiedname>
+        <reimplements refid="classcx_1_1ClipsPlugin_1a503dc794d932be7047a2d9c3901c61df">clips_env_destroyed</reimplements>
+        <param>
+          <type>std::shared_ptr&lt; clips::Environment &gt; &amp;</type>
+          <declname>env</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_ros_param_plugin/ros_param_plugin.hpp" line="32" column="8"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="private-func">
+      <memberdef kind="function" id="classcx_1_1RosParamPlugin_1acb1e9694f31c1ad6d2fdf51af8fb86d9" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>clips::UDFValue</type>
+        <definition>clips::UDFValue cx::RosParamPlugin::get_ros_param</definition>
+        <argsstring>(clips::Environment *env, std::string param_name, clips::UDFValue &amp;default_value)</argsstring>
+        <name>get_ros_param</name>
+        <qualifiedname>cx::RosParamPlugin::get_ros_param</qualifiedname>
+        <param>
+          <type>clips::Environment *</type>
+          <declname>env</declname>
+        </param>
+        <param>
+          <type>std::string</type>
+          <declname>param_name</declname>
+        </param>
+        <param>
+          <type>clips::UDFValue &amp;</type>
+          <declname>default_value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_ros_param_plugin/ros_param_plugin.hpp" line="37" column="19"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="2">
+        <label>cx::ClipsPlugin</label>
+        <link refid="classcx_1_1ClipsPlugin" external="/home/runner/work/clips_executive/clips_executive/cross_reference/cx_plugin/cx_plugin.tag"/>
+      </node>
+      <node id="1">
+        <label>cx::RosParamPlugin</label>
+        <link refid="classcx_1_1RosParamPlugin"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="2">
+        <label>cx::ClipsPlugin</label>
+        <link refid="classcx_1_1ClipsPlugin" external="/home/runner/work/clips_executive/clips_executive/cross_reference/cx_plugin/cx_plugin.tag"/>
+      </node>
+      <node id="1">
+        <label>cx::RosParamPlugin</label>
+        <link refid="classcx_1_1RosParamPlugin"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="include/cx_ros_param_plugin/ros_param_plugin.hpp" line="24" column="1" bodyfile="include/cx_ros_param_plugin/ros_param_plugin.hpp" bodystart="24" bodyend="39"/>
+    <listofallmembers>
+      <member refid="classcx_1_1RosParamPlugin_1a503cdfc3ead3f3486a210d207a56cf7a" prot="public" virt="virtual"><scope>cx::RosParamPlugin</scope><name>clips_env_destroyed</name></member>
+      <member refid="classcx_1_1RosParamPlugin_1ac0efd291b6cb17ea4a0b79e6575f6cbf" prot="public" virt="virtual"><scope>cx::RosParamPlugin</scope><name>clips_env_init</name></member>
+      <member refid="classcx_1_1ClipsPlugin_1a3aa0e046356cc938b853e414c539cb60" prot="public" virt="virtual"><scope>cx::RosParamPlugin</scope><name>finalize</name></member>
+      <member refid="classcx_1_1RosParamPlugin_1acb1e9694f31c1ad6d2fdf51af8fb86d9" prot="private" virt="non-virtual"><scope>cx::RosParamPlugin</scope><name>get_ros_param</name></member>
+      <member refid="classcx_1_1RosParamPlugin_1abade68dca06952f8e6580e0adf32ee45" prot="public" virt="virtual"><scope>cx::RosParamPlugin</scope><name>initialize</name></member>
+      <member refid="classcx_1_1RosParamPlugin_1aabb188de9d29de9649da5e588c47a862" prot="private" virt="non-virtual"><scope>cx::RosParamPlugin</scope><name>logger_</name></member>
+      <member refid="classcx_1_1ClipsPlugin_1a5c9c64f5ab925a688f022554d3985342" prot="protected" virt="non-virtual"><scope>cx::RosParamPlugin</scope><name>parent_</name></member>
+      <member refid="classcx_1_1ClipsPlugin_1aace7c9a1941b76a19a23e6881ec26906" prot="protected" virt="non-virtual"><scope>cx::RosParamPlugin</scope><name>plugin_name_</name></member>
+      <member refid="classcx_1_1RosParamPlugin_1af9d013b79e44e7161a9574307a135e21" prot="public" virt="non-virtual"><scope>cx::RosParamPlugin</scope><name>RosParamPlugin</name></member>
+      <member refid="classcx_1_1RosParamPlugin_1a7b62597a86e74eb39b8113f0cba9087c" prot="public" virt="non-virtual"><scope>cx::RosParamPlugin</scope><name>~RosParamPlugin</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

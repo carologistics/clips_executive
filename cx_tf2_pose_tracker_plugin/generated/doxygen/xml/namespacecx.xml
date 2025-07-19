@@ -12,6 +12,7 @@
     <innerclass refid="classcx_1_1FileLoadPlugin" prot="public">cx::FileLoadPlugin</innerclass>
     <innerclass refid="classcx_1_1ProtobufPlugin" prot="public">cx::ProtobufPlugin</innerclass>
     <innerclass refid="classcx_1_1RosMsgsPlugin" prot="public">cx::RosMsgsPlugin</innerclass>
+    <innerclass refid="classcx_1_1RosParamPlugin" prot="public">cx::RosParamPlugin</innerclass>
     <innerclass refid="classcx_1_1Tf2PoseTrackerPlugin" prot="public">cx::Tf2PoseTrackerPlugin</innerclass>
     <briefdescription>
     </briefdescription>

@@ -1,0 +1,26 @@
+.. _exhale_class_classcx_1_1RosParamPlugin:
+
+Class RosParamPlugin
+====================
+
+- Defined in :ref:`file_include_cx_ros_param_plugin_ros_param_plugin.hpp`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public cx::ClipsPlugin``
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: cx::RosParamPlugin
+   :project: cx_ros_param_plugin Doxygen Project
+   :members:
+   :protected-members:
+   :undoc-members:
