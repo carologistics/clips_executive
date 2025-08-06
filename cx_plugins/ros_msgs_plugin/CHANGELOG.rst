@@ -2,8 +2,8 @@
 Changelog for package cx_ros_msgs_plugin
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.3 (2025-08-06)
+------------------
 * 0.1.3
 * Contributors: Tarik Viehmann
 

@@ -2,8 +2,8 @@
 Changelog for package cx_utils
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.3 (2025-08-06)
+------------------
 * 0.1.3
 * cx_utils: also created latest symlink
 * Contributors: Tarik Viehmann

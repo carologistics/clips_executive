@@ -2,8 +2,8 @@
 Changelog for package cx_ros_param_plugin
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.3 (2025-08-06)
+------------------
 * 0.1.3
 * ros_param_plugin: plugin for retrieving params from parent ROS node
   This plugin is meant to ease the customization when starting the CX via
