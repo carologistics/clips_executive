@@ -18,6 +18,7 @@
   <depend>std_srvs</depend>
   <depend>example_interfaces</depend>
   <depend>pkg-config</depend>
+  <depend>cx_protobuf_plugin</depend>
 
   <exec_depend>launch_ros</exec_depend>
   <exec_depend>cx_clips_env_manager</exec_depend>
@@ -26,7 +27,6 @@
   <exec_depend>cx_example_plugin</exec_depend>
   <exec_depend>cx_executive_plugin</exec_depend>
   <exec_depend>cx_file_load_plugin</exec_depend>
-  <exec_depend>cx_protobuf_plugin</exec_depend>
   <exec_depend>cx_ros_msgs_plugin</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
