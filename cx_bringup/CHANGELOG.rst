@@ -8,6 +8,7 @@ Forthcoming
 * project: remove occurrences of pkgconfig (it is not used)
 * cx_bringup: make cx_protobuf_plugin a build-time dependency
   This is required when generating custom plugins from it.
+* cx_bringup: add usage example for ros param plugin
 * Contributors: Tarik Viehmann
 
 0.1.2 (2025-07-16)
