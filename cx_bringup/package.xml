@@ -17,7 +17,6 @@
   <depend>std_msgs</depend>
   <depend>std_srvs</depend>
   <depend>example_interfaces</depend>
-  <depend>pkg-config</depend>
   <depend>cx_protobuf_plugin</depend>
 
   <exec_depend>launch_ros</exec_depend>

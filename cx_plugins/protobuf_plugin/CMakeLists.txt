@@ -25,7 +25,6 @@ find_package(rclcpp_lifecycle REQUIRED)
 set(dependencies
   ament_cmake
   rclcpp
-  PkgConfig
   cx_plugin
   cx_utils
   pluginlib
