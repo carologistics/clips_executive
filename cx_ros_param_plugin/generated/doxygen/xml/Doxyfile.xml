@@ -2,7 +2,7 @@
 <doxyfile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="doxyfile.xsd" version="1.9.8" xml:lang="en-US">
   <option  id='DOXYFILE_ENCODING' default='yes' type='string'><value><![CDATA[UTF-8]]></value></option>
   <option  id='PROJECT_NAME' default='no' type='string'><value><![CDATA[cx_ros_param_plugin]]></value></option>
-  <option  id='PROJECT_NUMBER' default='no' type='string'><value><![CDATA[0.1.3]]></value></option>
+  <option  id='PROJECT_NUMBER' default='no' type='string'><value><![CDATA[0.1.2]]></value></option>
   <option  id='PROJECT_BRIEF' default='no' type='string'><value><![CDATA["CLIPS plugin to retrieve ROS params from own or other nodes"]]></value></option>
   <option  id='PROJECT_LOGO' default='yes' type='string'><value><![CDATA[]]></value></option>
   <option  id='OUTPUT_DIRECTORY' default='no' type='string'><value><![CDATA[/home/runner/work/clips_executive/clips_executive/docs_build/cx_ros_param_plugin/cx_ros_param_plugin-public-cc-api/doxygen_output]]></value></option>
