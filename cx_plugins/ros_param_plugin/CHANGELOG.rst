@@ -1,6 +1,6 @@
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Changelog for package clips_executive
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Changelog for package cx_ros_param_plugin
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Forthcoming
 -----------
@@ -10,12 +10,4 @@ Forthcoming
   run or launch.
   Params of other nodes may be retrieved via the ROS bindings (calling the
   respective parameter services).
-* Contributors: Tarik Viehmann
-
-0.1.2 (2025-07-16)
-------------------
-
-0.1.1 (2025-07-11)
-------------------
-* project: prepare for first ros2 release
 * Contributors: Tarik Viehmann

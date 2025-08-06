@@ -2,6 +2,11 @@
 Changelog for package cx_executive_plugin
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* 0.1.3
+* Contributors: Tarik Viehmann
+
 0.1.2 (2025-07-16)
 ------------------
 
