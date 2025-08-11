@@ -213,6 +213,7 @@ class CXRLGym(Env):
 
             obs_space += values
 
+        self.node.get_logger().info(f"Observation space: {obs_space}")
         self.node.get_logger().info("Observation space size: "+str(len(obs_space)))
         return obs_space
 
