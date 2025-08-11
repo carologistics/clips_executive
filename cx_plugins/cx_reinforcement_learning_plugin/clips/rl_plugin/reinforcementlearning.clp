@@ -52,9 +52,9 @@
               (allowed-values TRAINING EXECUTION))
 )
 
-(deftemplate rl-observable-object
-  (slot name (type SYMBOL))
+(deftemplate rl-observable-type
   (slot type (type SYMBOL))
+  (multislot objects (type STRING) (default (create$)))
 )
 
 (deftemplate rl-observable-predicate

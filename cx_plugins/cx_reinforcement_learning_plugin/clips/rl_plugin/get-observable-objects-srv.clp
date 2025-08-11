@@ -11,9 +11,10 @@
     (bind ?t (cx-rl-interfaces-get-observable-objects-request-get-field ?request "type"))
     (printout info "Collecting cxrl observable objects of type " ?t crlf)
     (bind ?obj-list (create$))
-    (do-for-all-facts ((?do rl-observable-object))
-            (eq ?do:type (sym-cat ?t))
-        (bind ?obj-list (insert$ ?obj-list 1 (str-cat ?do:name)))
+    (do-for-all-facts ((?ot rl-observable-type))
+            (eq ?ot:type (sym-cat ?t))
+        (bind ?obj-list ?ot:objects)
+        (break)
     )
     (if (eq ?obj-list (create$)) then
         (bind ?obj-list (insert$ ?obj-list 1 "Not found"))
