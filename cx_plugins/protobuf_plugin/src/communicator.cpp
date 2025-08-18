@@ -28,7 +28,6 @@
 #include <protobuf_comm/client.h>
 #include <protobuf_comm/peer.h>
 #include <protobuf_comm/server.h>
-#include <spdlog/spdlog.h>
 
 #include <filesystem>
 #include <string>
@@ -59,6 +58,8 @@ ClipsProtobufCommunicator::ClipsProtobufCommunicator(
       parent_(parent) {
   message_register_ = std::make_unique<MessageRegister>();
   setup_clips();
+  logger_ = std::make_unique<rclcpp::Logger>(
+      rclcpp::get_logger("ClipsProtobufCommunicator"));
 }
 
 /** Constructor.
@@ -103,7 +104,8 @@ void ClipsProtobufCommunicator::setup_clips() {
             static_cast<ClipsProtobufCommunicator *>(udfc->context);
         clips::UDFValue full_name;
         if (!clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &full_name)) {
-          SPDLOG_ERROR("pb-register-type: unexpected types, expected addr");
+          RCLCPP_ERROR(*instance->logger_,
+                       "pb-register-type: unexpected types, expected addr");
           clips::UDFThrowError(udfc);
           return;
         }
@@ -123,7 +125,8 @@ void ClipsProtobufCommunicator::setup_clips() {
         clips::UDFValue msgptr;
         if (!clips::UDFNthArgument(udfc, 1, clips::EXTERNAL_ADDRESS_BIT,
                                    &msgptr)) {
-          SPDLOG_ERROR("pb-field-names: unexpected types, expected addr");
+          RCLCPP_ERROR(*instance->logger_,
+                       "pb-field-names: unexpected types, expected addr");
           clips::UDFThrowError(udfc);
           return;
         }
@@ -144,7 +147,8 @@ void ClipsProtobufCommunicator::setup_clips() {
         if (!clips::UDFNthArgument(udfc, 1, clips::EXTERNAL_ADDRESS_BIT,
                                    &msgptr) ||
             !clips::UDFNthArgument(udfc, 2, LEXEME_BITS, &field_name)) {
-          SPDLOG_ERROR("pb-field-type: unexpected types, expected addr;lex");
+          RCLCPP_ERROR(*instance->logger_,
+                       "pb-field-type: unexpected types, expected addr;lex");
           clips::UDFThrowError(udfc);
           return;
         }
@@ -166,7 +170,8 @@ void ClipsProtobufCommunicator::setup_clips() {
         if (!clips::UDFNthArgument(udfc, 1, clips::EXTERNAL_ADDRESS_BIT,
                                    &msgptr) ||
             !clips::UDFNthArgument(udfc, 2, LEXEME_BITS, &field_name)) {
-          SPDLOG_ERROR("pb-has-field: unexpected types, expected addr;lex");
+          RCLCPP_ERROR(*instance->logger_,
+                       "pb-has-field: unexpected types, expected addr;lex");
           clips::UDFThrowError(udfc);
           return;
         }
@@ -188,7 +193,8 @@ void ClipsProtobufCommunicator::setup_clips() {
         if (!clips::UDFNthArgument(udfc, 1, clips::EXTERNAL_ADDRESS_BIT,
                                    &msgptr) ||
             !clips::UDFNthArgument(udfc, 2, LEXEME_BITS, &field_name)) {
-          SPDLOG_ERROR("pb-field-label: unexpected types, expected addr;lex");
+          RCLCPP_ERROR(*instance->logger_,
+                       "pb-field-label: unexpected types, expected addr;lex");
           clips::UDFThrowError(udfc);
           return;
         }
@@ -210,7 +216,8 @@ void ClipsProtobufCommunicator::setup_clips() {
         if (!clips::UDFNthArgument(udfc, 1, clips::EXTERNAL_ADDRESS_BIT,
                                    &msgptr) ||
             !clips::UDFNthArgument(udfc, 2, LEXEME_BITS, &field_name)) {
-          SPDLOG_ERROR("pb-field-value: unexpected types, expected addr;lex");
+          RCLCPP_ERROR(*instance->logger_,
+                       "pb-field-value: unexpected types, expected addr;lex");
           clips::UDFThrowError(udfc);
           return;
         }
@@ -232,7 +239,8 @@ void ClipsProtobufCommunicator::setup_clips() {
         if (!clips::UDFNthArgument(udfc, 1, clips::EXTERNAL_ADDRESS_BIT,
                                    &msgptr) ||
             !clips::UDFNthArgument(udfc, 2, LEXEME_BITS, &field_name)) {
-          SPDLOG_ERROR("pb-field-list: unexpected types, expected addr;lex");
+          RCLCPP_ERROR(*instance->logger_,
+                       "pb-field-list: unexpected types, expected addr;lex");
           clips::UDFThrowError(udfc);
           return;
         }
@@ -254,7 +262,8 @@ void ClipsProtobufCommunicator::setup_clips() {
         if (!clips::UDFNthArgument(udfc, 1, clips::EXTERNAL_ADDRESS_BIT,
                                    &msgptr) ||
             !clips::UDFNthArgument(udfc, 2, LEXEME_BITS, &field_name)) {
-          SPDLOG_ERROR("pb-field-is-list: unexpected types, expected addr;lex");
+          RCLCPP_ERROR(*instance->logger_,
+                       "pb-field-is-list: unexpected types, expected addr;lex");
           clips::UDFThrowError(udfc);
           return;
         }
@@ -275,7 +284,8 @@ void ClipsProtobufCommunicator::setup_clips() {
             static_cast<ClipsProtobufCommunicator *>(udfc->context);
         clips::UDFValue full_name;
         if (!clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &full_name)) {
-          SPDLOG_ERROR("pb-create: unexpected types, expected lex");
+          RCLCPP_ERROR(*instance->logger_,
+                       "pb-create: unexpected types, expected lex");
           clips::UDFThrowError(udfc);
           return;
         }
@@ -294,7 +304,8 @@ void ClipsProtobufCommunicator::setup_clips() {
         clips::UDFValue msgptr;
         if (!clips::UDFNthArgument(udfc, 1, clips::EXTERNAL_ADDRESS_BIT,
                                    &msgptr)) {
-          SPDLOG_ERROR("pb-destroy: unexpected types, expected addr");
+          RCLCPP_ERROR(*instance->logger_,
+                       "pb-destroy: unexpected types, expected addr");
           clips::UDFThrowError(udfc);
           return;
         }
@@ -315,7 +326,8 @@ void ClipsProtobufCommunicator::setup_clips() {
                                    &msgptr) ||
             !clips::UDFNthArgument(udfc, 2, LEXEME_BITS, &field_name) ||
             !clips::UDFNthArgument(udfc, 3, ANY_TYPE_BITS, &value)) {
-          SPDLOG_ERROR("pb-set-field: unexpected types, expected addr;lex;*");
+          RCLCPP_ERROR(*instance->logger_,
+                       "pb-set-field: unexpected types, expected addr;lex;*");
           clips::UDFThrowError(udfc);
           return;
         }
@@ -337,7 +349,8 @@ void ClipsProtobufCommunicator::setup_clips() {
                                    &msgptr) ||
             !clips::UDFNthArgument(udfc, 2, LEXEME_BITS, &field_name) ||
             !clips::UDFNthArgument(udfc, 3, ANY_TYPE_BITS, &value)) {
-          SPDLOG_ERROR("pb-add-list: unexpected types, expected addr;lex;*");
+          RCLCPP_ERROR(*instance->logger_,
+                       "pb-add-list: unexpected types, expected addr;lex;*");
           clips::UDFThrowError(udfc);
           return;
         }
@@ -358,7 +371,8 @@ void ClipsProtobufCommunicator::setup_clips() {
         if (!clips::UDFNthArgument(udfc, 1, clips::INTEGER_BIT, &client_id) ||
             !clips::UDFNthArgument(udfc, 2, clips::EXTERNAL_ADDRESS_BIT,
                                    &msgptr)) {
-          SPDLOG_ERROR("pb-send: unexpected types, expected int;addr");
+          RCLCPP_ERROR(*instance->logger_,
+                       "pb-send: unexpected types, expected int;addr");
           clips::UDFThrowError(udfc);
           return;
         }
@@ -378,7 +392,8 @@ void ClipsProtobufCommunicator::setup_clips() {
         clips::UDFValue msgptr;
         if (!clips::UDFNthArgument(udfc, 1, clips::EXTERNAL_ADDRESS_BIT,
                                    &msgptr)) {
-          SPDLOG_ERROR("pb-tostring: unexpected types, expected addr");
+          RCLCPP_ERROR(*instance->logger_,
+                       "pb-tostring: unexpected types, expected addr");
           out->lexemeValue = clips::CreateSymbol(env, "INVALID-MESSAGE");
           clips::UDFThrowError(udfc);
           return;
@@ -399,7 +414,8 @@ void ClipsProtobufCommunicator::setup_clips() {
             static_cast<ClipsProtobufCommunicator *>(udfc->context);
         clips::UDFValue port;
         if (!clips::UDFNthArgument(udfc, 1, clips::INTEGER_BIT, &port)) {
-          SPDLOG_ERROR("pb-server-enable: unexpected types, expected int");
+          RCLCPP_ERROR(*instance->logger_,
+                       "pb-server-enable: unexpected types, expected int");
           clips::UDFThrowError(udfc);
           return;
         }
@@ -430,7 +446,8 @@ void ClipsProtobufCommunicator::setup_clips() {
         clips::UDFValue address, port;
         if (!clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &address) ||
             !clips::UDFNthArgument(udfc, 2, clips::INTEGER_BIT, &port)) {
-          SPDLOG_ERROR("pb-peer-create: unexpected types, expected lex;int");
+          RCLCPP_ERROR(*instance->logger_,
+                       "pb-peer-create: unexpected types, expected lex;int");
           clips::UDFThrowError(udfc);
           return;
         }
@@ -452,7 +469,8 @@ void ClipsProtobufCommunicator::setup_clips() {
         if (!clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &address) ||
             !clips::UDFNthArgument(udfc, 2, clips::INTEGER_BIT, &send_port) ||
             !clips::UDFNthArgument(udfc, 3, clips::INTEGER_BIT, &recv_port)) {
-          SPDLOG_ERROR(
+          RCLCPP_ERROR(
+              *instance->logger_,
               "pb-peer-create-local: unexpected types, expected lex;int;int");
           clips::UDFThrowError(udfc);
           return;
@@ -478,7 +496,8 @@ void ClipsProtobufCommunicator::setup_clips() {
             !clips::UDFNthArgument(udfc, 2, clips::INTEGER_BIT, &port) ||
             !clips::UDFNthArgument(udfc, 4, LEXEME_BITS, &crypto_key) ||
             !clips::UDFNthArgument(udfc, 5, LEXEME_BITS, &cipher)) {
-          SPDLOG_ERROR("pb-peer-create-crypto: unexpected types, expected "
+          RCLCPP_ERROR(*instance->logger_,
+                       "pb-peer-create-crypto: unexpected types, expected "
                        "lex;int;lex,lex");
           clips::UDFThrowError(udfc);
           return;
@@ -505,7 +524,8 @@ void ClipsProtobufCommunicator::setup_clips() {
             !clips::UDFNthArgument(udfc, 3, clips::INTEGER_BIT, &recv_port) ||
             !clips::UDFNthArgument(udfc, 4, LEXEME_BITS, &crypto_key) ||
             !clips::UDFNthArgument(udfc, 5, LEXEME_BITS, &cipher)) {
-          SPDLOG_ERROR("pb-peer-create-local-crypto: unexpected types, "
+          RCLCPP_ERROR(*instance->logger_,
+                       "pb-peer-create-local-crypto: unexpected types, "
                        "expected lex;int;int,lex,lex");
           clips::UDFThrowError(udfc);
           return;
@@ -530,7 +550,8 @@ void ClipsProtobufCommunicator::setup_clips() {
             static_cast<ClipsProtobufCommunicator *>(udfc->context);
         clips::UDFValue peer_id;
         if (!clips::UDFNthArgument(udfc, 1, clips::INTEGER_BIT, &peer_id)) {
-          SPDLOG_ERROR("pb-peer-destroy: unexpected types, expected int");
+          RCLCPP_ERROR(*instance->logger_,
+                       "pb-peer-destroy: unexpected types, expected int");
           clips::UDFThrowError(udfc);
           return;
         }
@@ -550,7 +571,8 @@ void ClipsProtobufCommunicator::setup_clips() {
         if (!clips::UDFNthArgument(udfc, 1, clips::INTEGER_BIT, &peer_id) ||
             !clips::UDFNthArgument(udfc, 2, LEXEME_BITS, &crypto_key) ||
             !clips::UDFNthArgument(udfc, 3, LEXEME_BITS, &cipher)) {
-          SPDLOG_ERROR(
+          RCLCPP_ERROR(
+              *instance->logger_,
               "pb-peer-setup-crypto: unexpected types, expected int;lex;lex");
           clips::UDFThrowError(udfc);
           return;
@@ -573,7 +595,8 @@ void ClipsProtobufCommunicator::setup_clips() {
         if (!clips::UDFNthArgument(udfc, 1, clips::INTEGER_BIT, &peer_id) ||
             !clips::UDFNthArgument(udfc, 2, clips::EXTERNAL_ADDRESS_BIT,
                                    &msgptr)) {
-          SPDLOG_ERROR("pb-broadcast: unexpected types, expected int;addr");
+          RCLCPP_ERROR(*instance->logger_,
+                       "pb-broadcast: unexpected types, expected int;addr");
           clips::UDFThrowError(udfc);
           return;
         }
@@ -593,7 +616,8 @@ void ClipsProtobufCommunicator::setup_clips() {
         clips::UDFValue host, port;
         if (!clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &host) ||
             !clips::UDFNthArgument(udfc, 2, clips::INTEGER_BIT, &port)) {
-          SPDLOG_ERROR("pb-connect: unexpected types, expected lex;int");
+          RCLCPP_ERROR(*instance->logger_,
+                       "pb-connect: unexpected types, expected lex;int");
           clips::UDFThrowError(udfc);
           return;
         }
@@ -614,7 +638,8 @@ void ClipsProtobufCommunicator::setup_clips() {
             static_cast<ClipsProtobufCommunicator *>(udfc->context);
         clips::UDFValue peer_id;
         if (!clips::UDFNthArgument(udfc, 1, clips::INTEGER_BIT, &peer_id)) {
-          SPDLOG_ERROR("pb-disconnect: unexpected types, expected int");
+          RCLCPP_ERROR(*instance->logger_,
+                       "pb-disconnect: unexpected types, expected int");
           clips::UDFThrowError(udfc);
           return;
         }
@@ -765,8 +790,10 @@ ClipsProtobufCommunicator::clips_pb_register_type(std::string full_name) {
     res.lexemeValue = clips::CreateBoolean(clips_, true);
     return res;
   } catch (std::runtime_error &e) {
-    SPDLOG_ERROR("CLIPS-Protobuf: Registering type {} failed: {}", full_name,
-                 e.what());
+    RCLCPP_ERROR(*logger_,
+                 cx::format("CLIPS-Protobuf: Registering type {} failed: {}",
+                            full_name, e.what())
+                     .c_str());
     res.lexemeValue = clips::CreateBoolean(clips_, false);
     return res;
   }
@@ -782,8 +809,11 @@ ClipsProtobufCommunicator::clips_pb_create(std::string full_name) {
     res.externalAddressValue = clips::CreateCExternalAddress(clips_, m.get());
     return res;
   } catch (std::runtime_error &e) {
-    SPDLOG_WARN("CLIPS-Protobuf: Cannot create message of type {}: {}",
-                full_name, e.what());
+    RCLCPP_WARN(
+        *logger_,
+        cx::format("CLIPS-Protobuf: Cannot create message of type {}: {}",
+                   full_name, e.what())
+            .c_str());
     res.externalAddressValue = clips::CreateCExternalAddress(clips_, nullptr);
     return res;
   }
@@ -967,16 +997,19 @@ ClipsProtobufCommunicator::clips_pb_field_value(void *msgptr,
   const Descriptor *desc = msg->GetDescriptor();
   const FieldDescriptor *field = desc->FindFieldByName(field_name);
   if (!field) {
-    SPDLOG_WARN("CLIPS-Protobuf: Field {} of {} does not exist", field_name,
-                msg->GetTypeName());
+    RCLCPP_WARN(*logger_,
+                cx::format("CLIPS-Protobuf: Field {} of {} does not exist",
+                           field_name, msg->GetTypeName())
+                    .c_str());
     res.lexemeValue = clips::CreateSymbol(clips_, "DOES-NOT-EXIST");
     return res;
   }
   const Reflection *refl = msg->GetReflection();
   if (field->type() != FieldDescriptor::TYPE_MESSAGE &&
       !refl->HasField(*msg, field)) {
-    SPDLOG_WARN("CLIPS-Protobuf: Field {} of {} not set", field_name,
-                msg->GetTypeName());
+    RCLCPP_WARN(*logger_, cx::format("CLIPS-Protobuf: Field {} of {} not set",
+                                     field_name, msg->GetTypeName())
+                              .c_str());
     res.lexemeValue = clips::CreateSymbol(clips_, "NOT-SET");
     return res;
   }
@@ -1069,7 +1102,9 @@ void ClipsProtobufCommunicator::clips_pb_set_field(void *msgptr,
   const Descriptor *desc = msg->GetDescriptor();
   const FieldDescriptor *field = desc->FindFieldByName(field_name);
   if (!field) {
-    SPDLOG_WARN("CLIPS-Protobuf: Could not find field {}", field_name);
+    RCLCPP_WARN(*logger_, cx::format("CLIPS-Protobuf: Could not find field {}",
+                                     field_name)
+                              .c_str());
     return;
   }
   const Reflection *refl = msg->GetReflection();
@@ -1125,19 +1160,26 @@ void ClipsProtobufCommunicator::clips_pb_set_field(void *msgptr,
       if (enumval) {
         refl->SetEnum(msg.get(), field, enumval);
       } else {
-        SPDLOG_WARN(
-            "CLIPS-Protobuf: {}: cannot set invalid enum value '{}' on '{}'",
-            msg->GetTypeName(), value.lexemeValue->contents, field_name);
+        RCLCPP_WARN(*logger_,
+                    cx::format("CLIPS-Protobuf: {}: cannot set invalid enum "
+                               "value '{}' on '{}'",
+                               msg->GetTypeName(), value.lexemeValue->contents,
+                               field_name)
+                        .c_str());
       }
     } break;
     default:
       throw std::logic_error("Unknown protobuf field type encountered");
     }
   } catch (std::logic_error &e) {
-    SPDLOG_WARN("CLIPS-Protobuf: Failed to set field {} of {}: {} (type {}, as "
-                "string {})",
-                field_name, msg->GetTypeName(), e.what(),
-                value.lexemeValue->header.type, to_string(value));
+    RCLCPP_WARN(
+        *logger_,
+        cx::format(
+            "CLIPS-Protobuf: Failed to set field {} of {}: {} (type {}, as "
+            "string {})",
+            field_name, msg->GetTypeName(), e.what(),
+            value.lexemeValue->header.type, to_string(value))
+            .c_str());
   }
 }
 
@@ -1153,7 +1195,9 @@ void ClipsProtobufCommunicator::clips_pb_add_list(void *msgptr,
   const Descriptor *desc = msg->GetDescriptor();
   const FieldDescriptor *field = desc->FindFieldByName(field_name);
   if (!field) {
-    SPDLOG_WARN("CLIPS-Protobuf: Could not find field {}", field_name);
+    RCLCPP_WARN(*logger_, cx::format("CLIPS-Protobuf: Could not find field {}",
+                                     field_name)
+                              .c_str());
     return;
   }
   const Reflection *refl = msg->GetReflection();
@@ -1214,8 +1258,10 @@ void ClipsProtobufCommunicator::clips_pb_add_list(void *msgptr,
       throw std::logic_error("Unknown protobuf field type encountered");
     }
   } catch (std::logic_error &e) {
-    SPDLOG_WARN("CLIPS-Protobuf: Failed to add field {} of {}: {}", field_name,
-                msg->GetTypeName().c_str(), e.what());
+    RCLCPP_WARN(*logger_,
+                cx::format("CLIPS-Protobuf: Failed to add field {} of {}: {}",
+                           field_name, msg->GetTypeName().c_str(), e.what())
+                    .c_str());
   }
 }
 
@@ -1279,18 +1325,25 @@ void ClipsProtobufCommunicator::clips_pb_send(long int client_id,
       //     client_id, (*m)->GetTypeName().c_str());
     }
   } catch (google::protobuf::FatalException &e) {
-    SPDLOG_WARN("CLIPS-Profobuf: Failed to send message of type {}: {}",
-                msg->GetTypeName().c_str(), e.what());
+    RCLCPP_WARN(
+        *logger_,
+        cx::format("CLIPS-Profobuf: Failed to send message of type {}: {}",
+                   msg->GetTypeName().c_str(), e.what())
+            .c_str());
   } catch (std::runtime_error &e) {
-    SPDLOG_WARN("CLIPS-Profobuf: Failed to send message of type {}: {}",
-                msg->GetTypeName().c_str(), e.what());
+    RCLCPP_WARN(
+        *logger_,
+        cx::format("CLIPS-Profobuf: Failed to send message of type {}: {}",
+                   msg->GetTypeName().c_str(), e.what())
+            .c_str());
   }
 }
 
 std::string ClipsProtobufCommunicator::clips_pb_tostring(void *msgptr) {
   auto msg = messages_[msgptr];
   if (!msg) {
-    SPDLOG_WARN(
+    RCLCPP_WARN(
+        *logger_,
         "CLIPS-Protobuf: Cannot convert message to string: invalid message");
     messages_.erase(msgptr);
     return "";
@@ -1315,18 +1368,24 @@ void ClipsProtobufCommunicator::clips_pb_broadcast(long int peer_id,
   try {
     peers_[peer_id]->send(msg);
   } catch (google::protobuf::FatalException &e) {
-    SPDLOG_WARN("Failed to broadcast message of type {}: {}",
-                msg->GetTypeName(), e.what());
+    RCLCPP_WARN(*logger_,
+                cx::format("Failed to broadcast message of type {}: {}",
+                           msg->GetTypeName(), e.what())
+                    .c_str());
   } catch (std::runtime_error &e) {
-    SPDLOG_WARN("Failed to broadcast message of type {}: {}",
-                msg->GetTypeName(), e.what());
+    RCLCPP_WARN(*logger_,
+                cx::format("Failed to broadcast message of type {}: {}",
+                           msg->GetTypeName(), e.what())
+                    .c_str());
   }
 
   sig_peer_sent_(peer_id, msg);
 }
 
 void ClipsProtobufCommunicator::clips_pb_disconnect(long int client_id) {
-  SPDLOG_INFO("CLIPS-Protobuf: Disconnecting client {}", client_id);
+  RCLCPP_INFO(
+      *logger_,
+      cx::format("CLIPS-Protobuf: Disconnecting client {}", client_id).c_str());
   try {
     std::lock_guard<std::mutex> lock(map_mutex_);
 
@@ -1340,8 +1399,11 @@ void ClipsProtobufCommunicator::clips_pb_disconnect(long int client_id) {
       clients_.erase(client_id);
     }
   } catch (std::runtime_error &e) {
-    SPDLOG_WARN("CLIPS-Protobuf: Failed to disconnect from client {}: {}",
-                client_id, e.what());
+    RCLCPP_WARN(
+        *logger_,
+        cx::format("CLIPS-Protobuf: Failed to disconnect from client {}: {}",
+                   client_id, e.what())
+            .c_str());
   }
 }
 
@@ -1491,11 +1553,13 @@ void ClipsProtobufCommunicator::clips_assert_message(
     clips::Fact *new_fact = clips::FBAssert(fact_builder);
 
     if (!new_fact) {
-      SPDLOG_WARN("CLIPS-Protobuf: Asserting protobuf-msg fact failed");
+      RCLCPP_WARN(*logger_,
+                  "CLIPS-Protobuf: Asserting protobuf-msg fact failed");
     }
     clips::FBDispose(fact_builder);
   } else {
-    SPDLOG_WARN(
+    RCLCPP_WARN(
+        *logger_,
         "CLIPS-Protobuf: Did not get template, did you load protobuf.clp?");
   }
 }
@@ -1609,8 +1673,12 @@ void ClipsProtobufCommunicator::handle_peer_msg(
 void ClipsProtobufCommunicator::handle_peer_recv_error(
     long int /*peer_id*/, boost::asio::ip::udp::endpoint &endpoint,
     std::string msg) {
-  SPDLOG_WARN("CLIPS-Protobuf: Failed to receive peer message from {}:{}: {}",
-              endpoint.address().to_string(), endpoint.port(), msg);
+  RCLCPP_WARN(
+      *logger_,
+      cx::format(
+          "CLIPS-Protobuf: Failed to receive peer message from {}:{}: {}",
+          endpoint.address().to_string(), endpoint.port(), msg)
+          .c_str());
 }
 
 /** Handle error during peer message processing.
@@ -1618,7 +1686,9 @@ void ClipsProtobufCommunicator::handle_peer_recv_error(
  */
 void ClipsProtobufCommunicator::handle_peer_send_error(long int /*peer_id*/,
                                                        std::string msg) {
-  SPDLOG_WARN("CLIPS-Protobuf: Failed to send peer message: {}", msg);
+  RCLCPP_WARN(*logger_,
+              cx::format("CLIPS-Protobuf: Failed to send peer message: {}", msg)
+                  .c_str());
 }
 
 void ClipsProtobufCommunicator::handle_client_connected(long int client_id) {

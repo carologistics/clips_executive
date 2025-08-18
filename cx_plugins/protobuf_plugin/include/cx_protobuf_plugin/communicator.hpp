@@ -198,6 +198,8 @@ private:
 
   std::unordered_map<void *, std::shared_ptr<google::protobuf::Message>>
       messages_;
+
+  std::unique_ptr<rclcpp::Logger> logger_;
 };
 
 } // end namespace protobuf_clips

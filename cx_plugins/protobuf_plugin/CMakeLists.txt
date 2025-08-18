@@ -41,8 +41,8 @@ pluginlib_export_plugin_description_file(cx_plugin protobuf_plugin.xml)
 add_library(clips_protobuf_comm SHARED src/communicator.cpp)
 target_link_libraries(
   clips_protobuf_comm protobuf::libprotobuf ProtobufComm::protobuf_comm
-  ClipsNS::libclips_ns spdlog::spdlog)
-ament_target_dependencies(clips_protobuf_comm rclcpp_lifecycle)
+  ClipsNS::libclips_ns)
+ament_target_dependencies(clips_protobuf_comm rclcpp_lifecycle cx_utils)
 
 set_property(TARGET clips_protobuf_comm PROPERTY CXX_STANDARD ${CMAKE_CXX_STANDARD})
 
