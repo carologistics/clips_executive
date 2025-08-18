@@ -22,6 +22,7 @@
 
 #include "cx_plugin/clips_plugin.hpp"
 #include "cx_utils/clips_env_context.hpp"
+#include "cx_utils/format.hpp"
 #include "cx_utils/param_utils.hpp"
 
 #include "lifecycle_msgs/msg/state.hpp"
@@ -48,14 +49,14 @@ void ClipsPluginManager::configure(
     RCLCPP_INFO(logger_, "Configuring [%s]...", name_.c_str());
 
     load_plugin_service_ = node->create_service<cx_msgs::srv::LoadClipsPlugin>(
-        std::format("{}/load_plugin", name_).c_str(),
+        cx::format("{}/load_plugin", name_).c_str(),
         std::bind(&ClipsPluginManager::load_plugin_cb, this, _1, _2, _3));
     unload_plugin_service_ =
         node->create_service<cx_msgs::srv::UnloadClipsPlugin>(
-            std::format("{}/unload_plugin", name_).c_str(),
+            cx::format("{}/unload_plugin", name_).c_str(),
             std::bind(&ClipsPluginManager::unload_plugin_cb, this, _1, _2, _3));
     list_plugin_service_ = node->create_service<cx_msgs::srv::ListClipsPlugins>(
-        std::format("{}/list_plugins", name_).c_str(),
+        cx::format("{}/list_plugins", name_).c_str(),
         std::bind(&ClipsPluginManager::list_plugin_cb, this, _1, _2, _3));
   } else {
     RCLCPP_ERROR(logger_, "Invalid parent node reference!");

@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include <chrono>
-#include <format>
 #include <map>
 #include <memory>
 #include <ranges>

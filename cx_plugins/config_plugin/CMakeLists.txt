@@ -38,8 +38,7 @@ add_library(${PROJECT_NAME} SHARED src/config_plugin.cpp)
 ament_target_dependencies(${PROJECT_NAME} ${dependencies})
 target_link_libraries(${PROJECT_NAME} ClipsNS::libclips_ns)
 target_link_libraries(${PROJECT_NAME} yaml-cpp)
-target_compile_definitions(${PROJECT_NAME} PUBLIC "PLUGINLIB__DISABLE_BOOST_FUNCTIONS")
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD ${CMAKE_CXX_STANDARD})
 
 install(
   DIRECTORY include/

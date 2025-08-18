@@ -28,6 +28,7 @@
 #include <cx_plugin/clips_plugin.hpp>
 #include "{{name_snake}}.hpp"
 #include <cx_utils/clips_env_context.hpp>
+#include "cx_utils/format.hpp"
 
 // To export as plugin
 #include "pluginlib/class_list_macros.hpp"

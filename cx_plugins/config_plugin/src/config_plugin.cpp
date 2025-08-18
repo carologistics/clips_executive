@@ -17,6 +17,7 @@
 
 #include <ament_index_cpp/get_package_prefix.hpp>
 #include <ament_index_cpp/get_package_share_directory.hpp>
+#include <cx_utils/format.hpp>
 #include <yaml-cpp/yaml.h>
 
 #include "cx_config_plugin/config_plugin.hpp"
@@ -147,10 +148,10 @@ void ConfigPlugin::iterateThroughYamlRecuresively(
         //             escaped_quotes.str().c_str());
 
         clips::AssertString(
-            env, std::format("(confval (path \"{}\") (type {}) (value {}))",
-                             path.c_str(), type.c_str(),
-                             escaped_quotes.str().c_str())
-                     .c_str());
+            env,
+            cx::format("(confval (path \"{}\") (type {}) (value {}))",
+                       path.c_str(), type.c_str(), escaped_quotes.str().c_str())
+                .c_str());
       } else {
         // RCLCPP_INFO(*logger_,
         //             "(confval (path \"%s\") (type %s) (value %s))",
@@ -162,15 +163,15 @@ void ConfigPlugin::iterateThroughYamlRecuresively(
           std::string val = item.second.as<std::string>();
           std::transform(val.begin(), val.end(), val.begin(), ::toupper);
           clips::AssertString(
-              env, std::format("(confval (path \"{}\") (type {}) (value {}))",
-                               path.c_str(), type.c_str(), val.c_str())
+              env, cx::format("(confval (path \"{}\") (type {}) (value {}))",
+                              path.c_str(), type.c_str(), val.c_str())
                        .c_str());
         } else {
 
           clips::AssertString(
-              env, std::format("(confval (path \"{}\") (type {}) (value {}))",
-                               path.c_str(), type.c_str(),
-                               item.second.as<std::string>().c_str())
+              env, cx::format("(confval (path \"{}\") (type {}) (value {}))",
+                              path.c_str(), type.c_str(),
+                              item.second.as<std::string>().c_str())
                        .c_str());
         }
       }
@@ -215,9 +216,9 @@ void ConfigPlugin::sequenceIterator(const YAML::Node &input_node,
 
         if (i == input_node.size()) {
           clips::AssertString(
-              env, std::format("(confval (path \"{}\") (type STRING) "
-                               "(is-list TRUE) (list-value {}))",
-                               cfg_prefix.c_str(), list_values.c_str())
+              env, cx::format("(confval (path \"{}\") (type STRING) "
+                              "(is-list TRUE) (list-value {}))",
+                              cfg_prefix.c_str(), list_values.c_str())
                        .c_str());
           // RCLCPP_INFO(*logger_,
           //             "(confval (path \"%s\") (type STRING) "
@@ -242,7 +243,7 @@ void ConfigPlugin::sequenceIterator(const YAML::Node &input_node,
 
           clips::AssertString(
               env,
-              std::format(
+              cx::format(
                   "(confval (path \"{}\") (is-list FALSE) (type {}) (value "
                   "\"{}\"))",
                   path.c_str(), std::move(getScalarType(item3.second)).c_str(),
@@ -281,9 +282,9 @@ void ConfigPlugin::sequenceIterator(const YAML::Node &input_node,
           }
 
           clips::AssertString(
-              env, std::format("(confval (path \"{}\") (type STRING) "
-                               "(is-list TRUE) (list-value {}))",
-                               path.c_str(), escaped_quotes.str().c_str())
+              env, cx::format("(confval (path \"{}\") (type STRING) "
+                              "(is-list TRUE) (list-value {}))",
+                              path.c_str(), escaped_quotes.str().c_str())
                        .c_str());
           // RCLCPP_INFO(*logger_,
           //             "(confval (path \"%s\") (type STRING) "

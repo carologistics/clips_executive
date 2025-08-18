@@ -52,7 +52,6 @@ target_link_libraries(${PROJECT_NAME} clips_protobuf_comm)
 target_link_libraries(${PROJECT_NAME} ClipsNS::libclips_ns)
 
 # END OF PLUGINS REGISTRATION
-target_compile_definitions(${PROJECT_NAME} PUBLIC "PLUGINLIB__DISABLE_BOOST_FUNCTIONS")
 
 install(
   DIRECTORY include/
