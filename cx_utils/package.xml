@@ -13,7 +13,7 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>rclcpp</depend>
-  <depend>spdlog</depend>
+  <depend>spdlog_vendor</depend>
   <depend>fmt</depend>
   <depend>clips_vendor</depend>
 
