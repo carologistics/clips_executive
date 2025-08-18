@@ -13,6 +13,7 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(spdlog_vendor REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(clips_vendor REQUIRED)
 find_package(clips REQUIRED)
