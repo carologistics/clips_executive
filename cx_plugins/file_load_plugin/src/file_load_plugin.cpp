@@ -16,8 +16,8 @@
 
 #include "cx_file_load_plugin/file_load_plugin.hpp"
 #include <cx_utils/clips_env_context.hpp>
+#include <cx_utils/format.hpp>
 #include <cx_utils/param_utils.hpp>
-#include <format>
 
 // To export as plugin
 #include "pluginlib/class_list_macros.hpp"
@@ -71,9 +71,9 @@ bool FileLoadPlugin::clips_env_init(std::shared_ptr<clips::Environment> &env) {
   for (const auto &f : init_files_) {
 
     if (clips::EE_NO_ERROR !=
-        clips::Eval(env.get(), std::format("(load* {})", f).c_str(), NULL)) {
+        clips::Eval(env.get(), cx::format("(load* {})", f).c_str(), NULL)) {
       clips::Writeln(env.get(),
-                     std::format("Failed to load file {}", f).c_str());
+                     cx::format("Failed to load file {}", f).c_str());
       RCLCPP_ERROR(*logger_, "Failed to load file '%s' failed!, aborting...",
                    f.c_str());
       return false;
@@ -84,7 +84,7 @@ bool FileLoadPlugin::clips_env_init(std::shared_ptr<clips::Environment> &env) {
     if (!clips::BatchStar(env.get(), f.c_str())) {
       clips::Writeln(
           env.get(),
-          std::format("Failed to initialize bach file {}", f).c_str());
+          cx::format("Failed to initialize bach file {}", f).c_str());
       RCLCPP_ERROR(*logger_,
                    "Failed to initialize"
                    "batch file '%s' failed!, aborting...",
@@ -102,7 +102,7 @@ bool FileLoadPlugin::clips_env_destroyed(
     if (!clips::BatchStar(env.get(), f.c_str())) {
       clips::Writeln(
           env.get(),
-          std::format("Failed to initialize bach file {}", f).c_str());
+          cx::format("Failed to initialize bach file {}", f).c_str());
       RCLCPP_ERROR(*logger_,
                    "Failed to initialize"
                    "batch file '%s' failed!, aborting...",

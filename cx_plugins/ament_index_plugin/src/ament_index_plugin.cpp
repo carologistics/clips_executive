@@ -16,6 +16,7 @@
 
 #include "cx_ament_index_plugin/ament_index_plugin.hpp"
 #include <cx_utils/clips_env_context.hpp>
+#include <cx_utils/format.hpp>
 
 #include "ament_index_cpp/get_package_prefix.hpp"
 #include "ament_index_cpp/get_package_share_directory.hpp"
@@ -132,7 +133,7 @@ bool AmentIndexPlugin::clips_env_init(
                                             resource_name.lexemeValue->contents,
                                             content, &path)) {
             out->multifieldValue = clips::StringToMultifield(
-                env, std::format("\"{}\" \"{}\"", content, path).c_str());
+                env, cx::format("\"{}\" \"{}\"", content, path).c_str());
             return;
           }
         } catch (std::exception &e) {

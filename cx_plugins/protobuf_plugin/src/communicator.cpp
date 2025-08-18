@@ -22,15 +22,15 @@
  ****************************************************************************/
 
 #include <cx_protobuf_plugin/communicator.hpp>
+#include <cx_utils/format.hpp>
+
 #include <google/protobuf/descriptor.h>
 #include <protobuf_comm/client.h>
 #include <protobuf_comm/peer.h>
 #include <protobuf_comm/server.h>
 #include <spdlog/spdlog.h>
 
-#include <boost/format.hpp>
 #include <filesystem>
-#include <format>
 #include <string>
 
 using namespace google::protobuf;
@@ -1480,7 +1480,7 @@ void ClipsProtobufCommunicator::clips_assert_message(
         fact_builder, "rcvd-from",
         clips::StringToMultifield(
             clips_,
-            std::format("{} {}", endpoint.first, endpoint.second).c_str()));
+            cx::format("{} {}", endpoint.first, endpoint.second).c_str()));
     clips::FBPutSlotSymbol(
         fact_builder, "client-type",
         ct == CT_CLIENT ? "CLIENT" : (ct == CT_SERVER ? "SERVER" : "PEER"));
@@ -1516,8 +1516,8 @@ void ClipsProtobufCommunicator::handle_server_client_connected(
   std::lock_guard<std::mutex> lock(clips_mutex_);
   clips::AssertString(
       clips_,
-      std::format("(protobuf-server-client-connected {} {} {})", client_id,
-                  endpoint.address().to_string().c_str(), endpoint.port())
+      cx::format("(protobuf-server-client-connected {} {} {})", client_id,
+                 endpoint.address().to_string().c_str(), endpoint.port())
           .c_str());
 }
 
@@ -1539,7 +1539,7 @@ void ClipsProtobufCommunicator::handle_server_client_disconnected(
     std::lock_guard<std::mutex> lock(clips_mutex_);
     clips::AssertString(
         clips_,
-        std::format("(protobuf-server-client-disconnected {})", client_id)
+        cx::format("(protobuf-server-client-disconnected {})", client_id)
             .c_str());
   }
 }
@@ -1576,13 +1576,12 @@ void ClipsProtobufCommunicator::handle_server_client_fail(
     std::lock_guard<std::mutex> lock(clips_mutex_);
     clips::AssertString(
         clips_,
-        std::format(
-            "(protobuf-server-receive-failed (comp-id {}) (msg-type {}) "
-            "(rcvd-via STREAM) (client-id {}) (message \"{}\") "
-            "(rcvd-from (\"{}\" {})))",
-            component_id, msg_type, c->second, msg.c_str(),
-            client_endpoints_[c->second].first.c_str(),
-            client_endpoints_[c->second].second)
+        cx::format("(protobuf-server-receive-failed (comp-id {}) (msg-type {}) "
+                   "(rcvd-via STREAM) (client-id {}) (message \"{}\") "
+                   "(rcvd-from (\"{}\" {})))",
+                   component_id, msg_type, c->second, msg.c_str(),
+                   client_endpoints_[c->second].first.c_str(),
+                   client_endpoints_[c->second].second)
             .c_str());
   }
 }
@@ -1625,7 +1624,7 @@ void ClipsProtobufCommunicator::handle_peer_send_error(long int /*peer_id*/,
 void ClipsProtobufCommunicator::handle_client_connected(long int client_id) {
   std::lock_guard<std::mutex> lock(clips_mutex_);
   clips::AssertString(
-      clips_, std::format("(protobuf-client-connected {})", client_id).c_str());
+      clips_, cx::format("(protobuf-client-connected {})", client_id).c_str());
 }
 
 void ClipsProtobufCommunicator::handle_client_disconnected(
@@ -1633,7 +1632,7 @@ void ClipsProtobufCommunicator::handle_client_disconnected(
   std::lock_guard<std::mutex> lock(clips_mutex_);
   clips::AssertString(
       clips_,
-      std::format("(protobuf-client-disconnected {})", client_id).c_str());
+      cx::format("(protobuf-client-disconnected {})", client_id).c_str());
 }
 
 void ClipsProtobufCommunicator::handle_client_msg(
@@ -1652,9 +1651,9 @@ void ClipsProtobufCommunicator::handle_client_receive_fail(long int client_id,
   std::lock_guard<std::mutex> lock(clips_mutex_);
   clips::AssertString(
       clips_,
-      std::format("(protobuf-receive-failed (client-id {}) (rcvd-via STREAM) "
-                  "(comp-id {}) (msg-type {}) (message \"{}\"))",
-                  client_id, comp_id, msg_type, msg.c_str())
+      cx::format("(protobuf-receive-failed (client-id {}) (rcvd-via STREAM) "
+                 "(comp-id {}) (msg-type {}) (message \"{}\"))",
+                 client_id, comp_id, msg_type, msg.c_str())
           .c_str());
 }
 
@@ -1673,7 +1672,8 @@ std::string ClipsProtobufCommunicator::to_string(const clips::UDFValue &v) {
   case INSTANCE_ADDRESS_TYPE:
   case FACT_ADDRESS_TYPE:
   case EXTERNAL_ADDRESS_TYPE:
-    return boost::str(boost::format("%p") % v.externalAddressValue->contents);
+    return cx::format("{:p}", v.externalAddressValue->contents);
+
   case MULTIFIELD_TYPE:
     std::string res;
 

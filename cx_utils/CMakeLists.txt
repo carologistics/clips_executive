@@ -14,7 +14,6 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(spdlog REQUIRED)
-find_package(fmt REQUIRED)
 find_package(clips_vendor REQUIRED)
 find_package(clips REQUIRED)
 find_package(ament_index_cpp REQUIRED)
@@ -23,7 +22,6 @@ set(dependencies
   ament_cmake
   rclcpp
   spdlog
-  fmt
   ament_index_cpp
 )
 
@@ -37,7 +35,36 @@ set(CX_UTILS_SOURCES
 add_library(${PROJECT_NAME} SHARED ${CX_UTILS_SOURCES})
 ament_target_dependencies(${PROJECT_NAME} PUBLIC ${dependencies})
 target_link_libraries(${PROJECT_NAME} PUBLIC spdlog::spdlog ClipsNS::libclips_ns)
-target_link_libraries(${PROJECT_NAME} INTERFACE spdlog::spdlog ClipsNS::libclips_ns)
+
+include(CheckCXXSourceCompiles)
+
+set(CMAKE_REQUIRED_FLAGS "-std=c++20")
+
+check_cxx_source_compiles("
+  #include <format>
+  #include <string>
+  int main() {
+      auto s = std::format(\"Hello {}\", 42);
+      return s.size();
+  }
+" HAVE_STD_FORMAT)
+
+if(HAVE_STD_FORMAT)
+    message(STATUS "std::format is supported")
+else()
+    message(STATUS "std::format is NOT supported, checking for bundled fmt")
+    include(CheckIncludeFileCXX)
+    check_include_file_cxx("spdlog/fmt/fmt.h" SPDLOG_HAS_BUNDLED_FMT CMAKE_REQUIRED_LIBRARIES spdlog)
+    if(SPDLOG_HAS_BUNDLED_FMT)
+      message(Status "spdlog has bundled fmt, using that")
+    else()
+        message(Status "spdlog has not bundled fmt, looking for external fmt lib")
+        find_package(fmt REQUIRED)
+        target_compile_definitions(${PROJECT_NAME} PUBLIC SPDLOG_FMT_EXTERNAL=1)
+        ament_export_definitions(SPDLOG_FMT_EXTERNAL)
+        ament_target_dependencies(${PROJECT_NAME} PUBLIC fmt)
+    endif()
+endif()
 
 install(
   DIRECTORY include/

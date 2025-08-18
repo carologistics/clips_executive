@@ -17,7 +17,6 @@
 #include "cx_ros_param_plugin/ros_param_plugin.hpp"
 #include <cx_utils/clips_env_context.hpp>
 #include <cx_utils/param_utils.hpp>
-#include <format>
 
 // To export as plugin
 #include "pluginlib/class_list_macros.hpp"

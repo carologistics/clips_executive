@@ -16,6 +16,7 @@
 
 #include "cx_tf2_pose_tracker_plugin/tf2_pose_tracker_plugin.hpp"
 #include <cx_utils/clips_env_context.hpp>
+#include <cx_utils/format.hpp>
 #include <cx_utils/param_utils.hpp>
 
 // To export as plugin
@@ -196,18 +197,18 @@ void Tf2PoseTrackerPlugin::start_periodic_lookup(clips::Environment *env,
             clips::FBPutSlotMultifield(
                 fact_builder, "translation",
                 clips::StringToMultifield(
-                    env, std::format("{} {} {}", tf.transform.translation.x,
-                                     tf.transform.translation.y,
-                                     tf.transform.translation.z)
+                    env, cx::format("{} {} {}", tf.transform.translation.x,
+                                    tf.transform.translation.y,
+                                    tf.transform.translation.z)
                              .c_str()));
             clips::FBPutSlotMultifield(
                 fact_builder, "rotation",
                 clips::StringToMultifield(
-                    env, std::format("{} {} {} {}", tf.transform.rotation.x,
-                                     tf.transform.rotation.y,
-                                     tf.transform.rotation.z,
-                                     tf.transform.rotation.w)
-                             .c_str()));
+                    env,
+                    cx::format("{} {} {} {}", tf.transform.rotation.x,
+                               tf.transform.rotation.y, tf.transform.rotation.z,
+                               tf.transform.rotation.w)
+                        .c_str()));
             pose_tracker->pose_fact = clips::FBAssert(fact_builder);
             clips::RetainFact(pose_tracker->pose_fact);
             clips::FBDispose(fact_builder);
@@ -220,18 +221,18 @@ void Tf2PoseTrackerPlugin::start_periodic_lookup(clips::Environment *env,
             clips::FMPutSlotMultifield(
                 fact_modifier, "translation",
                 clips::StringToMultifield(
-                    env, std::format("{} {} {}", tf.transform.translation.x,
-                                     tf.transform.translation.y,
-                                     tf.transform.translation.z)
+                    env, cx::format("{} {} {}", tf.transform.translation.x,
+                                    tf.transform.translation.y,
+                                    tf.transform.translation.z)
                              .c_str()));
             clips::FMPutSlotMultifield(
                 fact_modifier, "rotation",
                 clips::StringToMultifield(
-                    env, std::format("{} {} {} {}", tf.transform.rotation.x,
-                                     tf.transform.rotation.y,
-                                     tf.transform.rotation.z,
-                                     tf.transform.rotation.w)
-                             .c_str()));
+                    env,
+                    cx::format("{} {} {} {}", tf.transform.rotation.x,
+                               tf.transform.rotation.y, tf.transform.rotation.z,
+                               tf.transform.rotation.w)
+                        .c_str()));
             pose_tracker->pose_fact = clips::FMModify(fact_modifier);
             clips::RetainFact(pose_tracker->pose_fact);
             clips::FMDispose(fact_modifier);
