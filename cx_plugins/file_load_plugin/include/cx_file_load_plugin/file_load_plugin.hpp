@@ -20,17 +20,19 @@
 
 #include "cx_plugin/clips_plugin.hpp"
 
-namespace cx {
+namespace cx
+{
 
-class FileLoadPlugin : public ClipsPlugin {
+class FileLoadPlugin : public ClipsPlugin
+{
 public:
   FileLoadPlugin();
   ~FileLoadPlugin();
 
   void initialize();
 
-  bool clips_env_init(std::shared_ptr<clips::Environment> &env) override;
-  bool clips_env_destroyed(std::shared_ptr<clips::Environment> &env) override;
+  bool clips_env_init(std::shared_ptr<clips::Environment> & env) override;
+  bool clips_env_destroyed(std::shared_ptr<clips::Environment> & env) override;
 
 private:
   std::unique_ptr<rclcpp::Logger> logger_;
@@ -39,6 +41,6 @@ private:
   std::vector<std::string> init_batch_files_;
   std::vector<std::string> cleanup_files_;
 };
-} // namespace cx
+}  // namespace cx
 
-#endif // !CX_PLUGINS__FILELOADPLUGIN_HPP_
+#endif  // !CX_PLUGINS__FILELOADPLUGIN_HPP_

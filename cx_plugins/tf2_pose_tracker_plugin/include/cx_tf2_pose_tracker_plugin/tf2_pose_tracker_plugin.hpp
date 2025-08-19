@@ -16,18 +16,20 @@
 #ifndef CX_PLUGINS__TF2POSETRACKER_PLUGIN_HPP_
 #define CX_PLUGINS__TF2POSETRACKER_PLUGIN_HPP_
 
+#include <tf2_ros/buffer.h>
+#include <tf2_ros/transform_listener.h>
+
+#include <geometry_msgs/msg/transform_stamped.hpp>
 #include <string>
 #include <vector>
 
 #include "cx_plugin/clips_plugin.hpp"
 
-#include <geometry_msgs/msg/transform_stamped.hpp>
-#include <tf2_ros/buffer.h>
-#include <tf2_ros/transform_listener.h>
+namespace cx
+{
 
-namespace cx {
-
-class Tf2PoseTrackerPlugin : public ClipsPlugin {
+class Tf2PoseTrackerPlugin : public ClipsPlugin
+{
 public:
   Tf2PoseTrackerPlugin();
   ~Tf2PoseTrackerPlugin();
@@ -35,14 +37,15 @@ public:
   void initialize() override;
   void finalize() override;
 
-  bool clips_env_init(std::shared_ptr<clips::Environment> &env) override;
-  bool clips_env_destroyed(std::shared_ptr<clips::Environment> &env) override;
+  bool clips_env_init(std::shared_ptr<clips::Environment> & env) override;
+  bool clips_env_destroyed(std::shared_ptr<clips::Environment> & env) override;
 
 private:
-  struct PoseTracker {
+  struct PoseTracker
+  {
     rclcpp::TimerBase::SharedPtr timer;
-    clips::Fact *pose_fact;
-    clips::Environment *env;
+    clips::Fact * pose_fact;
+    clips::Environment * env;
   };
 
   std::unique_ptr<rclcpp::Logger> logger_;
@@ -54,10 +57,11 @@ private:
 
   std::vector<std::shared_ptr<PoseTracker>> pose_trackers_;
 
-  void start_periodic_lookup(clips::Environment *env, const std::string &parent,
-                             const std::string &child, double frequency);
-  bool stop_periodic_lookup(PoseTracker *pose_tracker);
+  void start_periodic_lookup(
+    clips::Environment * env, const std::string & parent, const std::string & child,
+    double frequency);
+  bool stop_periodic_lookup(PoseTracker * pose_tracker);
 };
-} // namespace cx
+}  // namespace cx
 
-#endif // !CX_PLUGINS__TF2POSETRACKER_PLUGIN_HPP_
+#endif  // !CX_PLUGINS__TF2POSETRACKER_PLUGIN_HPP_

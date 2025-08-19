@@ -18,21 +18,22 @@
 
 #pragma once
 
-#include <rclcpp/rclcpp.hpp>
+#include <clips_ns/clips.h>
 #include <spdlog/spdlog.h>
 
-#include <clips_ns/clips.h>
+#include <rclcpp/rclcpp.hpp>
 
-namespace cx {
-class CLIPSLogger {
+namespace cx
+{
+class CLIPSLogger
+{
 public:
-  explicit CLIPSLogger(const char *component, bool log_to_file,
-                       bool stdout_to_debug);
+  explicit CLIPSLogger(const char * component, bool log_to_file, bool stdout_to_debug);
   ~CLIPSLogger();
-  void log(const char *logical_name, const char *str);
+  void log(const char * logical_name, const char * str);
 
 private:
-  char *component_;
+  char * component_;
   const rclcpp::Logger logger_;
   const bool stdout_to_debug_;
   std::shared_ptr<spdlog::logger> clips_logger_;
@@ -40,16 +41,17 @@ private:
   std::string terminal_buffer_;
 };
 
-class CLIPSEnvContext {
+class CLIPSEnvContext
+{
 public:
   std::string env_name_;
   std::mutex env_mtx_;
   CLIPSLogger logger_;
 
-  static CLIPSEnvContext *get_context(clips::Environment *env);
-  static CLIPSEnvContext *get_context(std::shared_ptr<clips::Environment> &env);
+  static CLIPSEnvContext * get_context(clips::Environment * env);
+  static CLIPSEnvContext * get_context(std::shared_ptr<clips::Environment> & env);
 };
 
-} // namespace cx
+}  // namespace cx
 
-#endif // !_CX_UTILS_CLIPS_ENV_CONTEXT_HPP
+#endif  // !_CX_UTILS_CLIPS_ENV_CONTEXT_HPP

@@ -20,22 +20,24 @@
 
 #include "cx_plugin/clips_plugin.hpp"
 
-namespace cx {
+namespace cx
+{
 
-class AmentIndexPlugin : public ClipsPlugin {
+class AmentIndexPlugin : public ClipsPlugin
+{
 public:
   AmentIndexPlugin();
   ~AmentIndexPlugin();
 
   void initialize();
 
-  bool clips_env_init(std::shared_ptr<clips::Environment> &env) override;
-  bool clips_env_destroyed(std::shared_ptr<clips::Environment> &env) override;
+  bool clips_env_init(std::shared_ptr<clips::Environment> & env) override;
+  bool clips_env_destroyed(std::shared_ptr<clips::Environment> & env) override;
 
 private:
   std::unique_ptr<rclcpp::Logger> logger_;
   std::unordered_set<std::string> function_names_;
 };
-} // namespace cx
+}  // namespace cx
 
-#endif // !CX_PLUGINS__AMENT_INDEX_PLUGIN_HPP_
+#endif  // !CX_PLUGINS__AMENT_INDEX_PLUGIN_HPP_

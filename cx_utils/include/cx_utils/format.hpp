@@ -20,30 +20,36 @@
 #if __has_include(<format>) && __cplusplus >= 202002L
 #include <format>
 using std::format;
-namespace cx {
+namespace cx
+{
 template <typename... Args>
-inline std::string format(std::format_string<Args...> fmt, Args &&...args) {
+inline std::string format(std::format_string<Args...> fmt, Args &&... args)
+{
   return std::format(fmt, std::forward<Args>(args)...);
 }
-} // namespace cx
+}  // namespace cx
 #elif __has_include(<spdlog/fmt/fmt.h>)
 #include <spdlog/fmt/fmt.h>
-namespace cx {
+namespace cx
+{
 template <typename... Args>
-inline std::string format(fmt::format_string<Args...> fmt, Args &&...args) {
+inline std::string format(fmt::format_string<Args...> fmt, Args &&... args)
+{
   return fmt::format(fmt_str, std::forward<Args>(args)...);
 }
-} // namespace cx
+}  // namespace cx
 #elif __has_include(<fmt/format.h>)
 #include <fmt/format.h>
-namespace cx {
+namespace cx
+{
 template <typename... Args>
-inline std::string format(fmt::format_string<Args...> fmt, Args &&...args) {
+inline std::string format(fmt::format_string<Args...> fmt, Args &&... args)
+{
   return fmt::format(fmt_str, std::forward<Args>(args)...);
 }
-} // namespace cx
+}  // namespace cx
 #else
 #error "No available formatting library found: need std::format or fmt"
 #endif
 
-#endif // !CX_UTILS__FORMAT_HPP
+#endif  // !CX_UTILS__FORMAT_HPP

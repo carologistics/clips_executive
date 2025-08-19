@@ -23,18 +23,19 @@
 
 using std::string;
 
-namespace cx {
+namespace cx
+{
 
-std::string chars{
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-"};
+std::string chars{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-"};
 std::random_device rd;
 std::mt19937 generator(rd());
 
-std::string generate_rnd_string(int length) {
+std::string generate_rnd_string(int length)
+{
   std::string output(chars);
   std::shuffle(output.begin(), output.end(), generator);
   return output.substr(0, length);
 }
 
-} // namespace cx
-#endif // !CX_UTILS__STRINGUTILS_HPP
+}  // namespace cx
+#endif  // !CX_UTILS__STRINGUTILS_HPP

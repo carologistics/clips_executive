@@ -16,24 +16,28 @@
 #ifndef CX_PLUGINS__CONFIGPLUGIN_HPP_
 #define CX_PLUGINS__CONFIGPLUGIN_HPP_
 
+#include <yaml-cpp/yaml.h>
+
 #include <map>
 #include <memory>
 #include <string>
 
 #include "cx_plugin/clips_plugin.hpp"
-#include <yaml-cpp/yaml.h>
 
 // HACKY WAY TO DETERMINE SCALAR TYPE AS YAML-CPP DOESN'T OFFER THAT..
-namespace YAML {
-template <typename T> struct as_if<T, std::optional<T>> {
-  explicit as_if(const Node &input_node) : node(input_node) {}
-  const Node &node;
+namespace YAML
+{
+template <typename T>
+struct as_if<T, std::optional<T>>
+{
+  explicit as_if(const Node & input_node) : node(input_node) {}
+  const Node & node;
 
-  const std::optional<T> operator()() const {
+  const std::optional<T> operator()() const
+  {
     std::optional<T> val;
     T t;
-    if (node.m_pNode && convert<T>::decode(node, t))
-      val = std::move(t);
+    if (node.m_pNode && convert<T>::decode(node, t)) val = std::move(t);
 
     return val;
   }
@@ -41,49 +45,52 @@ template <typename T> struct as_if<T, std::optional<T>> {
 
 // There is already a std::string partial specialisation, so we need a full
 // specialisation here
-template <> struct as_if<std::string, std::optional<std::string>> {
-  explicit as_if(const Node &input_node) : node(input_node) {}
-  const Node &node;
+template <>
+struct as_if<std::string, std::optional<std::string>>
+{
+  explicit as_if(const Node & input_node) : node(input_node) {}
+  const Node & node;
 
-  const std::optional<std::string> operator()() const {
+  const std::optional<std::string> operator()() const
+  {
     std::optional<std::string> val;
     std::string t;
-    if (node.m_pNode && convert<std::string>::decode(node, t))
-      val = std::move(t);
+    if (node.m_pNode && convert<std::string>::decode(node, t)) val = std::move(t);
 
     return val;
   }
 };
-} // namespace YAML
+}  // namespace YAML
 
-namespace cx {
+namespace cx
+{
 
-class ConfigPlugin : public ClipsPlugin {
+class ConfigPlugin : public ClipsPlugin
+{
 public:
   ConfigPlugin();
   ~ConfigPlugin();
 
   void initialize() override;
 
-  bool clips_env_init(std::shared_ptr<clips::Environment> &env) override;
-  bool clips_env_destroyed(std::shared_ptr<clips::Environment> &env) override;
+  bool clips_env_init(std::shared_ptr<clips::Environment> & env) override;
+  bool clips_env_destroyed(std::shared_ptr<clips::Environment> & env) override;
 
 private:
-  void clips_config_load(clips::Environment *env, const std::string &file,
-                         const std::string &cfg_prefix);
+  void clips_config_load(
+    clips::Environment * env, const std::string & file, const std::string & cfg_prefix);
 
-  std::string getScalarType(const YAML::Node &input_node);
+  std::string getScalarType(const YAML::Node & input_node);
 
-  void iterateThroughYamlRecuresively(const YAML::Node &current_level_node,
-                                      std::string cfg_prefix,
-                                      clips::Environment *env);
+  void iterateThroughYamlRecuresively(
+    const YAML::Node & current_level_node, std::string cfg_prefix, clips::Environment * env);
 
-  void sequenceIterator(const YAML::Node &input_node, std::string &cfg_prefix,
-                        clips::Environment *env);
+  void sequenceIterator(
+    const YAML::Node & input_node, std::string & cfg_prefix, clips::Environment * env);
 
   std::unique_ptr<rclcpp::Logger> logger_;
 };
 
-} // namespace cx
+}  // namespace cx
 
-#endif // !CX_PLUGINS__CONFIGPLUGIN_HPP_
+#endif  // !CX_PLUGINS__CONFIGPLUGIN_HPP_

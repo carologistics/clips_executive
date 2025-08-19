@@ -20,21 +20,23 @@
 
 #include "cx_plugin/clips_plugin.hpp"
 
-namespace cx {
+namespace cx
+{
 
-class ExamplePlugin : public ClipsPlugin {
+class ExamplePlugin : public ClipsPlugin
+{
 public:
   ExamplePlugin();
   ~ExamplePlugin();
 
   void initialize() override;
 
-  bool clips_env_init(std::shared_ptr<clips::Environment> &env) override;
-  bool clips_env_destroyed(std::shared_ptr<clips::Environment> &env) override;
+  bool clips_env_init(std::shared_ptr<clips::Environment> & env) override;
+  bool clips_env_destroyed(std::shared_ptr<clips::Environment> & env) override;
 
 private:
   std::unique_ptr<rclcpp::Logger> logger_;
 };
-} // namespace cx
+}  // namespace cx
 
-#endif // !CX_PLUGINS__EXAMPLE_PLUGIN_HPP_
+#endif  // !CX_PLUGINS__EXAMPLE_PLUGIN_HPP_

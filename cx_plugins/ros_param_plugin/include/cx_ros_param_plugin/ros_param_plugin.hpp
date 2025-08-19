@@ -20,24 +20,26 @@
 
 #include "cx_plugin/clips_plugin.hpp"
 
-namespace cx {
+namespace cx
+{
 
-class RosParamPlugin : public ClipsPlugin {
+class RosParamPlugin : public ClipsPlugin
+{
 public:
   RosParamPlugin();
   ~RosParamPlugin();
 
   void initialize() override;
 
-  bool clips_env_init(std::shared_ptr<clips::Environment> &env) override;
-  bool clips_env_destroyed(std::shared_ptr<clips::Environment> &env) override;
+  bool clips_env_init(std::shared_ptr<clips::Environment> & env) override;
+  bool clips_env_destroyed(std::shared_ptr<clips::Environment> & env) override;
 
 private:
   std::unique_ptr<rclcpp::Logger> logger_;
 
-  clips::UDFValue get_ros_param(clips::Environment *env, std::string param_name,
-                                clips::UDFValue &default_value);
+  clips::UDFValue get_ros_param(
+    clips::Environment * env, std::string param_name, clips::UDFValue & default_value);
 };
-} // namespace cx
+}  // namespace cx
 
-#endif // !CX_PLUGINS__ROSPARAMPLUGIN_HPP_
+#endif  // !CX_PLUGINS__ROSPARAMPLUGIN_HPP_

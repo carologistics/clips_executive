@@ -17,13 +17,15 @@
 #define _CX_PLUGIN_CLIPS_PLUGIN_HPP
 
 #include <clips_ns/clips.h>
+
 #include <map>
 #include <string>
 
 #include "pluginlib/class_loader.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
-namespace cx {
+namespace cx
+{
 
 /// Clips Plugin
 /**
@@ -32,7 +34,8 @@ namespace cx {
  *
  * Inherit from this class and export your class as plugin via pluginlib.
  */
-class ClipsPlugin {
+class ClipsPlugin
+{
   friend class ClipsPluginManager;
   using Ptr = pluginlib::UniquePtr<cx::ClipsPlugin>;
 
@@ -58,7 +61,7 @@ public:
    *
    * \return true iff the initialization succeeded
    */
-  virtual bool clips_env_init(std::shared_ptr<clips::Environment> &env) = 0;
+  virtual bool clips_env_init(std::shared_ptr<clips::Environment> & env) = 0;
 
   /// Called once for every managed Clips environment on shutting down the
   /// environment.
@@ -67,8 +70,7 @@ public:
    * before usage in other threads.
    * \return true iff the initialization succeeded
    */
-  virtual bool
-  clips_env_destroyed(std::shared_ptr<clips::Environment> &env) = 0;
+  virtual bool clips_env_destroyed(std::shared_ptr<clips::Environment> & env) = 0;
 
   std::string get_plugin_name() const;
 
@@ -81,10 +83,10 @@ protected:
 
 private:
   /// \internal pass parent and name to the instance.
-  void initialize(const rclcpp_lifecycle::LifecycleNode::WeakPtr parent,
-                  const std::string &plugin_name);
+  void initialize(
+    const rclcpp_lifecycle::LifecycleNode::WeakPtr parent, const std::string & plugin_name);
 };
 
-} // namespace cx
+}  // namespace cx
 
-#endif // !_CX_PLUGIN_CLIPS_PLUGIN_HPP
+#endif  // !_CX_PLUGIN_CLIPS_PLUGIN_HPP

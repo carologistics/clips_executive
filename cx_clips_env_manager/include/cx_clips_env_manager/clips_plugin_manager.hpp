@@ -21,35 +21,32 @@
 #include <string>
 #include <unordered_map>
 
-#include "rclcpp/rclcpp.hpp"
-#include "rclcpp_lifecycle/lifecycle_node.hpp"
-
-#include "lifecycle_msgs/msg/state.hpp"
-#include "lifecycle_msgs/msg/transition.hpp"
-
-#include "cx_plugin/clips_plugin.hpp"
-
 #include "cx_msgs/srv/list_clips_plugins.hpp"
 #include "cx_msgs/srv/load_clips_plugin.hpp"
 #include "cx_msgs/srv/unload_clips_plugin.hpp"
-
+#include "cx_plugin/clips_plugin.hpp"
+#include "lifecycle_msgs/msg/state.hpp"
+#include "lifecycle_msgs/msg/transition.hpp"
 #include "pluginlib/class_list_macros.hpp"
 #include "pluginlib/class_loader.hpp"
+#include "rclcpp/rclcpp.hpp"
+#include "rclcpp_lifecycle/lifecycle_node.hpp"
 
-namespace cx {
-using EnvsMap =
-    std::unordered_map<std::string, std::shared_ptr<clips::Environment>>;
+namespace cx
+{
+using EnvsMap = std::unordered_map<std::string, std::shared_ptr<clips::Environment>>;
 
-class ClipsPluginManager {
+class ClipsPluginManager
+{
 public:
   ClipsPluginManager();
   ~ClipsPluginManager();
 
   using PluginsMap = std::unordered_map<std::string, cx::ClipsPlugin::Ptr>;
 
-  void configure(const rclcpp_lifecycle::LifecycleNode::WeakPtr &parent,
-                 const std::string &name, std::shared_ptr<EnvsMap> &envs,
-                 std::shared_ptr<std::mutex> &map_mtx);
+  void configure(
+    const rclcpp_lifecycle::LifecycleNode::WeakPtr & parent, const std::string & name,
+    std::shared_ptr<EnvsMap> & envs, std::shared_ptr<std::mutex> & map_mtx);
   /**
    * @brief Cleanup resources
    */
@@ -59,52 +56,45 @@ public:
    * @brief Activate plugin manager
    */
   void activate();
-  void activate_env(const std::string &env_name,
-                    std::shared_ptr<clips::Environment> &env);
+  void activate_env(const std::string & env_name, std::shared_ptr<clips::Environment> & env);
 
   /**
    * @brief Deactivate plugin manager
    */
   void deactivate();
-  void deactivate_env(const std::string &env_name,
-                      std::shared_ptr<clips::Environment> &env);
+  void deactivate_env(const std::string & env_name, std::shared_ptr<clips::Environment> & env);
 
   /**
    * @brief Reset plugin manager
    */
   void reset();
 
-  void plugin_init_context(const std::string &env_name,
-                           const std::string &plugin_name);
+  void plugin_init_context(const std::string & env_name, const std::string & plugin_name);
 
-  void clips_request_plugin(clips::Environment *env, clips::UDFValue *out,
-                            const std::string &plugin_name);
+  void clips_request_plugin(
+    clips::Environment * env, clips::UDFValue * out, const std::string & plugin_name);
 
   void load_plugin_cb(
-      const std::shared_ptr<rmw_request_id_t> request_header,
-      const std::shared_ptr<cx_msgs::srv::LoadClipsPlugin::Request> request,
-      const std::shared_ptr<cx_msgs::srv::LoadClipsPlugin::Response> response);
+    const std::shared_ptr<rmw_request_id_t> request_header,
+    const std::shared_ptr<cx_msgs::srv::LoadClipsPlugin::Request> request,
+    const std::shared_ptr<cx_msgs::srv::LoadClipsPlugin::Response> response);
   void unload_plugin_cb(
-      const std::shared_ptr<rmw_request_id_t> request_header,
-      const std::shared_ptr<cx_msgs::srv::UnloadClipsPlugin::Request> request,
-      const std::shared_ptr<cx_msgs::srv::UnloadClipsPlugin::Response>
-          response);
+    const std::shared_ptr<rmw_request_id_t> request_header,
+    const std::shared_ptr<cx_msgs::srv::UnloadClipsPlugin::Request> request,
+    const std::shared_ptr<cx_msgs::srv::UnloadClipsPlugin::Response> response);
   void list_plugin_cb(
-      const std::shared_ptr<rmw_request_id_t> request_header,
-      const std::shared_ptr<cx_msgs::srv::ListClipsPlugins::Request> request,
-      const std::shared_ptr<cx_msgs::srv::ListClipsPlugins::Response> response);
+    const std::shared_ptr<rmw_request_id_t> request_header,
+    const std::shared_ptr<cx_msgs::srv::ListClipsPlugins::Request> request,
+    const std::shared_ptr<cx_msgs::srv::ListClipsPlugins::Response> response);
 
 private:
-  bool load_plugin_for_env(const std::string &plugin,
-                           const std::string &env_name,
-                           std::shared_ptr<clips::Environment> &env);
+  bool load_plugin_for_env(
+    const std::string & plugin, const std::string & env_name,
+    std::shared_ptr<clips::Environment> & env);
 
-  rclcpp::Service<cx_msgs::srv::LoadClipsPlugin>::SharedPtr
-      load_plugin_service_;
-  rclcpp::Service<cx_msgs::srv::UnloadClipsPlugin>::SharedPtr
-      unload_plugin_service_;
-  rclcpp::Service<cx_msgs::srv::ListClipsPlugins>::SharedPtr
-      list_plugin_service_;
+  rclcpp::Service<cx_msgs::srv::LoadClipsPlugin>::SharedPtr load_plugin_service_;
+  rclcpp::Service<cx_msgs::srv::UnloadClipsPlugin>::SharedPtr unload_plugin_service_;
+  rclcpp::Service<cx_msgs::srv::ListClipsPlugins>::SharedPtr list_plugin_service_;
 
   // Pluginlib class loaders
   pluginlib::ClassLoader<cx::ClipsPlugin> pg_loader_;
@@ -123,6 +113,6 @@ private:
   rclcpp_lifecycle::LifecycleNode::WeakPtr parent_;
 };
 
-} // namespace cx
+}  // namespace cx
 
-#endif // !CX_PLUGINS_CLIPS_PLUGIN_MANAGER_HPP_
+#endif  // !CX_PLUGINS_CLIPS_PLUGIN_MANAGER_HPP_

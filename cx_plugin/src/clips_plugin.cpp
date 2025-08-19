@@ -13,10 +13,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <string>
-
 #include "cx_plugin/clips_plugin.hpp"
-namespace cx {
+
+#include <string>
+namespace cx
+{
 
 ClipsPlugin::ClipsPlugin() {}
 ClipsPlugin::~ClipsPlugin() {}
@@ -28,11 +29,11 @@ void ClipsPlugin::initialize() {}
 void ClipsPlugin::finalize() {}
 
 void ClipsPlugin::initialize(
-    const rclcpp_lifecycle::LifecycleNode::WeakPtr parent,
-    const std::string &plugin_name) {
+  const rclcpp_lifecycle::LifecycleNode::WeakPtr parent, const std::string & plugin_name)
+{
   parent_ = parent;
   plugin_name_ = plugin_name;
   initialize();
 }
 
-} // namespace cx
+}  // namespace cx

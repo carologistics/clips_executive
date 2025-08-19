@@ -25,34 +25,34 @@
 #define CX_PLUGINS__CLIPSPROTOBUFPLUGIN_HPP_
 
 #include <cx_protobuf_plugin/communicator.hpp>
-
 #include <map>
 #include <memory>
 #include <string>
 
 #include "cx_plugin/clips_plugin.hpp"
 
-namespace cx {
+namespace cx
+{
 
-class ProtobufPlugin : public ClipsPlugin {
+class ProtobufPlugin : public ClipsPlugin
+{
 public:
   ProtobufPlugin();
   ~ProtobufPlugin();
 
   void initialize() override;
 
-  bool clips_env_init(std::shared_ptr<clips::Environment> &env) override;
-  bool clips_env_destroyed(std::shared_ptr<clips::Environment> &env) override;
+  bool clips_env_init(std::shared_ptr<clips::Environment> & env) override;
+  bool clips_env_destroyed(std::shared_ptr<clips::Environment> & env) override;
 
 private:
   std::vector<std::string> paths_;
-  std::unordered_map<std::string,
-                     std::unique_ptr<protobuf_clips::ClipsProtobufCommunicator>>
-      protobuf_communicator_;
+  std::unordered_map<std::string, std::unique_ptr<protobuf_clips::ClipsProtobufCommunicator>>
+    protobuf_communicator_;
   std::unique_ptr<rclcpp::Logger> logger_;
 
   std::string plugin_path_;
 };
 
-} // namespace cx
-#endif // !CX_PLUGINS__CLIPSPROTOBUFPLUGIN_HPP_
+}  // namespace cx
+#endif  // !CX_PLUGINS__CLIPSPROTOBUFPLUGIN_HPP_

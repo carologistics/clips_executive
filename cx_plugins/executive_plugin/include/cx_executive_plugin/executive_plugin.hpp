@@ -16,15 +16,16 @@
 #ifndef CX_PLUGINS__EXECUTIVEPLUGIN_HPP_
 #define CX_PLUGINS__EXECUTIVEPLUGIN_HPP_
 
+#include <std_msgs/msg/empty.hpp>
 #include <string>
 
 #include "cx_plugin/clips_plugin.hpp"
 
-#include <std_msgs/msg/empty.hpp>
+namespace cx
+{
 
-namespace cx {
-
-class ExecutivePlugin : public ClipsPlugin {
+class ExecutivePlugin : public ClipsPlugin
+{
 public:
   ExecutivePlugin();
   ~ExecutivePlugin();
@@ -32,8 +33,8 @@ public:
   void initialize() override;
   void finalize() override;
 
-  bool clips_env_init(std::shared_ptr<clips::Environment> &clips) override;
-  bool clips_env_destroyed(std::shared_ptr<clips::Environment> &clips) override;
+  bool clips_env_init(std::shared_ptr<clips::Environment> & clips) override;
+  bool clips_env_destroyed(std::shared_ptr<clips::Environment> & clips) override;
 
   std::shared_ptr<rclcpp_lifecycle::LifecycleNode> get_node();
 
@@ -46,8 +47,7 @@ private:
 
   rclcpp::TimerBase::SharedPtr agenda_refresh_timer_;
 
-  rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::Empty>::SharedPtr
-      clips_agenda_refresh_pub_;
+  rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::Empty>::SharedPtr clips_agenda_refresh_pub_;
 
   std::chrono::nanoseconds publish_rate_;
 
@@ -56,6 +56,6 @@ private:
   std::vector<std::shared_ptr<clips::Environment>> managed_envs;
   std::mutex envs_mutex_;
 };
-} // namespace cx
+}  // namespace cx
 
-#endif // !CX_PLUGINS__EXECUTIVEPLUGIN_HPP_
+#endif  // !CX_PLUGINS__EXECUTIVEPLUGIN_HPP_

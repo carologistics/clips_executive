@@ -18,14 +18,17 @@
 #include <ament_index_cpp/get_package_share_directory.hpp>
 #include <filesystem>
 
-namespace cx {
-namespace cx_utils {
+namespace cx
+{
+namespace cx_utils
+{
 
-void resolve_files(const std::vector<std::string> &files_in,
-                   const std::vector<std::string> &share_dirs,
-                   std::vector<std::string> &files_out) {
+void resolve_files(
+  const std::vector<std::string> & files_in, const std::vector<std::string> & share_dirs,
+  std::vector<std::string> & files_out)
+{
   // Try to resolve files
-  for (const auto &file : files_in) {
+  for (const auto & file : files_in) {
     bool found = false;
     std::filesystem::path file_path(file);
     // Check if the path is absolute and exists
@@ -34,9 +37,8 @@ void resolve_files(const std::vector<std::string> &files_in,
       found = true;
     } else {
       // Otherwise check in the respective share directories
-      for (const auto &package : share_dirs) {
-        std::string dir_path =
-            ament_index_cpp::get_package_share_directory(package);
+      for (const auto & package : share_dirs) {
+        std::string dir_path = ament_index_cpp::get_package_share_directory(package);
         std::filesystem::path share_dir_path(dir_path);
 
         std::filesystem::path potential_path = share_dir_path / file_path;
@@ -53,5 +55,5 @@ void resolve_files(const std::vector<std::string> &files_in,
   }
 }
 
-} // namespace cx_utils
-} // namespace cx
+}  // namespace cx_utils
+}  // namespace cx
