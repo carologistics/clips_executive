@@ -22,6 +22,7 @@ repos:
       - id: check-added-large-files
       - id: check-executables-have-shebangs
       - id: check-shebang-scripts-are-executable
+      - id: double-quote-string-fixer
       - id: check-xml
   - repo: https://github.com/pre-commit/mirrors-clang-format
     rev: v19.1.4
@@ -95,27 +96,6 @@ repos:
         args: [-c=.cmakelint.py]
         exclude: etc/cmake/
   # Python
-  - repo: https://github.com/psf/black
-    rev: 24.10.0
-    hooks:
-      - id: black
-        language_version: python3
-        args: [--line-length=120]
-        additional_dependencies: [pip-autoremove]
-  - repo: https://github.com/asottile/reorder-python-imports
-    rev: v3.14.0
-    hooks:
-      - id: reorder-python-imports
-        args:
-          - --py39-plus
-  - repo: https://github.com/pycqa/flake8
-    rev: '7.1.1'
-    hooks:
-      - id: flake8
-        exclude: .cmakelint.py
-        args:
-          - --max-line-length=120
-          - --ignore=E203,W503
   - repo: https://github.com/PyCQA/autoflake.git
     rev: 'v2.3.1'
     hooks:
@@ -127,6 +107,24 @@ repos:
           - --remove-duplicate-keys
           - --remove-unused-variables
           - --remove-all-unused-imports
+
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        args:
+          - --profile=black
+          - --line-length=99
+          - --force-sort-within-sections
+
+  - repo: https://github.com/psf/black
+    rev: 24.10.0
+    hooks:
+      - id: black
+        language_version: python3
+        args: [--line-length=99, --skip-string-normalization]
+        additional_dependencies: [pip-autoremove]
+
   # XML
   - repo: local
     hooks:

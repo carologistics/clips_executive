@@ -22,17 +22,17 @@ from std_srvs.srv import SetBool
 class SetBoolService(Node):
 
     def __init__(self):
-        super().__init__("set_bool_service")
-        self.srv = self.create_service(SetBool, "ros_cx_client", self.set_bool_callback)
+        super().__init__('set_bool_service')
+        self.srv = self.create_service(SetBool, 'ros_cx_client', self.set_bool_callback)
 
     def set_bool_callback(self, request, response):
         if request.data:
             response.success = True
-            response.message = "The request was true!"
+            response.message = 'The request was true!'
         else:
             response.success = False
-            response.message = "The request was false!"
-        self.get_logger().info(f"Received request: {request.data}")
+            response.message = 'The request was false!'
+        self.get_logger().info(f'Received request: {request.data}')
         return response
 
 
@@ -44,5 +44,5 @@ def main(args=None):
     rclpy.shutdown()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
