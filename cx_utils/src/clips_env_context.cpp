@@ -45,11 +45,15 @@ CLIPSLogger::CLIPSLogger(const char *component, bool log_to_file,
 
     std::string formatted_time = oss.str();
     std::string base_name = component_ ? std::string(component_) : "clips";
-    std::string log_filename = rclcpp::get_logging_directory().string() + "/" +
-                               base_name + "_" + formatted_time + ".log";
+#if defined(HUMBLE) || defined(JAZZY)
+    std::string log_dir = rclcpp::get_logging_directory().string();
+#else
+    std::string log_dir = rclcpp::get_log_directory().string();
+#endif
+    std::string log_filename =
+        log_dir + "/" + base_name + "_" + formatted_time + ".log";
     clips_logger_ = spdlog::basic_logger_st(base_name, log_filename);
-    std::string symlink_path = rclcpp::get_logging_directory().string() + "/" +
-                               base_name + "_latest.log";
+    std::string symlink_path = log_dir + "/" + base_name + "_latest.log";
 
     namespace fs = std::filesystem;
     try {

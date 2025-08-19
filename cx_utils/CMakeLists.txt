@@ -10,6 +10,16 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
+if($ENV{ROS_DISTRO} MATCHES "humble")
+  add_compile_definitions(HUMBLE)
+elseif($ENV{ROS_DISTRO} MATCHES "jazzy")
+  add_compile_definitions(JAZZY)
+elseif($ENV{ROS_DISTRO} MATCHES "kilted")
+  add_compile_definitions(KILTED)
+elseif($ENV{ROS_DISTRO} MATCHES "rolling")
+  add_compile_definitions(ROLLING)
+endif()
+
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
