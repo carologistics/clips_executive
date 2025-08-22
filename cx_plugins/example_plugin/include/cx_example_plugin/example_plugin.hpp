@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef CX_PLUGINS__EXAMPLE_PLUGIN_HPP_
-#define CX_PLUGINS__EXAMPLE_PLUGIN_HPP_
+#ifndef CX_EXAMPLE_PLUGIN__EXAMPLE_PLUGIN_HPP_
+#define CX_EXAMPLE_PLUGIN__EXAMPLE_PLUGIN_HPP_
 
 #include <string>
 
@@ -39,4 +39,4 @@ private:
 };
 }  // namespace cx
 
-#endif  // !CX_PLUGINS__EXAMPLE_PLUGIN_HPP_
+#endif  // CX_EXAMPLE_PLUGIN__EXAMPLE_PLUGIN_HPP_

@@ -21,8 +21,8 @@
  *  Copyright  2024 Tarik Viehmann <viehmann@kbsg.rwth-achen.de>
  ****************************************************************************/
 
-#ifndef CX_PLUGINS__CLIPSPROTOBUFPLUGIN_HPP_
-#define CX_PLUGINS__CLIPSPROTOBUFPLUGIN_HPP_
+#ifndef CX_PROTOBUF_PLUGIN__PROTOBUF_PLUGIN_HPP_
+#define CX_PROTOBUF_PLUGIN__PROTOBUF_PLUGIN_HPP_
 
 #include <cx_protobuf_plugin/communicator.hpp>
 #include <map>
@@ -55,4 +55,4 @@ private:
 };
 
 }  // namespace cx
-#endif  // !CX_PLUGINS__CLIPSPROTOBUFPLUGIN_HPP_
+#endif  // CX_PROTOBUF_PLUGIN__PROTOBUF_PLUGIN_HPP_

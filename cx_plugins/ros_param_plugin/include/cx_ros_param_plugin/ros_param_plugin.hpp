@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef CX_PLUGINS__ROSPARAMPLUGIN_HPP_
-#define CX_PLUGINS__ROSPARAMPLUGIN_HPP_
+#ifndef CX_ROS_PARAM_PLUGIN__ROS_PARAM_PLUGIN_HPP_
+#define CX_ROS_PARAM_PLUGIN__ROS_PARAM_PLUGIN_HPP_
 
 #include <string>
 
@@ -42,4 +42,4 @@ private:
 };
 }  // namespace cx
 
-#endif  // !CX_PLUGINS__ROSPARAMPLUGIN_HPP_
+#endif  // CX_ROS_PARAM_PLUGIN__ROS_PARAM_PLUGIN_HPP_

@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef CX_UTILS__PARAMSUTILS_HPP
-#define CX_UTILS__PARAMSUTILS_HPP
+#ifndef CX_UTILS__PARAM_UTILS_HPP_
+#define CX_UTILS__PARAM_UTILS_HPP_
 
 #include <rclcpp/rclcpp.hpp>
 #include <string>
@@ -101,4 +101,4 @@ void resolve_files(
 }  // namespace cx_utils
 }  // namespace cx
 
-#endif  // !CX_UTILS__PARAMSUTILS_HPP
+#endif  // CX_UTILS__PARAM_UTILS_HPP_

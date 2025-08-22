@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef _CX_UTILS_CLIPS_ENV_CONTEXT_HPP
-#define _CX_UTILS_CLIPS_ENV_CONTEXT_HPP
+#ifndef CX_UTILS__CLIPS_ENV_CONTEXT_HPP_
+#define CX_UTILS__CLIPS_ENV_CONTEXT_HPP_
 
 #pragma once
 
@@ -54,4 +54,4 @@ public:
 
 }  // namespace cx
 
-#endif  // !_CX_UTILS_CLIPS_ENV_CONTEXT_HPP
+#endif  // CX_UTILS__CLIPS_ENV_CONTEXT_HPP_

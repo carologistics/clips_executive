@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef CX_PLUGINS__TF2POSETRACKER_PLUGIN_HPP_
-#define CX_PLUGINS__TF2POSETRACKER_PLUGIN_HPP_
+#ifndef CX_TF2_POSE_TRACKER_PLUGIN__TF2_POSE_TRACKER_PLUGIN_HPP_
+#define CX_TF2_POSE_TRACKER_PLUGIN__TF2_POSE_TRACKER_PLUGIN_HPP_
 
 #include <tf2_ros/buffer.h>
 #include <tf2_ros/transform_listener.h>
@@ -64,4 +64,4 @@ private:
 };
 }  // namespace cx
 
-#endif  // !CX_PLUGINS__TF2POSETRACKER_PLUGIN_HPP_
+#endif  // CX_TF2_POSE_TRACKER_PLUGIN__TF2_POSE_TRACKER_PLUGIN_HPP_

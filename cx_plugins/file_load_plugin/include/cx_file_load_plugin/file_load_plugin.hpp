@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef CX_PLUGINS__FILELOADPLUGIN_HPP_
-#define CX_PLUGINS__FILELOADPLUGIN_HPP_
+#ifndef CX_FILE_LOAD_PLUGIN__FILE_LOAD_PLUGIN_HPP_
+#define CX_FILE_LOAD_PLUGIN__FILE_LOAD_PLUGIN_HPP_
 
 #include <string>
 
@@ -43,4 +43,4 @@ private:
 };
 }  // namespace cx
 
-#endif  // !CX_PLUGINS__FILELOADPLUGIN_HPP_
+#endif  // CX_FILE_LOAD_PLUGIN__FILE_LOAD_PLUGIN_HPP_

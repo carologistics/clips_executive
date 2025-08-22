@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef CX_PLUGINS_CLIPS_PLUGIN_MANAGER_HPP_
-#define CX_PLUGINS_CLIPS_PLUGIN_MANAGER_HPP_
+#ifndef CX_CLIPS_ENV_MANAGER__CLIPS_PLUGIN_MANAGER_HPP_
+#define CX_CLIPS_ENV_MANAGER__CLIPS_PLUGIN_MANAGER_HPP_
 
 #include <map>
 #include <memory>
@@ -115,4 +115,4 @@ private:
 
 }  // namespace cx
 
-#endif  // !CX_PLUGINS_CLIPS_PLUGIN_MANAGER_HPP_
+#endif  // CX_CLIPS_ENV_MANAGER__CLIPS_PLUGIN_MANAGER_HPP_

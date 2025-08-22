@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef CX_PLUGINS__EXECUTIVEPLUGIN_HPP_
-#define CX_PLUGINS__EXECUTIVEPLUGIN_HPP_
+#ifndef CX_EXECUTIVE_PLUGIN__EXECUTIVE_PLUGIN_HPP_
+#define CX_EXECUTIVE_PLUGIN__EXECUTIVE_PLUGIN_HPP_
 
 #include <std_msgs/msg/empty.hpp>
 #include <string>
@@ -58,4 +58,4 @@ private:
 };
 }  // namespace cx
 
-#endif  // !CX_PLUGINS__EXECUTIVEPLUGIN_HPP_
+#endif  // CX_EXECUTIVE_PLUGIN__EXECUTIVE_PLUGIN_HPP_

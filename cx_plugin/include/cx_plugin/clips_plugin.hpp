@@ -13,14 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef _CX_PLUGIN_CLIPS_PLUGIN_HPP
-#define _CX_PLUGIN_CLIPS_PLUGIN_HPP
-
-#include <clips_ns/clips.h>
+#ifndef CX_PLUGIN__CLIPS_PLUGIN_HPP_
+#define CX_PLUGIN__CLIPS_PLUGIN_HPP_
 
 #include <map>
 #include <string>
 
+#include "clips_ns/clips.h"
 #include "pluginlib/class_loader.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
@@ -89,4 +88,4 @@ private:
 
 }  // namespace cx
 
-#endif  // !_CX_PLUGIN_CLIPS_PLUGIN_HPP
+#endif  // CX_PLUGIN__CLIPS_PLUGIN_HPP_

@@ -22,16 +22,15 @@
  *             2924       Tarik Viehmann <viehmann@kbsg.rwth-aachen.de>
  ****************************************************************************/
 
-#ifndef _PROTOBUF_CLIPS_COMMUNICATOR_H_
-#define _PROTOBUF_CLIPS_COMMUNICATOR_H_
-
-#include <clips_ns/clips.h>
-#include <protobuf_comm/server.h>
+#ifndef CX_PROTOBUF_PLUGIN__COMMUNICATOR_HPP_
+#define CX_PROTOBUF_PLUGIN__COMMUNICATOR_HPP_
 
 #include <list>
 #include <map>
 #include <mutex>
 
+#include "clips_ns/clips.h"
+#include "protobuf_comm/server.h"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
 namespace protobuf_comm
@@ -200,4 +199,4 @@ private:
 
 }  // end namespace protobuf_clips
 
-#endif
+#endif  // CX_PROTOBUF_PLUGIN__COMMUNICATOR_HPP_

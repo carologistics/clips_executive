@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef CX_UTILS__STRINGUTILS_HPP
-#define CX_UTILS__STRINGUTILS_HPP
+#ifndef CX_UTILS__STRING_UTILS_HPP_
+#define CX_UTILS__STRING_UTILS_HPP_
 
 #include <algorithm>
 #include <iostream>
@@ -38,4 +38,4 @@ std::string generate_rnd_string(int length)
 }
 
 }  // namespace cx
-#endif  // !CX_UTILS__STRINGUTILS_HPP
+#endif  // CX_UTILS__STRING_UTILS_HPP_

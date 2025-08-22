@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef CX_CLIPS__CLIPSENVMANAGER_H_
-#define CX_CLIPS__CLIPSENVMANAGER_H_
+#ifndef CX_CLIPS_ENV_MANAGER__CLIPS_ENV_MANAGER_HPP_
+#define CX_CLIPS_ENV_MANAGER__CLIPS_ENV_MANAGER_HPP_
 
 #include <spdlog/spdlog.h>
 
@@ -116,4 +116,4 @@ private:
 };
 }  // namespace cx
 
-#endif  // !CX_CLIPS__CLIPSENVMANAGER_H_
+#endif  // CX_CLIPS_ENV_MANAGER__CLIPS_ENV_MANAGER_HPP_

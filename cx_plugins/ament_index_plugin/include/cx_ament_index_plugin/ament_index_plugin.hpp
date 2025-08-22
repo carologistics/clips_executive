@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef CX_PLUGINS__AMENT_INDEX_PLUGIN_HPP_
-#define CX_PLUGINS__AMENT_INDEX_PLUGIN_HPP_
+#ifndef CX_AMENT_INDEX_PLUGIN__AMENT_INDEX_PLUGIN_HPP_
+#define CX_AMENT_INDEX_PLUGIN__AMENT_INDEX_PLUGIN_HPP_
 
 #include <string>
 
@@ -40,4 +40,4 @@ private:
 };
 }  // namespace cx
 
-#endif  // !CX_PLUGINS__AMENT_INDEX_PLUGIN_HPP_
+#endif  // CX_AMENT_INDEX_PLUGIN__AMENT_INDEX_PLUGIN_HPP_

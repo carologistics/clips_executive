@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef CX_PLUGINS__CONFIGPLUGIN_HPP_
-#define CX_PLUGINS__CONFIGPLUGIN_HPP_
+#ifndef CX_CONFIG_PLUGIN__CONFIG_PLUGIN_HPP_
+#define CX_CONFIG_PLUGIN__CONFIG_PLUGIN_HPP_
 
 #include <yaml-cpp/yaml.h>
 
@@ -93,4 +93,4 @@ private:
 
 }  // namespace cx
 
-#endif  // !CX_PLUGINS__CONFIGPLUGIN_HPP_
+#endif  // CX_CONFIG_PLUGIN__CONFIG_PLUGIN_HPP_

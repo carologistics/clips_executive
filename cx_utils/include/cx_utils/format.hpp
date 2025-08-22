@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef CX_UTILS__FORMAT_HPP
-#define CX_UTILS__FORMAT_HPP
+#ifndef CX_UTILS__FORMAT_HPP_
+#define CX_UTILS__FORMAT_HPP_
 #include <string>
 
 #if __has_include(<format>) && __cplusplus >= 202002L
@@ -52,4 +52,4 @@ inline std::string format(fmt::format_string<Args...> fmt, Args &&... args)
 #error "No available formatting library found: need std::format or fmt"
 #endif
 
-#endif  // !CX_UTILS__FORMAT_HPP
+#endif  // CX_UTILS__FORMAT_HPP_

@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef CX_PLUGINS__ROS_MSGS_PLUGIN_HPP_
-#define CX_PLUGINS__ROS_MSGS_PLUGIN_HPP_
+#ifndef CX_ROS_MSGS_PLUGIN__ROS_MSGS_PLUGIN_HPP_
+#define CX_ROS_MSGS_PLUGIN__ROS_MSGS_PLUGIN_HPP_
 
 #include <rclcpp/generic_client.hpp>
 #include <rosidl_typesupport_introspection_cpp/message_introspection.hpp>
@@ -215,4 +215,4 @@ private:
 };
 }  // namespace cx
 
-#endif  // !CX_PLUGINS__ROS_MSGS_PLUGIN_HPP_
+#endif  // CX_ROS_MSGS_PLUGIN__ROS_MSGS_PLUGIN_HPP_
