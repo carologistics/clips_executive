@@ -187,3 +187,5 @@ repos:
         language: system
         files: \.(launch|xml)$
         stages: [manual]
+
+exclude: (^extensions/pddl/z3_vendor/|^extensions/pddl/up_nextflap/)
