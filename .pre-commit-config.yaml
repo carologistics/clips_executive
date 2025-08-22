@@ -179,6 +179,7 @@ repos:
         language: system
         files: \.(c|cpp|h|hpp|py)$
         stages: [manual]
+        exclude: ^cx_plugins/protobuf_plugin/
 
       - id: ament_xmllint
         name: ament_xmllint
