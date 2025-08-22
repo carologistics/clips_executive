@@ -88,7 +88,7 @@ class ManagedGoal():
         self.fluent_filters = []
         self.action_filters = []
 
-    def set_goal_fluent(self, name, args):
+    def set_goal_fluent(self, name, args, value):
         grounded_args = []
 
         for arg in args:
@@ -97,8 +97,11 @@ class ManagedGoal():
         grounded_fluent = self.problem.fnode_manager.FluentExp(
             self.problem.base_problem.fluent(name), grounded_args
         )
-
-        self.goal_fluents.append(grounded_fluent)
+        if value:
+            grounded_goal_expr = self.problem.fnode_manager.Equals(grounded_fluent, value)
+            self.goal_fluents.append(grounded_goal_expr)
+        else:
+            self.goal_fluents.append(grounded_fluent)
 
     def remove_goal_fluent(self, name, args):
         raise NotImplementedError("remove_goal_fluent is not implemented")
@@ -269,8 +272,8 @@ class ManagedProblem():
     def get_goal(self, goal="base"):
         return self.goals[goal]
 
-    def add_goal_fluent(self, name, args, goal="base"):
-        self.goals[goal].set_goal_fluent(name, args)
+    def add_goal_fluent(self, name, args, value, goal):
+        self.goals[goal].set_goal_fluent(name, args, value)
 
     def remove_goal_fluent(self, name, args, goal="base"):
         self.goals[goal].remove_goal_fluent(name, args)
