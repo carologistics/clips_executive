@@ -20,8 +20,6 @@
   <exec_depend>cx_example_plugin</exec_depend>
   <exec_depend>cx_executive_plugin</exec_depend>
   <exec_depend>cx_file_load_plugin</exec_depend>
-  <!-- <exec_de_pend>cx_pddl_parser_plugin</exec_depend> -->
-  <!-- <exec_de_pend>cx_plansys2_plugin</exec_depend> -->
   <exec_depend>cx_protobuf_plugin</exec_depend>
   <exec_depend>cx_ros_msgs_plugin</exec_depend>
   <exec_depend>cx_tf2_pose_tracker_plugin</exec_depend>
