@@ -151,6 +151,7 @@ repos:
         entry: ament_cpplint
         language: system
         stages: [manual]
+        exclude: /templates/
 
       # -------------------------------
       # Python Linters
