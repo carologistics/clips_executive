@@ -26,7 +26,9 @@ using std::string;
 namespace cx
 {
 
-std::string chars{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-"};
+inline constexpr std::string_view chars =
+  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-";
+
 std::random_device rd;
 std::mt19937 generator(rd());
 

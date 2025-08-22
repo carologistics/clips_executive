@@ -79,8 +79,7 @@ public:
   /** Signal invoked for a message that has been sent to a client.
    * @return signal
    */
-  boost::signals2::signal<
-    void(std::string, unsigned short, std::shared_ptr<google::protobuf::Message>)> &
+  boost::signals2::signal<void(std::string, uint16_t, std::shared_ptr<google::protobuf::Message>)> &
   signal_client_sent()
   {
     return sig_client_sent_;
@@ -89,7 +88,7 @@ public:
   /** Signal invoked for a message that has been sent via broadcast.
    * @return signal
    */
-  boost::signals2::signal<void(long, std::shared_ptr<google::protobuf::Message>)> &
+  boost::signals2::signal<void(int64_t, std::shared_ptr<google::protobuf::Message>)> &
   signal_peer_sent()
   {
     return sig_peer_sent_;
@@ -110,21 +109,21 @@ private:
   void clips_pb_destroy(void * msgptr);
   void clips_pb_set_field(void * msgptr, std::string field_name, clips::UDFValue value);
   void clips_pb_add_list(void * msgptr, std::string field_name, clips::UDFValue value);
-  void clips_pb_send(long int client_id, void * msgptr);
+  void clips_pb_send(int64_t client_id, void * msgptr);
   std::string clips_pb_tostring(void * msgptr);
-  long int clips_pb_client_connect(std::string host, int port);
-  void clips_pb_disconnect(long int client_id);
-  void clips_pb_broadcast(long int peer_id, void * msgptr);
+  int64_t clips_pb_client_connect(std::string host, int port);
+  void clips_pb_disconnect(int64_t client_id);
+  void clips_pb_broadcast(int64_t peer_id, void * msgptr);
 
-  long int clips_pb_peer_create(std::string host, int port);
-  long int clips_pb_peer_create_local(std::string host, int send_port, int recv_port);
-  long int clips_pb_peer_create_crypto(
+  int64_t clips_pb_peer_create(std::string host, int port);
+  int64_t clips_pb_peer_create_local(std::string host, int send_port, int recv_port);
+  int64_t clips_pb_peer_create_crypto(
     std::string host, int port, std::string crypto_key = "", std::string cipher = "");
-  long int clips_pb_peer_create_local_crypto(
+  int64_t clips_pb_peer_create_local_crypto(
     std::string host, int send_port, int recv_port, std::string crypto_key = "",
     std::string cipher = "");
-  void clips_pb_peer_destroy(long int peer_id);
-  void clips_pb_peer_setup_crypto(long int peer_id, std::string crypto_key, std::string cipher);
+  void clips_pb_peer_destroy(int64_t peer_id);
+  void clips_pb_peer_setup_crypto(int64_t peer_id, std::string crypto_key, std::string cipher);
 
   typedef enum
   {
@@ -133,8 +132,8 @@ private:
     CT_PEER
   } ClientType;
   void clips_assert_message(
-    std::pair<std::string, unsigned short> & endpoint, uint16_t comp_id, uint16_t msg_type,
-    std::shared_ptr<google::protobuf::Message> & msg, ClientType ct, long int client_id = 0);
+    std::pair<std::string, uint16_t> & endpoint, uint16_t comp_id, uint16_t msg_type,
+    std::shared_ptr<google::protobuf::Message> & msg, ClientType ct, int64_t client_id = 0);
   void handle_server_client_connected(
     protobuf_comm::ProtobufStreamServer::ClientID client,
     boost::asio::ip::tcp::endpoint & endpoint);
@@ -150,19 +149,19 @@ private:
     std::string msg);
 
   void handle_peer_msg(
-    long int peer_id, boost::asio::ip::udp::endpoint & endpoint, uint16_t component_id,
+    int64_t peer_id, boost::asio::ip::udp::endpoint & endpoint, uint16_t component_id,
     uint16_t msg_type, std::shared_ptr<google::protobuf::Message> msg);
   void handle_peer_recv_error(
-    long int peer_id, boost::asio::ip::udp::endpoint & endpoint, std::string msg);
-  void handle_peer_send_error(long int peer_id, std::string msg);
+    int64_t peer_id, boost::asio::ip::udp::endpoint & endpoint, std::string msg);
+  void handle_peer_send_error(int64_t peer_id, std::string msg);
 
-  void handle_client_connected(long int client_id);
-  void handle_client_disconnected(long int client_id, const boost::system::error_code & error);
+  void handle_client_connected(int64_t client_id);
+  void handle_client_disconnected(int64_t client_id, const boost::system::error_code & error);
   void handle_client_msg(
-    long int client_id, uint16_t comp_id, uint16_t msg_type,
+    int64_t client_id, uint16_t comp_id, uint16_t msg_type,
     std::shared_ptr<google::protobuf::Message> msg);
   void handle_client_receive_fail(
-    long int client_id, uint16_t comp_id, uint16_t msg_type, std::string msg);
+    int64_t client_id, uint16_t comp_id, uint16_t msg_type, std::string msg);
 
   static std::string to_string(const clips::UDFValue & v);
 
@@ -176,22 +175,20 @@ private:
   boost::signals2::signal<void(
     protobuf_comm::ProtobufStreamServer::ClientID, std::shared_ptr<google::protobuf::Message>)>
     sig_server_sent_;
-  boost::signals2::signal<void(
-    std::string, unsigned short, std::shared_ptr<google::protobuf::Message>)>
+  boost::signals2::signal<void(std::string, uint16_t, std::shared_ptr<google::protobuf::Message>)>
     sig_client_sent_;
-  boost::signals2::signal<void(long int, std::shared_ptr<google::protobuf::Message>)>
-    sig_peer_sent_;
+  boost::signals2::signal<void(int64_t, std::shared_ptr<google::protobuf::Message>)> sig_peer_sent_;
 
   std::mutex map_mutex_;
-  long int next_client_id_;
+  int64_t next_client_id_;
 
-  std::map<long int, protobuf_comm::ProtobufStreamServer::ClientID> server_clients_;
-  typedef std::map<protobuf_comm::ProtobufStreamServer::ClientID, long int> RevServerClientMap;
+  std::map<int64_t, protobuf_comm::ProtobufStreamServer::ClientID> server_clients_;
+  typedef std::map<protobuf_comm::ProtobufStreamServer::ClientID, int64_t> RevServerClientMap;
   RevServerClientMap rev_server_clients_;
-  std::map<long int, std::unique_ptr<protobuf_comm::ProtobufStreamClient>> clients_;
-  std::map<long int, std::unique_ptr<protobuf_comm::ProtobufBroadcastPeer>> peers_;
+  std::map<int64_t, std::unique_ptr<protobuf_comm::ProtobufStreamClient>> clients_;
+  std::map<int64_t, std::unique_ptr<protobuf_comm::ProtobufBroadcastPeer>> peers_;
 
-  std::map<long int, std::pair<std::string, unsigned short>> client_endpoints_;
+  std::map<int64_t, std::pair<std::string, uint16_t>> client_endpoints_;
 
   std::list<std::string> functions_;
   /// Reference to parent node to get ros time
@@ -202,6 +199,6 @@ private:
   std::unique_ptr<rclcpp::Logger> logger_;
 };
 
-}  // end namespace protobuf_clips
+}  // namespace protobuf_clips
 
 #endif  // CX_PROTOBUF_PLUGIN__COMMUNICATOR_HPP_

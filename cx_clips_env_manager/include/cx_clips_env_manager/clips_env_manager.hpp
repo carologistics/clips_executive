@@ -48,7 +48,7 @@ class CLIPSEnvManager : public rclcpp_lifecycle::LifecycleNode
   friend ClipsExecutive;
 
 public:
-  CLIPSEnvManager(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
+  explicit CLIPSEnvManager(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
   ~CLIPSEnvManager();
   using CallbackReturn = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
   // using EnvsMap = std::unordered_map<std::string,

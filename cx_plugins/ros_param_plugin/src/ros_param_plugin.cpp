@@ -45,7 +45,7 @@ bool RosParamPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
       auto instance = static_cast<RosParamPlugin *>(udfc->context);
       clips::UDFValue param_name;
       clips::UDFValue default_value;
-      using namespace clips;
+      using namespace clips;  // NOLINT
       clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &param_name);
       clips::UDFNthArgument(
         udfc, 2, LEXEME_BITS | NUMBER_BITS | MULTIFIELD_BIT | BOOLEAN_BIT, &default_value);
@@ -161,11 +161,11 @@ clips::UDFValue RosParamPlugin::get_ros_param(
 
         for (size_t i = 0; i < n; ++i) {
           std::string s = mf.contents[i].lexemeValue->contents;
-          if (s == "TRUE")
+          if (s == "TRUE") {
             bool_def.push_back(true);
-          else if (s == "FALSE")
+          } else if (s == "FALSE") {
             bool_def.push_back(false);
-          else {
+          } else {
             all_bool = false;
             break;
           }

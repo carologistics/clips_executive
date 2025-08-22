@@ -296,7 +296,7 @@ bool CLIPSEnvManager::delete_env(const std::string & env_name)
     {
       auto context = CLIPSEnvContext::get_context(env);
       std::scoped_lock env_lock(context->env_mtx_);
-      clips::DeleteRouter(env.get(), (char *)ROUTER_NAME);
+      clips::DeleteRouter(env.get(), ROUTER_NAME);
       clips::DestroyEnvironment(env.get());
     }
 
@@ -385,7 +385,7 @@ std::shared_ptr<clips::Environment> CLIPSEnvManager::new_env(const std::string &
   new (&context->logger_) CLIPSLogger(env_name.c_str(), log_to_file, stdout_to_debug);
 
   clips::AddRouter(
-    env, (char *)ROUTER_NAME, /*router priority*/
+    env, ROUTER_NAME, /*router priority*/
     40, log_router_query, log_router_print, NULL, NULL, log_router_exit, &context->logger_);
 
   RCLCPP_INFO(get_logger(), "Initialisied new CLIPS environment: %s", env_name.c_str());

@@ -54,7 +54,7 @@ bool AmentIndexPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
     [](clips::Environment * env, clips::UDFContext * udfc, clips::UDFValue * out) {
       auto instance = static_cast<AmentIndexPlugin *>(udfc->context);
       clips::UDFValue package_name;
-      using namespace clips;
+      using namespace clips;  // NOLINT
       clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &package_name);
       try {
         std::string prefix =
@@ -74,7 +74,7 @@ bool AmentIndexPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
     [](clips::Environment * env, clips::UDFContext * udfc, clips::UDFValue * out) {
       auto instance = static_cast<AmentIndexPlugin *>(udfc->context);
       clips::UDFValue package_name;
-      using namespace clips;
+      using namespace clips;  // NOLINT
       clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &package_name);
       try {
         std::string share_dir =
@@ -117,7 +117,7 @@ bool AmentIndexPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
     [](clips::Environment * env, clips::UDFContext * udfc, clips::UDFValue * out) {
       auto instance = static_cast<AmentIndexPlugin *>(udfc->context);
       clips::UDFValue resource_type, resource_name;
-      using namespace clips;
+      using namespace clips;  // NOLINT
       clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &resource_type);
       clips::UDFNthArgument(udfc, 2, LEXEME_BITS, &resource_name);
       std::string content;
@@ -145,7 +145,7 @@ bool AmentIndexPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
     [](clips::Environment * env, clips::UDFContext * udfc, clips::UDFValue * out) {
       auto instance = static_cast<AmentIndexPlugin *>(udfc->context);
       clips::UDFValue resource_type;
-      using namespace clips;
+      using namespace clips;  // NOLINT
       clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &resource_type);
       try {
         auto resources = ament_index_cpp::get_resources(resource_type.lexemeValue->contents);
@@ -185,7 +185,7 @@ bool AmentIndexPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
     [](clips::Environment * env, clips::UDFContext * udfc, clips::UDFValue * out) {
       auto instance = static_cast<AmentIndexPlugin *>(udfc->context);
       clips::UDFValue resource_type, resource_name;
-      using namespace clips;
+      using namespace clips;  // NOLINT
       clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &resource_type);
       clips::UDFNthArgument(udfc, 2, LEXEME_BITS, &resource_name);
       try {

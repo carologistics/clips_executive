@@ -116,8 +116,8 @@ bool ExecutivePlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
     clips::AddUDF(
       env.get(), "now-systime", "d", 0, 0, NULL,
       [](clips::Environment * env, clips::UDFContext * /*udfc*/, clips::UDFValue * out) {
-        using namespace std::chrono;
-        auto now = time_point_cast<duration<double>>(system_clock::now());
+        auto now = std::chrono::time_point_cast<std::chrono::duration<double>>(
+          std::chrono::system_clock::now());
 
         out->floatValue = clips::CreateFloat(env, now.time_since_epoch().count());
       },

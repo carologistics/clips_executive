@@ -20,7 +20,6 @@
 
 #if __has_include(<format>) && __cplusplus >= 202002L
 #include <format>
-using std::format;
 namespace cx
 {
 template <typename... Args>

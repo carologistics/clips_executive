@@ -100,7 +100,7 @@ bool RosMsgsPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
     [](clips::Environment * env, clips::UDFContext * udfc, clips::UDFValue * out) {
       auto * instance = static_cast<RosMsgsPlugin *>(udfc->context);
       clips::UDFValue data_ptr, field;
-      using namespace clips;
+      using namespace clips;  // NOLINT
       clips::UDFNthArgument(udfc, 1, EXTERNAL_ADDRESS_BIT, &data_ptr);
       clips::UDFNthArgument(udfc, 2, LEXEME_BITS, &field);
       *out = instance->get_field(
@@ -115,7 +115,7 @@ bool RosMsgsPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
     [](clips::Environment * env, clips::UDFContext * udfc, clips::UDFValue * /*out*/) {
       auto * instance = static_cast<RosMsgsPlugin *>(udfc->context);
       clips::UDFValue msg_ptr, field, value;
-      using namespace clips;
+      using namespace clips;  // NOLINT
       clips::UDFNthArgument(udfc, 1, EXTERNAL_ADDRESS_BIT, &msg_ptr);
       clips::UDFNthArgument(udfc, 2, LEXEME_BITS, &field);
       clips::UDFNthArgument(udfc, 3, ANY_TYPE_BITS, &value);
@@ -132,7 +132,7 @@ bool RosMsgsPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
     [](clips::Environment * env, clips::UDFContext * udfc, clips::UDFValue * out) {
       auto * instance = static_cast<RosMsgsPlugin *>(udfc->context);
       clips::UDFValue type;
-      using namespace clips;
+      using namespace clips;  // NOLINT
       clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &type);
       *out = instance->create_message(env, type.lexemeValue->contents);
     },
@@ -145,7 +145,7 @@ bool RosMsgsPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
     [](clips::Environment * env, clips::UDFContext * udfc, clips::UDFValue * out) {
       auto * instance = static_cast<RosMsgsPlugin *>(udfc->context);
       clips::UDFValue type;
-      using namespace clips;
+      using namespace clips;  // NOLINT
       clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &type);
       *out = instance->create_request(env, type.lexemeValue->contents);
     },
@@ -159,7 +159,7 @@ bool RosMsgsPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
       auto * instance = static_cast<RosMsgsPlugin *>(udfc->context);
       clips::UDFValue topic;
       clips::UDFValue type;
-      using namespace clips;
+      using namespace clips;  // NOLINT
       clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &topic);
       clips::UDFNthArgument(udfc, 2, LEXEME_BITS, &type);
 
@@ -174,7 +174,7 @@ bool RosMsgsPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
     [](clips::Environment * env, clips::UDFContext * udfc, clips::UDFValue * /*out*/) {
       auto * instance = static_cast<RosMsgsPlugin *>(udfc->context);
       clips::UDFValue topic;
-      using namespace clips;
+      using namespace clips;  // NOLINT
       clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &topic);
 
       instance->destroy_publisher(env, topic.lexemeValue->contents);
@@ -188,7 +188,7 @@ bool RosMsgsPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
     [](clips::Environment * env, clips::UDFContext * udfc, clips::UDFValue * /*out*/) {
       auto * instance = static_cast<RosMsgsPlugin *>(udfc->context);
       clips::UDFValue message, topic;
-      using namespace clips;
+      using namespace clips;  // NOLINT
       clips::UDFNthArgument(udfc, 1, EXTERNAL_ADDRESS_BIT, &message);
       clips::UDFNthArgument(udfc, 2, LEXEME_BITS, &topic);
 
@@ -204,7 +204,7 @@ bool RosMsgsPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
     [](clips::Environment * /*env*/, clips::UDFContext * udfc, clips::UDFValue * /*out*/) {
       auto * instance = static_cast<RosMsgsPlugin *>(udfc->context);
       clips::UDFValue message;
-      using namespace clips;
+      using namespace clips;  // NOLINT
       clips::UDFNthArgument(udfc, 1, EXTERNAL_ADDRESS_BIT, &message);
 
       instance->destroy_msg(message.externalAddressValue->contents);
@@ -220,7 +220,7 @@ bool RosMsgsPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
       clips::UDFValue topic;
       clips::UDFValue type;
 
-      using namespace clips;
+      using namespace clips;  // NOLINT
       clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &topic);
       clips::UDFNthArgument(udfc, 2, LEXEME_BITS, &type);
       instance->subscribe_to_topic(env, topic.lexemeValue->contents, type.lexemeValue->contents);
@@ -235,7 +235,7 @@ bool RosMsgsPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
       auto * instance = static_cast<RosMsgsPlugin *>(udfc->context);
       clips::UDFValue topic;
 
-      using namespace clips;
+      using namespace clips;  // NOLINT
       clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &topic);
       instance->unsubscribe_from_topic(env, topic.lexemeValue->contents);
     },
@@ -249,7 +249,7 @@ bool RosMsgsPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
       auto * instance = static_cast<RosMsgsPlugin *>(udfc->context);
       clips::UDFValue service;
       clips::UDFValue type;
-      using namespace clips;
+      using namespace clips;  // NOLINT
       clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &service);
       clips::UDFNthArgument(udfc, 2, LEXEME_BITS, &type);
 
@@ -264,7 +264,7 @@ bool RosMsgsPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
     [](clips::Environment * env, clips::UDFContext * udfc, clips::UDFValue * /*out*/) {
       auto * instance = static_cast<RosMsgsPlugin *>(udfc->context);
       clips::UDFValue service;
-      using namespace clips;
+      using namespace clips;  // NOLINT
       clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &service);
 
       instance->destroy_client(env, service.lexemeValue->contents);
@@ -278,7 +278,7 @@ bool RosMsgsPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
     [](clips::Environment * env, clips::UDFContext * udfc, clips::UDFValue * out) {
       auto * instance = static_cast<RosMsgsPlugin *>(udfc->context);
       clips::UDFValue request, service_name;
-      using namespace clips;
+      using namespace clips;  // NOLINT
       clips::UDFNthArgument(udfc, 1, EXTERNAL_ADDRESS_BIT, &request);
       clips::UDFNthArgument(udfc, 2, LEXEME_BITS, &service_name);
 
@@ -290,32 +290,46 @@ bool RosMsgsPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
   // add fact templates
   clips::Build(
     env.get(),
-    "(deftemplate ros-msgs-subscription \
-            (slot topic (type STRING)) \
-            (slot type (type STRING)))");
+    R"(
+(deftemplate ros-msgs-subscription
+    (slot topic (type STRING))
+    (slot type (type STRING)))
+)");
+
   clips::Build(
     env.get(),
-    "(deftemplate ros-msgs-publisher \
-            (slot topic (type STRING)) \
-            (slot type (type STRING)))");
+    R"(
+(deftemplate ros-msgs-publisher
+    (slot topic (type STRING))
+    (slot type (type STRING)))
+)");
+
   clips::Build(
     env.get(),
-    "(deftemplate ros-msgs-client \
-            (slot service (type STRING)) \
-            (slot type (type STRING)))");
+    R"(
+(deftemplate ros-msgs-client
+    (slot service (type STRING))
+    (slot type (type STRING)))
+)");
+
   clips::Build(
     env.get(),
-    "(deftemplate ros-msgs-message \
-            (slot topic (type STRING) ) \
-            (slot msg-ptr (type EXTERNAL-ADDRESS)) \
-            )");
+    R"(
+(deftemplate ros-msgs-message
+    (slot topic (type STRING))
+    (slot msg-ptr (type EXTERNAL-ADDRESS))
+)
+)");
+
   clips::Build(
     env.get(),
-    "(deftemplate ros-msgs-response \
-            (slot service (type STRING) ) \
-            (slot request-id (type INTEGER) ) \
-            (slot msg-ptr (type EXTERNAL-ADDRESS)) \
-            )");
+    R"(
+(deftemplate ros-msgs-response
+    (slot service (type STRING))
+    (slot request-id (type INTEGER))
+    (slot msg-ptr (type EXTERNAL-ADDRESS))
+)
+)");
 
   return true;
 }
@@ -703,7 +717,7 @@ clips::UDFValue RosMsgsPlugin::create_request(
   ptr = std::make_shared<RosMsgsPlugin::MessageInfo>(introspection_info);
   messages_[ptr.get()] = ptr;
   clips::UDFValue res;
-  res.externalAddressValue = clips::CreateCExternalAddress(env, (void *)ptr.get());
+  res.externalAddressValue = clips::CreateCExternalAddress(env, static_cast<void *>(ptr.get()));
   return res;
 }
 
@@ -713,7 +727,7 @@ clips::UDFValue RosMsgsPlugin::create_message(clips::Environment * env, const st
   std::shared_ptr<MessageInfo> ptr = create_deserialized_msg(type);
   messages_[ptr.get()] = ptr;
   clips::UDFValue res;
-  res.externalAddressValue = clips::CreateCExternalAddress(env, (void *)ptr.get());
+  res.externalAddressValue = clips::CreateCExternalAddress(env, static_cast<void *>(ptr.get()));
   return res;
 }
 
@@ -826,7 +840,7 @@ clips::UDFValue RosMsgsPlugin::ros_msg_member_to_udf_value(
     clips::MBDispose(mb);
     res.multifieldValue = mf;
   } else {
-    void * value = reinterpret_cast<void *>((uint8_t *)deserialized_msg + member.offset_);
+    void * value = static_cast<void *>(static_cast<uint8_t *>(deserialized_msg) + member.offset_);
     clips::CLIPSValue elem = ros_to_clips_value(env, value, member.type_id_);
     // properly store nested message and ensure the CLIPS value reflects that
     if (member.type_id_ == rosidl_typesupport_introspection_cpp::ROS_TYPE_MESSAGE) {
@@ -1017,6 +1031,7 @@ void RosMsgsPlugin::udf_value_to_ros_message_member(
   uint8_t * field_ptr = static_cast<uint8_t *>(deserialized_msg) + member.offset_;
   if (member.is_array_) {
     if (val.header->type != MULTIFIELD_TYPE) {
+      RCLCPP_ERROR(*logger_, "Cannot convert single field CLIPS value to ROS ARRAY");
     }
     member.resize_function(field_ptr, val.multifieldValue->length);
     uint8_t * field_index_ptr;

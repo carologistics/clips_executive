@@ -74,14 +74,16 @@ bool Tf2PoseTrackerPlugin::clips_env_init(std::shared_ptr<clips::Environment> & 
   // define fact template
   clips::Build(
     env.get(),
-    "(deftemplate tf2-tracked-pose \
-            (slot parent (type STRING)) \
-            (slot child (type STRING)) \
-            (slot stamp (type FLOAT)) \
-            (multislot translation (type FLOAT) (cardinality 3 3)) \
-            (multislot rotation (type FLOAT) (cardinality 4 4)) \
-            (slot timer (type EXTERNAL-ADDRESS)) \
-)");
+    R"CLIPS(
+(deftemplate tf2-tracked-pose
+    (slot parent (type STRING))
+    (slot child (type STRING))
+    (slot stamp (type FLOAT))
+    (multislot translation (type FLOAT) (cardinality 3 3))
+    (multislot rotation (type FLOAT) (cardinality 4 4))
+    (slot timer (type EXTERNAL-ADDRESS))
+)
+)CLIPS");
 
   // user defined functions
   clips::AddUDF(
@@ -89,7 +91,7 @@ bool Tf2PoseTrackerPlugin::clips_env_init(std::shared_ptr<clips::Environment> & 
     [](clips::Environment * env, clips::UDFContext * udfc, clips::UDFValue * out) {
       auto * instance = static_cast<Tf2PoseTrackerPlugin *>(udfc->context);
       clips::UDFValue parent, child, freq;
-      using namespace clips;
+      using namespace clips;  // NOLINT
       clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &parent);
       clips::UDFNthArgument(udfc, 2, LEXEME_BITS, &child);
       clips::UDFNthArgument(udfc, 3, NUMBER_BITS, &freq);
@@ -111,7 +113,7 @@ bool Tf2PoseTrackerPlugin::clips_env_init(std::shared_ptr<clips::Environment> & 
     [](clips::Environment * env, clips::UDFContext * udfc, clips::UDFValue * out) {
       auto * instance = static_cast<Tf2PoseTrackerPlugin *>(udfc->context);
       clips::UDFValue pose_tracker;
-      using namespace clips;
+      using namespace clips;  // NOLINT
       clips::UDFNthArgument(udfc, 1, EXTERNAL_ADDRESS_BIT, &pose_tracker);
       PoseTracker * typed_pose_tracker =
         static_cast<PoseTracker *>(pose_tracker.externalAddressValue->contents);
@@ -151,7 +153,6 @@ bool Tf2PoseTrackerPlugin::clips_env_destroyed(std::shared_ptr<clips::Environmen
 void Tf2PoseTrackerPlugin::start_periodic_lookup(
   clips::Environment * env, const std::string & parent, const std::string & child, double frequency)
 {
-  using namespace std::chrono_literals;
   std::shared_ptr<PoseTracker> pose_tracker = std::make_shared<PoseTracker>();
   pose_tracker->env = env;
   auto node = parent_.lock();

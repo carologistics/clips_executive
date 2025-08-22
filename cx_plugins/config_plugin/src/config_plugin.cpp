@@ -53,7 +53,7 @@ bool ConfigPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
     env.get(), "config-load", "v", 2, 2, ";sy;sy",
     [](clips::Environment * env, clips::UDFContext * udfc, clips::UDFValue * /*out*/) {
       ConfigPlugin * instance = static_cast<ConfigPlugin *>(udfc->context);
-      using namespace clips;
+      using namespace clips;  // NOLINT
       clips::UDFValue file;
       clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &file);
       clips::UDFValue cfg_prefix;
@@ -104,7 +104,6 @@ void ConfigPlugin::clips_config_load(
       }
     }
     iterateThroughYamlRecuresively(config_main, sanitized_cfg_prefix, env);
-
   } catch (const std::exception & e) {
     RCLCPP_ERROR_STREAM(*logger_, e.what());
     RCLCPP_WARN(*logger_, "Aborting config loading...");

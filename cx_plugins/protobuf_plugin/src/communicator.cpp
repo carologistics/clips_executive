@@ -59,7 +59,7 @@ ClipsProtobufCommunicator::ClipsProtobufCommunicator(
   clips::Environment * env, std::mutex & env_mutex, rclcpp_lifecycle::LifecycleNode::WeakPtr parent)
 : clips_(env), clips_mutex_(env_mutex), next_client_id_(0), parent_(parent)
 {
-  message_register_ = std::make_unique<MessageRegister>();
+  message_register_ = std::make_unique<protobuf_comm::MessageRegister>();
   setup_clips();
   logger_ = std::make_unique<rclcpp::Logger>(rclcpp::get_logger("ClipsProtobufCommunicator"));
 }
@@ -74,7 +74,7 @@ ClipsProtobufCommunicator::ClipsProtobufCommunicator(
   rclcpp_lifecycle::LifecycleNode::WeakPtr parent)
 : clips_(env), clips_mutex_(env_mutex), next_client_id_(0), parent_(parent)
 {
-  message_register_ = std::make_unique<MessageRegister>(proto_path);
+  message_register_ = std::make_unique<protobuf_comm::MessageRegister>(proto_path);
   setup_clips();
 }
 
@@ -95,7 +95,7 @@ ClipsProtobufCommunicator::~ClipsProtobufCommunicator()
 void ClipsProtobufCommunicator::setup_clips()
 {
   // std::lock_guard<std::mutex> lock(clips_mutex_);
-  using namespace clips;
+  using namespace clips;  // NOLINT
   std::string function_name;
   function_name = "pb-register-type";
   functions_.push_back(function_name);
@@ -603,7 +603,6 @@ void ClipsProtobufCommunicator::enable_server(int port)
 {
   if ((port > 0) && !server_) {
     server_ = std::make_unique<protobuf_comm::ProtobufStreamServer>(port, message_register_.get());
-
     server_->signal_connected().connect(
       boost::bind(&ClipsProtobufCommunicator::handle_server_client_connected, this, _1, _2));
     server_->signal_disconnected().connect(
@@ -633,7 +632,7 @@ void ClipsProtobufCommunicator::disable_server()
  * @param cipher cipher suite, see BufferEncryptor for supported types
  * @return peer identifier
  */
-long int ClipsProtobufCommunicator::clips_pb_peer_create_local_crypto(
+int64_t ClipsProtobufCommunicator::clips_pb_peer_create_local_crypto(
   std::string address, int send_port, int recv_port, std::string crypto_key, std::string cipher)
 {
   if (recv_port <= 0) recv_port = send_port;
@@ -641,7 +640,7 @@ long int ClipsProtobufCommunicator::clips_pb_peer_create_local_crypto(
   if (send_port > 0) {
     protobuf_comm::ProtobufBroadcastPeer * peer;
 
-    long int peer_id;
+    int64_t peer_id;
     {
       std::lock_guard<std::mutex> lock(map_mutex_);
       peer_id = ++next_client_id_;
@@ -670,7 +669,7 @@ long int ClipsProtobufCommunicator::clips_pb_peer_create_local_crypto(
  * @param cipher cipher suite, see BufferEncryptor for supported types
  * @return peer identifier
  */
-long int ClipsProtobufCommunicator::clips_pb_peer_create_crypto(
+int64_t ClipsProtobufCommunicator::clips_pb_peer_create_crypto(
   std::string address, int port, std::string crypto_key, std::string cipher)
 {
   return clips_pb_peer_create_local_crypto(address, port, port, crypto_key, cipher);
@@ -681,7 +680,7 @@ long int ClipsProtobufCommunicator::clips_pb_peer_create_crypto(
  * @param port UDP port to send and receive messages
  * @return peer identifier
  */
-long int ClipsProtobufCommunicator::clips_pb_peer_create(std::string address, int port)
+int64_t ClipsProtobufCommunicator::clips_pb_peer_create(std::string address, int port)
 {
   return clips_pb_peer_create_local_crypto(address, port, port);
 }
@@ -693,7 +692,7 @@ long int ClipsProtobufCommunicator::clips_pb_peer_create(std::string address, in
  * send_port
  * @return peer identifier
  */
-long int ClipsProtobufCommunicator::clips_pb_peer_create_local(
+int64_t ClipsProtobufCommunicator::clips_pb_peer_create_local(
   std::string address, int send_port, int recv_port)
 {
   return clips_pb_peer_create_local_crypto(address, send_port, recv_port);
@@ -702,7 +701,7 @@ long int ClipsProtobufCommunicator::clips_pb_peer_create_local(
 /** Disable peer.
  * @param peer_id ID of the peer to destroy
  */
-void ClipsProtobufCommunicator::clips_pb_peer_destroy(long int peer_id)
+void ClipsProtobufCommunicator::clips_pb_peer_destroy(int64_t peer_id)
 {
   if (peers_.find(peer_id) != peers_.end()) {
     peers_.erase(peer_id);
@@ -715,7 +714,7 @@ void ClipsProtobufCommunicator::clips_pb_peer_destroy(long int peer_id)
  * @param cipher cipher suite, see BufferEncryptor for supported types
  */
 void ClipsProtobufCommunicator::clips_pb_peer_setup_crypto(
-  long int peer_id, std::string crypto_key, std::string cipher)
+  int64_t peer_id, std::string crypto_key, std::string cipher)
 {
   if (peers_.find(peer_id) != peers_.end()) {
     peers_[peer_id]->setup_crypto(crypto_key, cipher);
@@ -773,7 +772,7 @@ clips::UDFValue ClipsProtobufCommunicator::clips_pb_field_names(void * msgptr)
     field_names.lexemeValue = clips::CreateBoolean(clips_, false);
     return field_names;
   }
-  const Descriptor * desc = msg->GetDescriptor();
+  const pb::Descriptor * desc = msg->GetDescriptor();
   const int field_count = desc->field_count();
   std::string out_str = "";
   for (int i = 0; i < field_count; ++i) {
@@ -794,63 +793,63 @@ clips::UDFValue ClipsProtobufCommunicator::clips_pb_field_type(
     return res;
   }
 
-  const Descriptor * desc = msg->GetDescriptor();
-  const FieldDescriptor * field = desc->FindFieldByName(field_name);
+  const pb::Descriptor * desc = msg->GetDescriptor();
+  const pb::FieldDescriptor * field = desc->FindFieldByName(field_name);
   if (!field) {
     res.lexemeValue = clips::CreateSymbol(clips_, "DOES-NOT-EXIST");
     return res;
   }
 
   switch (field->type()) {
-    case FieldDescriptor::TYPE_DOUBLE:
+    case pb::FieldDescriptor::TYPE_DOUBLE:
       res.lexemeValue = clips::CreateSymbol(clips_, "DOUBLE");
       break;
-    case FieldDescriptor::TYPE_FLOAT:
+    case pb::FieldDescriptor::TYPE_FLOAT:
       res.lexemeValue = clips::CreateSymbol(clips_, "FLOAT");
       break;
-    case FieldDescriptor::TYPE_INT64:
+    case pb::FieldDescriptor::TYPE_INT64:
       res.lexemeValue = clips::CreateSymbol(clips_, "INT64");
       break;
-    case FieldDescriptor::TYPE_UINT64:
+    case pb::FieldDescriptor::TYPE_UINT64:
       res.lexemeValue = clips::CreateSymbol(clips_, "UINT64");
       break;
-    case FieldDescriptor::TYPE_INT32:
+    case pb::FieldDescriptor::TYPE_INT32:
       res.lexemeValue = clips::CreateSymbol(clips_, "INT32");
       break;
-    case FieldDescriptor::TYPE_FIXED64:
+    case pb::FieldDescriptor::TYPE_FIXED64:
       res.lexemeValue = clips::CreateSymbol(clips_, "FIXED64");
       break;
-    case FieldDescriptor::TYPE_FIXED32:
+    case pb::FieldDescriptor::TYPE_FIXED32:
       res.lexemeValue = clips::CreateSymbol(clips_, "FIXED32");
       break;
-    case FieldDescriptor::TYPE_BOOL:
+    case pb::FieldDescriptor::TYPE_BOOL:
       res.lexemeValue = clips::CreateSymbol(clips_, "BOOL");
       break;
-    case FieldDescriptor::TYPE_STRING:
+    case pb::FieldDescriptor::TYPE_STRING:
       res.lexemeValue = clips::CreateSymbol(clips_, "STRING");
       break;
-    case FieldDescriptor::TYPE_MESSAGE:
+    case pb::FieldDescriptor::TYPE_MESSAGE:
       res.lexemeValue = clips::CreateSymbol(clips_, "MESSAGE");
       break;
-    case FieldDescriptor::TYPE_BYTES:
+    case pb::FieldDescriptor::TYPE_BYTES:
       res.lexemeValue = clips::CreateSymbol(clips_, "BYTES");
       break;
-    case FieldDescriptor::TYPE_UINT32:
+    case pb::FieldDescriptor::TYPE_UINT32:
       res.lexemeValue = clips::CreateSymbol(clips_, "UINT32");
       break;
-    case FieldDescriptor::TYPE_ENUM:
+    case pb::FieldDescriptor::TYPE_ENUM:
       res.lexemeValue = clips::CreateSymbol(clips_, "ENUM");
       break;
-    case FieldDescriptor::TYPE_SFIXED32:
+    case pb::FieldDescriptor::TYPE_SFIXED32:
       res.lexemeValue = clips::CreateSymbol(clips_, "SFIXED32");
       break;
-    case FieldDescriptor::TYPE_SFIXED64:
+    case pb::FieldDescriptor::TYPE_SFIXED64:
       res.lexemeValue = clips::CreateSymbol(clips_, "SFIXED64");
       break;
-    case FieldDescriptor::TYPE_SINT32:
+    case pb::FieldDescriptor::TYPE_SINT32:
       res.lexemeValue = clips::CreateSymbol(clips_, "SINT32");
       break;
-    case FieldDescriptor::TYPE_SINT64:
+    case pb::FieldDescriptor::TYPE_SINT64:
       res.lexemeValue = clips::CreateSymbol(clips_, "SINT64");
       break;
     default:
@@ -870,14 +869,14 @@ clips::UDFValue ClipsProtobufCommunicator::clips_pb_has_field(void * msgptr, std
     return res;
   }
 
-  const Descriptor * desc = msg->GetDescriptor();
-  const FieldDescriptor * field = desc->FindFieldByName(field_name);
+  const pb::Descriptor * desc = msg->GetDescriptor();
+  const pb::FieldDescriptor * field = desc->FindFieldByName(field_name);
   if (!field) {
     res.lexemeValue = clips::CreateBoolean(clips_, false);
     return res;
   }
 
-  const Reflection * refl = msg->GetReflection();
+  const pb::Reflection * refl = msg->GetReflection();
 
   if (field->is_repeated()) {
     res.lexemeValue = clips::CreateBoolean(clips_, (refl->FieldSize(*msg, field) > 0));
@@ -898,20 +897,20 @@ clips::UDFValue ClipsProtobufCommunicator::clips_pb_field_label(
     return res;
   }
 
-  const Descriptor * desc = msg->GetDescriptor();
-  const FieldDescriptor * field = desc->FindFieldByName(field_name);
+  const pb::Descriptor * desc = msg->GetDescriptor();
+  const pb::FieldDescriptor * field = desc->FindFieldByName(field_name);
   if (!field) {
     res.lexemeValue = clips::CreateSymbol(clips_, "DOES-NOT-EXIST");
     return res;
   }
   switch (field->label()) {
-    case FieldDescriptor::LABEL_OPTIONAL:
+    case pb::FieldDescriptor::LABEL_OPTIONAL:
       res.lexemeValue = clips::CreateSymbol(clips_, "OPTIONAL");
       return res;
-    case FieldDescriptor::LABEL_REQUIRED:
+    case pb::FieldDescriptor::LABEL_REQUIRED:
       res.lexemeValue = clips::CreateSymbol(clips_, "REQUIRED");
       return res;
-    case FieldDescriptor::LABEL_REPEATED:
+    case pb::FieldDescriptor::LABEL_REPEATED:
       res.lexemeValue = clips::CreateSymbol(clips_, "REPEATED");
       return res;
     default:
@@ -931,8 +930,8 @@ clips::UDFValue ClipsProtobufCommunicator::clips_pb_field_value(
     return res;
   }
 
-  const Descriptor * desc = msg->GetDescriptor();
-  const FieldDescriptor * field = desc->FindFieldByName(field_name);
+  const pb::Descriptor * desc = msg->GetDescriptor();
+  const pb::FieldDescriptor * field = desc->FindFieldByName(field_name);
   if (!field) {
     RCLCPP_WARN(
       *logger_,
@@ -941,8 +940,8 @@ clips::UDFValue ClipsProtobufCommunicator::clips_pb_field_value(
     res.lexemeValue = clips::CreateSymbol(clips_, "DOES-NOT-EXIST");
     return res;
   }
-  const Reflection * refl = msg->GetReflection();
-  if (field->type() != FieldDescriptor::TYPE_MESSAGE && !refl->HasField(*msg, field)) {
+  const pb::Reflection * refl = msg->GetReflection();
+  if (field->type() != pb::FieldDescriptor::TYPE_MESSAGE && !refl->HasField(*msg, field)) {
     RCLCPP_WARN(
       *logger_,
       cx::format("CLIPS-Protobuf: Field {} of {} not set", field_name, msg->GetTypeName()).c_str());
@@ -950,37 +949,37 @@ clips::UDFValue ClipsProtobufCommunicator::clips_pb_field_value(
     return res;
   }
   switch (field->type()) {
-    case FieldDescriptor::TYPE_DOUBLE:
+    case pb::FieldDescriptor::TYPE_DOUBLE:
       res.floatValue = clips::CreateFloat(clips_, refl->GetDouble(*msg, field));
       return res;
-    case FieldDescriptor::TYPE_FLOAT:
+    case pb::FieldDescriptor::TYPE_FLOAT:
       res.floatValue = clips::CreateFloat(clips_, refl->GetFloat(*msg, field));
       return res;
-    case FieldDescriptor::TYPE_INT64:
+    case pb::FieldDescriptor::TYPE_INT64:
       res.integerValue = clips::CreateInteger(clips_, refl->GetInt64(*msg, field));
       return res;
-    case FieldDescriptor::TYPE_UINT64:
-      res.integerValue = clips::CreateInteger(clips_, (long int)refl->GetUInt64(*msg, field));
+    case pb::FieldDescriptor::TYPE_UINT64:
+      res.integerValue = clips::CreateInteger(clips_, (int64_t)refl->GetUInt64(*msg, field));
       return res;
-    case FieldDescriptor::TYPE_INT32:
+    case pb::FieldDescriptor::TYPE_INT32:
       res.integerValue = clips::CreateInteger(clips_, refl->GetInt32(*msg, field));
       return res;
-    case FieldDescriptor::TYPE_FIXED64:
-      res.integerValue = clips::CreateInteger(clips_, (long int)refl->GetUInt64(*msg, field));
+    case pb::FieldDescriptor::TYPE_FIXED64:
+      res.integerValue = clips::CreateInteger(clips_, (int64_t)refl->GetUInt64(*msg, field));
       return res;
-    case FieldDescriptor::TYPE_FIXED32:
+    case pb::FieldDescriptor::TYPE_FIXED32:
       res.integerValue = clips::CreateInteger(clips_, refl->GetUInt32(*msg, field));
       return res;
-    case FieldDescriptor::TYPE_BOOL:
+    case pb::FieldDescriptor::TYPE_BOOL:
       res.lexemeValue = clips::CreateBoolean(clips_, refl->GetBool(*msg, field));
       return res;
-    case FieldDescriptor::TYPE_BYTES:
-      res.lexemeValue = clips::CreateString(clips_, (char *)"BYTES");
+    case pb::FieldDescriptor::TYPE_BYTES:
+      res.lexemeValue = clips::CreateString(clips_, "BYTES");
       return res;
-    case FieldDescriptor::TYPE_STRING:
+    case pb::FieldDescriptor::TYPE_STRING:
       res.lexemeValue = clips::CreateString(clips_, refl->GetString(*msg, field).c_str());
       return res;
-    case FieldDescriptor::TYPE_MESSAGE: {
+    case pb::FieldDescriptor::TYPE_MESSAGE: {
       const google::protobuf::Message & mfield = refl->GetMessage(*msg, field);
       google::protobuf::Message * mcopy = mfield.New();
       mcopy->CopyFrom(mfield);
@@ -990,22 +989,22 @@ clips::UDFValue ClipsProtobufCommunicator::clips_pb_field_value(
       res.externalAddressValue = clips::CreateCExternalAddress(clips_, m.get());
       return res;
     }
-    case FieldDescriptor::TYPE_UINT32:
+    case pb::FieldDescriptor::TYPE_UINT32:
       res.integerValue = clips::CreateInteger(clips_, refl->GetUInt32(*msg, field));
       return res;
-    case FieldDescriptor::TYPE_ENUM:
+    case pb::FieldDescriptor::TYPE_ENUM:
       res.lexemeValue = clips::CreateSymbol(clips_, refl->GetEnum(*msg, field)->name().c_str());
       return res;
-    case FieldDescriptor::TYPE_SFIXED32:
+    case pb::FieldDescriptor::TYPE_SFIXED32:
       res.integerValue = clips::CreateInteger(clips_, refl->GetInt32(*msg, field));
       return res;
-    case FieldDescriptor::TYPE_SFIXED64:
+    case pb::FieldDescriptor::TYPE_SFIXED64:
       res.integerValue = clips::CreateInteger(clips_, refl->GetInt64(*msg, field));
       return res;
-    case FieldDescriptor::TYPE_SINT32:
+    case pb::FieldDescriptor::TYPE_SINT32:
       res.integerValue = clips::CreateInteger(clips_, refl->GetInt32(*msg, field));
       return res;
-    case FieldDescriptor::TYPE_SINT64:
+    case pb::FieldDescriptor::TYPE_SINT64:
       res.integerValue = clips::CreateInteger(clips_, refl->GetInt64(*msg, field));
       return res;
     default:
@@ -1023,61 +1022,61 @@ void ClipsProtobufCommunicator::clips_pb_set_field(
     return;
   }
 
-  const Descriptor * desc = msg->GetDescriptor();
-  const FieldDescriptor * field = desc->FindFieldByName(field_name);
+  const pb::Descriptor * desc = msg->GetDescriptor();
+  const pb::FieldDescriptor * field = desc->FindFieldByName(field_name);
   if (!field) {
     RCLCPP_WARN(
       *logger_, cx::format("CLIPS-Protobuf: Could not find field {}", field_name).c_str());
     return;
   }
-  const Reflection * refl = msg->GetReflection();
+  const pb::Reflection * refl = msg->GetReflection();
 
   try {
     switch (field->type()) {
-      case FieldDescriptor::TYPE_DOUBLE:
+      case pb::FieldDescriptor::TYPE_DOUBLE:
         refl->SetDouble(msg.get(), field, value.floatValue->contents);
         break;
-      case FieldDescriptor::TYPE_FLOAT:
+      case pb::FieldDescriptor::TYPE_FLOAT:
         refl->SetFloat(msg.get(), field, value.floatValue->contents);
         break;
-      case FieldDescriptor::TYPE_SFIXED64:
-      case FieldDescriptor::TYPE_SINT64:
-      case FieldDescriptor::TYPE_INT64:
+      case pb::FieldDescriptor::TYPE_SFIXED64:
+      case pb::FieldDescriptor::TYPE_SINT64:
+      case pb::FieldDescriptor::TYPE_INT64:
         refl->SetInt64(msg.get(), field, value.integerValue->contents);
         break;
-      case FieldDescriptor::TYPE_FIXED64:
-      case FieldDescriptor::TYPE_UINT64:
+      case pb::FieldDescriptor::TYPE_FIXED64:
+      case pb::FieldDescriptor::TYPE_UINT64:
         refl->SetUInt64(msg.get(), field, value.integerValue->contents);
         break;
-      case FieldDescriptor::TYPE_SFIXED32:
-      case FieldDescriptor::TYPE_SINT32:
-      case FieldDescriptor::TYPE_INT32:
+      case pb::FieldDescriptor::TYPE_SFIXED32:
+      case pb::FieldDescriptor::TYPE_SINT32:
+      case pb::FieldDescriptor::TYPE_INT32:
         refl->SetInt32(msg.get(), field, value.integerValue->contents);
         break;
-      case FieldDescriptor::TYPE_BOOL:
+      case pb::FieldDescriptor::TYPE_BOOL:
         refl->SetBool(msg.get(), field, std::strcmp(value.lexemeValue->contents, "TRUE") == 0);
         break;
-      case FieldDescriptor::TYPE_STRING:
+      case pb::FieldDescriptor::TYPE_STRING:
         refl->SetString(msg.get(), field, value.lexemeValue->contents);
         break;
-      case FieldDescriptor::TYPE_MESSAGE: {
+      case pb::FieldDescriptor::TYPE_MESSAGE: {
         auto sub_msg = messages_[value.externalAddressValue->contents];
         if (!sub_msg) {
           messages_.erase(msgptr);
           return;
         }
-        Message * mut_msg = refl->MutableMessage(msg.get(), field);
+        pb::Message * mut_msg = refl->MutableMessage(msg.get(), field);
         mut_msg->CopyFrom(*(sub_msg.get()));
       } break;
-      case FieldDescriptor::TYPE_BYTES:
+      case pb::FieldDescriptor::TYPE_BYTES:
         break;
-      case FieldDescriptor::TYPE_FIXED32:
-      case FieldDescriptor::TYPE_UINT32:
+      case pb::FieldDescriptor::TYPE_FIXED32:
+      case pb::FieldDescriptor::TYPE_UINT32:
         refl->SetUInt32(msg.get(), field, value.integerValue->contents);
         break;
-      case FieldDescriptor::TYPE_ENUM: {
-        const EnumDescriptor * enumdesc = field->enum_type();
-        const EnumValueDescriptor * enumval =
+      case pb::FieldDescriptor::TYPE_ENUM: {
+        const pb::EnumDescriptor * enumdesc = field->enum_type();
+        const pb::EnumValueDescriptor * enumval =
           enumdesc->FindValueByName(value.lexemeValue->contents);
         if (enumval) {
           refl->SetEnum(msg.get(), field, enumval);
@@ -1113,62 +1112,62 @@ void ClipsProtobufCommunicator::clips_pb_add_list(
     return;
   }
 
-  const Descriptor * desc = msg->GetDescriptor();
-  const FieldDescriptor * field = desc->FindFieldByName(field_name);
+  const pb::Descriptor * desc = msg->GetDescriptor();
+  const pb::FieldDescriptor * field = desc->FindFieldByName(field_name);
   if (!field) {
     RCLCPP_WARN(
       *logger_, cx::format("CLIPS-Protobuf: Could not find field {}", field_name).c_str());
     return;
   }
-  const Reflection * refl = msg->GetReflection();
+  const pb::Reflection * refl = msg->GetReflection();
 
   try {
     switch (field->type()) {
-      case FieldDescriptor::TYPE_DOUBLE:
+      case pb::FieldDescriptor::TYPE_DOUBLE:
         refl->AddDouble(msg.get(), field, value.floatValue->contents);
         break;
-      case FieldDescriptor::TYPE_FLOAT:
+      case pb::FieldDescriptor::TYPE_FLOAT:
         refl->AddFloat(msg.get(), field, value.floatValue->contents);
         break;
-      case FieldDescriptor::TYPE_SFIXED64:
-      case FieldDescriptor::TYPE_SINT64:
-      case FieldDescriptor::TYPE_INT64:
+      case pb::FieldDescriptor::TYPE_SFIXED64:
+      case pb::FieldDescriptor::TYPE_SINT64:
+      case pb::FieldDescriptor::TYPE_INT64:
         refl->AddInt64(msg.get(), field, value.integerValue->contents);
         break;
-      case FieldDescriptor::TYPE_FIXED64:
-      case FieldDescriptor::TYPE_UINT64:
-        refl->AddUInt64(msg.get(), field, (long int)value.integerValue->contents);
+      case pb::FieldDescriptor::TYPE_FIXED64:
+      case pb::FieldDescriptor::TYPE_UINT64:
+        refl->AddUInt64(msg.get(), field, (int64_t)value.integerValue->contents);
         break;
-      case FieldDescriptor::TYPE_SFIXED32:
-      case FieldDescriptor::TYPE_SINT32:
-      case FieldDescriptor::TYPE_INT32:
+      case pb::FieldDescriptor::TYPE_SFIXED32:
+      case pb::FieldDescriptor::TYPE_SINT32:
+      case pb::FieldDescriptor::TYPE_INT32:
         refl->AddInt32(msg.get(), field, value.integerValue->contents);
         break;
-      case FieldDescriptor::TYPE_BOOL:
+      case pb::FieldDescriptor::TYPE_BOOL:
         refl->AddBool(msg.get(), field, std::strcmp(value.lexemeValue->contents, "TRUE") == 0);
         break;
-      case FieldDescriptor::TYPE_STRING:
+      case pb::FieldDescriptor::TYPE_STRING:
         refl->AddString(msg.get(), field, value.lexemeValue->contents);
         break;
-      case FieldDescriptor::TYPE_MESSAGE: {
+      case pb::FieldDescriptor::TYPE_MESSAGE: {
         std::shared_ptr<google::protobuf::Message> mfrom =
           messages_[value.externalAddressValue->contents];
         if (!mfrom) {
           messages_.erase(value.externalAddressValue->contents);
           return;
         }
-        Message * new_msg = refl->AddMessage(msg.get(), field);
+        pb::Message * new_msg = refl->AddMessage(msg.get(), field);
         new_msg->CopyFrom(*mfrom);
       } break;
-      case FieldDescriptor::TYPE_BYTES:
+      case pb::FieldDescriptor::TYPE_BYTES:
         throw std::logic_error("Unsupported type BYTES");
-      case FieldDescriptor::TYPE_FIXED32:
-      case FieldDescriptor::TYPE_UINT32:
+      case pb::FieldDescriptor::TYPE_FIXED32:
+      case pb::FieldDescriptor::TYPE_UINT32:
         refl->AddUInt32(msg.get(), field, value.integerValue->contents);
         break;
-      case FieldDescriptor::TYPE_ENUM: {
-        const EnumDescriptor * enumdesc = field->enum_type();
-        const EnumValueDescriptor * enumval =
+      case pb::FieldDescriptor::TYPE_ENUM: {
+        const pb::EnumDescriptor * enumdesc = field->enum_type();
+        const pb::EnumValueDescriptor * enumval =
           enumdesc->FindValueByName(value.lexemeValue->contents);
         if (enumval) refl->AddEnum(msg.get(), field, enumval);
       } break;
@@ -1184,17 +1183,18 @@ void ClipsProtobufCommunicator::clips_pb_add_list(
   }
 }
 
-long int ClipsProtobufCommunicator::clips_pb_client_connect(std::string host, int port)
+int64_t ClipsProtobufCommunicator::clips_pb_client_connect(std::string host, int port)
 {
   if (port <= 0) return false;
 
-  ProtobufStreamClient * client;
+  protobuf_comm::ProtobufStreamClient * client;
 
-  long int client_id;
+  int64_t client_id;
   {
     std::lock_guard<std::mutex> lock(map_mutex_);
     client_id = ++next_client_id_;
-    clients_[client_id] = std::make_unique<ProtobufStreamClient>(message_register_.get());
+    clients_[client_id] =
+      std::make_unique<protobuf_comm::ProtobufStreamClient>(message_register_.get());
     client = clients_[client_id].get();
   }
 
@@ -1212,7 +1212,7 @@ long int ClipsProtobufCommunicator::clips_pb_client_connect(std::string host, in
   return client_id;
 }
 
-void ClipsProtobufCommunicator::clips_pb_send(long int client_id, void * msgptr)
+void ClipsProtobufCommunicator::clips_pb_send(int64_t client_id, void * msgptr)
 {
   auto msg = messages_[msgptr];
   if (!msg) {
@@ -1229,7 +1229,7 @@ void ClipsProtobufCommunicator::clips_pb_send(long int client_id, void * msgptr)
     } else if (clients_.find(client_id) != clients_.end()) {
       // printf("***** SENDING via CLIENT\n");
       clients_[client_id]->send(msg);
-      std::pair<std::string, unsigned short> & client_endpoint = client_endpoints_[client_id];
+      std::pair<std::string, uint16_t> & client_endpoint = client_endpoints_[client_id];
       sig_client_sent_(client_endpoint.first, client_endpoint.second, msg);
     } else if (peers_.find(client_id) != peers_.end()) {
       peers_[client_id]->send(msg);
@@ -1266,7 +1266,7 @@ std::string ClipsProtobufCommunicator::clips_pb_tostring(void * msgptr)
   return res;
 }
 
-void ClipsProtobufCommunicator::clips_pb_broadcast(long int peer_id, void * msgptr)
+void ClipsProtobufCommunicator::clips_pb_broadcast(int64_t peer_id, void * msgptr)
 {
   auto msg = messages_[msgptr];
   if (!msg) {
@@ -1294,7 +1294,7 @@ void ClipsProtobufCommunicator::clips_pb_broadcast(long int peer_id, void * msgp
   sig_peer_sent_(peer_id, msg);
 }
 
-void ClipsProtobufCommunicator::clips_pb_disconnect(long int client_id)
+void ClipsProtobufCommunicator::clips_pb_disconnect(int64_t client_id)
 {
   RCLCPP_INFO(*logger_, cx::format("CLIPS-Protobuf: Disconnecting client {}", client_id).c_str());
   try {
@@ -1327,8 +1327,8 @@ clips::UDFValue ClipsProtobufCommunicator::clips_pb_field_list(
     return res;
   }
 
-  const Descriptor * desc = msg->GetDescriptor();
-  const FieldDescriptor * field = desc->FindFieldByName(field_name);
+  const pb::Descriptor * desc = msg->GetDescriptor();
+  const pb::FieldDescriptor * field = desc->FindFieldByName(field_name);
   if (!field) {
     res.lexemeValue = clips::CreateSymbol(clips_, "DOES-NOT-EXIST");
     return res;
@@ -1337,8 +1337,8 @@ clips::UDFValue ClipsProtobufCommunicator::clips_pb_field_list(
   res.range = -1;
   clips::MultifieldBuilder * mb = clips::CreateMultifieldBuilder(clips_, 10);
   if (
-    field->label() == FieldDescriptor::LABEL_REQUIRED ||
-    field->label() == FieldDescriptor::LABEL_OPTIONAL) {
+    field->label() == pb::FieldDescriptor::LABEL_REQUIRED ||
+    field->label() == pb::FieldDescriptor::LABEL_OPTIONAL) {
     clips::UDFValue aux_val = clips_pb_field_value(msgptr, field_name);
     clips::MBAppend(mb, static_cast<clips::CLIPSValue *>(aux_val.value));
     res.multifieldValue = clips::MBCreate(mb);
@@ -1346,25 +1346,25 @@ clips::UDFValue ClipsProtobufCommunicator::clips_pb_field_list(
     return res;
   }
 
-  const Reflection * refl = msg->GetReflection();
+  const pb::Reflection * refl = msg->GetReflection();
   int field_size = refl->FieldSize(*msg, field);
   for (int i = 0; i < field_size; ++i) {
     switch (field->type()) {
-      case FieldDescriptor::TYPE_DOUBLE:
+      case pb::FieldDescriptor::TYPE_DOUBLE:
         clips::MBAppendFloat(mb, refl->GetRepeatedDouble(*msg, field, i));
         break;
-      case FieldDescriptor::TYPE_FLOAT:
+      case pb::FieldDescriptor::TYPE_FLOAT:
         clips::MBAppendFloat(mb, refl->GetRepeatedFloat(*msg, field, i));
         break;
-      case FieldDescriptor::TYPE_UINT64:
-      case FieldDescriptor::TYPE_FIXED64:
-        clips::MBAppendInteger(mb, (long int)refl->GetRepeatedUInt64(*msg, field, i));
+      case pb::FieldDescriptor::TYPE_UINT64:
+      case pb::FieldDescriptor::TYPE_FIXED64:
+        clips::MBAppendInteger(mb, (int64_t)refl->GetRepeatedUInt64(*msg, field, i));
         break;
-      case FieldDescriptor::TYPE_UINT32:
-      case FieldDescriptor::TYPE_FIXED32:
+      case pb::FieldDescriptor::TYPE_UINT32:
+      case pb::FieldDescriptor::TYPE_FIXED32:
         clips::MBAppendInteger(mb, refl->GetRepeatedUInt32(*msg, field, i));
         break;
-      case FieldDescriptor::TYPE_BOOL:
+      case pb::FieldDescriptor::TYPE_BOOL:
         // Booleans are represented as Symbols in CLIPS
         if (refl->GetRepeatedBool(*msg, field, i)) {
           clips::MBAppendSymbol(mb, "TRUE");
@@ -1372,30 +1372,30 @@ clips::UDFValue ClipsProtobufCommunicator::clips_pb_field_list(
           clips::MBAppendSymbol(mb, "FALSE");
         }
         break;
-      case FieldDescriptor::TYPE_STRING:
+      case pb::FieldDescriptor::TYPE_STRING:
         clips::MBAppendString(mb, refl->GetRepeatedString(*msg, field, i).c_str());
         break;
-      case FieldDescriptor::TYPE_MESSAGE: {
+      case pb::FieldDescriptor::TYPE_MESSAGE: {
         const google::protobuf::Message & sub_msg = refl->GetRepeatedMessage(*msg, field, i);
         google::protobuf::Message * mcopy = sub_msg.New();
         mcopy->CopyFrom(sub_msg);
         messages_[mcopy] = std::shared_ptr<google::protobuf::Message>(mcopy);
         clips::MBAppendCLIPSExternalAddress(mb, clips::CreateCExternalAddress(clips_, mcopy));
       } break;
-      case FieldDescriptor::TYPE_BYTES:
-        clips::MBAppendString(mb, (char *)"BYTES");
+      case pb::FieldDescriptor::TYPE_BYTES:
+        clips::MBAppendString(mb, "BYTES");
         break;
-      case FieldDescriptor::TYPE_ENUM:
+      case pb::FieldDescriptor::TYPE_ENUM:
         clips::MBAppendSymbol(mb, refl->GetRepeatedEnum(*msg, field, i)->name().c_str());
         break;
-      case FieldDescriptor::TYPE_SFIXED32:
-      case FieldDescriptor::TYPE_INT32:
-      case FieldDescriptor::TYPE_SINT32:
+      case pb::FieldDescriptor::TYPE_SFIXED32:
+      case pb::FieldDescriptor::TYPE_INT32:
+      case pb::FieldDescriptor::TYPE_SINT32:
         clips::MBAppendInteger(mb, refl->GetRepeatedInt32(*msg, field, i));
         break;
-      case FieldDescriptor::TYPE_SFIXED64:
-      case FieldDescriptor::TYPE_SINT64:
-      case FieldDescriptor::TYPE_INT64:
+      case pb::FieldDescriptor::TYPE_SFIXED64:
+      case pb::FieldDescriptor::TYPE_SINT64:
+      case pb::FieldDescriptor::TYPE_INT64:
         clips::MBAppendInteger(mb, refl->GetRepeatedInt64(*msg, field, i));
         break;
       default:
@@ -1419,8 +1419,8 @@ clips::UDFValue ClipsProtobufCommunicator::clips_pb_field_is_list(
     return res;
   }
 
-  const Descriptor * desc = msg->GetDescriptor();
-  const FieldDescriptor * field = desc->FindFieldByName(field_name);
+  const pb::Descriptor * desc = msg->GetDescriptor();
+  const pb::FieldDescriptor * field = desc->FindFieldByName(field_name);
   if (!field) {
     res.lexemeValue = clips::CreateBoolean(clips_, false);
   }
@@ -1429,9 +1429,9 @@ clips::UDFValue ClipsProtobufCommunicator::clips_pb_field_is_list(
 }
 
 void ClipsProtobufCommunicator::clips_assert_message(
-  std::pair<std::string, unsigned short> & endpoint, uint16_t comp_id, uint16_t msg_type,
+  std::pair<std::string, uint16_t> & endpoint, uint16_t comp_id, uint16_t msg_type,
   std::shared_ptr<google::protobuf::Message> & msg, ClipsProtobufCommunicator::ClientType ct,
-  long int client_id)
+  int64_t client_id)
 {
   clips::FactBuilder * fact_builder = clips::CreateFactBuilder(clips_, "protobuf-msg");
   if (fact_builder) {
@@ -1464,9 +1464,9 @@ void ClipsProtobufCommunicator::clips_assert_message(
 }
 
 void ClipsProtobufCommunicator::handle_server_client_connected(
-  ProtobufStreamServer::ClientID client, boost::asio::ip::tcp::endpoint & endpoint)
+  protobuf_comm::ProtobufStreamServer::ClientID client, boost::asio::ip::tcp::endpoint & endpoint)
 {
-  long int client_id = -1;
+  int64_t client_id = -1;
   {
     std::lock_guard<std::mutex> lock(map_mutex_);
     client_id = ++next_client_id_;
@@ -1484,9 +1484,9 @@ void ClipsProtobufCommunicator::handle_server_client_connected(
 }
 
 void ClipsProtobufCommunicator::handle_server_client_disconnected(
-  ProtobufStreamServer::ClientID client, const boost::system::error_code & /*error*/)
+  protobuf_comm::ProtobufStreamServer::ClientID client, const boost::system::error_code & /*error*/)
 {
-  long int client_id = -1;
+  int64_t client_id = -1;
   {
     std::lock_guard<std::mutex> lock(map_mutex_);
     RevServerClientMap::iterator c;
@@ -1511,7 +1511,7 @@ void ClipsProtobufCommunicator::handle_server_client_disconnected(
  * @param msg the message
  */
 void ClipsProtobufCommunicator::handle_server_client_msg(
-  ProtobufStreamServer::ClientID client, uint16_t component_id, uint16_t msg_type,
+  protobuf_comm::ProtobufStreamServer::ClientID client, uint16_t component_id, uint16_t msg_type,
   std::shared_ptr<google::protobuf::Message> msg)
 {
   std::scoped_lock lock{clips_mutex_, map_mutex_};
@@ -1529,7 +1529,8 @@ void ClipsProtobufCommunicator::handle_server_client_msg(
  * @param msg the message string
  */
 void ClipsProtobufCommunicator::handle_server_client_fail(
-  ProtobufStreamServer::ClientID client, uint16_t component_id, uint16_t msg_type, std::string msg)
+  protobuf_comm::ProtobufStreamServer::ClientID client, uint16_t component_id, uint16_t msg_type,
+  std::string msg)
 {
   std::lock_guard<std::mutex> lock(map_mutex_);
   RevServerClientMap::iterator c;
@@ -1553,11 +1554,11 @@ void ClipsProtobufCommunicator::handle_server_client_fail(
  * @param msg the message
  */
 void ClipsProtobufCommunicator::handle_peer_msg(
-  long int peer_id, boost::asio::ip::udp::endpoint & endpoint, uint16_t component_id,
+  int64_t peer_id, boost::asio::ip::udp::endpoint & endpoint, uint16_t component_id,
   uint16_t msg_type, std::shared_ptr<google::protobuf::Message> msg)
 {
   std::lock_guard<std::mutex> lock(clips_mutex_);
-  std::pair<std::string, unsigned short> endpp =
+  std::pair<std::string, uint16_t> endpp =
     std::make_pair(endpoint.address().to_string(), endpoint.port());
   clips_assert_message(endpp, component_id, msg_type, msg, CT_PEER, peer_id);
 }
@@ -1567,7 +1568,7 @@ void ClipsProtobufCommunicator::handle_peer_msg(
  * @param msg error message
  */
 void ClipsProtobufCommunicator::handle_peer_recv_error(
-  long int /*peer_id*/, boost::asio::ip::udp::endpoint & endpoint, std::string msg)
+  int64_t /*peer_id*/, boost::asio::ip::udp::endpoint & endpoint, std::string msg)
 {
   RCLCPP_WARN(
     *logger_, cx::format(
@@ -1579,35 +1580,35 @@ void ClipsProtobufCommunicator::handle_peer_recv_error(
 /** Handle error during peer message processing.
  * @param msg error message
  */
-void ClipsProtobufCommunicator::handle_peer_send_error(long int /*peer_id*/, std::string msg)
+void ClipsProtobufCommunicator::handle_peer_send_error(int64_t /*peer_id*/, std::string msg)
 {
   RCLCPP_WARN(*logger_, cx::format("CLIPS-Protobuf: Failed to send peer message: {}", msg).c_str());
 }
 
-void ClipsProtobufCommunicator::handle_client_connected(long int client_id)
+void ClipsProtobufCommunicator::handle_client_connected(int64_t client_id)
 {
   std::lock_guard<std::mutex> lock(clips_mutex_);
   clips::AssertString(clips_, cx::format("(protobuf-client-connected {})", client_id).c_str());
 }
 
 void ClipsProtobufCommunicator::handle_client_disconnected(
-  long int client_id, const boost::system::error_code & /*error*/)
+  int64_t client_id, const boost::system::error_code & /*error*/)
 {
   std::lock_guard<std::mutex> lock(clips_mutex_);
   clips::AssertString(clips_, cx::format("(protobuf-client-disconnected {})", client_id).c_str());
 }
 
 void ClipsProtobufCommunicator::handle_client_msg(
-  long int client_id, uint16_t comp_id, uint16_t msg_type,
+  int64_t client_id, uint16_t comp_id, uint16_t msg_type,
   std::shared_ptr<google::protobuf::Message> msg)
 {
   std::lock_guard<std::mutex> lock(clips_mutex_);
-  std::pair<std::string, unsigned short> endpp = std::make_pair(std::string(), 0);
+  std::pair<std::string, uint16_t> endpp = std::make_pair(std::string(), 0);
   clips_assert_message(endpp, comp_id, msg_type, msg, CT_CLIENT, client_id);
 }
 
 void ClipsProtobufCommunicator::handle_client_receive_fail(
-  long int client_id, uint16_t comp_id, uint16_t msg_type, std::string msg)
+  int64_t client_id, uint16_t comp_id, uint16_t msg_type, std::string msg)
 {
   std::lock_guard<std::mutex> lock(clips_mutex_);
   clips::AssertString(
@@ -1640,7 +1641,7 @@ std::string ClipsProtobufCommunicator::to_string(const clips::UDFValue & v)
       std::string res;
 
       for (size_t i = v.begin; i < (v.begin + v.range); i++) {
-        // TODO: actually, a type check for each field would be needed...
+        // actually, a type check for each field would be needed...
         res += v.multifieldValue->contents[i].lexemeValue->contents;
       }
       return res;

@@ -191,7 +191,7 @@ void ClipsPluginManager::unload_plugin_cb(
     std::scoped_lock lock(context->env_mtx_);
     auto loaded_elem =
       std::find(loaded_plugins_[env_name].begin(), loaded_plugins_[env_name].end(), plugin_name);
-    if (plugins_.contains(plugin_name) and loaded_elem != loaded_plugins_[env_name].end()) {
+    if (plugins_.contains(plugin_name) && loaded_elem != loaded_plugins_[env_name].end()) {
       bool success = plugins_[plugin_name]->clips_env_destroyed(clips);
       loaded_plugins_[env_name].erase(loaded_elem);
       response->success = success;
