@@ -22,6 +22,7 @@ from unified_planning.io import PDDLReader, PDDLWriter
 from unified_planning.model import Problem
 from unified_planning.plans.plan import PlanKind
 from unified_planning.shortcuts import Problem
+from up_nextflap import NextFLAPImpl
 
 
 def run_planner_process(env, dom, prob):
@@ -29,7 +30,7 @@ def run_planner_process(env, dom, prob):
     env.credits_stream = None
     reader = PDDLReader()
     problem = reader.parse_problem_string(dom, prob)
-    env.factory.add_engine('nextflap', __name__, 'NextFLAPImpl')
+    env.factory.add_engine('nextflap', __name__, NextFLAPImpl.__name__)
     with env.factory.OneshotPlanner(name='nextflap') as planner:
         result = planner.solve(problem, timeout=60.0)
         tPlan = None
