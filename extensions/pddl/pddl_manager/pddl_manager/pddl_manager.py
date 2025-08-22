@@ -710,16 +710,27 @@ class PddlManagerLifecycleNode(LifecycleNode):
                 exp, current_state
             )
             unsatisfied_conditions = []
-            for cond, value in grounded_action.conditions.items():
-                if cond == self.start_interval:
-                    for val in value:
-                        evaluated_cond = evaluate(val)
-                        if (
-                            not evaluated_cond.is_bool_constant()
-                            or not evaluated_cond.bool_constant_value()
-                        ):
-                            unsatisfied_conditions.append(val)
-                            print("unsatisfied precondition: ", val)
+            
+            if hasattr(grounded_action, "preconditions"):
+                for val in grounded_action.preconditions:
+                    evaluated_cond = evaluate(val)
+                    if (
+                        not evaluated_cond.is_bool_constant()
+                        or not evaluated_cond.bool_constant_value()
+                    ):
+                        unsatisfied_conditions.append(val)
+                        print("unsatisfied precondition: ", val)
+            else:
+                for cond, value in grounded_action.conditions.items():
+                    if cond == self.start_interval:
+                        for val in value:
+                            evaluated_cond = evaluate(val)
+                            if (
+                                not evaluated_cond.is_bool_constant()
+                                or not evaluated_cond.bool_constant_value()
+                            ):
+                                unsatisfied_conditions.append(val)
+                                print("unsatisfied precondition: ", val)
             response.success = True
             if unsatisfied_conditions:
                 response.sat = False
@@ -767,100 +778,117 @@ class PddlManagerLifecycleNode(LifecycleNode):
         try:
             # Ground action
             grounded_action = self.ground_action(action)
-
             function_effects = []
             fluent_effects = []
-            for cond, value in grounded_action.effects.items():
-                time_point = ""
-                if cond == self.start_timing:
-                    time_point = "START"
-                elif cond == self.end_timing:
-                    time_point = "END"
-                else:
-                    response.error = f"Unknown effect time point: {cond}"
-                    self.get_logger().error(response.error)
-                    response.success = False
-                    return response
-                for val in value:
-                    operator = ""
-                    match val.kind:
-                        case EffectKind.ASSIGN:
-                            operator = "="
-                        case EffectKind.INCREASE:
-                            operator = "+"
-                        case EffectKind.DECREASE:
-                            operator = "-"
-                        case _:
-                            response.error = f"Unknown operator kind: {val.kind}"
-                            self.get_logger().error(response.error)
-                            response.success = False
-                            return response
-
+            if hasattr(grounded_action, "preconditions"):
+                for eff in grounded_action.effects:
                     args = []
-                    for arg in val.fluent.args:
+                    for arg in eff.fluent.args:
                         args.append(f"{arg}")
-                    if val.value.is_bool_constant():
-                        # this is a normal fluent change effect
-                        fluent = FluentMsg(
-                            pddl_instance=action.pddl_instance,
-                            name=val.fluent.fluent().name,
-                            args=args,
+                    fluent = FluentMsg(
+                        pddl_instance=action.pddl_instance,
+                        name=eff.fluent.fluent().name,
+                        args=args,
+                    )
+                    fluent_effects.append(
+                        FluentEffect(
+                            fluent=fluent,
+                            time_point="START",
+                            value=eff.value.bool_constant_value(),
                         )
-                        fluent_effects.append(
-                            FluentEffect(
-                                fluent=fluent,
-                                time_point=time_point,
-                                value=val.value.bool_constant_value(),
-                            )
-                        )
+                    )
+            else:    
+                for cond, value in grounded_action.effects.items():
+                    time_point = ""
+                    if cond == self.start_timing:
+                        time_point = "START"
+                    elif cond == self.end_timing:
+                        time_point = "END"
                     else:
-                        function_msg = Function(
-                            pddl_instance=action.pddl_instance,
-                            name=val.fluent.fluent().name,
-                            args=args,
-                        )
-                        if val.value.is_int_constant():
-                            # this is a function change effect
-                            function_effects.append(
-                                FunctionEffect(
-                                    function=function_msg,
-                                    time_point=time_point,
-                                    operator_type=operator,
-                                    value=float(val.value.int_constant_value()),
-                                )
+                        response.error = f"Unknown effect time point: {cond}"
+                        self.get_logger().error(response.error)
+                        response.success = False
+                        return response
+                    for val in value:
+                        operator = ""
+                        match val.kind:
+                            case EffectKind.ASSIGN:
+                                operator = "="
+                            case EffectKind.INCREASE:
+                                operator = "+"
+                            case EffectKind.DECREASE:
+                                operator = "-"
+                            case _:
+                                response.error = f"Unknown operator kind: {val.kind}"
+                                self.get_logger().error(response.error)
+                                response.success = False
+                                return response
+
+                        args = []
+                        for arg in val.fluent.args:
+                            args.append(f"{arg}")
+                        if val.value.is_bool_constant():
+                            # this is a normal fluent change effect
+                            fluent = FluentMsg(
+                                pddl_instance=action.pddl_instance,
+                                name=val.fluent.fluent().name,
+                                args=args,
                             )
-                        elif val.value.is_real_constant():
-                            # this is a function change effect
-                            function_effects.append(
-                                FunctionEffect(
-                                    function=function_msg,
+                            fluent_effects.append(
+                                FluentEffect(
+                                    fluent=fluent,
                                     time_point=time_point,
-                                    operator_type=operator,
-                                    value=val.value.real_constant_value(),
-                                )
-                            )
-                        elif val.value.is_fluent_exp():
-                            # this is a function change effect
-                            rhs_fnode = self.managed_problems[action.pddl_instance].base_problem.initial_value(val.value)
-                            if rhs_fnode.is_real_constant():
-                                rhs_val = rhs_fnode.real_constant_value()
-                            elif rhs_fnode.is_int_constant():
-                                rhs_val = float(rhs_fnode.int_constant_value())
-                            else:
-                                raise Exception(f"value of {val.val} is unexpected ")
-                            function_effects.append(
-                                FunctionEffect(
-                                    function=function_msg,
-                                    time_point=time_point,
-                                    operator_type=operator,
-                                    value=rhs_val,
+                                    value=val.value.bool_constant_value(),
                                 )
                             )
                         else:
-                            response.error = f"Unknown value type: {val.value}"
-                            self.get_logger().error(response.error)
-                            response.success = False
-                            return response
+                            function_msg = Function(
+                                pddl_instance=action.pddl_instance,
+                                name=val.fluent.fluent().name,
+                                args=args,
+                            )
+                            if val.value.is_int_constant():
+                                # this is a function change effect
+                                function_effects.append(
+                                    FunctionEffect(
+                                        function=function_msg,
+                                        time_point=time_point,
+                                        operator_type=operator,
+                                        value=float(val.value.int_constant_value()),
+                                    )
+                                )
+                            elif val.value.is_real_constant():
+                                # this is a function change effect
+                                function_effects.append(
+                                    FunctionEffect(
+                                        function=function_msg,
+                                        time_point=time_point,
+                                        operator_type=operator,
+                                        value=val.value.real_constant_value(),
+                                    )
+                                )
+                            elif val.value.is_fluent_exp():
+                                # this is a function change effect
+                                rhs_fnode = self.managed_problems[action.pddl_instance].base_problem.initial_value(val.value)
+                                if rhs_fnode.is_real_constant():
+                                    rhs_val = rhs_fnode.real_constant_value()
+                                elif rhs_fnode.is_int_constant():
+                                    rhs_val = float(rhs_fnode.int_constant_value())
+                                else:
+                                    raise Exception(f"value of {val.val} is unexpected ")
+                                function_effects.append(
+                                    FunctionEffect(
+                                        function=function_msg,
+                                        time_point=time_point,
+                                        operator_type=operator,
+                                        value=rhs_val,
+                                    )
+                                )
+                            else:
+                                response.error = f"Unknown value type: {val.value}"
+                                self.get_logger().error(response.error)
+                                response.success = False
+                                return response
 
             response.success = True
             response.function_effects = function_effects
