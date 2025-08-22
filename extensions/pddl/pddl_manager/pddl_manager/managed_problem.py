@@ -1,86 +1,50 @@
+# Copyright (c) 2025 Carologistics
+# SPDX-License-Identifier: Apache-2.0
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 import concurrent.futures as cf
-from pddl_msgs.srv import (
-    AddFluent,
-    AddFluents,
-    RemoveFluents,
-    AddObjects,
-    RemoveObjects,
-    SetFunctions,
-    AddPddlInstance,
-    CheckActionPrecondition,
-    GetActionEffects,
-    GetActionNames,
-    GetFluents,
-    GetFunctions,
-    SetGoals,
-    ClearGoals,
-)
-from pddl_msgs.msg import Fluent as FluentMsg, FluentEffect, FunctionEffect, Function, TimedPlanAction, Action as ActionMsg
-from pddl_msgs.action import PlanTemporal
-from std_msgs.msg import String
 
+from pddl_msgs.msg import TimedPlanAction
 from unified_planning.engines import PlanGenerationResultStatus
-from unified_planning.shortcuts import (
-    Problem,
-    UserType,
-    Object,
-    Variable,
-    UPState,
-    BoolType,
-    RealType,
-    IntType,
-)
-from unified_planning.model.timing import Timepoint, TimepointKind
-from unified_planning.plans import TimeTriggeredPlan, ActionInstance
-from unified_planning.plans.plan import PlanKind
-from unified_planning.plot import plot_time_triggered_plan
-from unified_planning.engines.compilers import Grounder, GrounderHelper
-from unified_planning.model import (
-    Action,
-    Fluent,
-    FNode,
-    ExpressionManager,
-    UPState,
-    Problem,
-    MinimizeActionCosts,
-    MinimizeExpressionOnFinalState,
-    MaximizeExpressionOnFinalState,
-    Oversubscription,
-    Expression,
-    Variable,
-)
-from unified_planning.model.effect import EffectKind
-from unified_planning.model.timing import Timing, Timepoint, TimepointKind, TimeInterval
-from unified_planning.io import PDDLReader, PDDLWriter
 from unified_planning.environment import get_environment
-
-from unified_planning.model.walkers import StateEvaluator
-from up_nextflap import NextFLAPImpl
+from unified_planning.io import PDDLReader, PDDLWriter
+from unified_planning.model import Problem
+from unified_planning.plans.plan import PlanKind
+from unified_planning.shortcuts import Problem
 
 
 def run_planner_process(env, dom, prob):
     env = get_environment()
     env.credits_stream = None
     reader = PDDLReader()
-    problem = reader.parse_problem_string(dom,prob)
-    env.factory.add_engine("nextflap", __name__, "NextFLAPImpl")
-    with env.factory.OneshotPlanner(name="nextflap") as planner:
+    problem = reader.parse_problem_string(dom, prob)
+    env.factory.add_engine('nextflap', __name__, 'NextFLAPImpl')
+    with env.factory.OneshotPlanner(name='nextflap') as planner:
         result = planner.solve(problem, timeout=60.0)
-        tPlan=None
+        tPlan = None
         if result.status == PlanGenerationResultStatus.SOLVED_SATISFICING:
             if result.plan.kind == PlanKind.TIME_TRIGGERED_PLAN:
-                tPlan = result.plan.convert_to(
-                    PlanKind.TIME_TRIGGERED_PLAN, result.plan
-                )
-                plan = result.plan
+                tPlan = result.plan.convert_to(PlanKind.TIME_TRIGGERED_PLAN, result.plan)
+                result.plan
         else:
             return False
 
         return tPlan
 
-class ManagedGoal():
-    def __init__(self, problem, name="base"):
+
+class ManagedGoal:
+    def __init__(self, problem, name='base'):
         self.problem = problem
         self.name = name
         self.goal_fluents = []
@@ -104,7 +68,7 @@ class ManagedGoal():
             self.goal_fluents.append(grounded_fluent)
 
     def remove_goal_fluent(self, name, args):
-        raise NotImplementedError("remove_goal_fluent is not implemented")
+        raise NotImplementedError('remove_goal_fluent is not implemented')
 
     def get_goal_fluents(self):
         return self.goal_fluents
@@ -165,7 +129,7 @@ class ManagedGoal():
                 plan_action.pddl_instance = self.problem.name
                 plan_action.goal_instance = self.name
                 if f"{act.action.name}" in writer.nto_renamings.keys():
-                    plan_action.name=f"{writer.get_item_named(f"{act.action.name}").name}"
+                    plan_action.name = f"{writer.get_item_named(f"{act.action.name}").name}"
                 else:
                     plan_action.name = f"{act.action.name}"
 
@@ -186,14 +150,15 @@ class ManagedGoal():
             return plan_actions
         return None
 
-class ManagedProblem():
-    def __init__(self, problem, env, name="base"):
+
+class ManagedProblem:
+    def __init__(self, problem, env, name='base'):
         self.goals = {}
         self.base_problem = problem.clone()
         self.base_problem.clear_goals()
         self.name = name
 
-        self.goals["base"] = ManagedGoal(self)
+        self.goals['base'] = ManagedGoal(self)
         self.executor = cf.ProcessPoolExecutor(max_workers=4)
 
         self.env = env
@@ -221,7 +186,9 @@ class ManagedProblem():
         for f, val in self.base_problem.initial_values.items():
             args = [f"{arg}" for arg in f.args]
 
-            if not object_filter or not any(arg not in (o.name for o in object_filter) for arg in args):
+            if not object_filter or not any(
+                arg not in (o.name for o in object_filter) for arg in args
+            ):
                 target_problem.set_initial_value(f, val)
 
         # apply the actions based on the action filters
@@ -261,7 +228,7 @@ class ManagedProblem():
         return self.base_problem.actions
 
     def add_action(self, name, args):
-        raise NotImplementedError("add_action is not implemented")
+        raise NotImplementedError('add_action is not implemented')
 
     def remove_action(self, name):
         actions = self.base_problem.actions
@@ -269,16 +236,18 @@ class ManagedProblem():
             if action.name == name:
                 actions.remove(action)
                 break
-        self.base_problem = self.filter_problem(actions, self.get_object_list(), self.get_fluent_list())
+        self.base_problem = self.filter_problem(
+            actions, self.get_object_list(), self.get_fluent_list()
+        )
 
-    def add_goal(self, goal="base"):
+    def add_goal(self, goal='base'):
         self.goals[goal] = ManagedGoal(self, goal)
 
-    def get_goal(self, goal="base"):
+    def get_goal(self, goal='base'):
         return self.goals[goal]
 
     def add_goal_fluent(self, name, args, value, goal):
         self.goals[goal].set_goal_fluent(name, args, value)
 
-    def remove_goal_fluent(self, name, args, goal="base"):
+    def remove_goal_fluent(self, name, args, goal='base'):
         self.goals[goal].remove_goal_fluent(name, args)
