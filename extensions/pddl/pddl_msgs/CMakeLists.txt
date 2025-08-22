@@ -14,11 +14,14 @@ set(MSGS
     "msg/FluentEffect.msg"
     "msg/TimedPlanAction.msg"
     "msg/Action.msg"
-    "msg/Object.msg")
+    "msg/Object.msg"
+    "msg/Predicate.msg")
 set(SERVICES
     "srv/CheckActionPrecondition.srv"
     "srv/GetActionEffects.srv"
     "srv/GetActionNames.srv"
+    "srv/GetPredicates.srv"
+    "srv/GetTypeObjects.srv"
     "srv/AddPddlInstance.srv"
     "srv/AddFluent.srv"
     "srv/AddObjects.srv"

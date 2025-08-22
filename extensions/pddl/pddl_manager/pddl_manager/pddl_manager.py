@@ -29,9 +29,11 @@ from pddl_msgs.srv import (
     SetActionFilter,
     SetObjectFilter,
     SetFluentFilter,
-    CreateGoalInstance
+    CreateGoalInstance,
+    GetPredicates,
+    GetTypeObjects
 )
-from pddl_msgs.msg import Fluent as FluentMsg, FluentEffect, FunctionEffect, Function, TimedPlanAction, Action as ActionMsg
+from pddl_msgs.msg import Fluent as FluentMsg, FluentEffect, FunctionEffect, Function, TimedPlanAction, Action as ActionMsg, Predicate as PredicateMsg
 from pddl_msgs.action import PlanTemporal
 from std_msgs.msg import String
 
@@ -107,6 +109,8 @@ class PddlManagerLifecycleNode(LifecycleNode):
         self.set_fluent_filter_srv = None
         self.set_object_filter_srv = None
         self.create_goal_instance_srv = None
+        self.get_predicates_srv = None
+        self.get_objects_srv = None
         self.reader = PDDLReader()
         self.managed_problems = {}
         self.env = get_environment()
@@ -269,6 +273,18 @@ class PddlManagerLifecycleNode(LifecycleNode):
             CreateGoalInstance,
             f"{self.get_name()}/create_goal_instance",
             self.handle_create_goal_instance,
+            callback_group=self.srv_cb_group,
+        )
+        self.get_predicates_srv = self.create_service(
+            GetPredicates,
+            f"{self.get_name()}/get_predicates",
+            self.handle_get_predicates,
+            callback_group=self.srv_cb_group,
+        )
+        self.get_objects_srv = self.create_service(
+            GetTypeObjects,
+            f"{self.get_name()}/get_type_objects",
+            self.handle_get_type_objects,
             callback_group=self.srv_cb_group,
         )
         self.plan_action_server = ActionServer(
@@ -623,6 +639,51 @@ class PddlManagerLifecycleNode(LifecycleNode):
                     value=val.real_constant_value()
                 )
                 response.functions.append(func)
+        response.success = True
+        return response
+    
+    def handle_get_predicates(self, request, response):
+        if request.pddl_instance not in self.managed_problems.keys():
+            response.success = False
+            response.error = "Unknown pddl instance"
+            return response
+        instance = self.managed_problems[request.pddl_instance].base_problem
+        response.predicates = []
+        
+        for fluent in instance.fluents:
+            if fluent.type.is_bool_type():
+                param_types = []
+                param_names = []
+                for param in fluent.signature:
+                    param_types.append(param.type.name)
+                    param_names.append(param.name)
+                predicate = PredicateMsg(
+                    pddl_instance=request.pddl_instance,
+                    name=fluent.name,
+                    param_types=param_types,
+                    param_names=param_names
+                )
+                response.predicates.append(predicate)
+        response.success = True
+        return response
+    
+    def handle_get_type_objects(self, request, response):
+        if request.pddl_instance not in self.managed_problems.keys():
+            response.success = False
+            response.error = "Unknown pddl instance"
+            return response
+        instance = self.managed_problems[request.pddl_instance].base_problem
+        response.objects = []
+        
+        type = request.type
+        
+        if not instance.has_type(type):
+            request.success = False
+            response.error = "Type not in instance"
+            return response
+        
+        for obj in instance.objects(instance.user_type(type)):
+            response.objects.append(obj.name)
         response.success = True
         return response
 
