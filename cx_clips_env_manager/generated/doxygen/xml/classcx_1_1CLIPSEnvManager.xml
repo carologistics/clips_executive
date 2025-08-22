@@ -16,7 +16,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="54" column="3" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="55" bodyend="-1"/>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="53" column="3" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="53" bodyend="-1"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="private-attrib">
@@ -32,7 +32,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="48" column="10" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="48" bodyend="-1"/>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="47" column="10" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="47" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1CLIPSEnvManager_1af382b38f557e99445a73be2c3c17b723" prot="private" static="no" mutable="no">
         <type>friend</type>
@@ -46,7 +46,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="49" column="10" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="49" bodyend="-1"/>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="48" column="10" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="48" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1CLIPSEnvManager_1abe6da72ea161aaced61d55090a636c95" prot="private" static="no" mutable="no">
         <type>rclcpp::Service&lt; cx_msgs::srv::ListClipsEnvs &gt;::SharedPtr</type>
@@ -60,7 +60,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="96" column="31" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="96" bodyend="-1"/>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="94" column="31" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="94" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1CLIPSEnvManager_1a70307c2cf54d1a5d37a60681dc9bb7ee" prot="private" static="no" mutable="no">
         <type>rclcpp::Service&lt; cx_msgs::srv::CreateClipsEnv &gt;::SharedPtr</type>
@@ -74,7 +74,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="97" column="31" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="97" bodyend="-1"/>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="95" column="31" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="95" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1CLIPSEnvManager_1a58b19af7491458b96bacad28759cbadc" prot="private" static="no" mutable="no">
         <type>rclcpp::Service&lt; cx_msgs::srv::DestroyClipsEnv &gt;::SharedPtr</type>
@@ -88,7 +88,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="99" column="7" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="99" bodyend="-1"/>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="96" column="31" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="96" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1CLIPSEnvManager_1abd10ad0d97eb9f86af36472dc99752cc" prot="private" static="no" mutable="no">
         <type><ref refid="classcx_1_1ClipsPluginManager" kindref="compound">ClipsPluginManager</ref></type>
@@ -102,7 +102,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="109" column="22" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="109" bodyend="-1"/>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="106" column="22" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="106" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1CLIPSEnvManager_1aff0fecc3081fe81b076dfc127a44c35a" prot="private" static="no" mutable="no">
         <type>std::shared_ptr&lt; EnvsMap &gt;</type>
@@ -116,7 +116,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="111" column="19" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="111" bodyend="-1"/>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="108" column="19" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="108" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1CLIPSEnvManager_1a25b79bda2aa97629f30389879e24898d" prot="private" static="no" mutable="no">
         <type>std::shared_ptr&lt; std::mutex &gt;</type>
@@ -130,7 +130,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="112" column="19" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="112" bodyend="-1"/>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="109" column="19" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="109" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1CLIPSEnvManager_1abc25b1134c52125229479854e3b2180c" prot="private" static="no" mutable="no">
         <type>std::unique_ptr&lt; bond::Bond &gt;</type>
@@ -145,7 +145,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="115" column="19" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="115" bodyend="115"/>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="112" column="19" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="112" bodyend="112"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1CLIPSEnvManager_1a549c26b7a1ca2ad6b3b5123fbce7eeb4" prot="private" static="no" mutable="no">
         <type>double</type>
@@ -159,7 +159,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="116" column="10" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="116" bodyend="-1"/>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="113" column="10" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="113" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1CLIPSEnvManager_1ab9df32715bd23f0163731e81c8fac226" prot="private" static="no" mutable="no">
         <type>rclcpp::TimerBase::SharedPtr</type>
@@ -173,7 +173,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="117" column="32" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="117" bodyend="-1"/>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="114" column="32" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="114" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1CLIPSEnvManager_1a452ff37a418de100df227fbba0972488" prot="private" static="no" mutable="no">
         <type>std::unique_ptr&lt; rclcpp::PreShutdownCallbackHandle &gt;</type>
@@ -181,19 +181,18 @@
         <argsstring></argsstring>
         <name>rcl_preshutdown_cb_handle_</name>
         <qualifiedname>cx::CLIPSEnvManager::rcl_preshutdown_cb_handle_</qualifiedname>
-        <initializer>{
-      nullptr}</initializer>
+        <initializer>{nullptr}</initializer>
         <briefdescription>
         </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="118" column="19" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="118" bodyend="119"/>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="115" column="19" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="115" bodyend="115"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="public-func">
-      <memberdef kind="function" id="classcx_1_1CLIPSEnvManager_1ae9fda0b00546734dae34696c3a3d6b50" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+      <memberdef kind="function" id="classcx_1_1CLIPSEnvManager_1ae9fda0b00546734dae34696c3a3d6b50" prot="public" static="no" const="no" explicit="yes" inline="no" virt="non-virtual">
         <type></type>
         <definition>cx::CLIPSEnvManager::CLIPSEnvManager</definition>
         <argsstring>(const rclcpp::NodeOptions &amp;options=rclcpp::NodeOptions())</argsstring>
@@ -210,7 +209,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="52" column="3"/>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="51" column="12"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1CLIPSEnvManager_1a6255a5475a43728a59fe0421be237858" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -224,7 +223,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="53" column="3"/>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="52" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1CLIPSEnvManager_1a51c74dcf52a19b477999969a8a048fa7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>CallbackReturn</type>
@@ -242,7 +241,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="59" column="18"/>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="57" column="18"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1CLIPSEnvManager_1a02e7eb0201fa736937046cce8914a478" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>CallbackReturn</type>
@@ -260,7 +259,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="60" column="18"/>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="58" column="18"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1CLIPSEnvManager_1aa4db3ef49e5c8a0bedc543eb40be1d99" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>CallbackReturn</type>
@@ -278,7 +277,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="61" column="18"/>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="59" column="18"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1CLIPSEnvManager_1ae508e4892253904eaba42102c45da6ab" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>CallbackReturn</type>
@@ -296,7 +295,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="62" column="18"/>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="60" column="18"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1CLIPSEnvManager_1a584466416fdcf2d2e5eb577c3ebc31b8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>CallbackReturn</type>
@@ -314,7 +313,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="63" column="18"/>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="61" column="18"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1CLIPSEnvManager_1ae9fc66dbd61c0813ee48cae2c4b8da6e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -340,7 +339,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="70" column="8"/>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="68" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1CLIPSEnvManager_1a370e4a10ea2c9c73fe906dc7743c0683" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -366,7 +365,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="75" column="8"/>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="73" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1CLIPSEnvManager_1a64b1bf75f60c37ea7e4d0baf130a67cf" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -392,7 +391,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="80" column="8"/>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="78" column="8"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="private-func">
@@ -412,7 +411,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="86" column="19"/>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="84" column="19"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1CLIPSEnvManager_1aa0f323f3d81a4672dc4790b8998f6c84" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>bool</type>
@@ -430,7 +429,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="88" column="8"/>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="86" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1CLIPSEnvManager_1a57da58050635cd37c7768c274e312fc4" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -444,7 +443,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="102" column="8"/>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="99" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1CLIPSEnvManager_1a6023bbebaa7ea3b232e141bf4cdeaeda" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -458,7 +457,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="103" column="8"/>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="100" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1CLIPSEnvManager_1a7c9c335a53491baa0b2b8938512af606" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -472,7 +471,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="104" column="8"/>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="101" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1CLIPSEnvManager_1a8d44f9bbad1e3d7d66693f10788b8003" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -486,7 +485,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="105" column="8"/>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="102" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1CLIPSEnvManager_1a899ea203c8e8c95b88d491daead373d5" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -500,7 +499,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="106" column="8"/>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="103" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1CLIPSEnvManager_1a511390c99047a2ddceabc87abd061c75" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -514,7 +513,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="107" column="8"/>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="104" column="8"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
@@ -543,7 +542,7 @@
         <label>rclcpp_lifecycle::LifecycleNode</label>
       </node>
     </collaborationgraph>
-    <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="47" column="1" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="47" bodyend="120"/>
+    <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="45" column="1" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="46" bodyend="116"/>
     <listofallmembers>
       <member refid="classcx_1_1CLIPSEnvManager_1a7c9c335a53491baa0b2b8938512af606" prot="private" virt="non-virtual"><scope>cx::CLIPSEnvManager</scope><name>autostart</name></member>
       <member refid="classcx_1_1CLIPSEnvManager_1ab9df32715bd23f0163731e81c8fac226" prot="private" virt="non-virtual"><scope>cx::CLIPSEnvManager</scope><name>autostart_timer_</name></member>

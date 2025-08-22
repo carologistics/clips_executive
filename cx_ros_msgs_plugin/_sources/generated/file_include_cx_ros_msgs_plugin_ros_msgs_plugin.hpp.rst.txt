@@ -32,11 +32,21 @@ Includes
 
 - ``cx_plugin/clips_plugin.hpp``
 
+- ``map``
+
+- ``memory``
+
 - ``rclcpp/generic_client.hpp``
 
 - ``rosidl_typesupport_introspection_cpp/message_introspection.hpp``
 
 - ``string``
+
+- ``unordered_map``
+
+- ``unordered_set``
+
+- ``vector``
 
 
 

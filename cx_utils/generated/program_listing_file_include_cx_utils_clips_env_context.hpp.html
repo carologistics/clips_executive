@@ -21,7 +21,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="File param_utils.hpp" href="file_include_cx_utils_param_utils.hpp.html" />
+    <link rel="next" title="File format.hpp" href="file_include_cx_utils_format.hpp.html" />
     <link rel="prev" title="File clips_env_context.hpp" href="file_include_cx_utils_clips_env_context.hpp.html" /> 
 </head>
 
@@ -72,7 +72,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="index.html#variables">Variables</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="variable_string__utils_8hpp_1a8d8a6edcb760b28dacf2804884ef1e62.html">Variable cx::chars</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_string__utils_8hpp_1acbb48e2352e3fd2b0daec29318a59372.html">Variable cx::chars</a></li>
 <li class="toctree-l4"><a class="reference internal" href="variable_string__utils_8hpp_1ab55bf494ff071923012e9f7982c967d6.html">Variable cx::rd</a></li>
 </ul>
 </li>
@@ -83,6 +83,7 @@
 </li>
 <li class="toctree-l3 current"><a class="reference internal" href="index.html#files">Files</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="file_include_cx_utils_clips_env_context.hpp.html">File clips_env_context.hpp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="file_include_cx_utils_format.hpp.html">File format.hpp</a></li>
 <li class="toctree-l4"><a class="reference internal" href="file_include_cx_utils_param_utils.hpp.html">File param_utils.hpp</a></li>
 <li class="toctree-l4"><a class="reference internal" href="file_include_cx_utils_string_utils.hpp.html">File string_utils.hpp</a></li>
 </ul>
@@ -139,6 +140,7 @@
 <span id="program-listing-file-include-cx-utils-clips-env-context-hpp"></span><h1>Program Listing for File clips_env_context.hpp<a class="headerlink" href="#program-listing-for-file-clips-env-context-hpp" title="Link to this heading"></a></h1>
 <p>↰ <a class="reference internal" href="file_include_cx_utils_clips_env_context.hpp.html#file-include-cx-utils-clips-env-context-hpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">include/cx_utils/clips_env_context.hpp</span></code>)</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Copyright (c) 2024-2025 Carologistics</span>
+<span class="c1">// SPDX-License-Identifier: Apache-2.0</span>
 <span class="c1">//</span>
 <span class="c1">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
 <span class="c1">// you may not use this file except in compliance with the License.</span>
@@ -152,26 +154,27 @@
 <span class="c1">// See the License for the specific language governing permissions and</span>
 <span class="c1">// limitations under the License.</span>
 
-<span class="cp">#ifndef _CX_UTILS_CLIPS_ENV_CONTEXT_HPP</span>
-<span class="cp">#define _CX_UTILS_CLIPS_ENV_CONTEXT_HPP</span>
+<span class="cp">#ifndef CX_UTILS__CLIPS_ENV_CONTEXT_HPP_</span>
+<span class="cp">#define CX_UTILS__CLIPS_ENV_CONTEXT_HPP_</span>
 
-<span class="cp">#pragma once</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;memory&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string&gt;</span>
 
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;rclcpp/rclcpp.hpp&gt;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;spdlog/spdlog.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;clips_ns/clips.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;rclcpp/rclcpp.hpp&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;spdlog/spdlog.h&quot;</span>
 
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;clips_ns/clips.h&gt;</span>
-
-<span class="k">namespace</span><span class="w"> </span><span class="nn">cx</span><span class="w"> </span><span class="p">{</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">CLIPSLogger</span><span class="w"> </span><span class="p">{</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">cx</span>
+<span class="p">{</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CLIPSLogger</span>
+<span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
-<span class="w">  </span><span class="k">explicit</span><span class="w"> </span><span class="n">CLIPSLogger</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">component</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">log_to_file</span><span class="p">,</span>
-<span class="w">                       </span><span class="kt">bool</span><span class="w"> </span><span class="n">stdout_to_debug</span><span class="p">);</span>
+<span class="w">  </span><span class="k">explicit</span><span class="w"> </span><span class="n">CLIPSLogger</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">component</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">log_to_file</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">stdout_to_debug</span><span class="p">);</span>
 <span class="w">  </span><span class="o">~</span><span class="n">CLIPSLogger</span><span class="p">();</span>
-<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">log</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">logical_name</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">str</span><span class="p">);</span>
+<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">log</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">logical_name</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">str</span><span class="p">);</span>
 
 <span class="k">private</span><span class="o">:</span>
-<span class="w">  </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">component_</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">component_</span><span class="p">;</span>
 <span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">rclcpp</span><span class="o">::</span><span class="n">Logger</span><span class="w"> </span><span class="n">logger_</span><span class="p">;</span>
 <span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">stdout_to_debug_</span><span class="p">;</span>
 <span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">spdlog</span><span class="o">::</span><span class="n">logger</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clips_logger_</span><span class="p">;</span>
@@ -179,19 +182,20 @@
 <span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">terminal_buffer_</span><span class="p">;</span>
 <span class="p">};</span>
 
-<span class="k">class</span><span class="w"> </span><span class="nc">CLIPSEnvContext</span><span class="w"> </span><span class="p">{</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CLIPSEnvContext</span>
+<span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
 <span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">env_name_</span><span class="p">;</span>
 <span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="w"> </span><span class="n">env_mtx_</span><span class="p">;</span>
 <span class="w">  </span><span class="n">CLIPSLogger</span><span class="w"> </span><span class="n">logger_</span><span class="p">;</span>
 
-<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="n">CLIPSEnvContext</span><span class="w"> </span><span class="o">*</span><span class="nf">get_context</span><span class="p">(</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="w"> </span><span class="o">*</span><span class="n">env</span><span class="p">);</span>
-<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="n">CLIPSEnvContext</span><span class="w"> </span><span class="o">*</span><span class="nf">get_context</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">env</span><span class="p">);</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="n">CLIPSEnvContext</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nf">get_context</span><span class="p">(</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">env</span><span class="p">);</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="n">CLIPSEnvContext</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nf">get_context</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">env</span><span class="p">);</span>
 <span class="p">};</span>
 
-<span class="p">}</span><span class="w"> </span><span class="c1">// namespace cx</span>
+<span class="p">}</span><span class="w">  </span><span class="c1">// namespace cx</span>
 
-<span class="cp">#endif </span><span class="c1">// !_CX_UTILS_CLIPS_ENV_CONTEXT_HPP</span>
+<span class="cp">#endif  </span><span class="c1">// CX_UTILS__CLIPS_ENV_CONTEXT_HPP_</span>
 </pre></div>
 </div>
 </section>
@@ -201,7 +205,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="file_include_cx_utils_clips_env_context.hpp.html" class="btn btn-neutral float-left" title="File clips_env_context.hpp" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="file_include_cx_utils_param_utils.hpp.html" class="btn btn-neutral float-right" title="File param_utils.hpp" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="file_include_cx_utils_format.hpp.html" class="btn btn-neutral float-right" title="File format.hpp" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

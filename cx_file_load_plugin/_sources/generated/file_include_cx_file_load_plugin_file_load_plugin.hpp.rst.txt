@@ -32,7 +32,11 @@ Includes
 
 - ``cx_plugin/clips_plugin.hpp``
 
+- ``memory``
+
 - ``string``
+
+- ``vector``
 
 
 

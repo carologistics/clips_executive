@@ -2,13 +2,18 @@
 <doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
   <compounddef id="communicator_8hpp" kind="file" language="C++">
     <compoundname>communicator.hpp</compoundname>
-    <includes local="yes">rclcpp_lifecycle/lifecycle_node.hpp</includes>
-    <includes local="no">protobuf_comm/server.h</includes>
-    <includes local="no">clips_ns/clips.h</includes>
     <includes local="no">list</includes>
     <includes local="no">map</includes>
+    <includes local="no">memory</includes>
     <includes local="no">mutex</includes>
-    <includedby refid="protobuf__plugin_8hpp" local="no">include/cx_protobuf_plugin/protobuf_plugin.hpp</includedby>
+    <includes local="no">string</includes>
+    <includes local="no">unordered_map</includes>
+    <includes local="no">utility</includes>
+    <includes local="no">vector</includes>
+    <includes local="yes">clips_ns/clips.h</includes>
+    <includes local="yes">protobuf_comm/server.h</includes>
+    <includes local="yes">rclcpp_lifecycle/lifecycle_node.hpp</includes>
+    <includedby refid="protobuf__plugin_8hpp" local="yes">include/cx_protobuf_plugin/protobuf_plugin.hpp</includedby>
     <incdepgraph>
       <node id="1">
         <label>include/cx_protobuf_plugin/communicator.hpp</label>
@@ -25,24 +30,49 @@
         </childnode>
         <childnode refid="7" relation="include">
         </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+        <childnode refid="10" relation="include">
+        </childnode>
+        <childnode refid="11" relation="include">
+        </childnode>
+        <childnode refid="12" relation="include">
+        </childnode>
       </node>
-      <node id="4">
+      <node id="10">
         <label>clips_ns/clips.h</label>
       </node>
-      <node id="5">
+      <node id="2">
         <label>list</label>
       </node>
-      <node id="6">
+      <node id="3">
         <label>map</label>
       </node>
-      <node id="7">
+      <node id="4">
+        <label>memory</label>
+      </node>
+      <node id="5">
         <label>mutex</label>
       </node>
-      <node id="3">
+      <node id="11">
         <label>protobuf_comm/server.h</label>
       </node>
-      <node id="2">
+      <node id="12">
         <label>rclcpp_lifecycle/lifecycle_node.hpp</label>
+      </node>
+      <node id="6">
+        <label>string</label>
+      </node>
+      <node id="7">
+        <label>unordered_map</label>
+      </node>
+      <node id="8">
+        <label>utility</label>
+      </node>
+      <node id="9">
+        <label>vector</label>
       </node>
     </incdepgraph>
     <invincdepgraph>
@@ -67,200 +97,199 @@
     </detaileddescription>
     <programlisting>
 <codeline lineno="1"><highlight class="comment">//<sp/>Copyright<sp/>(c)<sp/>2024-2025<sp/>Carologistics</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="2"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">//<sp/>This<sp/>program<sp/>is<sp/>free<sp/>software;<sp/>you<sp/>can<sp/>redistribute<sp/>it<sp/>and/or<sp/>modify</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="4"><highlight class="normal"></highlight><highlight class="comment">//<sp/>it<sp/>under<sp/>the<sp/>terms<sp/>of<sp/>the<sp/>GNU<sp/>General<sp/>Public<sp/>License<sp/>as<sp/>published<sp/>by</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="5"><highlight class="normal"></highlight><highlight class="comment">//<sp/>the<sp/>Free<sp/>Software<sp/>Foundation;<sp/>either<sp/>version<sp/>2<sp/>of<sp/>the<sp/>License,<sp/>or</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="6"><highlight class="normal"></highlight><highlight class="comment">//<sp/>(at<sp/>your<sp/>option)<sp/>any<sp/>later<sp/>version.</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="7"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="8"><highlight class="normal"></highlight><highlight class="comment">//<sp/>This<sp/>program<sp/>is<sp/>distributed<sp/>in<sp/>the<sp/>hope<sp/>that<sp/>it<sp/>will<sp/>be<sp/>useful,</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="9"><highlight class="normal"></highlight><highlight class="comment">//<sp/>but<sp/>WITHOUT<sp/>ANY<sp/>WARRANTY;<sp/>without<sp/>even<sp/>the<sp/>implied<sp/>warranty<sp/>of</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="10"><highlight class="normal"></highlight><highlight class="comment">//<sp/>MERCHANTABILITY<sp/>or<sp/>FITNESS<sp/>FOR<sp/>A<sp/>PARTICULAR<sp/>PURPOSE.<sp/><sp/>See<sp/>the</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="11"><highlight class="normal"></highlight><highlight class="comment">//<sp/>GNU<sp/>Library<sp/>General<sp/>Public<sp/>License<sp/>for<sp/>more<sp/>details.</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="12"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="13"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Read<sp/>the<sp/>full<sp/>text<sp/>in<sp/>the<sp/>LICENSE.GPL<sp/>file<sp/>in<sp/>the<sp/>main<sp/>directory.</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="14"><highlight class="normal"></highlight></codeline>
-<codeline lineno="15"><highlight class="normal"></highlight><highlight class="comment">/***************************************************************************</highlight></codeline>
-<codeline lineno="16"><highlight class="comment"><sp/>*<sp/><sp/>communicator.h<sp/>-<sp/>protobuf<sp/>network<sp/>communication<sp/>for<sp/>CLIPS</highlight></codeline>
-<codeline lineno="17"><highlight class="comment"><sp/>*</highlight></codeline>
-<codeline lineno="18"><highlight class="comment"><sp/>*<sp/><sp/>Created:<sp/>Tue<sp/>Apr<sp/>16<sp/>13:41:13<sp/>2013</highlight></codeline>
-<codeline lineno="19"><highlight class="comment"><sp/>*<sp/><sp/>Copyright<sp/><sp/>2013-2014<sp/><sp/>Tim<sp/>Niemueller<sp/>[www.niemueller.de]</highlight></codeline>
-<codeline lineno="20"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>2021<sp/><sp/><sp/><sp/><sp/><sp/><sp/>Till<sp/>Hofmann<sp/>&lt;hofmann@kbsg.rwth-aachen.de&gt;</highlight></codeline>
-<codeline lineno="21"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>2924<sp/><sp/><sp/><sp/><sp/><sp/><sp/>Tarik<sp/>Viehmann<sp/>&lt;viehmann@kbsg.rwth-aachen.de&gt;</highlight></codeline>
-<codeline lineno="22"><highlight class="comment"><sp/>****************************************************************************/</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="23"><highlight class="normal"></highlight></codeline>
-<codeline lineno="24"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>_PROTOBUF_CLIPS_COMMUNICATOR_H_</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="25"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>_PROTOBUF_CLIPS_COMMUNICATOR_H_</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="26"><highlight class="normal"></highlight></codeline>
-<codeline lineno="27"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;rclcpp_lifecycle/lifecycle_node.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="28"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;protobuf_comm/server.h&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="29"><highlight class="normal"></highlight></codeline>
-<codeline lineno="30"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;clips_ns/clips.h&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="31"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;list&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="32"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;map&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="33"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;mutex&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="34"><highlight class="normal"></highlight></codeline>
-<codeline lineno="35"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">protobuf_comm<sp/>{</highlight></codeline>
-<codeline lineno="36"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">ProtobufStreamClient;</highlight></codeline>
-<codeline lineno="37"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">ProtobufBroadcastPeer;</highlight></codeline>
-<codeline lineno="38"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>protobuf_comm</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="39"><highlight class="normal"></highlight></codeline>
-<codeline lineno="40"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">fawkes<sp/>{</highlight></codeline>
-<codeline lineno="41"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">Logger;</highlight></codeline>
-<codeline lineno="42"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="43"><highlight class="normal"></highlight></codeline>
-<codeline lineno="44"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">protobuf_clips<sp/>{</highlight></codeline>
-<codeline lineno="45"><highlight class="normal"></highlight></codeline>
-<codeline lineno="46" refid="classprotobuf__clips_1_1ClipsProtobufCommunicator" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classprotobuf__clips_1_1ClipsProtobufCommunicator" kindref="compound">ClipsProtobufCommunicator</ref><sp/>{</highlight></codeline>
-<codeline lineno="47"><highlight class="normal"></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
-<codeline lineno="48"><highlight class="normal"><sp/><sp/><ref refid="classprotobuf__clips_1_1ClipsProtobufCommunicator" kindref="compound">ClipsProtobufCommunicator</ref>(clips::Environment<sp/>*env,<sp/>std::mutex<sp/>&amp;env_mutex,</highlight></codeline>
-<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>rclcpp_lifecycle::LifecycleNode::WeakPtr<sp/>parent);</highlight></codeline>
-<codeline lineno="50"><highlight class="normal"><sp/><sp/><ref refid="classprotobuf__clips_1_1ClipsProtobufCommunicator" kindref="compound">ClipsProtobufCommunicator</ref>(clips::Environment<sp/>*env,<sp/>std::mutex<sp/>&amp;env_mutex,</highlight></codeline>
-<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::vector&lt;std::string&gt;<sp/>&amp;proto_path,</highlight></codeline>
-<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>rclcpp_lifecycle::LifecycleNode::WeakPtr<sp/>parent);</highlight></codeline>
-<codeline lineno="53"><highlight class="normal"><sp/><sp/><ref refid="classprotobuf__clips_1_1ClipsProtobufCommunicator" kindref="compound">~ClipsProtobufCommunicator</ref>();</highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="comment">//<sp/>SPDX-License-Identifier:<sp/>GPL-2.0-or-later</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="comment">//<sp/>This<sp/>program<sp/>is<sp/>free<sp/>software;<sp/>you<sp/>can<sp/>redistribute<sp/>it<sp/>and/or<sp/>modify</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="comment">//<sp/>it<sp/>under<sp/>the<sp/>terms<sp/>of<sp/>the<sp/>GNU<sp/>General<sp/>Public<sp/>License<sp/>as<sp/>published<sp/>by</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="comment">//<sp/>the<sp/>Free<sp/>Software<sp/>Foundation;<sp/>either<sp/>version<sp/>2<sp/>of<sp/>the<sp/>License,<sp/>or</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="comment">//<sp/>(at<sp/>your<sp/>option)<sp/>any<sp/>later<sp/>version.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="comment">//<sp/>This<sp/>program<sp/>is<sp/>distributed<sp/>in<sp/>the<sp/>hope<sp/>that<sp/>it<sp/>will<sp/>be<sp/>useful,</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="comment">//<sp/>but<sp/>WITHOUT<sp/>ANY<sp/>WARRANTY;<sp/>without<sp/>even<sp/>the<sp/>implied<sp/>warranty<sp/>of</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="comment">//<sp/>MERCHANTABILITY<sp/>or<sp/>FITNESS<sp/>FOR<sp/>A<sp/>PARTICULAR<sp/>PURPOSE.<sp/><sp/>See<sp/>the</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="comment">//<sp/>GNU<sp/>Library<sp/>General<sp/>Public<sp/>License<sp/>for<sp/>more<sp/>details.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Read<sp/>the<sp/>full<sp/>text<sp/>in<sp/>the<sp/>LICENSE.GPL<sp/>file<sp/>in<sp/>the<sp/>main<sp/>directory.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="comment">/***************************************************************************</highlight></codeline>
+<codeline lineno="17"><highlight class="comment"><sp/>*<sp/><sp/>communicator.h<sp/>-<sp/>protobuf<sp/>network<sp/>communication<sp/>for<sp/>CLIPS</highlight></codeline>
+<codeline lineno="18"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="19"><highlight class="comment"><sp/>*<sp/><sp/>Created:<sp/>Tue<sp/>Apr<sp/>16<sp/>13:41:13<sp/>2013</highlight></codeline>
+<codeline lineno="20"><highlight class="comment"><sp/>*<sp/><sp/>Copyright<sp/><sp/>2013-2014<sp/><sp/>Tim<sp/>Niemueller<sp/>[www.niemueller.de]</highlight></codeline>
+<codeline lineno="21"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>2021<sp/><sp/><sp/><sp/><sp/><sp/><sp/>Till<sp/>Hofmann<sp/>&lt;hofmann@kbsg.rwth-aachen.de&gt;</highlight></codeline>
+<codeline lineno="22"><highlight class="comment"><sp/>*<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>2924<sp/><sp/><sp/><sp/><sp/><sp/><sp/>Tarik<sp/>Viehmann<sp/>&lt;viehmann@kbsg.rwth-aachen.de&gt;</highlight></codeline>
+<codeline lineno="23"><highlight class="comment"><sp/>****************************************************************************/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>CX_PROTOBUF_PLUGIN__COMMUNICATOR_HPP_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CX_PROTOBUF_PLUGIN__COMMUNICATOR_HPP_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;list&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;map&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;memory&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;mutex&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;unordered_map&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;utility&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;vector&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;clips_ns/clips.h&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;protobuf_comm/server.h&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;rclcpp_lifecycle/lifecycle_node.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">protobuf_comm</highlight></codeline>
+<codeline lineno="42"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">ProtobufStreamClient;</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">ProtobufBroadcastPeer;</highlight></codeline>
+<codeline lineno="45"><highlight class="normal">}<sp/><sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>protobuf_comm</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">fawkes</highlight></codeline>
+<codeline lineno="48"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">Logger;</highlight></codeline>
+<codeline lineno="50"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">protobuf_clips</highlight></codeline>
+<codeline lineno="53"><highlight class="normal">{</highlight></codeline>
 <codeline lineno="54"><highlight class="normal"></highlight></codeline>
-<codeline lineno="55"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>enable_server(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>port);</highlight></codeline>
-<codeline lineno="56"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>disable_server();</highlight></codeline>
-<codeline lineno="57"><highlight class="normal"></highlight></codeline>
-<codeline lineno="61"><highlight class="normal"><sp/><sp/>boost::signals2::signal&lt;void(protobuf_comm::ProtobufStreamServer::ClientID,</highlight></codeline>
-<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::shared_ptr&lt;google::protobuf::Message&gt;)&gt;<sp/>&amp;</highlight></codeline>
-<codeline lineno="63" refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ad9b1d71d6433c0f0f6fff5f556631d43" refkind="member"><highlight class="normal"><sp/><sp/><ref refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ad9b1d71d6433c0f0f6fff5f556631d43" kindref="member">signal_server_sent</ref>()<sp/>{</highlight></codeline>
-<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>sig_server_sent_;</highlight></codeline>
-<codeline lineno="65"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
-<codeline lineno="66"><highlight class="normal"></highlight></codeline>
-<codeline lineno="70"><highlight class="normal"><sp/><sp/>boost::signals2::signal&lt;void(std::string,<sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">short</highlight><highlight class="normal">,</highlight></codeline>
-<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::shared_ptr&lt;google::protobuf::Message&gt;)&gt;<sp/>&amp;</highlight></codeline>
-<codeline lineno="72" refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1af0cd4f4f1d5af8495c0dd955f8c97170" refkind="member"><highlight class="normal"><sp/><sp/><ref refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1af0cd4f4f1d5af8495c0dd955f8c97170" kindref="member">signal_client_sent</ref>()<sp/>{</highlight></codeline>
-<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>sig_client_sent_;</highlight></codeline>
-<codeline lineno="74"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
-<codeline lineno="75"><highlight class="normal"></highlight></codeline>
-<codeline lineno="79"><highlight class="normal"><sp/><sp/>boost::signals2::signal&lt;void(</highlight><highlight class="keywordtype">long</highlight><highlight class="normal">,</highlight></codeline>
-<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::shared_ptr&lt;google::protobuf::Message&gt;)&gt;<sp/>&amp;</highlight></codeline>
-<codeline lineno="81" refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1aabee4aa597a5bc5f612c939c9267afea" refkind="member"><highlight class="normal"><sp/><sp/><ref refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1aabee4aa597a5bc5f612c939c9267afea" kindref="member">signal_peer_sent</ref>()<sp/>{</highlight></codeline>
-<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>sig_peer_sent_;</highlight></codeline>
-<codeline lineno="83"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
-<codeline lineno="84"><highlight class="normal"></highlight></codeline>
-<codeline lineno="85"><highlight class="normal"></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
-<codeline lineno="86"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>setup_clips();</highlight></codeline>
+<codeline lineno="55" refid="classprotobuf__clips_1_1ClipsProtobufCommunicator" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classprotobuf__clips_1_1ClipsProtobufCommunicator" kindref="compound">ClipsProtobufCommunicator</ref></highlight></codeline>
+<codeline lineno="56"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><ref refid="classprotobuf__clips_1_1ClipsProtobufCommunicator" kindref="compound">ClipsProtobufCommunicator</ref>(</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/>clips::Environment<sp/>*<sp/>env,<sp/>std::mutex<sp/>&amp;<sp/>env_mutex,</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/>rclcpp_lifecycle::LifecycleNode::WeakPtr<sp/>parent);</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><ref refid="classprotobuf__clips_1_1ClipsProtobufCommunicator" kindref="compound">ClipsProtobufCommunicator</ref>(</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/>clips::Environment<sp/>*<sp/>env,<sp/>std::mutex<sp/>&amp;<sp/>env_mutex,<sp/>std::vector&lt;std::string&gt;<sp/>&amp;<sp/>proto_path,</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/>rclcpp_lifecycle::LifecycleNode::WeakPtr<sp/>parent);</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><ref refid="classprotobuf__clips_1_1ClipsProtobufCommunicator" kindref="compound">~ClipsProtobufCommunicator</ref>();</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>enable_server(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>port);</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>disable_server();</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"></highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/>boost::signals2::signal&lt;void(</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/>protobuf_comm::ProtobufStreamServer::ClientID,<sp/>std::shared_ptr&lt;google::protobuf::Message&gt;)&gt;<sp/>&amp;</highlight></codeline>
+<codeline lineno="74" refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a63ddae947df78b3e1f788f956713e3e0" refkind="member"><highlight class="normal"><sp/><sp/><ref refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a63ddae947df78b3e1f788f956713e3e0" kindref="member">signal_server_sent</ref>()</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/>{</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>sig_server_sent_;</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"></highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/>boost::signals2::signal&lt;void(std::string,<sp/>uint16_t,<sp/>std::shared_ptr&lt;google::protobuf::Message&gt;)&gt;<sp/>&amp;</highlight></codeline>
+<codeline lineno="83" refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a25d865044f1659d7b2e01e76415ebc0f" refkind="member"><highlight class="normal"><sp/><sp/><ref refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a25d865044f1659d7b2e01e76415ebc0f" kindref="member">signal_client_sent</ref>()</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/>{</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>sig_client_sent_;</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
 <codeline lineno="87"><highlight class="normal"></highlight></codeline>
-<codeline lineno="88"><highlight class="normal"><sp/><sp/>clips::UDFValue<sp/>clips_pb_register_type(std::string<sp/>full_name);</highlight></codeline>
-<codeline lineno="89"><highlight class="normal"><sp/><sp/>clips::UDFValue<sp/>clips_pb_field_names(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*msgptr);</highlight></codeline>
-<codeline lineno="90"><highlight class="normal"><sp/><sp/>clips::UDFValue<sp/>clips_pb_has_field(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*msgptr,<sp/>std::string<sp/>field_name);</highlight></codeline>
-<codeline lineno="91"><highlight class="normal"><sp/><sp/>clips::UDFValue<sp/>clips_pb_field_value(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*msgptr,<sp/>std::string<sp/>field_name);</highlight></codeline>
-<codeline lineno="92"><highlight class="normal"><sp/><sp/>clips::UDFValue<sp/>clips_pb_field_type(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*msgptr,<sp/>std::string<sp/>field_name);</highlight></codeline>
-<codeline lineno="93"><highlight class="normal"><sp/><sp/>clips::UDFValue<sp/>clips_pb_field_label(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*msgptr,<sp/>std::string<sp/>field_name);</highlight></codeline>
-<codeline lineno="94"><highlight class="normal"><sp/><sp/>clips::UDFValue<sp/>clips_pb_field_list(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*msgptr,<sp/>std::string<sp/>field_name);</highlight></codeline>
-<codeline lineno="95"><highlight class="normal"><sp/><sp/>clips::UDFValue<sp/>clips_pb_field_is_list(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*msgptr,<sp/>std::string<sp/>field_name);</highlight></codeline>
-<codeline lineno="96"><highlight class="normal"><sp/><sp/>clips::UDFValue<sp/>clips_pb_create(std::string<sp/>full_name);</highlight></codeline>
-<codeline lineno="97"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>clips_pb_destroy(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*msgptr);</highlight></codeline>
-<codeline lineno="98"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>clips_pb_set_field(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*msgptr,<sp/>std::string<sp/>field_name,</highlight></codeline>
-<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>clips::UDFValue<sp/>value);</highlight></codeline>
-<codeline lineno="100"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>clips_pb_add_list(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*msgptr,<sp/>std::string<sp/>field_name,</highlight></codeline>
-<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>clips::UDFValue<sp/>value);</highlight></codeline>
-<codeline lineno="102"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>clips_pb_send(</highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>client_id,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*msgptr);</highlight></codeline>
-<codeline lineno="103"><highlight class="normal"><sp/><sp/>std::string<sp/>clips_pb_tostring(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*msgptr);</highlight></codeline>
-<codeline lineno="104"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>clips_pb_client_connect(std::string<sp/>host,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>port);</highlight></codeline>
-<codeline lineno="105"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>clips_pb_disconnect(</highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>client_id);</highlight></codeline>
-<codeline lineno="106"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>clips_pb_broadcast(</highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>peer_id,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*msgptr);</highlight></codeline>
-<codeline lineno="107"><highlight class="normal"></highlight></codeline>
-<codeline lineno="108"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>clips_pb_peer_create(std::string<sp/>host,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>port);</highlight></codeline>
-<codeline lineno="109"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>clips_pb_peer_create_local(std::string<sp/>host,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>send_port,</highlight></codeline>
-<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>recv_port);</highlight></codeline>
-<codeline lineno="111"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>clips_pb_peer_create_crypto(std::string<sp/>host,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>port,</highlight></codeline>
-<codeline lineno="112"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::string<sp/>crypto_key<sp/>=<sp/></highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">,</highlight></codeline>
-<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::string<sp/>cipher<sp/>=<sp/></highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="114"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>clips_pb_peer_create_local_crypto(std::string<sp/>host,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>send_port,</highlight></codeline>
-<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>recv_port,</highlight></codeline>
-<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::string<sp/>crypto_key<sp/>=<sp/></highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">,</highlight></codeline>
-<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::string<sp/>cipher<sp/>=<sp/></highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">);</highlight></codeline>
-<codeline lineno="118"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>clips_pb_peer_destroy(</highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>peer_id);</highlight></codeline>
-<codeline lineno="119"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>clips_pb_peer_setup_crypto(</highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>peer_id,<sp/>std::string<sp/>crypto_key,</highlight></codeline>
-<codeline lineno="120"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::string<sp/>cipher);</highlight></codeline>
-<codeline lineno="121"><highlight class="normal"></highlight></codeline>
-<codeline lineno="122"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/>{<sp/>CT_SERVER,<sp/>CT_CLIENT,<sp/>CT_PEER<sp/>}<sp/>ClientType;</highlight></codeline>
-<codeline lineno="123"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>clips_assert_message(std::pair&lt;std::string,<sp/>unsigned<sp/>short&gt;<sp/>&amp;endpoint,</highlight></codeline>
-<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint16_t<sp/>comp_id,<sp/>uint16_t<sp/>msg_type,</highlight></codeline>
-<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::shared_ptr&lt;google::protobuf::Message&gt;<sp/>&amp;msg,</highlight></codeline>
-<codeline lineno="126"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ClientType<sp/>ct,<sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>client_id<sp/>=<sp/>0);</highlight></codeline>
-<codeline lineno="127"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>handle_server_client_connected(</highlight></codeline>
-<codeline lineno="128"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>protobuf_comm::ProtobufStreamServer::ClientID<sp/>client,</highlight></codeline>
-<codeline lineno="129"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>boost::asio::ip::tcp::endpoint<sp/>&amp;endpoint);</highlight></codeline>
-<codeline lineno="130"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>handle_server_client_disconnected(</highlight></codeline>
-<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>protobuf_comm::ProtobufStreamServer::ClientID<sp/>client,</highlight></codeline>
-<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>boost::system::error_code<sp/>&amp;error);</highlight></codeline>
-<codeline lineno="133"><highlight class="normal"></highlight></codeline>
-<codeline lineno="134"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="135"><highlight class="normal"><sp/><sp/>handle_server_client_msg(protobuf_comm::ProtobufStreamServer::ClientID<sp/>client,</highlight></codeline>
-<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint16_t<sp/>component_id,<sp/>uint16_t<sp/>msg_type,</highlight></codeline>
-<codeline lineno="137"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::shared_ptr&lt;google::protobuf::Message&gt;<sp/>msg);</highlight></codeline>
-<codeline lineno="138"><highlight class="normal"></highlight></codeline>
-<codeline lineno="139"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>handle_server_client_fail(</highlight></codeline>
-<codeline lineno="140"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>protobuf_comm::ProtobufStreamServer::ClientID<sp/>client,</highlight></codeline>
-<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>uint16_t<sp/>component_id,<sp/>uint16_t<sp/>msg_type,<sp/>std::string<sp/>msg);</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/>boost::signals2::signal&lt;void(int64_t,<sp/>std::shared_ptr&lt;google::protobuf::Message&gt;)&gt;<sp/>&amp;</highlight></codeline>
+<codeline lineno="92" refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a92030039e325ddd9cbb8168c28701c48" refkind="member"><highlight class="normal"><sp/><sp/><ref refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a92030039e325ddd9cbb8168c28701c48" kindref="member">signal_peer_sent</ref>()</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/>{</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>sig_peer_sent_;</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"></highlight></codeline>
+<codeline lineno="97"><highlight class="normal"></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>setup_clips();</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"></highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/>clips::UDFValue<sp/>clips_pb_register_type(std::string<sp/>full_name);</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/>clips::UDFValue<sp/>clips_pb_field_names(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*<sp/>msgptr);</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/>clips::UDFValue<sp/>clips_pb_has_field(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*<sp/>msgptr,<sp/>std::string<sp/>field_name);</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/>clips::UDFValue<sp/>clips_pb_field_value(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*<sp/>msgptr,<sp/>std::string<sp/>field_name);</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/>clips::UDFValue<sp/>clips_pb_field_type(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*<sp/>msgptr,<sp/>std::string<sp/>field_name);</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/>clips::UDFValue<sp/>clips_pb_field_label(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*<sp/>msgptr,<sp/>std::string<sp/>field_name);</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/>clips::UDFValue<sp/>clips_pb_field_list(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*<sp/>msgptr,<sp/>std::string<sp/>field_name);</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/>clips::UDFValue<sp/>clips_pb_field_is_list(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*<sp/>msgptr,<sp/>std::string<sp/>field_name);</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/>clips::UDFValue<sp/>clips_pb_create(std::string<sp/>full_name);</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>clips_pb_destroy(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*<sp/>msgptr);</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>clips_pb_set_field(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*<sp/>msgptr,<sp/>std::string<sp/>field_name,<sp/>clips::UDFValue<sp/>value);</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>clips_pb_add_list(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*<sp/>msgptr,<sp/>std::string<sp/>field_name,<sp/>clips::UDFValue<sp/>value);</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>clips_pb_send(int64_t<sp/>client_id,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*<sp/>msgptr);</highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/>std::string<sp/>clips_pb_tostring(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*<sp/>msgptr);</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"><sp/><sp/>int64_t<sp/>clips_pb_client_connect(std::string<sp/>host,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>port);</highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>clips_pb_disconnect(int64_t<sp/>client_id);</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>clips_pb_broadcast(int64_t<sp/>peer_id,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*<sp/>msgptr);</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"></highlight></codeline>
+<codeline lineno="118"><highlight class="normal"><sp/><sp/>int64_t<sp/>clips_pb_peer_create(std::string<sp/>host,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>port);</highlight></codeline>
+<codeline lineno="119"><highlight class="normal"><sp/><sp/>int64_t<sp/>clips_pb_peer_create_local(std::string<sp/>host,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>send_port,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>recv_port);</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"><sp/><sp/>int64_t<sp/>clips_pb_peer_create_crypto(</highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/>std::string<sp/>host,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>port,<sp/>std::string<sp/>crypto_key<sp/>=<sp/></highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">,<sp/>std::string<sp/>cipher<sp/>=<sp/></highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/>int64_t<sp/>clips_pb_peer_create_local_crypto(</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/>std::string<sp/>host,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>send_port,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>recv_port,<sp/>std::string<sp/>crypto_key<sp/>=<sp/></highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">,</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/>std::string<sp/>cipher<sp/>=<sp/></highlight><highlight class="stringliteral">&quot;&quot;</highlight><highlight class="normal">);</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>clips_pb_peer_destroy(int64_t<sp/>peer_id);</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>clips_pb_peer_setup_crypto(int64_t<sp/>peer_id,<sp/>std::string<sp/>crypto_key,<sp/>std::string<sp/>cipher);</highlight></codeline>
+<codeline lineno="127"><highlight class="normal"></highlight></codeline>
+<codeline lineno="128"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">enum</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="129"><highlight class="normal"><sp/><sp/>{</highlight></codeline>
+<codeline lineno="130"><highlight class="normal"><sp/><sp/><sp/><sp/>CT_SERVER,</highlight></codeline>
+<codeline lineno="131"><highlight class="normal"><sp/><sp/><sp/><sp/>CT_CLIENT,</highlight></codeline>
+<codeline lineno="132"><highlight class="normal"><sp/><sp/><sp/><sp/>CT_PEER</highlight></codeline>
+<codeline lineno="133"><highlight class="normal"><sp/><sp/>}<sp/>ClientType;</highlight></codeline>
+<codeline lineno="134"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>clips_assert_message(</highlight></codeline>
+<codeline lineno="135"><highlight class="normal"><sp/><sp/><sp/><sp/>std::pair&lt;std::string,<sp/>uint16_t&gt;<sp/>&amp;<sp/>endpoint,<sp/>uint16_t<sp/>comp_id,<sp/>uint16_t<sp/>msg_type,</highlight></codeline>
+<codeline lineno="136"><highlight class="normal"><sp/><sp/><sp/><sp/>std::shared_ptr&lt;google::protobuf::Message&gt;<sp/>&amp;<sp/>msg,<sp/>ClientType<sp/>ct,<sp/>int64_t<sp/>client_id<sp/>=<sp/>0);</highlight></codeline>
+<codeline lineno="137"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>handle_server_client_connected(</highlight></codeline>
+<codeline lineno="138"><highlight class="normal"><sp/><sp/><sp/><sp/>protobuf_comm::ProtobufStreamServer::ClientID<sp/>client,</highlight></codeline>
+<codeline lineno="139"><highlight class="normal"><sp/><sp/><sp/><sp/>boost::asio::ip::tcp::endpoint<sp/>&amp;<sp/>endpoint);</highlight></codeline>
+<codeline lineno="140"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>handle_server_client_disconnected(</highlight></codeline>
+<codeline lineno="141"><highlight class="normal"><sp/><sp/><sp/><sp/>protobuf_comm::ProtobufStreamServer::ClientID<sp/>client,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>boost::system::error_code<sp/>&amp;<sp/>error);</highlight></codeline>
 <codeline lineno="142"><highlight class="normal"></highlight></codeline>
-<codeline lineno="143"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>handle_peer_msg(</highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>peer_id,</highlight></codeline>
-<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>boost::asio::ip::udp::endpoint<sp/>&amp;endpoint,</highlight></codeline>
-<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint16_t<sp/>component_id,<sp/>uint16_t<sp/>msg_type,</highlight></codeline>
-<codeline lineno="146"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::shared_ptr&lt;google::protobuf::Message&gt;<sp/>msg);</highlight></codeline>
-<codeline lineno="147"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>handle_peer_recv_error(</highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>peer_id,</highlight></codeline>
-<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>boost::asio::ip::udp::endpoint<sp/>&amp;endpoint,</highlight></codeline>
-<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::string<sp/>msg);</highlight></codeline>
-<codeline lineno="150"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>handle_peer_send_error(</highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>peer_id,<sp/>std::string<sp/>msg);</highlight></codeline>
-<codeline lineno="151"><highlight class="normal"></highlight></codeline>
-<codeline lineno="152"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>handle_client_connected(</highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>client_id);</highlight></codeline>
-<codeline lineno="153"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>handle_client_disconnected(</highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>client_id,</highlight></codeline>
-<codeline lineno="154"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>boost::system::error_code<sp/>&amp;error);</highlight></codeline>
-<codeline lineno="155"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>handle_client_msg(</highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>client_id,<sp/>uint16_t<sp/>comp_id,</highlight></codeline>
-<codeline lineno="156"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint16_t<sp/>msg_type,</highlight></codeline>
-<codeline lineno="157"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::shared_ptr&lt;google::protobuf::Message&gt;<sp/>msg);</highlight></codeline>
-<codeline lineno="158"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>handle_client_receive_fail(</highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>client_id,<sp/>uint16_t<sp/>comp_id,</highlight></codeline>
-<codeline lineno="159"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>uint16_t<sp/>msg_type,<sp/>std::string<sp/>msg);</highlight></codeline>
-<codeline lineno="160"><highlight class="normal"></highlight></codeline>
-<codeline lineno="161"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>std::string<sp/>to_string(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>clips::UDFValue<sp/>&amp;v);</highlight></codeline>
-<codeline lineno="162"><highlight class="normal"></highlight></codeline>
-<codeline lineno="163"><highlight class="normal"></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
-<codeline lineno="164"><highlight class="normal"><sp/><sp/>clips::Environment<sp/>*clips_;</highlight></codeline>
-<codeline lineno="165"><highlight class="normal"><sp/><sp/>std::mutex<sp/>&amp;clips_mutex_;</highlight></codeline>
-<codeline lineno="166"><highlight class="normal"></highlight></codeline>
-<codeline lineno="167"><highlight class="normal"><sp/><sp/>std::unique_ptr&lt;protobuf_comm::MessageRegister&gt;<sp/>message_register_;</highlight></codeline>
-<codeline lineno="168"><highlight class="normal"><sp/><sp/>std::unique_ptr&lt;protobuf_comm::ProtobufStreamServer&gt;<sp/>server_;</highlight></codeline>
-<codeline lineno="169"><highlight class="normal"></highlight></codeline>
-<codeline lineno="170"><highlight class="normal"><sp/><sp/>boost::signals2::signal&lt;void(protobuf_comm::ProtobufStreamServer::ClientID,</highlight></codeline>
-<codeline lineno="171"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::shared_ptr&lt;google::protobuf::Message&gt;)&gt;</highlight></codeline>
-<codeline lineno="172"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>sig_server_sent_;</highlight></codeline>
-<codeline lineno="173"><highlight class="normal"><sp/><sp/>boost::signals2::signal&lt;void(std::string,<sp/></highlight><highlight class="keywordtype">unsigned</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">short</highlight><highlight class="normal">,</highlight></codeline>
-<codeline lineno="174"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::shared_ptr&lt;google::protobuf::Message&gt;)&gt;</highlight></codeline>
-<codeline lineno="175"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>sig_client_sent_;</highlight></codeline>
-<codeline lineno="176"><highlight class="normal"><sp/><sp/>boost::signals2::signal&lt;void(</highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal">,</highlight></codeline>
-<codeline lineno="177"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::shared_ptr&lt;google::protobuf::Message&gt;)&gt;</highlight></codeline>
-<codeline lineno="178"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>sig_peer_sent_;</highlight></codeline>
-<codeline lineno="179"><highlight class="normal"></highlight></codeline>
-<codeline lineno="180"><highlight class="normal"><sp/><sp/>std::mutex<sp/>map_mutex_;</highlight></codeline>
-<codeline lineno="181"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">long</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>next_client_id_;</highlight></codeline>
-<codeline lineno="182"><highlight class="normal"></highlight></codeline>
-<codeline lineno="183"><highlight class="normal"><sp/><sp/>std::map&lt;long<sp/>int,<sp/>protobuf_comm::ProtobufStreamServer::ClientID&gt;</highlight></codeline>
-<codeline lineno="184"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>server_clients_;</highlight></codeline>
-<codeline lineno="185"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/>std::map&lt;protobuf_comm::ProtobufStreamServer::ClientID,<sp/>long<sp/>int&gt;</highlight></codeline>
-<codeline lineno="186"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>RevServerClientMap;</highlight></codeline>
+<codeline lineno="143"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>handle_server_client_msg(</highlight></codeline>
+<codeline lineno="144"><highlight class="normal"><sp/><sp/><sp/><sp/>protobuf_comm::ProtobufStreamServer::ClientID<sp/>client,<sp/>uint16_t<sp/>component_id,<sp/>uint16_t<sp/>msg_type,</highlight></codeline>
+<codeline lineno="145"><highlight class="normal"><sp/><sp/><sp/><sp/>std::shared_ptr&lt;google::protobuf::Message&gt;<sp/>msg);</highlight></codeline>
+<codeline lineno="146"><highlight class="normal"></highlight></codeline>
+<codeline lineno="147"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>handle_server_client_fail(</highlight></codeline>
+<codeline lineno="148"><highlight class="normal"><sp/><sp/><sp/><sp/>protobuf_comm::ProtobufStreamServer::ClientID<sp/>client,<sp/>uint16_t<sp/>component_id,<sp/>uint16_t<sp/>msg_type,</highlight></codeline>
+<codeline lineno="149"><highlight class="normal"><sp/><sp/><sp/><sp/>std::string<sp/>msg);</highlight></codeline>
+<codeline lineno="150"><highlight class="normal"></highlight></codeline>
+<codeline lineno="151"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>handle_peer_msg(</highlight></codeline>
+<codeline lineno="152"><highlight class="normal"><sp/><sp/><sp/><sp/>int64_t<sp/>peer_id,<sp/>boost::asio::ip::udp::endpoint<sp/>&amp;<sp/>endpoint,<sp/>uint16_t<sp/>component_id,</highlight></codeline>
+<codeline lineno="153"><highlight class="normal"><sp/><sp/><sp/><sp/>uint16_t<sp/>msg_type,<sp/>std::shared_ptr&lt;google::protobuf::Message&gt;<sp/>msg);</highlight></codeline>
+<codeline lineno="154"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>handle_peer_recv_error(</highlight></codeline>
+<codeline lineno="155"><highlight class="normal"><sp/><sp/><sp/><sp/>int64_t<sp/>peer_id,<sp/>boost::asio::ip::udp::endpoint<sp/>&amp;<sp/>endpoint,<sp/>std::string<sp/>msg);</highlight></codeline>
+<codeline lineno="156"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>handle_peer_send_error(int64_t<sp/>peer_id,<sp/>std::string<sp/>msg);</highlight></codeline>
+<codeline lineno="157"><highlight class="normal"></highlight></codeline>
+<codeline lineno="158"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>handle_client_connected(int64_t<sp/>client_id);</highlight></codeline>
+<codeline lineno="159"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>handle_client_disconnected(int64_t<sp/>client_id,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>boost::system::error_code<sp/>&amp;<sp/>error);</highlight></codeline>
+<codeline lineno="160"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>handle_client_msg(</highlight></codeline>
+<codeline lineno="161"><highlight class="normal"><sp/><sp/><sp/><sp/>int64_t<sp/>client_id,<sp/>uint16_t<sp/>comp_id,<sp/>uint16_t<sp/>msg_type,</highlight></codeline>
+<codeline lineno="162"><highlight class="normal"><sp/><sp/><sp/><sp/>std::shared_ptr&lt;google::protobuf::Message&gt;<sp/>msg);</highlight></codeline>
+<codeline lineno="163"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>handle_client_receive_fail(</highlight></codeline>
+<codeline lineno="164"><highlight class="normal"><sp/><sp/><sp/><sp/>int64_t<sp/>client_id,<sp/>uint16_t<sp/>comp_id,<sp/>uint16_t<sp/>msg_type,<sp/>std::string<sp/>msg);</highlight></codeline>
+<codeline lineno="165"><highlight class="normal"></highlight></codeline>
+<codeline lineno="166"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>std::string<sp/>to_string(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>clips::UDFValue<sp/>&amp;<sp/>v);</highlight></codeline>
+<codeline lineno="167"><highlight class="normal"></highlight></codeline>
+<codeline lineno="168"><highlight class="normal"></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="169"><highlight class="normal"><sp/><sp/>clips::Environment<sp/>*<sp/>clips_;</highlight></codeline>
+<codeline lineno="170"><highlight class="normal"><sp/><sp/>std::mutex<sp/>&amp;<sp/>clips_mutex_;</highlight></codeline>
+<codeline lineno="171"><highlight class="normal"></highlight></codeline>
+<codeline lineno="172"><highlight class="normal"><sp/><sp/>std::unique_ptr&lt;protobuf_comm::MessageRegister&gt;<sp/>message_register_;</highlight></codeline>
+<codeline lineno="173"><highlight class="normal"><sp/><sp/>std::unique_ptr&lt;protobuf_comm::ProtobufStreamServer&gt;<sp/>server_;</highlight></codeline>
+<codeline lineno="174"><highlight class="normal"></highlight></codeline>
+<codeline lineno="175"><highlight class="normal"><sp/><sp/>boost::signals2::signal&lt;void(</highlight></codeline>
+<codeline lineno="176"><highlight class="normal"><sp/><sp/><sp/><sp/>protobuf_comm::ProtobufStreamServer::ClientID,<sp/>std::shared_ptr&lt;google::protobuf::Message&gt;)&gt;</highlight></codeline>
+<codeline lineno="177"><highlight class="normal"><sp/><sp/><sp/><sp/>sig_server_sent_;</highlight></codeline>
+<codeline lineno="178"><highlight class="normal"><sp/><sp/>boost::signals2::signal&lt;void(std::string,<sp/>uint16_t,<sp/>std::shared_ptr&lt;google::protobuf::Message&gt;)&gt;</highlight></codeline>
+<codeline lineno="179"><highlight class="normal"><sp/><sp/><sp/><sp/>sig_client_sent_;</highlight></codeline>
+<codeline lineno="180"><highlight class="normal"><sp/><sp/>boost::signals2::signal&lt;void(int64_t,<sp/>std::shared_ptr&lt;google::protobuf::Message&gt;)&gt;<sp/>sig_peer_sent_;</highlight></codeline>
+<codeline lineno="181"><highlight class="normal"></highlight></codeline>
+<codeline lineno="182"><highlight class="normal"><sp/><sp/>std::mutex<sp/>map_mutex_;</highlight></codeline>
+<codeline lineno="183"><highlight class="normal"><sp/><sp/>int64_t<sp/>next_client_id_;</highlight></codeline>
+<codeline lineno="184"><highlight class="normal"></highlight></codeline>
+<codeline lineno="185"><highlight class="normal"><sp/><sp/>std::map&lt;int64_t,<sp/>protobuf_comm::ProtobufStreamServer::ClientID&gt;<sp/>server_clients_;</highlight></codeline>
+<codeline lineno="186"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">typedef</highlight><highlight class="normal"><sp/>std::map&lt;protobuf_comm::ProtobufStreamServer::ClientID,<sp/>int64_t&gt;<sp/>RevServerClientMap;</highlight></codeline>
 <codeline lineno="187"><highlight class="normal"><sp/><sp/>RevServerClientMap<sp/>rev_server_clients_;</highlight></codeline>
-<codeline lineno="188"><highlight class="normal"><sp/><sp/>std::map&lt;long<sp/>int,<sp/>std::unique_ptr&lt;protobuf_comm::ProtobufStreamClient&gt;&gt;</highlight></codeline>
-<codeline lineno="189"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>clients_;</highlight></codeline>
-<codeline lineno="190"><highlight class="normal"><sp/><sp/>std::map&lt;long<sp/>int,<sp/>std::unique_ptr&lt;protobuf_comm::ProtobufBroadcastPeer&gt;&gt;</highlight></codeline>
-<codeline lineno="191"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>peers_;</highlight></codeline>
+<codeline lineno="188"><highlight class="normal"><sp/><sp/>std::map&lt;int64_t,<sp/>std::unique_ptr&lt;protobuf_comm::ProtobufStreamClient&gt;&gt;<sp/>clients_;</highlight></codeline>
+<codeline lineno="189"><highlight class="normal"><sp/><sp/>std::map&lt;int64_t,<sp/>std::unique_ptr&lt;protobuf_comm::ProtobufBroadcastPeer&gt;&gt;<sp/>peers_;</highlight></codeline>
+<codeline lineno="190"><highlight class="normal"></highlight></codeline>
+<codeline lineno="191"><highlight class="normal"><sp/><sp/>std::map&lt;int64_t,<sp/>std::pair&lt;std::string,<sp/>uint16_t&gt;&gt;<sp/>client_endpoints_;</highlight></codeline>
 <codeline lineno="192"><highlight class="normal"></highlight></codeline>
-<codeline lineno="193"><highlight class="normal"><sp/><sp/>std::map&lt;long<sp/>int,<sp/>std::pair&lt;std::string,<sp/>unsigned<sp/>short&gt;&gt;<sp/>client_endpoints_;</highlight></codeline>
-<codeline lineno="194"><highlight class="normal"></highlight></codeline>
-<codeline lineno="195"><highlight class="normal"><sp/><sp/>std::list&lt;std::string&gt;<sp/>functions_;</highlight></codeline>
-<codeline lineno="197"><highlight class="normal"><sp/><sp/>rclcpp_lifecycle::LifecycleNode::WeakPtr<sp/>parent_;</highlight></codeline>
+<codeline lineno="193"><highlight class="normal"><sp/><sp/>std::list&lt;std::string&gt;<sp/>functions_;</highlight></codeline>
+<codeline lineno="195"><highlight class="normal"><sp/><sp/>rclcpp_lifecycle::LifecycleNode::WeakPtr<sp/>parent_;</highlight></codeline>
+<codeline lineno="196"><highlight class="normal"></highlight></codeline>
+<codeline lineno="197"><highlight class="normal"><sp/><sp/>std::unordered_map&lt;void<sp/>*,<sp/>std::shared_ptr&lt;google::protobuf::Message&gt;&gt;<sp/>messages_;</highlight></codeline>
 <codeline lineno="198"><highlight class="normal"></highlight></codeline>
-<codeline lineno="199"><highlight class="normal"><sp/><sp/>std::unordered_map&lt;void<sp/>*,<sp/>std::shared_ptr&lt;google::protobuf::Message&gt;&gt;</highlight></codeline>
-<codeline lineno="200"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>messages_;</highlight></codeline>
-<codeline lineno="201"><highlight class="normal">};</highlight></codeline>
-<codeline lineno="202"><highlight class="normal"></highlight></codeline>
-<codeline lineno="203"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>end<sp/>namespace<sp/>protobuf_clips</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="204"><highlight class="normal"></highlight></codeline>
-<codeline lineno="205"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+<codeline lineno="199"><highlight class="normal"><sp/><sp/>std::unique_ptr&lt;rclcpp::Logger&gt;<sp/>logger_;</highlight></codeline>
+<codeline lineno="200"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="201"><highlight class="normal"></highlight></codeline>
+<codeline lineno="202"><highlight class="normal">}<sp/><sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>protobuf_clips</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="203"><highlight class="normal"></highlight></codeline>
+<codeline lineno="204"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/><sp/></highlight><highlight class="comment">//<sp/>CX_PROTOBUF_PLUGIN__COMMUNICATOR_HPP_</highlight><highlight class="normal"></highlight></codeline>
     </programlisting>
     <location file="include/cx_protobuf_plugin/communicator.hpp"/>
   </compounddef>

@@ -72,7 +72,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="index.html#variables">Variables</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="variable_string__utils_8hpp_1a8d8a6edcb760b28dacf2804884ef1e62.html">Variable cx::chars</a></li>
+<li class="toctree-l4"><a class="reference internal" href="variable_string__utils_8hpp_1acbb48e2352e3fd2b0daec29318a59372.html">Variable cx::chars</a></li>
 <li class="toctree-l4"><a class="reference internal" href="variable_string__utils_8hpp_1ab55bf494ff071923012e9f7982c967d6.html">Variable cx::rd</a></li>
 </ul>
 </li>
@@ -83,6 +83,7 @@
 </li>
 <li class="toctree-l3 current"><a class="reference internal" href="index.html#files">Files</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="file_include_cx_utils_clips_env_context.hpp.html">File clips_env_context.hpp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="file_include_cx_utils_format.hpp.html">File format.hpp</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="file_include_cx_utils_param_utils.hpp.html">File param_utils.hpp</a></li>
 <li class="toctree-l4"><a class="reference internal" href="file_include_cx_utils_string_utils.hpp.html">File string_utils.hpp</a></li>
 </ul>
@@ -139,6 +140,7 @@
 <span id="program-listing-file-include-cx-utils-param-utils-hpp"></span><h1>Program Listing for File param_utils.hpp<a class="headerlink" href="#program-listing-for-file-param-utils-hpp" title="Link to this heading"></a></h1>
 <p>↰ <a class="reference internal" href="file_include_cx_utils_param_utils.hpp.html#file-include-cx-utils-param-utils-hpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">include/cx_utils/param_utils.hpp</span></code>)</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Copyright (c) 2024-2025 Carologistics</span>
+<span class="c1">// SPDX-License-Identifier: Apache-2.0</span>
 <span class="c1">//</span>
 <span class="c1">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
 <span class="c1">// you may not use this file except in compliance with the License.</span>
@@ -152,13 +154,17 @@
 <span class="c1">// See the License for the specific language governing permissions and</span>
 <span class="c1">// limitations under the License.</span>
 
-<span class="cp">#ifndef CX_UTILS__PARAMSUTILS_HPP</span>
-<span class="cp">#define CX_UTILS__PARAMSUTILS_HPP</span>
+<span class="cp">#ifndef CX_UTILS__PARAM_UTILS_HPP_</span>
+<span class="cp">#define CX_UTILS__PARAM_UTILS_HPP_</span>
 
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;rclcpp/rclcpp.hpp&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string&gt;</span>
-<span class="k">namespace</span><span class="w"> </span><span class="nn">cx</span><span class="w"> </span><span class="p">{</span>
-<span class="k">namespace</span><span class="w"> </span><span class="nn">cx_utils</span><span class="w"> </span><span class="p">{</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;rclcpp/rclcpp.hpp&quot;</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">cx</span>
+<span class="p">{</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">cx_utils</span>
+<span class="p">{</span>
 <span class="cm">/* Declares static ROS2 parameter and sets it to a given value</span>
 <span class="cm"> * if it was not already declared.</span>
 <span class="cm"> *</span>
@@ -169,13 +175,12 @@
 <span class="cm"> */</span>
 <span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">NodeT</span><span class="o">&gt;</span>
 <span class="kt">void</span><span class="w"> </span><span class="n">declare_parameter_if_not_declared</span><span class="p">(</span>
-<span class="w">    </span><span class="n">NodeT</span><span class="w"> </span><span class="n">node</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="n">param_name</span><span class="p">,</span>
-<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">rclcpp</span><span class="o">::</span><span class="n">ParameterValue</span><span class="w"> </span><span class="o">&amp;</span><span class="n">default_value</span><span class="p">,</span>
-<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">rcl_interfaces</span><span class="o">::</span><span class="n">msg</span><span class="o">::</span><span class="n">ParameterDescriptor</span><span class="w"> </span><span class="o">&amp;</span><span class="n">parameter_descriptor</span><span class="w"> </span><span class="o">=</span>
-<span class="w">        </span><span class="n">rcl_interfaces</span><span class="o">::</span><span class="n">msg</span><span class="o">::</span><span class="n">ParameterDescriptor</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">NodeT</span><span class="w"> </span><span class="n">node</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">param_name</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">rclcpp</span><span class="o">::</span><span class="n">ParameterValue</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">default_value</span><span class="p">,</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">rcl_interfaces</span><span class="o">::</span><span class="n">msg</span><span class="o">::</span><span class="n">ParameterDescriptor</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">parameter_descriptor</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="n">rcl_interfaces</span><span class="o">::</span><span class="n">msg</span><span class="o">::</span><span class="n">ParameterDescriptor</span><span class="p">())</span>
+<span class="p">{</span>
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">has_parameter</span><span class="p">(</span><span class="n">param_name</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">RCLCPP_DEBUG</span><span class="p">(</span><span class="n">rclcpp</span><span class="o">::</span><span class="n">get_logger</span><span class="p">(</span><span class="s">&quot;cx_utils&quot;</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;Creating parameter: %s&quot;</span><span class="p">,</span>
-<span class="w">                 </span><span class="n">param_name</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+<span class="w">    </span><span class="n">RCLCPP_DEBUG</span><span class="p">(</span><span class="n">rclcpp</span><span class="o">::</span><span class="n">get_logger</span><span class="p">(</span><span class="s">&quot;cx_utils&quot;</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;Creating parameter: %s&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">param_name</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
 <span class="w">    </span><span class="n">node</span><span class="o">-&gt;</span><span class="n">declare_parameter</span><span class="p">(</span><span class="n">param_name</span><span class="p">,</span><span class="w"> </span><span class="n">default_value</span><span class="p">,</span><span class="w"> </span><span class="n">parameter_descriptor</span><span class="p">);</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -190,46 +195,43 @@
 <span class="cm"> */</span>
 <span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">NodeT</span><span class="o">&gt;</span>
 <span class="kt">void</span><span class="w"> </span><span class="n">declare_parameter_if_not_declared</span><span class="p">(</span>
-<span class="w">    </span><span class="n">NodeT</span><span class="w"> </span><span class="n">node</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="n">param_name</span><span class="p">,</span>
-<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">rclcpp</span><span class="o">::</span><span class="n">ParameterType</span><span class="w"> </span><span class="o">&amp;</span><span class="n">param_type</span><span class="p">,</span>
-<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">rcl_interfaces</span><span class="o">::</span><span class="n">msg</span><span class="o">::</span><span class="n">ParameterDescriptor</span><span class="w"> </span><span class="o">&amp;</span><span class="n">parameter_descriptor</span><span class="w"> </span><span class="o">=</span>
-<span class="w">        </span><span class="n">rcl_interfaces</span><span class="o">::</span><span class="n">msg</span><span class="o">::</span><span class="n">ParameterDescriptor</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">NodeT</span><span class="w"> </span><span class="n">node</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">param_name</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">rclcpp</span><span class="o">::</span><span class="n">ParameterType</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">param_type</span><span class="p">,</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">rcl_interfaces</span><span class="o">::</span><span class="n">msg</span><span class="o">::</span><span class="n">ParameterDescriptor</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">parameter_descriptor</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="n">rcl_interfaces</span><span class="o">::</span><span class="n">msg</span><span class="o">::</span><span class="n">ParameterDescriptor</span><span class="p">())</span>
+<span class="p">{</span>
 <span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">has_parameter</span><span class="p">(</span><span class="n">param_name</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">RCLCPP_DEBUG</span><span class="p">(</span><span class="n">rclcpp</span><span class="o">::</span><span class="n">get_logger</span><span class="p">(</span><span class="s">&quot;cx_utils&quot;</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;Creating parameter: %s&quot;</span><span class="p">,</span>
-<span class="w">                 </span><span class="n">param_name</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+<span class="w">    </span><span class="n">RCLCPP_DEBUG</span><span class="p">(</span><span class="n">rclcpp</span><span class="o">::</span><span class="n">get_logger</span><span class="p">(</span><span class="s">&quot;cx_utils&quot;</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;Creating parameter: %s&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">param_name</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
 <span class="w">    </span><span class="n">node</span><span class="o">-&gt;</span><span class="n">declare_parameter</span><span class="p">(</span><span class="n">param_name</span><span class="p">,</span><span class="w"> </span><span class="n">param_type</span><span class="p">,</span><span class="w"> </span><span class="n">parameter_descriptor</span><span class="p">);</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 
 
 <span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">NodeT</span><span class="o">&gt;</span>
-<span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">get_plugin_type_param</span><span class="p">(</span><span class="n">NodeT</span><span class="w"> </span><span class="n">node</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="n">plugin_name</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="n">declare_parameter_if_not_declared</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="w"> </span><span class="n">plugin_name</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;.plugin&quot;</span><span class="p">,</span>
-<span class="w">                                    </span><span class="n">rclcpp</span><span class="o">::</span><span class="n">PARAMETER_STRING</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">get_plugin_type_param</span><span class="p">(</span><span class="n">NodeT</span><span class="w"> </span><span class="n">node</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">plugin_name</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="n">declare_parameter_if_not_declared</span><span class="p">(</span><span class="n">node</span><span class="p">,</span><span class="w"> </span><span class="n">plugin_name</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;.plugin&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">rclcpp</span><span class="o">::</span><span class="n">PARAMETER_STRING</span><span class="p">);</span>
 <span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">plugin_type</span><span class="p">;</span>
 <span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">get_parameter</span><span class="p">(</span><span class="n">plugin_name</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;.plugin&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">plugin_type</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="n">RCLCPP_FATAL</span><span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">get_logger</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;&#39;plugin&#39; param not defined for %s&quot;</span><span class="p">,</span>
-<span class="w">                   </span><span class="n">plugin_name</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+<span class="w">      </span><span class="n">RCLCPP_FATAL</span><span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">get_logger</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;&#39;plugin&#39; param not defined for %s&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">plugin_name</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
 <span class="w">      </span><span class="n">exit</span><span class="p">(</span><span class="mi">-1</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
-
-<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">rclcpp</span><span class="o">::</span><span class="n">exceptions</span><span class="o">::</span><span class="n">ParameterUninitializedException</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ex</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">RCLCPP_FATAL</span><span class="p">(</span><span class="n">node</span><span class="o">-&gt;</span><span class="n">get_logger</span><span class="p">(),</span>
-<span class="w">                 </span><span class="s">&quot;&#39;plugin&#39; param not defined for %s. Error: %s&quot;</span><span class="p">,</span>
-<span class="w">                 </span><span class="n">plugin_name</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span><span class="w"> </span><span class="n">ex</span><span class="p">.</span><span class="n">what</span><span class="p">());</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">rclcpp</span><span class="o">::</span><span class="n">exceptions</span><span class="o">::</span><span class="n">ParameterUninitializedException</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">ex</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">RCLCPP_FATAL</span><span class="p">(</span>
+<span class="w">      </span><span class="n">node</span><span class="o">-&gt;</span><span class="n">get_logger</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;&#39;plugin&#39; param not defined for %s. Error: %s&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">plugin_name</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span>
+<span class="w">      </span><span class="n">ex</span><span class="p">.</span><span class="n">what</span><span class="p">());</span>
 <span class="w">    </span><span class="n">exit</span><span class="p">(</span><span class="mi">-1</span><span class="p">);</span>
 <span class="w">  </span><span class="p">}</span>
 
 <span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">plugin_type</span><span class="p">;</span>
 <span class="p">}</span>
-<span class="kt">void</span><span class="w"> </span><span class="n">resolve_files</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">files_in</span><span class="p">,</span>
-<span class="w">                   </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">share_dirs</span><span class="p">,</span>
-<span class="w">                   </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">files_out</span><span class="p">);</span>
-<span class="p">}</span><span class="w"> </span><span class="c1">// namespace cx_utils</span>
-<span class="p">}</span><span class="w"> </span><span class="c1">// namespace cx</span>
+<span class="kt">void</span><span class="w"> </span><span class="n">resolve_files</span><span class="p">(</span>
+<span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">files_in</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">share_dirs</span><span class="p">,</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">files_out</span><span class="p">);</span>
+<span class="p">}</span><span class="w">  </span><span class="c1">// namespace cx_utils</span>
+<span class="p">}</span><span class="w">  </span><span class="c1">// namespace cx</span>
 
-<span class="cp">#endif </span><span class="c1">// !CX_UTILS__PARAMSUTILS_HPP</span>
+<span class="cp">#endif  </span><span class="c1">// CX_UTILS__PARAM_UTILS_HPP_</span>
 </pre></div>
 </div>
 </section>

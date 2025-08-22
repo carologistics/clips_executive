@@ -16,7 +16,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_file_load_plugin/file_load_plugin.hpp" line="35" column="19" bodyfile="include/cx_file_load_plugin/file_load_plugin.hpp" bodystart="35" bodyend="-1"/>
+        <location file="include/cx_file_load_plugin/file_load_plugin.hpp" line="40" column="19" bodyfile="include/cx_file_load_plugin/file_load_plugin.hpp" bodystart="40" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1FileLoadPlugin_1af3a384f66107110e2f6c55320fd32c39" prot="private" static="no" mutable="no">
         <type>std::vector&lt; std::string &gt;</type>
@@ -30,7 +30,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_file_load_plugin/file_load_plugin.hpp" line="37" column="15" bodyfile="include/cx_file_load_plugin/file_load_plugin.hpp" bodystart="37" bodyend="-1"/>
+        <location file="include/cx_file_load_plugin/file_load_plugin.hpp" line="42" column="15" bodyfile="include/cx_file_load_plugin/file_load_plugin.hpp" bodystart="42" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1FileLoadPlugin_1a2f189c1892f904d231119accec26413a" prot="private" static="no" mutable="no">
         <type>std::vector&lt; std::string &gt;</type>
@@ -44,7 +44,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_file_load_plugin/file_load_plugin.hpp" line="38" column="15" bodyfile="include/cx_file_load_plugin/file_load_plugin.hpp" bodystart="38" bodyend="-1"/>
+        <location file="include/cx_file_load_plugin/file_load_plugin.hpp" line="43" column="15" bodyfile="include/cx_file_load_plugin/file_load_plugin.hpp" bodystart="43" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1FileLoadPlugin_1aed6bb59f1d92981052d51709fac1274c" prot="private" static="no" mutable="no">
         <type>std::vector&lt; std::string &gt;</type>
@@ -58,7 +58,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_file_load_plugin/file_load_plugin.hpp" line="39" column="15" bodyfile="include/cx_file_load_plugin/file_load_plugin.hpp" bodystart="39" bodyend="-1"/>
+        <location file="include/cx_file_load_plugin/file_load_plugin.hpp" line="44" column="15" bodyfile="include/cx_file_load_plugin/file_load_plugin.hpp" bodystart="44" bodyend="-1"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="public-func">
@@ -74,7 +74,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_file_load_plugin/file_load_plugin.hpp" line="26" column="3"/>
+        <location file="include/cx_file_load_plugin/file_load_plugin.hpp" line="31" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1FileLoadPlugin_1a71369a6ef262d182bfa5d2cf15378878" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -88,7 +88,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_file_load_plugin/file_load_plugin.hpp" line="27" column="3"/>
+        <location file="include/cx_file_load_plugin/file_load_plugin.hpp" line="32" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1FileLoadPlugin_1a48211a04b1e027c12da02383342adcc0" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
         <type>void</type>
@@ -103,7 +103,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_file_load_plugin/file_load_plugin.hpp" line="29" column="8"/>
+        <location file="include/cx_file_load_plugin/file_load_plugin.hpp" line="34" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1FileLoadPlugin_1a151a3d3d68aae53e1db9b9f30c55d86a" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
         <type>bool</type>
@@ -122,7 +122,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_file_load_plugin/file_load_plugin.hpp" line="31" column="8"/>
+        <location file="include/cx_file_load_plugin/file_load_plugin.hpp" line="36" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1FileLoadPlugin_1a437634437106fcc1b1367327c721c26c" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
         <type>bool</type>
@@ -141,7 +141,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_file_load_plugin/file_load_plugin.hpp" line="32" column="8"/>
+        <location file="include/cx_file_load_plugin/file_load_plugin.hpp" line="37" column="8"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
@@ -172,7 +172,7 @@
         </childnode>
       </node>
     </collaborationgraph>
-    <location file="include/cx_file_load_plugin/file_load_plugin.hpp" line="24" column="1" bodyfile="include/cx_file_load_plugin/file_load_plugin.hpp" bodystart="24" bodyend="40"/>
+    <location file="include/cx_file_load_plugin/file_load_plugin.hpp" line="28" column="1" bodyfile="include/cx_file_load_plugin/file_load_plugin.hpp" bodystart="29" bodyend="45"/>
     <listofallmembers>
       <member refid="classcx_1_1FileLoadPlugin_1aed6bb59f1d92981052d51709fac1274c" prot="private" virt="non-virtual"><scope>cx::FileLoadPlugin</scope><name>cleanup_files_</name></member>
       <member refid="classcx_1_1FileLoadPlugin_1a437634437106fcc1b1367327c721c26c" prot="public" virt="virtual"><scope>cx::FileLoadPlugin</scope><name>clips_env_destroyed</name></member>

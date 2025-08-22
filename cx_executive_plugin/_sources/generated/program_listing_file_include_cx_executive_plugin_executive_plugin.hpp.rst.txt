@@ -11,6 +11,7 @@ Program Listing for File executive_plugin.hpp
 .. code-block:: cpp
 
    // Copyright (c) 2024-2025 Carologistics
+   // SPDX-License-Identifier: Apache-2.0
    //
    // Licensed under the Apache License, Version 2.0 (the "License");
    // you may not use this file except in compliance with the License.
@@ -24,18 +25,21 @@ Program Listing for File executive_plugin.hpp
    // See the License for the specific language governing permissions and
    // limitations under the License.
    
-   #ifndef CX_PLUGINS__EXECUTIVEPLUGIN_HPP_
-   #define CX_PLUGINS__EXECUTIVEPLUGIN_HPP_
+   #ifndef CX_EXECUTIVE_PLUGIN__EXECUTIVE_PLUGIN_HPP_
+   #define CX_EXECUTIVE_PLUGIN__EXECUTIVE_PLUGIN_HPP_
    
+   #include <memory>
    #include <string>
+   #include <vector>
    
    #include "cx_plugin/clips_plugin.hpp"
+   #include "std_msgs/msg/empty.hpp"
    
-   #include <std_msgs/msg/empty.hpp>
+   namespace cx
+   {
    
-   namespace cx {
-   
-   class ExecutivePlugin : public ClipsPlugin {
+   class ExecutivePlugin : public ClipsPlugin
+   {
    public:
      ExecutivePlugin();
      ~ExecutivePlugin();
@@ -43,8 +47,8 @@ Program Listing for File executive_plugin.hpp
      void initialize() override;
      void finalize() override;
    
-     bool clips_env_init(std::shared_ptr<clips::Environment> &clips) override;
-     bool clips_env_destroyed(std::shared_ptr<clips::Environment> &clips) override;
+     bool clips_env_init(std::shared_ptr<clips::Environment> & clips) override;
+     bool clips_env_destroyed(std::shared_ptr<clips::Environment> & clips) override;
    
      std::shared_ptr<rclcpp_lifecycle::LifecycleNode> get_node();
    
@@ -57,8 +61,7 @@ Program Listing for File executive_plugin.hpp
    
      rclcpp::TimerBase::SharedPtr agenda_refresh_timer_;
    
-     rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::Empty>::SharedPtr
-         clips_agenda_refresh_pub_;
+     rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::Empty>::SharedPtr clips_agenda_refresh_pub_;
    
      std::chrono::nanoseconds publish_rate_;
    
@@ -67,6 +70,6 @@ Program Listing for File executive_plugin.hpp
      std::vector<std::shared_ptr<clips::Environment>> managed_envs;
      std::mutex envs_mutex_;
    };
-   } // namespace cx
+   }  // namespace cx
    
-   #endif // !CX_PLUGINS__EXECUTIVEPLUGIN_HPP_
+   #endif  // CX_EXECUTIVE_PLUGIN__EXECUTIVE_PLUGIN_HPP_

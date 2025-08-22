@@ -11,6 +11,7 @@ Program Listing for File string_utils.hpp
 .. code-block:: cpp
 
    // Copyright (c) 2024-2025 Carologistics
+   // SPDX-License-Identifier: Apache-2.0
    //
    // Licensed under the Apache License, Version 2.0 (the "License");
    // you may not use this file except in compliance with the License.
@@ -24,8 +25,8 @@ Program Listing for File string_utils.hpp
    // See the License for the specific language governing permissions and
    // limitations under the License.
    
-   #ifndef CX_UTILS__STRINGUTILS_HPP
-   #define CX_UTILS__STRINGUTILS_HPP
+   #ifndef CX_UTILS__STRING_UTILS_HPP_
+   #define CX_UTILS__STRING_UTILS_HPP_
    
    #include <algorithm>
    #include <iostream>
@@ -34,18 +35,21 @@ Program Listing for File string_utils.hpp
    
    using std::string;
    
-   namespace cx {
+   namespace cx
+   {
    
-   std::string chars{
-       "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-"};
+   inline constexpr std::string_view chars =
+     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-";
+   
    std::random_device rd;
    std::mt19937 generator(rd());
    
-   std::string generate_rnd_string(int length) {
+   std::string generate_rnd_string(int length)
+   {
      std::string output(chars);
      std::shuffle(output.begin(), output.end(), generator);
      return output.substr(0, length);
    }
    
-   } // namespace cx
-   #endif // !CX_UTILS__STRINGUTILS_HPP
+   }  // namespace cx
+   #endif  // CX_UTILS__STRING_UTILS_HPP_

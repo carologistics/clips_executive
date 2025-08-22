@@ -18,21 +18,21 @@
     <innerclass refid="classcx_1_1Tf2PoseTrackerPlugin" prot="public">cx::Tf2PoseTrackerPlugin</innerclass>
     <innernamespace refid="namespacecx_1_1cx__utils">cx::cx_utils</innernamespace>
     <sectiondef kind="var">
-      <memberdef kind="variable" id="string__utils_8hpp_1a8d8a6edcb760b28dacf2804884ef1e62" prot="public" static="no" mutable="no">
-        <type>std::string</type>
-        <definition>std::string cx::chars</definition>
+      <memberdef kind="variable" id="string__utils_8hpp_1acbb48e2352e3fd2b0daec29318a59372" prot="public" static="no" constexpr="yes" mutable="no">
+        <type>constexpr std::string_view</type>
+        <definition>constexpr std::string_view cx::chars</definition>
         <argsstring></argsstring>
         <name>chars</name>
         <qualifiedname>cx::chars</qualifiedname>
-        <initializer>{
-    &quot;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-&quot;}</initializer>
+        <initializer>=
+  &quot;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-&quot;</initializer>
         <briefdescription>
         </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_utils/string_utils.hpp" line="27" column="13" bodyfile="include/cx_utils/string_utils.hpp" bodystart="27" bodyend="28"/>
+        <location file="include/cx_utils/string_utils.hpp" line="29" column="35" bodyfile="include/cx_utils/string_utils.hpp" bodystart="29" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="string__utils_8hpp_1ab55bf494ff071923012e9f7982c967d6" prot="public" static="no" mutable="no">
         <type>std::random_device</type>
@@ -46,7 +46,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_utils/string_utils.hpp" line="29" column="20" bodyfile="include/cx_utils/string_utils.hpp" bodystart="29" bodyend="-1"/>
+        <location file="include/cx_utils/string_utils.hpp" line="32" column="20" bodyfile="include/cx_utils/string_utils.hpp" bodystart="32" bodyend="-1"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="func">
@@ -65,7 +65,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_utils/string_utils.hpp" line="30" column="14" declfile="include/cx_utils/string_utils.hpp" declline="30" declcolumn="14"/>
+        <location file="include/cx_utils/string_utils.hpp" line="33" column="14" declfile="include/cx_utils/string_utils.hpp" declline="33" declcolumn="14"/>
       </memberdef>
       <memberdef kind="function" id="string__utils_8hpp_1a59c4b9715ff132a1ac5adcde1c341ff6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::string</type>
@@ -83,13 +83,13 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_utils/string_utils.hpp" line="32" column="13" bodyfile="include/cx_utils/string_utils.hpp" bodystart="32" bodyend="36"/>
+        <location file="include/cx_utils/string_utils.hpp" line="35" column="13" bodyfile="include/cx_utils/string_utils.hpp" bodystart="35" bodyend="40"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="include/cx_utils/clips_env_context.hpp" line="25" column="1"/>
+    <location file="include/cx_utils/clips_env_context.hpp" line="26" column="1"/>
   </compounddef>
 </doxygen>

@@ -16,7 +16,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="47" column="15" bodyfile="include/cx_protobuf_plugin/protobuf_plugin.hpp" bodystart="47" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="51" column="15" bodyfile="include/cx_protobuf_plugin/protobuf_plugin.hpp" bodystart="51" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1ProtobufPlugin_1a8566ee2ea96b0ea330843248460dd3f0" prot="private" static="no" mutable="no">
         <type>std::unordered_map&lt; std::string, std::unique_ptr&lt; <ref refid="classprotobuf__clips_1_1ClipsProtobufCommunicator" kindref="compound">protobuf_clips::ClipsProtobufCommunicator</ref> &gt; &gt;</type>
@@ -30,7 +30,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="50" column="7" bodyfile="include/cx_protobuf_plugin/protobuf_plugin.hpp" bodystart="50" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="53" column="5" bodyfile="include/cx_protobuf_plugin/protobuf_plugin.hpp" bodystart="53" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1ProtobufPlugin_1adbe5d25d6dab82a6a1fbb0358dbd8e7c" prot="private" static="no" mutable="no">
         <type>std::unique_ptr&lt; rclcpp::Logger &gt;</type>
@@ -44,7 +44,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="51" column="19" bodyfile="include/cx_protobuf_plugin/protobuf_plugin.hpp" bodystart="51" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="54" column="19" bodyfile="include/cx_protobuf_plugin/protobuf_plugin.hpp" bodystart="54" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1ProtobufPlugin_1ab7f72938408d508409d3b02fd8e931f9" prot="private" static="no" mutable="no">
         <type>std::string</type>
@@ -58,7 +58,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="53" column="15" bodyfile="include/cx_protobuf_plugin/protobuf_plugin.hpp" bodystart="53" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="56" column="15" bodyfile="include/cx_protobuf_plugin/protobuf_plugin.hpp" bodystart="56" bodyend="-1"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="public-func">
@@ -74,7 +74,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="38" column="3"/>
+        <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="42" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1ProtobufPlugin_1a04c4a8972dd9f41fc26d353db8eb9edb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -88,7 +88,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="39" column="3"/>
+        <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="43" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1ProtobufPlugin_1ab5eb056301769dedaa901227fba09b62" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
         <type>void</type>
@@ -103,7 +103,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="41" column="8"/>
+        <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="45" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1ProtobufPlugin_1a6345ea8427adb7a1069e834fc4af5ffe" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
         <type>bool</type>
@@ -122,7 +122,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="43" column="8"/>
+        <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="47" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1ProtobufPlugin_1a5bc2e2fd90be5b7eb821aaa8d3762264" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
         <type>bool</type>
@@ -141,7 +141,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="44" column="8"/>
+        <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="48" column="8"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
@@ -172,7 +172,7 @@
         </childnode>
       </node>
     </collaborationgraph>
-    <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="36" column="1" bodyfile="include/cx_protobuf_plugin/protobuf_plugin.hpp" bodystart="36" bodyend="54"/>
+    <location file="include/cx_protobuf_plugin/protobuf_plugin.hpp" line="39" column="1" bodyfile="include/cx_protobuf_plugin/protobuf_plugin.hpp" bodystart="40" bodyend="57"/>
     <listofallmembers>
       <member refid="classcx_1_1ProtobufPlugin_1a5bc2e2fd90be5b7eb821aaa8d3762264" prot="public" virt="virtual"><scope>cx::ProtobufPlugin</scope><name>clips_env_destroyed</name></member>
       <member refid="classcx_1_1ProtobufPlugin_1a6345ea8427adb7a1069e834fc4af5ffe" prot="public" virt="virtual"><scope>cx::ProtobufPlugin</scope><name>clips_env_init</name></member>

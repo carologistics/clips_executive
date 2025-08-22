@@ -1,0 +1,40 @@
+
+.. _file_include_cx_utils_format.hpp:
+
+File format.hpp
+===============
+
+|exhale_lsh| :ref:`Parent directory <dir_include_cx_utils>` (``include/cx_utils``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``include/cx_utils/format.hpp``)
+--------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_include_cx_utils_format.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``string`` (:ref:`file_include_cx_utils_string_utils.hpp`)
+
+- ``utility``
+
+
+
+
+

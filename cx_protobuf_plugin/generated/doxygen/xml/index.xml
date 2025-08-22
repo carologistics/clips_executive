@@ -5,32 +5,33 @@
     <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1aed7220bce6a1065943d0c32ae8a3ef0cae8370b0af899857911189daa426f4e0a" kind="enumvalue"><name>CT_SERVER</name></member>
     <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1aed7220bce6a1065943d0c32ae8a3ef0ca375acc8d9e3a5ede3b04789ed01c92b5" kind="enumvalue"><name>CT_CLIENT</name></member>
     <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1aed7220bce6a1065943d0c32ae8a3ef0ca079cbaa54c9e3a7e969d34055759ff63" kind="enumvalue"><name>CT_PEER</name></member>
-    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a1770daef434786cedfd3a3aee8724998" kind="typedef"><name>RevServerClientMap</name></member>
+    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ade456e5303c2b07b14baaeab7d9d734b" kind="typedef"><name>RevServerClientMap</name></member>
     <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1aed9f993406c953e9d7f9aeaa2b5e3c4b" kind="variable"><name>clips_</name></member>
     <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a88a5fbae5611aea57cd1650395dd2b71" kind="variable"><name>clips_mutex_</name></member>
     <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a1b9a40d1b0ed689da580ab88bb0e4353" kind="variable"><name>message_register_</name></member>
     <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ae3fe8f937a7d80c6a66ff9847ef7fba7" kind="variable"><name>server_</name></member>
-    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a76a8f7262e59b5efdcfa38ceabda5e2a" kind="variable"><name>sig_server_sent_</name></member>
-    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a9c92cc12d643b84f8a05d861d9632450" kind="variable"><name>sig_client_sent_</name></member>
-    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a84a731e90de29c7f9c123fa624a1dcd7" kind="variable"><name>sig_peer_sent_</name></member>
+    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a6a08ac723978380780964abd5b6e5d08" kind="variable"><name>sig_server_sent_</name></member>
+    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a60f343e263ccf3eedf0f9d4ea61a0eaf" kind="variable"><name>sig_client_sent_</name></member>
+    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a9dce840404330838221a698f9d27c7ac" kind="variable"><name>sig_peer_sent_</name></member>
     <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a5bf56334a263cd9841b997591e1fbd6e" kind="variable"><name>map_mutex_</name></member>
-    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a93e0579d71b9e0f20e24bb084217e2eb" kind="variable"><name>next_client_id_</name></member>
-    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a2c054be7625ab045771bf49ef86e20ba" kind="variable"><name>server_clients_</name></member>
+    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a80664fa2e24f5b7660a3d6dd143627fc" kind="variable"><name>next_client_id_</name></member>
+    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1aa8cd268d3b810c1e686dab400a758abb" kind="variable"><name>server_clients_</name></member>
     <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a44a1cf57abbaf826970e950ce9165cb4" kind="variable"><name>rev_server_clients_</name></member>
-    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a89862808fd516dd04baaa0777f72039c" kind="variable"><name>clients_</name></member>
-    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a5eb3440d79e595079335f0404069b774" kind="variable"><name>peers_</name></member>
-    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a4b5825cde4cfdc77d68241944fb6eb56" kind="variable"><name>client_endpoints_</name></member>
+    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1abf6543c675ac8f5c5015fb45cca52f09" kind="variable"><name>clients_</name></member>
+    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a8ab87cdd854ddc49632ba2f0682cbb87" kind="variable"><name>peers_</name></member>
+    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a1852ed9d31f2a6a64f6e71bbbc541ebe" kind="variable"><name>client_endpoints_</name></member>
     <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1af6be31d1eac412f73eb26c7eda6e3a44" kind="variable"><name>functions_</name></member>
     <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ae527f28f7afc49ce8ec3b16473c3bef9" kind="variable"><name>parent_</name></member>
     <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a287f10014cc4ec9ac2c1ace6b46ee008" kind="variable"><name>messages_</name></member>
+    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ae974df78369ef25054ad9def0ee3b8aa" kind="variable"><name>logger_</name></member>
     <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a64840fa9e8157bd87f6b55a7f647ea17" kind="function"><name>ClipsProtobufCommunicator</name></member>
     <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a21429c700fae3b6f7c9b17b7c26da803" kind="function"><name>ClipsProtobufCommunicator</name></member>
     <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1abc30ac62426556659a0ca76f9da141ac" kind="function"><name>~ClipsProtobufCommunicator</name></member>
     <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a62f89d0182fcf10d9167f9b42b2bdf06" kind="function"><name>enable_server</name></member>
     <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ad9031ecd13912bcde0e2059d9efacefe" kind="function"><name>disable_server</name></member>
-    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ad9b1d71d6433c0f0f6fff5f556631d43" kind="function"><name>signal_server_sent</name></member>
-    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1af0cd4f4f1d5af8495c0dd955f8c97170" kind="function"><name>signal_client_sent</name></member>
-    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1aabee4aa597a5bc5f612c939c9267afea" kind="function"><name>signal_peer_sent</name></member>
+    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a63ddae947df78b3e1f788f956713e3e0" kind="function"><name>signal_server_sent</name></member>
+    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a25d865044f1659d7b2e01e76415ebc0f" kind="function"><name>signal_client_sent</name></member>
+    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a92030039e325ddd9cbb8168c28701c48" kind="function"><name>signal_peer_sent</name></member>
     <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a785a2cb98f231519896b6a6aea56df97" kind="function"><name>setup_clips</name></member>
     <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a43970233a023ac6b402495a220ac771c" kind="function"><name>clips_pb_register_type</name></member>
     <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a7202de9a2c1c247f15b3792d73dea609" kind="function"><name>clips_pb_field_names</name></member>
@@ -44,29 +45,29 @@
     <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a0d9eed812f5b51db1cca30bb90de59bf" kind="function"><name>clips_pb_destroy</name></member>
     <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a78e1d3cc0ae1ab2ab2d29c0409c9f47c" kind="function"><name>clips_pb_set_field</name></member>
     <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a47a7fc72aea166d20d31e7ed214affc1" kind="function"><name>clips_pb_add_list</name></member>
-    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ad890b53a94b5f1e4c5a7ffd2db562e81" kind="function"><name>clips_pb_send</name></member>
+    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ae27761b05525d2c3517a7de8a7fe9274" kind="function"><name>clips_pb_send</name></member>
     <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a67ee73dd17b309665a3573d9b586a6e9" kind="function"><name>clips_pb_tostring</name></member>
-    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a12ad417e6025c34208a5837c80d004e3" kind="function"><name>clips_pb_client_connect</name></member>
-    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a0c6f05f9682cf025b5080e83716ac37f" kind="function"><name>clips_pb_disconnect</name></member>
-    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a887b4bf239f8658f8af27dea6e1f3189" kind="function"><name>clips_pb_broadcast</name></member>
-    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a73784ba18a9dd9402df81db64fbd6925" kind="function"><name>clips_pb_peer_create</name></member>
-    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a062f01b3f2f06ba6af96d67e82387c00" kind="function"><name>clips_pb_peer_create_local</name></member>
-    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ac340b15c1db3b01fa0145f461be32734" kind="function"><name>clips_pb_peer_create_crypto</name></member>
-    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a42047254402331316c0697e325327b5f" kind="function"><name>clips_pb_peer_create_local_crypto</name></member>
-    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ae815b716da86c1eb888275637b1565bc" kind="function"><name>clips_pb_peer_destroy</name></member>
-    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a42a4c62563661b5779de40ea7220fd8b" kind="function"><name>clips_pb_peer_setup_crypto</name></member>
-    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a04a35e0bae718019016bf7b96806284d" kind="function"><name>clips_assert_message</name></member>
+    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a2ff7f849fbf35c8c7d935f519c202344" kind="function"><name>clips_pb_client_connect</name></member>
+    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a20b2e07fc695a2e08888de71869a430d" kind="function"><name>clips_pb_disconnect</name></member>
+    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a71f1aeaaf68c4347f5b485b28472dcf3" kind="function"><name>clips_pb_broadcast</name></member>
+    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1af2c594569eea6fd0c60991421c87a724" kind="function"><name>clips_pb_peer_create</name></member>
+    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a168021a7355c4cc7a699e53c57ac302c" kind="function"><name>clips_pb_peer_create_local</name></member>
+    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1acd55dbb76e99a59126ab66571a873ad4" kind="function"><name>clips_pb_peer_create_crypto</name></member>
+    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a4ce02fb46d41a27fec1f08779094e5d1" kind="function"><name>clips_pb_peer_create_local_crypto</name></member>
+    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a4c4f2e60759aed1928c54a85a114da80" kind="function"><name>clips_pb_peer_destroy</name></member>
+    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ad7801e92d7a1a5d16dd3be5950cd906c" kind="function"><name>clips_pb_peer_setup_crypto</name></member>
+    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ad82d1201ce393e43eec323a6cfc39501" kind="function"><name>clips_assert_message</name></member>
     <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a85b54230f87368f7d78f6940940a1bf6" kind="function"><name>handle_server_client_connected</name></member>
     <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a4274a1055ed3c38f5ae25c012b9e9d32" kind="function"><name>handle_server_client_disconnected</name></member>
     <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ab1946f562e3036e39fa88839c78110ee" kind="function"><name>handle_server_client_msg</name></member>
     <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a45398a1f49b47032742bb5f84bd7d4d2" kind="function"><name>handle_server_client_fail</name></member>
-    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a0722828a1be89034d2fa40e4aed2b58e" kind="function"><name>handle_peer_msg</name></member>
-    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a1433a69da85ae732351baa95170575ae" kind="function"><name>handle_peer_recv_error</name></member>
-    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a08dde4106e5dd12b14dbb4ff71cfffea" kind="function"><name>handle_peer_send_error</name></member>
-    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a0097b07d654cc23dea9ec877cd39bef3" kind="function"><name>handle_client_connected</name></member>
-    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a1c29fab6a1c4f1eb52d6ce79286b7c5e" kind="function"><name>handle_client_disconnected</name></member>
-    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a45782728a09a6a1738ee676a2c592725" kind="function"><name>handle_client_msg</name></member>
-    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a5049c43e33b127519ba73a59a548c5ef" kind="function"><name>handle_client_receive_fail</name></member>
+    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ae7dcd316c675b6211528edcfe18afa2e" kind="function"><name>handle_peer_msg</name></member>
+    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ab6c640599dae9781fd81f9d2a4b2c0cc" kind="function"><name>handle_peer_recv_error</name></member>
+    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a35121d6612a81561adb4dddab748df89" kind="function"><name>handle_peer_send_error</name></member>
+    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1adb668d9ad8b6095064aa52104a906eaa" kind="function"><name>handle_client_connected</name></member>
+    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a2af97c7f44ea7eda92882a62835a1356" kind="function"><name>handle_client_disconnected</name></member>
+    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a959dc6cdf6da9ee0fc4b18c801324bca" kind="function"><name>handle_client_msg</name></member>
+    <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ac6baa516edcf05b9dac91e71c790212d" kind="function"><name>handle_client_receive_fail</name></member>
     <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a0d8b42d582e05d67a2986e8a761d50f2" kind="function"><name>to_string</name></member>
   </compound>
   <compound refid="classcx_1_1ProtobufPlugin" kind="class"><name>cx::ProtobufPlugin</name>

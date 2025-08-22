@@ -34,11 +34,11 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="122" column="3" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="122" bodyend="122"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="128" column="3" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="129" bodyend="133"/>
       </memberdef>
-      <memberdef kind="typedef" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a1770daef434786cedfd3a3aee8724998" prot="private" static="no">
-        <type>std::map&lt; protobuf_comm::ProtobufStreamServer::ClientID, long int &gt;</type>
-        <definition>typedef std::map&lt;protobuf_comm::ProtobufStreamServer::ClientID, long int&gt; protobuf_clips::ClipsProtobufCommunicator::RevServerClientMap</definition>
+      <memberdef kind="typedef" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ade456e5303c2b07b14baaeab7d9d734b" prot="private" static="no">
+        <type>std::map&lt; protobuf_comm::ProtobufStreamServer::ClientID, int64_t &gt;</type>
+        <definition>typedef std::map&lt;protobuf_comm::ProtobufStreamServer::ClientID, int64_t&gt; protobuf_clips::ClipsProtobufCommunicator::RevServerClientMap</definition>
         <argsstring></argsstring>
         <name>RevServerClientMap</name>
         <qualifiedname>protobuf_clips::ClipsProtobufCommunicator::RevServerClientMap</qualifiedname>
@@ -48,7 +48,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="186" column="7" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="186" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="186" column="20" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="186" bodyend="-1"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="private-attrib">
@@ -64,7 +64,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="164" column="22" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="164" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="169" column="23" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="169" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a88a5fbae5611aea57cd1650395dd2b71" prot="private" static="no" mutable="no">
         <type>std::mutex &amp;</type>
@@ -78,7 +78,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="165" column="14" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="165" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="170" column="15" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="170" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a1b9a40d1b0ed689da580ab88bb0e4353" prot="private" static="no" mutable="no">
         <type>std::unique_ptr&lt; protobuf_comm::MessageRegister &gt;</type>
@@ -92,7 +92,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="167" column="19" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="167" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="172" column="19" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="172" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ae3fe8f937a7d80c6a66ff9847ef7fba7" prot="private" static="no" mutable="no">
         <type>std::unique_ptr&lt; protobuf_comm::ProtobufStreamServer &gt;</type>
@@ -106,11 +106,11 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="168" column="19" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="168" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="173" column="19" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="173" bodyend="-1"/>
       </memberdef>
-      <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a76a8f7262e59b5efdcfa38ceabda5e2a" prot="private" static="no" mutable="no">
+      <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a6a08ac723978380780964abd5b6e5d08" prot="private" static="no" mutable="no">
         <type>boost::signals2::signal&lt; void(protobuf_comm::ProtobufStreamServer::ClientID, std::shared_ptr&lt; google::protobuf::Message &gt;)&gt;</type>
-        <definition>boost::signals2::signal&lt;void(protobuf_comm::ProtobufStreamServer::ClientID, std::shared_ptr&lt;google::protobuf::Message&gt;)&gt; protobuf_clips::ClipsProtobufCommunicator::sig_server_sent_</definition>
+        <definition>boost::signals2::signal&lt;void( protobuf_comm::ProtobufStreamServer::ClientID, std::shared_ptr&lt;google::protobuf::Message&gt;)&gt; protobuf_clips::ClipsProtobufCommunicator::sig_server_sent_</definition>
         <argsstring></argsstring>
         <name>sig_server_sent_</name>
         <qualifiedname>protobuf_clips::ClipsProtobufCommunicator::sig_server_sent_</qualifiedname>
@@ -120,11 +120,11 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="172" column="7" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="172" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="177" column="5" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="177" bodyend="-1"/>
       </memberdef>
-      <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a9c92cc12d643b84f8a05d861d9632450" prot="private" static="no" mutable="no">
-        <type>boost::signals2::signal&lt; void(std::string, unsigned short, std::shared_ptr&lt; google::protobuf::Message &gt;)&gt;</type>
-        <definition>boost::signals2::signal&lt;void(std::string, unsigned short, std::shared_ptr&lt;google::protobuf::Message&gt;)&gt; protobuf_clips::ClipsProtobufCommunicator::sig_client_sent_</definition>
+      <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a60f343e263ccf3eedf0f9d4ea61a0eaf" prot="private" static="no" mutable="no">
+        <type>boost::signals2::signal&lt; void(std::string, uint16_t, std::shared_ptr&lt; google::protobuf::Message &gt;)&gt;</type>
+        <definition>boost::signals2::signal&lt;void(std::string, uint16_t, std::shared_ptr&lt;google::protobuf::Message&gt;)&gt; protobuf_clips::ClipsProtobufCommunicator::sig_client_sent_</definition>
         <argsstring></argsstring>
         <name>sig_client_sent_</name>
         <qualifiedname>protobuf_clips::ClipsProtobufCommunicator::sig_client_sent_</qualifiedname>
@@ -134,11 +134,11 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="175" column="7" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="175" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="179" column="5" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="179" bodyend="-1"/>
       </memberdef>
-      <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a84a731e90de29c7f9c123fa624a1dcd7" prot="private" static="no" mutable="no">
-        <type>boost::signals2::signal&lt; void(long int, std::shared_ptr&lt; google::protobuf::Message &gt;)&gt;</type>
-        <definition>boost::signals2::signal&lt;void(long int, std::shared_ptr&lt;google::protobuf::Message&gt;)&gt; protobuf_clips::ClipsProtobufCommunicator::sig_peer_sent_</definition>
+      <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a9dce840404330838221a698f9d27c7ac" prot="private" static="no" mutable="no">
+        <type>boost::signals2::signal&lt; void(int64_t, std::shared_ptr&lt; google::protobuf::Message &gt;)&gt;</type>
+        <definition>boost::signals2::signal&lt;void(int64_t, std::shared_ptr&lt;google::protobuf::Message&gt;)&gt; protobuf_clips::ClipsProtobufCommunicator::sig_peer_sent_</definition>
         <argsstring></argsstring>
         <name>sig_peer_sent_</name>
         <qualifiedname>protobuf_clips::ClipsProtobufCommunicator::sig_peer_sent_</qualifiedname>
@@ -148,7 +148,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="178" column="7" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="178" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="180" column="27" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="180" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a5bf56334a263cd9841b997591e1fbd6e" prot="private" static="no" mutable="no">
         <type>std::mutex</type>
@@ -162,11 +162,11 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="180" column="14" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="180" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="182" column="14" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="182" bodyend="-1"/>
       </memberdef>
-      <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a93e0579d71b9e0f20e24bb084217e2eb" prot="private" static="no" mutable="no">
-        <type>long int</type>
-        <definition>long int protobuf_clips::ClipsProtobufCommunicator::next_client_id_</definition>
+      <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a80664fa2e24f5b7660a3d6dd143627fc" prot="private" static="no" mutable="no">
+        <type>int64_t</type>
+        <definition>int64_t protobuf_clips::ClipsProtobufCommunicator::next_client_id_</definition>
         <argsstring></argsstring>
         <name>next_client_id_</name>
         <qualifiedname>protobuf_clips::ClipsProtobufCommunicator::next_client_id_</qualifiedname>
@@ -176,11 +176,11 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="181" column="12" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="181" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="183" column="11" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="183" bodyend="-1"/>
       </memberdef>
-      <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a2c054be7625ab045771bf49ef86e20ba" prot="private" static="no" mutable="no">
-        <type>std::map&lt; long int, protobuf_comm::ProtobufStreamServer::ClientID &gt;</type>
-        <definition>std::map&lt;long int, protobuf_comm::ProtobufStreamServer::ClientID&gt; protobuf_clips::ClipsProtobufCommunicator::server_clients_</definition>
+      <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1aa8cd268d3b810c1e686dab400a758abb" prot="private" static="no" mutable="no">
+        <type>std::map&lt; int64_t, protobuf_comm::ProtobufStreamServer::ClientID &gt;</type>
+        <definition>std::map&lt;int64_t, protobuf_comm::ProtobufStreamServer::ClientID&gt; protobuf_clips::ClipsProtobufCommunicator::server_clients_</definition>
         <argsstring></argsstring>
         <name>server_clients_</name>
         <qualifiedname>protobuf_clips::ClipsProtobufCommunicator::server_clients_</qualifiedname>
@@ -190,7 +190,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="184" column="7" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="184" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="185" column="12" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="185" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a44a1cf57abbaf826970e950ce9165cb4" prot="private" static="no" mutable="no">
         <type>RevServerClientMap</type>
@@ -206,9 +206,9 @@
         </inbodydescription>
         <location file="include/cx_protobuf_plugin/communicator.hpp" line="187" column="22" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="187" bodyend="-1"/>
       </memberdef>
-      <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a89862808fd516dd04baaa0777f72039c" prot="private" static="no" mutable="no">
-        <type>std::map&lt; long int, std::unique_ptr&lt; protobuf_comm::ProtobufStreamClient &gt; &gt;</type>
-        <definition>std::map&lt;long int, std::unique_ptr&lt;protobuf_comm::ProtobufStreamClient&gt; &gt; protobuf_clips::ClipsProtobufCommunicator::clients_</definition>
+      <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1abf6543c675ac8f5c5015fb45cca52f09" prot="private" static="no" mutable="no">
+        <type>std::map&lt; int64_t, std::unique_ptr&lt; protobuf_comm::ProtobufStreamClient &gt; &gt;</type>
+        <definition>std::map&lt;int64_t, std::unique_ptr&lt;protobuf_comm::ProtobufStreamClient&gt; &gt; protobuf_clips::ClipsProtobufCommunicator::clients_</definition>
         <argsstring></argsstring>
         <name>clients_</name>
         <qualifiedname>protobuf_clips::ClipsProtobufCommunicator::clients_</qualifiedname>
@@ -218,11 +218,11 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="189" column="7" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="189" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="188" column="12" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="188" bodyend="-1"/>
       </memberdef>
-      <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a5eb3440d79e595079335f0404069b774" prot="private" static="no" mutable="no">
-        <type>std::map&lt; long int, std::unique_ptr&lt; protobuf_comm::ProtobufBroadcastPeer &gt; &gt;</type>
-        <definition>std::map&lt;long int, std::unique_ptr&lt;protobuf_comm::ProtobufBroadcastPeer&gt; &gt; protobuf_clips::ClipsProtobufCommunicator::peers_</definition>
+      <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a8ab87cdd854ddc49632ba2f0682cbb87" prot="private" static="no" mutable="no">
+        <type>std::map&lt; int64_t, std::unique_ptr&lt; protobuf_comm::ProtobufBroadcastPeer &gt; &gt;</type>
+        <definition>std::map&lt;int64_t, std::unique_ptr&lt;protobuf_comm::ProtobufBroadcastPeer&gt; &gt; protobuf_clips::ClipsProtobufCommunicator::peers_</definition>
         <argsstring></argsstring>
         <name>peers_</name>
         <qualifiedname>protobuf_clips::ClipsProtobufCommunicator::peers_</qualifiedname>
@@ -232,11 +232,11 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="191" column="7" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="191" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="189" column="12" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="189" bodyend="-1"/>
       </memberdef>
-      <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a4b5825cde4cfdc77d68241944fb6eb56" prot="private" static="no" mutable="no">
-        <type>std::map&lt; long int, std::pair&lt; std::string, unsigned short &gt; &gt;</type>
-        <definition>std::map&lt;long int, std::pair&lt;std::string, unsigned short&gt; &gt; protobuf_clips::ClipsProtobufCommunicator::client_endpoints_</definition>
+      <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a1852ed9d31f2a6a64f6e71bbbc541ebe" prot="private" static="no" mutable="no">
+        <type>std::map&lt; int64_t, std::pair&lt; std::string, uint16_t &gt; &gt;</type>
+        <definition>std::map&lt;int64_t, std::pair&lt;std::string, uint16_t&gt; &gt; protobuf_clips::ClipsProtobufCommunicator::client_endpoints_</definition>
         <argsstring></argsstring>
         <name>client_endpoints_</name>
         <qualifiedname>protobuf_clips::ClipsProtobufCommunicator::client_endpoints_</qualifiedname>
@@ -246,7 +246,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="193" column="12" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="193" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="191" column="12" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="191" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1af6be31d1eac412f73eb26c7eda6e3a44" prot="private" static="no" mutable="no">
         <type>std::list&lt; std::string &gt;</type>
@@ -260,7 +260,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="195" column="13" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="195" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="193" column="13" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="193" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ae527f28f7afc49ce8ec3b16473c3bef9" prot="private" static="no" mutable="no">
         <type>rclcpp_lifecycle::LifecycleNode::WeakPtr</type>
@@ -275,7 +275,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="197" column="44" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="197" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="195" column="44" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="195" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a287f10014cc4ec9ac2c1ace6b46ee008" prot="private" static="no" mutable="no">
         <type>std::unordered_map&lt; void *, std::shared_ptr&lt; google::protobuf::Message &gt; &gt;</type>
@@ -289,7 +289,21 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="200" column="7" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="200" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="197" column="22" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="197" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ae974df78369ef25054ad9def0ee3b8aa" prot="private" static="no" mutable="no">
+        <type>std::unique_ptr&lt; rclcpp::Logger &gt;</type>
+        <definition>std::unique_ptr&lt;rclcpp::Logger&gt; protobuf_clips::ClipsProtobufCommunicator::logger_</definition>
+        <argsstring></argsstring>
+        <name>logger_</name>
+        <qualifiedname>protobuf_clips::ClipsProtobufCommunicator::logger_</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="199" column="19" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="199" bodyend="-1"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="public-func">
@@ -317,7 +331,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="48" column="3"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="58" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a21429c700fae3b6f7c9b17b7c26da803" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -347,7 +361,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="50" column="3"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="61" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1abc30ac62426556659a0ca76f9da141ac" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -361,7 +375,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="53" column="3"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="64" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a62f89d0182fcf10d9167f9b42b2bdf06" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -379,7 +393,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="55" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="66" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ad9031ecd13912bcde0e2059d9efacefe" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -393,11 +407,11 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="56" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="67" column="8"/>
       </memberdef>
-      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ad9b1d71d6433c0f0f6fff5f556631d43" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a63ddae947df78b3e1f788f956713e3e0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>boost::signals2::signal&lt; void(protobuf_comm::ProtobufStreamServer::ClientID, std::shared_ptr&lt; google::protobuf::Message &gt;)&gt; &amp;</type>
-        <definition>boost::signals2::signal&lt; void(protobuf_comm::ProtobufStreamServer::ClientID, std::shared_ptr&lt; google::protobuf::Message &gt;)&gt; &amp; protobuf_clips::ClipsProtobufCommunicator::signal_server_sent</definition>
+        <definition>boost::signals2::signal&lt; void( protobuf_comm::ProtobufStreamServer::ClientID, std::shared_ptr&lt; google::protobuf::Message &gt;)&gt; &amp; protobuf_clips::ClipsProtobufCommunicator::signal_server_sent</definition>
         <argsstring>()</argsstring>
         <name>signal_server_sent</name>
         <qualifiedname>protobuf_clips::ClipsProtobufCommunicator::signal_server_sent</qualifiedname>
@@ -410,11 +424,11 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="63" column="3" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="63" bodyend="65"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="74" column="3" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="74" bodyend="77"/>
       </memberdef>
-      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1af0cd4f4f1d5af8495c0dd955f8c97170" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
-        <type>boost::signals2::signal&lt; void(std::string, unsigned short, std::shared_ptr&lt; google::protobuf::Message &gt;)&gt; &amp;</type>
-        <definition>boost::signals2::signal&lt; void(std::string, unsigned short, std::shared_ptr&lt; google::protobuf::Message &gt;)&gt; &amp; protobuf_clips::ClipsProtobufCommunicator::signal_client_sent</definition>
+      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a25d865044f1659d7b2e01e76415ebc0f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>boost::signals2::signal&lt; void(std::string, uint16_t, std::shared_ptr&lt; google::protobuf::Message &gt;)&gt; &amp;</type>
+        <definition>boost::signals2::signal&lt; void(std::string, uint16_t, std::shared_ptr&lt; google::protobuf::Message &gt;)&gt; &amp; protobuf_clips::ClipsProtobufCommunicator::signal_client_sent</definition>
         <argsstring>()</argsstring>
         <name>signal_client_sent</name>
         <qualifiedname>protobuf_clips::ClipsProtobufCommunicator::signal_client_sent</qualifiedname>
@@ -427,11 +441,11 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="72" column="3" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="72" bodyend="74"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="83" column="3" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="83" bodyend="86"/>
       </memberdef>
-      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1aabee4aa597a5bc5f612c939c9267afea" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
-        <type>boost::signals2::signal&lt; void(long, std::shared_ptr&lt; google::protobuf::Message &gt;)&gt; &amp;</type>
-        <definition>boost::signals2::signal&lt; void(long, std::shared_ptr&lt; google::protobuf::Message &gt;)&gt; &amp; protobuf_clips::ClipsProtobufCommunicator::signal_peer_sent</definition>
+      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a92030039e325ddd9cbb8168c28701c48" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>boost::signals2::signal&lt; void(int64_t, std::shared_ptr&lt; google::protobuf::Message &gt;)&gt; &amp;</type>
+        <definition>boost::signals2::signal&lt; void(int64_t, std::shared_ptr&lt; google::protobuf::Message &gt;)&gt; &amp; protobuf_clips::ClipsProtobufCommunicator::signal_peer_sent</definition>
         <argsstring>()</argsstring>
         <name>signal_peer_sent</name>
         <qualifiedname>protobuf_clips::ClipsProtobufCommunicator::signal_peer_sent</qualifiedname>
@@ -444,7 +458,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="81" column="3" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="81" bodyend="83"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="92" column="3" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="92" bodyend="95"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="private-func">
@@ -460,7 +474,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="86" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="98" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a43970233a023ac6b402495a220ac771c" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>clips::UDFValue</type>
@@ -478,7 +492,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="88" column="19"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="100" column="19"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a7202de9a2c1c247f15b3792d73dea609" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>clips::UDFValue</type>
@@ -496,7 +510,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="89" column="19"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="101" column="19"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ac1f9aef49491aceaa9e73e7010382e87" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>clips::UDFValue</type>
@@ -518,7 +532,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="90" column="19"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="102" column="19"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a336724ac739a9dff83fa71fd7f38532f" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>clips::UDFValue</type>
@@ -540,7 +554,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="91" column="19"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="103" column="19"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1af02bed787bfd388edd7a4e77a3d73ac7" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>clips::UDFValue</type>
@@ -562,7 +576,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="92" column="19"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="104" column="19"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a68bcfe9d0ae3e94c4486ee70193f4b56" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>clips::UDFValue</type>
@@ -584,7 +598,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="93" column="19"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="105" column="19"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a9205f619f6922422c9dd04fb5ab30e2c" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>clips::UDFValue</type>
@@ -606,7 +620,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="94" column="19"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="106" column="19"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a3869b1e60d1bbbb2909520c86a84bfe1" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>clips::UDFValue</type>
@@ -628,7 +642,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="95" column="19"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="107" column="19"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a60842a4d9f8735f70fe0632e04ebe5ea" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>clips::UDFValue</type>
@@ -646,7 +660,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="96" column="19"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="108" column="19"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a0d9eed812f5b51db1cca30bb90de59bf" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -664,7 +678,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="97" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="109" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a78e1d3cc0ae1ab2ab2d29c0409c9f47c" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -690,7 +704,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="98" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="110" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a47a7fc72aea166d20d31e7ed214affc1" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -716,16 +730,16 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="100" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="111" column="8"/>
       </memberdef>
-      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ad890b53a94b5f1e4c5a7ffd2db562e81" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ae27761b05525d2c3517a7de8a7fe9274" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
         <definition>void protobuf_clips::ClipsProtobufCommunicator::clips_pb_send</definition>
-        <argsstring>(long int client_id, void *msgptr)</argsstring>
+        <argsstring>(int64_t client_id, void *msgptr)</argsstring>
         <name>clips_pb_send</name>
         <qualifiedname>protobuf_clips::ClipsProtobufCommunicator::clips_pb_send</qualifiedname>
         <param>
-          <type>long int</type>
+          <type>int64_t</type>
           <declname>client_id</declname>
         </param>
         <param>
@@ -738,7 +752,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="102" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="112" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a67ee73dd17b309665a3573d9b586a6e9" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::string</type>
@@ -756,11 +770,11 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="103" column="15"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="113" column="15"/>
       </memberdef>
-      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a12ad417e6025c34208a5837c80d004e3" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
-        <type>long int</type>
-        <definition>long int protobuf_clips::ClipsProtobufCommunicator::clips_pb_client_connect</definition>
+      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a2ff7f849fbf35c8c7d935f519c202344" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int64_t</type>
+        <definition>int64_t protobuf_clips::ClipsProtobufCommunicator::clips_pb_client_connect</definition>
         <argsstring>(std::string host, int port)</argsstring>
         <name>clips_pb_client_connect</name>
         <qualifiedname>protobuf_clips::ClipsProtobufCommunicator::clips_pb_client_connect</qualifiedname>
@@ -778,16 +792,16 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="104" column="12"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="114" column="11"/>
       </memberdef>
-      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a0c6f05f9682cf025b5080e83716ac37f" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a20b2e07fc695a2e08888de71869a430d" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
         <definition>void protobuf_clips::ClipsProtobufCommunicator::clips_pb_disconnect</definition>
-        <argsstring>(long int client_id)</argsstring>
+        <argsstring>(int64_t client_id)</argsstring>
         <name>clips_pb_disconnect</name>
         <qualifiedname>protobuf_clips::ClipsProtobufCommunicator::clips_pb_disconnect</qualifiedname>
         <param>
-          <type>long int</type>
+          <type>int64_t</type>
           <declname>client_id</declname>
         </param>
         <briefdescription>
@@ -796,16 +810,16 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="105" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="115" column="8"/>
       </memberdef>
-      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a887b4bf239f8658f8af27dea6e1f3189" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a71f1aeaaf68c4347f5b485b28472dcf3" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
         <definition>void protobuf_clips::ClipsProtobufCommunicator::clips_pb_broadcast</definition>
-        <argsstring>(long int peer_id, void *msgptr)</argsstring>
+        <argsstring>(int64_t peer_id, void *msgptr)</argsstring>
         <name>clips_pb_broadcast</name>
         <qualifiedname>protobuf_clips::ClipsProtobufCommunicator::clips_pb_broadcast</qualifiedname>
         <param>
-          <type>long int</type>
+          <type>int64_t</type>
           <declname>peer_id</declname>
         </param>
         <param>
@@ -818,11 +832,11 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="106" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="116" column="8"/>
       </memberdef>
-      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a73784ba18a9dd9402df81db64fbd6925" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
-        <type>long int</type>
-        <definition>long int protobuf_clips::ClipsProtobufCommunicator::clips_pb_peer_create</definition>
+      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1af2c594569eea6fd0c60991421c87a724" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int64_t</type>
+        <definition>int64_t protobuf_clips::ClipsProtobufCommunicator::clips_pb_peer_create</definition>
         <argsstring>(std::string host, int port)</argsstring>
         <name>clips_pb_peer_create</name>
         <qualifiedname>protobuf_clips::ClipsProtobufCommunicator::clips_pb_peer_create</qualifiedname>
@@ -840,11 +854,11 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="108" column="12"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="118" column="11"/>
       </memberdef>
-      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a062f01b3f2f06ba6af96d67e82387c00" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
-        <type>long int</type>
-        <definition>long int protobuf_clips::ClipsProtobufCommunicator::clips_pb_peer_create_local</definition>
+      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a168021a7355c4cc7a699e53c57ac302c" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int64_t</type>
+        <definition>int64_t protobuf_clips::ClipsProtobufCommunicator::clips_pb_peer_create_local</definition>
         <argsstring>(std::string host, int send_port, int recv_port)</argsstring>
         <name>clips_pb_peer_create_local</name>
         <qualifiedname>protobuf_clips::ClipsProtobufCommunicator::clips_pb_peer_create_local</qualifiedname>
@@ -866,11 +880,11 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="109" column="12"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="119" column="11"/>
       </memberdef>
-      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ac340b15c1db3b01fa0145f461be32734" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
-        <type>long int</type>
-        <definition>long int protobuf_clips::ClipsProtobufCommunicator::clips_pb_peer_create_crypto</definition>
+      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1acd55dbb76e99a59126ab66571a873ad4" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int64_t</type>
+        <definition>int64_t protobuf_clips::ClipsProtobufCommunicator::clips_pb_peer_create_crypto</definition>
         <argsstring>(std::string host, int port, std::string crypto_key=&quot;&quot;, std::string cipher=&quot;&quot;)</argsstring>
         <name>clips_pb_peer_create_crypto</name>
         <qualifiedname>protobuf_clips::ClipsProtobufCommunicator::clips_pb_peer_create_crypto</qualifiedname>
@@ -898,11 +912,11 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="111" column="12"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="120" column="11"/>
       </memberdef>
-      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a42047254402331316c0697e325327b5f" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
-        <type>long int</type>
-        <definition>long int protobuf_clips::ClipsProtobufCommunicator::clips_pb_peer_create_local_crypto</definition>
+      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a4ce02fb46d41a27fec1f08779094e5d1" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int64_t</type>
+        <definition>int64_t protobuf_clips::ClipsProtobufCommunicator::clips_pb_peer_create_local_crypto</definition>
         <argsstring>(std::string host, int send_port, int recv_port, std::string crypto_key=&quot;&quot;, std::string cipher=&quot;&quot;)</argsstring>
         <name>clips_pb_peer_create_local_crypto</name>
         <qualifiedname>protobuf_clips::ClipsProtobufCommunicator::clips_pb_peer_create_local_crypto</qualifiedname>
@@ -934,16 +948,16 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="114" column="12"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="122" column="11"/>
       </memberdef>
-      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ae815b716da86c1eb888275637b1565bc" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a4c4f2e60759aed1928c54a85a114da80" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
         <definition>void protobuf_clips::ClipsProtobufCommunicator::clips_pb_peer_destroy</definition>
-        <argsstring>(long int peer_id)</argsstring>
+        <argsstring>(int64_t peer_id)</argsstring>
         <name>clips_pb_peer_destroy</name>
         <qualifiedname>protobuf_clips::ClipsProtobufCommunicator::clips_pb_peer_destroy</qualifiedname>
         <param>
-          <type>long int</type>
+          <type>int64_t</type>
           <declname>peer_id</declname>
         </param>
         <briefdescription>
@@ -952,16 +966,16 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="118" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="125" column="8"/>
       </memberdef>
-      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a42a4c62563661b5779de40ea7220fd8b" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ad7801e92d7a1a5d16dd3be5950cd906c" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
         <definition>void protobuf_clips::ClipsProtobufCommunicator::clips_pb_peer_setup_crypto</definition>
-        <argsstring>(long int peer_id, std::string crypto_key, std::string cipher)</argsstring>
+        <argsstring>(int64_t peer_id, std::string crypto_key, std::string cipher)</argsstring>
         <name>clips_pb_peer_setup_crypto</name>
         <qualifiedname>protobuf_clips::ClipsProtobufCommunicator::clips_pb_peer_setup_crypto</qualifiedname>
         <param>
-          <type>long int</type>
+          <type>int64_t</type>
           <declname>peer_id</declname>
         </param>
         <param>
@@ -978,16 +992,16 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="119" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="126" column="8"/>
       </memberdef>
-      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a04a35e0bae718019016bf7b96806284d" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ad82d1201ce393e43eec323a6cfc39501" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
         <definition>void protobuf_clips::ClipsProtobufCommunicator::clips_assert_message</definition>
-        <argsstring>(std::pair&lt; std::string, unsigned short &gt; &amp;endpoint, uint16_t comp_id, uint16_t msg_type, std::shared_ptr&lt; google::protobuf::Message &gt; &amp;msg, ClientType ct, long int client_id=0)</argsstring>
+        <argsstring>(std::pair&lt; std::string, uint16_t &gt; &amp;endpoint, uint16_t comp_id, uint16_t msg_type, std::shared_ptr&lt; google::protobuf::Message &gt; &amp;msg, ClientType ct, int64_t client_id=0)</argsstring>
         <name>clips_assert_message</name>
         <qualifiedname>protobuf_clips::ClipsProtobufCommunicator::clips_assert_message</qualifiedname>
         <param>
-          <type>std::pair&lt; std::string, unsigned short &gt; &amp;</type>
+          <type>std::pair&lt; std::string, uint16_t &gt; &amp;</type>
           <declname>endpoint</declname>
         </param>
         <param>
@@ -1007,7 +1021,7 @@
           <declname>ct</declname>
         </param>
         <param>
-          <type>long int</type>
+          <type>int64_t</type>
           <declname>client_id</declname>
           <defval>0</defval>
         </param>
@@ -1017,7 +1031,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="123" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="134" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a85b54230f87368f7d78f6940940a1bf6" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -1039,7 +1053,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="127" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="137" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a4274a1055ed3c38f5ae25c012b9e9d32" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -1061,7 +1075,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="130" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="140" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ab1946f562e3036e39fa88839c78110ee" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -1091,7 +1105,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="135" column="3"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="143" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a45398a1f49b47032742bb5f84bd7d4d2" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -1121,16 +1135,16 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="139" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="147" column="8"/>
       </memberdef>
-      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a0722828a1be89034d2fa40e4aed2b58e" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ae7dcd316c675b6211528edcfe18afa2e" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
         <definition>void protobuf_clips::ClipsProtobufCommunicator::handle_peer_msg</definition>
-        <argsstring>(long int peer_id, boost::asio::ip::udp::endpoint &amp;endpoint, uint16_t component_id, uint16_t msg_type, std::shared_ptr&lt; google::protobuf::Message &gt; msg)</argsstring>
+        <argsstring>(int64_t peer_id, boost::asio::ip::udp::endpoint &amp;endpoint, uint16_t component_id, uint16_t msg_type, std::shared_ptr&lt; google::protobuf::Message &gt; msg)</argsstring>
         <name>handle_peer_msg</name>
         <qualifiedname>protobuf_clips::ClipsProtobufCommunicator::handle_peer_msg</qualifiedname>
         <param>
-          <type>long int</type>
+          <type>int64_t</type>
           <declname>peer_id</declname>
         </param>
         <param>
@@ -1155,16 +1169,16 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="143" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="151" column="8"/>
       </memberdef>
-      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a1433a69da85ae732351baa95170575ae" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ab6c640599dae9781fd81f9d2a4b2c0cc" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
         <definition>void protobuf_clips::ClipsProtobufCommunicator::handle_peer_recv_error</definition>
-        <argsstring>(long int peer_id, boost::asio::ip::udp::endpoint &amp;endpoint, std::string msg)</argsstring>
+        <argsstring>(int64_t peer_id, boost::asio::ip::udp::endpoint &amp;endpoint, std::string msg)</argsstring>
         <name>handle_peer_recv_error</name>
         <qualifiedname>protobuf_clips::ClipsProtobufCommunicator::handle_peer_recv_error</qualifiedname>
         <param>
-          <type>long int</type>
+          <type>int64_t</type>
           <declname>peer_id</declname>
         </param>
         <param>
@@ -1181,16 +1195,16 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="147" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="154" column="8"/>
       </memberdef>
-      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a08dde4106e5dd12b14dbb4ff71cfffea" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a35121d6612a81561adb4dddab748df89" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
         <definition>void protobuf_clips::ClipsProtobufCommunicator::handle_peer_send_error</definition>
-        <argsstring>(long int peer_id, std::string msg)</argsstring>
+        <argsstring>(int64_t peer_id, std::string msg)</argsstring>
         <name>handle_peer_send_error</name>
         <qualifiedname>protobuf_clips::ClipsProtobufCommunicator::handle_peer_send_error</qualifiedname>
         <param>
-          <type>long int</type>
+          <type>int64_t</type>
           <declname>peer_id</declname>
         </param>
         <param>
@@ -1203,16 +1217,16 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="150" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="156" column="8"/>
       </memberdef>
-      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a0097b07d654cc23dea9ec877cd39bef3" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1adb668d9ad8b6095064aa52104a906eaa" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
         <definition>void protobuf_clips::ClipsProtobufCommunicator::handle_client_connected</definition>
-        <argsstring>(long int client_id)</argsstring>
+        <argsstring>(int64_t client_id)</argsstring>
         <name>handle_client_connected</name>
         <qualifiedname>protobuf_clips::ClipsProtobufCommunicator::handle_client_connected</qualifiedname>
         <param>
-          <type>long int</type>
+          <type>int64_t</type>
           <declname>client_id</declname>
         </param>
         <briefdescription>
@@ -1221,16 +1235,16 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="152" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="158" column="8"/>
       </memberdef>
-      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a1c29fab6a1c4f1eb52d6ce79286b7c5e" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a2af97c7f44ea7eda92882a62835a1356" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
         <definition>void protobuf_clips::ClipsProtobufCommunicator::handle_client_disconnected</definition>
-        <argsstring>(long int client_id, const boost::system::error_code &amp;error)</argsstring>
+        <argsstring>(int64_t client_id, const boost::system::error_code &amp;error)</argsstring>
         <name>handle_client_disconnected</name>
         <qualifiedname>protobuf_clips::ClipsProtobufCommunicator::handle_client_disconnected</qualifiedname>
         <param>
-          <type>long int</type>
+          <type>int64_t</type>
           <declname>client_id</declname>
         </param>
         <param>
@@ -1243,16 +1257,16 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="153" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="159" column="8"/>
       </memberdef>
-      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a45782728a09a6a1738ee676a2c592725" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a959dc6cdf6da9ee0fc4b18c801324bca" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
         <definition>void protobuf_clips::ClipsProtobufCommunicator::handle_client_msg</definition>
-        <argsstring>(long int client_id, uint16_t comp_id, uint16_t msg_type, std::shared_ptr&lt; google::protobuf::Message &gt; msg)</argsstring>
+        <argsstring>(int64_t client_id, uint16_t comp_id, uint16_t msg_type, std::shared_ptr&lt; google::protobuf::Message &gt; msg)</argsstring>
         <name>handle_client_msg</name>
         <qualifiedname>protobuf_clips::ClipsProtobufCommunicator::handle_client_msg</qualifiedname>
         <param>
-          <type>long int</type>
+          <type>int64_t</type>
           <declname>client_id</declname>
         </param>
         <param>
@@ -1273,16 +1287,16 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="155" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="160" column="8"/>
       </memberdef>
-      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a5049c43e33b127519ba73a59a548c5ef" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+      <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ac6baa516edcf05b9dac91e71c790212d" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
         <definition>void protobuf_clips::ClipsProtobufCommunicator::handle_client_receive_fail</definition>
-        <argsstring>(long int client_id, uint16_t comp_id, uint16_t msg_type, std::string msg)</argsstring>
+        <argsstring>(int64_t client_id, uint16_t comp_id, uint16_t msg_type, std::string msg)</argsstring>
         <name>handle_client_receive_fail</name>
         <qualifiedname>protobuf_clips::ClipsProtobufCommunicator::handle_client_receive_fail</qualifiedname>
         <param>
-          <type>long int</type>
+          <type>int64_t</type>
           <declname>client_id</declname>
         </param>
         <param>
@@ -1303,7 +1317,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="158" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="163" column="8"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="private-static-func">
@@ -1323,27 +1337,27 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="161" column="22"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="166" column="22"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="include/cx_protobuf_plugin/communicator.hpp" line="46" column="1" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="46" bodyend="201"/>
+    <location file="include/cx_protobuf_plugin/communicator.hpp" line="55" column="1" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="56" bodyend="200"/>
     <listofallmembers>
-      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a4b5825cde4cfdc77d68241944fb6eb56" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>client_endpoints_</name></member>
-      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a89862808fd516dd04baaa0777f72039c" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clients_</name></member>
+      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a1852ed9d31f2a6a64f6e71bbbc541ebe" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>client_endpoints_</name></member>
+      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1abf6543c675ac8f5c5015fb45cca52f09" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clients_</name></member>
       <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1aed7220bce6a1065943d0c32ae8a3ef0c" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>ClientType</name></member>
       <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1aed9f993406c953e9d7f9aeaa2b5e3c4b" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_</name></member>
-      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a04a35e0bae718019016bf7b96806284d" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_assert_message</name></member>
+      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ad82d1201ce393e43eec323a6cfc39501" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_assert_message</name></member>
       <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a88a5fbae5611aea57cd1650395dd2b71" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_mutex_</name></member>
       <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a47a7fc72aea166d20d31e7ed214affc1" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_pb_add_list</name></member>
-      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a887b4bf239f8658f8af27dea6e1f3189" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_pb_broadcast</name></member>
-      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a12ad417e6025c34208a5837c80d004e3" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_pb_client_connect</name></member>
+      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a71f1aeaaf68c4347f5b485b28472dcf3" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_pb_broadcast</name></member>
+      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a2ff7f849fbf35c8c7d935f519c202344" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_pb_client_connect</name></member>
       <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a60842a4d9f8735f70fe0632e04ebe5ea" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_pb_create</name></member>
       <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a0d9eed812f5b51db1cca30bb90de59bf" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_pb_destroy</name></member>
-      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a0c6f05f9682cf025b5080e83716ac37f" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_pb_disconnect</name></member>
+      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a20b2e07fc695a2e08888de71869a430d" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_pb_disconnect</name></member>
       <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a3869b1e60d1bbbb2909520c86a84bfe1" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_pb_field_is_list</name></member>
       <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a68bcfe9d0ae3e94c4486ee70193f4b56" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_pb_field_label</name></member>
       <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a9205f619f6922422c9dd04fb5ab30e2c" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_pb_field_list</name></member>
@@ -1351,14 +1365,14 @@
       <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1af02bed787bfd388edd7a4e77a3d73ac7" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_pb_field_type</name></member>
       <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a336724ac739a9dff83fa71fd7f38532f" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_pb_field_value</name></member>
       <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ac1f9aef49491aceaa9e73e7010382e87" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_pb_has_field</name></member>
-      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a73784ba18a9dd9402df81db64fbd6925" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_pb_peer_create</name></member>
-      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ac340b15c1db3b01fa0145f461be32734" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_pb_peer_create_crypto</name></member>
-      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a062f01b3f2f06ba6af96d67e82387c00" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_pb_peer_create_local</name></member>
-      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a42047254402331316c0697e325327b5f" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_pb_peer_create_local_crypto</name></member>
-      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ae815b716da86c1eb888275637b1565bc" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_pb_peer_destroy</name></member>
-      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a42a4c62563661b5779de40ea7220fd8b" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_pb_peer_setup_crypto</name></member>
+      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1af2c594569eea6fd0c60991421c87a724" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_pb_peer_create</name></member>
+      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1acd55dbb76e99a59126ab66571a873ad4" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_pb_peer_create_crypto</name></member>
+      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a168021a7355c4cc7a699e53c57ac302c" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_pb_peer_create_local</name></member>
+      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a4ce02fb46d41a27fec1f08779094e5d1" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_pb_peer_create_local_crypto</name></member>
+      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a4c4f2e60759aed1928c54a85a114da80" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_pb_peer_destroy</name></member>
+      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ad7801e92d7a1a5d16dd3be5950cd906c" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_pb_peer_setup_crypto</name></member>
       <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a43970233a023ac6b402495a220ac771c" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_pb_register_type</name></member>
-      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ad890b53a94b5f1e4c5a7ffd2db562e81" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_pb_send</name></member>
+      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ae27761b05525d2c3517a7de8a7fe9274" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_pb_send</name></member>
       <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a78e1d3cc0ae1ab2ab2d29c0409c9f47c" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_pb_set_field</name></member>
       <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a67ee73dd17b309665a3573d9b586a6e9" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clips_pb_tostring</name></member>
       <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a64840fa9e8157bd87f6b55a7f647ea17" prot="public" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>ClipsProtobufCommunicator</name></member>
@@ -1369,34 +1383,35 @@
       <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ad9031ecd13912bcde0e2059d9efacefe" prot="public" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>disable_server</name></member>
       <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a62f89d0182fcf10d9167f9b42b2bdf06" prot="public" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>enable_server</name></member>
       <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1af6be31d1eac412f73eb26c7eda6e3a44" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>functions_</name></member>
-      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a0097b07d654cc23dea9ec877cd39bef3" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>handle_client_connected</name></member>
-      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a1c29fab6a1c4f1eb52d6ce79286b7c5e" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>handle_client_disconnected</name></member>
-      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a45782728a09a6a1738ee676a2c592725" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>handle_client_msg</name></member>
-      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a5049c43e33b127519ba73a59a548c5ef" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>handle_client_receive_fail</name></member>
-      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a0722828a1be89034d2fa40e4aed2b58e" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>handle_peer_msg</name></member>
-      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a1433a69da85ae732351baa95170575ae" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>handle_peer_recv_error</name></member>
-      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a08dde4106e5dd12b14dbb4ff71cfffea" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>handle_peer_send_error</name></member>
+      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1adb668d9ad8b6095064aa52104a906eaa" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>handle_client_connected</name></member>
+      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a2af97c7f44ea7eda92882a62835a1356" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>handle_client_disconnected</name></member>
+      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a959dc6cdf6da9ee0fc4b18c801324bca" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>handle_client_msg</name></member>
+      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ac6baa516edcf05b9dac91e71c790212d" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>handle_client_receive_fail</name></member>
+      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ae7dcd316c675b6211528edcfe18afa2e" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>handle_peer_msg</name></member>
+      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ab6c640599dae9781fd81f9d2a4b2c0cc" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>handle_peer_recv_error</name></member>
+      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a35121d6612a81561adb4dddab748df89" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>handle_peer_send_error</name></member>
       <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a85b54230f87368f7d78f6940940a1bf6" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>handle_server_client_connected</name></member>
       <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a4274a1055ed3c38f5ae25c012b9e9d32" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>handle_server_client_disconnected</name></member>
       <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a45398a1f49b47032742bb5f84bd7d4d2" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>handle_server_client_fail</name></member>
       <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ab1946f562e3036e39fa88839c78110ee" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>handle_server_client_msg</name></member>
+      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ae974df78369ef25054ad9def0ee3b8aa" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>logger_</name></member>
       <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a5bf56334a263cd9841b997591e1fbd6e" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>map_mutex_</name></member>
       <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a1b9a40d1b0ed689da580ab88bb0e4353" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>message_register_</name></member>
       <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a287f10014cc4ec9ac2c1ace6b46ee008" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>messages_</name></member>
-      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a93e0579d71b9e0f20e24bb084217e2eb" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>next_client_id_</name></member>
+      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a80664fa2e24f5b7660a3d6dd143627fc" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>next_client_id_</name></member>
       <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ae527f28f7afc49ce8ec3b16473c3bef9" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>parent_</name></member>
-      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a5eb3440d79e595079335f0404069b774" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>peers_</name></member>
+      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a8ab87cdd854ddc49632ba2f0682cbb87" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>peers_</name></member>
       <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a44a1cf57abbaf826970e950ce9165cb4" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>rev_server_clients_</name></member>
-      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a1770daef434786cedfd3a3aee8724998" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>RevServerClientMap</name></member>
+      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ade456e5303c2b07b14baaeab7d9d734b" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>RevServerClientMap</name></member>
       <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ae3fe8f937a7d80c6a66ff9847ef7fba7" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>server_</name></member>
-      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a2c054be7625ab045771bf49ef86e20ba" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>server_clients_</name></member>
+      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1aa8cd268d3b810c1e686dab400a758abb" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>server_clients_</name></member>
       <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a785a2cb98f231519896b6a6aea56df97" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>setup_clips</name></member>
-      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a9c92cc12d643b84f8a05d861d9632450" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>sig_client_sent_</name></member>
-      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a84a731e90de29c7f9c123fa624a1dcd7" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>sig_peer_sent_</name></member>
-      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a76a8f7262e59b5efdcfa38ceabda5e2a" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>sig_server_sent_</name></member>
-      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1af0cd4f4f1d5af8495c0dd955f8c97170" prot="public" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>signal_client_sent</name></member>
-      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1aabee4aa597a5bc5f612c939c9267afea" prot="public" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>signal_peer_sent</name></member>
-      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ad9b1d71d6433c0f0f6fff5f556631d43" prot="public" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>signal_server_sent</name></member>
+      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a60f343e263ccf3eedf0f9d4ea61a0eaf" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>sig_client_sent_</name></member>
+      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a9dce840404330838221a698f9d27c7ac" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>sig_peer_sent_</name></member>
+      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a6a08ac723978380780964abd5b6e5d08" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>sig_server_sent_</name></member>
+      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a25d865044f1659d7b2e01e76415ebc0f" prot="public" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>signal_client_sent</name></member>
+      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a92030039e325ddd9cbb8168c28701c48" prot="public" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>signal_peer_sent</name></member>
+      <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a63ddae947df78b3e1f788f956713e3e0" prot="public" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>signal_server_sent</name></member>
       <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a0d8b42d582e05d67a2986e8a761d50f2" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>to_string</name></member>
       <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1abc30ac62426556659a0ca76f9da141ac" prot="public" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>~ClipsProtobufCommunicator</name></member>
     </listofallmembers>

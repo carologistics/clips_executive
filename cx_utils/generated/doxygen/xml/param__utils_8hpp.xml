@@ -2,8 +2,9 @@
 <doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
   <compounddef id="param__utils_8hpp" kind="file" language="C++">
     <compoundname>param_utils.hpp</compoundname>
-    <includes local="no">rclcpp/rclcpp.hpp</includes>
     <includes local="no">string</includes>
+    <includes local="no">vector</includes>
+    <includes local="yes">rclcpp/rclcpp.hpp</includes>
     <incdepgraph>
       <node id="1">
         <label>include/cx_utils/param_utils.hpp</label>
@@ -12,12 +13,17 @@
         </childnode>
         <childnode refid="3" relation="include">
         </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
       </node>
-      <node id="2">
+      <node id="4">
         <label>rclcpp/rclcpp.hpp</label>
       </node>
-      <node id="3">
+      <node id="2">
         <label>string</label>
+      </node>
+      <node id="3">
+        <label>vector</label>
       </node>
     </incdepgraph>
     <innernamespace refid="namespacecx">cx</innernamespace>
@@ -28,97 +34,98 @@
     </detaileddescription>
     <programlisting>
 <codeline lineno="1"><highlight class="comment">//<sp/>Copyright<sp/>(c)<sp/>2024-2025<sp/>Carologistics</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="2"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Licensed<sp/>under<sp/>the<sp/>Apache<sp/>License,<sp/>Version<sp/>2.0<sp/>(the<sp/>&quot;License&quot;);</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="4"><highlight class="normal"></highlight><highlight class="comment">//<sp/>you<sp/>may<sp/>not<sp/>use<sp/>this<sp/>file<sp/>except<sp/>in<sp/>compliance<sp/>with<sp/>the<sp/>License.</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="5"><highlight class="normal"></highlight><highlight class="comment">//<sp/>You<sp/>may<sp/>obtain<sp/>a<sp/>copy<sp/>of<sp/>the<sp/>License<sp/>at</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="6"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="7"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/>http://www.apache.org/licenses/LICENSE-2.0</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="8"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="9"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Unless<sp/>required<sp/>by<sp/>applicable<sp/>law<sp/>or<sp/>agreed<sp/>to<sp/>in<sp/>writing,<sp/>software</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="10"><highlight class="normal"></highlight><highlight class="comment">//<sp/>distributed<sp/>under<sp/>the<sp/>License<sp/>is<sp/>distributed<sp/>on<sp/>an<sp/>&quot;AS<sp/>IS&quot;<sp/>BASIS,</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="11"><highlight class="normal"></highlight><highlight class="comment">//<sp/>WITHOUT<sp/>WARRANTIES<sp/>OR<sp/>CONDITIONS<sp/>OF<sp/>ANY<sp/>KIND,<sp/>either<sp/>express<sp/>or<sp/>implied.</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="12"><highlight class="normal"></highlight><highlight class="comment">//<sp/>See<sp/>the<sp/>License<sp/>for<sp/>the<sp/>specific<sp/>language<sp/>governing<sp/>permissions<sp/>and</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="13"><highlight class="normal"></highlight><highlight class="comment">//<sp/>limitations<sp/>under<sp/>the<sp/>License.</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="14"><highlight class="normal"></highlight></codeline>
-<codeline lineno="15"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>CX_UTILS__PARAMSUTILS_HPP</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="16"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CX_UTILS__PARAMSUTILS_HPP</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="17"><highlight class="normal"></highlight></codeline>
-<codeline lineno="18"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;rclcpp/rclcpp.hpp&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="comment">//<sp/>SPDX-License-Identifier:<sp/>Apache-2.0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Licensed<sp/>under<sp/>the<sp/>Apache<sp/>License,<sp/>Version<sp/>2.0<sp/>(the<sp/>&quot;License&quot;);</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="comment">//<sp/>you<sp/>may<sp/>not<sp/>use<sp/>this<sp/>file<sp/>except<sp/>in<sp/>compliance<sp/>with<sp/>the<sp/>License.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="comment">//<sp/>You<sp/>may<sp/>obtain<sp/>a<sp/>copy<sp/>of<sp/>the<sp/>License<sp/>at</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="comment">//<sp/><sp/><sp/><sp/><sp/>http://www.apache.org/licenses/LICENSE-2.0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight><highlight class="comment">//</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="comment">//<sp/>Unless<sp/>required<sp/>by<sp/>applicable<sp/>law<sp/>or<sp/>agreed<sp/>to<sp/>in<sp/>writing,<sp/>software</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="comment">//<sp/>distributed<sp/>under<sp/>the<sp/>License<sp/>is<sp/>distributed<sp/>on<sp/>an<sp/>&quot;AS<sp/>IS&quot;<sp/>BASIS,</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="comment">//<sp/>WITHOUT<sp/>WARRANTIES<sp/>OR<sp/>CONDITIONS<sp/>OF<sp/>ANY<sp/>KIND,<sp/>either<sp/>express<sp/>or<sp/>implied.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="comment">//<sp/>See<sp/>the<sp/>License<sp/>for<sp/>the<sp/>specific<sp/>language<sp/>governing<sp/>permissions<sp/>and</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="comment">//<sp/>limitations<sp/>under<sp/>the<sp/>License.</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>CX_UTILS__PARAM_UTILS_HPP_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CX_UTILS__PARAM_UTILS_HPP_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
 <codeline lineno="19"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;string&gt;</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="20"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">cx<sp/>{</highlight></codeline>
-<codeline lineno="21"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">cx_utils<sp/>{</highlight></codeline>
-<codeline lineno="24"><highlight class="comment">/*<sp/>Declares<sp/>static<sp/>ROS2<sp/>parameter<sp/>and<sp/>sets<sp/>it<sp/>to<sp/>a<sp/>given<sp/>value</highlight></codeline>
-<codeline lineno="25"><highlight class="comment"><sp/>*<sp/>if<sp/>it<sp/>was<sp/>not<sp/>already<sp/>declared.</highlight></codeline>
-<codeline lineno="26"><highlight class="comment"><sp/>*</highlight></codeline>
-<codeline lineno="27"><highlight class="comment"><sp/>*<sp/>\param[in]<sp/>node<sp/>A<sp/>node<sp/>in<sp/>which<sp/>given<sp/>parameter<sp/>to<sp/>be<sp/>declared</highlight></codeline>
-<codeline lineno="28"><highlight class="comment"><sp/>*<sp/>\param[in]<sp/>param_name<sp/>The<sp/>name<sp/>of<sp/>parameter</highlight></codeline>
-<codeline lineno="29"><highlight class="comment"><sp/>*<sp/>\param[in]<sp/>default_value<sp/>Parameter<sp/>value<sp/>to<sp/>initialize<sp/>with</highlight></codeline>
-<codeline lineno="30"><highlight class="comment"><sp/>*<sp/>\param[in]<sp/>parameter_descriptor<sp/>Parameter<sp/>descriptor<sp/>(optional)</highlight></codeline>
-<codeline lineno="31"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="32"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>NodeT&gt;</highlight></codeline>
-<codeline lineno="33"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>declare_parameter_if_not_declared(</highlight></codeline>
-<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/>NodeT<sp/>node,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;param_name,</highlight></codeline>
-<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>rclcpp::ParameterValue<sp/>&amp;default_value,</highlight></codeline>
-<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>rcl_interfaces::msg::ParameterDescriptor<sp/>&amp;parameter_descriptor<sp/>=</highlight></codeline>
-<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>rcl_interfaces::msg::ParameterDescriptor())<sp/>{</highlight></codeline>
-<codeline lineno="38"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!node-&gt;has_parameter(param_name))<sp/>{</highlight></codeline>
-<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/>RCLCPP_DEBUG(rclcpp::get_logger(</highlight><highlight class="stringliteral">&quot;cx_utils&quot;</highlight><highlight class="normal">),<sp/></highlight><highlight class="stringliteral">&quot;Creating<sp/>parameter:<sp/>%s&quot;</highlight><highlight class="normal">,</highlight></codeline>
-<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>param_name.c_str());</highlight></codeline>
-<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/>node-&gt;declare_parameter(param_name,<sp/>default_value,<sp/>parameter_descriptor);</highlight></codeline>
-<codeline lineno="42"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
-<codeline lineno="43"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="44"><highlight class="normal"></highlight></codeline>
-<codeline lineno="46"><highlight class="comment">/*<sp/>Declares<sp/>static<sp/>ROS2<sp/>parameter<sp/>with<sp/>given<sp/>type<sp/>if<sp/>it<sp/>was<sp/>not<sp/>already</highlight></codeline>
-<codeline lineno="47"><highlight class="comment"><sp/>*<sp/>declared.</highlight></codeline>
-<codeline lineno="48"><highlight class="comment"><sp/>*</highlight></codeline>
-<codeline lineno="49"><highlight class="comment"><sp/>*<sp/>\param[in]<sp/>node<sp/>A<sp/>node<sp/>in<sp/>which<sp/>given<sp/>parameter<sp/>to<sp/>be<sp/>declared</highlight></codeline>
-<codeline lineno="50"><highlight class="comment"><sp/>*<sp/>\param[in]<sp/>param_type<sp/>The<sp/>type<sp/>of<sp/>parameter</highlight></codeline>
-<codeline lineno="51"><highlight class="comment"><sp/>*<sp/>\param[in]<sp/>default_value<sp/>Parameter<sp/>value<sp/>to<sp/>initialize<sp/>with</highlight></codeline>
-<codeline lineno="52"><highlight class="comment"><sp/>*<sp/>\param[in]<sp/>parameter_descriptor<sp/>Parameter<sp/>descriptor<sp/>(optional)</highlight></codeline>
-<codeline lineno="53"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="54"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>NodeT&gt;</highlight></codeline>
-<codeline lineno="55"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>declare_parameter_if_not_declared(</highlight></codeline>
-<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/>NodeT<sp/>node,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;param_name,</highlight></codeline>
-<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>rclcpp::ParameterType<sp/>&amp;param_type,</highlight></codeline>
-<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>rcl_interfaces::msg::ParameterDescriptor<sp/>&amp;parameter_descriptor<sp/>=</highlight></codeline>
-<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>rcl_interfaces::msg::ParameterDescriptor())<sp/>{</highlight></codeline>
-<codeline lineno="60"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!node-&gt;has_parameter(param_name))<sp/>{</highlight></codeline>
-<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/>RCLCPP_DEBUG(rclcpp::get_logger(</highlight><highlight class="stringliteral">&quot;cx_utils&quot;</highlight><highlight class="normal">),<sp/></highlight><highlight class="stringliteral">&quot;Creating<sp/>parameter:<sp/>%s&quot;</highlight><highlight class="normal">,</highlight></codeline>
-<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>param_name.c_str());</highlight></codeline>
-<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/>node-&gt;declare_parameter(param_name,<sp/>param_type,<sp/>parameter_descriptor);</highlight></codeline>
-<codeline lineno="64"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
-<codeline lineno="65"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="66"><highlight class="normal"></highlight></codeline>
-<codeline lineno="68"><highlight class="normal"></highlight></codeline>
-<codeline lineno="77"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>NodeT&gt;</highlight></codeline>
-<codeline lineno="78"><highlight class="normal">std::string<sp/>get_plugin_type_param(NodeT<sp/>node,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;plugin_name)<sp/>{</highlight></codeline>
-<codeline lineno="79"><highlight class="normal"><sp/><sp/>declare_parameter_if_not_declared(node,<sp/>plugin_name<sp/>+<sp/></highlight><highlight class="stringliteral">&quot;.plugin&quot;</highlight><highlight class="normal">,</highlight></codeline>
-<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>rclcpp::PARAMETER_STRING);</highlight></codeline>
-<codeline lineno="81"><highlight class="normal"><sp/><sp/>std::string<sp/>plugin_type;</highlight></codeline>
-<codeline lineno="82"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">try</highlight><highlight class="normal"><sp/>{</highlight></codeline>
-<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!node-&gt;get_parameter(plugin_name<sp/>+<sp/></highlight><highlight class="stringliteral">&quot;.plugin&quot;</highlight><highlight class="normal">,<sp/>plugin_type))<sp/>{</highlight></codeline>
-<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>RCLCPP_FATAL(node-&gt;get_logger(),<sp/></highlight><highlight class="stringliteral">&quot;&apos;plugin&apos;<sp/>param<sp/>not<sp/>defined<sp/>for<sp/>%s&quot;</highlight><highlight class="normal">,</highlight></codeline>
-<codeline lineno="85"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>plugin_name.c_str());</highlight></codeline>
-<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>exit(-1);</highlight></codeline>
-<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
-<codeline lineno="88"><highlight class="normal"></highlight></codeline>
-<codeline lineno="89"><highlight class="normal"><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">catch</highlight><highlight class="normal"><sp/>(rclcpp::exceptions::ParameterUninitializedException<sp/>&amp;ex)<sp/>{</highlight></codeline>
-<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/>RCLCPP_FATAL(node-&gt;get_logger(),</highlight></codeline>
-<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="stringliteral">&quot;&apos;plugin&apos;<sp/>param<sp/>not<sp/>defined<sp/>for<sp/>%s.<sp/>Error:<sp/>%s&quot;</highlight><highlight class="normal">,</highlight></codeline>
-<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>plugin_name.c_str(),<sp/>ex.what());</highlight></codeline>
-<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/>exit(-1);</highlight></codeline>
-<codeline lineno="94"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
-<codeline lineno="95"><highlight class="normal"></highlight></codeline>
-<codeline lineno="96"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>plugin_type;</highlight></codeline>
-<codeline lineno="97"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="98"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>resolve_files(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;std::string&gt;<sp/>&amp;files_in,</highlight></codeline>
-<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;std::string&gt;<sp/>&amp;share_dirs,</highlight></codeline>
-<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>std::vector&lt;std::string&gt;<sp/>&amp;files_out);</highlight></codeline>
-<codeline lineno="101"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>cx_utils</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="102"><highlight class="normal">}<sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>cx</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="103"><highlight class="normal"></highlight></codeline>
-<codeline lineno="104"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight><highlight class="comment">//<sp/>!CX_UTILS__PARAMSUTILS_HPP</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;vector&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&quot;rclcpp/rclcpp.hpp&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">cx</highlight></codeline>
+<codeline lineno="24"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="keyword">namespace<sp/></highlight><highlight class="normal">cx_utils</highlight></codeline>
+<codeline lineno="26"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="29"><highlight class="comment">/*<sp/>Declares<sp/>static<sp/>ROS2<sp/>parameter<sp/>and<sp/>sets<sp/>it<sp/>to<sp/>a<sp/>given<sp/>value</highlight></codeline>
+<codeline lineno="30"><highlight class="comment"><sp/>*<sp/>if<sp/>it<sp/>was<sp/>not<sp/>already<sp/>declared.</highlight></codeline>
+<codeline lineno="31"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="32"><highlight class="comment"><sp/>*<sp/>\param[in]<sp/>node<sp/>A<sp/>node<sp/>in<sp/>which<sp/>given<sp/>parameter<sp/>to<sp/>be<sp/>declared</highlight></codeline>
+<codeline lineno="33"><highlight class="comment"><sp/>*<sp/>\param[in]<sp/>param_name<sp/>The<sp/>name<sp/>of<sp/>parameter</highlight></codeline>
+<codeline lineno="34"><highlight class="comment"><sp/>*<sp/>\param[in]<sp/>default_value<sp/>Parameter<sp/>value<sp/>to<sp/>initialize<sp/>with</highlight></codeline>
+<codeline lineno="35"><highlight class="comment"><sp/>*<sp/>\param[in]<sp/>parameter_descriptor<sp/>Parameter<sp/>descriptor<sp/>(optional)</highlight></codeline>
+<codeline lineno="36"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>NodeT&gt;</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>declare_parameter_if_not_declared(</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/>NodeT<sp/>node,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;<sp/>param_name,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>rclcpp::ParameterValue<sp/>&amp;<sp/>default_value,</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>rcl_interfaces::msg::ParameterDescriptor<sp/>&amp;<sp/>parameter_descriptor<sp/>=</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/>rcl_interfaces::msg::ParameterDescriptor())</highlight></codeline>
+<codeline lineno="42"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!node-&gt;has_parameter(param_name))<sp/>{</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/>RCLCPP_DEBUG(rclcpp::get_logger(</highlight><highlight class="stringliteral">&quot;cx_utils&quot;</highlight><highlight class="normal">),<sp/></highlight><highlight class="stringliteral">&quot;Creating<sp/>parameter:<sp/>%s&quot;</highlight><highlight class="normal">,<sp/>param_name.c_str());</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/>node-&gt;declare_parameter(param_name,<sp/>default_value,<sp/>parameter_descriptor);</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="47"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="comment">/*<sp/>Declares<sp/>static<sp/>ROS2<sp/>parameter<sp/>with<sp/>given<sp/>type<sp/>if<sp/>it<sp/>was<sp/>not<sp/>already</highlight></codeline>
+<codeline lineno="51"><highlight class="comment"><sp/>*<sp/>declared.</highlight></codeline>
+<codeline lineno="52"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="53"><highlight class="comment"><sp/>*<sp/>\param[in]<sp/>node<sp/>A<sp/>node<sp/>in<sp/>which<sp/>given<sp/>parameter<sp/>to<sp/>be<sp/>declared</highlight></codeline>
+<codeline lineno="54"><highlight class="comment"><sp/>*<sp/>\param[in]<sp/>param_type<sp/>The<sp/>type<sp/>of<sp/>parameter</highlight></codeline>
+<codeline lineno="55"><highlight class="comment"><sp/>*<sp/>\param[in]<sp/>default_value<sp/>Parameter<sp/>value<sp/>to<sp/>initialize<sp/>with</highlight></codeline>
+<codeline lineno="56"><highlight class="comment"><sp/>*<sp/>\param[in]<sp/>parameter_descriptor<sp/>Parameter<sp/>descriptor<sp/>(optional)</highlight></codeline>
+<codeline lineno="57"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>NodeT&gt;</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>declare_parameter_if_not_declared(</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/>NodeT<sp/>node,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;<sp/>param_name,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>rclcpp::ParameterType<sp/>&amp;<sp/>param_type,</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>rcl_interfaces::msg::ParameterDescriptor<sp/>&amp;<sp/>parameter_descriptor<sp/>=</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/>rcl_interfaces::msg::ParameterDescriptor())</highlight></codeline>
+<codeline lineno="63"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!node-&gt;has_parameter(param_name))<sp/>{</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"><sp/><sp/><sp/><sp/>RCLCPP_DEBUG(rclcpp::get_logger(</highlight><highlight class="stringliteral">&quot;cx_utils&quot;</highlight><highlight class="normal">),<sp/></highlight><highlight class="stringliteral">&quot;Creating<sp/>parameter:<sp/>%s&quot;</highlight><highlight class="normal">,<sp/>param_name.c_str());</highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/>node-&gt;declare_parameter(param_name,<sp/>param_type,<sp/>parameter_descriptor);</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="68"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight></codeline>
+<codeline lineno="71"><highlight class="normal"></highlight></codeline>
+<codeline lineno="80"><highlight class="normal"></highlight><highlight class="keyword">template</highlight><highlight class="normal"><sp/>&lt;</highlight><highlight class="keyword">typename</highlight><highlight class="normal"><sp/>NodeT&gt;</highlight></codeline>
+<codeline lineno="81"><highlight class="normal">std::string<sp/>get_plugin_type_param(NodeT<sp/>node,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;<sp/>plugin_name)</highlight></codeline>
+<codeline lineno="82"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/>declare_parameter_if_not_declared(node,<sp/>plugin_name<sp/>+<sp/></highlight><highlight class="stringliteral">&quot;.plugin&quot;</highlight><highlight class="normal">,<sp/>rclcpp::PARAMETER_STRING);</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/>std::string<sp/>plugin_type;</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">try</highlight><highlight class="normal"><sp/>{</highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!node-&gt;get_parameter(plugin_name<sp/>+<sp/></highlight><highlight class="stringliteral">&quot;.plugin&quot;</highlight><highlight class="normal">,<sp/>plugin_type))<sp/>{</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>RCLCPP_FATAL(node-&gt;get_logger(),<sp/></highlight><highlight class="stringliteral">&quot;&apos;plugin&apos;<sp/>param<sp/>not<sp/>defined<sp/>for<sp/>%s&quot;</highlight><highlight class="normal">,<sp/>plugin_name.c_str());</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>exit(-1);</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">catch</highlight><highlight class="normal"><sp/>(rclcpp::exceptions::ParameterUninitializedException<sp/>&amp;<sp/>ex)<sp/>{</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/>RCLCPP_FATAL(</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>node-&gt;get_logger(),<sp/></highlight><highlight class="stringliteral">&quot;&apos;plugin&apos;<sp/>param<sp/>not<sp/>defined<sp/>for<sp/>%s.<sp/>Error:<sp/>%s&quot;</highlight><highlight class="normal">,<sp/>plugin_name.c_str(),</highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>ex.what());</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/>exit(-1);</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"></highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>plugin_type;</highlight></codeline>
+<codeline lineno="98"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>resolve_files(</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;std::string&gt;<sp/>&amp;<sp/>files_in,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;std::string&gt;<sp/>&amp;<sp/>share_dirs,</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/>std::vector&lt;std::string&gt;<sp/>&amp;<sp/>files_out);</highlight></codeline>
+<codeline lineno="102"><highlight class="normal">}<sp/><sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>cx_utils</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="103"><highlight class="normal">}<sp/><sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>cx</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="104"><highlight class="normal"></highlight></codeline>
+<codeline lineno="105"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/><sp/></highlight><highlight class="comment">//<sp/>CX_UTILS__PARAM_UTILS_HPP_</highlight><highlight class="normal"></highlight></codeline>
     </programlisting>
     <location file="include/cx_utils/param_utils.hpp"/>
   </compounddef>

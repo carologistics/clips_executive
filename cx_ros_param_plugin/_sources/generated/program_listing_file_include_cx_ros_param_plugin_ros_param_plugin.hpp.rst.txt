@@ -11,6 +11,7 @@ Program Listing for File ros_param_plugin.hpp
 .. code-block:: cpp
 
    // Copyright (c) 2024-2025 Carologistics
+   // SPDX-License-Identifier: Apache-2.0
    //
    // Licensed under the Apache License, Version 2.0 (the "License");
    // you may not use this file except in compliance with the License.
@@ -24,31 +25,34 @@ Program Listing for File ros_param_plugin.hpp
    // See the License for the specific language governing permissions and
    // limitations under the License.
    
-   #ifndef CX_PLUGINS__ROSPARAMPLUGIN_HPP_
-   #define CX_PLUGINS__ROSPARAMPLUGIN_HPP_
+   #ifndef CX_ROS_PARAM_PLUGIN__ROS_PARAM_PLUGIN_HPP_
+   #define CX_ROS_PARAM_PLUGIN__ROS_PARAM_PLUGIN_HPP_
    
+   #include <memory>
    #include <string>
    
    #include "cx_plugin/clips_plugin.hpp"
    
-   namespace cx {
+   namespace cx
+   {
    
-   class RosParamPlugin : public ClipsPlugin {
+   class RosParamPlugin : public ClipsPlugin
+   {
    public:
      RosParamPlugin();
      ~RosParamPlugin();
    
      void initialize() override;
    
-     bool clips_env_init(std::shared_ptr<clips::Environment> &env) override;
-     bool clips_env_destroyed(std::shared_ptr<clips::Environment> &env) override;
+     bool clips_env_init(std::shared_ptr<clips::Environment> & env) override;
+     bool clips_env_destroyed(std::shared_ptr<clips::Environment> & env) override;
    
    private:
      std::unique_ptr<rclcpp::Logger> logger_;
    
-     clips::UDFValue get_ros_param(clips::Environment *env, std::string param_name,
-                                   clips::UDFValue &default_value);
+     clips::UDFValue get_ros_param(
+       clips::Environment * env, std::string param_name, clips::UDFValue & default_value);
    };
-   } // namespace cx
+   }  // namespace cx
    
-   #endif // !CX_PLUGINS__ROSPARAMPLUGIN_HPP_
+   #endif  // CX_ROS_PARAM_PLUGIN__ROS_PARAM_PLUGIN_HPP_

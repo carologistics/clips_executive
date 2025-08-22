@@ -11,6 +11,7 @@ Program Listing for File file_load_plugin.hpp
 .. code-block:: cpp
 
    // Copyright (c) 2024-2025 Carologistics
+   // SPDX-License-Identifier: Apache-2.0
    //
    // Licensed under the Apache License, Version 2.0 (the "License");
    // you may not use this file except in compliance with the License.
@@ -24,24 +25,28 @@ Program Listing for File file_load_plugin.hpp
    // See the License for the specific language governing permissions and
    // limitations under the License.
    
-   #ifndef CX_PLUGINS__FILELOADPLUGIN_HPP_
-   #define CX_PLUGINS__FILELOADPLUGIN_HPP_
+   #ifndef CX_FILE_LOAD_PLUGIN__FILE_LOAD_PLUGIN_HPP_
+   #define CX_FILE_LOAD_PLUGIN__FILE_LOAD_PLUGIN_HPP_
    
+   #include <memory>
    #include <string>
+   #include <vector>
    
    #include "cx_plugin/clips_plugin.hpp"
    
-   namespace cx {
+   namespace cx
+   {
    
-   class FileLoadPlugin : public ClipsPlugin {
+   class FileLoadPlugin : public ClipsPlugin
+   {
    public:
      FileLoadPlugin();
      ~FileLoadPlugin();
    
      void initialize();
    
-     bool clips_env_init(std::shared_ptr<clips::Environment> &env) override;
-     bool clips_env_destroyed(std::shared_ptr<clips::Environment> &env) override;
+     bool clips_env_init(std::shared_ptr<clips::Environment> & env) override;
+     bool clips_env_destroyed(std::shared_ptr<clips::Environment> & env) override;
    
    private:
      std::unique_ptr<rclcpp::Logger> logger_;
@@ -50,6 +55,6 @@ Program Listing for File file_load_plugin.hpp
      std::vector<std::string> init_batch_files_;
      std::vector<std::string> cleanup_files_;
    };
-   } // namespace cx
+   }  // namespace cx
    
-   #endif // !CX_PLUGINS__FILELOADPLUGIN_HPP_
+   #endif  // CX_FILE_LOAD_PLUGIN__FILE_LOAD_PLUGIN_HPP_

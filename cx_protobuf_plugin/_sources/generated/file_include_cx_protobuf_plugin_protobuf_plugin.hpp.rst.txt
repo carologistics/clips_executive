@@ -40,6 +40,10 @@ Includes
 
 - ``string``
 
+- ``unordered_map``
+
+- ``vector``
+
 
 
 

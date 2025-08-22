@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Variable cx::chars &mdash; cx_utils 0.1.3 documentation</title>
+  <title>File format.hpp &mdash; cx_utils 0.1.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=86f27845" />
       <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
@@ -21,8 +21,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Variable cx::rd" href="variable_string__utils_8hpp_1ab55bf494ff071923012e9f7982c967d6.html" />
-    <link rel="prev" title="Function cx::generator" href="function_string__utils_8hpp_1a1810683f407b6fadb41a3b8f1df0fd8a.html" /> 
+    <link rel="next" title="Program Listing for File format.hpp" href="program_listing_file_include_cx_utils_format.hpp.html" />
+    <link rel="prev" title="Program Listing for File clips_env_context.hpp" href="program_listing_file_include_cx_utils_clips_env_context.hpp.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -71,8 +71,8 @@
 <li class="toctree-l4"><a class="reference internal" href="function_string__utils_8hpp_1a1810683f407b6fadb41a3b8f1df0fd8a.html">Function cx::generator</a></li>
 </ul>
 </li>
-<li class="toctree-l3 current"><a class="reference internal" href="index.html#variables">Variables</a><ul class="current">
-<li class="toctree-l4 current"><a class="current reference internal" href="#">Variable cx::chars</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#variables">Variables</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="variable_string__utils_8hpp_1acbb48e2352e3fd2b0daec29318a59372.html">Variable cx::chars</a></li>
 <li class="toctree-l4"><a class="reference internal" href="variable_string__utils_8hpp_1ab55bf494ff071923012e9f7982c967d6.html">Variable cx::rd</a></li>
 </ul>
 </li>
@@ -81,8 +81,9 @@
 <li class="toctree-l4"><a class="reference internal" href="dir_include_cx_utils.html">Directory cx_utils</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="index.html#files">Files</a><ul>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html#files">Files</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="file_include_cx_utils_clips_env_context.hpp.html">File clips_env_context.hpp</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">File format.hpp</a></li>
 <li class="toctree-l4"><a class="reference internal" href="file_include_cx_utils_param_utils.hpp.html">File param_utils.hpp</a></li>
 <li class="toctree-l4"><a class="reference internal" href="file_include_cx_utils_string_utils.hpp.html">File string_utils.hpp</a></li>
 </ul>
@@ -124,9 +125,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">C++ API</a></li>
-      <li class="breadcrumb-item active">Variable cx::chars</li>
+      <li class="breadcrumb-item active">File format.hpp</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/generated/variable_string__utils_8hpp_1a8d8a6edcb760b28dacf2804884ef1e62.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/generated/file_include_cx_utils_format.hpp.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -134,18 +135,30 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="variable-cx-chars">
-<span id="exhale-variable-string-utils-8hpp-1a8d8a6edcb760b28dacf2804884ef1e62"></span><h1>Variable cx::chars<a class="headerlink" href="#variable-cx-chars" title="Link to this heading"></a></h1>
+  <section id="file-format-hpp">
+<span id="file-include-cx-utils-format-hpp"></span><h1>File format.hpp<a class="headerlink" href="#file-format-hpp" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="dir_include_cx_utils.html#dir-include-cx-utils"><span class="std std-ref">Parent directory</span></a> (<code class="docutils literal notranslate"><span class="pre">include/cx_utils</span></code>)</p>
+<nav class="contents local" id="contents">
+<p class="topic-title">Contents</p>
 <ul class="simple">
-<li><p>Defined in <a class="reference internal" href="file_include_cx_utils_string_utils.hpp.html#file-include-cx-utils-string-utils-hpp"><span class="std std-ref">File string_utils.hpp</span></a></p></li>
+<li><p><a class="reference internal" href="#definition-include-cx-utils-format-hpp" id="id1">Definition (<code class="docutils literal notranslate"><span class="pre">include/cx_utils/format.hpp</span></code>)</a></p></li>
+<li><p><a class="reference internal" href="#includes" id="id2">Includes</a></p></li>
 </ul>
-<section id="variable-documentation">
-<h2>Variable Documentation<a class="headerlink" href="#variable-documentation" title="Link to this heading"></a></h2>
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N2cx5charsE">
-<span id="_CPPv3N2cx5charsE"></span><span id="_CPPv2N2cx5charsE"></span><span id="cx::chars__ss"></span><span class="target" id="string__utils_8hpp_1a8d8a6edcb760b28dacf2804884ef1e62"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-prename descclassname"><span class="n"><span class="pre">cx</span></span><span class="p"><span class="pre">::</span></span></span><span class="sig-name descname"><span class="n"><span class="pre">chars</span></span></span><span class="p"><span class="pre">{</span></span><span class="s"><span class="pre">&quot;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N2cx5charsE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
-
+</nav>
+<section id="definition-include-cx-utils-format-hpp">
+<h2>Definition (<code class="docutils literal notranslate"><span class="pre">include/cx_utils/format.hpp</span></code>)<a class="headerlink" href="#definition-include-cx-utils-format-hpp" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="program_listing_file_include_cx_utils_format.hpp.html">Program Listing for File format.hpp</a></li>
+</ul>
+</div>
+</section>
+<section id="includes">
+<h2>Includes<a class="headerlink" href="#includes" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">string</span></code> (<a class="reference internal" href="file_include_cx_utils_string_utils.hpp.html#file-include-cx-utils-string-utils-hpp"><span class="std std-ref">File string_utils.hpp</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">utility</span></code></p></li>
+</ul>
 </section>
 </section>
 
@@ -153,8 +166,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="function_string__utils_8hpp_1a1810683f407b6fadb41a3b8f1df0fd8a.html" class="btn btn-neutral float-left" title="Function cx::generator" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="variable_string__utils_8hpp_1ab55bf494ff071923012e9f7982c967d6.html" class="btn btn-neutral float-right" title="Variable cx::rd" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="program_listing_file_include_cx_utils_clips_env_context.hpp.html" class="btn btn-neutral float-left" title="Program Listing for File clips_env_context.hpp" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="program_listing_file_include_cx_utils_format.hpp.html" class="btn btn-neutral float-right" title="Program Listing for File format.hpp" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

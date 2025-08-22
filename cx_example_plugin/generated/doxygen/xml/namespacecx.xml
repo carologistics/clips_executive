@@ -12,6 +12,6 @@
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="include/cx_example_plugin/example_plugin.hpp" line="22" column="1"/>
+    <location file="include/cx_example_plugin/example_plugin.hpp" line="24" column="1"/>
   </compounddef>
 </doxygen>

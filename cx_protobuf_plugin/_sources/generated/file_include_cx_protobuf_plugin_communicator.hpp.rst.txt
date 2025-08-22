@@ -36,11 +36,21 @@ Includes
 
 - ``map``
 
+- ``memory``
+
 - ``mutex``
 
 - ``protobuf_comm/server.h``
 
 - ``rclcpp_lifecycle/lifecycle_node.hpp``
+
+- ``string``
+
+- ``unordered_map``
+
+- ``utility``
+
+- ``vector``
 
 
 

@@ -32,9 +32,13 @@ Includes
 
 - ``clips_ns/clips.h``
 
+- ``memory``
+
 - ``rclcpp/rclcpp.hpp``
 
 - ``spdlog/spdlog.h``
+
+- ``string`` (:ref:`file_include_cx_utils_string_utils.hpp`)
 
 
 

@@ -138,6 +138,7 @@
 <span id="program-listing-file-include-cx-clips-env-manager-clips-env-manager-hpp"></span><h1>Program Listing for File clips_env_manager.hpp<a class="headerlink" href="#program-listing-for-file-clips-env-manager-hpp" title="Link to this heading"></a></h1>
 <p>↰ <a class="reference internal" href="file_include_cx_clips_env_manager_clips_env_manager.hpp.html#file-include-cx-clips-env-manager-clips-env-manager-hpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">include/cx_clips_env_manager/clips_env_manager.hpp</span></code>)</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Copyright (c) 2024-2025 Carologistics</span>
+<span class="c1">// SPDX-License-Identifier: Apache-2.0</span>
 <span class="c1">//</span>
 <span class="c1">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
 <span class="c1">// you may not use this file except in compliance with the License.</span>
@@ -151,8 +152,10 @@
 <span class="c1">// See the License for the specific language governing permissions and</span>
 <span class="c1">// limitations under the License.</span>
 
-<span class="cp">#ifndef CX_CLIPS__CLIPSENVMANAGER_H_</span>
-<span class="cp">#define CX_CLIPS__CLIPSENVMANAGER_H_</span>
+<span class="cp">#ifndef CX_CLIPS_ENV_MANAGER__CLIPS_ENV_MANAGER_HPP_</span>
+<span class="cp">#define CX_CLIPS_ENV_MANAGER__CLIPS_ENV_MANAGER_HPP_</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;spdlog/spdlog.h&gt;</span>
 
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;algorithm&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;list&gt;</span>
@@ -161,45 +164,40 @@
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;set&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string&gt;</span>
 
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;bond/msg/constants.hpp&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;bondcpp/bond.hpp&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;cx_clips_env_manager/clips_plugin_manager.hpp&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;cx_msgs/srv/create_clips_env.hpp&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;cx_msgs/srv/destroy_clips_env.hpp&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;cx_msgs/srv/list_clips_envs.hpp&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;lifecycle_msgs/msg/state.hpp&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;lifecycle_msgs/msg/transition.hpp&quot;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;rclcpp/clock.hpp&quot;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;rclcpp/rclcpp.hpp&quot;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;rclcpp_lifecycle/lifecycle_node.hpp&quot;</span>
 
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;lifecycle_msgs/msg/state.hpp&quot;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;lifecycle_msgs/msg/transition.hpp&quot;</span>
-
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;cx_clips_env_manager/clips_plugin_manager.hpp&quot;</span>
-
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;cx_msgs/srv/create_clips_env.hpp&quot;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;cx_msgs/srv/destroy_clips_env.hpp&quot;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;cx_msgs/srv/list_clips_envs.hpp&quot;</span>
-
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;spdlog/spdlog.h&gt;</span>
-
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;bond/msg/constants.hpp&quot;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;bondcpp/bond.hpp&quot;</span>
-
-<span class="k">namespace</span><span class="w"> </span><span class="nn">cx</span><span class="w"> </span><span class="p">{</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">cx</span>
+<span class="p">{</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ClipsPluginManager</span><span class="p">;</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ClipsExecutive</span><span class="p">;</span>
 
-<span class="k">class</span><span class="w"> </span><span class="nc">CLIPSEnvManager</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">rclcpp_lifecycle</span><span class="o">::</span><span class="n">LifecycleNode</span><span class="w"> </span><span class="p">{</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CLIPSEnvManager</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">rclcpp_lifecycle</span><span class="o">::</span><span class="n">LifecycleNode</span>
+<span class="p">{</span>
 <span class="w">  </span><span class="k">friend</span><span class="w"> </span><span class="n">ClipsPluginManager</span><span class="p">;</span>
 <span class="w">  </span><span class="k">friend</span><span class="w"> </span><span class="n">ClipsExecutive</span><span class="p">;</span>
 
 <span class="k">public</span><span class="o">:</span>
-<span class="w">  </span><span class="n">CLIPSEnvManager</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">rclcpp</span><span class="o">::</span><span class="n">NodeOptions</span><span class="w"> </span><span class="o">&amp;</span><span class="n">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rclcpp</span><span class="o">::</span><span class="n">NodeOptions</span><span class="p">());</span>
+<span class="w">  </span><span class="k">explicit</span><span class="w"> </span><span class="n">CLIPSEnvManager</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">rclcpp</span><span class="o">::</span><span class="n">NodeOptions</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">options</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rclcpp</span><span class="o">::</span><span class="n">NodeOptions</span><span class="p">());</span>
 <span class="w">  </span><span class="o">~</span><span class="n">CLIPSEnvManager</span><span class="p">();</span>
-<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">CallbackReturn</span><span class="w"> </span><span class="o">=</span>
-<span class="w">      </span><span class="n">rclcpp_lifecycle</span><span class="o">::</span><span class="n">node_interfaces</span><span class="o">::</span><span class="n">LifecycleNodeInterface</span><span class="o">::</span><span class="n">CallbackReturn</span><span class="p">;</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">CallbackReturn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rclcpp_lifecycle</span><span class="o">::</span><span class="n">node_interfaces</span><span class="o">::</span><span class="n">LifecycleNodeInterface</span><span class="o">::</span><span class="n">CallbackReturn</span><span class="p">;</span>
 <span class="w">  </span><span class="c1">// using EnvsMap = std::unordered_map&lt;std::string,</span>
 <span class="w">  </span><span class="c1">// cx::LockSharedPtr&lt;clips::Environment&gt;&gt;;</span>
 
-<span class="w">  </span><span class="n">CallbackReturn</span><span class="w"> </span><span class="nf">on_configure</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">rclcpp_lifecycle</span><span class="o">::</span><span class="n">State</span><span class="w"> </span><span class="o">&amp;</span><span class="n">state</span><span class="p">);</span>
-<span class="w">  </span><span class="n">CallbackReturn</span><span class="w"> </span><span class="nf">on_activate</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">rclcpp_lifecycle</span><span class="o">::</span><span class="n">State</span><span class="w"> </span><span class="o">&amp;</span><span class="n">state</span><span class="p">);</span>
-<span class="w">  </span><span class="n">CallbackReturn</span><span class="w"> </span><span class="nf">on_deactivate</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">rclcpp_lifecycle</span><span class="o">::</span><span class="n">State</span><span class="w"> </span><span class="o">&amp;</span><span class="n">state</span><span class="p">);</span>
-<span class="w">  </span><span class="n">CallbackReturn</span><span class="w"> </span><span class="nf">on_shutdown</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">rclcpp_lifecycle</span><span class="o">::</span><span class="n">State</span><span class="w"> </span><span class="o">&amp;</span><span class="n">state</span><span class="p">);</span>
-<span class="w">  </span><span class="n">CallbackReturn</span><span class="w"> </span><span class="nf">on_error</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">rclcpp_lifecycle</span><span class="o">::</span><span class="n">State</span><span class="w"> </span><span class="o">&amp;</span><span class="n">state</span><span class="p">);</span>
+<span class="w">  </span><span class="n">CallbackReturn</span><span class="w"> </span><span class="nf">on_configure</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">rclcpp_lifecycle</span><span class="o">::</span><span class="n">State</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">state</span><span class="p">);</span>
+<span class="w">  </span><span class="n">CallbackReturn</span><span class="w"> </span><span class="nf">on_activate</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">rclcpp_lifecycle</span><span class="o">::</span><span class="n">State</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">state</span><span class="p">);</span>
+<span class="w">  </span><span class="n">CallbackReturn</span><span class="w"> </span><span class="nf">on_deactivate</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">rclcpp_lifecycle</span><span class="o">::</span><span class="n">State</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">state</span><span class="p">);</span>
+<span class="w">  </span><span class="n">CallbackReturn</span><span class="w"> </span><span class="nf">on_shutdown</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">rclcpp_lifecycle</span><span class="o">::</span><span class="n">State</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">state</span><span class="p">);</span>
+<span class="w">  </span><span class="n">CallbackReturn</span><span class="w"> </span><span class="nf">on_error</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">rclcpp_lifecycle</span><span class="o">::</span><span class="n">State</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">state</span><span class="p">);</span>
 
 <span class="w">  </span><span class="c1">// std::map&lt;std::string, LockSharedPtr&lt;clips::Environment&gt;&gt;</span>
 <span class="w">  </span><span class="c1">// getEnvironments() const;</span>
@@ -207,24 +205,24 @@
 <span class="w">  </span><span class="c1">// LockSharedPtr&lt;clips::Environment&gt;</span>
 <span class="w">  </span><span class="c1">// getEnvironmentByName(const std::string &amp;env_name);</span>
 <span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">list_envs_callback</span><span class="p">(</span>
-<span class="w">      </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">rmw_request_id_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">request_header</span><span class="p">,</span>
-<span class="w">      </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">cx_msgs</span><span class="o">::</span><span class="n">srv</span><span class="o">::</span><span class="n">ListClipsEnvs</span><span class="o">::</span><span class="n">Request</span><span class="o">&gt;</span><span class="w"> </span><span class="n">request</span><span class="p">,</span>
-<span class="w">      </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">cx_msgs</span><span class="o">::</span><span class="n">srv</span><span class="o">::</span><span class="n">ListClipsEnvs</span><span class="o">::</span><span class="n">Response</span><span class="o">&gt;</span><span class="w"> </span><span class="n">response</span><span class="p">);</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">rmw_request_id_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">request_header</span><span class="p">,</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">cx_msgs</span><span class="o">::</span><span class="n">srv</span><span class="o">::</span><span class="n">ListClipsEnvs</span><span class="o">::</span><span class="n">Request</span><span class="o">&gt;</span><span class="w"> </span><span class="n">request</span><span class="p">,</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">cx_msgs</span><span class="o">::</span><span class="n">srv</span><span class="o">::</span><span class="n">ListClipsEnvs</span><span class="o">::</span><span class="n">Response</span><span class="o">&gt;</span><span class="w"> </span><span class="n">response</span><span class="p">);</span>
 
 <span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">create_env_callback</span><span class="p">(</span>
-<span class="w">      </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">rmw_request_id_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">request_header</span><span class="p">,</span>
-<span class="w">      </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">cx_msgs</span><span class="o">::</span><span class="n">srv</span><span class="o">::</span><span class="n">CreateClipsEnv</span><span class="o">::</span><span class="n">Request</span><span class="o">&gt;</span><span class="w"> </span><span class="n">request</span><span class="p">,</span>
-<span class="w">      </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">cx_msgs</span><span class="o">::</span><span class="n">srv</span><span class="o">::</span><span class="n">CreateClipsEnv</span><span class="o">::</span><span class="n">Response</span><span class="o">&gt;</span><span class="w"> </span><span class="n">response</span><span class="p">);</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">rmw_request_id_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">request_header</span><span class="p">,</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">cx_msgs</span><span class="o">::</span><span class="n">srv</span><span class="o">::</span><span class="n">CreateClipsEnv</span><span class="o">::</span><span class="n">Request</span><span class="o">&gt;</span><span class="w"> </span><span class="n">request</span><span class="p">,</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">cx_msgs</span><span class="o">::</span><span class="n">srv</span><span class="o">::</span><span class="n">CreateClipsEnv</span><span class="o">::</span><span class="n">Response</span><span class="o">&gt;</span><span class="w"> </span><span class="n">response</span><span class="p">);</span>
 
 <span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">destroy_env_callback</span><span class="p">(</span>
-<span class="w">      </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">rmw_request_id_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">request_header</span><span class="p">,</span>
-<span class="w">      </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">cx_msgs</span><span class="o">::</span><span class="n">srv</span><span class="o">::</span><span class="n">DestroyClipsEnv</span><span class="o">::</span><span class="n">Request</span><span class="o">&gt;</span><span class="w"> </span><span class="n">request</span><span class="p">,</span>
-<span class="w">      </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">cx_msgs</span><span class="o">::</span><span class="n">srv</span><span class="o">::</span><span class="n">DestroyClipsEnv</span><span class="o">::</span><span class="n">Response</span><span class="o">&gt;</span><span class="w"> </span><span class="n">response</span><span class="p">);</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">rmw_request_id_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">request_header</span><span class="p">,</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">cx_msgs</span><span class="o">::</span><span class="n">srv</span><span class="o">::</span><span class="n">DestroyClipsEnv</span><span class="o">::</span><span class="n">Request</span><span class="o">&gt;</span><span class="w"> </span><span class="n">request</span><span class="p">,</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">cx_msgs</span><span class="o">::</span><span class="n">srv</span><span class="o">::</span><span class="n">DestroyClipsEnv</span><span class="o">::</span><span class="n">Response</span><span class="o">&gt;</span><span class="w"> </span><span class="n">response</span><span class="p">);</span>
 
 <span class="k">private</span><span class="o">:</span>
-<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="o">&gt;</span><span class="w"> </span><span class="n">new_env</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="n">env_name</span><span class="p">);</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="o">&gt;</span><span class="w"> </span><span class="n">new_env</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">env_name</span><span class="p">);</span>
 
-<span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="nf">delete_env</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="n">env_name</span><span class="p">);</span>
+<span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="nf">delete_env</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">env_name</span><span class="p">);</span>
 <span class="w">  </span><span class="c1">// void assert_plugins(LockSharedPtr&lt;clips::Environment&gt; &amp;clips,</span>
 <span class="w">  </span><span class="c1">//                     bool immediate_assert);</span>
 <span class="w">  </span><span class="c1">// void add_functions(const std::string &amp;env_name);</span>
@@ -234,8 +232,7 @@
 <span class="w">  </span><span class="c1">// ROS2 SERVICES</span>
 <span class="w">  </span><span class="n">rclcpp</span><span class="o">::</span><span class="n">Service</span><span class="o">&lt;</span><span class="n">cx_msgs</span><span class="o">::</span><span class="n">srv</span><span class="o">::</span><span class="n">ListClipsEnvs</span><span class="o">&gt;::</span><span class="n">SharedPtr</span><span class="w"> </span><span class="n">list_envs_service_</span><span class="p">;</span>
 <span class="w">  </span><span class="n">rclcpp</span><span class="o">::</span><span class="n">Service</span><span class="o">&lt;</span><span class="n">cx_msgs</span><span class="o">::</span><span class="n">srv</span><span class="o">::</span><span class="n">CreateClipsEnv</span><span class="o">&gt;::</span><span class="n">SharedPtr</span><span class="w"> </span><span class="n">create_env_service_</span><span class="p">;</span>
-<span class="w">  </span><span class="n">rclcpp</span><span class="o">::</span><span class="n">Service</span><span class="o">&lt;</span><span class="n">cx_msgs</span><span class="o">::</span><span class="n">srv</span><span class="o">::</span><span class="n">DestroyClipsEnv</span><span class="o">&gt;::</span><span class="n">SharedPtr</span>
-<span class="w">      </span><span class="n">destroy_env_service_</span><span class="p">;</span>
+<span class="w">  </span><span class="n">rclcpp</span><span class="o">::</span><span class="n">Service</span><span class="o">&lt;</span><span class="n">cx_msgs</span><span class="o">::</span><span class="n">srv</span><span class="o">::</span><span class="n">DestroyClipsEnv</span><span class="o">&gt;::</span><span class="n">SharedPtr</span><span class="w"> </span><span class="n">destroy_env_service_</span><span class="p">;</span>
 
 <span class="k">private</span><span class="o">:</span>
 <span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="n">create_bond</span><span class="p">();</span>
@@ -254,12 +251,11 @@
 <span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">bond</span><span class="o">::</span><span class="n">Bond</span><span class="o">&gt;</span><span class="w"> </span><span class="n">bond_</span><span class="p">{</span><span class="k">nullptr</span><span class="p">};</span>
 <span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">bond_heartbeat_period</span><span class="p">;</span>
 <span class="w">  </span><span class="n">rclcpp</span><span class="o">::</span><span class="n">TimerBase</span><span class="o">::</span><span class="n">SharedPtr</span><span class="w"> </span><span class="n">autostart_timer_</span><span class="p">;</span>
-<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">rclcpp</span><span class="o">::</span><span class="n">PreShutdownCallbackHandle</span><span class="o">&gt;</span><span class="w"> </span><span class="n">rcl_preshutdown_cb_handle_</span><span class="p">{</span>
-<span class="w">      </span><span class="k">nullptr</span><span class="p">};</span>
+<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">rclcpp</span><span class="o">::</span><span class="n">PreShutdownCallbackHandle</span><span class="o">&gt;</span><span class="w"> </span><span class="n">rcl_preshutdown_cb_handle_</span><span class="p">{</span><span class="k">nullptr</span><span class="p">};</span>
 <span class="p">};</span>
-<span class="p">}</span><span class="w"> </span><span class="c1">// namespace cx</span>
+<span class="p">}</span><span class="w">  </span><span class="c1">// namespace cx</span>
 
-<span class="cp">#endif </span><span class="c1">// !CX_CLIPS__CLIPSENVMANAGER_H_</span>
+<span class="cp">#endif  </span><span class="c1">// CX_CLIPS_ENV_MANAGER__CLIPS_ENV_MANAGER_HPP_</span>
 </pre></div>
 </div>
 </section>

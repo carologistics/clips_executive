@@ -3,6 +3,7 @@
   <compounddef id="dir_71f5e3537c54355c141b3bc69d2dca5c" kind="dir">
     <compoundname>include/cx_utils</compoundname>
     <innerfile refid="clips__env__context_8hpp">clips_env_context.hpp</innerfile>
+    <innerfile refid="format_8hpp">format.hpp</innerfile>
     <innerfile refid="param__utils_8hpp">param_utils.hpp</innerfile>
     <innerfile refid="string__utils_8hpp">string_utils.hpp</innerfile>
     <briefdescription>

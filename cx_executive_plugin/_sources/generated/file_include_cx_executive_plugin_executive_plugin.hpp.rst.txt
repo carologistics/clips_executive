@@ -32,9 +32,13 @@ Includes
 
 - ``cx_plugin/clips_plugin.hpp``
 
+- ``memory``
+
 - ``std_msgs/msg/empty.hpp``
 
 - ``string``
+
+- ``vector``
 
 
 

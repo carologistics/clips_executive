@@ -16,7 +16,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="40" column="7" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="40" bodyend="-1"/>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="44" column="7" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="44" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1ExecutivePlugin_1a1988b7afe7afdadd19c2b6cf816003ad" prot="private" static="no" mutable="no">
         <type>bool</type>
@@ -30,7 +30,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="41" column="8" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="41" bodyend="-1"/>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="45" column="8" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="45" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1ExecutivePlugin_1ab71bf309cf37db4dede7409cd951dbd0" prot="private" static="no" mutable="no">
         <type>bool</type>
@@ -44,7 +44,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="42" column="8" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="42" bodyend="-1"/>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="46" column="8" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="46" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1ExecutivePlugin_1a18257588998f3734d386edf8b3b786b4" prot="private" static="no" mutable="no">
         <type>std::string</type>
@@ -58,7 +58,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="44" column="15" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="44" bodyend="-1"/>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="48" column="15" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="48" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1ExecutivePlugin_1a0690d9a7dbb520fe4cf35e4786c9c6c9" prot="private" static="no" mutable="no">
         <type>rclcpp::TimerBase::SharedPtr</type>
@@ -72,7 +72,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="46" column="32" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="46" bodyend="-1"/>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="50" column="32" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="50" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1ExecutivePlugin_1a93c9e12fdfe8ff047d16430cedbce58a" prot="private" static="no" mutable="no">
         <type>rclcpp_lifecycle::LifecyclePublisher&lt; std_msgs::msg::Empty &gt;::SharedPtr</type>
@@ -86,7 +86,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="49" column="7" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="49" bodyend="-1"/>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="52" column="52" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="52" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1ExecutivePlugin_1a90bcf01585ac247ea2dad0528f21bdf1" prot="private" static="no" mutable="no">
         <type>std::chrono::nanoseconds</type>
@@ -100,7 +100,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="51" column="28" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="51" bodyend="-1"/>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="54" column="28" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="54" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1ExecutivePlugin_1a8f8400444d958aee6b58f82069f3875c" prot="private" static="no" mutable="no">
         <type>std::unique_ptr&lt; rclcpp::Logger &gt;</type>
@@ -114,7 +114,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="53" column="19" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="53" bodyend="-1"/>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="56" column="19" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="56" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1ExecutivePlugin_1aa74acd07450f023f7c588f7225786feb" prot="private" static="no" mutable="no">
         <type>std::vector&lt; std::shared_ptr&lt; clips::Environment &gt; &gt;</type>
@@ -128,7 +128,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="55" column="15" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="55" bodyend="-1"/>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="58" column="15" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="58" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1ExecutivePlugin_1a469ff11c8f0923b65d8aee55c2394542" prot="private" static="no" mutable="no">
         <type>std::mutex</type>
@@ -142,7 +142,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="56" column="14" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="56" bodyend="-1"/>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="59" column="14" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="59" bodyend="-1"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="public-func">
@@ -158,7 +158,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="28" column="3"/>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="32" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1ExecutivePlugin_1ae35c4e0ed6a6a27b3b38df4ec23abc3d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -172,7 +172,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="29" column="3"/>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="33" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1ExecutivePlugin_1a05c41e5b7f22ea76d35870c7904cbe45" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
         <type>void</type>
@@ -187,7 +187,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="31" column="8"/>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="35" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1ExecutivePlugin_1acb14d613c62ba47ab41edbc2749a2d6a" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
         <type>void</type>
@@ -202,7 +202,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="32" column="8"/>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="36" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1ExecutivePlugin_1a0bc70e96725fdc585aed292ad140bb73" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
         <type>bool</type>
@@ -221,7 +221,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="34" column="8"/>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="38" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1ExecutivePlugin_1ae999953f3ae358b120edb66b5d291fb9" prot="public" static="no" const="no" explicit="no" inline="no" virt="virtual">
         <type>bool</type>
@@ -240,7 +240,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="35" column="8"/>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="39" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1ExecutivePlugin_1ab5dfb1b989dc4b9bcb5e865b1f7fcfd9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::shared_ptr&lt; rclcpp_lifecycle::LifecycleNode &gt;</type>
@@ -254,7 +254,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="37" column="19"/>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="41" column="19"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
@@ -285,7 +285,7 @@
         </childnode>
       </node>
     </collaborationgraph>
-    <location file="include/cx_executive_plugin/executive_plugin.hpp" line="26" column="1" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="26" bodyend="57"/>
+    <location file="include/cx_executive_plugin/executive_plugin.hpp" line="29" column="1" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="30" bodyend="60"/>
     <listofallmembers>
       <member refid="classcx_1_1ExecutivePlugin_1a0690d9a7dbb520fe4cf35e4786c9c6c9" prot="private" virt="non-virtual"><scope>cx::ExecutivePlugin</scope><name>agenda_refresh_timer_</name></member>
       <member refid="classcx_1_1ExecutivePlugin_1a1988b7afe7afdadd19c2b6cf816003ad" prot="private" virt="non-virtual"><scope>cx::ExecutivePlugin</scope><name>assert_time_</name></member>

@@ -128,6 +128,7 @@
 <span id="program-listing-file-include-cx-file-load-plugin-file-load-plugin-hpp"></span><h1>Program Listing for File file_load_plugin.hpp<a class="headerlink" href="#program-listing-for-file-file-load-plugin-hpp" title="Link to this heading"></a></h1>
 <p>↰ <a class="reference internal" href="file_include_cx_file_load_plugin_file_load_plugin.hpp.html#file-include-cx-file-load-plugin-file-load-plugin-hpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">include/cx_file_load_plugin/file_load_plugin.hpp</span></code>)</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Copyright (c) 2024-2025 Carologistics</span>
+<span class="c1">// SPDX-License-Identifier: Apache-2.0</span>
 <span class="c1">//</span>
 <span class="c1">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
 <span class="c1">// you may not use this file except in compliance with the License.</span>
@@ -141,24 +142,28 @@
 <span class="c1">// See the License for the specific language governing permissions and</span>
 <span class="c1">// limitations under the License.</span>
 
-<span class="cp">#ifndef CX_PLUGINS__FILELOADPLUGIN_HPP_</span>
-<span class="cp">#define CX_PLUGINS__FILELOADPLUGIN_HPP_</span>
+<span class="cp">#ifndef CX_FILE_LOAD_PLUGIN__FILE_LOAD_PLUGIN_HPP_</span>
+<span class="cp">#define CX_FILE_LOAD_PLUGIN__FILE_LOAD_PLUGIN_HPP_</span>
 
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;memory&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span>
 
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;cx_plugin/clips_plugin.hpp&quot;</span>
 
-<span class="k">namespace</span><span class="w"> </span><span class="nn">cx</span><span class="w"> </span><span class="p">{</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">cx</span>
+<span class="p">{</span>
 
-<span class="k">class</span><span class="w"> </span><span class="nc">FileLoadPlugin</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">ClipsPlugin</span><span class="w"> </span><span class="p">{</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FileLoadPlugin</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">ClipsPlugin</span>
+<span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
 <span class="w">  </span><span class="n">FileLoadPlugin</span><span class="p">();</span>
 <span class="w">  </span><span class="o">~</span><span class="n">FileLoadPlugin</span><span class="p">();</span>
 
 <span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">initialize</span><span class="p">();</span>
 
-<span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="nf">clips_env_init</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">env</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
-<span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="nf">clips_env_destroyed</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">env</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="nf">clips_env_init</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">env</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="nf">clips_env_destroyed</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">env</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
 
 <span class="k">private</span><span class="o">:</span>
 <span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">rclcpp</span><span class="o">::</span><span class="n">Logger</span><span class="o">&gt;</span><span class="w"> </span><span class="n">logger_</span><span class="p">;</span>
@@ -167,9 +172,9 @@
 <span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">init_batch_files_</span><span class="p">;</span>
 <span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">cleanup_files_</span><span class="p">;</span>
 <span class="p">};</span>
-<span class="p">}</span><span class="w"> </span><span class="c1">// namespace cx</span>
+<span class="p">}</span><span class="w">  </span><span class="c1">// namespace cx</span>
 
-<span class="cp">#endif </span><span class="c1">// !CX_PLUGINS__FILELOADPLUGIN_HPP_</span>
+<span class="cp">#endif  </span><span class="c1">// CX_FILE_LOAD_PLUGIN__FILE_LOAD_PLUGIN_HPP_</span>
 </pre></div>
 </div>
 </section>

@@ -347,8 +347,8 @@
   </option>
   <option  id='SKIP_FUNCTION_MACROS' default='yes' type='bool'><value>YES</value></option>
   <option  id='TAGFILES' default='no' type='stringlist'>
-    <value><![CDATA[/home/runner/work/clips_executive/clips_executive/cross_reference/cx_plugin/cx_plugin.tag=http://docs.ros.org/en/latest/p/cx_plugin/generated/doxygen/html]]></value>
     <value><![CDATA[/home/runner/work/clips_executive/clips_executive/cross_reference/cx_clips_env_manager/cx_clips_env_manager.tag=http://docs.ros.org/en/latest/p/cx_clips_env_manager/generated/doxygen/html]]></value>
+    <value><![CDATA[/home/runner/work/clips_executive/clips_executive/cross_reference/cx_plugin/cx_plugin.tag=http://docs.ros.org/en/latest/p/cx_plugin/generated/doxygen/html]]></value>
   </option>
   <option  id='GENERATE_TAGFILE' default='no' type='string'><value><![CDATA[/home/runner/work/clips_executive/clips_executive/docs_build/cx_ament_index_plugin/cx_ament_index_plugin-public-cc-api/doxygen_output/cx_ament_index_plugin.tag]]></value></option>
   <option  id='ALLEXTERNALS' default='yes' type='bool'><value>NO</value></option>
