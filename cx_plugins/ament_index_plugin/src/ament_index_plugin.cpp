@@ -15,8 +15,6 @@
 
 #include "cx_ament_index_plugin/ament_index_plugin.hpp"
 
-#include <cx_utils/clips_env_context.hpp>
-#include <cx_utils/format.hpp>
 #include <string>
 
 #include "ament_index_cpp/get_package_prefix.hpp"
@@ -26,6 +24,8 @@
 #include "ament_index_cpp/get_resources.hpp"
 #include "ament_index_cpp/get_search_paths.hpp"
 #include "ament_index_cpp/has_resource.hpp"
+#include "cx_utils/clips_env_context.hpp"
+#include "cx_utils/format.hpp"
 
 // To export as plugin
 #include "pluginlib/class_list_macros.hpp"

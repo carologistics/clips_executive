@@ -20,6 +20,7 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 #include "cx_msgs/srv/list_clips_plugins.hpp"
 #include "cx_msgs/srv/load_clips_plugin.hpp"

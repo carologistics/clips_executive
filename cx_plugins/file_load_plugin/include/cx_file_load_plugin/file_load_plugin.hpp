@@ -16,7 +16,9 @@
 #ifndef CX_FILE_LOAD_PLUGIN__FILE_LOAD_PLUGIN_HPP_
 #define CX_FILE_LOAD_PLUGIN__FILE_LOAD_PLUGIN_HPP_
 
+#include <memory>
 #include <string>
+#include <vector>
 
 #include "cx_plugin/clips_plugin.hpp"
 

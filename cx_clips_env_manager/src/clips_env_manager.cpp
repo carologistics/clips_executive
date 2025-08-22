@@ -18,7 +18,7 @@
 #include <chrono>
 #include <map>
 #include <memory>
-#include <ranges>
+#include <ranges>  // NOLINT
 #include <string>
 #include <utility>
 

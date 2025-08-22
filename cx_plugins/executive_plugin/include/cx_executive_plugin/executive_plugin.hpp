@@ -16,10 +16,12 @@
 #ifndef CX_EXECUTIVE_PLUGIN__EXECUTIVE_PLUGIN_HPP_
 #define CX_EXECUTIVE_PLUGIN__EXECUTIVE_PLUGIN_HPP_
 
-#include <std_msgs/msg/empty.hpp>
+#include <memory>
 #include <string>
+#include <vector>
 
 #include "cx_plugin/clips_plugin.hpp"
+#include "std_msgs/msg/empty.hpp"
 
 namespace cx
 {

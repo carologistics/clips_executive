@@ -27,7 +27,12 @@
 
 #include <list>
 #include <map>
+#include <memory>
 #include <mutex>
+#include <string>
+#include <unordered_map>
+#include <utility>
+#include <vector>
 
 #include "clips_ns/clips.h"
 #include "protobuf_comm/server.h"

@@ -16,7 +16,9 @@
 #ifndef CX_AMENT_INDEX_PLUGIN__AMENT_INDEX_PLUGIN_HPP_
 #define CX_AMENT_INDEX_PLUGIN__AMENT_INDEX_PLUGIN_HPP_
 
+#include <memory>
 #include <string>
+#include <unordered_set>
 
 #include "cx_plugin/clips_plugin.hpp"
 

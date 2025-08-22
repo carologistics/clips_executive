@@ -16,11 +16,16 @@
 #ifndef CX_ROS_MSGS_PLUGIN__ROS_MSGS_PLUGIN_HPP_
 #define CX_ROS_MSGS_PLUGIN__ROS_MSGS_PLUGIN_HPP_
 
-#include <rclcpp/generic_client.hpp>
-#include <rosidl_typesupport_introspection_cpp/message_introspection.hpp>
+#include <map>
+#include <memory>
 #include <string>
+#include <unordered_map>
+#include <unordered_set>
+#include <vector>
 
 #include "cx_plugin/clips_plugin.hpp"
+#include "rclcpp/generic_client.hpp"
+#include "rosidl_typesupport_introspection_cpp/message_introspection.hpp"
 
 namespace cx
 {

@@ -16,6 +16,7 @@
 #ifndef CX_ROS_PARAM_PLUGIN__ROS_PARAM_PLUGIN_HPP_
 #define CX_ROS_PARAM_PLUGIN__ROS_PARAM_PLUGIN_HPP_
 
+#include <memory>
 #include <string>
 
 #include "cx_plugin/clips_plugin.hpp"

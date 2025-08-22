@@ -24,12 +24,14 @@
 #ifndef CX_PROTOBUF_PLUGIN__PROTOBUF_PLUGIN_HPP_
 #define CX_PROTOBUF_PLUGIN__PROTOBUF_PLUGIN_HPP_
 
-#include <cx_protobuf_plugin/communicator.hpp>
 #include <map>
 #include <memory>
 #include <string>
+#include <unordered_map>
+#include <vector>
 
 #include "cx_plugin/clips_plugin.hpp"
+#include "cx_protobuf_plugin/communicator.hpp"
 
 namespace cx
 {

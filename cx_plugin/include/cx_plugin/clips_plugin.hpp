@@ -17,6 +17,7 @@
 #define CX_PLUGIN__CLIPS_PLUGIN_HPP_
 
 #include <map>
+#include <memory>
 #include <string>
 
 #include "clips_ns/clips.h"

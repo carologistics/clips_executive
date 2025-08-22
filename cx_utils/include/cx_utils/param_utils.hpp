@@ -16,8 +16,10 @@
 #ifndef CX_UTILS__PARAM_UTILS_HPP_
 #define CX_UTILS__PARAM_UTILS_HPP_
 
-#include <rclcpp/rclcpp.hpp>
 #include <string>
+#include <vector>
+
+#include "rclcpp/rclcpp.hpp"
 namespace cx
 {
 namespace cx_utils

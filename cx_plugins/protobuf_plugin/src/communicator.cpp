@@ -22,19 +22,22 @@
  *             2024  Tarik Viehmann <viehmann@kbsg.rwth-aachen.de>
  ****************************************************************************/
 
-#include <google/protobuf/descriptor.h>
-#include <protobuf_comm/client.h>
-#include <protobuf_comm/peer.h>
-#include <protobuf_comm/server.h>
+#include "cx_protobuf_plugin/communicator.hpp"
 
-#include <cx_protobuf_plugin/communicator.hpp>
-#include <cx_utils/format.hpp>
 #include <filesystem>
 #include <string>
 
-using namespace google::protobuf;
-using namespace protobuf_comm;
-using namespace boost::placeholders;
+#include "cx_utils/format.hpp"
+#include "google/protobuf/descriptor.h"
+#include "protobuf_comm/client.h"
+#include "protobuf_comm/peer.h"
+#include "protobuf_comm/server.h"
+
+using boost::placeholders::_1;
+using boost::placeholders::_2;
+using boost::placeholders::_3;
+using boost::placeholders::_4;
+namespace pb = google::protobuf;
 
 namespace protobuf_clips
 {

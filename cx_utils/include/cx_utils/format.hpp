@@ -16,6 +16,7 @@
 #ifndef CX_UTILS__FORMAT_HPP_
 #define CX_UTILS__FORMAT_HPP_
 #include <string>
+#include <utility>
 
 #if __has_include(<format>) && __cplusplus >= 202002L
 #include <format>

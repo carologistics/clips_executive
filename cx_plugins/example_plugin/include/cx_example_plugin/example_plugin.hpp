@@ -16,6 +16,7 @@
 #ifndef CX_EXAMPLE_PLUGIN__EXAMPLE_PLUGIN_HPP_
 #define CX_EXAMPLE_PLUGIN__EXAMPLE_PLUGIN_HPP_
 
+#include <memory>
 #include <string>
 
 #include "cx_plugin/clips_plugin.hpp"

@@ -16,12 +16,12 @@
 #ifndef CX_UTILS__CLIPS_ENV_CONTEXT_HPP_
 #define CX_UTILS__CLIPS_ENV_CONTEXT_HPP_
 
-#pragma once
+#include <memory>
+#include <string>
 
-#include <clips_ns/clips.h>
-#include <spdlog/spdlog.h>
-
-#include <rclcpp/rclcpp.hpp>
+#include "clips_ns/clips.h"
+#include "rclcpp/rclcpp.hpp"
+#include "spdlog/spdlog.h"
 
 namespace cx
 {
