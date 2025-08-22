@@ -359,17 +359,17 @@ class PddlManagerLifecycleNode(LifecycleNode):
         )
         return self.try_set_fluent(function, function.value)
 
-    def try_set_function_goal(self, function):
-        return self.try_set_fluent_goal(function, function.value)
+    def try_set_function_goal(self, function, goal_instance):
+        return self.try_set_fluent_goal(function, function.value, goal_instance)
 
 
-    def try_set_fluent_goal(self, fluent, value):
+    def try_set_fluent_goal(self, fluent, value, goal_instance):
         if fluent.pddl_instance not in self.managed_problems.keys():
             return False, "Unknown pddl instance"
         managed_instance = self.managed_problems[fluent.pddl_instance]
         args = []
         try:
-            managed_instance.add_goal_fluent(fluent.name, fluent.args)
+            managed_instance.add_goal_fluent(fluent.name, fluent.args, value, goal_instance)
             return True, ""
         except Exception as e:
             return False, f"error while { "adding" if value else "removing" } fluent: {e}"
@@ -481,14 +481,14 @@ class PddlManagerLifecycleNode(LifecycleNode):
         for fluent in request.fluents:
             if not success:
                 break
-            curr_success, curr_error = self.try_set_fluent_goal(fluent, True)
+            curr_success, curr_error = self.try_set_fluent_goal(fluent, None, request.goal_instance)
             success = success and curr_success
             error = f"{error} {curr_error}"
 
         for function in request.functions:
             if not success:
                 break
-            curr_success, curr_error = self.try_set_function_goal(function)
+            curr_success, curr_error = self.try_set_function_goal(function, request.goal_instance)
             success = success and curr_success
             error = f"{error} {curr_error}"
         response.success = success
@@ -550,7 +550,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
         success = True
         error = ""
         try:
-            self.managed_problems[request.pddl_instance].add_goal(request.name)
+            self.managed_problems[request.pddl_instance].add_goal(request.goal_instance)
         except:
             error = "Could not access problem"
             success = False
