@@ -152,13 +152,6 @@ repos:
         language: system
         stages: [manual]
 
-      - id: ament_uncrustify
-        name: ament_uncrustify
-        entry: ament_uncrustify
-        language: system
-        types: [c, c++]
-        stages: [manual]
-
       # -------------------------------
       # Python Linters
       # -------------------------------
