@@ -140,7 +140,8 @@ class ManagedGoal():
         fluent_filters = self.fluent_filters
         if len(self.fluent_filters) == 0:
             fluent_filters = None
-        goal_problem = self.problem.filter_problem(action_filters, object_filters, fluent_filters).clone()
+        goal_problem = self.problem.filter_problem(action_filters, object_filters, fluent_filters)
+        goal_problem.clear_goals()
 
         # add the goal fluents
         for fluent in self.goal_fluents:
@@ -189,6 +190,7 @@ class ManagedProblem():
     def __init__(self, problem, env, name="base"):
         self.goals = {}
         self.base_problem = problem.clone()
+        self.base_problem.clear_goals()
         self.name = name
 
         self.goals["base"] = ManagedGoal(self)
