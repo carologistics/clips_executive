@@ -16,8 +16,8 @@
 
 import concurrent.futures as cf
 
+from cx_pddl_manager.managed_problem import ManagedProblem
 from jinja2 import Environment, FileSystemLoader
-from pddl_manager.managed_problem import ManagedProblem
 from pddl_msgs.action import PlanTemporal
 from pddl_msgs.msg import Fluent as FluentMsg
 from pddl_msgs.msg import FluentEffect, Function, FunctionEffect
@@ -667,7 +667,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
 
     def handle_check_action_precondition(self, request, response):
         action = request.action
-        self.get_logger().debug(f"Received Action: name={action.name}, args={action.args}")
+        # self.get_logger().debug(f"Received Action: name={action.name}, args={action.args}")
         if action.pddl_instance not in self.managed_problems.keys():
             response.success = False
             response.error = 'Unknown pddl instance'
@@ -692,7 +692,6 @@ class PddlManagerLifecycleNode(LifecycleNode):
                         or not evaluated_cond.bool_constant_value()
                     ):
                         unsatisfied_conditions.append(val)
-                        print('unsatisfied precondition: ', val)
             else:
                 for cond, value in grounded_action.conditions.items():
                     if cond == self.start_interval:
@@ -703,7 +702,6 @@ class PddlManagerLifecycleNode(LifecycleNode):
                                 or not evaluated_cond.bool_constant_value()
                             ):
                                 unsatisfied_conditions.append(val)
-                                print('unsatisfied precondition: ', val)
             response.success = True
             if unsatisfied_conditions:
                 response.sat = False
@@ -714,8 +712,8 @@ class PddlManagerLifecycleNode(LifecycleNode):
             else:
                 response.sat = True
         except Exception as e:
-            response.error = f"error while checking precondition: {e}"
-            self.get_logger().error(response.error)
+            self.get_logger().error(f"error found")
+            response.error = f"error checking precondition: {e}"
             response.success = False
         return response
 
