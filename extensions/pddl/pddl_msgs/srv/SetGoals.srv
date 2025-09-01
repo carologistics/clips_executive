@@ -1,6 +1,0 @@
-pddl_msgs/Fluent[] fluents
-pddl_msgs/Function[] functions
-string goal_instance
----
-bool success
-string error

@@ -1,4 +1,4 @@
-pddl_msgs/Action action
+cx_pddl_msgs/Action action
 ---
 bool success
 bool sat

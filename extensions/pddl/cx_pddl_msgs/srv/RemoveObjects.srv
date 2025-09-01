@@ -1,4 +1,4 @@
-pddl_msgs/Fluent fluent
+cx_pddl_msgs/Object[] objects
 ---
 bool success
 string error

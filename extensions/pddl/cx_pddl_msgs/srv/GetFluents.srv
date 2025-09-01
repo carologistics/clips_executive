@@ -2,4 +2,4 @@ string pddl_instance
 ---
 bool success
 string error
-pddl_msgs/Fluent[] fluents
+cx_pddl_msgs/Fluent[] fluents
