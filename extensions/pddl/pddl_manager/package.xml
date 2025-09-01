@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>pddl_manager</name>
+  <name>cx_pddl_manager</name>
   <version>1.0.0</version>
   <description>This package allows you to manage PDDL planning environments for use with the ROS2 CX.</description>
   <maintainer email="viehmann@kbsg.rwth-aachen.de">Tarik Viehmann</maintainer>
