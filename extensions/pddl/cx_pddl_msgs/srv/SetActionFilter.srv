@@ -1,4 +1,4 @@
-string[] objects
+string[] actions
 string pddl_instance
 string goal_instance
 ---

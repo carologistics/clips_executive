@@ -1,3 +1,4 @@
+string[] objects
 string pddl_instance
 string goal_instance
 ---
