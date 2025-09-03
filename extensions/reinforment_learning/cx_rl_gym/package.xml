@@ -3,17 +3,16 @@
 <package format="3">
   <name>cx_rl_gym</name>
   <version>0.0.0</version>
-  <description>Package containing the base function cxrl_gym providing most gym-functions for reinforcement learning as well as functions for communication with the CX over ROS2 interfaces.</description>
-  <maintainer email="frank.pier@rwth-aachen.de">frankpier</maintainer>
-  <license>GPLv2+ license</license>
+  <description>Base class wrapping gym-functions for reinforcement learning to interface with CLIPS over cx_rl_interfaces.</description>
+  <maintainer email="viehmann@kbsg.rwth-aachen.de">Tarik Viehmann</maintainer>
+  <author email="frank.pier@rwth-aachen.de">Frank Pier</author>
+  <license>Apache-2.0</license>
 
   <depend>rclpy</depend>
-  <depend>functools</depend>
-
-  <test_depend>ament_copyright</test_depend>
-  <test_depend>ament_flake8</test_depend>
-  <test_depend>ament_pep257</test_depend>
-  <test_depend>python3-pytest</test_depend>
+  <depend>cx_rl_interfaces</depend>
+  <depend>python3-gymnasium-pip</depend>
+  <depend>python3-numpy</depend>
+  <depend>python3-pandas</depend>
 
   <export>
     <build_type>ament_python</build_type>

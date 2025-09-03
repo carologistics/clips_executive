@@ -3,19 +3,20 @@
 <package format="3">
   <name>cx_rl_interfaces</name>
   <version>0.0.0</version>
-  <description>Messages, Services and Action files for the Reinforcement Learning Plugin of the ROS2 Clips-Executive</description>
-  <maintainer email="frank.pier@rwth-aachen.de">frankpier</maintainer>
-  <license>GPLv2+ license</license>
+  <description>ROS interfaces for using reinforcement learning with the ROS2 CLIPS-Executive</description>
+  <maintainer email="viehmann@kbsg.rwth-aachen.de">Tarik Viehmann</maintainer>
 
-  <buildtool_depend>rosidl_default_generators</buildtool_depend>
-  <exec_depend>rosidl_default_runtime</exec_depend>
-  <member_of_group>rosidl_interface_packages</member_of_group>
-  <depend>action_msgs</depend>
+  <license>Apache-2.0</license>
+  <author email="frank.pier@rwth-aachen.de">Frank Pier</author>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
+  <depend>rosidl_default_generators</depend>
+
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
+
+  <member_of_group>rosidl_interface_packages</member_of_group>
 
   <export>
     <build_type>ament_cmake</build_type>

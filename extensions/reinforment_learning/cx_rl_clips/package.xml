@@ -3,21 +3,17 @@
 <package format="3">
   <name>cx_rl_clips</name>
   <version>0.1.0</version>
-  <description>CLIPS plugin to bridge with python-based RL via ROS services.</description>
+  <description>CLIPS snippets to help usint the cx_rl_interfaces.</description>
 
   <maintainer email="viehmann@kbsg.rwth-aachen.de">Tarik Viehmann</maintainer>
+  <author email="frank.pier@rwth-aachen.de">Frank Pier</author>
 
-  <license>GPLv2+ license</license>
+  <license>Apache-2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <depend>rclcpp</depend>
   <depend>cx_rl_interfaces</depend>
-  <depend>pluginlib</depend>
   <depend>cx_ros_comm_gen</depend>
-  <depend>cx_plugin</depend>
-  <depend>cx_utils</depend>
-  <depend>clips_vendor</depend>
 
   <export>
     <build_type>ament_cmake</build_type>
