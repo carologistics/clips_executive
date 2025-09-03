@@ -15,7 +15,7 @@
 
 import concurrent.futures as cf
 
-from pddl_msgs.msg import TimedPlanAction
+from cx_pddl_msgs.msg import TimedPlanAction
 from unified_planning.engines import PlanGenerationResultStatus
 from unified_planning.environment import get_environment
 from unified_planning.io import PDDLReader, PDDLWriter

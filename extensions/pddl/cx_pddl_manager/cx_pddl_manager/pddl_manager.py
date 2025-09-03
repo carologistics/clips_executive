@@ -17,12 +17,11 @@
 import concurrent.futures as cf
 
 from cx_pddl_manager.managed_problem import ManagedProblem
-from jinja2 import Environment, FileSystemLoader
-from pddl_msgs.action import PlanTemporal
-from pddl_msgs.msg import Fluent as FluentMsg
-from pddl_msgs.msg import FluentEffect, Function, FunctionEffect
-from pddl_msgs.msg import Predicate as PredicateMsg
-from pddl_msgs.srv import (
+from cx_pddl_msgs.action import PlanTemporal
+from cx_pddl_msgs.msg import Fluent as FluentMsg
+from cx_pddl_msgs.msg import FluentEffect, Function, FunctionEffect
+from cx_pddl_msgs.msg import Predicate as PredicateMsg
+from cx_pddl_msgs.srv import (
     AddFluent,
     AddFluents,
     AddObjects,
@@ -44,6 +43,7 @@ from pddl_msgs.srv import (
     SetGoals,
     SetObjectFilter,
 )
+from jinja2 import Environment, FileSystemLoader
 import rclpy
 from rclpy.action import ActionServer
 from rclpy.callback_groups import MutuallyExclusiveCallbackGroup, ReentrantCallbackGroup
