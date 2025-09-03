@@ -3,14 +3,17 @@
 <package format="3">
   <name>cx_rl_multi_robot_mppo</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
-  <maintainer email="frank.pier@rwth-aachen.de">frankpier</maintainer>
-  <license>TODO: License declaration</license>
+  <description>Multi-robot maskable proximal policy optimization (mppo) implementation.</description>
+  <maintainer email="viehmann@kbsg.rwth-aachen.de">Tarik Viehmann</maintainer>
+  <author email="frank.pier@rwth-aachen.de">Frank Pier</author>
+  <license>Apache-2.0</license>
 
-  <test_depend>ament_copyright</test_depend>
-  <test_depend>ament_flake8</test_depend>
-  <test_depend>ament_pep257</test_depend>
-  <test_depend>python3-pytest</test_depend>
+  <depend>rclpy</depend>
+  <depend>python3-gymnasium-pip</depend>
+  <depend>python3-numpy</depend>
+  <depend>python3-torch</depend>
+  <depend>python3-stable-baselines3-pip</depend>
+  <depend>python3-sb3-contrib-pip</depend>
 
   <export>
     <build_type>ament_python</build_type>
