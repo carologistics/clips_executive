@@ -1,0 +1,5 @@
+---
+string[] predicatenames
+uint8[] paramcounts
+string[] paramnames
+string[] paramtypes

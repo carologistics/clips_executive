@@ -1,7 +1,0 @@
-string actionid
----
-string actionid
-int32 reward
-string info
----
-string feedback
