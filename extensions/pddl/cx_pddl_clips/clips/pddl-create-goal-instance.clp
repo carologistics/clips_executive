@@ -1,0 +1,77 @@
+; Copyright (c) 2025 Carologistics
+; SPDX-License-Identifier: Apache-2.0
+;
+; Licensed under the Apache License, Version 2.0 (the "License");
+; you may not use this file except in compliance with the License.
+; You may obtain a copy of the License at
+;
+;     http://www.apache.org/licenses/LICENSE-2.0
+;
+; Unless required by applicable law or agreed to in writing, software
+; distributed under the License is distributed on an "AS IS" BASIS,
+; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+; See the License for the specific language governing permissions and
+; limitations under the License.
+
+(deftemplate pddl-create-goal-instance
+" Interface for create-goal-instance.clp
+  Assert a fact of this type in order to create a new ManagedGoal instance of a given
+  pddl instance with the external pddl manager.
+  @slot instance: pddl instance for which to add the goal.
+  Slots set automatically:
+  @slot state:
+   - PENDING: The goal instance is not created in the pddl manager yet.
+   - DONE: The goal instance is created with the pddl manager.
+   - ERROR: The goal instance is not created due to some error.
+  @slot error: provide information on encountered errors.
+"
+  (slot instance (type SYMBOL))
+  (slot goal (type SYMBOL))
+  (slot state (type SYMBOL) (allowed-values PENDING DONE ERROR) (default PENDING))
+  (slot error (type STRING))
+)
+
+(defrule pddl-create-goal-instance-request
+  (declare (salience ?*PRIORITY-PDDL-CREATE-GOAL-INSTANCE*))
+  (pddl-create-goal-instance (instance ?instance) (goal ?goal) (state PENDING))
+  (pddl-manager (node ?node))
+  ?pi-f <- (pddl-instance (name ?instance) (state LOADED) (busy-with FALSE))
+  (ros-msgs-client (service ?s&:(eq ?s (str-cat ?node "/create_goal_instance"))) (type ?type))
+  (not (pddl-service-request-meta (service ?s)))
+  (time ?any-time) ; used to continuously attempt to request the service until success
+  =>
+  (bind ?new-req (ros-msgs-create-request ?type))
+  (ros-msgs-set-field ?new-req "pddl_instance" ?instance)
+  (ros-msgs-set-field ?new-req "goal_instance" ?goal)
+  (bind ?id (ros-msgs-async-send-request ?new-req ?s))
+  (if ?id then
+    (assert (pddl-service-request-meta (service ?s) (request-id ?id) (meta ?instance)))
+    (modify ?pi-f (busy-with CREATE-GOAL-INSTANCE))
+   else
+    (printout error "Sending of request failed, is the service " ?s " running?" crlf)
+  )
+  (ros-msgs-destroy-message ?new-req)
+)
+
+(defrule pddl-create-goal-instance-response-received
+" Get response, read it and delete."
+  ?create-goal-instance-f <- (pddl-create-goal-instance (instance ?instance) (state PENDING))
+  (pddl-manager (node ?node))
+  ?pi-f <- (pddl-instance (name ?instance) (busy-with CREATE-GOAL-INSTANCE))
+  (ros-msgs-client (service ?s&:(eq ?s (str-cat ?node "/create_goal_instance"))) (type ?type))
+  ?msg-f <- (ros-msgs-response (service ?s) (msg-ptr ?ptr) (request-id ?id))
+  ?req-meta <- (pddl-service-request-meta (service ?s) (request-id ?id) (meta ?instance))
+=>
+  (modify ?pi-f (busy-with FALSE))
+  (bind ?success (ros-msgs-get-field ?ptr "success"))
+  (bind ?error (ros-msgs-get-field ?ptr "error"))
+  (if ?success then
+    (modify ?create-goal-instance-f (state DONE))
+   else
+    (modify ?create-goal-instance-f (state ERROR) (error ?error))
+    (printout error ?error crlf)
+  )
+  (ros-msgs-destroy-message ?ptr)
+  (retract ?msg-f)
+  (retract ?req-meta)
+)
