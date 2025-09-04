@@ -6,6 +6,8 @@ In order to identify the issue, changes of default parameters reverted and newer
 
 Hence, this package provides a legacy version that is capable of solving the problems emitted by the planner.
 
+The z3 solver itself is licensed under MIT, this vendor utilizes the Apache-2.0 license.
+
 # Usage
 
 ## CLI
