@@ -189,4 +189,4 @@ repos:
         files: \.(launch|xml)$
         stages: [manual]
 
-exclude: (^extensions/pddl/z3_vendor/|^extensions/pddl/up_nextflap/)
+exclude: (^extensions/pddl/cx_z3_vendor/|^extensions/pddl/cx_up_nextflap/)
