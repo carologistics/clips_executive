@@ -1,3 +1,18 @@
+; Copyright (c) 2025 Carologistics
+; SPDX-License-Identifier: Apache-2.0
+;
+; Licensed under the Apache License, Version 2.0 (the "License");
+; you may not use this file except in compliance with the License.
+; You may obtain a copy of the License at
+;
+;     http://www.apache.org/licenses/LICENSE-2.0
+;
+; Unless required by applicable law or agreed to in writing, software
+; distributed under the License is distributed on an "AS IS" BASIS,
+; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+; See the License for the specific language governing permissions and
+; limitations under the License.
+
 (defrule pddl-init
     (not (pddl-services-loaded))
     =>
@@ -26,7 +41,7 @@
     (not (pddl-planning-client-created))
     (pddl-services-loaded)
     =>
-    (pddl-msgs-plan-temporal-create-client (str-cat "/pddl_manager" "/temp_plan"))
+    (cx-pddl-msgs-plan-temporal-create-client (str-cat "/pddl_manager" "/temp_plan"))
     (assert (pddl-planning-client-created))
 )
 
@@ -164,34 +179,34 @@
 
 
 (defrule pddl-plan
-    (pddl-msgs-plan-temporal-client (server ?server&:(eq ?server "/pddl_manager/temp_plan")))
+    (cx-pddl-msgs-plan-temporal-client (server ?server&:(eq ?server "/pddl_manager/temp_plan")))
     (not (planned))
     (pddl-goals-set)
     =>
     (printout green "Start planning" crlf)
-    (bind ?goal (pddl-msgs-plan-temporal-goal-create))
-    (pddl-msgs-plan-temporal-goal-set-field ?goal "pddl_instance" "test")
-    (pddl-msgs-plan-temporal-goal-set-field ?goal "goal_instance" "base")
-    (pddl-msgs-plan-temporal-send-goal ?goal ?server)
+    (bind ?goal (cx-pddl-msgs-plan-temporal-goal-create))
+    (cx-pddl-msgs-plan-temporal-goal-set-field ?goal "pddl_instance" "test")
+    (cx-pddl-msgs-plan-temporal-goal-set-field ?goal "goal_instance" "base")
+    (cx-pddl-msgs-plan-temporal-send-goal ?goal ?server)
     (assert (planned))
 )
 
 (defrule pddl-plan-result
-    ?wr-f <- (pddl-msgs-plan-temporal-wrapped-result (server "/pddl_manager/temp_plan") (code SUCCEEDED) (result-ptr ?res-ptr))
+    ?wr-f <- (cx-pddl-msgs-plan-temporal-wrapped-result (server "/pddl_manager/temp_plan") (code SUCCEEDED) (result-ptr ?res-ptr))
     =>
-    (bind ?plan-found (pddl-msgs-plan-temporal-result-get-field ?res-ptr "success"))
+    (bind ?plan-found (cx-pddl-msgs-plan-temporal-result-get-field ?res-ptr "success"))
     (printout green "planning done" crlf)
     (if ?plan-found then
-        (bind ?plan (pddl-msgs-plan-temporal-result-get-field ?res-ptr "actions"))
+        (bind ?plan (cx-pddl-msgs-plan-temporal-result-get-field ?res-ptr "actions"))
         (foreach ?action ?plan
-        (bind ?name (sym-cat (pddl-msgs-timed-plan-action-get-field ?action "name")))
-        (bind ?args (pddl-msgs-timed-plan-action-get-field ?action "args"))
-        (bind ?ps-time (pddl-msgs-timed-plan-action-get-field ?action "start_time"))
-        (bind ?p-duration (pddl-msgs-timed-plan-action-get-field ?action "duration"))
+        (bind ?name (sym-cat (cx-pddl-msgs-timed-plan-action-get-field ?action "name")))
+        (bind ?args (cx-pddl-msgs-timed-plan-action-get-field ?action "args"))
+        (bind ?ps-time (cx-pddl-msgs-timed-plan-action-get-field ?action "start_time"))
+        (bind ?p-duration (cx-pddl-msgs-timed-plan-action-get-field ?action "duration"))
         (printout t ?ps-time "(" ?p-duration ")   " ?name ?args crlf)
         )
     else
         (printout red "plan not found!" crlf)
     )
-    (pddl-msgs-plan-temporal-result-destroy ?res-ptr)
+    (cx-pddl-msgs-plan-temporal-result-destroy ?res-ptr)
 )

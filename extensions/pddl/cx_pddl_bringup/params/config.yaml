@@ -4,11 +4,11 @@
     environments: ["pddl_agent"]
 
     pddl_agent:
-      plugins: ["executive","ros_msgs",
+      plugins: ["executive", "ros_msgs",
                 "ament_index",
                 "plan_temporal_action",
                 "timed_plan_action_msg",
-                 "files"]
+                "files"]
       log_clips_to_file: true
       watch: ["facts", "rules"]
 
@@ -24,7 +24,7 @@
     files:
       plugin: "cx::FileLoadPlugin"
       pkg_share_dirs: ["pddl_agent_example"]
-      load: ["clips/agent.clp"]
+      load: ["clips/raw_agent.clp"]
 
     plan_temporal_action:
       plugin: "cx::CXPddlMsgsPlanTemporalPlugin"
