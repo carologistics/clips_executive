@@ -22,6 +22,7 @@
         add_pddl_instance AddPddlInstance
         get_fluents GetFluents
         set_goals SetGoals
+        create_goal_instance CreateGoalInstance
     ))
     (bind ?index 1)
     (bind ?length (length$ ?services))
@@ -30,7 +31,7 @@
         (bind ?service-type (nth$ (+ ?index 1) ?services))
         (ros-msgs-create-client
             (str-cat "/pddl_manager" "/" ?service-name)
-            (str-cat "pddl_msgs/srv/" ?service-type)
+            (str-cat "cx_pddl_msgs/srv/" ?service-type)
         )
         (bind ?index (+ ?index 2))
     )
@@ -51,15 +52,18 @@
 	(ros-msgs-client (service ?service&:(eq ?service (str-cat "/pddl_manager" "/add_pddl_instance"))) (type ?type))
 	(not (pddl-loaded))
     (pddl-planning-client-created)
+	(time ?) ; poll until pddl manager is actually started
 	=>
 	(bind ?new-req (ros-msgs-create-request ?type))
 	(ros-msgs-set-field ?new-req "name" "test") ;instance of name test
-	(bind ?share-dir (ament-index-get-package-share-directory "pddl_agent_example"))
+	(bind ?share-dir (ament-index-get-package-share-directory "cx_pddl_bringup"))
 	(ros-msgs-set-field ?new-req "directory" (str-cat ?share-dir "/pddl"))
 	(ros-msgs-set-field ?new-req "domain_file" "domain.pddl")
 	(ros-msgs-set-field ?new-req "problem_file" "problem.pddl")
 	(bind ?id (ros-msgs-async-send-request ?new-req ?service))
-	(assert (pddl-loaded))
+	(if ?id then
+	  (assert (pddl-loaded))
+	)
 	(ros-msgs-destroy-message ?new-req)
 )
 
@@ -124,27 +128,58 @@
 
 
 ; ---------------- SET GOAL ------------------
+(defrule pddl-create-goal-instance
+    (pddl-fluents-requested)
+    (not (pddl-goals-set))
+    (ros-msgs-client (service ?s&:(eq ?s (str-cat "/pddl_manager" "/create_goal_instance"))) (type ?type))
+    =>
+    (bind ?new-req (ros-msgs-create-request ?type))
+    (ros-msgs-set-field ?new-req "pddl_instance" "test")
+    (ros-msgs-set-field ?new-req "goal_instance" "active-goal")
+    (bind ?id (ros-msgs-async-send-request ?new-req ?s))
+    (ros-msgs-destroy-message ?new-req)
+)
+
+(defrule pddl-create-goal-instance-result
+" Get response, read it and delete."
+    (ros-msgs-client (service ?s&:(eq ?s (str-cat "/pddl_manager" "/create_goal_instance"))) (type ?type))
+    ?msg-f <- (ros-msgs-response (service ?s) (msg-ptr ?ptr) (request-id ?id))
+    =>
+    (bind ?success (ros-msgs-get-field ?ptr "success"))
+    (bind ?error (ros-msgs-get-field ?ptr "error"))
+    (if ?success then
+        (printout t "Goals set successfully" crlf)
+    else
+        (printout error "Failed to create goal instance (" "active-goal" "):" ?error crlf)
+    )
+    (ros-msgs-destroy-message ?ptr)
+    (retract ?msg-f)
+    (assert (pddl-goal-instance-set))
+)
+
 
 (defrule pddl-set-goal
     (pddl-fluents-requested)
     (not (pddl-goals-set))
     (ros-msgs-client (service ?s&:(eq ?s (str-cat "/pddl_manager" "/set_goals"))) (type ?type))
+	(pddl-goal-instance-set)
     =>
     (bind ?new-req (ros-msgs-create-request ?type))
     (bind ?fluent-goal-msgs (create$))
 
-    (bind ?fluent-msg (ros-msgs-create-message "pddl_msgs/msg/Fluent"))
+    (bind ?fluent-msg (ros-msgs-create-message "cx_pddl_msgs/msg/Fluent"))
     (ros-msgs-set-field ?fluent-msg "pddl_instance" "test")
     (ros-msgs-set-field ?fluent-msg "name" "on")
     (ros-msgs-set-field ?fluent-msg "args" (create$ "a" "b"))
     (bind ?fluent-goal-msgs (create$ ?fluent-goal-msgs ?fluent-msg))
-    (bind ?fluent-msg (ros-msgs-create-message "pddl_msgs/msg/Fluent"))
+    (bind ?fluent-msg (ros-msgs-create-message "cx_pddl_msgs/msg/Fluent"))
     (ros-msgs-set-field ?fluent-msg "pddl_instance" "test")
     (ros-msgs-set-field ?fluent-msg "name" "on")
     (ros-msgs-set-field ?fluent-msg "args" (create$ "b" "c"))
     (bind ?fluent-goal-msgs (create$ ?fluent-goal-msgs ?fluent-msg))
 
     (ros-msgs-set-field ?new-req "fluents" ?fluent-goal-msgs)
+    (ros-msgs-set-field ?new-req "goal_instance" "active-goal")
     (bind ?id (ros-msgs-async-send-request ?new-req ?s))
     (if ?id then
         (printout t "Requested to set goals" crlf)
@@ -155,14 +190,12 @@
         (ros-msgs-destroy-message ?msg)
     )
     (ros-msgs-destroy-message ?new-req)
-    (assert (pddl-goals-set))
 )
 
 (defrule pddl-set-goal-result
 " Get response, read it and delete."
     (ros-msgs-client (service ?s&:(eq ?s (str-cat "/pddl_manager" "/set_goals"))) (type ?type))
     ?msg-f <- (ros-msgs-response (service ?s) (msg-ptr ?ptr) (request-id ?id))
-    (pddl-goals-set)
     =>
     (bind ?success (ros-msgs-get-field ?ptr "success"))
     (bind ?error (ros-msgs-get-field ?ptr "error"))
@@ -173,6 +206,7 @@
     )
     (ros-msgs-destroy-message ?ptr)
     (retract ?msg-f)
+    (assert (pddl-goals-set))
 )
 ; ---------------- PLAN FOR INSTANCE ------------------
 
@@ -186,7 +220,7 @@
     (printout green "Start planning" crlf)
     (bind ?goal (cx-pddl-msgs-plan-temporal-goal-create))
     (cx-pddl-msgs-plan-temporal-goal-set-field ?goal "pddl_instance" "test")
-    (cx-pddl-msgs-plan-temporal-goal-set-field ?goal "goal_instance" "base")
+    (cx-pddl-msgs-plan-temporal-goal-set-field ?goal "goal_instance" "active-goal")
     (cx-pddl-msgs-plan-temporal-send-goal ?goal ?server)
     (assert (planned))
 )
