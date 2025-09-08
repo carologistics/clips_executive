@@ -26,7 +26,7 @@ from cx_pddl_msgs.srv import (
     AddFluents,
     AddObjects,
     AddPddlInstance,
-    CheckActionPrecondition,
+    CheckActionCondition,
     ClearGoals,
     CreateGoalInstance,
     GetActionEffects,
@@ -148,7 +148,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
             callback_group=self.srv_cb_group,
         )
         self.check_action_condition_srv = self.create_service(
-            CheckActionPrecondition,
+            CheckActionCondition,
             f"{self.get_name()}/check_action_condition",
             self.handle_check_action_condition,
             callback_group=self.srv_cb_group,
