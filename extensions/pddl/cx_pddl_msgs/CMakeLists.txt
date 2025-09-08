@@ -17,7 +17,7 @@ set(MSGS
     "msg/Object.msg"
     "msg/Predicate.msg")
 set(SERVICES
-    "srv/CheckActionPrecondition.srv"
+    "srv/CheckActionCondition.srv"
     "srv/GetActionEffects.srv"
     "srv/GetActionNames.srv"
     "srv/GetPredicates.srv"
