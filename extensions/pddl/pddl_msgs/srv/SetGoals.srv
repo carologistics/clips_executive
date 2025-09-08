@@ -1,5 +1,0 @@
-pddl_msgs/Fluent[] fluents
-pddl_msgs/Function[] functions
----
-bool success
-string error

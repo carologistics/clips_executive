@@ -1,4 +1,0 @@
-pddl_msgs/Fluent fluent
----
-bool success
-string error
