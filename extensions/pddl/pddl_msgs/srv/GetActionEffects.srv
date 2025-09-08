@@ -1,6 +1,0 @@
-pddl_msgs/Action action
----
-bool success
-string error
-pddl_msgs/FunctionEffect[] function_effects
-pddl_msgs/FluentEffect[] fluent_effects
