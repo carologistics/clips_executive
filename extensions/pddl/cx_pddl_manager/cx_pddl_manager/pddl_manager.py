@@ -72,7 +72,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
         self.rm_objects_srv = None
         self.set_functions_srv = None
         self.add_pddl_instance_srv = None
-        self.check_action_precondition_srv = None
+        self.check_action_condition_srv = None
         self.get_action_effects_srv = None
         self.get_action_names_srv = None
         self.get_fluents_srv = None
@@ -147,10 +147,10 @@ class PddlManagerLifecycleNode(LifecycleNode):
             self.handle_add_pddl_instance,
             callback_group=self.srv_cb_group,
         )
-        self.check_action_precondition_srv = self.create_service(
+        self.check_action_condition_srv = self.create_service(
             CheckActionPrecondition,
-            f"{self.get_name()}/check_action_precondition",
-            self.handle_check_action_precondition,
+            f"{self.get_name()}/check_action_condition",
+            self.handle_check_action_condition,
             callback_group=self.srv_cb_group,
         )
         self.get_action_effects_srv = self.create_service(
@@ -665,7 +665,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
         response.success = True
         return response
 
-    def handle_check_action_precondition(self, request, response):
+    def handle_check_action_condition(self, request, response):
         action = request.action
         # self.get_logger().debug(f"Received Action: name={action.name}, args={action.args}")
         if action.pddl_instance not in self.managed_problems.keys():
