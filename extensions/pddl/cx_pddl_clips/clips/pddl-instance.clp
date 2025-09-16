@@ -46,8 +46,7 @@
   =>
   (bind ?new-req (ros-msgs-create-request ?type))
   (ros-msgs-set-field ?new-req "name" ?instance)
-  (bind ?share-dir (ament-index-get-package-share-directory "expertino"))
-  (ros-msgs-set-field ?new-req "directory" (str-cat ?share-dir "/" ?dir))
+  (ros-msgs-set-field ?new-req "directory" ?dir)
   (ros-msgs-set-field ?new-req "domain_file" ?domain)
   (ros-msgs-set-field ?new-req "problem_file" ?problem)
   (bind ?id (ros-msgs-async-send-request ?new-req ?s))
