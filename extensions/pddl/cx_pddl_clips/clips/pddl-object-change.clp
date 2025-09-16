@@ -129,7 +129,7 @@
 (defrule pddl-object-change-rm-process-response
 " Process a response to the /rm_objects service and clean up the associated pending facts afterwards.
 "
-  (confval (path "/pddl/manager_node") (value ?node))
+  (pddl-manager (node ?node))
   (ros-msgs-client (service ?s&:(eq ?s (str-cat ?node "/rm_objects"))))
   ?req-f <- (pddl-service-request-meta (service ?s) (meta ?instance) (request-id ?id))
   ?msg-f <- (ros-msgs-response (service ?s) (msg-ptr ?ptr) (request-id ?id))

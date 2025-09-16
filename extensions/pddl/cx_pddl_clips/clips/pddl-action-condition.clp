@@ -29,7 +29,7 @@
   ?check-fact <- (pddl-action-condition (id ?action-id) (state PENDING))
   (not (pddl-action-condition (id ?action-id) (state CHECK-CONDITION)))
   ?pi-f <- (pddl-instance (name ?instance) (state LOADED) (busy-with FALSE))
-  (confval (path "/pddl/manager_node") (value ?node))
+  (pddl-manager (node ?node))
   (ros-msgs-client (service ?s&:(eq ?s (str-cat ?node "/check_action_condition"))) (type ?type))
   (not (pddl-service-request-meta (service ?s) (meta ?action-id)))
   =>
@@ -55,7 +55,7 @@
   ?action-fact <- (pddl-action (id ?action-id))
   ?check-fact <- (pddl-action-condition (id ?action-id) (state CHECK-CONDITION))
   ?pi-f <- (pddl-instance (name ?instance) (busy-with CHECK-CONDITIONS))
-  (confval (path "/pddl/manager_node") (value ?node))
+  (pddl-manager (node ?node))
   (ros-msgs-client (service ?s&:(eq ?s (str-cat ?node "/check_action_condition"))) (type ?type))
   ?msg-f <- (ros-msgs-response (service ?s) (msg-ptr ?ptr) (request-id ?id))
   ?req-meta <- (pddl-service-request-meta (service ?s) (request-id ?id) (meta ?action-id))
@@ -88,7 +88,7 @@
 
 ; TODO: either do similar stuff for all requests or leave it
 (defrule pddl-action-condition-response-no-action
-  (confval (path "/pddl/manager_node") (value ?node))
+  (pddl-manager (node ?node))
   (ros-msgs-client (service ?s&:(eq ?s (str-cat ?node "/check_action_condition"))) (type ?type))
   ?pi-f <- (pddl-instance (name ?instance) (busy-with CHECK-CONDITIONS))
   ?msg-f <- (ros-msgs-response (service ?s) (msg-ptr ?ptr) (request-id ?id))
