@@ -13,33 +13,6 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
-(deftemplate pddl-numeric-fluent-change
-" Interface for numeric-fluents.clp
-  Assert a fact of this type in order to indicate that a numeric fluent needs
-  to be added to/removed from a pddl instance.
-  Acts as a transient layer to pddl-numeric-fluent facts to make sure the CLIPS
-  representation stays consistant with the externally managed pddl instance.
-  @slot instance: pddl instance to add the fluent to.
-  @slot name: name of the fluent.
-  @slot params: parameters of the fluent.
-  @slot value: value of the fluent.
-  Slots set automatically:
-  @slot request-id: id of the associated ros service request
-  @slot state:
-   - PENDING: The fluent was not added yet.
-   - WAITING: The fluent is about to be added and is waiting for confirmation.
-   - ERROR: The fluent might not have been fetched due to an error.
-   - ON-HOLD: Unused state that can be set in order to defer the fluent update
-     to a later time (by switching it manually to PENDING).
-"
-  (slot instance (type SYMBOL))
-  (slot name (type SYMBOL))
-  (multislot params (type SYMBOL) (default (create$)))
-  (slot value (type FLOAT))
-  (slot request-id (type INTEGER))
-  (slot state (type SYMBOL) (allowed-values PENDING WAITING ERROR ON-HOLD) (default PENDING))
-)
-
 (defrule pddl-numeric-fluent-change-request
   (declare (salience ?*PRIORITY-PDDL-FLUENTS*))
   (pddl-numeric-fluent-change (instance ?instance) (state PENDING))

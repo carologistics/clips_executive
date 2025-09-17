@@ -13,24 +13,6 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
-(deftemplate pddl-create-goal-instance
-" Interface for create-goal-instance.clp
-  Assert a fact of this type in order to create a new ManagedGoal instance of a given
-  pddl instance with the external pddl manager.
-  @slot instance: pddl instance for which to add the goal.
-  Slots set automatically:
-  @slot state:
-   - PENDING: The goal instance is not created in the pddl manager yet.
-   - DONE: The goal instance is created with the pddl manager.
-   - ERROR: The goal instance is not created due to some error.
-  @slot error: provide information on encountered errors.
-"
-  (slot instance (type SYMBOL))
-  (slot goal (type SYMBOL))
-  (slot state (type SYMBOL) (allowed-values PENDING DONE ERROR) (default PENDING))
-  (slot error (type STRING))
-)
-
 (defrule pddl-create-goal-instance-request
   (declare (salience ?*PRIORITY-PDDL-CREATE-GOAL-INSTANCE*))
   (pddl-create-goal-instance (instance ?instance) (goal ?goal) (state PENDING))
