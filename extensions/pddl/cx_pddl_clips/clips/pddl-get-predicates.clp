@@ -13,25 +13,6 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
-(deftemplate pddl-get-predicates
-" Interface for get-predicates.clp
-  Assert a fact of this type in order to fetch all predicates
-  of a given pddl instance with the external pddl manager.
-  This results in the automatic assertion of all predicates
-  (pddl-predicate template facts) currently present in the given pddl
-  instance.
-  @slot instance: pddl instance from which the predicates are fetched.
-  Slots set automatically:
-  @slot state:
-   - PENDING: The predicates were not fetched yet.
-   - DONE: The predicates were successfully retrieved
-   - ERROR: The predicates were not fetched due to an error.
-  @slot error: provide information on encountered errors.
-"
-  (slot instance (type SYMBOL))
-  (slot state (type SYMBOL) (allowed-values PENDING DONE ERROR) (default PENDING))
-  (slot error (type STRING))
-)
 
 (defrule pddl-get-predicates-request
   (pddl-get-predicates (instance ?instance) (state PENDING))

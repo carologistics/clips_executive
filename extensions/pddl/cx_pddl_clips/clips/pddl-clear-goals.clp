@@ -13,23 +13,6 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
-(deftemplate pddl-clear-goals
-" Assert a fact of this type in order to clear all goal conditions of a given
-  pddl instance with the external pddl manager.
-  @slot instance: pddl instance which should clear it's goal conditions.
-  Slots set automatically:
-  @slot state:
-   - PENDING: The goal is not cleared in the pddl manager yet.
-   - DONE: The goal is cleared with the pddl manager.
-   - ERROR: The goal is not cleared due to some error.
-  @slot error: provide information on encountered errors.
-"
-  (slot instance (type SYMBOL))
-  (slot goal (type SYMBOL))
-  (slot state (type SYMBOL) (allowed-values PENDING DONE ERROR) (default PENDING))
-  (slot error (type STRING))
-)
-
 (defrule pddl-clear-goals-request
   (declare (salience ?*PRIORITY-PDDL-CLEAR-GOALS*))
   (pddl-clear-goals (instance ?instance) (goal ?goal) (state PENDING))

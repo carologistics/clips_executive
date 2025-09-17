@@ -13,30 +13,6 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
-(deftemplate pddl-set-goals
-" Interface for set-goals.clp
-  Assert a fact of this type in order to actually register the respective goal
-  conditions represented by pddl-goal-(numeric-)fluent facts with the external
-  pddl manager.
-  @slot instance: pddl instance to which the respective goal conditions are
-        added.
-  Slots set automatically:
-  @slot goal:  symbol corresponding to pddl-goal-fluent slot
-  @slot state:
-   - PENDING: The goal is not updated with the pddl manager yet.
-   - DONE: The goal is updated with the pddl manager.
-   - ERROR: The goal is not (or only partially) updated.
-            Note that this leaves the set goal in an undefined state,
-            hence it is advised to clear the goal before proceeding.
-  @slot error: provide information on encountered errors.
-"
-  (slot instance (type SYMBOL))
-  (slot goal (type SYMBOL))
-  (slot state (type SYMBOL) (allowed-values PENDING DONE ERROR) (default PENDING))
-  (slot error (type STRING))
-)
-
-
 (defrule pddl-set-goals-request
   (declare (salience ?*PRIORITY-PDDL-SET-GOALS*))
   (pddl-set-goals (instance ?instance) (goal ?goal) (state PENDING))

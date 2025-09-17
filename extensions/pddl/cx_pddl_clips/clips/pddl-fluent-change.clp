@@ -13,34 +13,6 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
-(deftemplate pddl-fluent-change
-" Interface for fluents.clp
-  Assert a fact of this type in order to indicate that a fluent needs to be
-  added to/removed from a pddl instance.
-  Acts as a transient layer to pddl-fluent facts to make sure the CLIPS
-  representation stays consistant with the externally managed pddl instance.
-  @slot instance: pddl instance to add the fluent to.
-  @slot name: name of the fluent.
-  @slot params: parameters of the fluent.
-  @slot delete: if true, remove the fluent, else add it.
-  Slots set automatically:
-  @slot request-id: id of the associated ros service request
-  @slot state:
-   - PENDING: The fluent was not added yet.
-   - WAITING: The fluent is about to be added and is waiting for confirmation.
-   - ERROR: The fluent might not have been fetched due to an error.
-   - ON-HOLD: Unused state that can be set in order to defer the fluent update
-     to a later time (by switching it manually to PENDING).
-"
-  (slot instance (type SYMBOL))
-  (slot name (type SYMBOL))
-  (multislot params (type SYMBOL) (default (create$)))
-  (slot delete (type SYMBOL) (allowed-values FALSE TRUE) (default FALSE))
-  (slot request-id (type INTEGER))
-  (slot state (type SYMBOL) (allowed-values PENDING WAITING ERROR ON-HOLD) (default PENDING))
-  (slot error (type STRING))
-)
-
 (defrule pddl-fluent-change-request
   (declare (salience ?*PRIORITY-PDDL-FLUENTS*))
   (pddl-fluent-change (instance ?instance) (state PENDING))

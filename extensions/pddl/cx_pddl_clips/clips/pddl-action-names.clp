@@ -13,23 +13,6 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
-(deftemplate pddl-action-names
-" Retrieve the list of action names.
-  @slot instance: pddl instance to retrieve the action names for.
-  Slots set automatically:
-  @multislot action-names: retrieved list of action names
-  @slot state:
-   - PENDING: The action names were not retrieved yet.
-   - ERROR: The names were not fetched due to an error.
-   - DONE: The action-names slot now is filled properly.
-  @slot error: provide information on encountered errors.
-"
-  (slot instance (type SYMBOL))
-  (multislot action-names (type SYMBOL) (default (create$)))
-  (slot state (type SYMBOL) (allowed-values PENDING DONE ERROR) (default PENDING))
-  (slot error (type STRING))
-)
-
 (defrule pddl-action-names-request
   (declare (salience ?*PRIORITY-PDDL-GET-ACTION-NAMES*))
   (pddl-action-names (instance ?instance) (state PENDING))

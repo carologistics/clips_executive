@@ -13,17 +13,6 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
-(deftemplate pddl-planning-filter
-" This currently mainly is a transient layer betweeen the general pddl interface and our domain-specific usage.
-  Can be extended later in case different kind of planning filters should be used or if planning is used in varying contexts.
-"
-  (slot id (type SYMBOL))
-  (slot type (type SYMBOL) (allowed-values ACTIONS OBJECTS FLUENTS))
-  (multislot filter (type SYMBOL) (default (create$ )))
-  (slot instance (type SYMBOL))
-  (slot goal (type SYMBOL))
-)
-
 (defrule pddl-planning-filter-action-filter-request
   (declare (salience ?*PRIORITY-PDDL-SET-ACTION-FILTER*))
   ?pf <- (pddl-planning-filter (type ACTIONS) (instance ?instance) (goal ?goal) (filter $?filter))

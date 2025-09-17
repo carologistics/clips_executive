@@ -13,17 +13,6 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
-(deftemplate pddl-action-get-effect
-" request the effect of a grounded pddl action.
-  @slot action: id of the action.
-  @slot state: TBD
-"
-  (slot action (type SYMBOL))
-  (slot effect-type (type SYMBOL) (allowed-values ALL START END) (default ALL))
-  (slot state (type SYMBOL) (allowed-values PENDING WAITING START-EFFECT-APPLIED DONE ERROR) (default PENDING))
-  (slot apply (type SYMBOL) (allowed-values FALSE TRUE) (default FALSE))
-)
-
 (deffunction pddl-apply-op (?op ?value ?new-value)
   (if (eq ?op "=") then (return ?new-value))
   (if (eq ?op "+") then (return (+ ?value ?new-value)))
