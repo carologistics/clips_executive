@@ -1,0 +1,42 @@
+/**:
+  ros__parameters:
+    autostart_node: true
+    environments: ["structured_pddl_agent"]
+
+    structured_pddl_agent:
+      plugins: ["executive", "ros_msgs",
+                "ament_index",
+                "plan_temporal_action",
+                "timed_plan_action_msg",
+                "pddl_files",
+                "files"]
+      log_clips_to_file: true
+      watch: ["facts", "rules"]
+
+    ament_index:
+      plugin: "cx::AmentIndexPlugin"
+
+    executive:
+      plugin: "cx::ExecutivePlugin"
+
+    ros_msgs:
+      plugin: "cx::RosMsgsPlugin"
+
+    pddl_files:
+      plugin: "cx::FileLoadPlugin"
+      pkg_share_dirs: ["cx_pddl_clips", "cx_pddl_bringup"]
+      batch: [
+        "clips/deftemplates.clp",
+        "clips/deftemplate-overrides.clp",
+        "clips/pddl-no-deftemplates.clp"
+      ]
+
+    files:
+      plugin: "cx::FileLoadPlugin"
+      pkg_share_dirs: ["cx_pddl_bringup"]
+      load: ["clips/structured_agent.clp"]
+
+    plan_temporal_action:
+      plugin: "cx::CXCxPddlMsgsPlanTemporalPlugin"
+    timed_plan_action_msg:
+      plugin: "cx::CXCxPddlMsgsTimedPlanActionPlugin"
