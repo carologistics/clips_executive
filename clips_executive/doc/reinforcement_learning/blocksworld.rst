@@ -24,8 +24,8 @@ This tutorial makes use of the RL plugin of the CLIPS Executive in combination w
 Prerequisites
 *************
 
-You will need to have the |CX| :doc:`installed <../getting_started/installation>` together with the pddl manager extension and sourced in your environment. 
- 
+You will need to have the |CX| :doc:`installed <../getting_started/installation>` together with the pddl manager extension and sourced in your environment.
+
 
 Action Selection using Reinforcement Learning
 *********************************************
@@ -55,7 +55,7 @@ Creating a Blocksworld Agent
 We need to create three configuration files in the ``params`` folder. The first file ``clips_env_manager.yaml`` features all plugins and files loaded in our CLIPS environment.
 
 .. code-block:: yaml
-  
+
   clips_manager:
     ros__parameters:
       environments: ["main"]
@@ -83,7 +83,7 @@ We need to create three configuration files in the ``params`` folder. The first 
 
       ament_index:
         plugin: "cx::AmentIndexPlugin"
-      
+
       config:
         plugin: "cx::ConfigPlugin"
 
@@ -92,7 +92,7 @@ We need to create three configuration files in the ``params`` folder. The first 
         publish_on_refresh: false
         assert_time: true
         refresh_rate: 10
-      
+
       create_rl_env_state:
         plugin: "cx::CXCxRlInterfacesCreateRLEnvStatePlugin"
 
@@ -101,7 +101,7 @@ We need to create three configuration files in the ``params`` folder. The first 
 
       get_observable_objects:
         plugin: "cx::CXCxRlInterfacesGetObservableObjectsPlugin"
-      
+
       get_observable_predicates:
         plugin: "cx::CXCxRlInterfacesGetObservablePredicatesPlugin"
 
@@ -181,7 +181,7 @@ We need to create three configuration files in the ``params`` folder. The first 
         plugin: "cx::RosMsgsPlugin"
 
 
-        
+
 
 The second config is the ``training-config.yaml`` and features all settings for the reinforcement learning process. It is important, that the parameter ``number_of_robots`` matches the real number of worker robots in the environment to ensure no irregular behavior. By default it is configured to use training mode with a newly created agent which is saved as "BlocksworldAgent" in the tutorial agent package after training. The name can be changed using the parameter ``agent_name``. Existing agents can be trained for more episodes when enabling the ``retraining`` option. Change the parameter ``rl_mode`` to ``EXECUTION`` to enable the execution mode which uses an existing RL agent with the name as specified in the ``agent_name`` parameter.\
 
@@ -193,19 +193,19 @@ When creating a new agent, several parameters can be set tp change its learning 
 
   cxrl_node/blocksworld_rl_node:
     ros__parameters:
-      package_dir: "expertino_ws/src/expertino-rcll/expertino_blocksworld/expertino_blocksworld/"    
+      package_dir: "expertino_ws/src/expertino-rcll/expertino_blocksworld/expertino_blocksworld/"
       agent_name: "BlocksworldAgent"
       rl_mode: "TRAINING"
-      number_of_robots: 1    
-      
+      number_of_robots: 1
+
       training:
         retraining: false
         max_episodes: 100
-        timesteps: 100000000    
-      
+        timesteps: 100000000
+
       env:
-        entrypoint: "expertino_blocksworld.blocksworld_env:BlocksworldEnv"    
-      
+        entrypoint: "expertino_blocksworld.blocksworld_env:BlocksworldEnv"
+
       model:
         learning_rate: 0.0003
         gamma: 0.99
@@ -219,7 +219,7 @@ When creating a new agent, several parameters can be set tp change its learning 
         verbose: 1
         wait_for_all_robots: false
 
-The third config ``agent_config.yaml`` is used by the pddl manager extension to load the pddl domain and problem. 
+The third config ``agent_config.yaml`` is used by the pddl manager extension to load the pddl domain and problem.
 
 .. code-block::yaml
   # Configuration for the integration of the external pddl manager.
@@ -255,7 +255,7 @@ To start, we need to formalize our blocksworld domain in PDDL. For that, create 
       robot - object
   )
 
-  (:predicates 
+  (:predicates
     (clear ?a - block)
       (on-table ?a - block)
       (can-hold ?r - robot)
@@ -266,13 +266,13 @@ To start, we need to formalize our blocksworld domain in PDDL. For that, create 
   (:action pickup
     :parameters (?r - robot ?b - block)
     :precondition (and (clear ?b) (on-table ?b) (can-hold ?r))
-    :effect (and (holding ?r ?b) (not (clear ?b)) (not (on-table ?b)) 
+    :effect (and (holding ?r ?b) (not (clear ?b)) (not (on-table ?b))
                 (not (can-hold ?r))))
 
   (:action putdown
     :parameters  (?r - robot ?b - block)
     :precondition (and (holding ?r ?b))
-    :effect (and (clear ?b) (can-hold ?r) (on-table ?b) 
+    :effect (and (clear ?b) (can-hold ?r) (on-table ?b)
                 (not (holding ?r ?b))))
 
   (:action stack
@@ -323,7 +323,7 @@ This defines a simple domain with blocks that can be picked up and stacked by a 
   )
 
 In this case we have 4 block which we want to stack so that block1 is at the bottom and block4 is at the top.
-                    
+
 4 CLIPS Files
 ~~~~~~~~~~~~~
 Now we want to implement the main CLIPS agent. For that create a new folder ``clips`` where all CLIPS files are stored.
@@ -353,8 +353,8 @@ Then we want to decide which objects and predicates in the domain we want to add
   (deffunction observe-predicates-except-on-table ()
     (do-for-all-facts ((?p pddl-predicate))
       (neq ?p:name on-table)
-    (assert (rl-observable-predicate 	(name ?p:name) 
-                      (param-types ?p:param-types) 
+    (assert (rl-observable-predicate 	(name ?p:name)
+                      (param-types ?p:param-types)
                       (param-names ?p:param-names)))
     )
   )
@@ -362,7 +362,7 @@ Then we want to decide which objects and predicates in the domain we want to add
   (deffunction observe-all-objects ()
     (do-for-all-facts ((?o pddl-object))
       TRUE
-    (assert (rl-observable-object	(name ?o:name) 
+    (assert (rl-observable-object	(name ?o:name)
                     (type ?o:type)))
     )
   )
@@ -440,7 +440,7 @@ Before we can use these functions to set up our RL plugin, the predicates and ob
     (assert (domain-facts-loaded))
   )
 
-Finally, we want to define a goal state, which declares a successful outcome of our episode. As mentioned earlier, we we want to stack the block in ascending order with block1 being an the base. 
+Finally, we want to define a goal state, which declares a successful outcome of our episode. As mentioned earlier, we we want to stack the block in ascending order with block1 being an the base.
 
 .. code-block:: lisp
 
@@ -452,7 +452,7 @@ Finally, we want to define a goal state, which declares a successful outcome of 
     (pddl-fluent (name on) (params block4 block3))
     =>
     (assert (rl-episode-end (success TRUE)))
-  )   
+  )
 
 Because we do not consider any unstack actions, any deviation from the optimal stacking order will result in a tower of different ordering. When there is a tower of 4 blocks, we cannot perform any more actions which automactically results in the episode being ended and considered a failure.
 
@@ -563,7 +563,7 @@ When the action effect has been applied, we want to signal back to the RL plugin
 A custom environment is created (see ``cxrl_blocksworld/blocksworld_env.py``) which inherits from the ``CXRLGym`` class of the ``cx_reinforcement_learning`` package. In the custom CXRLGym-environment, the ``generate_action_space`` function is overwritten to list all possible rl-action names. In this case it is a combination of the goal class and its parameters. Other gym-functions can be extended to add custom functionality, here additional logging has been added to the ``step`` and ``reset`` function.
 
 .. code-block:: python
-  
+
   from cxrl_gym.cxrl_gym import CXRLGym
   from rclpy.node import Node
   import rclpy
@@ -580,13 +580,13 @@ A custom environment is created (see ``cxrl_blocksworld/blocksworld_env.py``) wh
           state, reward, done, truncated, info = super().step(action)
           self.reward_in_episode += reward
           return state, reward, done, truncated, info
-      
+
       def reset(self, seed: int = None, options: dict[str, any] = None):
           with open("cxrl-bw-log-episode-reward.txt", 'a+') as f:
               f.write(f"{self.reward_in_episode} \n")
           self.reward_in_episode = 0
           return super().reset(seed=seed)
-      
+
       def generate_action_space(self):
           self.node.get_logger().info("Generating action space...")
           action_space =  ["stack#robot1#block1#block2",
@@ -605,7 +605,7 @@ A custom environment is created (see ``cxrl_blocksworld/blocksworld_env.py``) wh
                           "pickup#robot1#block2",
                           "pickup#robot1#block3",
                           "pickup#robot1#block4"
-                          ]       
+                          ]
           return action_space
 
       def render(self):

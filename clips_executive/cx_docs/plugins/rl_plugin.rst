@@ -6,17 +6,17 @@ Interfaces for RL-based Action Selection
 Source code on .
 
 ===================== ============= =============================================
-Interface Name        Type          Plugin Class 
+Interface Name        Type          Plugin Class
 --------------------- ------------- ---------------------------------------------
 create_rl_env_state   Service       cx::CXCxRlInterfacesCreateRLEnvStatePlugin
-get_domain_objects    Service       cx::CXCxRlInterfacesGetDomainObjectsPlugin 
-get_domain_predicates Service       cx::CXCxRlInterfacesGetDomainPredicatesPlugin 
-get_action_list       Service       cx::CXCxRlInterfacesGetActionListPlugin 
-get_action_list_robot Service       cx::CXCxRlInterfacesGetActionListRobotPlugin 
-set_rl_mode           Service       cx::CXCxRlInterfacesSetRLModePlugin 
-get_free_robot        Action Server cx::CXCxRlInterfacesGetFreeRobotPlugin 
-action_selection      Action Server cx::CXCxRlInterfacesActionSelectionPlugin 
-reset_cx              Action Server cx::CXCxRlInterfacesResetCXPlugin 
+get_domain_objects    Service       cx::CXCxRlInterfacesGetDomainObjectsPlugin
+get_domain_predicates Service       cx::CXCxRlInterfacesGetDomainPredicatesPlugin
+get_action_list       Service       cx::CXCxRlInterfacesGetActionListPlugin
+get_action_list_robot Service       cx::CXCxRlInterfacesGetActionListRobotPlugin
+set_rl_mode           Service       cx::CXCxRlInterfacesSetRLModePlugin
+get_free_robot        Action Server cx::CXCxRlInterfacesGetFreeRobotPlugin
+action_selection      Action Server cx::CXCxRlInterfacesActionSelectionPlugin
+reset_cx              Action Server cx::CXCxRlInterfacesResetCXPlugin
 exec_action_selection Client        cx::CXCxRlInterfacesExecActionSelectionPlugin
 ===================== ============= =============================================
 
@@ -38,7 +38,7 @@ Interfaces
 In the following each interface is presented and explained:
 
 :`create_rl_env_state`:
-  
+
   Type
     Service
   Description
@@ -50,7 +50,7 @@ In the following each interface is presented and explained:
         string state
 
 :`get_observable_objects`:
-  
+
   Type
     Service
   Description
@@ -63,7 +63,7 @@ In the following each interface is presented and explained:
         string[] objects
 
 :`get_observable_predicates`:
-  
+
   Type
     Service
   Description
@@ -78,7 +78,7 @@ In the following each interface is presented and explained:
         string[] paramtypes
 
 :`get_predfined_observables`:
-  
+
   Type
     Service
   Description
@@ -90,7 +90,7 @@ In the following each interface is presented and explained:
         string[] observables
 
 :`get_action_list`:
-  
+
   Type
     Service
   Description
@@ -102,7 +102,7 @@ In the following each interface is presented and explained:
         string[] actions
 
 :`get_action_list_robot`:
-  
+
   Type
     Service
   Description
@@ -115,7 +115,7 @@ In the following each interface is presented and explained:
         string[] actions
 
 :`set_rl_mode`:
-  
+
   Type
     Service
   Description
@@ -128,7 +128,7 @@ In the following each interface is presented and explained:
         string confirmation
 
 :`get_free_robot`:
-  
+
   Type
     Action Server
   Description
@@ -142,11 +142,11 @@ In the following each interface is presented and explained:
         string feedback
 
 :`action_selection`:
-  
+
   Type
     Action Server
   Description
-    Calling this action with a valid actionid starts the action selection process in CLIPS. In the matching rl-action fact, the ``is-selected`` flag gets set, signaling to the user generated agent which action has been selected. When the execution of the action has been finished, the user must set the ``is-finished`` flag which leads to the actionid, the earned reward and an info-string are returned. This string is currently only used to signal if an episode has finished in which case it says "Done" otherwise it is empty. 
+    Calling this action with a valid actionid starts the action selection process in CLIPS. In the matching rl-action fact, the ``is-selected`` flag gets set, signaling to the user generated agent which action has been selected. When the execution of the action has been finished, the user must set the ``is-finished`` flag which leads to the actionid, the earned reward and an info-string are returned. This string is currently only used to signal if an episode has finished in which case it says "Done" otherwise it is empty.
   Specification
     .. code-block:: lisp
 
@@ -159,7 +159,7 @@ In the following each interface is presented and explained:
         string feedback
 
 :`reset_cx`:
-  
+
   Type
     Action Server
   Description
@@ -173,7 +173,7 @@ In the following each interface is presented and explained:
         string feedback
 
 :`exec_action_selection`:
-  
+
   Type
     Client
   Description
@@ -201,9 +201,9 @@ Facts
       (slot is-finished   (type SYMBOL)
                           (allowed-values TRUE FALSE)
                           (default FALSE))
-      (slot assigned-to   (type SYMBOL) 
+      (slot assigned-to   (type SYMBOL)
                           (default nil))
-      (slot points    (type INTEGER) 
+      (slot points    (type INTEGER)
                       (default 0))
   )
 
@@ -304,5 +304,4 @@ Saliences
 Usage Example
 *************
 
-  A simple usage example can be found in the tutorial Blocksworld with Reinforcement Learning 
-
+  A simple usage example can be found in the tutorial Blocksworld with Reinforcement Learning
