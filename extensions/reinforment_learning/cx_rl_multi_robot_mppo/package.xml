@@ -5,7 +5,7 @@
   <version>0.0.0</version>
   <description>Multi-robot maskable proximal policy optimization (mppo) implementation.</description>
   <maintainer email="viehmann@kbsg.rwth-aachen.de">Tarik Viehmann</maintainer>
-  <author email="frank.pier@rwth-aachen.de">Frank Pier</author>
+  <maintainer email="frank.pier@rwth-aachen.de">Frank Pier</maintainer>
   <license>Apache-2.0</license>
 
   <depend>rclpy</depend>

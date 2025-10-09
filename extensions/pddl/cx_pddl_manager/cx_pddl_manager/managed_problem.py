@@ -21,7 +21,6 @@ from unified_planning.environment import get_environment
 from unified_planning.io import PDDLReader, PDDLWriter
 from unified_planning.model import Problem
 from unified_planning.plans.plan import PlanKind
-from unified_planning.shortcuts import Problem
 from up_nextflap import NextFLAPImpl
 
 
@@ -45,6 +44,7 @@ def run_planner_process(env, dom, prob):
 
 
 class ManagedGoal:
+
     def __init__(self, problem, name='base'):
         self.problem = problem
         self.name = name
@@ -67,9 +67,6 @@ class ManagedGoal:
             self.goal_fluents.append(grounded_goal_expr)
         else:
             self.goal_fluents.append(grounded_fluent)
-
-    def remove_goal_fluent(self, name, args):
-        raise NotImplementedError('remove_goal_fluent is not implemented')
 
     def get_goal_fluents(self):
         return self.goal_fluents
@@ -129,17 +126,17 @@ class ManagedGoal:
                 plan_action = TimedPlanAction()
                 plan_action.pddl_instance = self.problem.name
                 plan_action.goal_instance = self.name
-                if f"{act.action.name}" in writer.nto_renamings.keys():
-                    plan_action.name = f"{writer.get_item_named(f"{act.action.name}").name}"
+                if f'{act.action.name}' in writer.nto_renamings.keys():
+                    plan_action.name = f'{writer.get_item_named(f"{act.action.name}").name}'
                 else:
-                    plan_action.name = f"{act.action.name}"
+                    plan_action.name = f'{act.action.name}'
 
                 plan_action.args = []
                 for arg in act.actual_parameters:
-                    if f"{arg}" in writer.nto_renamings.keys():
-                        plan_action.args.append(f"{writer.get_item_named(arg.__str__())}")
+                    if f'{arg}' in writer.nto_renamings.keys():
+                        plan_action.args.append(f'{writer.get_item_named(arg.__str__())}')
                     else:
-                        plan_action.args.append(f"{arg}")
+                        plan_action.args.append(f'{arg}')
                 plan_action.start_time = float(time)
                 plan_action.duration = float(duration)
                 if float(time) - last_time > delta_threshold:
@@ -153,6 +150,7 @@ class ManagedGoal:
 
 
 class ManagedProblem:
+
     def __init__(self, problem, env, name='base'):
         self.goals = {}
         self.base_problem = problem.clone()
@@ -171,9 +169,9 @@ class ManagedProblem:
 
         # add the objects based on the object filters
         objects = self.get_object_list()
-        for object in objects:
-            if object_filter is None or object in object_filter:
-                target_problem.add_object(object)
+        for obj in objects:
+            if object_filter is None or obj in object_filter:
+                target_problem.add_object(obj)
 
         # add the liftd fluents based on the fluent filters
         init_value = False
@@ -185,7 +183,7 @@ class ManagedProblem:
 
         # set the initial values based on the fluent filters
         for f, val in self.base_problem.initial_values.items():
-            args = [f"{arg}" for arg in f.args]
+            args = [f'{arg}' for arg in f.args]
 
             if not object_filter or not any(
                 arg not in (o.name for o in object_filter) for arg in args
@@ -202,8 +200,8 @@ class ManagedProblem:
     def get_object_list(self):
         return self.base_problem.all_objects
 
-    def add_object(self, name, type):
-        self.base_problem.add_object(name, self.base_problem.user_type(type))
+    def add_object(self, name, obj_type):
+        self.base_problem.add_object(name, self.base_problem.user_type(obj_type))
 
     def remove_object(self, name):
         object_list = self.get_object_list()

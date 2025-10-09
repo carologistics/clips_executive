@@ -151,7 +151,8 @@ repos:
         entry: ament_cpplint
         language: system
         stages: [manual]
-        exclude: /templates/
+        pass_filenames: true
+        exclude: 'jinja'
 
       # -------------------------------
       # Python Linters

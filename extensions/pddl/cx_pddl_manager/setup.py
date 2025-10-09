@@ -34,7 +34,8 @@ setup(
     zip_safe=True,
     maintainer='Tarik Viehmann',
     maintainer_email='viehmann@kbsg.rwth-aachen.de',
-    description='This package allows you to manage PDDL planning environments for use with the ROS2 CX.',
+    description='This package allows you to manage PDDL planning \
+    environments for use with the ROS2 CX.',
     license='Apache-2.0',
     tests_require=['pytest'],
     entry_points={

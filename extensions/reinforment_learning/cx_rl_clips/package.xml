@@ -6,7 +6,7 @@
   <description>CLIPS snippets to help usint the cx_rl_interfaces.</description>
 
   <maintainer email="viehmann@kbsg.rwth-aachen.de">Tarik Viehmann</maintainer>
-  <author email="frank.pier@rwth-aachen.de">Frank Pier</author>
+  <maintainer email="frank.pier@rwth-aachen.de">Frank Pier</maintainer>
 
   <license>Apache-2.0</license>
 

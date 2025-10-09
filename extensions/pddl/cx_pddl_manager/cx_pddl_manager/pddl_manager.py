@@ -15,6 +15,7 @@
 # limitations under the License.
 
 import concurrent.futures as cf
+from typing import Callable
 
 from cx_pddl_manager.managed_problem import ManagedProblem
 from cx_pddl_msgs.action import PlanTemporal
@@ -58,10 +59,10 @@ from unified_planning.model.effect import EffectKind
 from unified_planning.model.timing import TimeInterval, Timepoint, TimepointKind, Timing
 from unified_planning.model.walkers import StateEvaluator
 from unified_planning.plans import ActionInstance
-from unified_planning.shortcuts import UPState
 
 
 class PddlManagerLifecycleNode(LifecycleNode):
+
     def __init__(self):
         super().__init__('pddl_problem_manager')
         self.my_executor = cf.ProcessPoolExecutor(max_workers=4)
@@ -120,16 +121,16 @@ class PddlManagerLifecycleNode(LifecycleNode):
 
     def autostart_callback(self):
         self.autostart_timer.cancel()
-        self.get_logger().info(f"Auto-starting node: {self.get_name()}")
+        self.get_logger().info(f'Auto-starting node: {self.get_name()}')
 
         configure_result = self.trigger_configure()
         if configure_result != TransitionCallbackReturn.SUCCESS:
-            self.get_logger().error(f"Auto-starting node {self.get_name()} failed to configure!")
+            self.get_logger().error(f'Auto-starting node {self.get_name()} failed to configure!')
             return
 
         activate_result = self.trigger_activate()
         if activate_result != TransitionCallbackReturn.SUCCESS:
-            self.get_logger().error(f"Auto-starting node {self.get_name()} failed to activate!")
+            self.get_logger().error(f'Auto-starting node {self.get_name()} failed to activate!')
             return
 
     def on_configure(self, state: State) -> TransitionCallbackReturn:
@@ -137,133 +138,133 @@ class PddlManagerLifecycleNode(LifecycleNode):
         # Create the service when the node enters the 'inactive' state
         self.add_fluent_srv = self.create_service(
             AddFluent,
-            f"{self.get_name()}/add_fluent",
+            f'{self.get_name()}/add_fluent',
             self.handle_add_fluent,
             callback_group=self.srv_cb_group,
         )
         self.add_pddl_instance_srv = self.create_service(
             AddPddlInstance,
-            f"{self.get_name()}/add_pddl_instance",
+            f'{self.get_name()}/add_pddl_instance',
             self.handle_add_pddl_instance,
             callback_group=self.srv_cb_group,
         )
         self.check_action_condition_srv = self.create_service(
             CheckActionCondition,
-            f"{self.get_name()}/check_action_condition",
+            f'{self.get_name()}/check_action_condition',
             self.handle_check_action_condition,
             callback_group=self.srv_cb_group,
         )
         self.get_action_effects_srv = self.create_service(
             GetActionEffects,
-            f"{self.get_name()}/get_action_effects",
+            f'{self.get_name()}/get_action_effects',
             self.handle_get_action_effects,
             callback_group=self.srv_cb_group,
         )
         self.get_action_names_srv = self.create_service(
             GetActionNames,
-            f"{self.get_name()}/get_action_names",
+            f'{self.get_name()}/get_action_names',
             self.handle_get_action_names,
             callback_group=self.srv_cb_group,
         )
         self.get_fluents_srv = self.create_service(
             GetFluents,
-            f"{self.get_name()}/get_fluents",
+            f'{self.get_name()}/get_fluents',
             self.handle_get_fluents,
             callback_group=self.srv_cb_group,
         )
         self.add_fluents_srv = self.create_service(
             AddFluents,
-            f"{self.get_name()}/add_fluents",
+            f'{self.get_name()}/add_fluents',
             self.handle_add_fluents,
             callback_group=self.srv_cb_group,
         )
         self.rm_fluents_srv = self.create_service(
             RemoveFluents,
-            f"{self.get_name()}/rm_fluents",
+            f'{self.get_name()}/rm_fluents',
             self.handle_rm_fluents,
             callback_group=self.srv_cb_group,
         )
         self.add_objects_srv = self.create_service(
             AddObjects,
-            f"{self.get_name()}/add_objects",
+            f'{self.get_name()}/add_objects',
             self.handle_add_objects,
             callback_group=self.srv_cb_group,
         )
         self.rm_objects_srv = self.create_service(
             RemoveObjects,
-            f"{self.get_name()}/rm_objects",
+            f'{self.get_name()}/rm_objects',
             self.handle_rm_objects,
             callback_group=self.srv_cb_group,
         )
         self.set_functions_srv = self.create_service(
             SetFunctions,
-            f"{self.get_name()}/set_functions",
+            f'{self.get_name()}/set_functions',
             self.handle_set_functions,
             callback_group=self.srv_cb_group,
         )
         self.get_functions_srv = self.create_service(
             GetFunctions,
-            f"{self.get_name()}/get_functions",
+            f'{self.get_name()}/get_functions',
             self.handle_get_functions,
             callback_group=self.srv_cb_group,
         )
         self.set_goals_srv = self.create_service(
             SetGoals,
-            f"{self.get_name()}/set_goals",
+            f'{self.get_name()}/set_goals',
             self.handle_set_goals,
             callback_group=self.srv_cb_group,
         )
         self.clear_goals_srv = self.create_service(
             ClearGoals,
-            f"{self.get_name()}/clear_goals",
+            f'{self.get_name()}/clear_goals',
             self.handle_clear_goals,
             callback_group=self.srv_cb_group,
         )
         self.set_action_filter_srv = self.create_service(
             SetActionFilter,
-            f"{self.get_name()}/set_action_filter",
+            f'{self.get_name()}/set_action_filter',
             self.handle_set_action_filter,
             callback_group=self.srv_cb_group,
         )
         self.set_object_filter_srv = self.create_service(
             SetObjectFilter,
-            f"{self.get_name()}/set_object_filter",
+            f'{self.get_name()}/set_object_filter',
             self.handle_set_object_filter,
             callback_group=self.srv_cb_group,
         )
         self.set_fluent_filter_srv = self.create_service(
             SetFluentFilter,
-            f"{self.get_name()}/set_fluent_filter",
+            f'{self.get_name()}/set_fluent_filter',
             self.handle_set_fluent_filter,
             callback_group=self.srv_cb_group,
         )
         self.create_goal_instance_srv = self.create_service(
             CreateGoalInstance,
-            f"{self.get_name()}/create_goal_instance",
+            f'{self.get_name()}/create_goal_instance',
             self.handle_create_goal_instance,
             callback_group=self.srv_cb_group,
         )
         self.get_predicates_srv = self.create_service(
             GetPredicates,
-            f"{self.get_name()}/get_predicates",
+            f'{self.get_name()}/get_predicates',
             self.handle_get_predicates,
             callback_group=self.srv_cb_group,
         )
         self.get_objects_srv = self.create_service(
             GetTypeObjects,
-            f"{self.get_name()}/get_type_objects",
+            f'{self.get_name()}/get_type_objects',
             self.handle_get_type_objects,
             callback_group=self.srv_cb_group,
         )
         self.plan_action_server = ActionServer(
             self,
             PlanTemporal,
-            f"{self.get_name()}/temp_plan",
+            f'{self.get_name()}/temp_plan',
             self.plan_callback,
             callback_group=self.action_cb_group,
         )
         self.instance_update_pub = self.create_publisher(
-            String, f"{self.get_name()}/instance_update", 10
+            String, f'{self.get_name()}/instance_update', 10
         )
         self.get_logger().info('Service created successfully.')
         return TransitionCallbackReturn.SUCCESS
@@ -291,7 +292,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
         return TransitionCallbackReturn.SUCCESS
 
     def try_set_object(self, obj, value):
-        self.get_logger().debug(f"Received Object: name={obj.name}, type={obj.type}")
+        self.get_logger().debug(f'Received Object: name={obj.name}, type={obj.type}')
         if obj.pddl_instance not in self.managed_problems.keys():
             return False, 'Unknown pddl instance'
         managed_instance = self.managed_problems[obj.pddl_instance]
@@ -302,10 +303,10 @@ class PddlManagerLifecycleNode(LifecycleNode):
                 managed_instance.remove_object(obj.name)
             return True, ''
         except Exception as e:
-            return False, f"error while { "adding" if value else "removing" } object: {e}"
+            return False, f'error while {"adding" if value else "removing"} object: {e}'
 
     def try_set_fluent(self, fluent, value):
-        self.get_logger().debug(f"Received Fluent: name={fluent.name}, args={fluent.args}")
+        self.get_logger().debug(f'Received Fluent: name={fluent.name}, args={fluent.args}')
         if fluent.pddl_instance not in self.managed_problems.keys():
             return False, 'Unknown pddl instance'
         managed_instance = self.managed_problems[fluent.pddl_instance]
@@ -313,11 +314,12 @@ class PddlManagerLifecycleNode(LifecycleNode):
             managed_instance.set_fluent(fluent.name, fluent.args, value)
             return True, ''
         except Exception as e:
-            return False, f"error while { "adding" if value else "removing" } fluent: {e}"
+            return False, f'error while {"adding" if value else "removing"} fluent: {e}'
 
     def try_set_function(self, function):
         self.get_logger().debug(
-            f"Received Function: name={function.name}, args={function.args}, value={function.value}"
+            f'Received Function: name={function.name}, args={function.args}, \
+            value={function.value}'
         )
         return self.try_set_fluent(function, function.value)
 
@@ -332,7 +334,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
             managed_instance.add_goal_fluent(fluent.name, fluent.args, value, goal_instance)
             return True, ''
         except Exception as e:
-            return False, f"error while { "adding" if value else "removing" } fluent: {e}"
+            return False, f'error while {"adding" if value else "removing"} fluent: {e}'
 
     def handle_add_fluent(self, request, response):
         fluent = request.fluent
@@ -348,7 +350,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
         for fluent in request.fluents:
             curr_success, curr_error = self.try_set_fluent(fluent, True)
             success = success and curr_success
-            error = f"{error} {curr_error}"
+            error = f'{error} {curr_error}'
         response.success = success
         response.error = error
 
@@ -363,7 +365,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
         for function in request.functions:
             curr_success, curr_error = self.try_set_function(function)
             success = success and curr_success
-            error = f"{error} {curr_error}"
+            error = f'{error} {curr_error}'
         response.success = success
         response.error = error
 
@@ -378,7 +380,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
         for fluent in request.fluents:
             curr_success, curr_error = self.try_set_fluent(fluent, False)
             success = success and curr_success
-            error = f"{error} {curr_error}"
+            error = f'{error} {curr_error}'
         response.success = success
         response.error = error
 
@@ -391,10 +393,10 @@ class PddlManagerLifecycleNode(LifecycleNode):
     def handle_add_objects(self, request, response):
         success = True
         error = ''
-        for object in request.objects:
-            curr_success, curr_error = self.try_set_object(object, True)
+        for obj in request.objects:
+            curr_success, curr_error = self.try_set_object(obj, True)
             success = success and curr_success
-            error = f"{error} {curr_error}"
+            error = f'{error} {curr_error}'
         response.success = success
         response.error = error
 
@@ -406,10 +408,10 @@ class PddlManagerLifecycleNode(LifecycleNode):
     def handle_rm_objects(self, request, response):
         success = True
         error = ''
-        for object in request.objects:
-            curr_success, curr_error = self.try_set_object(object, False)
+        for obj in request.objects:
+            curr_success, curr_error = self.try_set_object(obj, False)
             success = success and curr_success
-            error = f"{error} {curr_error}"
+            error = f'{error} {curr_error}'
         response.success = success
         response.error = error
 
@@ -420,7 +422,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
 
     def handle_clear_goals(self, request, response):
         response.success = True
-        if not request.pddl_instance in self.managed_problems:
+        if request.pddl_instance not in self.managed_problems:
             response.success = False
             response.error = 'Unknown pddl instance'
             return response
@@ -430,8 +432,8 @@ class PddlManagerLifecycleNode(LifecycleNode):
             return response
         except Exception as e:
             response.success = False
-            response.error = f"error while clearing goals: {e}"
-            self.get_logger().error(f"{response.error}")
+            response.error = f'error while clearing goals: {e}'
+            self.get_logger().error(f'{response.error}')
             return response
 
     def handle_set_goals(self, request, response):
@@ -444,18 +446,18 @@ class PddlManagerLifecycleNode(LifecycleNode):
                 fluent, None, request.goal_instance
             )
             success = success and curr_success
-            error = f"{error} {curr_error}"
+            error = f'{error} {curr_error}'
 
         for function in request.functions:
             if not success:
                 break
             curr_success, curr_error = self.try_set_function_goal(function, request.goal_instance)
             success = success and curr_success
-            error = f"{error} {curr_error}"
+            error = f'{error} {curr_error}'
         response.success = success
         response.error = error
         if not response.success:
-            self.get_logger().error(f"{response.error}")
+            self.get_logger().error(f'{response.error}')
         return response
 
     def handle_set_object_filter(self, request, response):
@@ -470,7 +472,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
                 self.managed_problems[request.pddl_instance].goals[
                     request.goal_instance
                 ].add_object_filter(obj)
-        except:
+        except (KeyError, AttributeError):
             error = 'Could not access goal/problem'
             success = False
 
@@ -490,7 +492,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
                 self.managed_problems[request.pddl_instance].goals[
                     request.goal_instance
                 ].add_action_filter(action)
-        except:
+        except (KeyError, AttributeError):
             error = 'Could not access goal/problem'
             success = False
 
@@ -510,7 +512,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
                 self.managed_problems[request.pddl_instance].goals[
                     request.goal_instance
                 ].add_fluent_filter(fluent)
-        except:
+        except (KeyError, AttributeError):
             error = 'Could not access goal/problem'
             success = False
 
@@ -523,7 +525,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
         error = ''
         try:
             self.managed_problems[request.pddl_instance].add_goal(request.goal_instance)
-        except:
+        except (KeyError, AttributeError):
             error = 'Could not access problem'
             success = False
 
@@ -545,7 +547,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
                 problem_template = jinja_env.get_template(problem)
                 problem_rendered = problem_template.render()
             if name in self.managed_problems.keys():
-                self.get_logger().warn(f"Overriding problem {name}")
+                self.get_logger().warn(f'Overriding problem {name}')
 
             if problem_exists:
                 self.managed_problems[name] = ManagedProblem(
@@ -557,11 +559,11 @@ class PddlManagerLifecycleNode(LifecycleNode):
                 self.managed_problems[name] = ManagedProblem(
                     self.reader.parse_problem_string(domain_rendered), self.env, name
                 )
-            self.get_logger().info(f"Loading domain {domain} {problem}")
+            self.get_logger().info(f'Loading domain {domain} {problem}')
             response.success = True
-            self.get_logger().debug(f"{self.managed_problems[name].base_problem}")
+            self.get_logger().debug(f'{self.managed_problems[name].base_problem}')
         except Exception as e:
-            response.error = f"error while adding problem: {e}"
+            response.error = f'error while adding problem: {e}'
             self.get_logger().error(response.error)
             response.success = False
         return response
@@ -576,7 +578,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
         for f, val in instance.initial_values.items():
             args = []
             for arg in f.args:
-                args.append(f"{arg}")
+                args.append(f'{arg}')
             if val.is_bool_constant() and val.bool_constant_value():
                 # this is a normal fluent
                 fluent = FluentMsg(
@@ -598,7 +600,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
         for f, val in instance.initial_values.items():
             args = []
             for arg in f.args:
-                args.append(f"{arg}")
+                args.append(f'{arg}')
             if val.is_int_constant():
                 # this is a function
                 func = Function(
@@ -653,21 +655,21 @@ class PddlManagerLifecycleNode(LifecycleNode):
         instance = self.managed_problems[request.pddl_instance].base_problem
         response.objects = []
 
-        type = request.type
+        obj_type = request.type
 
-        if not instance.has_type(type):
+        if not instance.has_type(obj_type):
             request.success = False
             response.error = 'Type not in instance'
             return response
 
-        for obj in instance.objects(instance.user_type(type)):
+        for obj in instance.objects(instance.user_type(obj_type)):
             response.objects.append(obj.name)
         response.success = True
         return response
 
     def handle_check_action_condition(self, request, response):
         action = request.action
-        # self.get_logger().debug(f"Received Action: name={action.name}, args={action.args}")
+        # self.get_logger().debug(f'Received Action: name={action.name}, args={action.args}')
         if action.pddl_instance not in self.managed_problems.keys():
             response.success = False
             response.error = 'Unknown pddl instance'
@@ -707,13 +709,13 @@ class PddlManagerLifecycleNode(LifecycleNode):
                 response.sat = False
                 unsat_cond_strings = []
                 for unsat in unsatisfied_conditions:
-                    unsat_cond_strings.append(f"{unsat}")
+                    unsat_cond_strings.append(f'{unsat}')
                 response.unsatisfied_conditions = unsat_cond_strings
             else:
                 response.sat = True
         except Exception as e:
-            self.get_logger().error(f"error found")
-            response.error = f"error checking precondition: {e}"
+            self.get_logger().error('error found')
+            response.error = f'error checking precondition: {e}'
             response.success = False
         return response
 
@@ -732,7 +734,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
 
     def handle_get_action_effects(self, request, response):
         action = request.action
-        self.get_logger().debug(f"Received Action: name={action.name}, args={action.args}")
+        self.get_logger().debug(f'Received Action: name={action.name}, args={action.args}')
         if action.pddl_instance not in self.managed_problems.keys():
             response.success = False
             response.error = 'Unknown pddl instance'
@@ -753,7 +755,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
                 for eff in grounded_action.effects:
                     args = []
                     for arg in eff.fluent.args:
-                        args.append(f"{arg}")
+                        args.append(f'{arg}')
                     fluent = FluentMsg(
                         pddl_instance=action.pddl_instance,
                         name=eff.fluent.fluent().name,
@@ -774,7 +776,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
                     elif cond == self.end_timing:
                         time_point = 'END'
                     else:
-                        response.error = f"Unknown effect time point: {cond}"
+                        response.error = f'Unknown effect time point: {cond}'
                         self.get_logger().error(response.error)
                         response.success = False
                         return response
@@ -788,14 +790,14 @@ class PddlManagerLifecycleNode(LifecycleNode):
                             case EffectKind.DECREASE:
                                 operator = '-'
                             case _:
-                                response.error = f"Unknown operator kind: {val.kind}"
+                                response.error = f'Unknown operator kind: {val.kind}'
                                 self.get_logger().error(response.error)
                                 response.success = False
                                 return response
 
                         args = []
                         for arg in val.fluent.args:
-                            args.append(f"{arg}")
+                            args.append(f'{arg}')
                         if val.value.is_bool_constant():
                             # this is a normal fluent change effect
                             fluent = FluentMsg(
@@ -846,7 +848,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
                                 elif rhs_fnode.is_int_constant():
                                     rhs_val = float(rhs_fnode.int_constant_value())
                                 else:
-                                    raise Exception(f"value of {val.val} is unexpected ")
+                                    raise Exception(f'value of {val.val} is unexpected ')
                                 function_effects.append(
                                     FunctionEffect(
                                         function=function_msg,
@@ -856,7 +858,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
                                     )
                                 )
                             else:
-                                response.error = f"Unknown value type: {val.value}"
+                                response.error = f'Unknown value type: {val.value}'
                                 self.get_logger().error(response.error)
                                 response.success = False
                                 return response
@@ -866,7 +868,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
             response.fluent_effects = fluent_effects
             return response
         except Exception as e:
-            response.error = f"error while getting effects: {e}"
+            response.error = f'error while getting effects: {e}'
             self.get_logger().error(response.error)
             response.success = False
             return response
@@ -886,7 +888,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
             response.action_names = action_names
             return response
         except Exception as e:
-            response.error = f"error while getting action names: {e}"
+            response.error = f'error while getting action names: {e}'
             self.get_logger().error(response.error)
             response.success = False
             return response

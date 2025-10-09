@@ -46,6 +46,7 @@ class MaskableDictRolloutBufferSamples(MaskableRolloutBufferSamples):
 class MultiRobotMaskableRolloutBuffer(RolloutBuffer):
     """
     Maskable Rollout Buffer that is compatible with the MuliRobotMaskablePPO Agent.
+
     Based on the MaskableRolloutBuffer implemented by the Stable Baselines3 Team.
 
     :param buffer_size: Max number of element in the buffer
@@ -81,7 +82,7 @@ class MultiRobotMaskableRolloutBuffer(RolloutBuffer):
         elif isinstance(self.action_space, spaces.MultiBinary):
             mask_dims = 2 * self.action_space.n  # One mask per binary outcome
         else:
-            raise ValueError(f"Unsupported action space {type(self.action_space)}")
+            raise ValueError(f'Unsupported action space {type(self.action_space)}')
 
         self.mask_dims = mask_dims
         self.action_masks = np.ones(
@@ -91,9 +92,7 @@ class MultiRobotMaskableRolloutBuffer(RolloutBuffer):
         super().reset()
 
     def add(self, *args, action_masks: Optional[np.ndarray] = None, **kwargs) -> None:
-        """
-        :param action_masks: Masks applied to constrain the choice of possible actions.
-        """
+        """:param action_masks: Masks applied to constrain the choice of actions."""
         if action_masks is not None:
             self.action_masks[self.pos] = action_masks.reshape((self.n_envs, self.mask_dims))
 
@@ -124,7 +123,7 @@ class MultiRobotMaskableRolloutBuffer(RolloutBuffer):
 
         start_idx = 0
         while start_idx < size * self.n_envs:
-            yield self._get_samples(indices[start_idx : start_idx + batch_size])
+            yield self._get_samples(indices[start_idx : start_idx + batch_size])  # noqa: E203
             start_idx += batch_size
 
     def _get_samples(
@@ -144,10 +143,9 @@ class MultiRobotMaskableRolloutBuffer(RolloutBuffer):
 
 class MultiRobotMaskableDictRolloutBuffer(DictRolloutBuffer):
     """
-
     Maskable Dict Rollout Buffer that is compatible with the MuliRobotMaskablePPO Agent.
-    Based on the MaskableDictRolloutBuffer implemented by the Stable Baselines3 Team.
 
+    Based on the MaskableDictRolloutBuffer implemented by the Stable Baselines3 Team.
 
     :param buffer_size: Max number of element in the buffer
     :param observation_space: Observation space
@@ -182,7 +180,7 @@ class MultiRobotMaskableDictRolloutBuffer(DictRolloutBuffer):
         elif isinstance(self.action_space, spaces.MultiBinary):
             mask_dims = 2 * self.action_space.n  # One mask per binary outcome
         else:
-            raise ValueError(f"Unsupported action space {type(self.action_space)}")
+            raise ValueError(f'Unsupported action space {type(self.action_space)}')
 
         self.mask_dims = mask_dims
         self.action_masks = np.ones(
@@ -192,9 +190,7 @@ class MultiRobotMaskableDictRolloutBuffer(DictRolloutBuffer):
         super().reset()
 
     def add(self, *args, action_masks: Optional[np.ndarray] = None, **kwargs) -> None:
-        """
-        :param action_masks: Masks applied to constrain the choice of possible actions.
-        """
+        """:param action_masks: Masks applied to constrain the choice of actions."""
         if action_masks is not None:
             self.action_masks[self.pos] = action_masks.reshape((self.n_envs, self.mask_dims))
 
@@ -229,7 +225,7 @@ class MultiRobotMaskableDictRolloutBuffer(DictRolloutBuffer):
 
         start_idx = 0
         while start_idx < size * self.n_envs:
-            yield self._get_samples(indices[start_idx : start_idx + batch_size])
+            yield self._get_samples(indices[start_idx : start_idx + batch_size])  # noqa: E203
             start_idx += batch_size
 
     def _get_samples(

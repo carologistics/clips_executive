@@ -29,7 +29,9 @@ setup(
     zip_safe=True,
     maintainer='Tarik Viehmann',
     maintainer_email='viehmann@kbsg.rwth-aachen.de',
-    description='Base class wrapping gym-functions for reinforcement learning to interface with CLIPS over cx_rl_interfaces.',
+    description='Base class wrapping gym-functions \
+      for reinforcement learning to interface with CLIPS \
+      over cx_rl_interfaces.',
     license='Apache-2.0',
     entry_points={
         'console_scripts': [],

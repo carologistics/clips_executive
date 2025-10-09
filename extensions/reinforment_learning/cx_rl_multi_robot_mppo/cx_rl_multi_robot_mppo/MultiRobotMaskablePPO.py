@@ -13,14 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""/***************************************************************************
- *  MultiRobotMaskablePPO.py -
- *
- *  Created:
- *  Copyright
- ****************************************************************************/"""
-
-
 import threading
 from threading import Thread
 import time
@@ -47,47 +39,48 @@ import torch as th
 
 class MultiRobotMaskablePPO(MaskablePPO):
     """
-    Proximal Policy Optimization algorithm (PPO) (clip version) with Invalid Action Masking for Muli-Robot Scenarios in the CLIPS Executive.
+    Policy Optimization (PPO) with Invalid Action Masking for Multi-Robot Scenarios.
 
-    Based on the original Stable Baselines 3 implementation and the maskable PPO implementation in Stable Baselines3 contrib.
+    Based on the original Stable Baselines 3 implementation and the maskable PPO
+    implementation in Stable Baselines3 contrib.
 
     Introduction to PPO: https://spinningup.openai.com/en/latest/algorithms/ppo.html
     Background on Invalid Action Masking: https://arxiv.org/abs/2006.14171
 
     :param policy: The policy model to use (MlpPolicy, CnnPolicy, ...)
     :param env: The environment to learn from (if registered in Gym, can be str)
-    :param learning_rate: The learning rate, it can be a function
-        of the current progress remaining (from 1 to 0)
-    :param n_steps: The number of steps to run for each environment per update
-        (i.e. batch size is n_steps * n_env where n_env is number of environment copies running in parallel)
+    :param learning_rate: The learning rate; it can be a function of the current
+        progress remaining (from 1 to 0)
+    :param n_steps: Number of steps to run for each environment per update (batch
+        size is n_steps * n_env, where n_env is the number of environment copies
+        running in parallel)
     :param batch_size: Minibatch size
-    :param n_epochs: Number of epoch when optimizing the surrogate loss
+    :param n_epochs: Number of epochs when optimizing the surrogate loss
     :param gamma: Discount factor
-    :param gae_lambda: Factor for trade-off of bias vs variance for Generalized Advantage Estimator
-    :param clip_range: Clipping parameter, it can be a function of the current progress
-        remaining (from 1 to 0).
-    :param clip_range_vf: Clipping parameter for the value function,
-        it can be a function of the current progress remaining (from 1 to 0).
-        This is a parameter specific to the OpenAI implementation. If None is passed (default),
-        no clipping will be done on the value function.
-        IMPORTANT: this clipping depends on the reward scaling.
-    :param normalize_advantage: Whether to normalize or not the advantage
+    :param gae_lambda: Factor for trade-off of bias vs variance for Generalized
+        Advantage Estimator
+    :param clip_range: Clipping parameter; can be a function of the current progress
+        remaining (from 1 to 0)
+    :param clip_range_vf: Clipping parameter for the value function; can be a
+        function of the current progress remaining (from 1 to 0). If None (default),
+        no clipping is done. Note: clipping depends on reward scaling.
+    :param normalize_advantage: Whether to normalize the advantage or not
     :param ent_coef: Entropy coefficient for the loss calculation
     :param vf_coef: Value function coefficient for the loss calculation
-    :param max_grad_norm: The maximum value for the gradient clipping
-    :param target_kl: Limit the KL divergence between updates,
-        because the clipping is not enough to prevent large update
-        see issue #213 (cf https://github.com/hill-a/stable-baselines/issues/213)
-        By default, there is no limit on the kl div.
-    :param stats_window_size: Window size for the rollout logging, specifying the number of episodes to average
-        the reported success rate, mean episode length, and mean reward over
-    :param tensorboard_log: the log location for tensorboard (if None, no logging)
-    :param policy_kwargs: additional arguments to be passed to the policy on creation
-    :param verbose: the verbosity level: 0 no output, 1 info, 2 debug
-    :param seed: Seed for the pseudo random generators
-    :param device: Device (cpu, cuda, ...) on which the code should be run.
-        Setting it to auto, the code will be run on the GPU if possible.
-    :param _init_setup_model: Whether or not to build the network at the creation of the instance
+    :param max_grad_norm: Maximum value for gradient clipping
+    :param target_kl: Limit the KL divergence between updates. The clipping alone
+        may not prevent large updates. See issue #213:
+        https://github.com/hill-a/stable-baselines/issues/213. Default: no limit.
+    :param stats_window_size: Window size for rollout logging, specifying the number
+        of episodes to average reported success rate, mean episode length, and mean
+        reward over
+    :param tensorboard_log: Log location for tensorboard (if None, no logging)
+    :param policy_kwargs: Additional arguments passed to the policy on creation
+    :param verbose: Verbosity level: 0 no output, 1 info, 2 debug
+    :param seed: Seed for the pseudo-random generators
+    :param device: Device (cpu, cuda, ...) to run the code on. 'auto' uses GPU
+        if available
+    :param _init_setup_model: Whether to build the network at instance creation
     """
 
     policy_aliases: ClassVar[Dict[str, Type[BasePolicy]]] = {
@@ -217,6 +210,7 @@ class MultiRobotMaskablePPO(MaskablePPO):
     ) -> bool:
         """
         Collect experiences using the current policy and fill a ``RolloutBuffer``.
+
         The term rollout here refers to the model-free notion and should not
         be used with the concept of rollout used in model-based RL or planning.
 
@@ -231,7 +225,6 @@ class MultiRobotMaskablePPO(MaskablePPO):
         :return: True if function returned with at least `n_rollout_steps`
             collected, False if callback terminated rollout prematurely.
         """
-
         assert isinstance(
             rollout_buffer, (MultiRobotMaskableRolloutBuffer, MultiRobotMaskableDictRolloutBuffer)
         ), "RolloutBuffer doesn't support action masking"

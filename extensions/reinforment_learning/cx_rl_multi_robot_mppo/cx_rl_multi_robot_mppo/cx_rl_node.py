@@ -31,6 +31,7 @@ from stable_baselines3.common.logger import configure
 
 
 class CXRLNode(Node):
+
     def __init__(self):
         super().__init__('cx_rl_node')
         self.declare_parameters(
@@ -126,9 +127,9 @@ class CXRLNode(Node):
 
     def shutdown(self, sig, frame):
         self.shutdown = True
-        if self.env != None:
+        if self.env is not None:
             self.env.shutdown = True
-        if self.model != None:
+        if self.model is not None:
             self.model.shutdown = True
 
 
