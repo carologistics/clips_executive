@@ -69,7 +69,7 @@
 
 (deftemplate rl-observable-type
   (slot type (type SYMBOL))
-  (multislot objects (type STRING) (default (create$)))
+  (multislot objects (type SYMBOL) (default (create$)))
 )
 
 (deftemplate rl-observable-predicate

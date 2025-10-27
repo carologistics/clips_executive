@@ -150,7 +150,7 @@
 "
   (slot instance (type SYMBOL))
   (slot type (type SYMBOL))
-  (multislot objects (type STRING) (default (create$)))
+  (multislot objects (type SYMBOL) (default (create$)))
 )
 
 (deftemplate pddl-plan

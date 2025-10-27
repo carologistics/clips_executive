@@ -48,7 +48,11 @@
   (bind ?error (ros-msgs-get-field ?ptr "error"))
   (if ?success then
     (bind ?objects (ros-msgs-get-field ?ptr "objects"))
-    (assert (pddl-type-objects (instance ?instance) (type ?obj-type) (objects ?objects)))
+    (bind ?obj-syms (create$))
+    (foreach ?obj ?objects
+      (bind ?obj-syms (create$ ?obj-syms (sym-cat ?obj)))
+    )
+    (assert (pddl-type-objects (instance ?instance) (type ?obj-type) (objects ?obj-syms)))
     (modify ?get-facts-f (state DONE))
    else
     (modify ?get-facts-f (state ERROR) (error ?error))
