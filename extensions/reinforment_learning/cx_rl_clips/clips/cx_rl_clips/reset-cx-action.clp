@@ -32,19 +32,15 @@
     (return 1)
 )
 
-(deftemplate reset-cx
-    (slot uuid (type STRING))
-)
-
 (defrule reset-cx-goal-accepted-start
     (cx-rl-interfaces-reset-cx-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr))
-    (not (reset-cx (uuid ?uuid&:(eq ?uuid (cx-rl-interfaces-reset-cx-server-goal-handle-get-goal-id ?ptr)))))
-    (not (reset-game-finished))
+    (not (reset-cx-action (uuid ?uuid&:(eq ?uuid (cx-rl-interfaces-reset-cx-server-goal-handle-get-goal-id ?ptr)))))
+    (not (reset-cx-finished))
 =>
     (if (not (cx-rl-interfaces-reset-cx-server-goal-handle-is-canceling ?ptr)) then
         (bind ?uuid (cx-rl-interfaces-reset-cx-server-goal-handle-get-goal-id ?ptr))
-        (assert (reset-cx (uuid ?uuid)))
-        (assert (reset-game (stage STAGE-0)))
+        (assert (reset-cx-action (uuid ?uuid)))
+        (assert (reset-cx (stage INIT)))
         (assert (abort-all-action-selections))
         (assert (abort-get-free-robot))
     else
@@ -55,11 +51,11 @@
 
 (defrule reset-cx-finished
     ?ag <- (cx-rl-interfaces-reset-cx-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr))
-    ?rf <- (reset-game-finished)
+    ?rf <- (reset-cx-finished)
     (cx-rl-interfaces-reset-cx-server (name "reset_cx"))
 
 =>
-    (printout green "reset-game finished" crlf)
+    (printout green "reset-cx finished" crlf)
     (bind ?result (cx-rl-interfaces-reset-cx-result-create))
     (cx-rl-interfaces-reset-cx-result-set-field ?result "confirmation" "Reset completed")
     (cx-rl-interfaces-reset-cx-server-goal-handle-succeed ?ptr ?result)
