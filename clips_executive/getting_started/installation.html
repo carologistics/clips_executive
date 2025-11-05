@@ -105,28 +105,17 @@
 </section>
 <section id="installation-from-source">
 <h2>Installation from Source<a class="headerlink" href="#installation-from-source" title="Link to this heading"></a></h2>
-<div class="admonition-todo admonition" id="id1">
-<p class="admonition-title">Todo</p>
-<p>dependency.repos should not be necessary</p>
-</div>
-<p>All dependencies are listed in the <a class="reference external" href="https://github.com/carologistics/clips-executive/blob/master/dependency.repos">dependency.repos</a> file of the ROS2 CLIPS-Executive project.
-This enables setting up a dependency workspace using <cite>vcstool</cite>.</p>
-<p>The following steps will set up two workspaces, one for dependencies of the ROS2 CLIPS-Executive and one for the main project. Adjust target locations as needed.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>-p<span class="w"> </span>~/ros2/<span class="o">{</span>clips_executive_ws,deps_clips_executive_ws<span class="o">}</span>/src
-git<span class="w"> </span>clone<span class="w"> </span>-b<span class="w"> </span>tviehmann/major-cleanup<span class="w"> </span>https://github.com/fawkesrobotics/ros2-clips-executive.git<span class="w"> </span>~/ros2/clips_executive_ws/src/ros2-clips-executive
-<span class="nb">cd</span><span class="w"> </span>~/ros2/deps_clips_executive_ws/src
-vcs<span class="w"> </span>import<span class="w"> </span>&lt;<span class="w"> </span>~/ros2/clips_executive_ws/src/ros2-clips-executive/dependency.repos
-<span class="nb">cd</span><span class="w"> </span>~/ros2/deps_clips_executive_ws/
-colcon<span class="w"> </span>build<span class="w"> </span>--symlink-install<span class="w"> </span>--cmake-args<span class="w"> </span>-DCMAKE_BUILD_TYPE<span class="o">=</span>Debug<span class="w"> </span>-DBUILD_TESTING<span class="o">=</span>OFF
+<p>The following steps will setup a workspace for the project. Adjust target locations as needed.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Workspace setup</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span>~/ros2/clips_executive_ws/src
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/carologistics/clips_executive.git<span class="w"> </span>~/ros2/clips_executive_ws/src/clips_executive
 </pre></div>
 </div>
-<p>Then source the workspace with dependencies and build the CLIPS-Executive:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>~/ros2/deps_clips_executive_ws/install/setup.bash
-<span class="nb">cd</span><span class="w"> </span>~/ros2/clips_executive_ws/
-colcon<span class="w"> </span>build<span class="w"> </span>--symlink-install<span class="w"> </span>--cmake-args<span class="w"> </span>-DCMAKE_BUILD_TYPE<span class="o">=</span>Debug<span class="w"> </span>-DBUILD_TESTING<span class="o">=</span>OFF
-<span class="nb">source</span><span class="w"> </span>~/ros2/clips_executive_ws/install/setup.bash
+<p>You may need to install dependencies using rosdep:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rosdep<span class="w"> </span>install<span class="w"> </span>--from-paths<span class="w"> </span>src<span class="w"> </span>-y<span class="w"> </span>--ignore-src
 </pre></div>
 </div>
+<p>Lastly, build and source the workspace:</p>
 </section>
 </section>
 
