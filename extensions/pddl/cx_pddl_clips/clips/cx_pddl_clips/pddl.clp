@@ -34,5 +34,5 @@ pddl-get-type-objects.clp
 pddl-planning-filter.clp
 pddl-set-goals.clp
 )
-(load* (str-cat (ament-index-get-package-share-directory "cx_pddl_clips") "/clips/" ?f))
+(load* (str-cat (ament-index-get-package-share-directory "cx_pddl_clips") "/clips/cx_pddl_clips/" ?f))
 )

@@ -175,7 +175,7 @@ domain and problem to be planned for and defines the goal fluents.
   (defrule structured-agent-pddl-add-instance
     " Setup PDDL instance with an active goal to plan for "
     (not (pddl-loaded))
-    (pddl-planning-client-created)
+    (pddl-services-loaded)
     =>
     (bind ?share-dir (ament-index-get-package-share-directory "cx_pddl_bringup"))
     (assert
@@ -285,9 +285,9 @@ The structured agent continuously selects, executes, and validates actions.
   (defrule structured-agent-check-action
     " Before executing an action check the condition to make sure it is feasible "
     (pddl-action (id ?id) (state SELECTED) (name ?name) (params $?params))
-    (not (pddl-action-condition (id ?id)))
+    (not (pddl-action-condition (action ?id)))
     =>
-    (assert (pddl-action-condition (instance test) (id ?id)))
+    (assert (pddl-action-condition (instance test) (action ?id)))
   )
 
 **Executing and completing actions:**
@@ -296,7 +296,7 @@ The structured agent continuously selects, executes, and validates actions.
 
   (defrule structured-agent-executable-action
     (plan-start ?t)
-    (pddl-action-condition (id ?action-id) (state CONDITION-SAT))
+    (pddl-action-condition (action ?action-id) (state CONDITION-SAT))
     ?pa <- (pddl-action (id ?action-id) (name ?name) (params $?params) (state SELECTED))
     =>
     (modify ?pa (state EXECUTING) (actual-start-time (- (now) ?t)))
