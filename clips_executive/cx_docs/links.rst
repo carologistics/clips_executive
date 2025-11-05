@@ -10,6 +10,10 @@
 .. _clipsmm: https://github.com/fawkesrobotics/clipsmm
 .. _Stable Baselines3: https://stable-baselines3.readthedocs.io/en/master/modules/ppo.html
 .. _Gymnasium: https://gymnasium.farama.org/index.html
+.. _Unified Planning Framework (UPF): https://unified-planning.readthedocs.io/en/latest/
+.. _z3 constraint solver: https://github.com/Z3Prover/z3/wiki
+.. _NEXTFLAP planner: https://github.com/aiplan4eu/up-nextflap
+.. _Gymnasium: https://gymnasium.farama.org/index.html#
 
 .. |CX| replace:: ROS2 CLIPS-Executive
 .. |APG| replace:: `Advanced Programming Guide (PDF)`_

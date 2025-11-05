@@ -50,6 +50,7 @@ All new code is released under Apache 2.0 license, while some optional modules t
    plugins/index.rst
    plugin_generator/index.rst
    tutorials/index.rst
+   extensions/index.rst
    reinforcement_learning/index.rst
    standards.rst
    __readme_include.rst
