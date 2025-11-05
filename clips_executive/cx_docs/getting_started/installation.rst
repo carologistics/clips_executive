@@ -19,29 +19,26 @@ The easiest way to install the |CX| is via your package manager:
 Installation from Source
 +++++++++++++++++++++++++
 
-.. todo::
-
-   dependency.repos should not be necessary
-
-All dependencies are listed in the :source-master:`dependency.repos` file of the |CX| project.
-This enables setting up a dependency workspace using `vcstool`.
-
-The following steps will set up two workspaces, one for dependencies of the |CX| and one for the main project. Adjust target locations as needed.
+The following steps will setup a workspace for the project. Adjust target locations as needed.
 
 .. code-block:: bash
 
-    mkdir -p ~/ros2/{clips_executive_ws,deps_clips_executive_ws}/src
-    git clone -b tviehmann/major-cleanup https://github.com/fawkesrobotics/ros2-clips-executive.git ~/ros2/clips_executive_ws/src/ros2-clips-executive
-    cd ~/ros2/deps_clips_executive_ws/src
-    vcs import < ~/ros2/clips_executive_ws/src/ros2-clips-executive/dependency.repos
-    cd ~/ros2/deps_clips_executive_ws/
-    colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=OFF
+    # Workspace setup
+    mkdir -p ~/ros2/clips_executive_ws/src
+    git clone https://github.com/carologistics/clips_executive.git ~/ros2/clips_executive_ws/src/clips_executive
 
-Then source the workspace with dependencies and build the CLIPS-Executive:
+
+You may need to install dependencies using rosdep:
+
 
 .. code-block:: bash
 
-    source ~/ros2/deps_clips_executive_ws/install/setup.bash
+    rosdep install --from-paths src -y --ignore-src
+
+Lastly, build and source the workspace:
+
+.. code-block:: bash
+    # Building and sourcing
     cd ~/ros2/clips_executive_ws/
     colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=OFF
     source ~/ros2/clips_executive_ws/install/setup.bash
