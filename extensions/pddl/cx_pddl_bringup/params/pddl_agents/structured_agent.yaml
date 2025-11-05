@@ -26,9 +26,9 @@
       plugin: "cx::FileLoadPlugin"
       pkg_share_dirs: ["cx_pddl_clips", "cx_pddl_bringup"]
       batch: [
-        "clips/deftemplates.clp",
-        "clips/deftemplate-overrides.clp",
-        "clips/pddl-no-deftemplates.clp"
+        "clips/cx_pddl_clips/deftemplates.clp",
+        "clips/cx_pddl_bringup/deftemplate-overrides.clp",
+        "clips/cx_pddl_clips/dddl-no-deftemplates.clp"
       ]
 
     files:
