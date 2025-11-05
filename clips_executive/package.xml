@@ -24,6 +24,9 @@
   <exec_depend>cx_ros_msgs_plugin</exec_depend>
   <exec_depend>cx_tf2_pose_tracker_plugin</exec_depend>
 
+  <!-- docs -->
+  <build_depend>python3-sphinx-copybutton</build_depend>
+
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
