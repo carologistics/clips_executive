@@ -38,6 +38,7 @@ You may need to install dependencies using rosdep:
 Lastly, build and source the workspace:
 
 .. code-block:: bash
+
     # Building and sourcing
     cd ~/ros2/clips_executive_ws/
     colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=OFF

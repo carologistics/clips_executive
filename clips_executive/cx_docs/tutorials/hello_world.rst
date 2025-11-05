@@ -87,7 +87,7 @@ Navigate to the ``clips`` directory and download the example CLIPS file using th
 .. code-block:: bash
 
    cd ~/ros2/cx_tutorial_ws/src/cx_tutorial_agents/clips
-    wget -O hello_world.clp https://raw.githubusercontent.com/fawkesrobotics/ros2-clips-executive/master/tutorials/cx_tutorial_agents/clips/hello_world.clp
+    wget -O hello_world.clp https://raw.githubusercontent.com/carologistics/clips_executive/master/tutorials/cx_tutorial_agents/clips/hello_world.clp
 
 This adds the file ``hello_world.clp``, containing a simple rule that prints out `hello world` when it is fired:
 
@@ -111,7 +111,7 @@ To achieve  this, navigate to the ``params`` directory and download the example 
 .. code-block:: bash
 
    cd ~/ros2/cx_tutorial_ws/src/cx_tutorial_agents/params
-   wget -O hello_world.yaml https://raw.githubusercontent.com/fawkesrobotics/ros2-clips-executive/master/tutorials/cx_tutorial_agents/params/hello_world.yaml
+   wget -O hello_world.yaml https://raw.githubusercontent.com/carologistics/clips_executive/master/tutorials/cx_tutorial_agents/params/hello_world.yaml
 
 This adds the file ``hello_world.yaml`` with the following content:
 
