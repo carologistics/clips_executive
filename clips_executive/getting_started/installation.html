@@ -116,6 +116,12 @@ git<span class="w"> </span>clone<span class="w"> </span>https://github.com/carol
 </pre></div>
 </div>
 <p>Lastly, build and source the workspace:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Building and sourcing</span>
+<span class="nb">cd</span><span class="w"> </span>~/ros2/clips_executive_ws/
+colcon<span class="w"> </span>build<span class="w"> </span>--symlink-install<span class="w"> </span>--cmake-args<span class="w"> </span>-DCMAKE_BUILD_TYPE<span class="o">=</span>Debug<span class="w"> </span>-DBUILD_TESTING<span class="o">=</span>OFF
+<span class="nb">source</span><span class="w"> </span>~/ros2/clips_executive_ws/install/setup.bash
+</pre></div>
+</div>
 </section>
 </section>
 
