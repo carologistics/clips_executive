@@ -16,8 +16,8 @@
 
 (defrule pddl-action-condition-check-request
   (pddl-action (id ?action-id) (name ?name) (instance ?instance) (params $?params))
-  ?check-fact <- (pddl-action-condition (id ?action-id) (state PENDING))
-  (not (pddl-action-condition (id ?action-id) (state CHECK-CONDITION)))
+  ?check-fact <- (pddl-action-condition (action ?action-id) (state PENDING))
+  (not (pddl-action-condition (action ?action-id) (state CHECK-CONDITION)))
   ?pi-f <- (pddl-instance (name ?instance) (state LOADED) (busy-with FALSE))
   (pddl-manager (node ?node))
   (ros-msgs-client (service ?s&:(eq ?s (str-cat ?node "/check_action_condition"))) (type ?type))
@@ -43,7 +43,7 @@
 
 (defrule pddl-action-condition-check-response
   ?action-fact <- (pddl-action (id ?action-id))
-  ?check-fact <- (pddl-action-condition (id ?action-id) (state CHECK-CONDITION))
+  ?check-fact <- (pddl-action-condition (action ?action-id) (state CHECK-CONDITION))
   ?pi-f <- (pddl-instance (name ?instance) (busy-with CHECK-CONDITIONS))
   (pddl-manager (node ?node))
   (ros-msgs-client (service ?s&:(eq ?s (str-cat ?node "/check_action_condition"))) (type ?type))
@@ -86,7 +86,7 @@
   (not
     (and
       (pddl-action (id ?action-id))
-      (pddl-action-condition (id ?action-id) (state CHECK-CONDITION))
+      (pddl-action-condition (action ?action-id) (state CHECK-CONDITION))
     )
   )
   =>

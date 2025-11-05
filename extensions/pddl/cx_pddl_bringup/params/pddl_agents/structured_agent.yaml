@@ -28,13 +28,13 @@
       batch: [
         "clips/cx_pddl_clips/deftemplates.clp",
         "clips/cx_pddl_bringup/deftemplate-overrides.clp",
-        "clips/cx_pddl_clips/dddl-no-deftemplates.clp"
+        "clips/cx_pddl_clips/pddl-no-deftemplates.clp"
       ]
 
     files:
       plugin: "cx::FileLoadPlugin"
       pkg_share_dirs: ["cx_pddl_bringup"]
-      load: ["clips/structured_agent.clp"]
+      load: ["clips/cx_pddl_bringup/structured_agent.clp"]
 
     plan_temporal_action:
       plugin: "cx::CXCxPddlMsgsPlanTemporalPlugin"

@@ -23,7 +23,6 @@ from launch.substitutions import LaunchConfiguration
 
 
 def launch_with_context(context, *args, **kwargs):
-    get_package_share_directory('cx_pddl_bringup')
     cx_bringup_dir = get_package_share_directory('cx_bringup')
     manager_config = LaunchConfiguration('manager_config')
     log_level = LaunchConfiguration('log_level')

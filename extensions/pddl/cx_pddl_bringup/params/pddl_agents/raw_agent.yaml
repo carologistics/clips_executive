@@ -24,7 +24,7 @@
     files:
       plugin: "cx::FileLoadPlugin"
       pkg_share_dirs: ["cx_pddl_bringup"]
-      load: ["clips/raw_agent.clp"]
+      load: ["clips/cx_pddl_bringup/raw_agent.clp"]
 
     plan_temporal_action:
       plugin: "cx::CXCxPddlMsgsPlanTemporalPlugin"

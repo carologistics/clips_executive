@@ -32,7 +32,7 @@ def launch_with_context(context, *args, **kwargs):
     config_file = os.path.join(bringup_dir, '', config.perform(context))
     # re-issue warning as it is not colored otherwise ...
     if not os.path.isfile(config_file):
-        logger = get_logger('cx_bringup_launch')
+        logger = get_logger('cx_pddl_manager_launch')
         logger.warning(f'Parameter file path is not a file: {config_file}')
 
     LaunchConfiguration('log_level')
