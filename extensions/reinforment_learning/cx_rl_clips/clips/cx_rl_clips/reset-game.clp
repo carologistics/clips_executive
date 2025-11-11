@@ -13,36 +13,21 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
-(defglobal
-  ?*SALIENCE-RESET-GAME-HIGH* = 1000
-  ?*SALIENCE-RESET-GAME-MIDDLE* = 800
-  ?*SALIENCE-RESET-GAME-LOW* = 300
-  ?*RESET-GAME-TIMER* = 1.0
-)
-
-(deftemplate reset-game
- 	(slot stage (type SYMBOL))
-)
-
-(deffunction delete-rl-actions-after-reset ()
-  (delayed-do-for-all-facts ((?r rl-action))
-    TRUE
-    (retract ?r)
-  )
-)
-
 (defrule reset-game-stage-zero
   (declare (salience ?*SALIENCE-RESET-GAME-HIGH*))
   ?r <- (reset-game (stage STAGE-0))
-  (rl-mode (mode ?mode))
+  (cx-rl-node (name ?name) (mode ?mode))
   (cx-rl-interfaces-reset-cx-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr))
   =>
   (reset)
   (load-facts reset-save)
-  (delete-rl-actions-after-reset)
+  (delayed-do-for-all-facts ((?r rl-action))
+    TRUE
+    (retract ?r)
+  )
   (retract ?r)
   (assert (cx-rl-interfaces-reset-cx-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr)))
-  (assert (rl-mode (mode ?mode)))
+  (assert (cx-rl-node (name ?name) (mode ?mode)))
   (assert (reset-game-finished))
-  (assert (rl-executability-check (state CHECKING)))
+  (assert (rl-current-action-space (state PENDING)))
 )

@@ -531,7 +531,7 @@ bool RosMsgsPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
     R"((deftemplate ros-msgs-wrapped-result
             (slot server (type STRING))
             (slot goal-id (type SYMBOL))
-            (slot code (type SYMBOL) (allowed-values UNKNOWN SUCCEEDED CANCELED  ABORTED))
+            (slot code (type SYMBOL) (allowed-values UNKNOWN SUCCEEDED CANCELED ABORTED))
             (slot result-ptr (type EXTERNAL-ADDRESS))
             ))");
   clips::Build(

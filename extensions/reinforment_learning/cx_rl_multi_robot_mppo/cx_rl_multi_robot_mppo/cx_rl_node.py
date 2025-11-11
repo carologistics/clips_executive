@@ -37,7 +37,7 @@ class CXRLNode(Node):
         self.declare_parameters(
             namespace='',
             parameters=[
-                ('package_dir', rclpy.Parameter.Type.STRING),
+                ('storage_dir', rclpy.Parameter.Type.STRING),
                 ('agent_name', rclpy.Parameter.Type.STRING),
                 ('rl_mode', rclpy.Parameter.Type.STRING),
                 ('number_of_robots', rclpy.Parameter.Type.INTEGER),
@@ -66,11 +66,11 @@ class CXRLNode(Node):
         self.model = None
 
     def set_dirs(self):
-        home_dir = os.path.expanduser('~')
-        package_dir = self.get_parameter('package_dir').value
-        self.save_dir = os.path.join(home_dir, package_dir, 'trained_agents')
-        self.log_dir = os.path.join(home_dir, package_dir, 'logs')
-        self.checkpoint_dir = os.path.join(home_dir, package_dir, 'checkpoint_agents')
+        storage_path = rclpy.logging.get_logging_directory()
+
+        self.save_dir = os.path.join(storage_path, 'cx_rl_multi_robot_mppo/trained_agents')
+        self.log_dir = os.path.join(storage_path, 'cx_rl_multi_robot_mppo/logs')
+        self.checkpoint_dir = os.path.join(storage_path, 'checkpoint_agents')
 
         if not os.path.exists(self.save_dir):
             os.makedirs(self.save_dir)

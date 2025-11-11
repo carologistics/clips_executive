@@ -15,29 +15,12 @@
 
 (defrule get-free-robot-action-server-init
     "Create an action server handling requests to determine the robot waiting for a goal selection"
-    (not (cx-rl-interfaces-get-free-robot-server (name "get_free_robot")))
+	(cx-rl-node (name ?name))
+    (not (cx-rl-interfaces-get-free-robot-server (name ?n&:(eq ?n (str-cat ?name "/get_free_robot")))))
     (not (executive-finalize))
-    (domain-facts-loaded)
 =>
-    (cx-rl-interfaces-get-free-robot-create-server "get_free_robot")
-    (printout info "Created server for /get_free_robot" crlf)
-)
-
-(deffunction cx-rl-interfaces-get-free-robot-handle-goal-callback (?server ?goal ?uuid)
-    (printout blue ?server " callback (goal " ?goal " ; id " ?uuid " )" crlf)
-    (return 2)
-)
-
-(deffunction cx-rl-interfaces-get-free-robot-cancel-goal-callback (?server ?goal ?goal-handle)
-    (return 1)
-)
-
-(deftemplate get-free-robot
-    (slot uuid (type STRING))
-    (slot robot (type STRING))
-    (slot last-search (type FLOAT))
-    (slot found (type SYMBOL)
-                (allowed-values TRUE FALSE))
+    (cx-rl-interfaces-get-free-robot-create-server (str-cat ?name "/get_free_robot"))
+    (printout info "Created server for " ?name "/get_free_robot" crlf)
 )
 
 (defrule get-free-robot-goal-accepted-start-search

@@ -22,6 +22,21 @@
   ?*SALIENCE-ROBOT-ASSIGNMENT* = 499
   ?*SALIENCE-RL-EPISODE-END-FAILURE* = 499
   ?*SALIENCE-RL-SELECTION* = 498
+
+  ?*SALIENCE-RESET-GAME-HIGH* = 1000
+  ?*SALIENCE-RESET-GAME-MIDDLE* = 800
+  ?*SALIENCE-RESET-GAME-LOW* = 300
+  ?*RESET-GAME-TIMER* = 1.0
+)
+
+(deftemplate reset-game
+  (slot stage (type SYMBOL))
+)
+
+; asseted by user
+(deftemplate cx-rl-node
+  (slot name (type STRING) (default "/cx_rl_gym"))
+  (slot mode (type SYMBOL) (allowed-values TRAINING EXECUTION))
 )
 
 (deftemplate rl-action
@@ -35,36 +50,24 @@
                     (default FALSE))
   (slot assigned-to (type SYMBOL)
                     (default nil))
-  (slot points  (type INTEGER)
-                (default 0))
-)
-
-(deftemplate rl-action-selection
-	(slot uuid (type STRING))
-  (slot actionid (type SYMBOL))
-  (slot is-finished (type SYMBOL)
-                    (allowed-values TRUE FALSE)
-                    (default FALSE))
+  ; note: renamed from points
   (slot reward  (type INTEGER)
                 (default 0))
-  (slot done  (type SYMBOL)
-              (allowed-values TRUE FALSE)
-              (default FALSE))
 )
 
-(deftemplate rl-action-selection-exec
-  (slot actionid (type SYMBOL))
+; note renamed from rl-action-selection
+; not relevant for user
+(deftemplate rl-ros-action-meta
+	(slot uuid (type STRING))
+  (slot action-id (type SYMBOL))
 )
 
+; user sets this
+; or if user gives action selection without choices
 (deftemplate rl-episode-end
   (slot success (type SYMBOL)
                 (allowed-values TRUE FALSE)
 	              (default TRUE))
-)
-
-(deftemplate rl-mode
-  (slot mode  (type SYMBOL)
-              (allowed-values TRAINING EXECUTION))
 )
 
 (deftemplate rl-observable-type
@@ -78,6 +81,7 @@
   (multislot param-types (type SYMBOL))
 )
 
+; todo: what is predefined osbervable?
 (deftemplate rl-predefined-observable
   (slot name (type SYMBOL))
   (multislot params (type SYMBOL))
@@ -93,24 +97,40 @@
   (slot waiting (type SYMBOL) (allowed-values TRUE FALSE) (default TRUE))
 )
 
-(deftemplate rl-executability-check
-  (slot state (type SYMBOL) (allowed-values PENDING CHECKING CHECKED) (default PENDING))
+; System asserts this to PENDING in TRAINING mode
+; User asserts the necessary rl-action items and modifies it to DONE
+; For Execution:
+; User asserts this to DONE to get a suggested action
+(deftemplate rl-current-action-space
+  (slot state (type SYMBOL) (allowed-values PENDING DONE) (default PENDING))
 )
 
-(deftemplate rl-action-selection-requested)
-
-(deffunction rl-action-selected-update-actions ()
-  (delayed-do-for-all-facts ((?a rl-action))
-		(eq ?a:is-selected FALSE)
-		(retract ?a)
-	)
+(deftemplate rl-action-request-meta
+  (slot service (type STRING))
+  (slot request-id (type INTEGER))
+  (slot action-id (type SYMBOL))
 )
 
-(deffunction rl-action-selected-update-robots (?robot)
-	(if (neq ?robot nil) then
-		(delayed-do-for-all-facts ((?a rl-action))
-			(eq ?a:mode FORMULATED)
-			(modify ?a (assigned-to nil))
-		)
-	)
+(deffunction delete-rl-actions-after-reset ()
+  (delayed-do-for-all-facts ((?r rl-action))
+    TRUE
+    (retract ?r)
+  )
+)
+
+(deffunction cx-rl-interfaces-get-free-robot-handle-goal-callback (?server ?goal ?uuid)
+    (printout blue ?server " callback (goal " ?goal " ; id " ?uuid " )" crlf)
+    (return 2)
+)
+
+(deffunction cx-rl-interfaces-get-free-robot-cancel-goal-callback (?server ?goal ?goal-handle)
+    (return 1)
+)
+
+(deftemplate get-free-robot
+    (slot uuid (type STRING))
+    (slot robot (type STRING))
+    (slot last-search (type FLOAT))
+    (slot found (type SYMBOL)
+                (allowed-values TRUE FALSE))
 )

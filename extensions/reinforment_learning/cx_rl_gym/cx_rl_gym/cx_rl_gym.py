@@ -73,31 +73,33 @@ class CXRLGym(Env):
 
         self.set_rl_mode_client = self.node.create_client(SetRLMode, '/set_rl_mode')
         self.get_action_list_executable_client = self.node.create_client(
-            GetActionList, '/get_action_list_executable'
+            GetActionList, '/cx_rl_node/get_action_list_executable'
         )
         self.get_action_list_executable_for_robot_client = self.node.create_client(
-            GetActionListRobot, '/get_action_list_executable_for_robot'
+            GetActionListRobot, '/cx_rl_node/get_action_list_executable_for_robot'
         )
         self.get_observable_objects_client = self.node.create_client(
-            GetObservableObjects, '/get_observable_objects'
+            GetObservableObjects, '/cx_rl_node/get_observable_objects'
         )
         self.get_observable_predicates_client = self.node.create_client(
-            GetObservablePredicates, '/get_observable_predicates'
+            GetObservablePredicates, '/cx_rl_node/get_observable_predicates'
         )
         self.get_predefined_observables_client = self.node.create_client(
-            GetPredefinedObservables, '/get_predefined_observables'
+            GetPredefinedObservables, '/cx_rl_node/get_predefined_observables'
         )
         self.create_rl_env_state_client = self.node.create_client(
-            CreateRLEnvState, '/create_rl_env_state'
+            CreateRLEnvState, '/cx_rl_node/create_rl_env_state'
         )
 
-        self.reset_cx_client = ActionClient(self.node, ResetCX, '/reset_cx')
+        self.reset_cx_client = ActionClient(self.node, ResetCX, '/cx_rl_node/reset_cx')
         self.reset_cx_result = None
         self.reset_cx_send_goal_future = None
         self.reset_cx_get_result_future = None
         self.reset_cx_goal_handle = None
 
-        self.get_free_robot_client = ActionClient(self.node, GetFreeRobot, '/get_free_robot')
+        self.get_free_robot_client = ActionClient(
+            self.node, GetFreeRobot, '/cx_rl_node/get_free_robot'
+        )
         self.get_free_robot_result = None
         self.get_free_robot_send_goal_future = None
         self.get_free_robot_get_result_future = None

@@ -13,19 +13,12 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
-(defrule cx-rl-interfaces-exec-action-selection-client-init
-"Create a client requesting action selection if there is a robot waiting and at least one action executable"
-    (not (cx-rl-interfaces-exec-action-selection-client (service "exec_action_selection")))
-    (domain-facts-loaded)
-=>
-    (cx-rl-interfaces-exec-action-selection-create-client "exec_action_selection")
-    (printout info "Created client for /exec_action_selection" crlf)
-)
 
-
-(defrule cx-rl-interfaces-send-request-for-action-selection
-    (rl-action-selection-requested)
-    (not (rl-action-selection))
+(defrule cx-rl-exec-action-selection-request
+  (cx-rl-node (name ?node) (mode EXECUTION))
+  (ros-msgs-client (service ?s&:(eq ?s (str-cat ?node "/exec_action_selection"))) (type ?type))
+  (not (rl-action-request-meta (service ?s)))
+  (rl-current-action-space (state DONE))
 =>
     (printout info "Action selection demand found" crlf)
     (bind ?state-string (create-observation-string))
@@ -39,20 +32,46 @@
     )
 
     (printout info "Requesting action selection" crlf)
-    (bind ?new-req (cx-rl-interfaces-exec-action-selection-request-create))
-    (cx-rl-interfaces-exec-action-selection-request-set-field ?new-req "state" ?state-string)
-    (cx-rl-interfaces-exec-action-selection-request-set-field ?new-req "actions" ?action-list)
-    (cx-rl-interfaces-exec-action-selection-send-request ?new-req "exec_action_selection")
-    (cx-rl-interfaces-exec-action-selection-request-destroy ?new-req)
+    (bind ?new-req (ros-msgs-create-request ?type))
+    (ros-msgs-set-field ?new-req "state" ?state-string)
+    (ros-msgs-set-field ?new-req "actions" ?action-list)
+    (bind ?id (ros-msgs-async-send-request ?new-req ?s))
+    (if ?id then
+      (assert (rl-action-request-meta (service ?s) (request-id ?id)))
+  )
+    (ros-msgs-destroy-message ?new-req)
 )
 
-(defrule exec-action-selection-response-received
-    ?msg-fact <- (cx-rl-interfaces-exec-action-selection-response (service ?service) (msg-ptr ?ptr))
+(defrule cx-rl-exec-action-selection-response-received
+  (cx-rl-node (name ?node) (mode EXECUTION))
+  (ros-msgs-client (service ?s&:(eq ?s (str-cat ?node "/exec_action_selection"))) (type ?type))
+    ?msg-fact <- (ros-msgs-response (service ?s) (msg-ptr ?ptr) (request-id ?id))
+   ?req-meta <- (rl-action-request-meta (service ?s) (request-id ?id))
 =>
-    (bind ?action-id (cx-rl-interfaces-exec-action-selection-response-get-field ?ptr "actionid"))
-    (printout green "Received actionid from " ?service ": " ?action-id crlf)
-    (assert (rl-action-selection-exec (actionid (sym-cat ?action-id))))
-    (cx-rl-interfaces-exec-action-selection-response-destroy ?ptr)
+    (bind ?action-id (ros-msgs-get-field ?ptr "actionid"))
+    (printout green "Received actionid from " ?s ": " ?action-id crlf)
+    (ros-msgs-destroy-message ?ptr)
     (retract ?msg-fact)
+	(modify ?req-meta (action-id ?action-id))
+)
 
+
+(defrule rl-action-select-execution
+  (declare (salience ?*SALIENCE-RL-SELECTION*))
+  (cx-rl-node (mode EXECUTION))
+  ?r <- (rl-action-request-meta (action-id ?action-id))
+ ?action-space <- (rl-current-action-space (state DONE))
+  ?next-action <- (rl-action (id ?action-id) (is-selected FALSE) (assigned-to ?robot))
+  ?rw <- (rl-robot (name ?robot) (waiting TRUE))
+  =>
+  (printout info crlf "CXRL: Selected action " ?action-id  "for robot " ?robot crlf)
+
+  (retract ?r)
+  (retract ?action-space)
+  (modify ?rw (waiting FALSE))
+  (modify ?next-action (is-selected TRUE))
+  (delayed-do-for-all-facts ((?a rl-action))
+		(eq ?a:is-selected FALSE)
+		(retract ?a)
+	)
 )

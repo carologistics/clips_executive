@@ -9,6 +9,7 @@
   <license>Apache-2.0</license>
 
   <depend>rclpy</depend>
+  <depend>ament_index_python</depend>
   <depend>python3-gymnasium-pip</depend>
   <depend>python3-numpy</depend>
   <depend>python3-torch</depend>

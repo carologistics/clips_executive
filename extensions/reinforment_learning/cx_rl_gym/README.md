@@ -12,7 +12,6 @@ It automatically constructs its **observation** and **action spaces** by queryin
 ### Key Features
 
 - Dynamic observation and action spaces generated from ROS 2 services
-- Multi-robot management and coordination
+- Multi-robot management and coordination via reinforcement learning
 - Compatible with Gym-based RL libraries (e.g., Stable Baselines3)
-- ROS 2 actions for reset, robot allocation, and action execution
-- Service-based RL mode switching and state creation
+- ROS 2 action interfaces for reset, robot allocation, and action execution
