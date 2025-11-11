@@ -47,11 +47,7 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/index.html">Getting Started</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">CLIPS Plugins</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="index.html#initialize">initialize()</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#clips-env-init">clips_env_init()</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#clips-env-destroyed">clips_env_destroyed()</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#finalize">finalize()</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#pitfalls-and-considerations">Pitfalls and Considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#plugin-interface">Plugin Interface</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html#available-plugins">Available Plugins</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="cx_ament_index.html">Ament Index Plugin</a></li>
 <li class="toctree-l3"><a class="reference internal" href="executive_plugin.html">Continuous Execution Plugin</a></li>
@@ -198,6 +194,7 @@ E.g., when using batch, a missing closing parenthesis <code class="docutils lite
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>cx_bringup<span class="w"> </span>cx_launch.py<span class="w"> </span>manager_config:<span class="o">=</span>plugin_examples/file_load.yaml
 </pre></div>
 </div>
+<p>Note, that while <cite>file-load.clp</cite> is loaded before <cite>file-load-batch.clp</cite>, the rules of <cite>file-load.clp</cite> will only be executed, once the CLIPS engine runs. hence, the expected output is that <cite>batch</cite> is printed before <cite>Hello World</cite>.</p>
 <section id="id1">
 <h3>Configuration<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
 <p>File <a class="reference external" href="https://github.com/carologistics/clips-executive/blob/master/cx_bringup/params/plugin_examples/file_load.yaml">cx_bringup/params/plugin_examples/file_load.yaml</a>.</p>

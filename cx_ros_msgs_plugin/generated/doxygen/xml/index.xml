@@ -28,9 +28,10 @@
     <member refid="classcx_1_1RosMsgsPlugin_1a72d36324b642cc96a991aa209126f731" kind="variable"><name>messages_</name></member>
     <member refid="classcx_1_1RosMsgsPlugin_1a74bc98fa6681903a660447b779986f52" kind="variable"><name>sub_messages_</name></member>
     <member refid="classcx_1_1RosMsgsPlugin_1a8368f7e49f07727e19f561b34eb7730e" kind="variable"><name>type_support_cache_</name></member>
-    <member refid="classcx_1_1RosMsgsPlugin_1a539933a98e6a6a49a6526e6aae58e0f5" kind="variable"><name>clients_</name></member>
-    <member refid="classcx_1_1RosMsgsPlugin_1a91d17a9ad33fd8ae3f395753c393ac42" kind="variable"><name>client_types_</name></member>
-    <member refid="classcx_1_1RosMsgsPlugin_1a57a48362df14a4a22fce6980de3a5b90" kind="variable"><name>service_type_support_cache_</name></member>
+    <member refid="classcx_1_1RosMsgsPlugin_1a890e5d81f00c38b978ff28c250e4b622" kind="variable"><name>task_queue_</name></member>
+    <member refid="classcx_1_1RosMsgsPlugin_1a33d9acbfb16e401a4a70e13cc5c7c196" kind="variable"><name>clips_worker_thread_</name></member>
+    <member refid="classcx_1_1RosMsgsPlugin_1a4e5382885b125e0cc504ef33326af913" kind="variable"><name>cv_</name></member>
+    <member refid="classcx_1_1RosMsgsPlugin_1ac3da1305263bd0b1271192c184572026" kind="variable"><name>queue_mutex_</name></member>
     <member refid="classcx_1_1RosMsgsPlugin_1adc20b22ceaa9111766ed0b9b199db6c3" kind="function"><name>RosMsgsPlugin</name></member>
     <member refid="classcx_1_1RosMsgsPlugin_1a179582c3ae1c1ad7bf5917514bf65911" kind="function"><name>~RosMsgsPlugin</name></member>
     <member refid="classcx_1_1RosMsgsPlugin_1aa172b6316fa790bdeab73a356bdcf6e3" kind="function"><name>initialize</name></member>
@@ -39,7 +40,6 @@
     <member refid="classcx_1_1RosMsgsPlugin_1aaf8f3f5c7deb344fc1b91c2850d8bc68" kind="function"><name>clips_env_destroyed</name></member>
     <member refid="classcx_1_1RosMsgsPlugin_1a34eb1287e8f01a38ece5c7437ecdcc11" kind="function"><name>create_message</name></member>
     <member refid="classcx_1_1RosMsgsPlugin_1aaaabb1083d1509f697c2f743090c1242" kind="function"><name>destroy_msg</name></member>
-    <member refid="classcx_1_1RosMsgsPlugin_1a8d8728435dd9d1e3637f8c1fcbaa3a05" kind="function"><name>create_request</name></member>
     <member refid="classcx_1_1RosMsgsPlugin_1a2caf464562d233a78f07db5126cd35d1" kind="function"><name>ros_msg_member_to_udf_value</name></member>
     <member refid="classcx_1_1RosMsgsPlugin_1a8dd75c0ff9576064ee581d7760558bd8" kind="function"><name>process_nested_msg</name></member>
     <member refid="classcx_1_1RosMsgsPlugin_1a7a595c869419d289edbc79a0cecc486f" kind="function"><name>ros_to_clips_value</name></member>
@@ -54,9 +54,6 @@
     <member refid="classcx_1_1RosMsgsPlugin_1aad9708e0479a64b622360d2ce13f4148" kind="function"><name>create_new_publisher</name></member>
     <member refid="classcx_1_1RosMsgsPlugin_1a4b99a3f0e765bd53118fc827f27da3b3" kind="function"><name>destroy_publisher</name></member>
     <member refid="classcx_1_1RosMsgsPlugin_1ae7497f509f176b7d2c2efd5632ddbe70" kind="function"><name>publish_to_topic</name></member>
-    <member refid="classcx_1_1RosMsgsPlugin_1ad9ce370716455d7391a5b803d23d1161" kind="function"><name>create_new_client</name></member>
-    <member refid="classcx_1_1RosMsgsPlugin_1aabeb519eef52e8a611826ea9600655a4" kind="function"><name>destroy_client</name></member>
-    <member refid="classcx_1_1RosMsgsPlugin_1ab8567663784dfe04a9622fef6540453d" kind="function"><name>send_request</name></member>
     <member refid="classcx_1_1RosMsgsPlugin_1a26bdaac87b2dba2eb4260ecad671a3cb" kind="function"><name>get_msg_type</name></member>
     <member refid="classcx_1_1RosMsgsPlugin_1a72f1de19540d16507bbfd05b4c989240" kind="function"><name>get_msg_members</name></member>
     <member refid="classcx_1_1RosMsgsPlugin_1a45450de119755c9034b634681231eedf" kind="function"><name>deserialize_msg</name></member>

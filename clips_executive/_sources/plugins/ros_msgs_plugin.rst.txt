@@ -11,6 +11,13 @@ Source code on :source-master:`GitHub <cx_plugins/ros_msgs_plugin>`.
 
 This plugin provides the ability to interface with ROS topics of any type using introspection.
 
+.. attention::
+
+   ROS introspection used to be limited to topics.
+   Service introspection was started in Jazzy and finished in Kilted.
+   Action introspection was started in Kilted and is not completed yet.
+   The features of this plugin vary, depending on the ROS version it is compiled with.
+
 Configuration
 *************
 
@@ -38,6 +45,17 @@ Facts
     (slot type (type STRING))  ; example: "std_msgs/msg/String"
   )
 
+  ; Asserted by the callback of a subscription whenever a message arrives.
+  ; Process the message and then call ros-msgs-destroy-message before retracting!
+  (deftemplate ros-msgs-message
+    (slot topic (type STRING))             ; example: "/cx_string_in"
+    (slot msg-ptr (type EXTERNAL-ADDRESS)) ; example: <Pointer-C-0x7f1550001d20>
+  )
+
+Supported since Jazzy:
+
+.. code-block:: lisp
+
   ; Asserted by the ros-msgs-create-client function.
   ; Retracted by the respective ros-msgs-destroy-client function.
   (deftemplate-ros-msgs-client
@@ -45,33 +63,72 @@ Facts
     (slot type (type STRING))  ; example: "std_srvs/srv/SetBool"
   )
 
-  ; Asserted by the callback of a subscriber whenever a message arrives.
-  ; Process the message and then call ros-msgs-destroy-message before retracting!
-  (deftemplate ros-msgs-message
-    (slot topic (type STRING)) ; example          : "/cx_string_in"
-    (slot msg-ptr (type EXTERNAL-ADDRESS)) example: <Pointer-C-0x7f1550001d20>
-  )
-
   ; Asserted by the callback of ros-msgs-async-send-request.
   ; Process the response like a normal message and then call
   ; ros-msgs-destroy-message before retracting!
   (deftemplate ros-msgs-response
-    (slot service (type STRING)) ; example        : "/ros_cx_client"
-    (slot request-id (type INTEGER); example      : 1
-    (slot msg-ptr (type EXTERNAL-ADDRESS)) example: <Pointer-C-0x7f1550001d20>
+    (slot service (type STRING))            ; example: "/ros_cx_client"
+    (slot request-id (type INTEGER))        ; example: 1
+    (slot msg-ptr (type EXTERNAL-ADDRESS))  ; example: <Pointer-C-0x7f1550001d20>
+  )
+
+Supported since Kilted:
+
+.. code-block:: lisp
+
+  ; Asserted by the ros-msgs-create-service function.
+  ; Retracted by the respective ros-msgs-destroy-service function.
+  (deftemplate ros-msgs-service
+    (slot service (type STRING)) ; example: "/ros_cx_service"
+    (slot type (type STRING))    ; example: "std_srvs/srv/SetBool"
+  )
+
+  ; Asserted by the ros-msgs-create-action-client function.
+  ; Retracted by the respective ros-msgs-destroy-action-client function.
+  (deftemplate ros-msgs-action-client
+    (slot server (type STRING))
+    (slot type (type STRING)))
+  )
+
+  ; Asserted by the goal response callback of ros-msgs-async-send-goal function.
+  ; Process the response by using the client goal handle functions:
+  ; - ros-msgs-client-goal-handle-get-goal-id
+  ; - ros-msgs-client-goal-handle-get-goal-stamp
+  ; Call ros-msgs-destroy-client-goal-handle before retracting.
+  ; Clean up only after goal is completely handled by the server.
+  (deftemplate ros-msgs-action-response
+    (slot server (type STRING))
+    (slot client-goal-handle-ptr (type EXTERNAL-ADDRESS))
+  )
+
+  ; Asserted by the goal result callback of ros-msgs-async-send-goal function.
+  ; The result is a ROS message and can be processed using ros-msgs-get-field.
+  (deftemplate ros-msgs-wrapped-result
+    (slot server (type STRING))
+    (slot goal-id (type SYMBOL))
+    (slot code (type SYMBOL) (allowed-values UNKNOWN SUCCEEDED CANCELED  ABORTED))
+    (slot result-ptr (type EXTERNAL-ADDRESS))
+  )
+
+  ; Asserted by the goal feedback callback of ros-msgs-async-send-goal function.
+  ; The feedback is a ROS message and can be processed using ros-msgs-get-field.
+  (deftemplate ros-msgs-feedback
+    (slot server (type STRING))
+    (slot client-goal-handle-ptr (type EXTERNAL-ADDRESS))
+    (slot feedback-ptr (type EXTERNAL-ADDRESS))
+  )
+
 
 Functions
 ~~~~~~~~~
 
 .. code-block:: lisp
 
-  ; Create and destroy publishers, subscribers and service clients.
+  ; Create and destroy publishers, subscribers
   (ros-msgs-create-publisher ?topic-name ?msg-type)    ; example args: "/cx_string_out" "std_msgs/msg/String"
   (ros-msgs-destroy-publisher ?topic-name)             ; example args: "/cx_string_out"
   (ros-msgs-create-subscription ?topic-name ?msg-type) ; example args: "/cx_string_in" "std_msgs/msg/String"
   (ros-msgs-destroy-subscription ?topic-name)          ; example args: "/cx_string_in"
-  (ros-msgs-create-client ?service-name ?service-type) ; example args: "/ros_cx_client" "std_srvs/srv/SetBool"
-  (ros-msgs-destroy-client ?service-name)              ; example args: "/ros_cx_client"
 
   ; Publish a given message over a topic.
   ; Requires the publisher to be created first using ros-msgs-create-publisher.
@@ -92,9 +149,18 @@ Functions
   ; If the field is a message, then a pointer is returned that can be further inspected by passing it to ros-msgs-get-field.
   (ros-msgs-get-field ?msg-ptr ?field-name)
 
+
+Supported since Jazzy:
+
+.. code-block:: lisp
+
+  ; Create and destroy service clients.
+  (ros-msgs-create-client ?service-name ?service-type) ; example args: "/ros_cx_client" "std_srvs/srv/SetBool"
+  (ros-msgs-destroy-client ?service-name)              ; example args: "/ros_cx_client"
+
   ; Create a request message and return a pointer to it.
   ; It is a regular message and hence can be pouplated with ros-msgs-set-field
-  ; and destroyed with ros-msgs-destroy-message
+  ; and destroyed with ros-msgs-destroy-message.
   (bind ?msg-ptr (ros-msgs-create-request ?msg-type)) ; example args: "std_srvs/srv/SetBool"
                                                       ; example ret: <Pointer-C-0x7f1550001d20>
 
@@ -102,6 +168,60 @@ Functions
   ; Requires the service client to be created first using ros-msgs-create-client.
   (bind ?request-id (ros-msgs-async-send-request ?msg-ptr ?service-name)) ; example args: "std_srvs/srv/SetBool"
                                                                           ; example ret: 1 (or FALSE if sending the request failed)
+
+
+Supported since Kilted:
+
+.. code-block:: lisp
+
+  ; Create and destroy service providers.
+  ; In order to answer service requests, define a function with the following signature:
+  ; (deffunction <service_name>-service-callback (?name ?request ?response)
+  ;   <process request and populate response like regular ros messages>
+  ; )
+  ; Do not cleanup the request or response, their lifetime is handled automatically.
+  ;
+  ; Example:
+  ; (deffunction /ros_cx_service-service-callback (?name ?request ?response)
+  ;   (printout green "Received a request" crlf)
+  ;   (bind ?data (ros-msgs-get-field ?request "data"))
+  ;   (printout yellow ?data crlf)
+  ;   (ros-msgs-set-field ?response "success" TRUE)
+  ;   (ros-msgs-set-field ?response "message" (str-cat "Received " ?data))
+  ; )
+  (ros-msgs-create-service ?service-name ?service-type) ; example_args: "/ros_cx_service" "std_srvs/srv/SetBool"
+  (ros-msgs-destroy-service ?service-name)              ; example_args: "/ros_cx_service"
+
+  ; Create and destroy action clients.
+  (ros-msgs-create-action-client ?action-server ?type) ; eample args: "fibonacci" "example_interfaces/action/Fibonacci"
+  (ros-msgs-destroy-action-client ?action-server) ; example args: "fibonacci"
+
+  ; Create a goal request and return a pointer to it.
+  ; It is a regular message and hence can be pouplated with ros-msgs-set-field
+  ; and destroyed with ros-msgs-destroy-message..
+  (bind ?req-ptr (ros-msgs-create-goal-request ?type)) ; example args: "example_interfaces/action/Fibonacci"
+                                                       ; example ret: <Pointer-C-0x7f1550001d20>
+
+  ; Send a goal request to an action server.
+  ; This registers three callbacks: response, feedback and result.
+  ; These assert the corrending facts of the following types:
+  ; - ros-msgs-action-response
+  ; - ros-msgs-wrapped-result
+  ; - ros-msgs-feedback
+  (ros-msgs-async-send-goal ?action-server ?req-ptr) ; example args: "fibonacci" <Pointer-C-0x7f1550001d20>
+
+  ; Functions to inspect client goal handles that are contained in the facts asserted by action callbacks.
+
+  ; Uses rclcpp_action::to_string to provide a formatted version of the associated goal id (as SYMBOL).
+  (bind ?g-id (ros-msgs-client-goal-handle-get-goal-id ?client-goal-handle-ptr)) ; example args: <Pointer-C-0x7f1550001d20>
+                                                          ; example ret: f2d1cd46-58f2-5bfe-d49f-e182c4a4eccc
+
+  ; Provide the goal stamp using get_goal_stamp().seconds()
+  (bind ?ts (ros-msgs-client-goal-handle-get-goal-stamp ?client-goal-handle-ptr)) ; example args: <Pointer-C-0x7f1550001d20>
+                                                                                  ; example ret: 1698326401.123456
+
+  ; Delete a client goal handle. Use this only after the associated goal is fully processed.
+  (ros-msgs-destroy-client-goal-handle ?client-goal-handle-ptr) ; example args: <Pointer-C-0x7f1550001d20>
 
 
 Message Lifetimes
@@ -141,6 +261,11 @@ In particular, obtaining a nested message from one message ``?source`` and setti
   (ros-msgs-set-field ?sink "linear" ?source-sub-msg)
   ; now all dynamicly allocated members of the sub message in ?source are reset,
   ; as they are moved to ?sink.
+
+Action Lifetime
+~~~~~~~~~~~~~~~
+
+When dealing with actions, always make sure to keep the relevant goal handles alive for the entire duration of the associated action. Do not attempt to preemptively delete it. The same goes for goal requests.
 
 Usage Example 1: Publishers and Subscribers
 *******************************************
@@ -253,6 +378,8 @@ File :source-master:`cx_bringup/clips/plugin_examples/ros-msgs.clp`.
 Usage Example 2: Service Client
 *******************************
 
+This example requires ROS jazzy or later.
+
 A minimal working example is provided by the :docsite:`cx_bringup` package. Run it via:
 
 .. code-block:: bash
@@ -357,4 +484,213 @@ File :source-master:`cx_bringup/clips/plugin_examples/ros-msgs.clp`.
   =>
     (ros-msgs-destroy-message ?ptr)
     (retract ?msg-f)
+  )
+
+Usage Example 3: Service Provider
+*********************************
+
+This example requires ROS kilted or later.
+
+A minimal working example is provided by the :docsite:`cx_bringup` package. Run it via:
+
+.. code-block:: bash
+
+    ros2 launch cx_bringup cx_launch.py manager_config:=plugin_examples/ros_msgs_service.yaml
+
+It creates a ``std_srvs/srv/SetBool`` service ``/ros_cx_service`` and prints all requests, returning successfully and adding a message with the request.
+
+In order to launch a simple client to send the request, run the following command:
+
+.. code-block:: bash
+
+    ros2 service call /ros_cx_service std_srvs/srv/SetBool "{data: true}"
+
+Configuration
+~~~~~~~~~~~~~
+
+File :source-master:`cx_bringup/params/plugin_examples/ros_msgs_service.yaml`.
+
+.. code-block:: yaml
+
+  /**:
+    ros__parameters:
+      environments: ["cx_ros_msgs_service"]
+      cx_ros_msgs_service:
+        plugins: ["executive", "ros_msgs", "files"]
+        log_clips_to_file: true
+        watch: ["facts", "rules"]
+
+      executive:
+        plugin: "cx::ExecutivePlugin"
+        publish_on_refresh: false
+        assert_time: true
+        refresh_rate: 10
+      ros_msgs:
+        plugin: "cx::RosMsgsPlugin"
+      files:
+        plugin: "cx::FileLoadPlugin"
+        pkg_share_dirs: ["cx_bringup"]
+        load: [
+          "clips/plugin_examples/ros-msgs-service.clp"]
+
+
+Code
+~~~~
+
+File :source-master:`cx_bringup/clips/plugin_examples/ros-msgs-service.clp`.
+
+.. code-block:: lisp
+
+  (defrule ros-msgs-service-init
+  " Create a service /ros_cx_service"
+    (not (ros-msgs-service (service "ros_cx_service")))
+    (not (executive-finalize))
+  =>
+    (ros-msgs-create-service "ros_cx_service" "std_srvs/srv/SetBool")
+    (printout green "Opening service on /ros_cx_service" crlf)
+    (printout green "Call it via 'ros2 service call /ros_cx_service std_srvs/srv/SetBool \"{data: true}\""' crlf)
+  )
+
+  (deffunction ros_cx_service-service-callback (?name ?request ?response)
+    (printout green "Received a request" crlf)
+    (bind ?data (ros-msgs-get-field ?request "data"))
+    (printout yellow ?data crlf)
+    (ros-msgs-set-field ?response "success" TRUE)
+    (ros-msgs-set-field ?response "message" (str-cat "Received " ?data))
+  )
+
+  (defrule ros-msgs-service-finalize
+  " Delete the service on executive finalize. "
+    (executive-finalize)
+    (ros-msgs-service (service ?service))
+  =>
+    (printout info "Destroying service" crlf)
+    (ros-msgs-destroy-service ?service)
+  )
+
+Usage Example 4: Action Client
+******************************
+
+This example requires ROS kilted or later.
+
+A minimal working example is provided by the :docsite:`cx_bringup` package. Run it via:
+
+.. code-block:: bash
+
+    ros2 launch cx_bringup cx_launch.py manager_config:=plugin_examples/ros_msgs_action_client.yaml
+
+It creates an action client ``/fibonacci`` (of type ``example_interfaces/action/Fibonacci``) and requests the fibonacci sequence of order 10.
+
+In order to launch the corresponding server, run the following command:
+
+.. code-block:: bash
+
+    ros2 run action_tutorials_cpp fibonacci_action_server
+
+Configuration
+~~~~~~~~~~~~~
+
+File :source-master:`cx_bringup/params/plugin_examples/ros_msgs_action_client.yaml`.
+
+.. code-block:: yaml
+
+  /**:
+    ros__parameters:
+      environments: ["cx_ros_msgs_action_client"]
+      cx_ros_msgs_action_client:
+        plugins: ["executive", "ros_msgs", "files"]
+        log_clips_to_file: true
+        watch: ["facts", "rules"]
+
+      executive:
+        plugin: "cx::ExecutivePlugin"
+        publish_on_refresh: false
+        assert_time: true
+        refresh_rate: 10
+      ros_msgs:
+        plugin: "cx::RosMsgsPlugin"
+      files:
+        plugin: "cx::FileLoadPlugin"
+        pkg_share_dirs: ["cx_bringup"]
+        load: [
+          "clips/plugin_examples/ros-msgs-action-client.clp"]
+
+
+Code
+~~~~
+
+File :source-master:`cx_bringup/clips/plugin_examples/ros-msgs-action-client.clp`.
+
+.. code-block:: lisp
+
+  (defrule ros-msgs-action-client-init
+  " Create a client for fibonacci example action server."
+    (not (ros-msgs-action-client (server "fibonacci")))
+    (not (executive-finalize))
+  =>
+    (ros-msgs-create-action-client "fibonacci" "example_interfaces/action/Fibonacci")
+    (printout green "Opening client on /fibonacci" crlf)
+    (printout green "Run a corresponding server using 'ros2 run action_tutorials_cpp fibonacci_action_server'" crlf)
+  )
+
+  (defrule ros-msgs-action-client-send-goal
+  " Send a goal request for the 10th fibonacci number. "
+    (ros-msgs-action-client (server ?server))
+    (not (request ?))
+    (not (already-requested))
+    =>
+    (bind ?new-req (ros-msgs-create-goal-request "example_interfaces/action/Fibonacci"))
+    (ros-msgs-set-field ?new-req "order" 10)
+    (bind ?val (ros-msgs-get-field ?new-req "order"))
+    (printout blue "i have this value: " ?val crlf)
+    (bind ?id (ros-msgs-async-send-goal ?new-req ?server))
+    (assert (request ?new-req))
+    (assert (already-requested))
+    ; do not destroy goal directly, it is kept alive
+    ;(ros-msgs-destroy-message ?new-req)
+  )
+
+  (defrule ros-msgs-action-client-check-client-goal-handle
+  " Process the response for the requested goal."
+    (ros-msgs-action-response (server "fibonacci") (client-goal-handle-ptr ?cgh-ptr))
+  =>
+    (bind ?g-id (ros-msgs-client-goal-handle-get-goal-id ?cgh-ptr))
+    (bind ?stamp (ros-msgs-client-goal-handle-get-goal-stamp ?cgh-ptr))
+    (printout t "goal id " ?g-id " at stamp " ?stamp crlf)
+  )
+
+  (defrule ros-msgs-action-client-read-feedback
+   ?fact <- (ros-msgs-feedback (server "fibonacci") (client-goal-handle-ptr ?cgh-ptr) (feedback-ptr ?msg-ptr))
+  =>
+    (bind ?seq (ros-msgs-get-field ?msg-ptr "sequence"))
+    (printout yellow "partial sequence " ?seq crlf)
+    (ros-msgs-destroy-message ?msg-ptr)
+    (retract ?fact)
+  )
+
+  (defrule ros-msgs-action-client-process-result
+    ?response-f <- (ros-msgs-action-response (server "fibonacci") (client-goal-handle-ptr ?cgh-ptr))
+    ?result-f <- (ros-msgs-wrapped-result (server "fibonacci") (goal-id ?id) (code ?code) (result-ptr ?res-ptr))
+    (test (eq ?id (ros-msgs-client-goal-handle-get-goal-id ?cgh-ptr)))
+    ?req-f <- (request ?req-ptr)
+    =>
+    (printout info "Action result: " ?code crlf)
+    (if (eq ?code SUCCEEDED)
+      then
+      (bind ?result (ros-msgs-get-field ?res-ptr "sequence"))
+      (printout green "fibonacci sequence of order 10 is: " ?result crlf)
+    )
+    (ros-msgs-destroy-message ?res-ptr)
+    (ros-msgs-destroy-message ?req-ptr)
+    (ros-msgs-destroy-client-goal-handle ?cgh-ptr)
+    (retract ?response-f ?result-f ?req-f)
+  )
+
+  (defrule ros-msgs-action-client-finalize
+  " Delete the client on executive finalize. "
+    (executive-finalize)
+    (ros-msgs-action-client (server ?server))
+  =>
+    (printout info "Destroying action client" crlf)
+    (ros-msgs-destroy-action-client ?server)
   )

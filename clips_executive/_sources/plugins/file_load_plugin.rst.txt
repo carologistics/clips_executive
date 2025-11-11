@@ -83,6 +83,8 @@ A minimal working example is provided by the :docsite:`cx_bringup` package. Run 
 
     ros2 launch cx_bringup cx_launch.py manager_config:=plugin_examples/file_load.yaml
 
+Note, that while `file-load.clp` is loaded before `file-load-batch.clp`, the rules of `file-load.clp` will only be executed, once the CLIPS engine runs. hence, the expected output is that `batch` is printed before `Hello World`.
+
 Configuration
 ~~~~~~~~~~~~~
 

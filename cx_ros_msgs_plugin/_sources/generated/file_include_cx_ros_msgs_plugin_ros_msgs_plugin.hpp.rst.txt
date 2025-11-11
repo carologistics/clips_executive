@@ -36,7 +36,7 @@ Includes
 
 - ``memory``
 
-- ``rclcpp/generic_client.hpp``
+- ``queue``
 
 - ``rosidl_typesupport_introspection_cpp/message_introspection.hpp``
 
