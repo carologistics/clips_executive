@@ -354,6 +354,20 @@ bool RosMsgsPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
       instance->create_new_service(env, service.lexemeValue->contents, type.lexemeValue->contents);
     },
     "create_new_service", this);
+
+  fun_name = "ros-msgs-destroy-service";
+  function_names_.insert(fun_name);
+  clips::AddUDF(
+    env.get(), fun_name.c_str(), "v", 1, 1, ";sy;sy",
+    [](clips::Environment * env, clips::UDFContext * udfc, clips::UDFValue * /*out*/) {
+      auto * instance = static_cast<RosMsgsPlugin *>(udfc->context);
+      clips::UDFValue service;
+      using namespace clips;  // NOLINT
+      clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &service);
+
+      instance->destroy_service(env, service.lexemeValue->contents);
+    },
+    "create_new_service", this);
 #endif
 
 #ifdef HAVE_GENERIC_ACTION_CLIENT
@@ -510,7 +524,7 @@ bool RosMsgsPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
     env.get(),
     R"((deftemplate ros-msgs-action-response
             (slot server (type STRING))
-            (slot client-goal-handle-ptr (type EXTERNAL-ADDRESS) )
+            (slot client-goal-handle-ptr (type EXTERNAL-ADDRESS))
             ))");
   clips::Build(
     env.get(),
@@ -1876,6 +1890,39 @@ void RosMsgsPlugin::create_new_service(
     clips::AssertString(
       env, ("(ros-msgs-service (service \"" + service_name + "\") (type \"" + service_type + "\"))")
              .c_str());
+  }
+}
+
+void RosMsgsPlugin::destroy_service(clips::Environment * env, const std::string & service_name)
+{
+  auto context = CLIPSEnvContext::get_context(env);
+  std::string env_name = context->env_name_;
+  map_mtx_.lock();
+  auto outer_it = services_.find(env_name);
+  if (outer_it != services_.end()) {
+    // Check if service_name exists in the inner map
+    auto & inner_map = outer_it->second;
+    auto inner_it = inner_map.find(service_name);
+    if (inner_it != inner_map.end()) {
+      // Remove the service_name entry from the inner map
+      RCLCPP_DEBUG(*logger_, "Destroying service %s", service_name.c_str());
+      inner_map.erase(inner_it);
+      map_mtx_.unlock();
+      clips::Eval(
+        env,
+        ("(do-for-all-facts ((?f ros-msgs-service)) (eq (str-cat "
+         "?f:service) (str-cat \"" +
+         service_name + "\"))  (retract ?f))")
+          .c_str(),
+        NULL);
+    } else {
+      map_mtx_.unlock();
+      RCLCPP_WARN(
+        *logger_, "Service %s not found in environment %s", service_name.c_str(), env_name.c_str());
+    }
+  } else {
+    map_mtx_.unlock();
+    RCLCPP_WARN(*logger_, "Environment %s not found", env_name.c_str());
   }
 }
 

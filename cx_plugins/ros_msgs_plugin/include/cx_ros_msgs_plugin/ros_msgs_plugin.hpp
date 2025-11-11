@@ -203,9 +203,12 @@ private:
   clips::UDFValue send_request(
     clips::Environment * env, void * deserialized_msg, const std::string & service_name);
 #endif
+
 #ifdef HAVE_GENERIC_SERVICE
   void create_new_service(
     clips::Environment * env, const std::string & service_name, const std::string & service_type);
+
+  void destroy_service(clips::Environment * env, const std::string & service_name);
 
   void service_callback(
     clips::Environment * env, const std::string service_name,
