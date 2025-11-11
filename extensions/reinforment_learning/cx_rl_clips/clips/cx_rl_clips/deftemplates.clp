@@ -22,6 +22,19 @@
   ?*SALIENCE-ROBOT-ASSIGNMENT* = 499
   ?*SALIENCE-RL-EPISODE-END-FAILURE* = 499
   ?*SALIENCE-RL-SELECTION* = 498
+
+  ?*SALIENCE-RESET-GAME-HIGH* = 1000
+  ?*SALIENCE-RESET-GAME-MIDDLE* = 800
+  ?*SALIENCE-RESET-GAME-LOW* = 300
+  ?*RESET-GAME-TIMER* = 1.0
+)
+
+(deftemplate reset-game
+ 	(slot stage (type SYMBOL))
+)
+
+(deftemplate cx-rl-node
+  (slot name (type STRING) (default "/cx-rl"))
 )
 
 (deftemplate rl-action
@@ -99,6 +112,11 @@
 
 (deftemplate rl-action-selection-requested)
 
+(deftemplate rl-service-request-meta
+  (slot service (type STRING))
+  (slot request-id (type INTEGER))
+)
+
 (deffunction rl-action-selected-update-actions ()
   (delayed-do-for-all-facts ((?a rl-action))
 		(eq ?a:is-selected FALSE)
@@ -113,4 +131,11 @@
 			(modify ?a (assigned-to nil))
 		)
 	)
+)
+
+(deffunction delete-rl-actions-after-reset ()
+  (delayed-do-for-all-facts ((?r rl-action))
+    TRUE
+    (retract ?r)
+  )
 )

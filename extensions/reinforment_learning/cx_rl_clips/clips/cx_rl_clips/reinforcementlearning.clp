@@ -53,26 +53,26 @@
   (retract ?a)
 )
 
-(defrule rl-action-finished-episode-end
-  (declare (salience (+ ?*SALIENCE-RL-SELECTION* 1)))
-  (rl-mode (mode TRAINING))
-  (rl-executability-check (state CHECKED))
-	?r <- (rl-action-selection (actionid ?actionid))
-	?a <- (rl-action (id ?actionid) (is-finished TRUE) (points ?points))
-  ?e <- (rl-episode-end (success ?success))
-	=>
-	(printout info crlf "CXRL: Action " ?actionid " has finished, end of episode"crlf )
-
-  (if (eq ?success FALSE) then
-    (bind ?reward ?*POINTS-EPISODE-END-FAILURE*)
-  else
-    (bind ?reward (+ ?points ?*POINTS-EPISODE-END-SUCCESS*))
-  )
-
-  (modify ?r (actionid ?actionid) (is-finished TRUE) (reward ?reward) (done TRUE))
-  (retract ?e)
-  (retract ?a)
-)
+; (defrule rl-action-finished-episode-end
+;   (declare (salience (+ ?*SALIENCE-RL-SELECTION* 1)))
+;   (rl-mode (mode TRAINING))
+;   (rl-executability-check (state CHECKED))
+; 	?r <- (rl-action-selection (actionid ?actionid))
+; 	?a <- (rl-action (id ?actionid) (is-finished TRUE) (points ?points))
+;   ?e <- (rl-episode-end (success ?success))
+; 	=>
+; 	(printout info crlf "CXRL: Action " ?actionid " has finished, end of episode"crlf )
+;
+;   (if (eq ?success FALSE) then
+;     (bind ?reward ?*POINTS-EPISODE-END-FAILURE*)
+;   else
+;     (bind ?reward (+ ?points ?*POINTS-EPISODE-END-SUCCESS*))
+;   )
+;
+;   (modify ?r (actionid ?actionid) (is-finished TRUE) (reward ?reward) (done TRUE))
+;   (retract ?e)
+;   (retract ?a)
+; )
 
 (defrule domain-game-finished-failure
   (declare (salience ?*SALIENCE-RL-EPISODE-END-FAILURE*))

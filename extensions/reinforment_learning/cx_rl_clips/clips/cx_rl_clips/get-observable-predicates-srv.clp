@@ -13,16 +13,7 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
-(defrule get-observable-predicates-service-init
-" Create a service returning a list of all observable predicates in the clips environment."
-    (not (cx-rl-interfaces-get-observable-predicates-service (name "get_observable_predicates")))
-    (domain-facts-loaded)
-=>
-    (cx-rl-interfaces-get-observable-predicates-create-service "get_observable_predicates")
-    (printout info "Created service for /get_observable_predicates" crlf)
-)
-
-(deffunction cx-rl-interfaces-get-observable-predicates-service-callback (?service-name ?request ?response)
+(deffunction get_observable_predicates-service-callback (?service-name ?request ?response)
     (printout info "Collecting cxrl observable predicates" crlf)
     (bind ?pred-names (create$))
     (bind ?param-counts (create$))
@@ -40,8 +31,8 @@
         )
     )
 
-    (cx-rl-interfaces-get-observable-predicates-response-set-field ?response "predicatenames" ?pred-names)
-    (cx-rl-interfaces-get-observable-predicates-response-set-field ?response "paramcounts" ?param-counts)
-    (cx-rl-interfaces-get-observable-predicates-response-set-field ?response "paramnames" ?param-names)
-    (cx-rl-interfaces-get-observable-predicates-response-set-field ?response "paramtypes" ?param-types)
+    (ros-msgs-set-field ?response "predicatenames" ?pred-names)
+    (ros-msgs-set-field ?response "paramcounts" ?param-counts)
+    (ros-msgs-set-field ?response "paramnames" ?param-names)
+    (ros-msgs-set-field ?response "paramtypes" ?param-types)
 )
