@@ -5,7 +5,7 @@ This document assumes you have the |CX| installed and sourced in your environmen
 Starting the PDDL Manager
 *************************
 
-Aside from the regular |CX| node, the PDDL extension additionally requires **PDDL Manager** node (a lifecycle node with a bond timer).
+Aside from the regular |CX| node, the PDDL extension additionally requires the **PDDL Manager** node (a lifecycle node with a bond timer).
 
 To just launch a standalone node, just run the following command:
 

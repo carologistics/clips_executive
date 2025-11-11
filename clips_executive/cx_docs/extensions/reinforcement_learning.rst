@@ -33,7 +33,7 @@ Overview
 This extension leverages the `Gymnasium`_ framework, a modern and extensible toolkit for RL environments.
 It provides a Python-based ROS node that bridges the Gymnasium API with CLIPS, allowing bidirectional communication between the rule-based and learning components.
 
-CLIPS can act as the high-level controller — managing symbolic knowledge, rules, and goals — while the RL node handles low-level control or adaptive behaviors learned from experience.
+CLIPS can act as the high-level controller, managing symbolic knowledge, rules, and goals, while the RL node handles low-level control or adaptive behaviors learned from experience.
 
 Additionally, this extension includes utilities to:
 
@@ -49,6 +49,3 @@ Content
 
    rl/usage.rst
    rl/rl_clips.rst
-   rl/environment.rst
-   rl/training_tutorial.rst
-   rl/evaluation_tutorial.rst
