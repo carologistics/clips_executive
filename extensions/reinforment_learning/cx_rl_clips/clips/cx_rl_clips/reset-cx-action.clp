@@ -52,6 +52,7 @@
 (defrule reset-cx-finished
     ?ag <- (cx-rl-interfaces-reset-cx-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr))
     ?rf <- (reset-cx-finished)
+    ?ra <- (reset-cx-action (uuid ?uuid))
     (cx-rl-interfaces-reset-cx-server (name "reset_cx"))
 
 =>
@@ -63,6 +64,7 @@
     (cx-rl-interfaces-reset-cx-server-goal-handle-destroy ?ptr)
     (retract ?rf)
     (retract ?ag)
+    (retract ?ra)
 )
 
 (defrule reset-cx-server-cleanup

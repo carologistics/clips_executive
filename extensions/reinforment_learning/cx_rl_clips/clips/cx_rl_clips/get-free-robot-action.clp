@@ -48,6 +48,7 @@
     (if (not (cx-rl-interfaces-get-free-robot-server-goal-handle-is-canceling ?ptr)) then
         (bind ?uuid (cx-rl-interfaces-get-free-robot-server-goal-handle-get-goal-id ?ptr))
         (assert (get-free-robot (uuid ?uuid) (robot "") (last-search ?now) (found FALSE)))
+        (assert (rl-executability-check (state CHECKING)))
     else
         (printout error "Goal immediately canceled" crlf)
     )
@@ -56,6 +57,7 @@
 (defrule get-free-robot-search
     (cx-rl-interfaces-get-free-robot-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr))
     ?gfr <- (get-free-robot (uuid ?uuid) (robot "") (last-search ?last) (found FALSE))
+    ?ec <- (rl-executability-check (state CHECKED))
     (time ?now&:(> (- ?now ?last) 1))
     (test (eq ?uuid (cx-rl-interfaces-get-free-robot-server-goal-handle-get-goal-id ?ptr)))
 =>
@@ -75,6 +77,7 @@
         (cx-rl-interfaces-get-free-robot-feedback-set-field ?feedback "feedback" "No free robot found, retrying...")
         (cx-rl-interfaces-get-free-robot-server-goal-handle-publish-feedback ?ptr ?feedback)
         (cx-rl-interfaces-get-free-robot-feedback-destroy ?feedback)
+        (modify ?ec (state CHECKING))
         (modify ?gfr (last-search ?now))
     else
         (modify ?gfr (robot (str-cat ?robot)) (last-search ?now) (found TRUE))
@@ -87,6 +90,7 @@
     ?ag <- (cx-rl-interfaces-get-free-robot-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr))
     ?gfr <- (get-free-robot (robot ?robot) (last-search ?last) (found ?found) (uuid ?uuid))
     (test (eq ?uuid (cx-rl-interfaces-get-free-robot-server-goal-handle-get-goal-id ?ptr)))
+    ?ec <- (rl-executability-check (state ?state))
 =>
     (printout info "ResetCX: Aborting robot search" crlf)
     (bind ?result (cx-rl-interfaces-get-free-robot-result-create))
@@ -96,12 +100,14 @@
     (cx-rl-interfaces-get-free-robot-server-goal-handle-destroy ?ptr)
     (retract ?gfr)
     (retract ?ag)
+    (retract ?ec)
 )
 
 (defrule get-free-robot-search-done
     ?ag <- (cx-rl-interfaces-get-free-robot-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr))
     ?gfr <- (get-free-robot (robot ?robot) (last-search ?last) (found TRUE) (uuid ?uuid))
     (test (eq ?uuid (cx-rl-interfaces-get-free-robot-server-goal-handle-get-goal-id ?ptr)))
+    ?ec <- (rl-executability-check (state CHECKED))
 =>
     (printout green "Free robot found: " ?robot crlf)
     (bind ?result (cx-rl-interfaces-get-free-robot-result-create))
@@ -111,6 +117,7 @@
     (cx-rl-interfaces-get-free-robot-server-goal-handle-destroy ?ptr)
     (retract ?gfr)
     (retract ?ag)
+    (retract ?ec)
 )
 
 (defrule get-free-robot-server-cleanup

@@ -117,7 +117,7 @@
 
 (defrule rl-action-select
   (declare (salience ?*SALIENCE-RL-SELECTION*))
-  ?ec <- (rl-executability-check (state CHECKED))
+  ;?ec <- (rl-executability-check (state CHECKED))
   (rl-mode (mode TRAINING))
 	(rl-action-selection (actionid ?a))
 	?next-action <- (rl-action (id ?a) (is-selected FALSE) (is-finished FALSE) (assigned-to ?robot))
@@ -127,24 +127,24 @@
 	(modify ?rw (waiting FALSE))
   (modify ?next-action (is-selected TRUE))
   (rl-action-selected-update-actions)
-  (modify ?ec (state PENDING))
+  ;(modify ?ec (state PENDING))
   ;(rl-action-selected-update-robots ?robot)
 
 )
 
-(defrule rl-executability-check-before-action-finished
-  (declare (salience ?*SALIENCE-ACTION-EXECUTABLE-CHECK*))
-  (rl-action (is-finished TRUE))
-  ?ec <- (rl-executability-check (state PENDING))
-  =>
-  (modify ?ec (state CHECKING))
-  (rl-action-selected-update-actions)
-
-)
+;(defrule rl-executability-check-before-action-finished
+;  (declare (salience ?*SALIENCE-ACTION-EXECUTABLE-CHECK*))
+;  (rl-action (is-finished TRUE))
+;  ?ec <- (rl-executability-check (state PENDING))
+;  =>
+;  (modify ?ec (state CHECKING))
+;  (rl-action-selected-update-actions)
+;
+;)
 (defrule rl-action-finished
   (declare (salience ?*SALIENCE-RL-SELECTION*))
   (rl-mode (mode TRAINING))
-  (rl-executability-check (state CHECKED))
+  ;(rl-executability-check (state CHECKED))
 	?r <- (rl-action-selection (actionid ?actionid))
 	?a <- (rl-action (id ?actionid) (is-finished TRUE) (points ?points))
 	=>
@@ -157,7 +157,7 @@
 (defrule rl-action-finished-episode-end
   (declare (salience (+ ?*SALIENCE-RL-SELECTION* 1)))
   (rl-mode (mode TRAINING))
-  (rl-executability-check (state CHECKED))
+  ;(rl-executability-check (state CHECKED))
 	?r <- (rl-action-selection (actionid ?actionid))
 	?a <- (rl-action (id ?actionid) (is-finished TRUE) (points ?points))
   ?e <- (rl-episode-end (success ?success))
@@ -178,7 +178,7 @@
 (defrule domain-game-finished-failure
   (declare (salience ?*SALIENCE-RL-EPISODE-END-FAILURE*))
   (rl-mode (mode TRAINING))
-  (rl-executability-check (state CHECKED))
+  ;(rl-executability-check (state CHECKED))
   (rl-action (is-finished TRUE))
   (not (rl-action (is-selected FALSE)))
   (not (rl-episode-end (success ?success)))
@@ -245,8 +245,6 @@
 ;)
 
 (defrule assign-robot-to-rl-actions
-	" Before checking rl-actions for their executability, pick a waiting robot
-  that should get a new action assigned to it next. "
   (declare (salience ?*SALIENCE-ROBOT-ASSIGNMENT*))
   (rl-executability-check (state CHECKED))
   (rl-action (id ?id) (is-selected FALSE) (assigned-to nil))
@@ -273,7 +271,7 @@
     (modify ?a (assigned-to ?longest-waiting-robot))
   )
   (retract ?longest-waiting)
-  (assert (rl-robot (name ?robot) (waiting TRUE)))
+  (assert (rl-robot (name ?longest-waiting-robot) (waiting TRUE)))
 )
 
 (defrule unassign-robot-from-finished-action

@@ -21,7 +21,7 @@
 )
 
 (deftemplate reset-cx
- 	(slot stage (type SYMBOL))
+ 	(slot stage (type SYMBOL) (allowed-values INIT PRE-RESET RESET POST-RESET FINALIZE))
 )
 
 (deftemplate reset-cx-action
@@ -38,11 +38,9 @@
 (defrule reset-cx-stage-init
   (declare (salience ?*SALIENCE-RESET-CX-HIGH*))
   ?r <- (reset-cx (stage INIT))
-  (rl-mode (mode ?mode))
   (cx-rl-interfaces-reset-cx-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr))
   =>
   (modify ?r (stage PRE-RESET))
-  
 )
 
 (defrule reset-cx-stage-reset
@@ -64,6 +62,6 @@
   ?r <- (reset-cx (stage FINALIZE))
   =>
   (assert (reset-cx-finished))
-  (assert (rl-executability-check (state CHECKING)))
+  ;(assert (rl-executability-check (state CHECKING)))
   (retract ?r)
 )
