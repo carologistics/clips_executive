@@ -45,9 +45,9 @@ html_theme = 'alabaster'
 
 if local:
     extlinks = {
-        'docsite': ('https://carologistics.github.io/clips-executive/%s', '%s'),
+        'docsite': ('https://carologistics.github.io/clips_executive/%s', '%s'),
         # ('http://localhost:8000/%s', '%s'),
-        'source-master': ('https://github.com/carologistics/clips-executive/blob/master/%s', '%s'),
+        'source-master': ('https://github.com/carologistics/clip__executive/blob/master/%s', '%s'),
         'rosdoc': (f'https://docs.ros.org/en/{ros_distro}/p/%s', '%s'),
         'rostut': (f'https://docs.ros.org/en/{ros_distro}/%s', '%s'),
     }
