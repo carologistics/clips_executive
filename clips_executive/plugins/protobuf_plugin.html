@@ -100,12 +100,12 @@
              
   <section id="protobuf-plugin">
 <span id="usage-protobuf-plugin"></span><h1>Protobuf Plugin<a class="headerlink" href="#protobuf-plugin" title="Link to this heading"></a></h1>
-<p>Source code on <a class="reference external" href="https://github.com/carologistics/clips-executive/blob/master/cx_plugins/protobuf_plugin">GitHub</a>.</p>
+<p>Source code on <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_plugins/protobuf_plugin">GitHub</a>.</p>
 <div class="admonition-plugin-class admonition">
 <p class="admonition-title">Plugin Class</p>
 <p>cx::ProtobufPlugin</p>
 </div>
-<p>This plugin enables communication via protobuf through <a class="reference external" href="https://carologistics.github.io/clips-executive/protobuf_comm">protobuf_comm</a>, a C++ library to handle communication via Protocol Buffers (<a class="reference external" href="https://protobuf.dev/">protobuf</a>) using a simple framing protocol.</p>
+<p>This plugin enables communication via protobuf through <a class="reference external" href="https://carologistics.github.io/clips_executive/protobuf_comm">protobuf_comm</a>, a C++ library to handle communication via Protocol Buffers (<a class="reference external" href="https://protobuf.dev/">protobuf</a>) using a simple framing protocol.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This Plugin was ported from the fawkes and thus is subject to the GPLv2+ license.</p>
@@ -150,7 +150,7 @@ Supports absolute paths or relative paths using the share directories specified 
 </section>
 <section id="features">
 <h2>Features<a class="headerlink" href="#features" title="Link to this heading"></a></h2>
-<p>The utilized <a class="reference external" href="https://carologistics.github.io/clips-executive/protobuf_comm">protobuf_comm</a> library (de)-serializes proto using a framing protocol that other communication endpoints therefore need to adhere to, as well.
+<p>The utilized <a class="reference external" href="https://carologistics.github.io/clips_executive/protobuf_comm">protobuf_comm</a> library (de)-serializes proto using a framing protocol that other communication endpoints therefore need to adhere to, as well.
 Refer to it’s documentation to get details on the layout of the frame headers.</p>
 <p>It requires messages using <a class="reference external" href="https://protobuf.dev/programming-guides/proto2/">proto2</a> syntax that additionally define a <code class="docutils literal notranslate"><span class="pre">CompType</span></code> enum acting as a unique identifier (using a tmple <code class="docutils literal notranslate"><span class="pre">COMP_ID</span></code> and <code class="docutils literal notranslate"><span class="pre">MESSAGE_TYPE</span></code>.
 An example message is depicted below:</p>
@@ -170,7 +170,7 @@ An example message is depicted below:</p>
 The easiest way is to utilize the configuration options to specify directories that host proto definitions (<code class="docutils literal notranslate"><span class="pre">.proto</span></code> files).
 This automatically registers all found messages when the plugin is loaded in a CLIPS environment.</p>
 <p>It is also possible to instead register types explicitly by looking them up from a linked library.
-However, this requires to build a shared library from proto files and then link it together with the <a class="reference external" href="https://carologistics.github.io/clips-executive/cx_protobuf_plugin">cx_protobuf_plugin</a> plugin, creating a new linked plugin.</p>
+However, this requires to build a shared library from proto files and then link it together with the <a class="reference external" href="https://carologistics.github.io/clips_executive/cx_protobuf_plugin">cx_protobuf_plugin</a> plugin, creating a new linked plugin.</p>
 <p>In order to accomplish this, this plugin offers two cmake macros:</p>
 <div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="c"># Generates a new plugin called NEW_PLUGIN_NAME (should be a name in CamelCase, e.g., CustomProtobufPlugin) given a list of protobuf message definitions PROTO_FILES.</span>
 <span class="nb">cx_generate_linked_protobuf_plugin_from_proto</span><span class="p">(</span><span class="s">NEW_PLUGIN_NAME</span><span class="w"> </span><span class="s">PROTO_FILES</span><span class="p">)</span>
@@ -310,14 +310,14 @@ However, this requires to build a shared library from proto files and then link 
 </section>
 <section id="usage-example-register-message-via-configuration">
 <h2>Usage Example: Register Message via Configuration<a class="headerlink" href="#usage-example-register-message-via-configuration" title="Link to this heading"></a></h2>
-<p>A minimal working example is provided by the <a class="reference external" href="https://carologistics.github.io/clips-executive/cx_bringup">cx_bringup</a> package.</p>
+<p>A minimal working example is provided by the <a class="reference external" href="https://carologistics.github.io/clips_executive/cx_bringup">cx_bringup</a> package.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>cx_bringup<span class="w"> </span>cx_launch.py<span class="w"> </span>manager_config:<span class="o">=</span>plugin_examples/protobuf.yaml
 </pre></div>
 </div>
 <p>It registers a proto file using the configuration options and then creates two UDP broadcast peers communicating via ports <code class="docutils literal notranslate"><span class="pre">4445</span></code> and <code class="docutils literal notranslate"><span class="pre">4444</span></code> on <code class="docutils literal notranslate"><span class="pre">127.0.0.1</span></code>.</p>
 <section id="message">
 <span id="proto-msg-example"></span><h3>Message<a class="headerlink" href="#message" title="Link to this heading"></a></h3>
-<p>File <a class="reference external" href="https://github.com/carologistics/clips-executive/blob/master/cx_bringup/proto/cx_bringup/SearchRequest.proto">cx_bringup/proto/cx_bringup/SearchRequest.proto</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/proto/cx_bringup/SearchRequest.proto">cx_bringup/proto/cx_bringup/SearchRequest.proto</a>.</p>
 <div class="highlight-proto notranslate"><div class="highlight"><pre><span></span><span class="k">syntax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;proto2&quot;</span><span class="p">;</span>
 
 <span class="kd">message</span><span class="w"> </span><span class="nc">SearchRequest</span><span class="w"> </span><span class="p">{</span>
@@ -334,7 +334,7 @@ However, this requires to build a shared library from proto files and then link 
 </section>
 <section id="id1">
 <h3>Configuration<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
-<p>File <a class="reference external" href="https://github.com/carologistics/clips-executive/blob/master/cx_bringup/params/plugin_examples/protobuf.yaml">cx_bringup/params/plugin_examples/protobuf.yaml</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/params/plugin_examples/protobuf.yaml">cx_bringup/params/plugin_examples/protobuf.yaml</a>.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">clips_manager</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_protobuf&quot;</span><span class="p p-Indicator">]</span>
@@ -362,7 +362,7 @@ However, this requires to build a shared library from proto files and then link 
 </section>
 <section id="code">
 <h3>Code<a class="headerlink" href="#code" title="Link to this heading"></a></h3>
-<p>File <a class="reference external" href="https://github.com/carologistics/clips-executive/blob/master/cx_bringup/clips/plugin_examples/protobuf.clp">cx_bringup/clips/plugin_examples/protobuf.clp</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/protobuf.clp">cx_bringup/clips/plugin_examples/protobuf.clp</a>.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">protobuf-init-example-peer</span>
 <span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">peer</span><span class="w"> </span><span class="nv">?any-peer-id</span><span class="p">))</span>
 <span class="w">  </span><span class="nv">=&gt;</span>
@@ -409,7 +409,7 @@ However, this requires to build a shared library from proto files and then link 
 </section>
 <section id="usage-example-register-message-via-linked-plugin">
 <h2>Usage Example: Register Message via Linked Plugin<a class="headerlink" href="#usage-example-register-message-via-linked-plugin" title="Link to this heading"></a></h2>
-<p>A minimal working example is provided by the <a class="reference external" href="https://carologistics.github.io/clips-executive/cx_bringup">cx_bringup</a> package.</p>
+<p>A minimal working example is provided by the <a class="reference external" href="https://carologistics.github.io/clips_executive/cx_bringup">cx_bringup</a> package.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>cx_bringup<span class="w"> </span>cx_launch.py<span class="w"> </span>manager_config:<span class="o">=</span>plugin_examples/protobuf_linked.yaml
 </pre></div>
 </div>
@@ -421,7 +421,7 @@ Therefore, a linked plugin is generated:</p>
 </div>
 <section id="id2">
 <h3>Configuration<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
-<p>File <a class="reference external" href="https://github.com/carologistics/clips-executive/blob/master/cx_bringup/params/plugin_examples/protobuf_linked.yaml">cx_bringup/params/plugin_examples/protobuf_linked.yaml</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/params/plugin_examples/protobuf_linked.yaml">cx_bringup/params/plugin_examples/protobuf_linked.yaml</a>.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">clips_manager</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_protobuf&quot;</span><span class="p p-Indicator">]</span>
@@ -447,7 +447,7 @@ Therefore, a linked plugin is generated:</p>
 </section>
 <section id="id3">
 <h3>Code<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
-<p>File <a class="reference external" href="https://github.com/carologistics/clips-executive/blob/master/cx_bringup/clips/plugin_examples/protobuf-linked.clp">cx_bringup/clips/plugin_examples/protobuf-linked.clp</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/protobuf-linked.clp">cx_bringup/clips/plugin_examples/protobuf-linked.clp</a>.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">peer-send-msg</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">client</span><span class="w"> </span><span class="nv">?c-id</span><span class="p">)</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">protobuf-client-connected</span><span class="w"> </span><span class="nv">?c-id</span><span class="p">)</span>

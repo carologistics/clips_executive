@@ -99,7 +99,7 @@
              
   <section id="ros-param-plugin">
 <span id="usage-ros-param-plugin"></span><h1>ROS Param Plugin<a class="headerlink" href="#ros-param-plugin" title="Link to this heading"></a></h1>
-<p>Source code on <a class="reference external" href="https://github.com/carologistics/clips-executive/blob/master/cx_plugins/ros_param_plugin">GitHub</a>.</p>
+<p>Source code on <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_plugins/ros_param_plugin">GitHub</a>.</p>
 <div class="admonition-plugin-class admonition">
 <p class="admonition-title">Plugin Class</p>
 <p>cx::RosParamPlugin</p>
@@ -124,14 +124,14 @@
 </section>
 <section id="usage-example">
 <h2>Usage Example<a class="headerlink" href="#usage-example" title="Link to this heading"></a></h2>
-<p>A minimal working example is provided by the <a class="reference external" href="https://carologistics.github.io/clips-executive/cx_bringup">cx_bringup</a> package. Run it via:</p>
+<p>A minimal working example is provided by the <a class="reference external" href="https://carologistics.github.io/clips_executive/cx_bringup">cx_bringup</a> package. Run it via:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>cx_bringup<span class="w"> </span>cx_launch.py<span class="w"> </span>manager_config:<span class="o">=</span>plugin_examples/ros_param.yaml
 </pre></div>
 </div>
 <p>It calls all of the provided function to print some parameters.</p>
 <section id="id1">
 <h3>Configuration<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
-<p>File <a class="reference external" href="https://github.com/carologistics/clips-executive/blob/master/cx_bringup/params/plugin_examples/ros_param.yaml">cx_bringup/params/plugin_examples/ros_param.yaml</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/params/plugin_examples/ros_param.yaml">cx_bringup/params/plugin_examples/ros_param.yaml</a>.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">/**</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">unused_param</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;i</span><span class="nv"> </span><span class="s">am</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">used</span><span class="nv"> </span><span class="s">anywhere&quot;</span>
@@ -153,7 +153,7 @@
 </section>
 <section id="code">
 <h3>Code<a class="headerlink" href="#code" title="Link to this heading"></a></h3>
-<p>File <a class="reference external" href="https://github.com/carologistics/clips-executive/blob/master/cx_bringup/clips/plugin_examples/ros-param.clp">cx_bringup/clips/plugin_examples/ros-param.clp</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/ros-param.clp">cx_bringup/clips/plugin_examples/ros-param.clp</a>.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">info</span><span class="w"> </span><span class="s">&quot;(ros-param-get-value \&quot;environments\&quot; (create$ not-found))&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
 <span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;    &quot;</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-param-get-value</span><span class="w"> </span><span class="s">&quot;environments&quot;</span><span class="w"> </span><span class="p">(</span><span class="nv">create$</span><span class="w"> </span><span class="nv">not-found</span><span class="p">))</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
 

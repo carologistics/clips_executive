@@ -85,11 +85,11 @@
 CLIPS uses a production rule system, where knowledge is represented as if-then rules. These rules operate on facts, which represent data or conditions in the system. The inference engine (based on the <a class="reference external" href="https://en.wikipedia.org/wiki/Rete_algorithm">Rete algorithm</a>) matches rules against facts and executes the applicable rules based on a conflict resolution strategy.
 Once no rules can be activated anymore, the execution is halted.</p>
 <p>The documentation assumes a basic understanding of CLIPS. If you have never worked with CLIPS before, check out the documentation at <a class="reference external" href="https://clipsrules.net/">clipsrules.net</a> to get familiar with its functionalities.</p>
-<p>The <a class="reference external" href="https://carologistics.github.io/clips-executive/clips_vendor">clips_vendor</a> package provides a packaged version of CLIPS suitable for the ROS ecosystem (and is also used by the CLIPS-Executive).</p>
+<p>The <a class="reference external" href="https://carologistics.github.io/clips_executive/clips_vendor">clips_vendor</a> package provides a packaged version of CLIPS suitable for the ROS ecosystem (and is also used by the CLIPS-Executive).</p>
 </section>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
-<p>The heart of the ROS2 CLIPS-Executive is the CLIPS Environment Manager node of the <a class="reference external" href="https://carologistics.github.io/clips-executive/cx_clips_env_manager">cx_clips_env_manager</a> package that allows creating and destroying CLIPS environments and extending these environments through dynamically loadable plugins (e.g., to inject C++ functions).</p>
+<p>The heart of the ROS2 CLIPS-Executive is the CLIPS Environment Manager node of the <a class="reference external" href="https://carologistics.github.io/clips_executive/cx_clips_env_manager">cx_clips_env_manager</a> package that allows creating and destroying CLIPS environments and extending these environments through dynamically loadable plugins (e.g., to inject C++ functions).</p>
 <p>Several plugins are provided out-of-the-box that enable interfacing with ROS as well as other useful features. See the <a class="reference internal" href="plugins/index.html#plugins"><span class="std std-ref">CLIPS Plugins</span></a> page for more information.</p>
 <section id="package-index">
 <h3>Package Index<a class="headerlink" href="#package-index" title="Link to this heading"></a></h3>
