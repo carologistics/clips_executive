@@ -56,7 +56,7 @@ Navigate to the ``params`` directory of the ``cx_tutorial_agents`` package from 
 .. code-block:: bash
 
    cd ~/ros2/cx_tutorial_ws/src/cx_tutorial_agents/params
-   wget -O tf2_tracked_pose.yaml https://raw.githubusercontent.com/carologistics/clips_executive/master/tutorials/cx_tutorial_agents/params/tf2_tracked_pose.yaml
+   wget -O tf2_tracked_pose.yaml https://raw.githubusercontent.com/carologistics/clips_executive/master/cx_tutorial_agents/params/tf2_tracked_pose.yaml
 
 This adds the file ``tf2_tracked_pose.yaml`` for setting up the |CX| for this tutorial.
 
@@ -65,7 +65,7 @@ Next, a CLIPS file ``tf2_tracked_pose.clp`` can be downloaded to the ``clips`` d
 .. code-block:: bash
 
    cd ~/ros2/cx_tutorial_ws/src/cx_tutorial_agents/clips
-   wget -O tf2_tracked_pose.clp https://raw.githubusercontent.com/carologistics/clips_executive/master/tutorials/cx_tutorial_agents/clips/tf2_tracked_pose.clp
+   wget -O tf2_tracked_pose.clp https://raw.githubusercontent.com/carologistics/clips_executive/master/cx_tutorial_agents/clips/tf2_tracked_pose.clp
 
 The plugin code is taken from the :docsite:`Tf2PoseTrackerPlugin <clips_executive/plugins/tf2_pose_tracker_plugin>`. The code can be found on :source-master:`GitHub <cx_plugins/tf2_pose_tracker_plugin>`.
 

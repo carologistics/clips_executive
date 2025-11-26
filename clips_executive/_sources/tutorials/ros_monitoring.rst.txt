@@ -39,7 +39,7 @@ Navigate to the ``params`` directory of the ``cx_tutorial_agents`` package from 
 .. code-block:: bash
 
    cd ~/ros2/cx_tutorial_ws/src/cx_tutorial_agents/params
-   wget -O turtlesim.yaml https://raw.githubusercontent.com/carologistics/clips_executive/master/tutorials/cx_tutorial_agents/params/turtlesim.yaml
+   wget -O turtlesim.yaml https://raw.githubusercontent.com/carologistics/clips_executive/master/cx_tutorial_agents/params/turtlesim.yaml
 
 This adds the file ``turtlesim.yaml``.
 
@@ -48,8 +48,8 @@ Next, two CLIPS files can be downloaded to the ``clips`` directory:
 .. code-block:: bash
 
    cd ~/ros2/cx_tutorial_ws/src/cx_tutorial_agents/clips
-   wget -O turtlesim_monitor.clp https://raw.githubusercontent.com/carologistics/clips_executive/master/tutorials/cx_tutorial_agents/clips/turtlesim_monitor.clp
-   wget -O turtlesim_teleport.clp https://raw.githubusercontent.com/carologistics/clips_executive/master/tutorials/cx_tutorial_agents/clips/turtlesim_teleport.clp
+   wget -O turtlesim_monitor.clp https://raw.githubusercontent.com/carologistics/clips_executive/master/cx_tutorial_agents/clips/turtlesim_monitor.clp
+   wget -O turtlesim_teleport.clp https://raw.githubusercontent.com/carologistics/clips_executive/master/cx_tutorial_agents/clips/turtlesim_teleport.clp
 
 2 Configuring the |CX|
 ^^^^^^^^^^^^^^^^^^^^^^

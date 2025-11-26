@@ -154,13 +154,13 @@ When working with the API you should familiarize yourself with the <a class="ref
 <h3><a class="toc-backref" href="#id4" role="doc-backlink">1 Obtaining the Files</a><a class="headerlink" href="#obtaining-the-files" title="Link to this heading"></a></h3>
 <p>Navigate to the <code class="docutils literal notranslate"><span class="pre">params</span></code> directory of the <code class="docutils literal notranslate"><span class="pre">cx_tutorial_agents</span></code> package from the <a class="reference internal" href="hello_world.html"><span class="doc">Hello World tutorial</span></a> and download the configuration file using the following command:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>~/ros2/cx_tutorial_ws/src/cx_tutorial_agents/params
-wget<span class="w"> </span>-O<span class="w"> </span>tf2_tracked_pose.yaml<span class="w"> </span>https://raw.githubusercontent.com/carologistics/clips_executive/master/tutorials/cx_tutorial_agents/params/tf2_tracked_pose.yaml
+wget<span class="w"> </span>-O<span class="w"> </span>tf2_tracked_pose.yaml<span class="w"> </span>https://raw.githubusercontent.com/carologistics/clips_executive/master/cx_tutorial_agents/params/tf2_tracked_pose.yaml
 </pre></div>
 </div>
 <p>This adds the file <code class="docutils literal notranslate"><span class="pre">tf2_tracked_pose.yaml</span></code> for setting up the ROS2 CLIPS-Executive for this tutorial.</p>
 <p>Next, a CLIPS file <code class="docutils literal notranslate"><span class="pre">tf2_tracked_pose.clp</span></code> can be downloaded to the <code class="docutils literal notranslate"><span class="pre">clips</span></code> directory, providing a minimal example to test the plugin:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>~/ros2/cx_tutorial_ws/src/cx_tutorial_agents/clips
-wget<span class="w"> </span>-O<span class="w"> </span>tf2_tracked_pose.clp<span class="w"> </span>https://raw.githubusercontent.com/carologistics/clips_executive/master/tutorials/cx_tutorial_agents/clips/tf2_tracked_pose.clp
+wget<span class="w"> </span>-O<span class="w"> </span>tf2_tracked_pose.clp<span class="w"> </span>https://raw.githubusercontent.com/carologistics/clips_executive/master/cx_tutorial_agents/clips/tf2_tracked_pose.clp
 </pre></div>
 </div>
 <p>The plugin code is taken from the <a class="reference external" href="https://carologistics.github.io/clips-executive/clips_executive/plugins/tf2_pose_tracker_plugin">Tf2PoseTrackerPlugin</a>. The code can be found on <a class="reference external" href="https://github.com/carologistics/clips-executive/blob/master/cx_plugins/tf2_pose_tracker_plugin">GitHub</a>.</p>
