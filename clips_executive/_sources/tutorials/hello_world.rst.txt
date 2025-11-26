@@ -111,7 +111,7 @@ To achieve  this, navigate to the ``params`` directory and download the example 
 .. code-block:: bash
 
    cd ~/ros2/cx_tutorial_ws/src/cx_tutorial_agents/params
-   wget -O hello_world.yaml https://raw.githubusercontent.com/carologistics/clips_executive/master/cx_tutorial_agents/clips/hello_world.yaml
+   wget -O hello_world.yaml https://raw.githubusercontent.com/carologistics/clips_executive/master/cx_tutorial_agents/params/hello_world.yaml
 
 This adds the file ``hello_world.yaml`` with the following content:
 
