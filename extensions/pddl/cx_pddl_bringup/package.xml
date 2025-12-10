@@ -11,6 +11,7 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>cx_ros_comm_gen</depend>
+  <depend>cx_pddl_msgs</depend>
   <exec_depend>cx_bringup</exec_depend>
   <exec_depend>cx_pddl_manager</exec_depend>
 
