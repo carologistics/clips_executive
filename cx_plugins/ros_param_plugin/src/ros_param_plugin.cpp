@@ -40,7 +40,7 @@ bool RosParamPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
   auto context = CLIPSEnvContext::get_context(env.get());
   RCLCPP_INFO(*logger_, "Initializing plugin for environment %s", context->env_name_.c_str());
   clips::AddUDF(
-    env.get(), "ros-param-get-value", "v", 2, 2, ";sy;*",
+    env.get(), "ros-param-get-value", "*", 2, 2, ";sy;*",
     [](clips::Environment * env, clips::UDFContext * udfc, clips::UDFValue * out) {
       auto instance = static_cast<RosParamPlugin *>(udfc->context);
       clips::UDFValue param_name;
