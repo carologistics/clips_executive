@@ -326,16 +326,19 @@ class MultiRobotMaskablePPO(MaskablePPO):
         with th.no_grad():
             # Convert to pytorch tensor or to TensorDict
             obs_tensor = obs_as_tensor(self._last_obs, self.device)
-            # This is the only change related to invalid action masking
 
             if use_masking:
                 action_masks = get_action_masks(env)
                 if np.sum(action_masks) == 0:
-                    return
-            actions, values, log_probs = self.policy(obs_tensor, action_masks=action_masks)
-            actions = actions.cpu().numpy()
+                    actions = [-1]
+                else:
+                    actions, values, log_probs = self.policy(obs_tensor, action_masks=action_masks)
+                    actions = actions.cpu().numpy()
+            else:
+                actions, values, log_probs = self.policy(obs_tensor)
+                actions = actions.cpu().numpy()
         new_obs, rewards, dones, infos = env.step(actions)
-        if infos[0].get('outcome') == 'NO-GOAL-ID':
+        if infos[0].get('outcome') == 'NO-ACTION-FOR-ROBOT':
             return
         self.num_timesteps += env.num_envs
         if self.no_callback:

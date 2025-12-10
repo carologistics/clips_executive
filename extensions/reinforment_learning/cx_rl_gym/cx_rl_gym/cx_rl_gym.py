@@ -38,6 +38,7 @@ from cx_rl_interfaces.srv import (
     ExecActionSelection,
     GetActionList,
     GetActionListRobot,
+    GetEpisodeEnd,
     GetObservableObjects,
     GetObservablePredicates,
     GetPredefinedObservables,
@@ -71,35 +72,34 @@ class CXRLGym(Env):
         self.node = node
         self.node.get_logger().info('cxrl_gym init')
 
-        self.set_rl_mode_client = self.node.create_client(SetRLMode, '/set_rl_mode')
+        self.set_rl_mode_client = self.node.create_client(SetRLMode, 'set_rl_mode')
         self.get_action_list_executable_client = self.node.create_client(
-            GetActionList, '/cx_rl_node/get_action_list_executable'
+            GetActionList, 'get_action_list_executable'
         )
         self.get_action_list_executable_for_robot_client = self.node.create_client(
-            GetActionListRobot, '/cx_rl_node/get_action_list_executable_for_robot'
+            GetActionListRobot, 'get_action_list_executable_for_robot'
         )
         self.get_observable_objects_client = self.node.create_client(
-            GetObservableObjects, '/cx_rl_node/get_observable_objects'
+            GetObservableObjects, 'get_observable_objects'
         )
         self.get_observable_predicates_client = self.node.create_client(
-            GetObservablePredicates, '/cx_rl_node/get_observable_predicates'
+            GetObservablePredicates, 'get_observable_predicates'
         )
         self.get_predefined_observables_client = self.node.create_client(
-            GetPredefinedObservables, '/cx_rl_node/get_predefined_observables'
+            GetPredefinedObservables, 'get_predefined_observables'
         )
+        self.get_episode_end_client = self.node.create_client(GetEpisodeEnd, 'get_episode_end')
         self.create_rl_env_state_client = self.node.create_client(
-            CreateRLEnvState, '/cx_rl_node/create_rl_env_state'
+            CreateRLEnvState, 'create_rl_env_state'
         )
 
-        self.reset_cx_client = ActionClient(self.node, ResetCX, '/cx_rl_node/reset_cx')
+        self.reset_cx_client = ActionClient(self.node, ResetCX, 'reset_cx')
         self.reset_cx_result = None
         self.reset_cx_send_goal_future = None
         self.reset_cx_get_result_future = None
         self.reset_cx_goal_handle = None
 
-        self.get_free_robot_client = ActionClient(
-            self.node, GetFreeRobot, '/cx_rl_node/get_free_robot'
-        )
+        self.get_free_robot_client = ActionClient(self.node, GetFreeRobot, 'get_free_robot')
         self.get_free_robot_result = None
         self.get_free_robot_send_goal_future = None
         self.get_free_robot_get_result_future = None
@@ -118,9 +118,7 @@ class CXRLGym(Env):
         self.action_selection_results = []
         self.action_selection_goal_handles = []
 
-        self.action_selection_client = ActionClient(
-            self.node, ActionSelection, '/action_selection'
-        )
+        self.action_selection_client = ActionClient(self.node, ActionSelection, 'action_selection')
         for i in range(self.number_of_robots):
             self.action_selection_send_goal_futures.append(None)
             self.action_selection_get_result_futures.append(None)
@@ -144,8 +142,8 @@ class CXRLGym(Env):
 
         # Action space
         action_space = self.generate_action_space()
-        sorted_actions = sorted(set(action_space))
-        set_keys_action = range(0, len(sorted_actions))
+        sorted_actions = ['no-op'] + sorted(set(action_space))
+        set_keys_action = range(-1, len(sorted_actions))
         self.action_dict = dict(zip(set_keys_action, sorted_actions))
         self.inv_action_dict = dict(zip(sorted_actions, set_keys_action))
         self.n_actions = len(sorted_actions)
@@ -187,11 +185,13 @@ class CXRLGym(Env):
                 {self.next_robot}!'
             )
             self.robot_locked = False
-            state = self.create_rl_env_state()
-            reward = 0
-            terminated = False
+            # state = self.create_rl_env_state()
+            state = self.get_observation()
+
+            # TODO: call service to ask for reward, termination
+            terminated, reward = self.get_episode_end()
             truncated = False
-            info = {'outcome': 'NO-GOAL-ID'}
+            info = {'outcome': 'NO-ACTION-FOR-ROBOT'}
             return state, reward, terminated, truncated, info
 
         action_msg = ActionSelection.Goal()
@@ -561,6 +561,31 @@ class CXRLGym(Env):
 
         rl_env_state = response.state
         return rl_env_state
+
+    def get_episode_end(self) -> tuple[bool, int]:
+        """
+        Check whether the current RL episode has ended.
+
+        Calls the `CheckForEpisodeEnd` service to determine if the episode
+        should terminate and obtain the corresponding reward.
+
+        Returns:
+            Tuple[bool, int]: (episode_end, reward)
+                - episode_end (bool): Whether the episode has ended.
+                - reward (int): Reward for the transition.
+        """
+        while not self.get_episode_end_client.wait_for_service(1.0):
+            self.node.get_logger().info('Waiting for service (get_episode_end) to be ready...')
+
+        request = GetEpisodeEnd.Request()
+        future = self.get_episode_end_client.call_async(request)
+
+        while not future.done():
+            time.sleep(self.time_sleep)
+
+        response = future.result()
+
+        return response.episode_end, response.reward
 
     def exec_action_selection(
         self, request: ExecActionSelection.Request, response: ExecActionSelection.Response

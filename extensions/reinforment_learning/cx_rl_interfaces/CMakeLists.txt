@@ -13,6 +13,7 @@ set(SERVICES
   "srv/SetRLMode.srv"
   "srv/GetActionID.srv"
   "srv/GetActionListRobot.srv"
+  "srv/GetEpisodeEnd.srv"
   "srv/GetObservableObjects.srv"
   "srv/GetObservablePredicates.srv"
   "srv/GetPredefinedObservables.srv"
