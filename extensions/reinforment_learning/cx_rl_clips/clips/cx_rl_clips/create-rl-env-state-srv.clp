@@ -16,7 +16,7 @@
 (build
 (str-cat
 "(deffunction " ?*CX-RL-NODE-NAME* "/create_rl_env_state-service-callback (?service-name ?request ?response)
-<D-m><D-s> (bind ?state-string (create-observation-string))
+  (bind ?state-string (cx-rl-create-observation-string \"" ?*CX-RL-NODE-NAME* "\"))
   (ros-msgs-set-field ?response \"state\" ?state-string)
 )"
 )

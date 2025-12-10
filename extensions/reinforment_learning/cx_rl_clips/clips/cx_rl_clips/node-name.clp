@@ -13,21 +13,6 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
-(defrule reset-game-stage-zero
-  (declare (salience ?*SALIENCE-RESET-GAME-HIGH*))
-  ?r <- (reset-game (stage STAGE-0))
-  (cx-rl-node (name ?name) (mode ?mode))
-  (cx-rl-interfaces-reset-cx-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr))
-  =>
-  (reset)
-  (load-facts reset-save)
-  (delayed-do-for-all-facts ((?r rl-action))
-    TRUE
-    (retract ?r)
-  )
-  (retract ?r)
-  (assert (cx-rl-interfaces-reset-cx-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr)))
-  (assert (cx-rl-node (name ?name) (mode ?mode)))
-  (assert (reset-game-finished))
-  (assert (rl-current-action-space (state PENDING)))
+(defglobal
+  ?*CX-RL-NODE-NAME* = "/cx_rl_node"
 )

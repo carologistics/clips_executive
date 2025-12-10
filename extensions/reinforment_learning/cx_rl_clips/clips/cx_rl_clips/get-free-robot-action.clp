@@ -14,99 +14,125 @@
 ; limitations under the License.
 
 (defrule get-free-robot-action-server-init
-    "Create an action server handling requests to determine the robot waiting for a goal selection"
-	(cx-rl-node (name ?name))
-    (not (cx-rl-interfaces-get-free-robot-server (name ?n&:(eq ?n (str-cat ?name "/get_free_robot")))))
-    (not (executive-finalize))
+  "Create an action server handling requests to determine the robot waiting for a goal selection"
+  (cx-rl-node (name ?node-name))
+  (not (cx-rl-interfaces-get-free-robot-server (name ?name&:(eq ?name (str-cat ?node-name "/get_free_robot")))))
+  (not (executive-finalize))
 =>
-    (cx-rl-interfaces-get-free-robot-create-server (str-cat ?name "/get_free_robot"))
-    (printout info "Created server for " ?name "/get_free_robot" crlf)
+  (bind ?name (str-cat ?node-name "/get_free_robot"))
+  (cx-rl-interfaces-get-free-robot-create-server ?name)
+  (printout ?*CX-RL-LOG-LEVEL* "Created server for " ?name  crlf)
+)
+
+(deffunction cx-rl-interfaces-get-free-robot-handle-goal-callback (?server ?goal ?uuid)
+    (return 2)
+)
+
+(deffunction cx-rl-interfaces-get-free-robot-cancel-goal-callback (?server ?goal ?goal-handle)
+    (return 1)
 )
 
 (defrule get-free-robot-goal-accepted-start-search
-    (cx-rl-interfaces-get-free-robot-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr))
-    (not (get-free-robot (uuid ?uuid&:(eq ?uuid (cx-rl-interfaces-get-free-robot-server-goal-handle-get-goal-id ?ptr)))))
-    (time ?now)
+  (cx-rl-node (name ?node))
+  (cx-rl-interfaces-get-free-robot-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr))
+  (test (str-index ?node ?server))
+  (not (rl-ros-action-meta-get-free-robot (node ?node) (uuid ?uuid&:(eq ?uuid (cx-rl-interfaces-get-free-robot-server-goal-handle-get-goal-id ?ptr)))))
+  (time ?now)
 =>
-    (if (not (cx-rl-interfaces-get-free-robot-server-goal-handle-is-canceling ?ptr)) then
-        (bind ?uuid (cx-rl-interfaces-get-free-robot-server-goal-handle-get-goal-id ?ptr))
-        (assert (get-free-robot (uuid ?uuid) (robot "") (last-search ?now) (found FALSE)))
-    else
-        (printout error "Goal immediately canceled" crlf)
-    )
+  (if (not (cx-rl-interfaces-get-free-robot-server-goal-handle-is-canceling ?ptr)) then
+      (bind ?uuid (cx-rl-interfaces-get-free-robot-server-goal-handle-get-goal-id ?ptr))
+      (assert (rl-ros-action-meta-get-free-robot (node ?node) (uuid ?uuid) (robot "") (last-search ?now) (found FALSE)))
+  else
+      (printout ?*CX-RL-LOG-LEVEL* "Goal immediately canceled" crlf)
+  )
 )
 
-(defrule get-free-robot-search
-    (cx-rl-interfaces-get-free-robot-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr))
-    ?gfr <- (get-free-robot (uuid ?uuid) (robot "") (last-search ?last) (found FALSE))
-    (time ?now&:(> (- ?now ?last) 1))
-    (test (eq ?uuid (cx-rl-interfaces-get-free-robot-server-goal-handle-get-goal-id ?ptr)))
+(defrule get-free-robot-robot-found
+  (cx-rl-node (name ?node))
+  (cx-rl-interfaces-get-free-robot-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr))
+  (test (str-index ?node ?server))
+  ?gfr <- (rl-ros-action-meta-get-free-robot (node ?node) (uuid ?uuid) (robot "") (last-search ?last) (found FALSE) (abort-action FALSE))
+  (test (eq ?uuid (cx-rl-interfaces-get-free-robot-server-goal-handle-get-goal-id ?ptr)))
+  (rl-robot (node ?node) (name ?robot-name) (waiting TRUE))
+  (rl-action (node ?node) (is-selected FALSE) (assigned-to ?robot-name))
+  (rl-current-action-space (node ?node) (state DONE))
 =>
-    (bind ?robot NONE)
-    (do-for-all-facts ((?rw rl-robot))
-            (eq ?rw:waiting TRUE)
-        (bind ?r ?rw:name)
-        (do-for-all-facts ((?a rl-action))
-                (and    (eq ?a:is-selected FALSE)
-                        (eq ?a:assigned-to ?r))
-            (bind ?robot ?r)
-            (break)
-        )
-    )
-    (if (eq ?robot NONE) then
-        (bind ?feedback (cx-rl-interfaces-get-free-robot-feedback-create))
-        (cx-rl-interfaces-get-free-robot-feedback-set-field ?feedback "feedback" "No free robot found, retrying...")
-        (cx-rl-interfaces-get-free-robot-server-goal-handle-publish-feedback ?ptr ?feedback)
-        (cx-rl-interfaces-get-free-robot-feedback-destroy ?feedback)
-        (modify ?gfr (last-search ?now))
-    else
-        (modify ?gfr (robot (str-cat ?robot)) (last-search ?now) (found TRUE))
-    )
+  (modify ?gfr (robot (str-cat ?robot-name)) (last-search (now)) (found TRUE))
+)
+
+(defrule get-free-robot-episode-end
+  (cx-rl-node (name ?node))
+  (cx-rl-interfaces-get-free-robot-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr))
+  (test (str-index ?node ?server))
+  ?gfr <- (rl-ros-action-meta-get-free-robot (node ?node) (uuid ?uuid) (robot "") (last-search ?last) (found FALSE) (abort-action FALSE))
+  (test (eq ?uuid (cx-rl-interfaces-get-free-robot-server-goal-handle-get-goal-id ?ptr)))
+  (rl-robot (node ?node) (name ?robot-name) (waiting TRUE))
+  (rl-episode-end (node ?node) (success ?success))
+  (rl-current-action-space (node ?node) (state DONE))
+=>
+  (modify ?gfr (last-search (now)) (found TRUE))
+)
+
+(defrule get-free-robot-search-update
+  (cx-rl-node (name ?node))
+  (cx-rl-interfaces-get-free-robot-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr))
+  (test (str-index ?node ?server))
+  ?gfr <- (rl-ros-action-meta-get-free-robot (node ?node) (uuid ?uuid) (robot "") (last-search ?last) (found FALSE) (abort-action FALSE))
+  (time ?now&:(> (- ?now ?last) ?*CX-RL-GET-FREE-ROBOT-SEARCH-UPDATE-INTERVAL*))
+  (test (eq ?uuid (cx-rl-interfaces-get-free-robot-server-goal-handle-get-goal-id ?ptr)))
+=>
+  (bind ?feedback (cx-rl-interfaces-get-free-robot-feedback-create))
+  (cx-rl-interfaces-get-free-robot-feedback-set-field ?feedback "feedback" "No free robot found, retrying...")
+  (cx-rl-interfaces-get-free-robot-server-goal-handle-publish-feedback ?ptr ?feedback)
+  (cx-rl-interfaces-get-free-robot-feedback-destroy ?feedback)
+  (modify ?gfr (last-search ?now))
 )
 
 (defrule get-free-robot-abort
-    (declare (salience ?*SALIENCE-RL-FIRST*))
-    (abort-get-free-robot)
-    ?ag <- (cx-rl-interfaces-get-free-robot-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr))
-    ?gfr <- (get-free-robot (robot ?robot) (last-search ?last) (found ?found) (uuid ?uuid))
-    (test (eq ?uuid (cx-rl-interfaces-get-free-robot-server-goal-handle-get-goal-id ?ptr)))
+  (cx-rl-node (name ?node))
+  ?ag <- (cx-rl-interfaces-get-free-robot-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr))
+  (test (str-index ?node ?server))
+  ?gfr <- (rl-ros-action-meta-get-free-robot (node ?node) (robot ?robot) (last-search ?last) (found ?found) (uuid ?uuid) (abort-action TRUE))
+  (test (eq ?uuid (cx-rl-interfaces-get-free-robot-server-goal-handle-get-goal-id ?ptr)))
 =>
-    (printout info "ResetCX: Aborting robot search" crlf)
-    (bind ?result (cx-rl-interfaces-get-free-robot-result-create))
-    (cx-rl-interfaces-get-free-robot-result-set-field ?result "robot" "Aborted")
-    (cx-rl-interfaces-get-free-robot-server-goal-handle-abort ?ptr ?result)
-    (cx-rl-interfaces-get-free-robot-result-destroy ?result)
-    (cx-rl-interfaces-get-free-robot-server-goal-handle-destroy ?ptr)
-    (retract ?gfr)
-    (retract ?ag)
+  (printout ?*CX-RL-LOG-LEVEL* "ResetCX: Aborting robot search" crlf)
+  (bind ?result (cx-rl-interfaces-get-free-robot-result-create))
+  (cx-rl-interfaces-get-free-robot-result-set-field ?result "robot" "Aborted")
+  (cx-rl-interfaces-get-free-robot-server-goal-handle-abort ?ptr ?result)
+  (cx-rl-interfaces-get-free-robot-result-destroy ?result)
+  (cx-rl-interfaces-get-free-robot-server-goal-handle-destroy ?ptr)
+  (retract ?gfr)
+  (retract ?ag)
 )
 
 (defrule get-free-robot-search-done
-    ?ag <- (cx-rl-interfaces-get-free-robot-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr))
-    ?gfr <- (get-free-robot (robot ?robot) (last-search ?last) (found TRUE) (uuid ?uuid))
-    (test (eq ?uuid (cx-rl-interfaces-get-free-robot-server-goal-handle-get-goal-id ?ptr)))
+  ?ag <- (cx-rl-interfaces-get-free-robot-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr))
+  ?gfr <- (rl-ros-action-meta-get-free-robot (robot ?robot) (last-search ?last) (found TRUE) (uuid ?uuid) (abort-action FALSE))
+  (test (eq ?uuid (cx-rl-interfaces-get-free-robot-server-goal-handle-get-goal-id ?ptr)))
 =>
-    (printout green "Free robot found: " ?robot crlf)
-    (bind ?result (cx-rl-interfaces-get-free-robot-result-create))
-    (cx-rl-interfaces-get-free-robot-result-set-field ?result "robot" ?robot)
-    (cx-rl-interfaces-get-free-robot-server-goal-handle-succeed ?ptr ?result)
-    (cx-rl-interfaces-get-free-robot-result-destroy ?result)
-    (cx-rl-interfaces-get-free-robot-server-goal-handle-destroy ?ptr)
-    (retract ?gfr)
-    (retract ?ag)
+  (printout ?*CX-RL-LOG-LEVEL* "Free robot found: " ?robot crlf)
+  (bind ?result (cx-rl-interfaces-get-free-robot-result-create))
+  (if (neq ?robot "") then
+  (cx-rl-interfaces-get-free-robot-result-set-field ?result "robot" ?robot)
+  )
+  (cx-rl-interfaces-get-free-robot-server-goal-handle-succeed ?ptr ?result)
+  (cx-rl-interfaces-get-free-robot-result-destroy ?result)
+  (cx-rl-interfaces-get-free-robot-server-goal-handle-destroy ?ptr)
+  (retract ?gfr)
+  (retract ?ag)
 )
 
 (defrule get-free-robot-server-cleanup
-    (executive-finalize)
-    (cx-rl-interfaces-get-free-robot-server (name ?server))
+  (executive-finalize)
+  (cx-rl-interfaces-get-free-robot-server (name ?server))
 =>
-    (cx-rl-interfaces-get-free-robot-destroy-server ?server)
+  (cx-rl-interfaces-get-free-robot-destroy-server ?server)
 )
 
 (defrule get-free-robot-accepted-goal-cleanup
-    (executive-finalize)
-    ?ag <- (cx-rl-interfaces-get-free-robot-accepted-goal (server-goal-handle-ptr ?ptr))
+  (executive-finalize)
+  ?ag <- (cx-rl-interfaces-get-free-robot-accepted-goal (server-goal-handle-ptr ?ptr))
 =>
-    (cx-rl-interfaces-get-free-robot-server-goal-handle-destroy ?ptr)
-    (retract ?ag)
+  (cx-rl-interfaces-get-free-robot-server-goal-handle-destroy ?ptr)
+  (retract ?ag)
 )

@@ -15,14 +15,14 @@
 
 (build (str-cat
 "(deffunction " ?*CX-RL-NODE-NAME* "/get_action_list_executable-service-callback (?service-name ?request ?response) \
-    (printout info \"Generating list of all executable actions\" crlf) \
+    (printout ?*CX-RL-LOG-LEVEL* \"Generating list of all executable actions\" crlf) \
     (bind ?action-list (create$)) \
     (do-for-all-facts ((?action rl-action)) \
-            (eq ?action:is-selected FALSE) \
+            (and (eq ?action:is-selected FALSE) (eq ?action:node \"" ?*CX-RL-NODE-NAME* "\")) \
         (bind ?action-string (str-cat ?action:id \"|\" ?action:name)) \
-        (printout info "\Executable action: \" ?action-string crlf) \
         (bind ?action-list (insert$ ?action-list 1 ?action-string)) \
     ) \
+    (printout ?*CX-RL-LOG-LEVEL* "\Executable actions: \" ?action-list crlf) \
     (ros-msgs-set-field ?response \"actions\" ?action-list) \
 )"
 ))

@@ -14,19 +14,19 @@
 ; limitations under the License.
 
 (build (str-cat
-"(deffunction " ?*CX-RL-NODE-NAME* "/get_observable_objects-service-callback (?service-name ?request ?response)
-    (bind ?t (ros-msgs-get-field ?request \"type\"))
-    (printout ?*CX-RL-LOG-LEVEL* \"Collecting cxrl observable objects of type \" ?t crlf)
-    (bind ?obj-list (create$))
-    (do-for-all-facts ((?ot rl-observable-type))
-            (and (eq ?ot:type (sym-cat ?t)) (eq ?ot:node \"" ?*CX-RL-NODE-NAME* "\"))
-        (bind ?obj-list ?ot:objects)
-        (break)
+"(deffunction " ?*CX-RL-NODE-NAME* "/get_episode_end-service-callback (?service-name ?request ?response)
+    (bind ?end FALSE)
+    (bind ?reward 0)
+    (do-for-fact ((?end-f rl-episode-end))
+        (eq ?end-f:node \"" ?*CX-RL-NODE-NAME* "\")
+        (bind ?end TRUE)
+        (if ?end-f:success then
+            (bind ?reward ?*REWARD-EPISODE-SUCCESS*)
+          else
+            (bind ?reward ?*REWARD-EPISODE-FAILURE*)
+        )
     )
-    (if (eq ?obj-list (create$)) then
-        (bind ?obj-list (insert$ ?obj-list 1 \"Not found\"))
-    )
-
-    (ros-msgs-set-field ?response \"objects\" ?obj-list)
+    (ros-msgs-set-field ?response \"episode_end\" ?end)
+    (ros-msgs-set-field ?response \"reward\" ?reward)
 )"
 ))

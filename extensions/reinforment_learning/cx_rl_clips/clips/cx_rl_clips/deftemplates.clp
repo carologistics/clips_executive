@@ -14,33 +14,49 @@
 ; limitations under the License.
 
 (defglobal
-  ?*SALIENCE-RL-FIRST* = 10000
-  ?*SALIENCE-RL-HIGH* = 1000
-  ?*SALIENCE-ROBOT-INIT* = 501
-  ?*SALIENCE-ACTION-EXECUTABLE-CHECK* = 500
-  ?*SALIENCE-RL-EPISODE-END-SUCCESS* = 500
-  ?*SALIENCE-ROBOT-ASSIGNMENT* = 499
-  ?*SALIENCE-RL-EPISODE-END-FAILURE* = 499
-  ?*SALIENCE-RL-SELECTION* = 498
+  ?*CX-RL-LOG-LEVEL* = info
 
-  ?*SALIENCE-RESET-GAME-HIGH* = 1000
-  ?*SALIENCE-RESET-GAME-MIDDLE* = 800
-  ?*SALIENCE-RESET-GAME-LOW* = 300
+  ?*CX-RL-GET-FREE-ROBOT-SEARCH-UPDATE-INTERVAL* = 5
   ?*RESET-GAME-TIMER* = 1.0
+
+  ?*REWARD-EPISODE-SUCCESS* = 100
+  ?*REWARD-EPISODE-FAILURE* = -100
+
+  ?*CX-RL-SERVICES* = (create$
+      create_rl_env_state CreateRLEnvState
+      get_action_list_executable_for_robot GetActionListRobot
+      get_action_list_executable GetActionList
+      get_episode_end GetEpisodeEnd
+      get_observable_objects GetObservableObjects
+      get_observable_predicates GetObservablePredicates
+      get_predefined_observables GetPredefinedObservables
+      set_rl_mode SetRLMode
+  )
+  ?*CX-RL-SERVICE-CLIENTS* = (create$
+      exec_action_selection ExecActionSelection
+  )
+  ?*CX-RL-ACTION-SERVERS* = (create$
+      cx-rl-interfaces-get-free-robot-server get_free_robot
+      cx-rl-interfaces-action-selection-server action_selection
+      cx-rl-interfaces-reset-cx-server reset_cx
+  )
 )
 
-(deftemplate reset-game
-  (slot stage (type SYMBOL))
+(deftemplate rl-reset-env
+  (slot state (type SYMBOL)
+    (allowed-values ABORT-RUNNING-ACTIONS USER-CLEANUP LOAD-FACTS USER-INIT DONE))
+  (slot uuid (type STRING))
+  (slot node (type STRING) (default "/cx_rl_node"))
 )
 
-; asseted by user
 (deftemplate cx-rl-node
-  (slot name (type STRING) (default "/cx_rl_gym"))
+  (slot name (type STRING) (default "/cx_rl_node"))
   (slot mode (type SYMBOL) (allowed-values TRAINING EXECUTION))
 )
 
 (deftemplate rl-action
   (slot id (type SYMBOL))
+  (slot node (type STRING) (default "/cx_rl_node"))
   (slot name (type SYMBOL))
   (slot is-selected (type SYMBOL)
                     (allowed-values TRUE FALSE)
@@ -50,87 +66,73 @@
                     (default FALSE))
   (slot assigned-to (type SYMBOL)
                     (default nil))
-  ; note: renamed from points
   (slot reward  (type INTEGER)
                 (default 0))
 )
 
-; note renamed from rl-action-selection
-; not relevant for user
-(deftemplate rl-ros-action-meta
-	(slot uuid (type STRING))
-  (slot action-id (type SYMBOL))
+(deftemplate rl-ros-action-meta-get-free-robot
+  (slot uuid (type STRING))
+  (slot node (type STRING) (default "/cx_rl_node"))
+  (slot robot (type STRING))
+  (slot last-search (type FLOAT))
+  (slot found (type SYMBOL)
+    (allowed-values TRUE FALSE))
+  (slot abort-action (type SYMBOL) (allowed-values FALSE TRUE) (default FALSE))
 )
 
-; user sets this
-; or if user gives action selection without choices
+(deftemplate rl-ros-action-meta-action-selection
+  (slot uuid (type STRING))
+  (slot node (type STRING) (default "/cx_rl_node"))
+  (slot action-id (type SYMBOL))
+  (slot abort-action (type SYMBOL) (allowed-values FALSE TRUE) (default FALSE))
+)
+
 (deftemplate rl-episode-end
+  (slot node (type STRING) (default "/cx_rl_node"))
   (slot success (type SYMBOL)
-                (allowed-values TRUE FALSE)
-	              (default TRUE))
+    (allowed-values TRUE FALSE)
+    (default TRUE))
 )
 
 (deftemplate rl-observable-type
+  (slot node (type STRING) (default "/cx_rl_node"))
   (slot type (type SYMBOL))
   (multislot objects (type STRING) (default (create$)))
 )
 
 (deftemplate rl-observable-predicate
+  (slot node (type STRING) (default "/cx_rl_node"))
   (slot name (type SYMBOL))
   (multislot param-names (type SYMBOL))
   (multislot param-types (type SYMBOL))
 )
 
-; todo: what is predefined osbervable?
 (deftemplate rl-predefined-observable
+  (slot node (type STRING) (default "/cx_rl_node"))
   (slot name (type SYMBOL))
   (multislot params (type SYMBOL))
 )
 
 (deftemplate rl-observation
+  (slot node (type STRING) (default "/cx_rl_node"))
   (slot name (type SYMBOL))
   (multislot param-values (type SYMBOL))
 )
 
 (deftemplate rl-robot
+  (slot node (type STRING) (default "/cx_rl_node"))
   (slot name (type SYMBOL))
   (slot waiting (type SYMBOL) (allowed-values TRUE FALSE) (default TRUE))
 )
 
-; System asserts this to PENDING in TRAINING mode
-; User asserts the necessary rl-action items and modifies it to DONE
-; For Execution:
-; User asserts this to DONE to get a suggested action
 (deftemplate rl-current-action-space
+  (slot node (type STRING) (default "/cx_rl_node"))
   (slot state (type SYMBOL) (allowed-values PENDING DONE) (default PENDING))
 )
 
 (deftemplate rl-action-request-meta
+  (slot node (type STRING) (default "/cx_rl_node"))
   (slot service (type STRING))
   (slot request-id (type INTEGER))
   (slot action-id (type SYMBOL))
-)
-
-(deffunction delete-rl-actions-after-reset ()
-  (delayed-do-for-all-facts ((?r rl-action))
-    TRUE
-    (retract ?r)
-  )
-)
-
-(deffunction cx-rl-interfaces-get-free-robot-handle-goal-callback (?server ?goal ?uuid)
-    (printout blue ?server " callback (goal " ?goal " ; id " ?uuid " )" crlf)
-    (return 2)
-)
-
-(deffunction cx-rl-interfaces-get-free-robot-cancel-goal-callback (?server ?goal ?goal-handle)
-    (return 1)
-)
-
-(deftemplate get-free-robot
-    (slot uuid (type STRING))
-    (slot robot (type STRING))
-    (slot last-search (type FLOAT))
-    (slot found (type SYMBOL)
-                (allowed-values TRUE FALSE))
 )

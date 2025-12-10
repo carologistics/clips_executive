@@ -16,13 +16,13 @@
 (build
 (str-cat
 "(deffunction " ?*CX-RL-NODE-NAME* "/get_predefined_observables-service-callback (?service-name ?request ?response)
-    (printout info \"Collecting cx rl predefined observables\" crlf)
+    (printout ?*CX-RL-LOG-LEVEL* \"Collecting cx rl predefined observables\" crlf)
     (bind ?observables (create$))
 
     (do-for-all-facts ((?po rl-predefined-observable))
-            TRUE
-        (printout info "\predefined observable \" ?po:name ?po:params crlf)
-        (bind ?observables (insert$ ?observables (+ (length$ ?observables) 1) (str-cat ?po:name \"(\" (create-slot-value-string ?po:params) \")\")))
+            (eq ?po:node \"" ?*CX-RL-NODE-NAME* "\")
+        (printout ?*CX-RL-LOG-LEVEL* "\predefined observable \" ?po:name ?po:params crlf)
+        (bind ?observables (insert$ ?observables (+ (length$ ?observables) 1) (str-cat ?po:name \"(\" (cx-rl-create-slot-value-string ?po:params) \")\")))
     )
 
     (ros-msgs-set-field ?response \"observables\" ?observables)

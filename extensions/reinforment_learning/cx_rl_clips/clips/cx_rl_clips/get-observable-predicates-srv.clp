@@ -16,15 +16,15 @@
 (build
 (str-cat
 "(deffunction " ?*CX-RL-NODE-NAME* "/get_observable_predicates-service-callback (?service-name ?request ?response)
-    (printout info \"Collecting cxrl observable predicates\" crlf)
+    (printout ?*CX-RL-LOG-LEVEL* \"Collecting cxrl observable predicates\" crlf)
     (bind ?pred-names (create$))
     (bind ?param-counts (create$))
     (bind ?param-names (create$))
     (bind ?param-types (create$))
 
     (do-for-all-facts ((?dp rl-observable-predicate))
-            TRUE
-        (printout info \"observable predicate \" ?dp:name crlf)
+            (eq ?dp:node \"" ?*CX-RL-NODE-NAME* "\")
+        (printout ?*CX-RL-LOG-LEVEL* \"observable predicate \" ?dp:name crlf)
         (bind ?pred-names (insert$ ?pred-names (+ (length$ ?pred-names) 1) (str-cat ?dp:name)))
         (bind ?param-counts (insert$ ?param-counts (+ (length$ ?param-counts) 1) (length$ ?dp:param-names)))
         (loop-for-count (?i 1 (length$ ?dp:param-names))

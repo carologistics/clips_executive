@@ -17,9 +17,9 @@
 (str-cat
 "(deffunction " ?*CX-RL-NODE-NAME* "/set_rl_mode-service-callback (?service-name ?request ?response)
     (bind ?mode (sym-cat (ros-msgs-get-field ?request \"mode\")))
-    (printout info \"Changing reinforcement learning mode to \" ?mode crlf)
+    (printout ?*CX-RL-LOG-LEVEL* \"Changing reinforcement learning mode to \" ?mode crlf)
     (if (or (eq ?mode TRAINING) (eq ?mode EVALUATION) (eq ?mode EXECUTION)) then
-        (if (not (do-for-fact ((?cx-rl cx-rl-node)) TRUE
+        (if (not (do-for-fact ((?cx-rl cx-rl-node)) (eq ?cx-rl:name \"" ?*CX-RL-NODE-NAME* "\")
          (modify ?cx-rl (mode ?mode))
         )) then
         (ros-msgs-set-field ?response \"confirmation\" \"Couldn't set mode\")
