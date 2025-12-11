@@ -38,7 +38,7 @@
   ?*CX-RL-ACTION-SERVERS* = (create$
       cx-rl-interfaces-get-free-robot-server get_free_robot
       cx-rl-interfaces-action-selection-server action_selection
-      cx-rl-interfaces-reset-cx-server reset_cx
+      cx-rl-interfaces-reset-env-server reset_env
   )
 )
 

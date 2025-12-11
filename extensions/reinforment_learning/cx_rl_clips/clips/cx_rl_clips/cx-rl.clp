@@ -29,7 +29,7 @@ rl-utils.clp
 action-selection-action.clp
 exec-action-selection-client.clp
 get-free-robot-action.clp
-reset-cx-action.clp
+reset-env-action.clp
 rl-reset-env.clp
 rl-ros-comm-init.clp
 rl-execution.clp

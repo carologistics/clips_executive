@@ -42,7 +42,7 @@
 (defrule cx-rl-reset-env-stage-load-facts
   ?r <- (rl-reset-env (node ?node) (uuid ?uuid) (state LOAD-FACTS))
   (cx-rl-node (name ?node) (mode ?mode))
-  (cx-rl-interfaces-reset-cx-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr))
+  (cx-rl-interfaces-reset-env-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr))
   (test (str-index ?node ?server))
   =>
   (reset)
@@ -51,7 +51,7 @@
     (eq ?r:node ?node)
     (retract ?r)
   )
-  (assert (cx-rl-interfaces-reset-cx-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr)))
+  (assert (cx-rl-interfaces-reset-env-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr)))
   (assert (cx-rl-node (name ?node) (mode ?mode)))
   (assert (rl-reset-env (node ?node) (uuid ?uuid) (state USER-INIT)))
 )
