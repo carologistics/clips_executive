@@ -42,6 +42,7 @@ rl-execution.clp
 ; The procedures fot storing the initial database depend on the required ROS interfaces
 (foreach ?f (create$
   create-rl-env-state-srv.clp
+  create-rl-action-space-srv.clp
   get-action-list-robot-srv.clp
   get-action-list-srv.clp
   get-episode-end-srv.clp

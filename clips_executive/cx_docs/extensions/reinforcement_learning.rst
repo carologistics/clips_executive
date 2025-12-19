@@ -24,22 +24,25 @@ An RL setup typically consists of:
 
 Through repeated interaction, the agent refines its policy to maximize cumulative reward.
 
-An example Gymnasium environment configuration can be found `here <rl/environment.html>`_.
-
 
 Overview
 ++++++++
 
-This extension leverages the `Gymnasium`_ framework, a modern and extensible toolkit for RL environments.
-It provides a Python-based ROS node that bridges the Gymnasium API with CLIPS, allowing bidirectional communication between the rule-based and learning components.
+The Reinforcement Learning (RL) integration is provided through the CXRLGym class.
+It provides a Gym environemnt that utilizes ROS interaces to customize training and execution, which can be called through the |CX| plugins that handle ROS communication.
 
-CLIPS can act as the high-level controller, managing symbolic knowledge, rules, and goals, while the RL node handles low-level control or adaptive behaviors learned from experience.
+Additionally, an RL algorithm is needed as well as a node to utilize both.
+We provide a multi-robot Maskable Proximal Policy Optimization (MPPO) algorithm thorugh the ``cx_rl_multi_robot_mppo`` package, which alsoprovides a suitable ``cx_rl_node`` to use CXRLGym based environments and the multi-robot MPPO policy to train and apply policies.
 
-Additionally, this extension includes utilities to:
+In order to reduce the manual overhead, the ``cx_rl_clips`` package provides a CLIPS-based interface for interacting with the PDDL Manager node in ROS 2.
+This allows to interact with the CXRLGym manager by simply asserting and monitoring CLIPS facts, without the need to do direct ROS communication (e.g., populating ROS messages or waiting for service feedback).
 
- - wrap custom ROS environments as Gymnasium environments,
- - synchronize state and reward information with the CLIPS fact base,
- - and train or evaluate policies within the |CX| ecosystem.
+This makes it possible to:
+
+* Train reinforcement learning agents using ROS
+* Integrate symbolic reasoning and learning-based control by combining it with CLIPS
+* Evaluate trained models directly on real or simulated robots
+
 
 Content
 +++++++
@@ -48,4 +51,5 @@ Content
    :maxdepth: 2
 
    rl/usage.rst
+   rl/cx_rl.rst
    rl/rl_clips.rst

@@ -11,15 +11,7 @@ set(dependencies
   cx_rl_interfaces
 )
 
-cx_generate_srv_bindings("cx_rl_interfaces" "SetRLMode")
-cx_generate_srv_bindings("cx_rl_interfaces" "GetObservableObjects")
-cx_generate_srv_bindings("cx_rl_interfaces" "GetObservablePredicates")
-cx_generate_srv_bindings("cx_rl_interfaces" "GetPredefinedObservables")
-cx_generate_srv_bindings("cx_rl_interfaces" "GetActionList")
-cx_generate_srv_bindings("cx_rl_interfaces" "GetActionListRobot")
-cx_generate_srv_bindings("cx_rl_interfaces" "CreateRLEnvState")
-cx_generate_srv_bindings("cx_rl_interfaces" "ExecActionSelection")
-cx_generate_action_bindings("cx_rl_interfaces" "ResetCX")
+cx_generate_action_bindings("cx_rl_interfaces" "ResetEnv")
 cx_generate_action_bindings("cx_rl_interfaces" "GetFreeRobot")
 cx_generate_action_bindings("cx_rl_interfaces" "ActionSelection")
 

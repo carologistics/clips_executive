@@ -92,6 +92,9 @@ class CXRLGym(Env):
         self.create_rl_env_state_client = self.node.create_client(
             CreateRLEnvState, 'create_rl_env_state'
         )
+        self.create_rl_action_space_client = self.node.create_client(
+            GetActionList, 'create_rl_action_space'
+        )
 
         self.reset_cx_client = ActionClient(self.node, ResetCX, 'reset_cx')
         self.reset_cx_result = None
@@ -141,7 +144,7 @@ class CXRLGym(Env):
         self.observation_space = Box(0, 1, (self.n_obs,))
 
         # Action space
-        action_space = self.generate_action_space()
+        action_space = self.create_rl_action_space()
         sorted_actions = ['no-op'] + sorted(set(action_space))
         set_keys_action = range(-1, len(sorted_actions))
         self.action_dict = dict(zip(set_keys_action, sorted_actions))
@@ -188,7 +191,6 @@ class CXRLGym(Env):
             # state = self.create_rl_env_state()
             state = self.get_observation()
 
-            # TODO: call service to ask for reward, termination
             terminated, reward = self.get_episode_end()
             truncated = False
             info = {'outcome': 'NO-ACTION-FOR-ROBOT'}
@@ -248,9 +250,6 @@ class CXRLGym(Env):
             info['outcome'] = ''
 
         return state, reward, done, truncated, info
-
-    def generate_action_space(self) -> list[str]:
-        raise NotImplementedError()
 
     def generate_observation_space(self) -> list[str]:
         self.node.get_logger().info('Generating observation space...')
@@ -539,6 +538,28 @@ class CXRLGym(Env):
             time.sleep(self.time_sleep)
         response = future.result()
         return response.observables
+
+    def create_rl_action_space(self) -> str:
+        """
+        Create a new RL action space.
+
+        Calls the `create_rl_action_space` service to obtain a list of all available actions.
+
+        Returns:
+            str: The generated environment state as a serialized string.
+        """
+        while not self.create_rl_action_space_client.wait_for_service(1.0):
+            self.node.get_logger().info(
+                'Waiting for service (create_rl_action_space) to be ready...'
+            )
+
+        request = GetActionList.Request()
+        future = self.create_rl_action_space_client.call_async(request)
+        while not future.done():
+            time.sleep(self.time_sleep)
+        response = future.result()
+
+        return response.actions
 
     def create_rl_env_state(self) -> str:
         """
