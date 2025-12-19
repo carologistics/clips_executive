@@ -35,7 +35,7 @@ namespace cx
 template <typename... Args>
 inline std::string format(fmt::format_string<Args...> fmt, Args &&... args)
 {
-  return fmt::format(fmt_str, std::forward<Args>(args)...);
+  return fmt::format(fmt, std::forward<Args>(args)...);
 }
 }  // namespace cx
 #elif __has_include(<fmt/format.h>)
@@ -45,7 +45,7 @@ namespace cx
 template <typename... Args>
 inline std::string format(fmt::format_string<Args...> fmt, Args &&... args)
 {
-  return fmt::format(fmt_str, std::forward<Args>(args)...);
+  return fmt::format(fmt, std::forward<Args>(args)...);
 }
 }  // namespace cx
 #else
