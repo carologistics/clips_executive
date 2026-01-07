@@ -187,7 +187,7 @@ The second config is the ``training-config.yaml`` and features all settings for 
 
 In the ``env/entrypoint`` setting, a custom environment class is specified which must define the action space of the RL agent and can be used for other custom operations like further logging.
 
-When creating a new agent, several parameters can be set tp change its learning behavior. These follow largely the parameters of the `Stable Baselines3`_ implentation of the PPO algorithm. The ``wait_for_all_robots``parameter determines if the agent should wait until all robots have finished their actions before doing a policy update or if it does it directly when the nth step has completed.
+When creating a new agent, several parameters can be set tp change its learning behavior. These follow largely the parameters of the `Stable Baselines3`_ implentation of the PPO algorithm. The ``wait_for_all_robots`` parameter determines if the agent should wait until all robots have finished their actions before doing a policy update or if it does it directly when the nth step has completed.
 
 .. code-block::yaml
 
@@ -222,6 +222,7 @@ When creating a new agent, several parameters can be set tp change its learning 
 The third config ``agent_config.yaml`` is used by the pddl manager extension to load the pddl domain and problem.
 
 .. code-block::yaml
+
   # Configuration for the integration of the external pddl manager.
   pddl:
     # Name of the externally started pddl manager.
