@@ -366,7 +366,7 @@ Then launch the agent:
 
 .. code-block:: bash
 
-   ros2 launch cx_bringup cx_launch.py manager_config:=structured_pddl_agent.yaml package:=cx_pddl_bringup
+   ros2 launch cx_pddl_bringup cx_pddl_launch.py manager_config:=pddl_agents/structured_agent.yaml
 
 You should see the CLIPS output showing initialization, goal setup, planning,
 and the full action execution process with timing data.

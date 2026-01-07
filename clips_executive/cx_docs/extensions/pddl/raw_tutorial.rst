@@ -320,7 +320,7 @@ Then, start the PDDL agent:
 
 .. code-block:: bash
 
-   ros2 launch cx_bringup cx_launch.py manager_config:=raw_pddl_agent.yaml package:=cx_pddl_bringup
+   ros2 launch cx_pddl_bringup cx_pddl_launch.py manager_config:=pddl_agents/raw_agent.yaml
 
 The CLIPS output should show the initialization of services, loading of the PDDL files, goal creation, and the resulting plan.
 
