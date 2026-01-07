@@ -1,4 +1,4 @@
-// Copyright (c) 2024-2025 Carologistics
+// Copyright (c) 2024-2026 Carologistics
 // SPDX-License-Identifier: Apache-2.0
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,6 +26,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <queue>
 
 #include "cx_plugin/clips_plugin.hpp"
 
