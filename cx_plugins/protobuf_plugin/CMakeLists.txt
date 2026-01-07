@@ -75,6 +75,7 @@ install(
 
 install(TARGETS
   ${PROJECT_NAME}
+  clips_protobuf_comm
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION lib/${PROJECT_NAME}
@@ -83,7 +84,7 @@ install(FILES cmake/cx_protobuf_sub_plugin.cmake
         DESTINATION share/${PROJECT_NAME}/cmake)
 
 ament_export_include_directories(include)
-ament_export_libraries(${PROJECT_NAME})
+ament_export_libraries(${PROJECT_NAME} clips_protobuf_comm)
 ament_export_dependencies(${dependencies})
 
 ament_package(

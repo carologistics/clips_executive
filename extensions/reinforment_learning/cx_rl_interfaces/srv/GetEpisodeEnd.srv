@@ -1,0 +1,3 @@
+---
+bool episode_end
+int32 reward

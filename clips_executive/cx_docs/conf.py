@@ -1,4 +1,4 @@
-# Copyright (c) 2024-2025 Carologistics
+# Copyright (c) 2024-2026 Carologistics
 # SPDX-License-Identifier: Apache-2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,7 +33,7 @@ author = 'Tarik Viehmann'
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 ros_distro = os.getenv('ROS_DISTRO', 'humble')  # Default to 'humble' if ROS_DISTRO is not set
 
-extensions = ['sphinx.ext.extlinks', 'sphinx.ext.todo']
+extensions = ['sphinx.ext.extlinks', 'sphinx.ext.todo', 'sphinx_copybutton']
 local = True
 
 

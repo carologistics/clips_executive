@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>cx_rl_gym</name>
+  <version>0.0.0</version>
+  <description>Base class wrapping gym-functions for reinforcement learning to interface with CLIPS over cx_rl_interfaces.</description>
+  <maintainer email="viehmann@kbsg.rwth-aachen.de">Tarik Viehmann</maintainer>
+  <maintainer email="frank.pier@rwth-aachen.de">Frank Pier</maintainer>
+  <license>Apache-2.0</license>
+
+  <depend>rclpy</depend>
+  <depend>cx_rl_interfaces</depend>
+  <depend>python3-gymnasium-pip</depend>
+  <depend>python3-numpy</depend>
+  <depend>python3-pandas</depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

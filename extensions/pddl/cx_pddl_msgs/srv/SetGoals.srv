@@ -1,0 +1,6 @@
+cx_pddl_msgs/Fluent[] fluents
+cx_pddl_msgs/Function[] functions
+string goal_instance
+---
+bool success
+string error

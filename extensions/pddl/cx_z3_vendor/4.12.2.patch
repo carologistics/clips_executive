@@ -1,0 +1,76 @@
+diff --git a/src/ast/rewriter/elim_bounds.h b/src/ast/rewriter/elim_bounds.h
+index 99d002f98..a4a08173d 100644
+--- a/src/ast/rewriter/elim_bounds.h
++++ b/src/ast/rewriter/elim_bounds.h
+@@ -20,6 +20,7 @@ Revision History:
+ 
+ #include "ast/ast.h"
+ #include "ast/arith_decl_plugin.h"
++#include "ast/rewriter/rewriter_def.h"
+ #include "ast/rewriter/rewriter.h"
+ 
+ /**
+diff --git a/src/ast/rewriter/push_app_ite.h b/src/ast/rewriter/push_app_ite.h
+index 67c48c7ae..49baee134 100644
+--- a/src/ast/rewriter/push_app_ite.h
++++ b/src/ast/rewriter/push_app_ite.h
+@@ -19,6 +19,7 @@ Revision History:
+ #pragma once
+ 
+ #include "ast/ast.h"
++#include "ast/rewriter/rewriter_def.h"
+ #include "ast/rewriter/rewriter.h"
+ 
+ /**
+diff --git a/src/math/lp/column_info.h b/src/math/lp/column_info.h
+index 1dc0c60c7..9cbeea66c 100644
+--- a/src/math/lp/column_info.h
++++ b/src/math/lp/column_info.h
+@@ -47,7 +47,7 @@ public:
+             m_lower_bound_is_strict == c.m_lower_bound_is_strict &&
+             m_upper_bound_is_set == c.m_upper_bound_is_set&&
+             m_upper_bound_is_strict == c.m_upper_bound_is_strict&&
+-            (!m_lower_bound_is_set || m_lower_bound == c.m_low_bound) &&
++            (!m_lower_bound_is_set || m_lower_bound == c.m_lower_bound) &&
+             (!m_upper_bound_is_set || m_upper_bound == c.m_upper_bound) &&
+             m_cost == c.m_cost &&
+             m_is_fixed == c.m_is_fixed &&
+diff --git a/src/math/lp/static_matrix.h b/src/math/lp/static_matrix.h
+index f79ff36ac..408f97d4e 100644
+--- a/src/math/lp/static_matrix.h
++++ b/src/math/lp/static_matrix.h
+@@ -79,7 +79,7 @@ public:
+         ref(static_matrix & m, unsigned row, unsigned col):m_matrix(m), m_row(row), m_col(col) {}
+         ref & operator=(T const & v) { m_matrix.set( m_row, m_col, v); return *this; }
+ 
+-        ref operator=(ref & v) { m_matrix.set(m_row, m_col, v.m_matrix.get(v.m_row, v.m_col)); return *this; }
++        ref operator=(ref & v) { m_matrix.set(m_row, m_col, v.m_matrix.get_elem(v.m_row, v.m_col)); return *this; }
+ 
+         operator T () const { return m_matrix.get_elem(m_row, m_col); }
+     };
+diff --git a/src/math/lp/static_matrix_def.h b/src/math/lp/static_matrix_def.h
+index 76c1dec54..474d95c21 100644
+--- a/src/math/lp/static_matrix_def.h
++++ b/src/math/lp/static_matrix_def.h
+@@ -92,7 +92,7 @@ static_matrix<T, X>::static_matrix(static_matrix const &A, unsigned * /* basis *
+     init_row_columns(m, m);
+     for (; m-- > 0; ) 
+         for (auto & col : A.m_columns[m]) 
+-            set(col.var(), m, A.get_value_of_column_cell(col));
++            set(col.var(), m, A.get_val(col));
+ }
+ 
+ template <typename T, typename X> void static_matrix<T, X>::clear() {
+diff --git a/src/util/tptr.h b/src/util/tptr.h
+index 6213b2efa..2a35af535 100644
+--- a/src/util/tptr.h
++++ b/src/util/tptr.h
+@@ -20,6 +20,7 @@ Revision History:
+ #pragma once
+ 
+ #include "util/machine.h"
++#include <cstdint>
+ 
+ #define TAG_SHIFT        PTR_ALIGNMENT
+ #define ALIGNMENT_VALUE  (1 << PTR_ALIGNMENT)
+
