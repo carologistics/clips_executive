@@ -13,7 +13,6 @@
 .. _Unified Planning Framework (UPF): https://unified-planning.readthedocs.io/en/latest/
 .. _z3 constraint solver: https://github.com/Z3Prover/z3/wiki
 .. _NEXTFLAP planner: https://github.com/aiplan4eu/up-nextflap
-.. _Gymnasium: https://gymnasium.farama.org/index.html#
 .. _sb3_contrib: https://sb3-contrib.readthedocs.io/en/master/index.html
 .. _MaskableActorCriticPolicy: https://sb3-contrib.readthedocs.io/en/master/modules/ppo_mask.html
 
