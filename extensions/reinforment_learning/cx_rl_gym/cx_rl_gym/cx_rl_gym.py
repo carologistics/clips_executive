@@ -1,4 +1,4 @@
-# Copyright (c) 2025 Carologistics
+# Copyright (c) 2025-2026 Carologistics
 # SPDX-License-Identifier: Apache-2.0
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,10 +12,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """
-CXRLGym: ROS 2 Reinforcement Learning Environment
-=================================================
+CXRLGym: ROS 2 Reinforcement Learning Environment.
 
 This module defines the :class:`CXRLGym` class — a ROS 2-integrated
 reinforcement learning environment following the Gymnasium API.
@@ -55,15 +53,18 @@ from rclpy.task import Future
 
 
 class CXRLGym(Env):
-    """ROS 2 integrated Gymnasium environment for reinforcement learning.
+    """
+    ROS 2 integrated Gymnasium environment for reinforcement learning.
 
     This environment dynamically constructs its observation and action spaces
     from ROS 2 services and executes symbolic robot actions through ROS 2 actions.
 
-    Args:
-        node (rclpy.node.Node): ROS 2 node used to create service and action clients.
-        mode (str): Reinforcement learning mode (e.g., "train" or "eval").
-        number_robots (int): Number of managed robots in the environment.
+    Parameters
+    ----------
+      node (rclpy.node.Node): ROS 2 node used to create service and action clients.
+      mode (str): Reinforcement learning mode (e.g., "train" or "eval").
+      number_robots (int): Number of managed robots in the environment.
+
     """
 
     def __init__(self, node: Node, mode: str, number_robots: int):
@@ -159,23 +160,32 @@ class CXRLGym(Env):
     """
 
     def step(self, action: int) -> tuple[npt.NDArray[np.float32], int, bool, bool, dict]:
-        """Execute one environment step.
+        """
+        Execute one environment step.
 
         This sends an action to the CX system and returns the resulting
         observation, reward, and done state.
 
-        Args:
-            action (int): Index of the chosen action.
+        Parameters
+        ----------
+        action : int
+            Index of the chosen action.
 
-        Returns:
-            tuple:
-                observation (np.ndarray): The next state observation.
-                reward (float): Scalar reward.
-                terminated (bool): Whether the episode ended normally.
-                truncated (bool): Whether the episode ended early.
-                info (dict): Additional debug information.
+        Returns
+        -------
+        tuple
+            observation : np.ndarray
+                The next state observation.
+            reward : float
+                Scalar reward.
+            terminated : bool
+                Whether the episode ended normally.
+            truncated : bool
+                Whether the episode ended early.
+            info : dict
+                Additional debug information.
+
         """
-
         action_string = self.action_dict[action]
 
         self.node.get_logger().info(f'In step function with action {action}: {action_string}')
@@ -297,21 +307,28 @@ class CXRLGym(Env):
     def reset(
         self, seed: int = None, options: dict[str, any] = None
     ) -> tuple[npt.NDArray[np.float32], dict]:
-        """Reset the environment and return the initial observation.
+        """
+        Reset the environment and return the initial observation.
 
         Calls the `/reset_cx` action and queries `/create_rl_env_state`
         for the initial environment state.
 
-        Args:
-            seed (int, optional): Random seed for reproducibility.
-            options (dict, optional): Additional reset parameters.
+        Parameters
+        ----------
+        seed : int, optional
+            Random seed for reproducibility.
+        options : dict, optional
+            Additional reset parameters.
 
-        Returns:
-            tuple:
-                observation (np.ndarray): The initial observation.
-                info (dict): Metadata about the reset process.
+        Returns
+        -------
+        tuple
+            observation : np.ndarray
+                The initial observation.
+            info : dict
+                Metadata about the reset process.
+
         """
-
         self.node.get_logger().info('Resetting environment...')
         super().reset(seed=seed)
         result = self.reset_cx()
@@ -330,7 +347,8 @@ class CXRLGym(Env):
         super().close()
 
     def render(self):
-        """Render the environment (no-op).
+        """
+        Render the environment (no-op).
 
         This environment is symbolic and does not provide visualization.
         """
@@ -364,15 +382,18 @@ class CXRLGym(Env):
     """
 
     def set_rl_model(self, model) -> None:
-        """Attach an RL model for autonomous action selection.
+        """
+        Attach an RL model for autonomous action selection.
 
         Registers a service `/exec_action_selection` to let ROS query
         the model when actions are needed.
 
-        Args:
-            model (object): Trained RL model supporting `predict(observation)`.
-        """
+        Parameters
+        ----------
+        model : object
+            Trained RL model supporting ``predict(observation)``.
 
+        """
         self.rl_model = model
         self.exec_action_selection_service = self.node.create_service(
             ExecActionSelection, '/exec_action_selection', self.exec_action_selection
@@ -387,11 +408,16 @@ class CXRLGym(Env):
         is received. It blocks until the service is ready and the asynchronous call
         completes.
 
-        Args:
-            mode (str): The RL mode to set (e.g., "train", "eval").
+        Parameters
+        ----------
+        mode : str
+            The RL mode to set (e.g., "train", "eval").
 
-        Returns:
-            str: Confirmation message returned by the service.
+        Returns
+        -------
+        str
+            Confirmation message returned by the service.
+
         """
         while not self.set_rl_mode_client.wait_for_service(1.0):
             self.node.get_logger().info('Waiting for service (set_rl_mode) to be ready...')
@@ -414,8 +440,10 @@ class CXRLGym(Env):
         Calls the `GetActionList` service to obtain all available actions that can
         currently be executed by the system.
 
-        Returns:
+        Returns
+        -------
             dict: A mapping of action names to their corresponding action IDs.
+
         """
         while not self.get_action_list_executable_client.wait_for_service(1.0):
             self.node.get_logger().info(
@@ -438,11 +466,16 @@ class CXRLGym(Env):
         Calls the `GetActionListRobot` service for the given robot and waits for
         the result.
 
-        Args:
-            robot (str): The robot identifier for which to retrieve executable actions.
+        Parameters
+        ----------
+        robot : str
+            The robot identifier for which to retrieve executable actions.
 
-        Returns:
-            dict: A mapping of action names to action IDs for the specified robot.
+        Returns
+        -------
+        dict
+            A mapping of action names to action IDs for the specified robot.
+
         """
         while not self.get_action_list_executable_for_robot_client.wait_for_service(1.0):
             self.node.get_logger().info(
@@ -466,11 +499,16 @@ class CXRLGym(Env):
         Calls the `GetObservableObjects` service to get a list of currently observable
         objects matching the specified type.
 
-        Args:
-            obj_type (str): The type of observable object (e.g., "robot", "item").
+        Parameters
+        ----------
+        obj_type : str
+            The type of observable object (e.g., "robot", "item").
 
-        Returns:
-            list[str]: List of observable object names.
+        Returns
+        -------
+        list[str]
+            List of observable object names.
+
         """
         while not self.get_observable_objects_client.wait_for_service(1.0):
             self.node.get_logger().info(
@@ -495,9 +533,11 @@ class CXRLGym(Env):
         Calls the `GetObservablePredicates` service and constructs a dictionary mapping
         predicate names to their parameter information.
 
-        Returns:
+        Returns
+        -------
             dict: Dictionary where keys are predicate names and values describe parameter
                   counts, names, and types.
+
         """
         while not self.get_observable_predicates_client.wait_for_service(1.0):
             self.node.get_logger().info(
@@ -522,10 +562,11 @@ class CXRLGym(Env):
         Calls the `GetPredefinedObservables` service to get predefined observables used
         for RL environment construction or monitoring.
 
-        Returns:
+        Returns
+        -------
             list: A list of predefined observables.
-        """
 
+        """
         while not self.get_predefined_observables_client.wait_for_service(1.0):
             self.node.get_logger().info(
                 'Waiting for service (get_predefined_observables) to be ready...'
@@ -545,8 +586,10 @@ class CXRLGym(Env):
 
         Calls the `create_rl_action_space` service to obtain a list of all available actions.
 
-        Returns:
+        Returns
+        -------
             str: The generated environment state as a serialized string.
+
         """
         while not self.create_rl_action_space_client.wait_for_service(1.0):
             self.node.get_logger().info(
@@ -568,8 +611,10 @@ class CXRLGym(Env):
         Calls the `CreateRLEnvState` service to generate a new environment state for
         reinforcement learning execution.
 
-        Returns:
+        Returns
+        -------
             str: The generated environment state as a serialized string.
+
         """
         while not self.create_rl_env_state_client.wait_for_service(1.0):
             self.node.get_logger().info('Waiting for service (create_rl_env_state) to be ready...')
@@ -590,10 +635,12 @@ class CXRLGym(Env):
         Calls the `CheckForEpisodeEnd` service to determine if the episode
         should terminate and obtain the corresponding reward.
 
-        Returns:
+        Returns
+        -------
             Tuple[bool, int]: (episode_end, reward)
                 - episode_end (bool): Whether the episode has ended.
                 - reward (int): Reward for the transition.
+
         """
         while not self.get_episode_end_client.wait_for_service(1.0):
             self.node.get_logger().info('Waiting for service (get_episode_end) to be ready...')
@@ -618,14 +665,19 @@ class CXRLGym(Env):
         observation for the RL model, predicts the next action using the model, and
         fills the ROS 2 service response with the selected action ID.
 
-        Args:
-            request (ExecActionSelection.Request): The incoming request containing the
-                serialized environment state and a list of executable actions.
-            response (ExecActionSelection.Response): The response object to populate.
+        Parameters
+        ----------
+        request : ExecActionSelection.Request
+            The incoming request containing the serialized environment state and a list
+            of executable actions.
+        response : ExecActionSelection.Response
+            The response object to populate.
 
-        Returns:
-            ExecActionSelection.Response: The populated response containing the selected
-            action ID.
+        Returns
+        -------
+        ExecActionSelection.Response
+            The populated response containing the selected action ID.
+
         """
         self.node.get_logger().info('Selecting action...')
 
@@ -654,8 +706,10 @@ class CXRLGym(Env):
 
         Sends a goal to the `ResetCX` action server and waits for completion.
 
-        Returns:
+        Returns
+        -------
             str: Confirmation message from the CX node after reset.
+
         """
         goal_msg = ResetCX.Goal()
         self.reset_cx_client.wait_for_server()
@@ -670,10 +724,13 @@ class CXRLGym(Env):
 
     def reset_cx_goal_response_callback(self, future: Future) -> None:
         """
-        Callback for handling the goal response from the `ResetCX` action server.
+        Handle the goal response from the `ResetCX` action server via callback.
 
-        Args:
-            future (Future): The future object representing the goal response.
+        Parameters
+        ----------
+        future : Future
+            The future object representing the goal response.
+
         """
         goal_handle = future.result()
         if not goal_handle.accepted:
@@ -686,30 +743,39 @@ class CXRLGym(Env):
 
     def reset_cx_get_result_callback(self, future: Future) -> None:
         """
-        Callback for handling the result returned from the `ResetCX` action.
+        Handle the result returned from the `ResetCX` action via callback.
 
-        Args:
-            future (Future): The future containing the action result.
+        Parameters
+        ----------
+        future : Future
+                The future containing the action result.
+
         """
         self.node.get_logger().info('Result for reset_cx received')
         self.reset_cx_result = future.result().result
 
     def reset_cx_feedback_callback(self, feedback_msg: ResetCX.Feedback) -> None:
         """
-        Callback for handling feedback messages from the `ResetCX` action.
+        Handle feedback messages from the `ResetCX` action via callback.
 
-        Args:
-            feedback_msg (ResetCX.Feedback): The feedback message received from the action.
+        Parameters
+        ----------
+        feedback_msg : ResetCX.Feedback
+                The feedback message received from the action.
+
         """
         feedback = feedback_msg.feedback.feedback
         self.node.get_logger().info(feedback)
 
     def reset_cx_cancel_done(self, future: Future) -> None:
         """
-        Callback invoked once a cancel request for `ResetCX` is completed.
+        Invoke once a cancel request for `ResetCX` is completed via callback.
 
-        Args:
-            future (Future): The future representing the cancel result.
+        Parameters
+        ----------
+        future : Future
+                The future representing the cancel result.
+
         """
         cancel_response = future.result()
         if len(cancel_response.goals_canceling) > 0:
@@ -723,8 +789,11 @@ class CXRLGym(Env):
 
         Sends a goal to the `GetFreeRobot` action server and waits for the result.
 
-        Returns:
-            str: The name or identifier of the free robot.
+        Returns
+        -------
+        str
+                The name or identifier of the free robot.
+
         """
         goal_msg = GetFreeRobot.Goal()
         self.get_free_robot_client.wait_for_server()
@@ -742,10 +811,13 @@ class CXRLGym(Env):
 
     def get_free_robot_goal_response_callback(self, future: Future) -> None:
         """
-        Callback for handling goal responses from the `GetFreeRobot` action server.
+        Handle goal responses from the `GetFreeRobot` action server via callback.
 
-        Args:
-            future (Future): The future representing the goal response.
+        Parameters
+        ----------
+        future : Future
+                The future representing the goal response.
+
         """
         goal_handle = future.result()
         if not goal_handle.accepted:
@@ -760,30 +832,39 @@ class CXRLGym(Env):
 
     def get_free_robot_get_result_callback(self, future: Future) -> None:
         """
-        Callback for handling the result of the `GetFreeRobot` action.
+        Handle the result of the `GetFreeRobot` action via callback.
 
-        Args:
-            future (Future): The future containing the action result.
+        Parameters
+        ----------
+        future : Future
+                The future containing the action result.
+
         """
         self.node.get_logger().info('Result for get_free_robot received')
         self.get_free_robot_result = future.result().result
 
     def get_free_robot_feedback_callback(self, feedback_msg: GetFreeRobot.Feedback) -> None:
         """
-        Callback for handling feedback messages from the `GetFreeRobot` action.
+        Handle feedback messages from the `GetFreeRobot` action via callback.
 
-        Args:
-            feedback_msg (GetFreeRobot.Feedback): The feedback message received from the action.
+        Parameters
+        ----------
+        feedback_msg : GetFreeRobot.Feedback
+                The feedback message received from the action.
+
         """
         feedback = feedback_msg.feedback.feedback
         self.node.get_logger().info(feedback)
 
     def get_free_robot_cancel_done(self, future: Future) -> None:
         """
-        Callback invoked once a cancel request for `GetFreeRobot` is completed.
+        Invoke via callback once a cancel request for `GetFreeRobot` is completed.
 
-        Args:
-            future (Future): The future representing the cancel result.
+        Parameters
+        ----------
+        future : Future
+                The future representing the cancel result.
+
         """
         cancel_response = future.result()
         if len(cancel_response.goals_canceling) > 0:
@@ -793,11 +874,15 @@ class CXRLGym(Env):
 
     def action_selection_goal_response_callback(self, future: Future, robot_index: int) -> None:
         """
-        Callback for handling goal responses from the action selection server.
+        Handle goal responses from the action selection server via callback.
 
-        Args:
-            future (Future): The future representing the goal response.
-            robot_index (int): Index of the robot associated with this goal.
+        Parameters
+        ----------
+        future : Future
+                The future representing the goal response.
+        robot_index : int
+                Index of the robot associated with this goal.
+
         """
         goal_handle = future.result()
         if not goal_handle.accepted:
@@ -812,11 +897,15 @@ class CXRLGym(Env):
 
     def action_selection_get_result_callback(self, future: Future, robot_index: int) -> None:
         """
-        Callback for handling action selection results.
+        Handle action selection results via callback.
 
-        Args:
-            future (Future): The future containing the action result.
-            robot_index (int): Index of the robot for which the result applies.
+        Parameters
+        ----------
+        future : Future
+                The future containing the action result.
+        robot_index : int
+                Index of the robot for which the result applies.
+
         """
         self.action_selection_results[robot_index] = future.result().result
         self.node.get_logger().info(
@@ -827,14 +916,18 @@ class CXRLGym(Env):
         self, feedback_msg: ActionSelection.Feedback, robot_index: int
     ) -> None:
         """
-        Callback for handling feedback messages during action selection.
+        Handle feedback messages during action selection via callback.
 
         If the feedback indicates that an action selection fact was asserted,
         the robot is unlocked for further use.
 
-        Args:
-            feedback_msg (ActionSelection.Feedback): Feedback message from the action.
-            robot_index (int): Index of the robot for which feedback applies.
+        Parameters
+        ----------
+        feedback_msg : ActionSelection.Feedback
+                Feedback message from the action.
+        robot_index : int
+                Index of the robot for which feedback applies.
+
         """
         feedback = feedback_msg.feedback.feedback
         if feedback == 'Action selection fact asserted':
@@ -848,11 +941,15 @@ class CXRLGym(Env):
 
     def action_selection_cancel_done(self, future: Future, robot_index: int) -> None:
         """
-        Callback invoked once a cancel request for action selection is completed.
+        Invoke via callback once a cancel request for action selection is completed.
 
-        Args:
-            future (Future): The future representing the cancel result.
-            robot_index (int): Index of the robot for which the cancel applies.
+        Parameters
+        ----------
+        future : Future
+                The future representing the cancel result.
+        robot_index : int
+                Index of the robot for which the cancel applies.
+
         """
         cancel_response = future.result()
         if len(cancel_response.goals_canceling) > 0:
@@ -874,10 +971,12 @@ class CXRLGym(Env):
         parses the returned fact string into Python objects, and converts
         them into a numerical observation vector suitable for the RL model.
 
-        Returns:
-            numpy.ndarray: The observation vector as a NumPy array of type float32.
-        """
+        Returns
+        -------
+        numpy.ndarray
+                The observation vector as a NumPy array of type float32.
 
+        """
         fact_string = self.create_rl_env_state()
         raw_facts = ast.literal_eval(fact_string)
         return self.get_state_from_facts(raw_facts)
@@ -889,11 +988,16 @@ class CXRLGym(Env):
         Each key in the input dictionary represents a column, and its list of values
         defines the possible entries.
 
-        Args:
-            dictionary (dict): A dictionary where each key maps to a list of possible values.
+        Parameters
+        ----------
+        dictionary : dict
+                A dictionary where each key maps to a list of possible values.
 
-        Returns:
-            pandas.DataFrame: A DataFrame containing one row per value combination.
+        Returns
+        -------
+        pandas.DataFrame
+                A DataFrame containing one row per value combination.
+
         """
         return pd.DataFrame(list(product(*dictionary.values())), columns=dictionary.keys())
 
@@ -910,16 +1014,23 @@ class CXRLGym(Env):
         This method takes parallel lists describing predicates and their parameters,
         and aggregates them into a nested dictionary for easier lookup.
 
-        Args:
-            predicate_names (list[str]): Names of the predicates.
-            param_counts (list[int]): Number of parameters for each predicate.
-            param_names (list[str]): Flat list of parameter names for all predicates.
-            param_types (list[str]): Flat list of parameter types corresponding to each name.
+        Parameters
+        ----------
+        predicate_names : list[str]
+                Names of the predicates.
+        param_counts : list[int]
+                Number of parameters for each predicate.
+        param_names : list[str]
+                Flat list of parameter names for all predicates.
+        param_types : list[str]
+                Flat list of parameter types corresponding to each name.
 
-        Returns:
-            dict: A mapping from predicate names to dictionaries of parameter names and types.
+        Returns
+        -------
+        dict
+                A mapping from predicate names to dictionaries of parameter names and types.
+
         """
-
         predicates = {}
         param_counter = 0
         for x in range(len(predicate_names)):
@@ -940,11 +1051,16 @@ class CXRLGym(Env):
         Each action string is expected to have the format:
         ``"<action_id>|<action_name>"``.
 
-        Args:
-            action_list (list[str]): List of encoded action strings.
+        Parameters
+        ----------
+        action_list : list[str]
+                List of encoded action strings.
 
-        Returns:
-            dict: Mapping from action names to action IDs.
+        Returns
+        -------
+        dict
+                Mapping from action names to action IDs.
+
         """
         dict_action_ids = {}
         for action in action_list:
@@ -964,11 +1080,16 @@ class CXRLGym(Env):
         Each fact is matched against the internal observation dictionary.
         The corresponding index is set to 1.0 if the fact is present, 0.0 otherwise.
 
-        Args:
-            obs_facts (iterable): Collection of fact strings representing the current state.
+        Parameters
+        ----------
+        obs_facts : iterable
+                Collection of fact strings representing the current state.
 
-        Returns:
-            numpy.ndarray: Binary state vector as a NumPy array of type float32.
+        Returns
+        -------
+        numpy.ndarray
+                Binary state vector as a NumPy array of type float32.
+
         """
         new_state = np.zeros(self.n_obs, dtype=np.float32)
         for fact in obs_facts:
