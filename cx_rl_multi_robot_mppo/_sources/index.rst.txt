@@ -1,0 +1,23 @@
+.. GENERATED_CONTENT by rosdoc2.verbs.build.builders.sphinx_builder.
+
+cx_rl_multi_robot_mppo
+======================
+
+Multi-robot maskable proximal policy optimization (mppo) implementation.
+
+.. toctree::
+   :maxdepth: 2
+
+   Python API <modules>
+
+
+
+
+   Standard Documents <standards>
+
+
+
+.. toctree::
+   :hidden:
+
+   genindex

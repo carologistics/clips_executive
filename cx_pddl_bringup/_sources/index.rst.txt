@@ -1,0 +1,23 @@
+.. GENERATED_CONTENT by rosdoc2.verbs.build.builders.sphinx_builder.
+
+cx_pddl_bringup
+===============
+
+Bringup scripts, parameters anf files for launching CLIPS example programs utilizing PDDL
+
+.. toctree::
+   :maxdepth: 2
+
+
+
+
+
+
+   Standard Documents <standards>
+
+
+
+.. toctree::
+   :hidden:
+
+   genindex

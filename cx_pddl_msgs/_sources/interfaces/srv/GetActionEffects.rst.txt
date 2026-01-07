@@ -1,0 +1,8 @@
+GetActionEffects
+================
+This is a ROS service definition.
+
+**Source**
+
+.. literalinclude:: ../../../../../../extensions/pddl/cx_pddl_msgs/srv/GetActionEffects.srv
+

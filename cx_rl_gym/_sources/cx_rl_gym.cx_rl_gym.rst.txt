@@ -1,0 +1,7 @@
+cx\_rl\_gym.cx\_rl\_gym module
+==============================
+
+.. automodule:: cx_rl_gym.cx_rl_gym
+   :members:
+   :undoc-members:
+   :show-inheritance:

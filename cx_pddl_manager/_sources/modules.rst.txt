@@ -1,0 +1,7 @@
+cx_pddl_manager
+===============
+
+.. toctree::
+   :maxdepth: 4
+
+   cx_pddl_manager

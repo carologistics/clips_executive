@@ -1,0 +1,7 @@
+cx\_pddl\_manager.pddl\_manager module
+======================================
+
+.. automodule:: cx_pddl_manager.pddl_manager
+   :members:
+   :undoc-members:
+   :show-inheritance:

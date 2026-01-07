@@ -7,6 +7,7 @@
   <title>CLIPS Plugins &mdash; clips_executive 0.1.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=86f27845" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
 
   
   
@@ -15,10 +16,12 @@
         <script src="../_static/documentation_options.js?v=360bc84d"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Ament Index Plugin" href="cx_ament_index.html" />
+    <link rel="next" title="initialize()" href="overrides.html" />
     <link rel="prev" title="Dynamic Setup via Services" href="../getting_started/dynamic.html" /> 
 </head>
 
@@ -47,7 +50,12 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/index.html">Getting Started</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">CLIPS Plugins</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#plugin-interface">Plugin Interface</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="#plugin-interface">Plugin Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="overrides.html">initialize()</a></li>
+<li class="toctree-l3"><a class="reference internal" href="overrides.html#clips-env-init">clips_env_init()</a></li>
+<li class="toctree-l3"><a class="reference internal" href="overrides.html#clips-env-destroyed">clips_env_destroyed()</a></li>
+<li class="toctree-l3"><a class="reference internal" href="overrides.html#finalize">finalize()</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pitfalls.html">Pitfalls and Considerations</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#available-plugins">Available Plugins</a><ul>
@@ -65,6 +73,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../plugin_generator/index.html">ROS Interface Plugin Generator</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extensions/index.html">Extensions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../standards.html">Standard Documents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../__readme_include.html">README</a></li>
 </ul>
@@ -113,6 +122,22 @@
 <section id="plugin-interface">
 <h2>Plugin Interface<a class="headerlink" href="#plugin-interface" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="overrides.html">initialize()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overrides.html#clips-env-init">clips_env_init()</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="overrides.html#environment-reset">Environment Reset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overrides.html#environment-context-and-multithreading">Environment Context and Multithreading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="overrides.html#clips-env-destroyed">clips_env_destroyed()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overrides.html#finalize">finalize()</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pitfalls.html">Pitfalls and Considerations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pitfalls.html#injected-functions-should-not-be-blocking">Injected functions should not be blocking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pitfalls.html#keep-your-locking-scopes-as-tight-as-possible">Keep your locking scopes as tight as possible</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pitfalls.html#be-aware-of-hidden-locks">Be aware of hidden locks</a></li>
+</ul>
+</li>
+</ul>
 </div>
 </section>
 <section id="available-plugins">
@@ -181,7 +206,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../getting_started/dynamic.html" class="btn btn-neutral float-left" title="Dynamic Setup via Services" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="cx_ament_index.html" class="btn btn-neutral float-right" title="Ament Index Plugin" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="overrides.html" class="btn btn-neutral float-right" title="initialize()" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

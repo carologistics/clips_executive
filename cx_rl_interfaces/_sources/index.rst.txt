@@ -1,0 +1,23 @@
+.. GENERATED_CONTENT by rosdoc2.verbs.build.builders.sphinx_builder.
+
+cx_rl_interfaces
+================
+
+ROS interfaces for using reinforcement learning with the ROS2 CLIPS-Executive
+
+.. toctree::
+   :maxdepth: 2
+
+
+
+
+   Service Definitions <interfaces/service_definitions>
+   Action Definitions <interfaces/action_definitions>
+   Standard Documents <standards>
+
+
+
+.. toctree::
+   :hidden:
+
+   genindex

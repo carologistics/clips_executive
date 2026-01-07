@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interfaces for RL-based Action Selection &mdash; clips_executive 0.1.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=86f27845" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+
+  
+  
+        <script src="../_static/jquery.js?v=8dae8fb0"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=360bc84d"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            clips_executive
+          </a>
+              <div class="version">
+                0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/index.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">CLIPS Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../plugin_generator/index.html">ROS Interface Plugin Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extensions/index.html">Extensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../standards.html">Standard Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../__readme_include.html">README</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">clips_executive</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Interfaces for RL-based Action Selection</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/plugins/rl_plugin.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="interfaces-for-rl-based-action-selection">
+<span id="usage-rl-interfaces-plugin"></span><h1>Interfaces for RL-based Action Selection<a class="headerlink" href="#interfaces-for-rl-based-action-selection" title="Link to this heading"></a></h1>
+<p>Source code on .</p>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Interface Name</p></td>
+<td><p>Type</p></td>
+<td><p>Plugin Class</p></td>
+</tr>
+<tr class="row-even"><td><p>create_rl_env_state</p></td>
+<td><p>Service</p></td>
+<td><p>cx::CXCxRlInterfacesCreateRLEnvStatePlugin</p></td>
+</tr>
+<tr class="row-odd"><td><p>get_domain_objects</p></td>
+<td><p>Service</p></td>
+<td><p>cx::CXCxRlInterfacesGetDomainObjectsPlugin</p></td>
+</tr>
+<tr class="row-even"><td><p>get_domain_predicates</p></td>
+<td><p>Service</p></td>
+<td><p>cx::CXCxRlInterfacesGetDomainPredicatesPlugin</p></td>
+</tr>
+<tr class="row-odd"><td><p>get_action_list</p></td>
+<td><p>Service</p></td>
+<td><p>cx::CXCxRlInterfacesGetActionListPlugin</p></td>
+</tr>
+<tr class="row-even"><td><p>get_action_list_robot</p></td>
+<td><p>Service</p></td>
+<td><p>cx::CXCxRlInterfacesGetActionListRobotPlugin</p></td>
+</tr>
+<tr class="row-odd"><td><p>set_rl_mode</p></td>
+<td><p>Service</p></td>
+<td><p>cx::CXCxRlInterfacesSetRLModePlugin</p></td>
+</tr>
+<tr class="row-even"><td><p>get_free_robot</p></td>
+<td><p>Action Server</p></td>
+<td><p>cx::CXCxRlInterfacesGetFreeRobotPlugin</p></td>
+</tr>
+<tr class="row-odd"><td><p>action_selection</p></td>
+<td><p>Action Server</p></td>
+<td><p>cx::CXCxRlInterfacesActionSelectionPlugin</p></td>
+</tr>
+<tr class="row-even"><td><p>reset_cx</p></td>
+<td><p>Action Server</p></td>
+<td><p>cx::CXCxRlInterfacesResetCXPlugin</p></td>
+</tr>
+<tr class="row-odd"><td><p>exec_action_selection</p></td>
+<td><p>Client</p></td>
+<td><p>cx::CXCxRlInterfacesExecActionSelectionPlugin</p></td>
+</tr>
+</tbody>
+</table>
+<p>This plugin provides interfaces used in reinforcement learning based action selection to either access information from the CLIPS environment or to communicate a selected action to the reinforcement learning plugin. In the table above, the type specifies which part of the ROS 2 communication is implemented, if the user wants to use these interfaces, the corresponding counterpart needs to be used (Service &lt;-&gt; Client, Action Server &lt;-&gt; Action Client).</p>
+<p>It is intended to use this plugin together with the cxrl_gym environment which serves as a base class in python implementing the counterparts to the interfaces specified here and most of the basic gym-functions (step, reset, action_mask, …) used in (maskable action) reinforcement learning.</p>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
+<p>This plugin has no specific configuration options.</p>
+</section>
+<section id="features">
+<h2>Features<a class="headerlink" href="#features" title="Link to this heading"></a></h2>
+<section id="interfaces">
+<h3>Interfaces<a class="headerlink" href="#interfaces" title="Link to this heading"></a></h3>
+<p>In the following each interface is presented and explained:</p>
+<dl class="field-list">
+<dt class="field-odd"><cite>create_rl_env_state</cite><span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt>Type</dt><dd><p>Service</p>
+</dd>
+<dt>Description</dt><dd><p>Creates a string containing all asserted rl-observation facts which have to be asserted by the user by overriding rl-generate-observation function. Format: {“OBSERVATION_1_NAME(PARAM_1,PARAM_2,…)”, …}</p>
+</dd>
+<dt>Specification</dt><dd><div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="nv">---</span>
+<span class="nb">string</span><span class="w"> </span><span class="nv">state</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd>
+<dt class="field-even"><cite>get_observable_objects</cite><span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt>Type</dt><dd><p>Service</p>
+</dd>
+<dt>Description</dt><dd><p>Returns string list of all objects set to be observable by the user (asserted rl-observable-predicate fact) and matching a given type. If there does not exist an object for the type, “Not found” is returned.</p>
+</dd>
+<dt>Specification</dt><dd><div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="nb">string</span><span class="w"> </span><span class="k">type</span>
+<span class="nv">---</span>
+<span class="nv">string[]</span><span class="w"> </span><span class="nv">objects</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd"><cite>get_observable_predicates</cite><span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt>Type</dt><dd><p>Service</p>
+</dd>
+<dt>Description</dt><dd><p>Returns information on all predicates set to be observable by the user (asserted rl-observable-predicate fact). <code class="docutils literal notranslate"><span class="pre">predicatenames</span></code> lists all the names. <code class="docutils literal notranslate"><span class="pre">paramcounts</span></code> specifies for every predicate name with the same index how many parameters the predicate features. <code class="docutils literal notranslate"><span class="pre">paramnames</span></code> and <code class="docutils literal notranslate"><span class="pre">paramtypes</span></code> list the names and types of all predicates where thee name and type share the same index and both lists are constructed in a way that the first paramcounts[0] entries in both lists are the parameters of predicate predicatenames[0] and so on.</p>
+</dd>
+<dt>Specification</dt><dd><div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="nv">---</span>
+<span class="nv">string[]</span><span class="w"> </span><span class="nv">predicatenames</span>
+<span class="nv">uint8[]</span><span class="w"> </span><span class="nv">paramcounts</span>
+<span class="nv">string[]</span><span class="w"> </span><span class="nv">paramnames</span>
+<span class="nv">string[]</span><span class="w"> </span><span class="nv">paramtypes</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd>
+<dt class="field-even"><cite>get_predfined_observables</cite><span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt>Type</dt><dd><p>Service</p>
+</dd>
+<dt>Description</dt><dd><p>Returns a list of all observation space entries which have been pre-defined (not defined using combinations of observable predicates and observable objects) which are asserted as rl-predefined-observable fact.</p>
+</dd>
+<dt>Specification</dt><dd><div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="nv">---</span>
+<span class="nv">string[]</span><span class="w"> </span><span class="nv">observables</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd"><cite>get_action_list</cite><span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt>Type</dt><dd><p>Service</p>
+</dd>
+<dt>Description</dt><dd><p>Returns a list of ids and names of all existing rl-action facts i.e. all executable actions. Format: “actionid|actionname”.</p>
+</dd>
+<dt>Specification</dt><dd><div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="nv">---</span>
+<span class="nv">string[]</span><span class="w"> </span><span class="nv">actions</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd>
+<dt class="field-even"><cite>get_action_list_robot</cite><span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt>Type</dt><dd><p>Service</p>
+</dd>
+<dt>Description</dt><dd><p>Returns a list of ids and names of all existing rl-action facts which have the specified robot as value in their <code class="docutils literal notranslate"><span class="pre">assigned-to</span></code> slot i.e. all executable actions for a certain robot. Format: “actionid|actionname”.</p>
+</dd>
+<dt>Specification</dt><dd><div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="nb">string</span><span class="w"> </span><span class="nv">robot</span>
+<span class="nv">---</span>
+<span class="nv">string[]</span><span class="w"> </span><span class="nv">actions</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd"><cite>set_rl_mode</cite><span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt>Type</dt><dd><p>Service</p>
+</dd>
+<dt>Description</dt><dd><p>Allows the client to set the mode of the reinforcement learning plugin. Available modes are TRAINING and EXECUTION. If successful, the message “Set mode to (MODE)” is returned, otherwise “Couldn’t set mode”.</p>
+</dd>
+<dt>Specification</dt><dd><div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="nb">string</span><span class="w"> </span><span class="nv">mode</span>
+<span class="nv">---</span>
+<span class="nb">string</span><span class="w"> </span><span class="nv">confirmation</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd>
+<dt class="field-even"><cite>get_free_robot</cite><span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt>Type</dt><dd><p>Action Server</p>
+</dd>
+<dt>Description</dt><dd><p>Calling this action starts a search for a robot which is currently not working on an action and thus waiting. When a free robot has been found, its name is returned. During the search, feedback may be returned stating that no free robot has been found and the search is continued.</p>
+</dd>
+<dt>Specification</dt><dd><div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="nv">---</span>
+<span class="nb">string</span><span class="w"> </span><span class="nv">robot</span>
+<span class="nv">---</span>
+<span class="nb">string</span><span class="w"> </span><span class="nv">feedback</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd"><cite>action_selection</cite><span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt>Type</dt><dd><p>Action Server</p>
+</dd>
+<dt>Description</dt><dd><p>Calling this action with a valid actionid starts the action selection process in CLIPS. In the matching rl-action fact, the <code class="docutils literal notranslate"><span class="pre">is-selected</span></code> flag gets set, signaling to the user generated agent which action has been selected. When the execution of the action has been finished, the user must set the <code class="docutils literal notranslate"><span class="pre">is-finished</span></code> flag which leads to the actionid, the earned reward and an info-string are returned. This string is currently only used to signal if an episode has finished in which case it says “Done” otherwise it is empty.</p>
+</dd>
+<dt>Specification</dt><dd><div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="nb">string</span><span class="w"> </span><span class="nv">actionid</span>
+<span class="nv">---</span>
+<span class="nb">string</span><span class="w"> </span><span class="nv">actionid</span>
+<span class="nv">int32</span><span class="w"> </span><span class="nv">reward</span>
+<span class="nb">string</span><span class="w"> </span><span class="nv">info</span>
+<span class="nv">---</span>
+<span class="nb">string</span><span class="w"> </span><span class="nv">feedback</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd>
+<dt class="field-even"><cite>reset_cx</cite><span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt>Type</dt><dd><p>Action Server</p>
+</dd>
+<dt>Description</dt><dd><p>Calling this action starts a reset procedure for the environment. The reset is done by loading the fact base at an initial state. After this reset, a string is returned confirming the successful reset (“Reset completed”).</p>
+</dd>
+<dt>Specification</dt><dd><div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="nv">---</span>
+<span class="nb">string</span><span class="w"> </span><span class="nv">confirmation</span>
+<span class="nv">---</span>
+<span class="nb">string</span><span class="w"> </span><span class="nv">feedback</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd"><cite>exec_action_selection</cite><span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt>Type</dt><dd><p>Client</p>
+</dd>
+<dt>Description</dt><dd><p>This client is used if the reinforcement learning plugin is in EXECUTION mode. When an action selection is needed (i.e. there are executable actions and robots without a task), the client sends a request to a service implemented by the user. This request consists of the current state string (as specified in <strong>_create_rl_env_state_</strong>) and a list of executable action (as specified in <strong>_get_action_list_</strong>). Using this information a trained RL agent should be able to predict the next action which then must be returned to the client via its actionid.</p>
+</dd>
+<dt>Specification</dt><dd><div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="nb">string</span><span class="w"> </span><span class="nv">state</span>
+<span class="nv">string[]</span><span class="w"> </span><span class="nv">actions</span>
+<span class="nv">---</span>
+<span class="nb">string</span><span class="w"> </span><span class="nv">actionid</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+<section id="facts">
+<h3>Facts<a class="headerlink" href="#facts" title="Link to this heading"></a></h3>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; asserted by the user whenever a corresponding user action is executable</span>
+<span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-action</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">id</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">is-selected</span><span class="w">   </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">TRUE</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">is-finished</span><span class="w">   </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">TRUE</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">assigned-to</span><span class="w">   </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="no">nil</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">points</span><span class="w">    </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">)</span>
+<span class="w">                    </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
+<span class="p">)</span>
+
+<span class="c1">; asserted by the user if the current episode has finished</span>
+<span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-episode-end</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">success</span><span class="w">   </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span>
+<span class="w">                    </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">TRUE</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">)</span>
+<span class="w">                    </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">))</span>
+<span class="p">)</span>
+
+<span class="c1">; asserted by the user to include an object in the automatic observation space generation</span>
+<span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-observable-object</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<span class="p">)</span>
+
+<span class="c1">; asserted by the user to include a predicate in the automatic observation space generation</span>
+<span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-observable-predicate</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">param-names</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">param-types</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<span class="p">)</span>
+
+<span class="c1">; asserted by the user to define a single observation space entry (without automatic generation)</span>
+<span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-predefined-observable</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">params</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<span class="p">)</span>
+
+<span class="c1">; asserted by the user to define a single observation (predicate name and object parameters)</span>
+<span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-observation</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">param-values</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<span class="p">)</span>
+
+<span class="c1">; asserted by the plugin to signal the beginning of an executability check (state CHECKING)</span>
+<span class="c1">; user must modify the state to CHECKED when the executability check is completed</span>
+<span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-executability-check</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">state</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">PENDING</span><span class="w"> </span><span class="nv">CHECKING</span><span class="w"> </span><span class="nv">CHECKED</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">PENDING</span><span class="p">))</span>
+<span class="p">)</span>
+
+<span class="c1">; asserted by the plugin to keep track of the workers actions are assigned to</span>
+<span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-robot</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">waiting</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">TRUE</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">))</span>
+<span class="p">)</span>
+
+<span class="c1">; asserted by the plugin, corresponds to a single selection process during training mode</span>
+<span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-action-selection</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">uuid</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">actionid</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">is-finished</span><span class="w">   </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">TRUE</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">reward</span><span class="w">    </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">)</span>
+<span class="w">                    </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">done</span><span class="w">  </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span>
+<span class="w">                </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">TRUE</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">)</span>
+<span class="w">                </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">))</span>
+<span class="p">)</span>
+
+<span class="c1">; asserted by the plugin, corresponds to a single action selection during execution mode</span>
+<span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-action-selection-exec</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">actionid</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<span class="p">)</span>
+
+<span class="c1">; asserted by the plugin, shows the current mode</span>
+<span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-mode</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">mode</span><span class="w">  </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span>
+<span class="w">                </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">TRAINING</span><span class="w"> </span><span class="nv">EXECUTION</span><span class="p">))</span>
+<span class="p">)</span>
+
+<span class="c1">; asserted by the plugin whenever a robot is not assigned to a selected rl-action</span>
+<span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">robot-waiting</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">robot</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; must be overwritten so that in this function all rl-observation facts are asserted</span>
+<span class="c1">; that correspond to the current state of the environment</span>
+<span class="p">(</span><span class="nv">rl-generate-observations</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="saliences">
+<h3>Saliences<a class="headerlink" href="#saliences" title="Link to this heading"></a></h3>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; must be used in rules checking the executability of an action</span>
+<span class="nv">?*SALIENCE-ACTION-EXECUTABLE-CHECK*</span>
+
+<span class="c1">; must be used in rules checking if the episode has ended</span>
+<span class="nv">?*SALIENCE-RL-EPISODE-END-SUCCESS*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="mi">500</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="usage-example">
+<h2>Usage Example<a class="headerlink" href="#usage-example" title="Link to this heading"></a></h2>
+<blockquote>
+<div><p>A simple usage example can be found in the tutorial Blocksworld with Reinforcement Learning</p>
+</div></blockquote>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Tarik Viehmann.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

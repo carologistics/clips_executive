@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pitfalls and Considerations &mdash; clips_executive 0.1.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=86f27845" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+
+  
+  
+        <script src="../_static/jquery.js?v=8dae8fb0"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=360bc84d"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Ament Index Plugin" href="cx_ament_index.html" />
+    <link rel="prev" title="initialize()" href="overrides.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            clips_executive
+          </a>
+              <div class="version">
+                0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/index.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">CLIPS Plugins</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#plugin-interface">Plugin Interface</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="overrides.html">initialize()</a></li>
+<li class="toctree-l3"><a class="reference internal" href="overrides.html#clips-env-init">clips_env_init()</a></li>
+<li class="toctree-l3"><a class="reference internal" href="overrides.html#clips-env-destroyed">clips_env_destroyed()</a></li>
+<li class="toctree-l3"><a class="reference internal" href="overrides.html#finalize">finalize()</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Pitfalls and Considerations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#injected-functions-should-not-be-blocking">Injected functions should not be blocking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#keep-your-locking-scopes-as-tight-as-possible">Keep your locking scopes as tight as possible</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#be-aware-of-hidden-locks">Be aware of hidden locks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#available-plugins">Available Plugins</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../plugin_generator/index.html">ROS Interface Plugin Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extensions/index.html">Extensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../standards.html">Standard Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../__readme_include.html">README</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">clips_executive</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">CLIPS Plugins</a></li>
+      <li class="breadcrumb-item active">Pitfalls and Considerations</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/plugins/pitfalls.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="pitfalls-and-considerations">
+<h1>Pitfalls and Considerations<a class="headerlink" href="#pitfalls-and-considerations" title="Link to this heading"></a></h1>
+<p>Below are some lessons learned when developingthe core plugins of the ROS2 CLIPS-Executive. They might be a useful read for some.</p>
+<section id="injected-functions-should-not-be-blocking">
+<h2>Injected functions should not be blocking<a class="headerlink" href="#injected-functions-should-not-be-blocking" title="Link to this heading"></a></h2>
+<p>In order to ensure running a responsive CLIPS application, make sure the injected functions are executing fast. Long-lasting operations should rather be dispatched by a function and then asynchronously handled once they finish. This allows the inference engine to continue operating while heavy computations or time-consuming sub-routines are processed.</p>
+</section>
+<section id="keep-your-locking-scopes-as-tight-as-possible">
+<h2>Keep your locking scopes as tight as possible<a class="headerlink" href="#keep-your-locking-scopes-as-tight-as-possible" title="Link to this heading"></a></h2>
+<p>When writing complex plugins with asynchronous operations, be sure to scope your guarded regions well.</p>
+<p>A common pitfall may occur when plugins also need to guard data structures from concurrent access using some mutex, while also handling CLIPS access.</p>
+<p>Consider this example from <strong>cx_ros_msgs_plugin</strong> which allows interactions with ROS topics:</p>
+<ol class="arabic simple">
+<li><p>The asynchronous subscription callbacks adds messages and meta-data to an unordered map, which needs to be guarded by a mutex <cite>map_mtx_</cite> as multiple write operations could occur at the same time when multi-threaded executors and re-entrant callback groups are used. Additionally, the messages are asserted as facts (holding a reference to the message) in the callback.</p></li>
+<li><p>The <strong>ros-msgs-get-field</strong> UDF allows to retrieve fields of messages. As fields may contain messages, this again might need to store meta-data, hence it also needs to lock <cite>map_mtx_</cite>.</p></li>
+</ol>
+<p>A bad implementation using a scoped lock for the entire scope of the callback and the entire scope of <strong>ros-msgs-get-field</strong> could cause a deadlock if the ros-msgs-get-field function is called on the left-hand side of a rule, e.g., like this:</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">deadlock-example</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-subscription</span><span class="w"> </span><span class="p">(</span><span class="nv">topic</span><span class="w"> </span><span class="nv">?sub</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">?msg-f</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-message</span><span class="w"> </span><span class="p">(</span><span class="nv">topic</span><span class="w"> </span><span class="nv">?sub</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">msg-ptr</span><span class="w"> </span><span class="nv">?inc-msg</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">test</span><span class="w"> </span><span class="p">(</span><span class="nb">and</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-get-field</span><span class="w"> </span><span class="nv">?inc-msg</span><span class="w"> </span><span class="s">&quot;velocity&quot;</span><span class="p">))))</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>The assertion of the fact in the callback triggers the conditional check in the rule which therefore tries to lock <cite>map_mtx_</cite> blocked by the callback function itself. Hence, make sure to keep the scopes of any mutex as tight as possible!</p>
+</section>
+<section id="be-aware-of-hidden-locks">
+<h2>Be aware of hidden locks<a class="headerlink" href="#be-aware-of-hidden-locks" title="Link to this heading"></a></h2>
+<p>It can be tricky to interface between ROS callbacks and CLIPS environments, especially if locks are guarding said callbacks that are not visible to the end user.
+As CLIPS environment access must also guarded by locks (as access is not thread-safe), this can easily create deadlocks in situations, where other functions can be called from clips that also try to acquire the lock held by a callback.</p>
+<p>Example: The feedback callback for action clients is guarded by a mutex that is also used by client goal handles to access members in a thread-safe manner (such as get_status()).</p>
+<p>A CLIPS rule that calls ClientGoalHandle::get_status() will therefore attempt to lock such a mutex while the clips lock is being held by the thread running the clips environment.
+If a callback is received right before, then the clips environment will stall as the function call is stuck (mutex is held by the callback function), while the callback function is stuck because it tries to acquire the lock for the clips environment (because it wants to pass the callback content to the clips environment).</p>
+<p>In these cases special care must be taken, e.g., by deferring CLIPS access out of scope of the mutexes guarding the callbacks.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="overrides.html" class="btn btn-neutral float-left" title="initialize()" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cx_ament_index.html" class="btn btn-neutral float-right" title="Ament Index Plugin" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Tarik Viehmann.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

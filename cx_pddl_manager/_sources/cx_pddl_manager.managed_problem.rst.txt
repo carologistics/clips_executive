@@ -1,0 +1,7 @@
+cx\_pddl\_manager.managed\_problem module
+=========================================
+
+.. automodule:: cx_pddl_manager.managed_problem
+   :members:
+   :undoc-members:
+   :show-inheritance:

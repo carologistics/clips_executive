@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>initialize() &mdash; clips_executive 0.1.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=86f27845" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+
+  
+  
+        <script src="../_static/jquery.js?v=8dae8fb0"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=360bc84d"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Pitfalls and Considerations" href="pitfalls.html" />
+    <link rel="prev" title="CLIPS Plugins" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            clips_executive
+          </a>
+              <div class="version">
+                0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/index.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">CLIPS Plugins</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#plugin-interface">Plugin Interface</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">initialize()</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#clips-env-init">clips_env_init()</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#environment-reset">Environment Reset</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#environment-context-and-multithreading">Environment Context and Multithreading</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#clips-env-destroyed">clips_env_destroyed()</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#finalize">finalize()</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pitfalls.html">Pitfalls and Considerations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#available-plugins">Available Plugins</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../plugin_generator/index.html">ROS Interface Plugin Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extensions/index.html">Extensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../standards.html">Standard Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../__readme_include.html">README</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">clips_executive</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">CLIPS Plugins</a></li>
+      <li class="breadcrumb-item active">initialize()</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/plugins/overrides.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="initialize">
+<h1>initialize()<a class="headerlink" href="#initialize" title="Link to this heading"></a></h1>
+<p>This function is called exactly once when a plugin is loaded, before it actually provides it’s features to CLIPS environments.</p>
+<p>Typical uses include
+1) Reading of parameters from specified in the parent node.
+2) Initialization of environment-agnostic class members.</p>
+</section>
+<section id="clips-env-init">
+<h1>clips_env_init()<a class="headerlink" href="#clips-env-init" title="Link to this heading"></a></h1>
+<p>Called once for every environment the plugin is loaded into.</p>
+<p>Typically this is used to inject user-defined functions, define templates etc.</p>
+<p>It should return <cite>true</cite>, if the initialization of the environment was successful. If it returns <cite>false</cite>, then the plugin manager will call <cite>clips_env_destroyed</cite> to allow proper cleanup.</p>
+<section id="environment-reset">
+<h2>Environment Reset<a class="headerlink" href="#environment-reset" title="Link to this heading"></a></h2>
+<p>However, be aware that each environment is reset afterwards on startup.</p>
+<p>This in particular means that all asserted facts and instances are deleted and it makes no sense to directly assert facts in this function.</p>
+<p>If your plugin should provide initial facts, it should therefore use <cite>deffacts</cite> instead, which would assert the facts on reset.</p>
+</section>
+<section id="environment-context-and-multithreading">
+<h2>Environment Context and Multithreading<a class="headerlink" href="#environment-context-and-multithreading" title="Link to this heading"></a></h2>
+<p>Each environment also holds an instance of the <cite>CLIPSEnvContext</cite> class from the <strong>cx_utils</strong> package that can be retrieved via static functions:</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="n">cx</span><span class="o">::</span><span class="n">CLIPSEnvContext</span><span class="o">::</span><span class="n">get_context</span><span class="p">(</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="w"> </span><span class="o">*</span><span class="n">env</span><span class="p">)</span>
+<span class="n">cx</span><span class="o">::</span><span class="n">CLIPSEnvContext</span><span class="o">::</span><span class="n">get_context</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="o">&gt;</span><span class="w"> </span><span class="n">env</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This instance contains the name and the environment as well as a mutex to guard the environment.</p>
+<p><strong>Operations on CLIPS environments are not thread-safe</strong>, hence each environment interaction needs to be guarded by this mutex.
+This is mainly relevant for plugins handling asynchronous operations.
+Directly accessing the environment in <strong>clips_env_init</strong> or <strong>clips_env_destroyed</strong> is safe, because the plugin manager already guards the environments with the mutex (do <strong>not</strong> attempt to lock the mutex in this context or it will block).</p>
+<p>Similarly, if a plugin provides a C++ function to a CLIPS environment, it’s body will be scoped through whatever context that invoked the function (e.g., the CLIPS environment manager through invoking the inference engine via <code class="docutils literal notranslate"><span class="pre">(run)</span></code>).</p>
+</section>
+</section>
+<section id="clips-env-destroyed">
+<h1>clips_env_destroyed()<a class="headerlink" href="#clips-env-destroyed" title="Link to this heading"></a></h1>
+<p>Called once for every environment that needs to unload a previously loaded plugin’s feature.
+Also is called when a <cite>clips_env_init</cite> call returns <cite>false</cite>.</p>
+<p>Typically this is used to undefine user-defined functions, templates, etc.</p>
+</section>
+<section id="finalize">
+<h1>finalize()<a class="headerlink" href="#finalize" title="Link to this heading"></a></h1>
+<p>This function is called exactly once when a plugin is finally unloaded again, hence all resources should be freed for a graceful destruction of the object.</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="CLIPS Plugins" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pitfalls.html" class="btn btn-neutral float-right" title="Pitfalls and Considerations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Tarik Viehmann.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

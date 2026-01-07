@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDDL Manager Plugin &mdash; clips_executive 0.1.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=86f27845" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+
+  
+  
+        <script src="../../_static/jquery.js?v=8dae8fb0"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=360bc84d"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            clips_executive
+          </a>
+              <div class="version">
+                0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started/index.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plugins/index.html">CLIPS Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plugin_generator/index.html">ROS Interface Plugin Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Extensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../standards.html">Standard Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../__readme_include.html">README</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">clips_executive</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">PDDL Manager Plugin</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/extensions/pddl/PDDL.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="pddl-manager-plugin">
+<h1>PDDL Manager Plugin<a class="headerlink" href="#pddl-manager-plugin" title="Link to this heading"></a></h1>
+<p><strong>Goal:</strong> Interface with a managed PDDL domain and use a planner from CLIPS</p>
+<p><strong>Tutorial Level</strong>: Intermediate</p>
+<section id="background">
+<h2>Background<a class="headerlink" href="#background" title="Link to this heading"></a></h2>
+<p>This plugin provides the necessary means to integrate a CLIPS environment and a PDDL Planning Domain via the ROS2 CX. The core idea is that an external planner can be used to solve a given problem, instantiated from the world model maintained by CLIPS. This allows you to build an agent that can use the benefits of PDDL planning (including temporal planning) with its guarantees, while using the flexibility of CLIPS for execution itself.</p>
+</section>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h2>
+<p>This tutorial mostly focuses on the usage of a plugin from within the ROS2 CLIPS-Executive. That means you should have some understanding of how the ROS2CX generally operates, what plugins do in the ROS2CX (especially file load plugin, protobuf plugin, etc), etc. It’s also beneficial if you have some understanding of PDDL planning and ROS2-CLIPS integration in the ROS2CX.</p>
+<p>### Unified Planning Framework
+Under the hood, the PDDL Manager Plugin uses the UPF (Unified Planning Framework, <a class="reference external" href="https://github.com/aiplan4eu/unified-planning">https://github.com/aiplan4eu/unified-planning</a>), which is a wrapper that provides tools to provide a common interface with many different PDDL planners. It also provides some tools for plan introspection, managing problems and domains, and for parsing PDDL domain files. Since we build on this framework, the support of planners is generally dictated by compatibility with the UPF. In this case, we will use the temporal planner NextFLAP (<a class="reference external" href="https://github.com/ossaver/NextFLAP">https://github.com/ossaver/NextFLAP</a>), which is not supported by default (thus we provide some packaging around it).</p>
+</section>
+<section id="bridging-clips-and-pddl">
+<h2>Bridging CLIPS and PDDL<a class="headerlink" href="#bridging-clips-and-pddl" title="Link to this heading"></a></h2>
+<p>In the following, we will set up a simple project to show the steps required to incorporate PDDL planning through the PDDL Manager extension of the ROS2 CLIPS-Executive. We will go through all the steps from package creation to building and running a small example, in which we plan for a temporal version of BlocksWorld, and receive the completed plan on the CLIPS side. The final version of the project can be found under <cite>extensions/pddl/pddl_agent_example</cite>.</p>
+<section id="setting-up-a-new-package">
+<h3>Setting Up a New Package<a class="headerlink" href="#setting-up-a-new-package" title="Link to this heading"></a></h3>
+<p>First, we want to set up a new package for our project. You can generally set this package up wherever you desire, but in this tutorial we will work directly in the <cite>extensions/pddl</cite> directory. Run</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>pkg<span class="w"> </span>create<span class="w"> </span>--build-type<span class="w"> </span>ament_python<span class="w"> </span>--license<span class="w"> </span>Apache-2.0<span class="w"> </span>--node-name<span class="w"> </span>pddl_agent_example<span class="w"> </span>pddl_agent_example
+</pre></div>
+</div>
+<p>Additionally, in your package’s main directory, create the following directories: <cite>launch</cite>, <cite>clips</cite>, <cite>pddl</cite> and <cite>params</cite>, which we will use to store launch , clips, pddl, and config files respectively. Now you should have a project structure that’s roughly as follows:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">pddl_agent_example/</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">package.xml</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">resource/my_package</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">setup.cfg</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">setup.py</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">pddl_agent_example/</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">__init__.py</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">pddl_agent_example.py</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">launch/</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">params/</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">clips/</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">pddl/</span>
+</pre></div>
+</div>
+<p>In Ayour <cite>package.xml</cite>, change the description, maintainer and version to your desired values, and add the following dependencies:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;depend&gt;</span>rclcpp<span class="nt">&lt;/depend&gt;</span>
+<span class="nt">&lt;depend&gt;</span>cx_bringup<span class="nt">&lt;/depend&gt;</span>
+<span class="nt">&lt;depend&gt;</span>pddl_manager<span class="nt">&lt;/depend&gt;</span>
+</pre></div>
+</div>
+<p>Finally, we also need to properly configure the <cite>setup.py</cite> file in order to copy all the files we need to the right locations in the install directory. Add:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;share&#39;</span><span class="p">,</span> <span class="n">package_name</span><span class="p">,</span> <span class="s1">&#39;launch&#39;</span><span class="p">),</span> <span class="n">glob</span><span class="p">(</span><span class="s1">&#39;launch/*&#39;</span><span class="p">)),</span>
+<span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;share&#39;</span><span class="p">,</span> <span class="n">package_name</span><span class="p">,</span> <span class="s1">&#39;clips&#39;</span><span class="p">),</span> <span class="n">glob</span><span class="p">(</span><span class="s1">&#39;clips/*&#39;</span><span class="p">)),</span>
+<span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;share&#39;</span><span class="p">,</span> <span class="n">package_name</span><span class="p">,</span> <span class="s1">&#39;pddl&#39;</span><span class="p">),</span> <span class="n">glob</span><span class="p">(</span><span class="s1">&#39;pddl/*&#39;</span><span class="p">)),</span>
+<span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;share&#39;</span><span class="p">,</span> <span class="n">package_name</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">),</span> <span class="n">glob</span><span class="p">(</span><span class="s1">&#39;params/*&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>into your list of <cite>data_files</cite> in the <cite>setup.py</cite>. For the PDDL files, I refer you to look up the code for this Tutorial in the repository. We just use a simple temporal blocks world problem for this example.</p>
+</section>
+<section id="configuring-the-ros2-clips-executive">
+<h3>1 Configuring the ROS2 CLIPS-Executive<a class="headerlink" href="#configuring-the-ros2-clips-executive" title="Link to this heading"></a></h3>
+<p>For our planning project, we need several capabilities that come with the ROS2 CLIPS-Executive. First of all, we need to be able to:
+- Continuously run the inference engine, which can be achieved with the <a class="reference external" href="https://carologistics.github.io/clips_executive/clips_executive/plugins/executive_plugin">ExecutivePlugin</a>
+- Establish ROS communication to other components, which is provided by the <a class="reference external" href="https://carologistics.github.io/clips_executive/clips_executive/plugins/ros_msgs_plugin">RosMsgsPlugin</a>.
+- Load our CLIPS files in the environment, using the <a class="reference external" href="https://carologistics.github.io/clips_executive/clips_executive/plugins/executive_plugin">FileLoadPlugin</a>.</p>
+<p>Additionally, we will use need auto-generated plugins to properly interface with the PDDL manager. To achieve this, we need a configuration file that we can use to start the ROS2 CLIPS-Executive with exactly those capabilities:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">/**</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">autostart_node</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;pddl_agent&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">    </span><span class="nt">pddl_agent</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;executive&quot;</span><span class="p p-Indicator">,</span><span class="s">&quot;ros_msgs&quot;</span><span class="p p-Indicator">,</span><span class="s">&quot;files&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">                </span><span class="s">&quot;plan_temporal_action&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">                </span><span class="s">&quot;timed_plan_action_msg&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">                </span><span class="s">&quot;ament_index&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">log_clips_to_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">watch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facts&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;rules&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">    </span><span class="nt">executive</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::ExecutivePlugin&quot;</span>
+
+<span class="w">    </span><span class="nt">ros_msgs</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::RosMsgsPlugin&quot;</span>
+
+<span class="w">    </span><span class="nt">ament_index</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::AmentIndexPlugin&quot;</span>
+
+<span class="w">    </span><span class="nt">files</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::FileLoadPlugin&quot;</span>
+<span class="w">      </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;pddl_agent_example&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;clips/agent.clp&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">    </span><span class="nt">plan_temporal_action</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::CXPddlMsgsPlanTemporalPlugin&quot;</span>
+
+<span class="w">    </span><span class="nt">timed_plan_action_msg</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::CXPddlMsgsTimedPlanActionPlugin&quot;</span>
+</pre></div>
+</div>
+<p>The first block defines that the CX node starts and activates automatically. It also sets up a CLIPS environment with the name <cite>pddl_agent</cite> that is managed by the CX.</p>
+<p>For this environment, we defined the plugins <cite>executive</cite>, <cite>ros_msgs</cite>, <cite>files</cite>, <cite>config</cite>, <cite>plan_temporal_action</cite>, and <cite>timed_plan_action_msg</cite> to be loaded. The first two are required to run the executive, and to enable communication with ROS. The plugin <cite>files</cite> is used to load our self-written CLIPS files (here we will have only one: <cite>agent.clp</cite>. And the last two are auto-generated plugins that are used to interact with the PDDL manager extension, specifically to receive temporal actions from the planner, and to call the planner service.  Finally, we can use the <cite>ament_index</cite> plugin later to access our package directories to more easily find files like PDDL files.</p>
+<p>Save the file as <cite>config.yaml</cite> in the <cite>params</cite> directory that we previously created.</p>
+</section>
+<section id="writing-a-launch-file">
+<h3>3 Writing a Launch File<a class="headerlink" href="#writing-a-launch-file" title="Link to this heading"></a></h3>
+<p>Now we need to launch all our desired nodes. To do so properly, we will write a launch file <cite>example_launch.py</cite> in the <cite>launch</cite> directory we have created before.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>   <span class="k">def</span> <span class="nf">launch_with_context</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+   <span class="c1"># configure and launc the CX node</span>
+   <span class="n">example_agent_dir</span> <span class="o">=</span> <span class="n">get_package_share_directory</span><span class="p">(</span><span class="s1">&#39;pddl_agent_example&#39;</span><span class="p">)</span>
+   <span class="n">cx_config_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">example_agent_dir</span><span class="p">,</span> <span class="s2">&quot;params&quot;</span><span class="p">,</span> <span class="s2">&quot;config.yaml&quot;</span><span class="p">)</span>
+
+<span class="n">log_level</span> <span class="o">=</span> <span class="n">LaunchConfiguration</span><span class="p">(</span><span class="s1">&#39;log_level&#39;</span><span class="p">)</span>
+<span class="n">cx_node</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span>
+<span class="n">package</span><span class="o">=</span><span class="s1">&#39;cx_clips_env_manager&#39;</span><span class="p">,</span>
+<span class="n">executable</span><span class="o">=</span><span class="s1">&#39;cx_node&#39;</span><span class="p">,</span>
+<span class="n">output</span><span class="o">=</span><span class="s1">&#39;screen&#39;</span><span class="p">,</span>
+<span class="n">emulate_tty</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="n">parameters</span><span class="o">=</span><span class="p">[</span>
+<span class="n">cx_config_file</span><span class="p">,</span>
+<span class="p">],</span>
+<span class="n">arguments</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;--ros-args&#39;</span><span class="p">,</span> <span class="s1">&#39;--log-level&#39;</span><span class="p">,</span> <span class="n">log_level</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># launch the pddl_manager</span>
+<span class="n">pddl_manager_dir</span> <span class="o">=</span> <span class="n">get_package_share_directory</span><span class="p">(</span><span class="s1">&#39;pddl_manager&#39;</span><span class="p">)</span>
+<span class="n">launch_pddl_manager</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pddl_manager_dir</span><span class="p">,</span> <span class="s1">&#39;launch&#39;</span><span class="p">,</span> <span class="s1">&#39;pddl_manager.launch.py&#39;</span><span class="p">)</span>
+
+<span class="k">return</span> <span class="p">[</span><span class="n">cx_node</span><span class="p">,</span> <span class="n">IncludeLaunchDescription</span><span class="p">(</span>
+<span class="n">PythonLaunchDescriptionSource</span><span class="p">(</span><span class="n">launch_pddl_manager</span><span class="p">)</span>
+<span class="p">),]</span>
+
+<span class="k">def</span> <span class="nf">generate_launch_description</span><span class="p">():</span>
+<span class="n">declare_log_level_</span> <span class="o">=</span> <span class="n">DeclareLaunchArgument</span><span class="p">(</span>
+<span class="s2">&quot;log_level&quot;</span><span class="p">,</span>
+<span class="n">default_value</span><span class="o">=</span><span class="s1">&#39;info&#39;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="c1"># The lauchdescription to populate with defined CMDS</span>
+<span class="n">ld</span> <span class="o">=</span> <span class="n">LaunchDescription</span><span class="p">()</span>
+<span class="n">ld</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span><span class="n">declare_log_level_</span><span class="p">)</span>
+<span class="n">ld</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span><span class="n">OpaqueFunction</span><span class="p">(</span><span class="n">function</span><span class="o">=</span><span class="n">launch_with_context</span><span class="p">))</span>
+
+<span class="k">return</span> <span class="n">ld</span>
+</pre></div>
+</div>
+<p>The launch file consists of two parts, <cite>generate_launch_description</cite> returns a ROS2 launch description. In it we declare the log level as a parameter, and then use the function <cite>launch_with_context</cite> as a parameter to launch our actual nodes. First we define the directory of our package, and of our previously written config file, and start the ROS2 CLIPS-Executive node with the corresponding parameters. Then we also launch the <cite>pddl_manager</cite> as its own node, by finding its package directory and using its pre-defined launch file.</p>
+<p>If you now build and run using the steps described in <em>7</em>, you should see the all nodes start up and then nothing happening anymore. This means, we can now move onto the PDDL and CLIPS side.</p>
+</section>
+<section id="access-the-pddl-manager-from-clips">
+<h3>4 Access the PDDL Manager from CLIPS<a class="headerlink" href="#access-the-pddl-manager-from-clips" title="Link to this heading"></a></h3>
+<p>To access the PDDL Manager from within CLIPS, we need to understand how to communicate with other ROS2 nodes from within CLIPS. For this we can use the <cite>RosMsgs</cite> plugin.</p>
+<p>First, we need to create clients for the services that we need to access. To do this, we use the <cite>ros-msgs-create-client</cite> function. Let’s write a rule in our <cite>agent.clp</cite> for this:</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">pddl-init</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">pddl-services-loaded</span><span class="p">))</span>
+<span class="w">    </span><span class="nv">=&gt;</span>
+<span class="w">    </span><span class="c1">; create clints for all services</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?services</span><span class="w"> </span><span class="p">(</span><span class="nv">create$</span>
+<span class="w">        </span><span class="nv">add_fluents</span><span class="w"> </span><span class="nv">AddFluents</span>
+<span class="w">        </span><span class="nv">add_pddl_instance</span><span class="w"> </span><span class="nv">AddPddlInstance</span>
+<span class="w">        </span><span class="nv">get_fluents</span><span class="w"> </span><span class="nv">GetFluents</span>
+<span class="w">        </span><span class="nv">set_goals</span><span class="w"> </span><span class="nv">SetGoals</span>
+<span class="w">    </span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?index</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?length</span><span class="w"> </span><span class="p">(</span><span class="nv">length$</span><span class="w"> </span><span class="nv">?services</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">while</span><span class="w"> </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="nv">?index</span><span class="w"> </span><span class="nv">?length</span><span class="p">)</span>
+<span class="w">        </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?service-name</span><span class="w"> </span><span class="p">(</span><span class="nv">nth$</span><span class="w"> </span><span class="nv">?index</span><span class="w"> </span><span class="nv">?services</span><span class="p">))</span>
+<span class="w">        </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?service-type</span><span class="w"> </span><span class="p">(</span><span class="nv">nth$</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="nv">?index</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="nv">?services</span><span class="p">))</span>
+<span class="w">        </span><span class="p">(</span><span class="nv">ros-msgs-create-client</span>
+<span class="w">            </span><span class="p">(</span><span class="nv">str-cat</span><span class="w"> </span><span class="s">&quot;/pddl_manager&quot;</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="w"> </span><span class="nv">?service-name</span><span class="p">)</span>
+<span class="w">            </span><span class="p">(</span><span class="nv">str-cat</span><span class="w"> </span><span class="s">&quot;pddl_msgs/srv/&quot;</span><span class="w"> </span><span class="nv">?service-type</span><span class="p">)</span>
+<span class="w">        </span><span class="p">)</span>
+<span class="w">        </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?index</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="nv">?index</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">pddl-services-loaded</span><span class="p">))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>We also want to create a client for Plan Temporal, corresponding to the plugin we specifically loaded before: <cite>CXPddlMsgsPlanTemporalPlugin</cite>. To do so we can write the following simple rule:</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">pddl-init-plan-client</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">pddl-planning-client-created</span><span class="p">))</span>
+<span class="w">    </span><span class="nv">=&gt;</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">pddl-msgs-plan-temporal-create-client</span><span class="w"> </span><span class="p">(</span><span class="nv">str-cat</span><span class="w"> </span><span class="s">&quot;/pddl_manager&quot;</span><span class="w"> </span><span class="s">&quot;/temp_plan&quot;</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">pddl-planning-client-created</span><span class="p">))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>At the end of the rule, we assert a fact <cite>(pddl-services-loaded)</cite>, we use this to guide the program flow, and to “forward our agenda”.  Next, we need to create a PDDL instance and tell the PDDL Manager which domain and problem files to load. We can use a rule like the following one for this:</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">pddl-add-instance</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">ros-msgs-client</span><span class="w"> </span><span class="p">(</span><span class="nv">service</span><span class="w"> </span><span class="nv">?service&amp;:</span><span class="p">(</span><span class="nb">eq</span><span class="w"> </span><span class="nv">?service</span><span class="w"> </span><span class="p">(</span><span class="nv">str-cat</span><span class="w"> </span><span class="s">&quot;/pddl_manager&quot;</span><span class="w"> </span><span class="s">&quot;/add_pddl_instance&quot;</span><span class="p">)))</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">?type</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">pddl-loaded</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">pddl-services-loaded</span><span class="p">)</span>
+<span class="w">    </span><span class="nv">=&gt;</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?new-req</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-create-request</span><span class="w"> </span><span class="nv">?type</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">ros-msgs-set-field</span><span class="w"> </span><span class="nv">?new-req</span><span class="w"> </span><span class="s">&quot;name&quot;</span><span class="w"> </span><span class="s">&quot;test&quot;</span><span class="p">)</span><span class="w"> </span><span class="c1">;instance of name test</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?share-dir</span><span class="w"> </span><span class="p">(</span><span class="nv">ament-index-get-package-share-directory</span><span class="w"> </span><span class="s">&quot;pddl_agent_example&quot;</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">ros-msgs-set-field</span><span class="w"> </span><span class="nv">?new-req</span><span class="w"> </span><span class="s">&quot;directory&quot;</span><span class="w"> </span><span class="p">(</span><span class="nv">str-cat</span><span class="w"> </span><span class="nv">?share-dir</span><span class="w"> </span><span class="s">&quot;/pddl&quot;</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">ros-msgs-set-field</span><span class="w"> </span><span class="nv">?new-req</span><span class="w"> </span><span class="s">&quot;domain_file&quot;</span><span class="w"> </span><span class="s">&quot;domain.pddl&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">ros-msgs-set-field</span><span class="w"> </span><span class="nv">?new-req</span><span class="w"> </span><span class="s">&quot;problem_file&quot;</span><span class="w"> </span><span class="s">&quot;problem.pddl&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?id</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-async-send-request</span><span class="w"> </span><span class="nv">?new-req</span><span class="w"> </span><span class="nv">?service</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">pddl-loaded</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">ros-msgs-destroy-message</span><span class="w"> </span><span class="nv">?new-req</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Note, that we use the fact <cite>ros-msgs-client</cite> in our precondition to check whether we have a client for the <cite>add_pddl_instance</cite> service that we can use to create our request. We will have this, because of the rule that we previously wrote. Also note, that the service is identified by the node name (here we assume the default <cite>/pddl_manager</cite>) and by the service name <cite>add_pddl_instance</cite>. On the RHS of the rule, we just create a request message using the <cite>ros-msgs-create-request</cite> function, and then we fill the fields as required. We call our instance <cite>test</cite>, we use <cite>ament-index-get-package-share-directory</cite> to find the path to our PDDL files, and we just give the names of the files we created. Finally, we send the request using the function <cite>ros-msgs-async-send-request</cite> and destroy the message for memory cleanliness ;)</p>
+<p>We want to know what kind of response we got (i.e., whether our request was successful or not, e.g., because the domain file contained errors), so we can write another rule for that:</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">pddl-add-instance-result</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">ros-msgs-client</span><span class="w"> </span><span class="p">(</span><span class="nv">service</span><span class="w"> </span><span class="nv">?s&amp;:</span><span class="p">(</span><span class="nb">eq</span><span class="w"> </span><span class="nv">?s</span><span class="w"> </span><span class="p">(</span><span class="nv">str-cat</span><span class="w"> </span><span class="s">&quot;/pddl_manager&quot;</span><span class="w"> </span><span class="s">&quot;/add_pddl_instance&quot;</span><span class="p">)))</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">?type</span><span class="p">))</span>
+<span class="w">    </span><span class="nv">?msg-f</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-response</span><span class="w"> </span><span class="p">(</span><span class="nv">service</span><span class="w"> </span><span class="nv">?s</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">msg-ptr</span><span class="w"> </span><span class="nv">?ptr</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">request-id</span><span class="w"> </span><span class="nv">?id</span><span class="p">))</span>
+<span class="w">    </span><span class="nv">=&gt;</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?success</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-get-field</span><span class="w"> </span><span class="nv">?ptr</span><span class="w"> </span><span class="s">&quot;success&quot;</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?error</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-get-field</span><span class="w"> </span><span class="nv">?ptr</span><span class="w"> </span><span class="s">&quot;error&quot;</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="nv">?success</span><span class="w"> </span><span class="nv">then</span>
+<span class="w">        </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="s">&quot;PDDL instance added&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">    </span><span class="nv">else</span>
+<span class="w">        </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nb">error</span><span class="w"> </span><span class="s">&quot;Failed to set problem instance&quot;</span><span class="w"> </span><span class="nv">?error</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">ros-msgs-destroy-message</span><span class="w"> </span><span class="nv">?ptr</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?msg-f</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>We use <cite>ros-msgs-client</cite> as before, but now also check if there is a <cite>ros-msgs-response</cite> fact. These facts are automatically asserted if we get a response to a request. They have a pointer in memory to a message, which we use to read them. On the RHS we unpack the message behind the pointer and just add some output. Finally, we destroy the message and retract the response fact.</p>
+</section>
+<section id="set-a-goal">
+<h3>5 Set a Goal<a class="headerlink" href="#set-a-goal" title="Link to this heading"></a></h3>
+<p>Now that we have a PDDL instance set up, we can plan for it. As a first step, let’s define the goal that we want to plan for. For this, we need to things: <cite>pddl_msgs/msg/Fluent</cite> messages, that we can use to describe the goal fluents. And the <cite>ros-msgs-client</cite> we know already. In the following rule we will do the following things:</p>
+<ul class="simple">
+<li><p>create a request</p></li>
+<li><p>create two fluents that make up our planning goal, corresponding to <cite>(and (on a b) (on b c))</cite> (remember we’re working with a simple temporal blocksworld example here)</p></li>
+<li><p>=end the request with the two fluents and clean up.</p></li>
+</ul>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">pddl-set-goal</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">pddl-fluents-requested</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">pddl-goals-set</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">ros-msgs-client</span><span class="w"> </span><span class="p">(</span><span class="nv">service</span><span class="w"> </span><span class="nv">?s&amp;:</span><span class="p">(</span><span class="nb">eq</span><span class="w"> </span><span class="nv">?s</span><span class="w"> </span><span class="p">(</span><span class="nv">str-cat</span><span class="w"> </span><span class="s">&quot;/pddl_manager&quot;</span><span class="w"> </span><span class="s">&quot;/set_goals&quot;</span><span class="p">)))</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">?type</span><span class="p">))</span>
+<span class="w">    </span><span class="nv">=&gt;</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?new-req</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-create-request</span><span class="w"> </span><span class="nv">?type</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?fluent-goal-msgs</span><span class="w"> </span><span class="p">(</span><span class="nv">create$</span><span class="p">))</span>
+
+<span class="w">    </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?fluent-msg</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-create-message</span><span class="w"> </span><span class="s">&quot;pddl_msgs/msg/Fluent&quot;</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">ros-msgs-set-field</span><span class="w"> </span><span class="nv">?fluent-msg</span><span class="w"> </span><span class="s">&quot;pddl_instance&quot;</span><span class="w"> </span><span class="s">&quot;test&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">ros-msgs-set-field</span><span class="w"> </span><span class="nv">?fluent-msg</span><span class="w"> </span><span class="s">&quot;name&quot;</span><span class="w"> </span><span class="s">&quot;on&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">ros-msgs-set-field</span><span class="w"> </span><span class="nv">?fluent-msg</span><span class="w"> </span><span class="s">&quot;args&quot;</span><span class="w"> </span><span class="p">(</span><span class="nv">create$</span><span class="w"> </span><span class="s">&quot;a&quot;</span><span class="w"> </span><span class="s">&quot;b&quot;</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?fluent-goal-msgs</span><span class="w"> </span><span class="p">(</span><span class="nv">create$</span><span class="w"> </span><span class="nv">?fluent-goal-msgs</span><span class="w"> </span><span class="nv">?fluent-msg</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?fluent-msg</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-create-message</span><span class="w"> </span><span class="s">&quot;pddl_msgs/msg/Fluent&quot;</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">ros-msgs-set-field</span><span class="w"> </span><span class="nv">?fluent-msg</span><span class="w"> </span><span class="s">&quot;pddl_instance&quot;</span><span class="w"> </span><span class="s">&quot;test&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">ros-msgs-set-field</span><span class="w"> </span><span class="nv">?fluent-msg</span><span class="w"> </span><span class="s">&quot;name&quot;</span><span class="w"> </span><span class="s">&quot;on&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">ros-msgs-set-field</span><span class="w"> </span><span class="nv">?fluent-msg</span><span class="w"> </span><span class="s">&quot;args&quot;</span><span class="w"> </span><span class="p">(</span><span class="nv">create$</span><span class="w"> </span><span class="s">&quot;b&quot;</span><span class="w"> </span><span class="s">&quot;c&quot;</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?fluent-goal-msgs</span><span class="w"> </span><span class="p">(</span><span class="nv">create$</span><span class="w"> </span><span class="nv">?fluent-goal-msgs</span><span class="w"> </span><span class="nv">?fluent-msg</span><span class="p">))</span>
+
+<span class="w">    </span><span class="p">(</span><span class="nv">ros-msgs-set-field</span><span class="w"> </span><span class="nv">?new-req</span><span class="w"> </span><span class="s">&quot;fluents&quot;</span><span class="w"> </span><span class="nv">?fluent-goal-msgs</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?id</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-async-send-request</span><span class="w"> </span><span class="nv">?new-req</span><span class="w"> </span><span class="nv">?s</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="nv">?id</span><span class="w"> </span><span class="nv">then</span>
+<span class="w">        </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="s">&quot;Requested to set goals&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">    </span><span class="nv">else</span>
+<span class="w">        </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nb">error</span><span class="w"> </span><span class="s">&quot;Sending of request failed, is the service &quot;</span><span class="w"> </span><span class="nv">?s</span><span class="w"> </span><span class="s">&quot; running?&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">foreach</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="nv">?fluent-goal-msgs</span>
+<span class="w">        </span><span class="p">(</span><span class="nv">ros-msgs-destroy-message</span><span class="w"> </span><span class="nv">?msg</span><span class="p">)</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">ros-msgs-destroy-message</span><span class="w"> </span><span class="nv">?new-req</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">pddl-goals-set</span><span class="p">))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>As you can see by now, communicating with the PDDL Manager follows the template of communicating with any other ROS node using the ROS2 CLIPS-Executive.</p>
+<p>Again, we can listen to the results of our requests using the same approach as above:</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">pddl-set-goal-result</span>
+<span class="s">&quot; Get response, read it and delete.&quot;</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">ros-msgs-client</span><span class="w"> </span><span class="p">(</span><span class="nv">service</span><span class="w"> </span><span class="nv">?s&amp;:</span><span class="p">(</span><span class="nb">eq</span><span class="w"> </span><span class="nv">?s</span><span class="w"> </span><span class="p">(</span><span class="nv">str-cat</span><span class="w"> </span><span class="s">&quot;/pddl_manager&quot;</span><span class="w"> </span><span class="s">&quot;/set_goals&quot;</span><span class="p">)))</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">?type</span><span class="p">))</span>
+<span class="w">    </span><span class="nv">?msg-f</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-response</span><span class="w"> </span><span class="p">(</span><span class="nv">service</span><span class="w"> </span><span class="nv">?s</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">msg-ptr</span><span class="w"> </span><span class="nv">?ptr</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">request-id</span><span class="w"> </span><span class="nv">?id</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">pddl-goals-set</span><span class="p">)</span>
+<span class="w">    </span><span class="nv">=&gt;</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?success</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-get-field</span><span class="w"> </span><span class="nv">?ptr</span><span class="w"> </span><span class="s">&quot;success&quot;</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?error</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-get-field</span><span class="w"> </span><span class="nv">?ptr</span><span class="w"> </span><span class="s">&quot;error&quot;</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="nv">?success</span><span class="w"> </span><span class="nv">then</span>
+<span class="w">        </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="s">&quot;Goals set successfully&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">    </span><span class="nv">else</span>
+<span class="w">        </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nb">error</span><span class="w"> </span><span class="s">&quot;Failed to set goals (&quot;</span><span class="w"> </span><span class="s">&quot;test&quot;</span><span class="w"> </span><span class="s">&quot;):&quot;</span><span class="w"> </span><span class="nv">?error</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">ros-msgs-destroy-message</span><span class="w"> </span><span class="nv">?ptr</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?msg-f</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="plan-for-the-problem">
+<h3>6 Plan for the Problem<a class="headerlink" href="#plan-for-the-problem" title="Link to this heading"></a></h3>
+<p>Finally, we can plan for the problem. So let’s do it. Planning works a bit different, as we work with the <cite>pddl-msgs-plan-temporal-client</cite> now. Besides the change in names, the principle is still the same:</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">pddl-plan</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">pddl-msgs-plan-temporal-client</span><span class="w"> </span><span class="p">(</span><span class="nv">server</span><span class="w"> </span><span class="nv">?server&amp;:</span><span class="p">(</span><span class="nb">eq</span><span class="w"> </span><span class="nv">?server</span><span class="w"> </span><span class="s">&quot;/pddl_manager/temp_plan&quot;</span><span class="p">)))</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">planned</span><span class="p">))</span>
+<span class="w">    </span><span class="nv">=&gt;</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;Start planning&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?goal</span><span class="w"> </span><span class="p">(</span><span class="nv">pddl-msgs-plan-temporal-goal-create</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">pddl-msgs-plan-temporal-goal-set-field</span><span class="w"> </span><span class="nv">?goal</span><span class="w"> </span><span class="s">&quot;pddl_instance&quot;</span><span class="w"> </span><span class="s">&quot;test&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">pddl-msgs-plan-temporal-goal-set-field</span><span class="w"> </span><span class="nv">?goal</span><span class="w"> </span><span class="s">&quot;goal_instance&quot;</span><span class="w"> </span><span class="s">&quot;base&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">pddl-msgs-plan-temporal-send-goal</span><span class="w"> </span><span class="nv">?goal</span><span class="w"> </span><span class="nv">?server</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">planned</span><span class="p">))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Here we plan for the instance <cite>test</cite> as defined above, and its base goal instance <cite>base</cite>.</p>
+<p>Once we get the callback from the planner we can check if it successfully found a plan, and if it did, we can read the resulting plan actions. Since we are planning for a temporal planning, we can also get the durations and the time of the action in the plan. In the following rule we read the response, and print the actions nicely if we got a plan. Yay, we’re done!</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">pddl-plan-result</span>
+<span class="w">    </span><span class="nv">?wr-f</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">pddl-msgs-plan-temporal-wrapped-result</span><span class="w"> </span><span class="p">(</span><span class="nv">server</span><span class="w"> </span><span class="s">&quot;/pddl_manager/temp_plan&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">code</span><span class="w"> </span><span class="nv">SUCCEEDED</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">result-ptr</span><span class="w"> </span><span class="nv">?res-ptr</span><span class="p">))</span>
+<span class="w">    </span><span class="nv">=&gt;</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?plan-found</span><span class="w"> </span><span class="p">(</span><span class="nv">pddl-msgs-plan-temporal-result-get-field</span><span class="w"> </span><span class="nv">?res-ptr</span><span class="w"> </span><span class="s">&quot;success&quot;</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;planning done&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="nv">?plan-found</span><span class="w"> </span><span class="nv">then</span>
+<span class="w">        </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?plan</span><span class="w"> </span><span class="p">(</span><span class="nv">pddl-msgs-plan-temporal-result-get-field</span><span class="w"> </span><span class="nv">?res-ptr</span><span class="w"> </span><span class="s">&quot;actions&quot;</span><span class="p">))</span>
+<span class="w">        </span><span class="p">(</span><span class="nv">foreach</span><span class="w"> </span><span class="nv">?action</span><span class="w"> </span><span class="nv">?plan</span>
+<span class="w">        </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?name</span><span class="w"> </span><span class="p">(</span><span class="nv">sym-cat</span><span class="w"> </span><span class="p">(</span><span class="nv">pddl-msgs-timed-plan-action-get-field</span><span class="w"> </span><span class="nv">?action</span><span class="w"> </span><span class="s">&quot;name&quot;</span><span class="p">)))</span>
+<span class="w">        </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?args</span><span class="w"> </span><span class="p">(</span><span class="nv">pddl-msgs-timed-plan-action-get-field</span><span class="w"> </span><span class="nv">?action</span><span class="w"> </span><span class="s">&quot;args&quot;</span><span class="p">))</span>
+<span class="w">        </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?ps-time</span><span class="w"> </span><span class="p">(</span><span class="nv">pddl-msgs-timed-plan-action-get-field</span><span class="w"> </span><span class="nv">?action</span><span class="w"> </span><span class="s">&quot;start_time&quot;</span><span class="p">))</span>
+<span class="w">        </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?p-duration</span><span class="w"> </span><span class="p">(</span><span class="nv">pddl-msgs-timed-plan-action-get-field</span><span class="w"> </span><span class="nv">?action</span><span class="w"> </span><span class="s">&quot;duration&quot;</span><span class="p">))</span>
+<span class="w">        </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="nv">?ps-time</span><span class="w"> </span><span class="s">&quot;(&quot;</span><span class="w"> </span><span class="nv">?p-duration</span><span class="w"> </span><span class="s">&quot;)   &quot;</span><span class="w"> </span><span class="nv">?name</span><span class="w"> </span><span class="nv">?args</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">        </span><span class="p">)</span>
+<span class="w">    </span><span class="nv">else</span>
+<span class="w">        </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">red</span><span class="w"> </span><span class="s">&quot;plan not found!&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">pddl-msgs-plan-temporal-result-destroy</span><span class="w"> </span><span class="nv">?res-ptr</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="build-and-run">
+<h3>7 Build and Run<a class="headerlink" href="#build-and-run" title="Link to this heading"></a></h3>
+<p>To build the package, go into the respective directory in your workspace and run</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>colcon<span class="w"> </span>build<span class="w"> </span>--symlink-install<span class="w"> </span>--cmake-args<span class="w"> </span>-DCMAKE_BUILD_TYPE<span class="o">=</span>Debug<span class="w"> </span>-DBUILD_TESTING<span class="o">=</span>OFF
+</pre></div>
+</div>
+<p>Now you need to source the package</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>install/setup.bash
+</pre></div>
+</div>
+<p>And finally, you can start the system using the launch file we wrote. You should see the planner being initialised and triggered, and the actions in the plan being printed. Run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>pddl_agent_example<span class="w"> </span>example_launch.py
+</pre></div>
+</div>
+<p>to start the full system.</p>
+</section>
+<section id="summary">
+<h3>Summary<a class="headerlink" href="#summary" title="Link to this heading"></a></h3>
+<p>You now know how to get access to PDDL planners through the ROS2 CLIPS-Executive with the PDDL Manager Plugin. This allows you to dynamically plan for problems and use the resulting plans as guidelines for your execution. The PDDL manager provides more tools for advanced users, so you can also manage multiple instances of a planning problem with various granularities and subsets of actions, and predicates.</p>
+</section>
+<section id="addendum-other-fun-things-you-can-do">
+<h3>Addendum: Other fun things you can do<a class="headerlink" href="#addendum-other-fun-things-you-can-do" title="Link to this heading"></a></h3>
+<p>Of course there’s many more interesting things you can do with the PDDL manager:</p>
+<ul class="simple">
+<li><p>you can check whether preconditions of actions are satisifed</p></li>
+<li><p>you can add and delete fluents from the world state</p></li>
+<li><p>you can manage complex problems, restricting your domain to only a subset of objects, fluents, or actions, etc.</p></li>
+<li><p>and many more.</p></li>
+</ul>
+<p>These functionalities are still partially under development and will be covered in different tutorials. But, due to its relevance, we will briefly cover how to access the current initial state for your problem using the PDDL manager. The principles are the same that we already know, so we won’t go into too much detail.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">pddl-get-fluents</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-client</span><span class="w"> </span><span class="p">(</span><span class="nv">service</span><span class="w"> </span><span class="nv">?s&amp;:</span><span class="p">(</span><span class="nb">eq</span><span class="w"> </span><span class="nv">?s</span><span class="w"> </span><span class="p">(</span><span class="nv">str-cat</span><span class="w"> </span><span class="s">&quot;/pddl_manager&quot;</span><span class="w"> </span><span class="s">&quot;/get_fluents&quot;</span><span class="p">)))</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">?type</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">pddl-loaded</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">pddl-fluents-requested</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?new-req</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-create-request</span><span class="w"> </span><span class="nv">?type</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-set-field</span><span class="w"> </span><span class="nv">?new-req</span><span class="w"> </span><span class="s">&quot;pddl_instance&quot;</span><span class="w"> </span><span class="s">&quot;test&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?id</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-async-send-request</span><span class="w"> </span><span class="nv">?new-req</span><span class="w"> </span><span class="nv">?s</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="nv">?id</span><span class="w"> </span><span class="nv">then</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="s">&quot;Requested Fluents&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">pddl-fluents-requested</span><span class="p">))</span>
+<span class="w">   </span><span class="nv">else</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nb">error</span><span class="w"> </span><span class="s">&quot;Sending of request failed, is the service &quot;</span><span class="w"> </span><span class="nv">?s</span><span class="w"> </span><span class="s">&quot; running?&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-destroy-message</span><span class="w"> </span><span class="nv">?new-req</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">pddl-get-fluents-result</span>
+<span class="s">&quot; Get response, read it and delete.&quot;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-client</span><span class="w"> </span><span class="p">(</span><span class="nv">service</span><span class="w"> </span><span class="nv">?s&amp;:</span><span class="p">(</span><span class="nb">eq</span><span class="w"> </span><span class="nv">?s</span><span class="w"> </span><span class="p">(</span><span class="nv">str-cat</span><span class="w"> </span><span class="s">&quot;/pddl_manager&quot;</span><span class="w"> </span><span class="s">&quot;/get_fluents&quot;</span><span class="p">)))</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">?type</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">?msg-f</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-response</span><span class="w"> </span><span class="p">(</span><span class="nv">service</span><span class="w"> </span><span class="nv">?s</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">msg-ptr</span><span class="w"> </span><span class="nv">?ptr</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">request-id</span><span class="w"> </span><span class="nv">?id</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">pddl-fluents-requested</span><span class="p">)</span>
+<span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?success</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-get-field</span><span class="w"> </span><span class="nv">?ptr</span><span class="w"> </span><span class="s">&quot;success&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?error</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-get-field</span><span class="w"> </span><span class="nv">?ptr</span><span class="w"> </span><span class="s">&quot;error&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="nv">?success</span><span class="w"> </span><span class="nv">then</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="s">&quot;Got fluents from current instance&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?fluents</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-get-field</span><span class="w"> </span><span class="nv">?ptr</span><span class="w"> </span><span class="s">&quot;fluents&quot;</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">foreach</span><span class="w"> </span><span class="nv">?fluent</span><span class="w"> </span><span class="nv">?fluents</span>
+<span class="w">      </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?instance</span><span class="w"> </span><span class="p">(</span><span class="nv">sym-cat</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-get-field</span><span class="w"> </span><span class="nv">?fluent</span><span class="w"> </span><span class="s">&quot;pddl_instance&quot;</span><span class="p">)))</span>
+<span class="w">      </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?name</span><span class="w"> </span><span class="p">(</span><span class="nv">sym-cat</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-get-field</span><span class="w"> </span><span class="nv">?fluent</span><span class="w"> </span><span class="s">&quot;name&quot;</span><span class="p">)))</span>
+<span class="w">      </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?args</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-get-field</span><span class="w"> </span><span class="nv">?fluent</span><span class="w"> </span><span class="s">&quot;args&quot;</span><span class="p">))</span>
+<span class="w">      </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="nv">?name</span><span class="w"> </span><span class="nv">?args</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">   </span><span class="nv">else</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nb">error</span><span class="w"> </span><span class="s">&quot;Failed to get fluents (&quot;</span><span class="w"> </span><span class="s">&quot;test&quot;</span><span class="w"> </span><span class="s">&quot;):&quot;</span><span class="w"> </span><span class="nv">?error</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-destroy-message</span><span class="w"> </span><span class="nv">?ptr</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Tarik Viehmann.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,18 @@
+cx\_rl\_gym package
+===================
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   cx_rl_gym.cx_rl_gym
+
+Module contents
+---------------
+
+.. automodule:: cx_rl_gym
+   :members:
+   :undoc-members:
+   :show-inheritance:
