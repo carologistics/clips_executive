@@ -24,7 +24,7 @@ set(SERVICES
 
 set(ACTIONS
   "action/GetFreeRobot.action"
-  "action/ResetCX.action"
+  "action/ResetEnv.action"
   "action/ActionSelection.action"
 )
 rosidl_generate_interfaces(${PROJECT_NAME}
