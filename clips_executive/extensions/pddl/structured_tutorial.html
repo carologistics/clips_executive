@@ -430,7 +430,7 @@ colcon<span class="w"> </span>build<span class="w"> </span>--symlink-install
 </pre></div>
 </div>
 <p>Then launch the agent:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>cx_bringup<span class="w"> </span>cx_launch.py<span class="w"> </span>manager_config:<span class="o">=</span>structured_pddl_agent.yaml<span class="w"> </span>package:<span class="o">=</span>cx_pddl_bringup
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>cx_pddl_bringup<span class="w"> </span>cx_pddl_launch.py<span class="w"> </span>manager_config:<span class="o">=</span>pddl_agents/structured_agent.yaml
 </pre></div>
 </div>
 <p>You should see the CLIPS output showing initialization, goal setup, planning,
