@@ -680,7 +680,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
             grounded_action = self.ground_action(action)
             # Build current state
             initial_values = instance.initial_values
-            current_state = UPState(initial_values)
+            current_state = UPState(initial_values, instance)
             # Evaluate each start condition
             se = StateEvaluator(instance)
             evaluate: Callable[[FNode], FNode] = lambda exp: se.evaluate(exp, current_state)
