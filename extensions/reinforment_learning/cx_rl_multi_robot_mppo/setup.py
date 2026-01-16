@@ -31,7 +31,6 @@ setup(
     maintainer_email='viehmann@kbsg.rwth-aachen.de',
     description='Multi-robot maskable proximal policy optimization (mppo) implementation',
     license='Apache-2.0',
-    tests_require=['pytest'],
     entry_points={
         'console_scripts': ['cx_rl_node = cx_rl_multi_robot_mppo.cx_rl_node:main'],
     },
