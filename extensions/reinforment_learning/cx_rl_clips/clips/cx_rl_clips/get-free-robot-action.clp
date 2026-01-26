@@ -95,7 +95,7 @@
   ?gfr <- (rl-ros-action-meta-get-free-robot (node ?node) (robot ?robot) (last-search ?last) (found ?found) (uuid ?uuid) (abort-action TRUE))
   (test (eq ?uuid (cx-rl-interfaces-get-free-robot-server-goal-handle-get-goal-id ?ptr)))
 =>
-  (printout ?*CX-RL-LOG-LEVEL* "ResetCX: Aborting robot search" crlf)
+  (printout ?*CX-RL-LOG-LEVEL* "ResetEnv: Aborting robot search" crlf)
   (bind ?result (cx-rl-interfaces-get-free-robot-result-create))
   (cx-rl-interfaces-get-free-robot-result-set-field ?result "robot" "Aborted")
   (cx-rl-interfaces-get-free-robot-server-goal-handle-abort ?ptr ?result)

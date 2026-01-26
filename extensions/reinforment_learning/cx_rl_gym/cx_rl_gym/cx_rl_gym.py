@@ -30,7 +30,7 @@ from functools import partial
 from itertools import product
 import time
 
-from cx_rl_interfaces.action import ActionSelection, GetFreeRobot, ResetCX
+from cx_rl_interfaces.action import ActionSelection, GetFreeRobot, ResetEnv
 from cx_rl_interfaces.srv import (
     CreateRLEnvState,
     ExecActionSelection,
@@ -97,11 +97,11 @@ class CXRLGym(Env):
             GetActionList, 'create_rl_action_space'
         )
 
-        self.reset_cx_client = ActionClient(self.node, ResetCX, 'reset_cx')
-        self.reset_cx_result = None
-        self.reset_cx_send_goal_future = None
-        self.reset_cx_get_result_future = None
-        self.reset_cx_goal_handle = None
+        self.reset_env_client = ActionClient(self.node, ResetEnv, 'reset_env')
+        self.reset_env_result = None
+        self.reset_env_send_goal_future = None
+        self.reset_env_get_result_future = None
+        self.reset_env_goal_handle = None
 
         self.get_free_robot_client = ActionClient(self.node, GetFreeRobot, 'get_free_robot')
         self.get_free_robot_result = None
@@ -310,7 +310,7 @@ class CXRLGym(Env):
         """
         Reset the environment and return the initial observation.
 
-        Calls the `/reset_cx` action and queries `/create_rl_env_state`
+        Calls the `/reset_env` action and queries `/create_rl_env_state`
         for the initial environment state.
 
         Parameters
@@ -331,7 +331,7 @@ class CXRLGym(Env):
         """
         self.node.get_logger().info('Resetting environment...')
         super().reset(seed=seed)
-        result = self.reset_cx()
+        result = self.reset_env()
         self.node.get_logger().info(result)
 
         state = self.get_observation()
@@ -700,31 +700,31 @@ class CXRLGym(Env):
         response.actionid = self.executable_actions_dict[action_string]
         return response
 
-    def reset_cx(self) -> str:
+    def reset_env(self) -> str:
         """
         Reset the CLIPS executive (CX) node.
 
-        Sends a goal to the `ResetCX` action server and waits for completion.
+        Sends a goal to the `ResetEnv` action server and waits for completion.
 
         Returns
         -------
             str: Confirmation message from the CX node after reset.
 
         """
-        goal_msg = ResetCX.Goal()
-        self.reset_cx_client.wait_for_server()
-        self.reset_cx_send_goal_future = self.reset_cx_client.send_goal_async(
-            goal_msg, self.reset_cx_feedback_callback
+        goal_msg = ResetEnv.Goal()
+        self.reset_env_client.wait_for_server()
+        self.reset_env_send_goal_future = self.reset_env_client.send_goal_async(
+            goal_msg, self.reset_env_feedback_callback
         )
-        self.reset_cx_send_goal_future.add_done_callback(self.reset_cx_goal_response_callback)
-        while self.reset_cx_result is None:
+        self.reset_env_send_goal_future.add_done_callback(self.reset_env_goal_response_callback)
+        while self.reset_env_result is None:
             time.sleep(self.time_sleep)
-        reset_confirm = self.reset_cx_result.confirmation
+        reset_confirm = self.reset_env_result.confirmation
         return reset_confirm
 
-    def reset_cx_goal_response_callback(self, future: Future) -> None:
+    def reset_env_goal_response_callback(self, future: Future) -> None:
         """
-        Handle the goal response from the `ResetCX` action server via callback.
+        Handle the goal response from the `ResetEnv` action server via callback.
 
         Parameters
         ----------
@@ -734,16 +734,16 @@ class CXRLGym(Env):
         """
         goal_handle = future.result()
         if not goal_handle.accepted:
-            self.node.get_logger().info('reset_cx rejected')
+            self.node.get_logger().info('reset_env rejected')
             return
-        self.node.get_logger().info('reset_cx accepted')
-        self.reset_cx_goal_handle = goal_handle
-        self.reset_cx_get_result_future = goal_handle.get_result_async()
-        self.reset_cx_get_result_future.add_done_callback(self.reset_cx_get_result_callback)
+        self.node.get_logger().info('reset_env accepted')
+        self.reset_env_goal_handle = goal_handle
+        self.reset_env_get_result_future = goal_handle.get_result_async()
+        self.reset_env_get_result_future.add_done_callback(self.reset_env_get_result_callback)
 
-    def reset_cx_get_result_callback(self, future: Future) -> None:
+    def reset_env_get_result_callback(self, future: Future) -> None:
         """
-        Handle the result returned from the `ResetCX` action via callback.
+        Handle the result returned from the `ResetEnv` action via callback.
 
         Parameters
         ----------
@@ -751,25 +751,25 @@ class CXRLGym(Env):
                 The future containing the action result.
 
         """
-        self.node.get_logger().info('Result for reset_cx received')
-        self.reset_cx_result = future.result().result
+        self.node.get_logger().info('Result for reset_env received')
+        self.reset_env_result = future.result().result
 
-    def reset_cx_feedback_callback(self, feedback_msg: ResetCX.Feedback) -> None:
+    def reset_env_feedback_callback(self, feedback_msg: ResetEnv.Feedback) -> None:
         """
-        Handle feedback messages from the `ResetCX` action via callback.
+        Handle feedback messages from the `ResetEnv` action via callback.
 
         Parameters
         ----------
-        feedback_msg : ResetCX.Feedback
+        feedback_msg : ResetEnv.Feedback
                 The feedback message received from the action.
 
         """
         feedback = feedback_msg.feedback.feedback
         self.node.get_logger().info(feedback)
 
-    def reset_cx_cancel_done(self, future: Future) -> None:
+    def reset_env_cancel_done(self, future: Future) -> None:
         """
-        Invoke once a cancel request for `ResetCX` is completed via callback.
+        Invoke once a cancel request for `ResetEnv` is completed via callback.
 
         Parameters
         ----------
@@ -779,9 +779,9 @@ class CXRLGym(Env):
         """
         cancel_response = future.result()
         if len(cancel_response.goals_canceling) > 0:
-            self.node.get_logger().info('reset_cx canceled')
+            self.node.get_logger().info('reset_env canceled')
         else:
-            self.node.get_logger().info('Failed to cancel reset_cx!')
+            self.node.get_logger().info('Failed to cancel reset_env!')
 
     def get_free_robot(self) -> str:
         """

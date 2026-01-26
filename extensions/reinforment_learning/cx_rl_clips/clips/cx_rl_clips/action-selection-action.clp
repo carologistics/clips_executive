@@ -59,7 +59,7 @@
   (test (str-index ?node-name ?server))
   ?as <- (rl-ros-action-meta-action-selection (node ?node-name) (abort-action TRUE) (action-id ?actionid) (uuid ?uuid&:(eq ?uuid (cx-rl-interfaces-action-selection-server-goal-handle-get-goal-id ?ptr))))
 =>
-  (printout ?*CX-RL-LOG-LEVEL* "ResetCX: Aborting action " ?actionid crlf)
+  (printout ?*CX-RL-LOG-LEVEL* "ResetEnv: Aborting action " ?actionid crlf)
   (bind ?result (cx-rl-interfaces-action-selection-result-create))
   (cx-rl-interfaces-action-selection-result-set-field ?result "actionid" (str-cat ?actionid))
   (cx-rl-interfaces-action-selection-result-set-field ?result "reward" 0)
