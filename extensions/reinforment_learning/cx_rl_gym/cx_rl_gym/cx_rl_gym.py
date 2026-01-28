@@ -149,7 +149,7 @@ class CXRLGym(Env):
         # Action space
         action_space = self.create_rl_action_space()
         sorted_actions = ['no-op'] + sorted(set(action_space))
-        set_keys_action = range(-1, len(sorted_actions))
+        set_keys_action = range(0, len(sorted_actions))
         self.action_dict = dict(zip(set_keys_action, sorted_actions))
         self.inv_action_dict = dict(zip(sorted_actions, set_keys_action))
         self.n_actions = len(sorted_actions)

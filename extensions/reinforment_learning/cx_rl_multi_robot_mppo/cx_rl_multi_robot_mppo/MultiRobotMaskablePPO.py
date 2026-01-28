@@ -244,10 +244,13 @@ class MultiRobotMaskablePPO(MaskablePPO):
             )
 
         callback.on_rollout_start()
-
         if self.time_based:
             start_time = time.time()
-            while time.time() - start_time < self.n_time and not self.shutdown:
+            while (
+                time.time() - start_time < self.n_time
+                and not self.shutdown
+                and not self.no_callback
+            ):
                 if (
                     len(threads) < self.n_robots
                     and time.time() - start_time < self.n_time - self.deadzone
@@ -267,7 +270,11 @@ class MultiRobotMaskablePPO(MaskablePPO):
                         threads_alive.append(thread)
                 threads = threads_alive
         else:
-            while self.n_current_steps < n_rollout_steps and not self.shutdown:
+            while (
+                self.n_current_steps < n_rollout_steps
+                and not self.shutdown
+                and not self.no_callback
+            ):
                 if len(threads) < self.n_robots:
                     t = Thread(
                         target=self._do_step, args=(env, callback, rollout_buffer, use_masking)
@@ -284,7 +291,7 @@ class MultiRobotMaskablePPO(MaskablePPO):
                         threads_alive.append(thread)
                 threads = threads_alive
 
-        if self.shutdown:
+        if self.shutdown or self.no_callback:
             for thread in threads:
                 thread.join()
             return False
@@ -330,28 +337,20 @@ class MultiRobotMaskablePPO(MaskablePPO):
             if use_masking:
                 action_masks = get_action_masks(env)
                 if np.sum(action_masks) == 0:
-                    actions = [-1]
-                else:
-                    actions, values, log_probs = self.policy(obs_tensor, action_masks=action_masks)
-                    actions = actions.cpu().numpy()
+                    action_masks[0] = 1
+                actions, values, log_probs = self.policy(obs_tensor, action_masks=action_masks)
+                actions = actions.cpu().numpy()
             else:
                 actions, values, log_probs = self.policy(obs_tensor)
                 actions = actions.cpu().numpy()
         new_obs, rewards, dones, infos = env.step(actions)
-        if infos[0].get('outcome') == 'NO-ACTION-FOR-ROBOT':
-            return
-        self.num_timesteps += env.num_envs
-        if self.no_callback:
-            return
-        # Give access to local variables
-        callback.update_locals(locals())
 
+        callback.update_locals(locals())
         if not callback.on_step():
             self.no_callback = True
             return
         if infos[0].get('outcome') == 'RESET':
             return
-
         self._update_info_buffer(infos)
         self.n_current_steps += 1
 

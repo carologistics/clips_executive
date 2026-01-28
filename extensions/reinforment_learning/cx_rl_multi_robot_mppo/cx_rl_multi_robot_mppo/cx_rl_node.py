@@ -28,6 +28,7 @@ from rclpy.node import Node
 from sb3_contrib.common.maskable.policies import MaskableActorCriticPolicy
 from stable_baselines3.common.callbacks import CheckpointCallback, StopTrainingOnMaxEpisodes
 from stable_baselines3.common.logger import configure
+from stable_baselines3.common.monitor import Monitor
 
 
 class CXRLNode(Node):
@@ -84,10 +85,12 @@ class CXRLNode(Node):
         mod_name, attr_name = self.get_parameter('env.entrypoint').value.split(':')
         mod = importlib.import_module(mod_name)
         env_class = getattr(mod, attr_name)
-        self.env = env_class(
-            self,
-            self.get_parameter('rl_mode').value.upper(),
-            self.get_parameter('number_of_robots').value,
+        self.env = Monitor(
+            env_class(
+                self,
+                self.get_parameter('rl_mode').value.upper(),
+                self.get_parameter('number_of_robots').value,
+            )
         )
         return self.env
 
@@ -113,7 +116,7 @@ class CXRLNode(Node):
         )
         sb3_logger = configure(self.log_dir, ['stdout', 'csv', 'log'])
         self.model.set_logger(sb3_logger)
-        self.env.set_rl_model(self.model)
+        self.env.env.set_rl_model(self.model)
         return self.model
 
     def load_model(self) -> MultiRobotMaskablePPO:
@@ -121,7 +124,7 @@ class CXRLNode(Node):
             self.save_dir, str(self.get_parameter('agent_name').value) + '.zip'
         )
         self.model = MultiRobotMaskablePPO.load(agent_path, env=self.env)
-        self.env.set_rl_model(self.model)
+        self.env.env.set_rl_model(self.model)
         self.get_logger().info('Agent loaded')
         return self.model
 
