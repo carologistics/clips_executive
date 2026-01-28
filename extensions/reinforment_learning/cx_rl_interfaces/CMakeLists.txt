@@ -10,22 +10,23 @@ find_package(builtin_interfaces REQUIRED)
 find_package(action_msgs REQUIRED)
 
 set(SERVICES
-  "srv/SetRLMode.srv"
+  "srv/CreateRLEnvState.srv"
+  "srv/EndTraining.srv"
+  "srv/ExecActionSelection.srv"
   "srv/GetActionID.srv"
+  "srv/GetActionList.srv"
   "srv/GetActionListRobot.srv"
   "srv/GetEpisodeEnd.srv"
   "srv/GetObservableObjects.srv"
   "srv/GetObservablePredicates.srv"
   "srv/GetPredefinedObservables.srv"
-  "srv/CreateRLEnvState.srv"
-  "srv/GetActionList.srv"
-  "srv/ExecActionSelection.srv"
+  "srv/SetRLMode.srv"
 )
 
 set(ACTIONS
+  "action/ActionSelection.action"
   "action/GetFreeRobot.action"
   "action/ResetEnv.action"
-  "action/ActionSelection.action"
 )
 rosidl_generate_interfaces(${PROJECT_NAME}
   ${SERVICES}

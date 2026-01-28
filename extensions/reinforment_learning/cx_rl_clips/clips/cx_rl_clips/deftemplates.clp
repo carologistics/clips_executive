@@ -25,6 +25,7 @@
   ?*CX-RL-SERVICES* = (create$
       create_rl_action_space GetActionList
       create_rl_env_state CreateRLEnvState
+      end_training EndTraining
       get_action_list_executable_for_robot GetActionListRobot
       get_action_list_executable GetActionList
       get_episode_end GetEpisodeEnd
@@ -58,6 +59,11 @@
 "
   (slot name (type STRING) (default "/cx_rl_node"))
   (slot mode (type SYMBOL) (allowed-values TRAINING EXECUTION))
+)
+
+(deftemplate rl-end-training
+" Asserted once training terminated. "
+  (slot node (type STRING) (default "/cx_rl_node"))
 )
 
 (deftemplate rl-action-space

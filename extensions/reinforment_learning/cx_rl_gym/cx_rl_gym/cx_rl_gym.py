@@ -33,6 +33,7 @@ import time
 from cx_rl_interfaces.action import ActionSelection, GetFreeRobot, ResetEnv
 from cx_rl_interfaces.srv import (
     CreateRLEnvState,
+    EndTraining,
     ExecActionSelection,
     GetActionList,
     GetActionListRobot,
@@ -74,6 +75,7 @@ class CXRLGym(Env):
         self.node.get_logger().info('cxrl_gym init')
 
         self.set_rl_mode_client = self.node.create_client(SetRLMode, 'set_rl_mode')
+        self.end_training_client = self.node.create_client(EndTraining, 'end_training')
         self.get_action_list_executable_client = self.node.create_client(
             GetActionList, 'get_action_list_executable'
         )
@@ -154,6 +156,18 @@ class CXRLGym(Env):
         self.action_space = Discrete(self.n_actions)
 
         self.node.get_logger().info('cxrl_gym init complete')
+
+    def on_training_end(self):
+        while not self.end_training_client.wait_for_service(1.0):
+            self.node.get_logger().info('Waiting for service (end_client) to be ready...')
+
+        request = EndTraining.Request()
+        future = self.end_training_client.call_async(request)
+
+        while not future.done():
+            time.sleep(self.time_sleep)
+
+        future.result()
 
     """
             ===GYM-FUNCTIONS===

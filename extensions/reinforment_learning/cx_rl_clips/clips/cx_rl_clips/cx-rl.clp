@@ -43,6 +43,7 @@ rl-execution.clp
 (foreach ?f (create$
   create-rl-env-state-srv.clp
   create-rl-action-space-srv.clp
+  end-training-srv.clp
   get-action-list-robot-srv.clp
   get-action-list-srv.clp
   get-episode-end-srv.clp
