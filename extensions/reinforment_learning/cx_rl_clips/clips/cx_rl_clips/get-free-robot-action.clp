@@ -58,7 +58,7 @@
     (cx-rl-interfaces-get-free-robot-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr))
     ?gfr <- (get-free-robot (uuid ?uuid) (robot "") (last-search ?last) (found FALSE))
     ?ec <- (rl-executability-check (state CHECKED))
-    (time ?now&:(> (- ?now ?last) 1))
+    (time ?now&:(> (- ?now ?last) 5))
     (test (eq ?uuid (cx-rl-interfaces-get-free-robot-server-goal-handle-get-goal-id ?ptr)))
 =>
     (bind ?robot NONE)

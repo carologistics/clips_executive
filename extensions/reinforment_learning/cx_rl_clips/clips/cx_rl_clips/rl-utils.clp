@@ -62,6 +62,7 @@
 )
 
 (defrule all-services-actions-created
+    (declare (salience ?*SALIENCE-RL-SAVE-FACTS*))
     (not (saved-facts))
     (cx-rl-interfaces-set-rl-mode-service)
     (cx-rl-interfaces-create-rl-env-state-service)

@@ -22,6 +22,7 @@
   ?*SALIENCE-ROBOT-ASSIGNMENT* = 499
   ?*SALIENCE-RL-EPISODE-END-FAILURE* = 499
   ?*SALIENCE-RL-SELECTION* = 498
+  ?*SALIENCE-RL-SAVE-FACTS* = -10000
 )
 
 (deftemplate rl-action
@@ -175,16 +176,16 @@
   (retract ?a)
 )
 
-(defrule domain-game-finished-failure
-  (declare (salience ?*SALIENCE-RL-EPISODE-END-FAILURE*))
-  (rl-mode (mode TRAINING))
-  ;(rl-executability-check (state CHECKED))
-  (rl-action (is-finished TRUE))
-  (not (rl-action (is-selected FALSE)))
-  (not (rl-episode-end (success ?success)))
-  =>
-  (assert (rl-episode-end (success FALSE)))
-)
+;(defrule domain-game-finished-failure
+;  (declare (salience ?*SALIENCE-RL-EPISODE-END-FAILURE*))
+;  (rl-mode (mode TRAINING))
+;  (rl-executability-check (state CHECKED))
+;  (rl-action (is-finished TRUE))
+;  (not (rl-action (is-selected FALSE)))
+;  (not (rl-episode-end (success ?success)))
+;  =>
+;  (assert (rl-episode-end (success FALSE)))
+;)
 
 (defrule logging-on-episode-end
   (declare (salience ?*SALIENCE-RL-EPISODE-END-SUCCESS*))

@@ -104,7 +104,7 @@ class CXRLGym(Env):
         self.robot_locked = False
         self.executable_actions_dicts_for_robot = {}
         self.executable_actions_dict = {}
-        self.reset_wait_time = 3
+        self.in_reset = False
 
         # Observation space
         obs_space = self.generate_observation_space()
@@ -256,6 +256,7 @@ class CXRLGym(Env):
     ) -> tuple[npt.NDArray[np.float32], dict]:
         self.node.get_logger().info('Resetting environment...')
         super().reset(seed=seed)
+        self.in_reset = True
         result = self.reset_cx()
         self.node.get_logger().info(result)
 
@@ -263,6 +264,7 @@ class CXRLGym(Env):
 
         self.executable_actions_dicts_for_robot = {}
         self.executable_actions_dict = {}
+        self.in_reset = False
 
         info = {}
         return (state, info)
@@ -275,7 +277,7 @@ class CXRLGym(Env):
 
     def action_masks(self) -> npt.NDArray[np.int8]:
         self.node.get_logger().info('Creating action masks...')
-        while self.robot_locked:
+        while self.robot_locked or self.in_reset:
             if self.shutdown:
                 return np.zeros((self.n_actions), dtype=np.int8)
             time.sleep(self.time_sleep)

@@ -44,6 +44,7 @@
 )
 
 (defrule reset-cx-stage-reset
+  (declare (salience ?*SALIENCE-RESET-CX-HIGH*))
   ?r <- (reset-cx (stage RESET))
   (rl-mode (mode ?mode))
   (cx-rl-interfaces-reset-cx-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr))
@@ -59,6 +60,7 @@
 )
 
 (defrule reset-cx-stage-finalize
+  (declare (salience ?*SALIENCE-RESET-CX-HIGH*))
   ?r <- (reset-cx (stage FINALIZE))
   =>
   (assert (reset-cx-finished))
