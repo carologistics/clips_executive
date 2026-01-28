@@ -168,6 +168,7 @@ def main(args=None):
             log_interval=1,
         )
         model.save(os.path.join(node.save_dir, str(node.get_parameter('agent_name').value)))
+        node.env.env.on_training_end()
 
         node.get_logger().info('Finished training, closing node')
 
