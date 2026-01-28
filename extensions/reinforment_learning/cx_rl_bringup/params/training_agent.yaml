@@ -1,0 +1,64 @@
+clips_manager:
+  ros__parameters:
+    environments: ["cx_rl_bringup"]
+    cx_rl_bringup:
+      plugins: ["executive",
+                "ament_index",
+                "ros_msgs",
+                "ros_param",
+                "action_selection",
+                "get_free_robot",
+                "reset_env",
+                "rl_files",
+                "files"]
+      log_clips_to_file: true
+      watch: ["facts", "rules"]
+      redirect_stdout_to_debug: true
+
+    ament_index:
+      plugin: "cx::AmentIndexPlugin"
+
+    executive:
+      plugin: "cx::ExecutivePlugin"
+      publish_on_refresh: false
+      assert_time: true
+      refresh_rate: 10
+    ros_msgs:
+      plugin: "cx::RosMsgsPlugin"
+    ros_param:
+      plugin: "cx::RosParamPlugin"
+
+    reset_env:
+      plugin: "cx::CXCxRlInterfacesResetEnvPlugin"
+    action_selection:
+      plugin: "cx::CXCxRlInterfacesActionSelectionPlugin"
+
+    get_free_robot:
+      plugin: "cx::CXCxRlInterfacesGetFreeRobotPlugin"
+
+    rl_files:
+      plugin: "cx::FileLoadPlugin"
+      pkg_share_dirs: ["cx_rl_bringup", "cx_rl_clips"]
+      batch: [
+        "clips/cx_rl_clips/cx-rl.clp",
+      ]
+
+    files:
+      plugin: "cx::FileLoadPlugin"
+      pkg_share_dirs: ["cx_rl_bringup", "cx_rl_clips"]
+      load: [
+        # # Specific isolated concepts
+        # "clips/cx_rl_bringup/start-tasks/start-tasks.clp",
+        # # General utility stuff
+        # "clips/cx_rl_bringup/defglobals.clp",
+        # "clips/cx_rl_bringup/deftemplates.clp",
+        # # Startup
+        # "clips/cx_rl_bringup_blocksworld/init-pddl.clp",
+        # # PDDL
+        # "clips/cx_rl_bringup_blocksworld/pddl/instances.clp",
+        # "clips/cx_rl_bringup_blocksworld/point-mapping.clp",
+        "clips/cx_rl_bringup/init.clp",
+        # "clips/cx_rl_bringup_blocksworld/reset.clp",
+        # "clips/cx_rl_bringup_blocksworld/action-executability.clp",
+        # "clips/cx_rl_bringup_blocksworld/action-execution.clp"
+      ]
