@@ -138,18 +138,16 @@ class CXRLGym(Env):
         # Observation space
         obs_space = self.generate_observation_space()
         sorted_obs = sorted(set(obs_space))
-        set_keys_obs = range(0, len(sorted_obs))
-        self.obs_dict = dict(zip(set_keys_obs, sorted_obs))
-        self.inv_obs_dict = dict(zip(sorted_obs, set_keys_obs))
+        self.obs_dict = dict(zip(range(len(sorted_obs)), sorted_obs))
+        self.inv_obs_dict = dict(zip(sorted_obs, range(len(sorted_obs))))
         self.n_obs = len(sorted_obs)
         self.observation_space = Box(0, 1, (self.n_obs,))
 
         # Action space
         action_space = self.create_rl_action_space()
         sorted_actions = ['no-op'] + sorted(set(action_space))
-        set_keys_action = range(0, len(sorted_actions))
-        self.action_dict = dict(zip(set_keys_action, sorted_actions))
-        self.inv_action_dict = dict(zip(sorted_actions, set_keys_action))
+        self.action_dict = dict(zip(range(len(sorted_actions)), sorted_actions))
+        self.inv_action_dict = dict(zip(sorted_actions, range(len(sorted_actions))))
         self.n_actions = len(sorted_actions)
         self.action_space = Discrete(self.n_actions)
 
@@ -703,6 +701,11 @@ class CXRLGym(Env):
             pos = self.inv_action_dict.get(action)
             if pos is not None:
                 action_mask[pos] = 1
+
+        if np.sum(action_mask) == 0:
+            action_mask[0] = 1
+            response.actionid = 'no-op'
+            return response
 
         action, _ = self.rl_model.predict(
             observation,
