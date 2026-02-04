@@ -75,7 +75,7 @@
       "pickup#robot1#block4"
     )))
   )
-  (bind ?mode (sym-cat (ros-param-get-value "rl-mode" "TRAINING")))
+  (bind ?mode (sym-cat (ros-param-get-value "rl_mode" "TRAINING")))
   (printout green ?mode crlf)
   (if (member$ ?mode (create$ TRAINING EXECTUTION)) then
    (assert (cx-rl-node (name ?*CX-RL-NODE-NAME*) (mode (sym-cat ?mode))))
@@ -94,6 +94,33 @@
  ?reset <- (rl-reset-env (state USER-INIT))
  =>
  (modify ?reset (state DONE))
+)
+
+(defrule execution-ask-for-execution
+  (cx-rl-node (mode EXECUTION))
+  (not (rl-current-action-space))
+  =>
+  (assert (rl-current-action-space (state PENDING)))
+)
+
+(defrule execution-no-action-possible
+  (cx-rl-node (mode EXECUTION))
+  (rl-robot (name ?robot))
+  (rl-action (id no-op) (is-selected TRUE) (assigned-to ?robot))
+  =>
+  (printout green "Execution done, no more actions to select" crlf)
+)
+
+(defrule execution-assign-actions
+  (rl-current-action-space (state DONE))
+  (cx-rl-node (mode EXECUTION))
+  (rl-robot (name ?robot) (waiting TRUE))
+  (rl-action (assigned-to nil))
+  =>
+  (delayed-do-for-all-facts ((?action rl-action))
+    (eq ?action:assigned-to nil)
+    (modify ?action (assigned-to ?robot))
+  )
 )
 
 (defrule training-provide-action-stack

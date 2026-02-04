@@ -48,11 +48,29 @@
   ?msg-fact <- (ros-msgs-response (service ?s) (msg-ptr ?ptr) (request-id ?id))
   ?req-meta <- (rl-action-request-meta (node ?node) (service ?s) (request-id ?id))
 =>
-  (bind ?action-id (ros-msgs-get-field ?ptr "actionid"))
+  (bind ?action-id (sym-cat (ros-msgs-get-field ?ptr "actionid")))
   (printout ?*CX-RL-LOG-LEVEL* "Received actionid from " ?s ": " ?action-id crlf)
   (ros-msgs-destroy-message ?ptr)
   (retract ?msg-fact)
   (modify ?req-meta (action-id ?action-id))
+)
+
+(defrule cx-rl-exec-action-selection-action-unknown
+  (cx-rl-node (name ?node) (mode EXECUTION))
+  ?r <- (rl-action-request-meta (node ?node) (action-id ?action-id&:(neq ?action-id nil)))
+  ?action-space <- (rl-current-action-space (node ?node) (state DONE))
+  (not (rl-action (node ?node) (id ?action-id)))
+  ?rw <- (rl-robot (node ?node) (name ?robot) (waiting TRUE))
+  =>
+  (printout ?*CX-RL-LOG-LEVEL* crlf "CXRL: Selected action unknown " crlf)
+  (retract ?r)
+  (retract ?action-space)
+  (modify ?rw (waiting FALSE))
+  (assert (rl-action (node ?node) (id ?action-id) (assigned-to ?robot) (is-selected TRUE)))
+  (delayed-do-for-all-facts ((?a rl-action))
+    (and (eq ?a:is-selected FALSE) (eq ?a:node ?node))
+    (retract ?a)
+  )
 )
 
 
