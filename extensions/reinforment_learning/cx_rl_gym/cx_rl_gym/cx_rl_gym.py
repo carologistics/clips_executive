@@ -72,66 +72,64 @@ class CXRLGym(Env):
         super().__init__()
 
         self.node = node
+        self.node_name_prefix = node.get_name()  # <-- use this as the prefix
         self.node.get_logger().info('cxrl_gym init')
 
-        self.set_rl_mode_client = self.node.create_client(SetRLMode, 'set_rl_mode')
-        self.end_training_client = self.node.create_client(EndTraining, 'end_training')
+        # Helper function to prepend the node name to topic/service names
+        def prefixed(name: str) -> str:
+            return f"{self.node_name_prefix}/{name}"
+
+        # Service clients
+        self.set_rl_mode_client = self.node.create_client(SetRLMode, prefixed('set_rl_mode'))
+        self.end_training_client = self.node.create_client(EndTraining, prefixed('end_training'))
         self.get_action_list_executable_client = self.node.create_client(
-            GetActionList, 'get_action_list_executable'
+            GetActionList, prefixed('get_action_list_executable')
         )
         self.get_action_list_executable_for_robot_client = self.node.create_client(
-            GetActionListRobot, 'get_action_list_executable_for_robot'
+            GetActionListRobot, prefixed('get_action_list_executable_for_robot')
         )
         self.get_observable_objects_client = self.node.create_client(
-            GetObservableObjects, 'get_observable_objects'
+            GetObservableObjects, prefixed('get_observable_objects')
         )
         self.get_observable_predicates_client = self.node.create_client(
-            GetObservablePredicates, 'get_observable_predicates'
+            GetObservablePredicates, prefixed('get_observable_predicates')
         )
         self.get_predefined_observables_client = self.node.create_client(
-            GetPredefinedObservables, 'get_predefined_observables'
+            GetPredefinedObservables, prefixed('get_predefined_observables')
         )
-        self.get_episode_end_client = self.node.create_client(GetEpisodeEnd, 'get_episode_end')
+        self.get_episode_end_client = self.node.create_client(
+            GetEpisodeEnd, prefixed('get_episode_end')
+        )
         self.create_rl_env_state_client = self.node.create_client(
-            CreateRLEnvState, 'create_rl_env_state'
+            CreateRLEnvState, prefixed('create_rl_env_state')
         )
         self.create_rl_action_space_client = self.node.create_client(
-            GetActionList, 'create_rl_action_space'
+            GetActionList, prefixed('create_rl_action_space')
         )
 
-        self.reset_env_client = ActionClient(self.node, ResetEnv, 'reset_env')
-        self.reset_env_result = None
-        self.reset_env_send_goal_future = None
-        self.reset_env_get_result_future = None
-        self.reset_env_goal_handle = None
+        # Action clients
+        self.reset_env_client = ActionClient(self.node, ResetEnv, prefixed('reset_env'))
+        self.get_free_robot_client = ActionClient(
+            self.node, GetFreeRobot, prefixed('get_free_robot')
+        )
+        self.action_selection_client = ActionClient(
+            self.node, ActionSelection, prefixed('action_selection')
+        )
 
-        self.get_free_robot_client = ActionClient(self.node, GetFreeRobot, 'get_free_robot')
+        # initialize other internal state
+        self.reset_env_result = None
         self.get_free_robot_result = None
-        self.get_free_robot_send_goal_future = None
-        self.get_free_robot_get_result_future = None
-        self.get_free_robot_goal_handle = None
+        self.action_selection_send_goal_futures = [None] * number_robots
+        self.action_selection_get_result_futures = [None] * number_robots
+        self.action_selection_results = [None] * number_robots
+        self.action_selection_goal_handles = [None] * number_robots
 
         self.time_sleep = 0.001
         self.shutdown = False
-
         self.number_of_robots = number_robots
         self.mode = mode
-
         self.rl_model = None
-
-        self.action_selection_send_goal_futures = []
-        self.action_selection_get_result_futures = []
-        self.action_selection_results = []
-        self.action_selection_goal_handles = []
-
-        self.action_selection_client = ActionClient(self.node, ActionSelection, 'action_selection')
-        for i in range(self.number_of_robots):
-            self.action_selection_send_goal_futures.append(None)
-            self.action_selection_get_result_futures.append(None)
-            self.action_selection_results.append(None)
-            self.action_selection_goal_handles.append(None)
-
-        self.next_robot = 'None'
+        self.next_robot = None
         self.robot_locked = False
         self.executable_actions_dicts_for_robot = {}
         self.executable_actions_dict = {}
@@ -410,7 +408,9 @@ class CXRLGym(Env):
         """
         self.rl_model = model
         self.exec_action_selection_service = self.node.create_service(
-            ExecActionSelection, '/exec_action_selection', self.exec_action_selection
+            ExecActionSelection,
+            self.node_name_prefix + '/exec_action_selection',
+            self.exec_action_selection,
         )
         self.set_rl_mode(self.mode)
 
