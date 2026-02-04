@@ -33,6 +33,12 @@ def generate_launch_description():
     # -----------------------------
     # Launch arguments
     # -----------------------------
+    declare_namespace = DeclareLaunchArgument(
+        'namespace',
+        default_value='',
+        description='namepace for the nodes',
+    )
+
     declare_log_level = DeclareLaunchArgument(
         'log_level',
         default_value='info',
@@ -52,6 +58,7 @@ def generate_launch_description():
     )
 
     # LaunchConfigurations
+    namespace = LaunchConfiguration('namespace')
     log_level = LaunchConfiguration('log_level')
     manager_config = LaunchConfiguration('manager_config')
     training_config = LaunchConfiguration('training_config')
@@ -70,12 +77,13 @@ def generate_launch_description():
     # -----------------------------
     cx_rl_node = Node(
         package='cx_rl_multi_robot_mppo',
-        executable='cx_rl_node',
-        namespace='cx_rl_node',
-        name='cx_rl_bringup_rl_node',
+        executable='cx_rl_mppo_node',
+        namespace=namespace,
+        name='cx_rl_node',
         output='screen',
         emulate_tty=True,
         parameters=[rl_config_file],
+        arguments=['--ros-args', '--log-level', log_level],
     )
 
     include_cx_launch = IncludeLaunchDescription(
@@ -83,7 +91,6 @@ def generate_launch_description():
         launch_arguments={
             'package': 'cx_rl_bringup',
             'manager_config': manager_config,
-            'log_level': log_level,
         }.items(),
     )
 
@@ -91,6 +98,7 @@ def generate_launch_description():
     # Build LaunchDescription
     # -----------------------------
     ld = LaunchDescription()
+    ld.add_action(declare_namespace)
     ld.add_action(declare_log_level)
     ld.add_action(declare_manager_config)
     ld.add_action(declare_training_config)
