@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # Copyright (c) 2025-2026 Carologistics
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -13,59 +14,66 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, OpaqueFunction
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
-
-
-def launch_with_context(context, *args, **kwargs):
-    cx_bringup_dir = get_package_share_directory('cx_bringup')
-    manager_config = LaunchConfiguration('manager_config')
-    log_level = LaunchConfiguration('log_level')
-
-    # also launch the pddl_manager
-    pddl_manager_dir = get_package_share_directory('cx_pddl_manager')
-    launch_pddl_manager = os.path.join(pddl_manager_dir, 'launch', 'pddl_manager.launch.py')
-    launch_cx = os.path.join(cx_bringup_dir, 'launch', 'cx_launch.py')
-
-    return [
-        IncludeLaunchDescription(PythonLaunchDescriptionSource(launch_pddl_manager)),
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(launch_cx),
-            launch_arguments={
-                'package': 'cx_pddl_bringup',
-                'manager_config': manager_config.perform(context),
-                'log_level': log_level,
-            }.items(),
-        ),
-    ]
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 
 
 def generate_launch_description():
-
-    LaunchConfiguration('model_file')
-
-    declare_log_level_ = DeclareLaunchArgument(
+    # -----------------------------
+    # Launch arguments
+    # -----------------------------
+    declare_log_level = DeclareLaunchArgument(
         'log_level',
         default_value='info',
         description='Logging level for cx_node executable',
     )
+
     declare_manager_config = DeclareLaunchArgument(
         'manager_config',
         default_value='pddl_agents/structured_agent.yaml',
         description='Name of the CLIPS environment manager configuration',
     )
 
-    # The lauchdescription to populate with defined CMDS
+    log_level = LaunchConfiguration('log_level')
+    manager_config = LaunchConfiguration('manager_config')
+
+    # -----------------------------
+    # Paths to other launch files
+    # -----------------------------
+    pddl_manager_launch = PathJoinSubstitution(
+        [get_package_share_directory('cx_pddl_manager'), 'launch', 'pddl_manager.launch.py']
+    )
+
+    cx_launch_file = PathJoinSubstitution(
+        [get_package_share_directory('cx_bringup'), 'launch', 'cx_launch.py']
+    )
+
+    # -----------------------------
+    # Include launch descriptions
+    # -----------------------------
+    include_pddl_manager = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(pddl_manager_launch)
+    )
+
+    include_cx_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(cx_launch_file),
+        launch_arguments={
+            'package': 'cx_pddl_bringup',
+            'manager_config': manager_config,
+            'log_level': log_level,
+        }.items(),
+    )
+
+    # -----------------------------
+    # Build LaunchDescription
+    # -----------------------------
     ld = LaunchDescription()
-
-    ld.add_action(declare_log_level_)
+    ld.add_action(declare_log_level)
     ld.add_action(declare_manager_config)
-
-    ld.add_action(OpaqueFunction(function=launch_with_context))
+    ld.add_action(include_pddl_manager)
+    ld.add_action(include_cx_launch)
 
     return ld
