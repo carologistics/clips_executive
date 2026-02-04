@@ -32,6 +32,6 @@ setup(
     description='Multi-robot maskable proximal policy optimization (mppo) implementation',
     license='Apache-2.0',
     entry_points={
-        'console_scripts': ['cx_rl_node = cx_rl_multi_robot_mppo.cx_rl_node:main'],
+        'console_scripts': ['cx_rl_mppo_node = cx_rl_multi_robot_mppo.cx_rl_mppo_node:main'],
     },
 )

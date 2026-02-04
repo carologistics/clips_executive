@@ -1,4 +1,4 @@
-cx_rl_node/cx_rl_bringup_rl_node:
+/**:
   ros__parameters:
     # storage_dir: defaults to ros logging dir
 
@@ -12,7 +12,7 @@ cx_rl_node/cx_rl_bringup_rl_node:
       timesteps: 100000000
 
     env:
-      entrypoint: "cx_rl_bringup.blocksworld_env:BlocksworldEnv"
+      entrypoint: "cx_rl_gym.cx_rl_gym:CXRLGym"
 
     model:
       learning_rate: 0.03
