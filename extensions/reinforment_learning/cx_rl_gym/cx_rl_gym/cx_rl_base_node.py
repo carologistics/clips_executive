@@ -34,25 +34,9 @@ class CXRLBaseNode(Node):
             namespace='',
             parameters=[
                 ('storage_dir', rclpy.Parameter.Type.STRING),
-                ('agent_name', rclpy.Parameter.Type.STRING),
+                ('env.entrypoint', rclpy.Parameter.Type.STRING),
                 ('rl_mode', rclpy.Parameter.Type.STRING),
                 ('number_of_robots', rclpy.Parameter.Type.INTEGER),
-                ('training.retraining', rclpy.Parameter.Type.BOOL),
-                ('training.max_episodes', rclpy.Parameter.Type.INTEGER),
-                ('env.entrypoint', rclpy.Parameter.Type.STRING),
-                ('model.learning_rate', rclpy.Parameter.Type.DOUBLE),
-                ('model.gamma', rclpy.Parameter.Type.DOUBLE),
-                ('model.gae_lambda', rclpy.Parameter.Type.DOUBLE),
-                ('model.ent_coef', rclpy.Parameter.Type.DOUBLE),
-                ('model.vf_coef', rclpy.Parameter.Type.DOUBLE),
-                ('model.max_grad_norm', rclpy.Parameter.Type.DOUBLE),
-                ('model.batch_size', rclpy.Parameter.Type.INTEGER),
-                ('model.n_steps', rclpy.Parameter.Type.INTEGER),
-                ('model.seed', rclpy.Parameter.Type.INTEGER),
-                ('model.verbose', rclpy.Parameter.Type.INTEGER),
-                ('model.n_robots', rclpy.Parameter.Type.INTEGER),
-                ('model.wait_for_all_robots', rclpy.Parameter.Type.BOOL),
-                ('training.timesteps', rclpy.Parameter.Type.INTEGER),
             ],
         )
 
@@ -63,7 +47,8 @@ class CXRLBaseNode(Node):
         self.get_logger().info(f'{node_name} initialised')
 
     def set_dirs(self):
-        storage_path = rclpy.logging.get_logging_directory()
+        storage_path = self.get_parameter('storage_dir').value
+        self.get_logger().info(f"{storage_path}")
         self.save_dir = os.path.join(storage_path, 'cx_rl_multi_robot_mppo', 'trained_agents')
         self.log_dir = os.path.join(storage_path, 'cx_rl_multi_robot_mppo', 'logs')
         self.checkpoint_dir = os.path.join(storage_path, 'checkpoint_agents')

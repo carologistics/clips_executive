@@ -32,6 +32,30 @@ from stable_baselines3.common.logger import configure
 class CXRLMaskablePPONode(CXRLBaseNode):
     """Specific RL node using MultiRobotMaskablePPO."""
 
+    def __init__(self, node_name='cx_rl_node'):
+        super().__init__(node_name)
+        self.declare_parameters(
+            namespace='',
+            parameters=[
+                ('agent_name', rclpy.Parameter.Type.STRING),
+                ('training.retraining', rclpy.Parameter.Type.BOOL),
+                ('training.max_episodes', rclpy.Parameter.Type.INTEGER),
+                ('model.learning_rate', rclpy.Parameter.Type.DOUBLE),
+                ('model.gamma', rclpy.Parameter.Type.DOUBLE),
+                ('model.gae_lambda', rclpy.Parameter.Type.DOUBLE),
+                ('model.ent_coef', rclpy.Parameter.Type.DOUBLE),
+                ('model.vf_coef', rclpy.Parameter.Type.DOUBLE),
+                ('model.max_grad_norm', rclpy.Parameter.Type.DOUBLE),
+                ('model.batch_size', rclpy.Parameter.Type.INTEGER),
+                ('model.n_steps', rclpy.Parameter.Type.INTEGER),
+                ('model.seed', rclpy.Parameter.Type.INTEGER),
+                ('model.verbose', rclpy.Parameter.Type.INTEGER),
+                ('model.n_robots', rclpy.Parameter.Type.INTEGER),
+                ('model.wait_for_all_robots', rclpy.Parameter.Type.BOOL),
+                ('training.timesteps', rclpy.Parameter.Type.INTEGER),
+            ],
+        )
+
     def set_model(self):
         rl_mode = self.get_parameter('rl_mode').value.upper()
         if rl_mode == 'TRAINING':

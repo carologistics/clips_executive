@@ -27,6 +27,7 @@ from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
+from rclpy.logging import get_logging_directory
 
 
 def generate_launch_description():
@@ -57,11 +58,18 @@ def generate_launch_description():
         description='Name of the RL training configuration',
     )
 
+    declare_storage_dir = DeclareLaunchArgument(
+        'storage_dir',
+        default_value=PathJoinSubstitution([get_logging_directory(), 'cx_rl_mppo_agents']),
+        description='Absolute path, where trained agents and checkpoints are stored',
+    )
+
     # LaunchConfigurations
     namespace = LaunchConfiguration('namespace')
     log_level = LaunchConfiguration('log_level')
     manager_config = LaunchConfiguration('manager_config')
     training_config = LaunchConfiguration('training_config')
+    storage_dir = LaunchConfiguration('storage_dir')
 
     # -----------------------------
     # Paths to packages and files
@@ -82,7 +90,7 @@ def generate_launch_description():
         name='cx_rl_node',
         output='screen',
         emulate_tty=True,
-        parameters=[rl_config_file],
+        parameters=[rl_config_file, {'storage_dir': storage_dir}],
         arguments=['--ros-args', '--log-level', log_level],
     )
 
@@ -102,6 +110,7 @@ def generate_launch_description():
     ld.add_action(declare_log_level)
     ld.add_action(declare_manager_config)
     ld.add_action(declare_training_config)
+    ld.add_action(declare_storage_dir)
     ld.add_action(cx_rl_node)
     ld.add_action(include_cx_launch)
 
