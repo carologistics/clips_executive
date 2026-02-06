@@ -75,12 +75,8 @@
       "pickup#robot1#block4"
     )))
   )
-  (bind ?mode (sym-cat (ros-param-get-value "rl_mode" "TRAINING")))
-  (printout green ?mode crlf)
-  (if (member$ ?mode (create$ TRAINING EXECTUTION)) then
-   (assert (cx-rl-node (name ?*CX-RL-NODE-NAME*) (mode (sym-cat ?mode))))
-   else
-   (printout error "rl-mode param set to: " ?mode " expected one of [TRAINING, EXECUTION]" crlf)
+  (if (not (any-factp ((?node cx-rl-node)) (eq ?node:name ?*CX-RL-NODE-NAME*))) then
+   (assert (cx-rl-node (name ?*CX-RL-NODE-NAME*) (mode UNSET)))
   )
 )
 

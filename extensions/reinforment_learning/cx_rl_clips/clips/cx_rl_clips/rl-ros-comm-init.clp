@@ -15,9 +15,9 @@
 
 (defrule rl-service-init
 " Initiate the service clients for the pddl manager "
-  (cx-rl-node (name ?node-name))
+  ?node-f <- (cx-rl-node (name ?node-name) (ros-comm-init FALSE))
   =>
-  ; create clints for all services
+  ; create clients for all services
   (bind ?services ?*CX-RL-SERVICES*)
   (bind ?service-clients ?*CX-RL-SERVICE-CLIENTS*)
   (bind ?index 1)
@@ -42,4 +42,5 @@
       )
       (bind ?index (+ ?index 2))
   )
+  (modify ?node-f (ros-comm-init TRUE))
 )

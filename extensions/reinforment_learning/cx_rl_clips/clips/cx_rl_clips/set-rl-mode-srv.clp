@@ -20,7 +20,7 @@
     (printout ?*CX-RL-LOG-LEVEL* \"Changing reinforcement learning mode to \" ?mode crlf)
     (if (or (eq ?mode TRAINING) (eq ?mode EVALUATION) (eq ?mode EXECUTION)) then
         (if (not (do-for-fact ((?cx-rl cx-rl-node)) (eq ?cx-rl:name \"" ?*CX-RL-NODE-NAME* "\")
-         (modify ?cx-rl (mode ?mode))
+         (modify ?cx-rl (mode ?mode) (model-loaded TRUE))
         )) then
         (ros-msgs-set-field ?response \"confirmation\" \"Couldn't set mode\")
         )

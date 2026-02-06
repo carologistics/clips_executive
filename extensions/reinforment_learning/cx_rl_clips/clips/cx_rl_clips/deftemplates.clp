@@ -58,7 +58,10 @@
   each episode in training.
 "
   (slot name (type STRING) (default "/cx_rl_node"))
-  (slot mode (type SYMBOL) (allowed-values TRAINING EXECUTION))
+  (slot mode (type SYMBOL) (allowed-values UNSET TRAINING EXECUTION))
+  (slot ros-comm-init (type SYMBOL) (allowed-values TRUE FALSE) (default FALSE))
+  (slot model-loaded (type SYMBOL) (allowed-values TRUE FALSE) (default FALSE))
+  (slot fact-reset-file (type STRING) (default ""))
 )
 
 (deftemplate rl-end-training
