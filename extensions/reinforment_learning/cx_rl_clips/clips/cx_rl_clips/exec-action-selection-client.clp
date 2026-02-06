@@ -15,10 +15,11 @@
 
 
 (defrule cx-rl-exec-action-selection-request
-  (cx-rl-node (name ?node) (mode EXECUTION))
+  (cx-rl-node (name ?node) (mode EXECUTION) (model-loaded TRUE))
   (ros-msgs-client (service ?s&:(eq ?s (str-cat ?node "/exec_action_selection"))) (type ?type))
   (not (rl-action-request-meta (service ?s)))
   (rl-current-action-space (state DONE))
+  (time ?now)
 =>
   (printout ?*CX-RL-LOG-LEVEL* "Action selection demand found" crlf)
   (bind ?state-string (cx-rl-create-observation-string ?node))
@@ -38,6 +39,8 @@
   (bind ?id (ros-msgs-async-send-request ?new-req ?s))
   (if ?id then
     (assert (rl-action-request-meta (node ?node) (service ?s) (request-id ?id)))
+   else
+    (printout error "Action selection request failed, retrying" crlf)
   )
   (ros-msgs-destroy-message ?new-req)
 )
