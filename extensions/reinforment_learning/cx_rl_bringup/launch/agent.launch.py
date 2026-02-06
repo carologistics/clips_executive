@@ -23,10 +23,11 @@
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, LogInfo, Shutdown
+from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
-from launch_ros.actions import Node
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution, PythonExpression
+from launch_ros.actions import Node, SetParameter
 from rclpy.logging import get_logging_directory
 
 
@@ -58,10 +59,37 @@ def generate_launch_description():
         description='Name of the RL training configuration',
     )
 
+    declare_rl_mode = DeclareLaunchArgument(
+        'rl_mode',
+        default_value='EXECUTION',
+        description='Mode for RL',
+    )
+
     declare_storage_dir = DeclareLaunchArgument(
         'storage_dir',
         default_value=PathJoinSubstitution([get_logging_directory(), 'cx_rl_mppo_agents']),
         description='Absolute path, where trained agents and checkpoints are stored',
+    )
+
+    # TODO: This should be an error, but is not supported as action yet
+    invalid_rl_mode = LogInfo(
+        condition=IfCondition(
+            PythonExpression(
+                ['"', LaunchConfiguration('rl_mode'), '" not in ["TRAINING", "EXECUTION"]']
+            )
+        ),
+        msg=[
+            'Invalid value for rl_mode: ',
+            LaunchConfiguration('rl_mode'),
+            '. Allowed values are TRAINING or EXECUTION.',
+        ],
+    )
+    shutdown_on_invalid = Shutdown(
+        condition=IfCondition(
+            PythonExpression(
+                ['"', LaunchConfiguration('rl_mode'), '" not in ["TRAINING", "EXECUTION"]']
+            )
+        )
     )
 
     # LaunchConfigurations
@@ -70,6 +98,7 @@ def generate_launch_description():
     manager_config = LaunchConfiguration('manager_config')
     training_config = LaunchConfiguration('training_config')
     storage_dir = LaunchConfiguration('storage_dir')
+    rl_mode = LaunchConfiguration('rl_mode')
 
     # -----------------------------
     # Paths to packages and files
@@ -90,7 +119,7 @@ def generate_launch_description():
         name='cx_rl_node',
         output='screen',
         emulate_tty=True,
-        parameters=[rl_config_file, {'storage_dir': storage_dir}],
+        parameters=[rl_config_file],
         arguments=['--ros-args', '--log-level', log_level],
     )
 
@@ -107,10 +136,17 @@ def generate_launch_description():
     # -----------------------------
     ld = LaunchDescription()
     ld.add_action(declare_namespace)
+    ld.add_action(declare_namespace)
     ld.add_action(declare_log_level)
     ld.add_action(declare_manager_config)
     ld.add_action(declare_training_config)
     ld.add_action(declare_storage_dir)
+    ld.add_action(declare_rl_mode)
+    ld.add_action(invalid_rl_mode)
+    ld.add_action(shutdown_on_invalid)
+    # pass down parameters to both nodes (even through nested launch)
+    ld.add_action(SetParameter(name='storage_dir', value=storage_dir))
+    ld.add_action(SetParameter(name='rl_mode', value=rl_mode))
     ld.add_action(cx_rl_node)
     ld.add_action(include_cx_launch)
 

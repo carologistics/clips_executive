@@ -3,7 +3,6 @@
     # storage_dir: defaults to ros logging dir
 
     agent_name: "cx_rl_agent"
-    rl_mode: "TRAINING"
     number_of_robots: 1
 
     training:
