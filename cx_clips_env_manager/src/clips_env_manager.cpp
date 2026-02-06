@@ -431,6 +431,9 @@ void CLIPSEnvManager::run_cleanups()
   if (get_current_state().id() == lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE) {
     this->cleanup();
   }
+  if (get_current_state().id() == lifecycle_msgs::msg::State::PRIMARY_STATE_UNCONFIGURED) {
+    this->shutdown();
+  }
 }
 
 void CLIPSEnvManager::register_rcl_preshutdown_callback()
