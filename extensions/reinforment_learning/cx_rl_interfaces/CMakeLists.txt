@@ -10,7 +10,7 @@ find_package(builtin_interfaces REQUIRED)
 find_package(action_msgs REQUIRED)
 
 set(SERVICES
-  "srv/CreateRLEnvState.srv"
+  "srv/GetEnvState.srv"
   "srv/EndTraining.srv"
   "srv/ExecActionSelection.srv"
   "srv/GetActionID.srv"

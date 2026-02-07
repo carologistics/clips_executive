@@ -24,7 +24,7 @@
 
   ?*CX-RL-SERVICES* = (create$
       create_rl_action_space GetActionList
-      create_rl_env_state CreateRLEnvState
+      get_env_state GetEnvState
       end_training EndTraining
       get_action_list_executable_for_robot GetActionListRobot
       get_action_list_executable GetActionList

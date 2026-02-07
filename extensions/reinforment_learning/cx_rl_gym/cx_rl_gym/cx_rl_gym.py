@@ -32,11 +32,11 @@ import time
 
 from cx_rl_interfaces.action import ActionSelection, GetFreeRobot, ResetEnv
 from cx_rl_interfaces.srv import (
-    CreateRLEnvState,
     EndTraining,
     ExecActionSelection,
     GetActionList,
     GetActionListRobot,
+    GetEnvState,
     GetEpisodeEnd,
     GetObservableObjects,
     GetObservablePredicates,
@@ -100,11 +100,9 @@ class CXRLGym(Env):
         self.get_episode_end_client = self.node.create_client(
             GetEpisodeEnd, prefixed('get_episode_end')
         )
-        self.create_rl_env_state_client = self.node.create_client(
-            CreateRLEnvState, prefixed('create_rl_env_state')
-        )
-        self.create_rl_action_space_client = self.node.create_client(
-            GetActionList, prefixed('create_rl_action_space')
+        self.get_env_state_client = self.node.create_client(GetEnvState, prefixed('get_env_state'))
+        self.get_action_list_client = self.node.create_client(
+            GetActionList, prefixed('get_action_list')
         )
 
         # Action clients
@@ -208,7 +206,7 @@ class CXRLGym(Env):
                 {self.next_robot}!'
             )
             self.robot_locked = False
-            # state = self.create_rl_env_state()
+            # state = self.get_env_state()
             state = self.get_observation()
 
             terminated, reward = self.get_episode_end()
@@ -320,7 +318,7 @@ class CXRLGym(Env):
         """
         Reset the environment and return the initial observation.
 
-        Calls the `/reset_env` action and queries `/create_rl_env_state`
+        Calls the `/reset_env` action and queries `/get_env_state`
         for the initial environment state.
 
         Parameters
@@ -616,11 +614,11 @@ class CXRLGym(Env):
 
         return response.actions
 
-    def create_rl_env_state(self) -> str:
+    def get_env_state(self) -> str:
         """
         Create a new RL environment state.
 
-        Calls the `CreateRLEnvState` service to generate a new environment state for
+        Calls the `GetEnvState` service to generate a new environment state for
         reinforcement learning execution.
 
         Returns
@@ -628,11 +626,11 @@ class CXRLGym(Env):
             str: The generated environment state as a serialized string.
 
         """
-        while not self.create_rl_env_state_client.wait_for_service(1.0):
-            self.node.get_logger().info('Waiting for service (create_rl_env_state) to be ready...')
+        while not self.get_env_state_client.wait_for_service(1.0):
+            self.node.get_logger().info('Waiting for service (get_env_state) to be ready...')
 
-        request = CreateRLEnvState.Request()
-        future = self.create_rl_env_state_client.call_async(request)
+        request = GetEnvState.Request()
+        future = self.get_env_state_client.call_async(request)
         while not future.done():
             time.sleep(self.time_sleep)
         response = future.result()
@@ -984,7 +982,7 @@ class CXRLGym(Env):
         """
         Generate the current RL observation vector.
 
-        Creates a new RL environment state using `create_rl_env_state()`,
+        Creates a new RL environment state using `get_env_state()`,
         parses the returned fact string into Python objects, and converts
         them into a numerical observation vector suitable for the RL model.
 
@@ -994,7 +992,7 @@ class CXRLGym(Env):
                 The observation vector as a NumPy array of type float32.
 
         """
-        fact_string = self.create_rl_env_state()
+        fact_string = self.get_env_state()
         raw_facts = ast.literal_eval(fact_string)
         return self.get_state_from_facts(raw_facts)
 
