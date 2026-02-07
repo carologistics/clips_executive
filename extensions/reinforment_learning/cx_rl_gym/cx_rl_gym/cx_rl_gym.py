@@ -38,8 +38,10 @@ from cx_rl_interfaces.srv import (
     GetActionListRobot,
     GetEnvState,
     GetEpisodeEnd,
+    GetObservableActions,
     GetObservableObjects,
     GetObservablePredicates,
+    GetPredefinedActions,
     GetPredefinedObservables,
     SetRLMode,
 )
@@ -97,6 +99,12 @@ class CXRLGym(Env):
         self.get_predefined_observables_client = self.node.create_client(
             GetPredefinedObservables, prefixed('get_predefined_observables')
         )
+        self.get_predefined_actions_client = self.node.create_client(
+            GetPredefinedActions, prefixed('get_predefined_actions')
+        )
+        self.get_observable_actions_client = self.node.create_client(
+            GetObservableActions, prefixed('get_observable_actions')
+        )
         self.get_episode_end_client = self.node.create_client(
             GetEpisodeEnd, prefixed('get_episode_end')
         )
@@ -142,7 +150,7 @@ class CXRLGym(Env):
         self.observation_space = Box(0, 1, (self.n_obs,))
 
         # Action space
-        action_space = self.create_rl_action_space()
+        action_space = self.generate_action_space()
         sorted_actions = ['no-op'] + sorted(set(action_space))
         self.action_dict = dict(zip(range(len(sorted_actions)), sorted_actions))
         self.inv_action_dict = dict(zip(sorted_actions, range(len(sorted_actions))))
@@ -560,8 +568,11 @@ class CXRLGym(Env):
         while not future.done():
             time.sleep(self.time_sleep)
         response = future.result()
-        observable_predicates = self.create_observable_predicate_dict(
-            response.predicatenames, response.paramcounts, response.paramnames, response.paramtypes
+        observable_predicates = self.create_observable_dict(
+            response.predicate_names,
+            response.param_counts,
+            response.param_names,
+            response.param_types,
         )
         return observable_predicates
 
@@ -590,29 +601,125 @@ class CXRLGym(Env):
         response = future.result()
         return response.observables
 
-    def create_rl_action_space(self) -> str:
+    def get_predefined_actions(self) -> list:
         """
-        Create a new RL action space.
+        Retrieve the list of predefined observables.
 
-        Calls the `create_rl_action_space` service to obtain a list of all available actions.
+        Calls the `GetPredefinedActions` service to get predefined observables used
+        for RL environment construction or monitoring.
 
         Returns
         -------
-            str: The generated environment state as a serialized string.
+            list: A list of predefined actions.
 
         """
-        while not self.create_rl_action_space_client.wait_for_service(1.0):
+        while not self.get_predefined_actions_client.wait_for_service(1.0):
             self.node.get_logger().info(
-                'Waiting for service (create_rl_action_space) to be ready...'
+                'Waiting for service (get_predefined_actions) to be ready...'
             )
 
-        request = GetActionList.Request()
-        future = self.create_rl_action_space_client.call_async(request)
+        request = GetPredefinedActions.Request()
+
+        future = self.get_predefined_actions_client.call_async(request)
         while not future.done():
             time.sleep(self.time_sleep)
         response = future.result()
-
         return response.actions
+
+    def get_observable_actions(self) -> dict:
+        """
+        Retrieve all observable actions and their parameters.
+
+        Calls the `GetObservableActions` service and constructs a dictionary mapping
+        predicate names to their parameter information.
+
+        Returns
+        -------
+            dict: Dictionary where keys are predicate names and values describe parameter
+                  counts, names, and types.
+
+        """
+        while not self.get_observable_actions_client.wait_for_service(1.0):
+            self.node.get_logger().info(
+                'Waiting for service (get_observable_actions) to be ready...'
+            )
+
+        request = GetObservableActions.Request()
+
+        future = self.get_observable_actions_client.call_async(request)
+        while not future.done():
+            time.sleep(self.time_sleep)
+        response = future.result()
+        observable_actions = self.create_observable_dict(
+            response.action_names,
+            response.param_counts,
+            response.param_names,
+            response.param_types,
+        )
+        return observable_actions
+
+    def generate_action_space(self) -> list[str]:
+        """
+        Generate the RL action space dynamically.
+
+        This includes predefined actions as well as actions with parameters,
+        which are expanded over all currently observable objects of the corresponding types.
+
+        Returns
+        -------
+        list[str]
+            A list of action strings for the RL environment.
+        """
+        self.node.get_logger().info('Generating action space...')
+        action_space = []
+
+        # Step 1: Add predefined actions
+        predefined_actions = (
+            self.get_predefined_actions()
+        )  # assumes a service call similar to get_predefined_observables
+        action_space += predefined_actions
+
+        # Step 2: Add parameterized actions
+        observable_actions_dict = (
+            self.get_observable_actions()
+        )  # returns dict: {action_name: {param_name: type}}
+        for action_name, param_types in observable_actions_dict.items():
+            if not param_types:
+                continue
+
+            # Retrieve observable objects for each parameter type
+            observable_objects_for_param_name = {}
+            skip_action = False
+            for param_name, obj_type in param_types.items():
+                objects = self.get_observable_objects(obj_type)
+                if not objects or objects[0] == 'Not found':
+                    skip_action = True
+                    break
+                observable_objects_for_param_name[param_name] = objects
+
+            if skip_action:
+                continue
+
+            # Compute Cartesian product of all parameter values
+            action_df = self.expand_grid(observable_objects_for_param_name)
+
+            # Add action name and parentheses for consistency
+            action_df.insert(0, '(', '(')
+            action_df.insert(len(action_df.columns), ')', ')')
+            action_df.insert(0, 'Action', action_name)
+
+            # Convert each row to a single action string
+            action_strings = action_df.to_string(
+                header=False, index=False, index_names=False
+            ).split('\n')
+            action_strings = ['#'.join(element.split()) for element in action_strings]
+            action_strings = [w.replace('#(#', '(').replace('#)', ')') for w in action_strings]
+
+            action_space += action_strings
+
+        self.node.get_logger().info(f'Action space: {action_space}')
+        self.node.get_logger().info('Action space size: ' + str(len(action_space)))
+        return action_space
 
     def get_env_state(self) -> str:
         """
@@ -1016,48 +1123,49 @@ class CXRLGym(Env):
         """
         return pd.DataFrame(list(product(*dictionary.values())), columns=dictionary.keys())
 
-    def create_observable_predicate_dict(
+    def create_observable_dict(
         self,
-        predicate_names: list[str],
+        names: list[str],
         param_counts: list[int],
         param_names: list[str],
         param_types: list[str],
     ) -> dict:
         """
-        Construct a dictionary describing observable predicates and their parameters.
+        Construct a dictionary describing entities and their parameters.
 
-        This method takes parallel lists describing predicates and their parameters,
+        This method takes parallel lists describing either observable predicates
+        (for observation space) or parameterized actions (for action space),
         and aggregates them into a nested dictionary for easier lookup.
 
         Parameters
         ----------
-        predicate_names : list[str]
-                Names of the predicates.
+        names : list[str]
+            Names of the predicates or actions.
         param_counts : list[int]
-                Number of parameters for each predicate.
+            Number of parameters for each predicate or action.
         param_names : list[str]
-                Flat list of parameter names for all predicates.
+            Flat list of parameter names for all predicates or actions.
         param_types : list[str]
-                Flat list of parameter types corresponding to each name.
+            Flat list of parameter types corresponding to each name.
 
         Returns
         -------
         dict
-                A mapping from predicate names to dictionaries of parameter names and types.
-
+            A mapping from entity names (predicates or actions) to dictionaries
+            of parameter names and types.
         """
-        predicates = {}
+        entities = {}
         param_counter = 0
-        for x in range(len(predicate_names)):
-            name = predicate_names[x]
+        for x in range(len(names)):
+            name = names[x]
             number_params = param_counts[x]
             params = {}
             param_range = param_counter + number_params
             while param_counter < param_range:
                 params[param_names[param_counter]] = param_types[param_counter]
                 param_counter += 1
-            predicates[name] = params
-        return predicates
+            entities[name] = params
+        return entities
 
     def unpack_transmitted_action_list(self, action_list: list[str]) -> dict:
         """

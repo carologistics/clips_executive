@@ -33,8 +33,8 @@
         )
     )
 
-    (ros-msgs-set-field ?response \"predicatenames\" ?pred-names)
-    (ros-msgs-set-field ?response \"paramcounts\" ?param-counts)
-    (ros-msgs-set-field ?response \"paramnames\" ?param-names)
-    (ros-msgs-set-field ?response \"paramtypes\" ?param-types)
+    (ros-msgs-set-field ?response \"predicate_names\" ?pred-names)
+    (ros-msgs-set-field ?response \"param_counts\" ?param-counts)
+    (ros-msgs-set-field ?response \"param_names\" ?param-names)
+    (ros-msgs-set-field ?response \"param_types\" ?param-types)
 )"))

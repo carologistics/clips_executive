@@ -23,7 +23,6 @@
   ?*REWARD-EPISODE-FAILURE* = -100
 
   ?*CX-RL-SERVICES* = (create$
-      create_rl_action_space GetActionList
       get_env_state GetEnvState
       end_training EndTraining
       get_action_list_executable_for_robot GetActionListRobot
@@ -32,6 +31,8 @@
       get_observable_objects GetObservableObjects
       get_observable_predicates GetObservablePredicates
       get_predefined_observables GetPredefinedObservables
+      get_observable_actions GetObservableActions
+      get_predefined_actions GetPredefinedActions
       set_rl_mode SetRLMode
   )
   ?*CX-RL-SERVICE-CLIENTS* = (create$
@@ -69,12 +70,6 @@
   (slot node (type STRING) (default "/cx_rl_node"))
 )
 
-(deftemplate rl-action-space
-" Define all action names. "
-  (slot node (type STRING) (default "/cx_rl_node"))
-  (multislot action-names (type STRING))
-)
-
 (deftemplate rl-episode-end
 " Assert this during training if the episode is supposed to end. "
   (slot node (type STRING) (default "/cx_rl_node"))
@@ -98,7 +93,7 @@
 " Used to span a symbolic observation space.
   Define a predicate with parameters and belonging types.
   The observation space will contain all possible groundings of this predicate
-  accoridng to the belonging objects as defined via rl-observable-type.
+  according to the belonging objects as defined via rl-observable-type.
   Example: name on, param-names (blocka block b) param-types (BLOCK BLOCK).
 "
   (slot node (type STRING) (default "/cx_rl_node"))
@@ -114,6 +109,27 @@
   (slot node (type STRING) (default "/cx_rl_node"))
   (slot name (type SYMBOL))
   (multislot params (type SYMBOL))
+)
+
+(deftemplate rl-predefined-action
+" Used to span a symbolic action space.
+  Use this to directly assert grounded actions.
+"
+  (slot node (type STRING) (default "/cx_rl_node"))
+  (slot name (type SYMBOL))
+  (multislot params (type SYMBOL))
+)
+
+(deftemplate rl-observable-action
+" Used to span a symbolic action space.
+  Define an action with parameters and belonging types.
+  The action space will contain all possible groundings of this action
+  according to the belonging objects as defined via rl-observable-type.
+"
+  (slot node (type STRING) (default "/cx_rl_node"))
+  (slot name (type SYMBOL))
+  (multislot param-names (type SYMBOL))
+  (multislot param-types (type SYMBOL))
 )
 
 (deftemplate rl-observation
@@ -149,7 +165,8 @@
 
 (deftemplate rl-action
 " Defines an action that can be executed.
-  The name needs to match one defined via the rl-action-space fact.
+  The name needs to match one defined via the rl-predefined-action or
+  rl-observable-action facts.
   The ID should be unique to distinguish actions with the same signature.
   The slots is-selected and assigned-to are handled automatically.
   Once an action is selected, the user has to take care of the execution.

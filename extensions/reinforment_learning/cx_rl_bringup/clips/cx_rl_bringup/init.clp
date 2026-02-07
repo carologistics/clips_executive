@@ -56,24 +56,8 @@
     (rl-observation (name clear) (param-values block2))
     (rl-observation (name clear) (param-values block3))
     (rl-observation (name clear) (param-values block4))
-    (rl-action-space (action-names (create$
-      "stack#robot1#block1#block2"
-      "stack#robot1#block1#block3"
-      "stack#robot1#block1#block4"
-      "stack#robot1#block2#block1"
-      "stack#robot1#block2#block3"
-      "stack#robot1#block2#block4"
-      "stack#robot1#block3#block1"
-      "stack#robot1#block3#block2"
-      "stack#robot1#block3#block4"
-      "stack#robot1#block4#block1"
-      "stack#robot1#block4#block2"
-      "stack#robot1#block4#block3"
-      "pickup#robot1#block1"
-      "pickup#robot1#block2"
-      "pickup#robot1#block3"
-      "pickup#robot1#block4"
-    )))
+    (rl-observable-action (name stack) (param-names r b1 b2) (param-types robot block block))
+    (rl-observable-action (name pickup) (param-names r b) (param-types robot block))
   )
   (if (not (any-factp ((?node cx-rl-node)) (eq ?node:name ?*CX-RL-NODE-NAME*))) then
    (assert (cx-rl-node (name ?*CX-RL-NODE-NAME*) (mode UNSET)))
@@ -129,7 +113,7 @@
   (bind ?block1 (sub-string 6 6 ?some-block))
   (bind ?block2 (sub-string 6 6 ?other-block))
   (bind ?id (sym-cat "stack" ?block1 ?block2))
-  (bind ?name (sym-cat "stack#" ?robot "#" ?some-block "#" ?other-block))
+  (bind ?name (sym-cat "stack(" ?robot "#" ?some-block "#" ?other-block ")"))
   (assert (rl-action (id ?id) (name ?name)))
 )
 
@@ -142,7 +126,7 @@
   =>
   (bind ?block1 (sub-string 6 6 ?some-block))
   (bind ?id (sym-cat "pickup" (gensym*)))
-  (bind ?name (sym-cat "pickup#" ?robot "#" ?some-block))
+  (bind ?name (sym-cat "pickup(" ?robot "#" ?some-block ")"))
   (assert (rl-action (id ?id) (name ?name)))
 )
 

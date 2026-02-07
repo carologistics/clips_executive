@@ -1,5 +1,5 @@
 ---
-string[] predicate_names
+string[] action_names
 uint8[] param_counts
 string[] param_names
 string[] param_types
