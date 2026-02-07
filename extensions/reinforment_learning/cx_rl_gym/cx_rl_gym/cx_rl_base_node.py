@@ -15,15 +15,19 @@
 
 import importlib
 import os
+from threading import Thread
 
+from bondpy import bondpy
+from lifecycle_msgs.msg import State
 import rclpy
-from rclpy.node import Node
+from rclpy.callback_groups import ReentrantCallbackGroup
+from rclpy.lifecycle import LifecycleNode, TransitionCallbackReturn
 from stable_baselines3.common.monitor import Monitor
 
 # Import SB3 Maskable PPO (or your custom class)
 
 
-class CXRLBaseNode(Node):
+class CXRLBaseNode(LifecycleNode):
     """Base class for RL nodes: handles environment and general RL setup."""
 
     def __init__(self, node_name='cx_rl_node'):
@@ -43,8 +47,99 @@ class CXRLBaseNode(Node):
         self.shutdown_flag = False
         self.env = None
         self.model = None
-        self.set_dirs()
+        self.autostart_group = ReentrantCallbackGroup()
+        self.autostart_timer = self.create_timer(
+            0.0, self.autostart_callback, callback_group=self.autostart_group
+        )
+
+        self.register_rcl_preshutdown_callback()
+
         self.get_logger().info(f'{node_name} initialised')
+
+    def register_rcl_preshutdown_callback(self):
+        context = self.context
+        context.on_shutdown(self.on_rcl_preshutdown)
+
+    def run_cleanups(self):
+        state = self._state_machine.current_state[0]
+
+        if state == State.PRIMARY_STATE_ACTIVE:
+            self.trigger_deactivate()
+        state = self._state_machine.current_state[0]
+
+        if state == State.PRIMARY_STATE_INACTIVE:
+            self.trigger_cleanup()
+        state = self._state_machine.current_state[0]
+
+        if state == State.PRIMARY_STATE_UNCONFIGURED:
+            self.trigger_shutdown()
+
+    def autostart_callback(self):
+        self.autostart_timer.cancel()
+        self.get_logger().info(f'Auto-starting node: {self.get_name()}')
+
+        configure_result = self.trigger_configure()
+        if configure_result != TransitionCallbackReturn.SUCCESS:
+            self.get_logger().error(f'Auto-starting node {self.get_name()} failed to configure!')
+            return
+
+        activate_result = self.trigger_activate()
+        if activate_result != TransitionCallbackReturn.SUCCESS:
+            self.get_logger().error(f'Auto-starting node {self.get_name()} failed to activate!')
+            return
+
+    def on_configure(self, state):
+        try:
+            self.set_dirs()
+            self.bond_heartbeat_period = self.get_parameter_or(
+                'bond_heartbeat_period',
+                rclpy.Parameter('bond_heartbeat_period', rclpy.Parameter.Type.DOUBLE, 0.0),
+            ).value
+        except Exception as e:
+            self.get_logger().error(f'Failed to configure: {e}')
+            return TransitionCallbackReturn.FAILURE
+        return TransitionCallbackReturn.SUCCESS
+
+    def on_activate(self, state):
+        self.get_logger().info('Activating RL node')
+
+        try:
+            self.create_env()
+            self.set_model()
+            if self.get_parameter('rl_mode').value.upper() == 'TRAINING':
+                self.training_thread = Thread(target=self.run_training, daemon=True)
+                self.training_thread.start()
+            return TransitionCallbackReturn.SUCCESS
+        except Exception as e:
+            self.get_logger().error(f'Failed to activate: {e}')
+            return TransitionCallbackReturn.FAILURE
+
+        self.create_bond()
+        return TransitionCallbackReturn.SUCCESS
+
+    def on_deactivate(self, state):
+        self.get_logger().info('Deactivating RL node')
+
+        if self.env:
+            self.env.shutdown = True
+
+        if hasattr(self, 'training_thread'):
+            self.training_thread.join(timeout=2.0)
+
+        self.destroy_bond()
+        return TransitionCallbackReturn.SUCCESS
+
+    def on_cleanup(self, state):
+        self.get_logger().info('Cleaning up RL node')
+
+        self.env = None
+        self.model = None
+
+        return TransitionCallbackReturn.SUCCESS
+
+    def on_shutdown(self, state):
+        self.get_logger().info('Shutdown transition')
+        return TransitionCallbackReturn.SUCCESS
 
     def set_dirs(self):
         storage_path = self.get_parameter('storage_dir').value
@@ -80,3 +175,32 @@ class CXRLBaseNode(Node):
     def set_model(self):
         """Implemented in subclass: create or load a model."""
         raise NotImplementedError('Subclasses must implement set_model()')
+
+    def load_model(self):
+        """Implemented in subclass: create or load a model."""
+        raise NotImplementedError('Subclasses must implement set_model()')
+
+    def run_training(self):
+        """Implemented in subclass: create or load a model."""
+        raise NotImplementedError('Subclasses must implement set_model()')
+
+    def create_bond(self):
+        if self.bond_heartbeat_period > 0.0:
+            self.get_logger().info(f"Creating bond ({self.get_name()}) to lifecycle manager")
+            self.bond = bondpy.Bond(self.get_name(), node=self)
+            self.bond.start()
+            self.bond.set_heartbeat_period(self.bond_heartbeat_period)
+            self.bond.set_heartbeat_timeout(4.0)
+
+    def destroy_bond(self):
+        if getattr(self, 'bond', None):
+            self.get_logger().info(f"Destroying bond ({self.get_name()})")
+            self.bond.break_bond()
+            self.bond = None
+
+    def on_rcl_preshutdown(self):
+        # Best-effort cleanup
+        self.run_cleanups()
+
+        # Break bond cleanly
+        self.destroy_bond()

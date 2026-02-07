@@ -14,16 +14,13 @@
 # limitations under the License.
 
 import os
-import signal
-from threading import Thread
-import time
 
 from cx_rl_gym.cx_rl_base_node import CXRLBaseNode
 
 # Import SB3 Maskable PPO (or your custom class)
 from cx_rl_multi_robot_mppo.MultiRobotMaskablePPO import MultiRobotMaskablePPO
 import rclpy
-from rclpy.executors import MultiThreadedExecutor
+from rclpy.executors import ExternalShutdownException, MultiThreadedExecutor
 from sb3_contrib.common.maskable.policies import MaskableActorCriticPolicy
 from stable_baselines3.common.callbacks import CheckpointCallback, StopTrainingOnMaxEpisodes
 from stable_baselines3.common.logger import configure
@@ -104,38 +101,38 @@ class CXRLMaskablePPONode(CXRLBaseNode):
         self.get_logger().info('Agent loaded')
         return self.model
 
-
-def main(args=None):
-    rclpy.init()
-    node = CXRLMaskablePPONode()
-    executor = MultiThreadedExecutor()
-    executor.add_node(node)
-
-    Thread(target=executor.spin).start()
-    signal.signal(signal.SIGINT, node.shutdown)
-
-    node.get_logger().info('Creating environment')
-    node.create_env()
-
-    model = node.set_model()
-
-    if node.get_parameter('rl_mode').value.upper() == 'TRAINING':
+    def run_training(self):
         callback_max_episodes = StopTrainingOnMaxEpisodes(
-            max_episodes=node.get_parameter('training.max_episodes').value, verbose=1
+            max_episodes=self.get_parameter('training.max_episodes').value, verbose=1
         )
-        checkpoint_callback = CheckpointCallback(save_freq=200, save_path=node.checkpoint_dir)
 
-        model.learn(
-            total_timesteps=node.get_parameter('training.timesteps').value,
+        checkpoint_callback = CheckpointCallback(save_freq=200, save_path=self.checkpoint_dir)
+
+        self.model.learn(
+            total_timesteps=self.get_parameter('training.timesteps').value,
             callback=[callback_max_episodes, checkpoint_callback],
             log_interval=1,
         )
-        model.save(os.path.join(node.save_dir, str(node.get_parameter('agent_name').value)))
-        node.env.env.on_training_end()
-        node.get_logger().info('Finished training, closing node')
-    else:
-        while not node.shutdown_flag:
-            time.sleep(0.1)
 
-    node.destroy_node()
-    rclpy.shutdown()
+        self.model.save(os.path.join(self.save_dir, str(self.get_parameter('agent_name').value)))
+
+        self.env.env.on_training_end()
+        self.get_logger().info('Finished training')
+        self.on_rcl_preshutdown()
+
+        # Drop extra reference to parameter event publisher.
+        # It will be destroyed with other publishers below.
+        self._parameter_event_publisher = None
+        self.destroy_node()
+        rclpy.shutdown()
+
+
+def main(args=None):
+    try:
+        with rclpy.init(args=args):
+            node = CXRLMaskablePPONode()
+            executor = MultiThreadedExecutor()
+            executor.add_node(node)
+            executor.spin()
+    except (KeyboardInterrupt, ExternalShutdownException):
+        pass
