@@ -94,3 +94,11 @@
     (retract ?a)
   )
 )
+
+(defrule cx-rl-exec-action-selection-cleanup
+  (executive-finalize)
+  (cx-rl-node (name ?node))
+  (ros-msgs-client (service ?s&:(eq ?s (str-cat ?node "/exec_action_selection"))) (type ?type))
+  =>
+  (ros-msgs-destroy-client ?s)
+)
