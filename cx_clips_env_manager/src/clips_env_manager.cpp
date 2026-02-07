@@ -389,12 +389,12 @@ std::shared_ptr<clips::Environment> CLIPSEnvManager::new_env(const std::string &
     40, log_router_query, log_router_print, NULL, NULL, log_router_exit, &context->logger_);
   clips::AddUDF(
     env, "cx-shutdown", "v", 0, 0, ";",
-    [](clips::Environment * env, clips::UDFContext * /*udfc*/, clips::UDFValue * /*out*/) {
+    [](clips::Environment * /*env*/, clips::UDFContext * /*udfc*/, clips::UDFValue * /*out*/) {
       std::thread([]() { rclcpp::shutdown(); }).detach();
     },
     "cx_shutdown", nullptr);
 
-  RCLCPP_INFO(get_logger(), "Initialisied new CLIPS environment: %s", env_name.c_str());
+  RCLCPP_INFO(get_logger(), "Initialized new CLIPS environment: %s", env_name.c_str());
   return clips;
 }
 
