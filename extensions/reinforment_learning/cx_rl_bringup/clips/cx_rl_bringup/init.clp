@@ -212,5 +212,5 @@
 (defrule rl-stop-agent-on-training-end
   (rl-end-training)
   =>
-  (exit)
+  (cx-shutdown)
 )
