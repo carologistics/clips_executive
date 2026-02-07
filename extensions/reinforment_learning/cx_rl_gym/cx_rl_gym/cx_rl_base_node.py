@@ -28,7 +28,7 @@ from stable_baselines3.common.monitor import Monitor
 
 
 class CXRLBaseNode(LifecycleNode):
-    """Base class for RL nodes: handles environment and general RL setup."""
+    """Base class for RL nodes: handles environment and general RL setup, as well as Lifecycle and Bond features."""
 
     def __init__(self, node_name='cx_rl_node'):
         super().__init__(node_name)
@@ -53,8 +53,6 @@ class CXRLBaseNode(LifecycleNode):
         )
 
         self.register_rcl_preshutdown_callback()
-
-        self.get_logger().info(f'{node_name} initialised')
 
     def register_rcl_preshutdown_callback(self):
         context = self.context
@@ -118,8 +116,6 @@ class CXRLBaseNode(LifecycleNode):
         return TransitionCallbackReturn.SUCCESS
 
     def on_deactivate(self, state):
-        self.get_logger().info('Deactivating RL node')
-
         if self.env:
             self.env.shutdown = True
 
@@ -130,22 +126,19 @@ class CXRLBaseNode(LifecycleNode):
         return TransitionCallbackReturn.SUCCESS
 
     def on_cleanup(self, state):
-        self.get_logger().info('Cleaning up RL node')
-
         self.env = None
         self.model = None
 
         return TransitionCallbackReturn.SUCCESS
 
     def on_shutdown(self, state):
-        self.get_logger().info('Shutdown transition')
         return TransitionCallbackReturn.SUCCESS
 
     def set_dirs(self):
         storage_path = self.get_parameter('storage_dir').value
         self.get_logger().info(f"{storage_path}")
-        self.save_dir = os.path.join(storage_path, 'cx_rl_multi_robot_mppo', 'trained_agents')
-        self.log_dir = os.path.join(storage_path, 'cx_rl_multi_robot_mppo', 'logs')
+        self.save_dir = os.path.join(storage_path, 'cx_rl_data', 'trained_agents')
+        self.log_dir = os.path.join(storage_path, 'cx_rl_data', 'logs')
         self.checkpoint_dir = os.path.join(storage_path, 'checkpoint_agents')
         os.makedirs(self.save_dir, exist_ok=True)
         os.makedirs(self.log_dir, exist_ok=True)
@@ -165,24 +158,13 @@ class CXRLBaseNode(LifecycleNode):
         )
         return self.env
 
-    def shutdown(self, sig, frame):
-        self.shutdown_flag = True
-        if self.env:
-            self.env.shutdown = True
-        if self.model:
-            self.model.shutdown = True
-
     def set_model(self):
-        """Implemented in subclass: create or load a model."""
-        raise NotImplementedError('Subclasses must implement set_model()')
-
-    def load_model(self):
-        """Implemented in subclass: create or load a model."""
+        """Implemented in subclass: Called on activation to load a model, store it to self.model"""
         raise NotImplementedError('Subclasses must implement set_model()')
 
     def run_training(self):
-        """Implemented in subclass: create or load a model."""
-        raise NotImplementedError('Subclasses must implement set_model()')
+        """Implemented in subclass: Called in separate thread, if rl_mode is set to 'TRAINING'."""
+        raise NotImplementedError('Subclasses must implement run_training()')
 
     def create_bond(self):
         if self.bond_heartbeat_period > 0.0:
