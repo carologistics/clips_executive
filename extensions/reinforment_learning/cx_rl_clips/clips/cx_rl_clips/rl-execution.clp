@@ -13,6 +13,21 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
+(defrule cx-rl-query-update-no-mode-set
+  (cx-rl-node (name ?node) (mode UNSET))
+  (not (rl-get-status (node ?node)))
+  =>
+  (assert (rl-get-status (node ?node)))
+)
+
+(defrule cx-rl-query-update-exection
+  (cx-rl-node (name ?node) (mode EXECUTION) (model-loaded FALSE))
+  (not (rl-get-status (node ?node)))
+  =>
+  (assert (rl-get-status (node ?node)))
+)
+
+
 (defrule cx-rl-assign-robot-to-rl-actions
 " Before checking rl-actions for their executability, pick a waiting robot
   that should get a new action assigned to it next. "

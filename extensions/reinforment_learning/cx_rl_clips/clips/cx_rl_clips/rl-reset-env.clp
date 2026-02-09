@@ -41,7 +41,7 @@
 
 (defrule cx-rl-reset-env-stage-load-facts
   ?r <- (rl-reset-env (node ?node) (uuid ?uuid) (state LOAD-FACTS))
-  (cx-rl-node (name ?node) (mode ?mode) (fact-reset-file ?path) (model-loaded ?model-loaded) (ros-comm-init ?ros-comm-init))
+  (cx-rl-node (name ?node) (mode ?mode) (fact-reset-file ?path) (model-loaded ?model-loaded) (total-steps ?total-steps) (ros-comm-init ?ros-comm-init))
   (cx-rl-interfaces-reset-env-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr))
   (test (str-index ?node ?server))
   =>
@@ -56,6 +56,6 @@
     (retract ?old-node)
   )
   (assert (cx-rl-interfaces-reset-env-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr)))
-  (assert (cx-rl-node (name ?node) (mode ?mode) (fact-reset-file ?path) (ros-comm-init ?ros-comm-init) (model-loaded ?model-loaded)))
+  (assert (cx-rl-node (name ?node) (mode ?mode) (fact-reset-file ?path) (ros-comm-init ?ros-comm-init) (total-steps ?total-steps) (model-loaded ?model-loaded)))
   (assert (rl-reset-env (node ?node) (uuid ?uuid) (state USER-INIT)))
 )

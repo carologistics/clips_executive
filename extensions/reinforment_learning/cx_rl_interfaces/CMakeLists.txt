@@ -14,7 +14,6 @@ set(SERVICES
   "srv/EndTraining.srv"
   "srv/ExecActionSelection.srv"
   "srv/GetActionID.srv"
-  "srv/GetActionList.srv"
   "srv/GetActionListRobot.srv"
   "srv/GetEpisodeEnd.srv"
   "srv/GetObservableActions.srv"
@@ -22,7 +21,7 @@ set(SERVICES
   "srv/GetObservablePredicates.srv"
   "srv/GetPredefinedActions.srv"
   "srv/GetPredefinedObservables.srv"
-  "srv/SetRLMode.srv"
+  "srv/GetStatus.srv"
 )
 
 set(ACTIONS

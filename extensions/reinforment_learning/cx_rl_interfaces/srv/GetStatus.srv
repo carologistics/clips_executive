@@ -1,0 +1,6 @@
+---
+string mode                  # Current RL mode: "TRAINING" or "EXECUTION"
+int32 current_episode        # Current episode number when training
+int32 current_episode_step   # Step count within the current episode when training
+int32 total_steps            # Total steps since environment start when training
+bool model_loaded            # True if a RL model is registered for execution

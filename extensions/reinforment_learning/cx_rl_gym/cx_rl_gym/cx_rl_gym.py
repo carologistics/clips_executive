@@ -34,7 +34,6 @@ from cx_rl_interfaces.action import ActionSelection, GetFreeRobot, ResetEnv
 from cx_rl_interfaces.srv import (
     EndTraining,
     ExecActionSelection,
-    GetActionList,
     GetActionListRobot,
     GetEnvState,
     GetEpisodeEnd,
@@ -43,7 +42,7 @@ from cx_rl_interfaces.srv import (
     GetObservablePredicates,
     GetPredefinedActions,
     GetPredefinedObservables,
-    SetRLMode,
+    GetStatus,
 )
 from gymnasium import Env
 from gymnasium.spaces import Box, Discrete
@@ -74,6 +73,13 @@ class CXRLGym(Env):
         super().__init__()
 
         self.node = node
+        self.mode = mode
+        self.current_episode = 0
+        self.current_step = 0
+        self.total_steps = 0
+        self.rl_model = None
+        self.number_of_robots = number_robots
+
         self.node_name_prefix = node.get_name()  # <-- use this as the prefix
         self.node.get_logger().info('cxrl_gym init')
 
@@ -82,11 +88,7 @@ class CXRLGym(Env):
             return f"{self.node_name_prefix}/{name}"
 
         # Service clients
-        self.set_rl_mode_client = self.node.create_client(SetRLMode, prefixed('set_rl_mode'))
         self.end_training_client = self.node.create_client(EndTraining, prefixed('end_training'))
-        self.get_action_list_executable_client = self.node.create_client(
-            GetActionList, prefixed('get_action_list_executable')
-        )
         self.get_action_list_executable_for_robot_client = self.node.create_client(
             GetActionListRobot, prefixed('get_action_list_executable_for_robot')
         )
@@ -109,8 +111,10 @@ class CXRLGym(Env):
             GetEpisodeEnd, prefixed('get_episode_end')
         )
         self.get_env_state_client = self.node.create_client(GetEnvState, prefixed('get_env_state'))
-        self.get_action_list_client = self.node.create_client(
-            GetActionList, prefixed('get_action_list')
+
+        # Service provider
+        self.get_status_service = self.node.create_service(
+            GetStatus, prefixed('get_status'), self.get_status
         )
 
         # Action clients
@@ -132,14 +136,10 @@ class CXRLGym(Env):
 
         self.time_sleep = 0.001
         self.shutdown = False
-        self.number_of_robots = number_robots
-        self.mode = mode
-        self.rl_model = None
         self.next_robot = None
         self.robot_locked = False
         self.executable_actions_dicts_for_robot = {}
         self.executable_actions_dict = {}
-        self.reset_wait_time = 3
 
         # Observation space
         obs_space = self.generate_observation_space()
@@ -202,6 +202,8 @@ class CXRLGym(Env):
                 Additional debug information.
 
         """
+        self.current_step += 1
+        self.total_steps += 1
         action_string = self.action_dict[action]
 
         self.node.get_logger().info(f'In step function with action {action}: {action_string}')
@@ -346,6 +348,8 @@ class CXRLGym(Env):
 
         """
         self.node.get_logger().info('Resetting environment...')
+        self.current_episode += 1
+        self.current_step = 0
         super().reset(seed=seed)
         result = self.reset_env()
         self.node.get_logger().info(result)
@@ -410,72 +414,12 @@ class CXRLGym(Env):
             Trained RL model supporting ``predict(observation)``.
 
         """
-        self.rl_model = model
         self.exec_action_selection_service = self.node.create_service(
             ExecActionSelection,
             self.node_name_prefix + '/exec_action_selection',
             self.exec_action_selection,
         )
-        self.set_rl_mode(self.mode)
-
-    def set_rl_mode(self, mode: str) -> str:
-        """
-        Set the current reinforcement learning (RL) mode on the remote system.
-
-        This method calls the `SetRLMode` ROS 2 service and waits until a confirmation
-        is received. It blocks until the service is ready and the asynchronous call
-        completes.
-
-        Parameters
-        ----------
-        mode : str
-            The RL mode to set (e.g., "train", "eval").
-
-        Returns
-        -------
-        str
-            Confirmation message returned by the service.
-
-        """
-        while not self.set_rl_mode_client.wait_for_service(1.0):
-            self.node.get_logger().info('Waiting for service (set_rl_mode) to be ready...')
-
-        request = SetRLMode.Request()
-        request.mode = mode
-
-        future = self.set_rl_mode_client.call_async(request)
-        while not future.done():
-            time.sleep(self.time_sleep)
-        response = future.result()
-
-        mode_confirm = response.confirmation
-        return mode_confirm
-
-    def get_action_list_executable(self) -> dict:
-        """
-        Retrieve the list of all executable actions.
-
-        Calls the `GetActionList` service to obtain all available actions that can
-        currently be executed by the system.
-
-        Returns
-        -------
-            dict: A mapping of action names to their corresponding action IDs.
-
-        """
-        while not self.get_action_list_executable_client.wait_for_service(1.0):
-            self.node.get_logger().info(
-                'Waiting for service (get_action_list_executable) to be ready...'
-            )
-
-        request = GetActionList.Request()
-
-        future = self.get_action_list_executable_client.call_async(request)
-        while not future.done():
-            time.sleep(self.time_sleep)
-        response = future.result()
-        dict_action_ids = self.unpack_transmitted_action_list(response.actions)
-        return dict_action_ids
+        self.rl_model = model
 
     def get_action_list_executable_for_robot(self, robot: str) -> dict:
         """
@@ -771,6 +715,36 @@ class CXRLGym(Env):
         response = future.result()
 
         return response.episode_end, response.reward
+
+    def get_status(
+        self, request: GetStatus.Request, response: GetStatus.Response
+    ) -> GetStatus.Response:
+        """
+        Fetch information regarding environment and training progress.
+
+        This method receives a serialized environment state, converts it into an
+        observation for the RL model, predicts the next action using the model, and
+        fills the ROS 2 service response with the selected action ID.
+
+        Parameters
+        ----------
+        request : GetStatus.Request
+            Empty request.
+        response : GetStatus.Response
+            The response object to populate.
+
+        Returns
+        -------
+        GetStatus.Response
+            Information for status
+
+        """
+        response.mode = self.mode
+        response.current_episode = self.current_episode
+        response.current_episode_step = self.current_step
+        response.total_steps = self.total_steps
+        response.model_loaded = self.rl_model is not None
+        return response
 
     def exec_action_selection(
         self, request: ExecActionSelection.Request, response: ExecActionSelection.Response

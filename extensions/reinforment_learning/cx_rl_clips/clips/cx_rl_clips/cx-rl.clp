@@ -28,6 +28,7 @@ deftemplates.clp
 rl-utils.clp
 action-selection-action.clp
 exec-action-selection-client.clp
+get-status-client.clp
 get-free-robot-action.clp
 reset-env-action.clp
 rl-reset-env.clp
@@ -51,7 +52,6 @@ rl-execution.clp
   get-predefined-observables-srv.clp
   get-observable-actions-srv.clp
   get-predefined-actions-srv.clp
-  set-rl-mode-srv.clp
   rl-save-facts.clp
 )
 (batch* (str-cat (ament-index-get-package-share-directory "cx_rl_clips") "/clips/cx_rl_clips/" ?f))

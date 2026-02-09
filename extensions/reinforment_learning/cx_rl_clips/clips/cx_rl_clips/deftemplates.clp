@@ -26,17 +26,16 @@
       get_env_state GetEnvState
       end_training EndTraining
       get_action_list_executable_for_robot GetActionListRobot
-      get_action_list_executable GetActionList
       get_episode_end GetEpisodeEnd
       get_observable_objects GetObservableObjects
       get_observable_predicates GetObservablePredicates
       get_predefined_observables GetPredefinedObservables
       get_observable_actions GetObservableActions
       get_predefined_actions GetPredefinedActions
-      set_rl_mode SetRLMode
   )
   ?*CX-RL-SERVICE-CLIENTS* = (create$
       exec_action_selection ExecActionSelection
+      get_status GetStatus
   )
   ?*CX-RL-ACTION-SERVERS* = (create$
       cx-rl-interfaces-get-free-robot-server get_free_robot
@@ -55,14 +54,29 @@
 
 (deftemplate cx-rl-node
 " Assert this once everything is initialized.
-  This will cause the current fact base to be saved as a starting point for
-  each episode in training.
+  Only specify the node name, all other fields are handled automatically.
+
+  Specifically, to get updates on training progress, assert the rl-get-status fact.
 "
   (slot name (type STRING) (default "/cx_rl_node"))
-  (slot mode (type SYMBOL) (allowed-values UNSET TRAINING EXECUTION))
+  ; these slots are set automatically on startup
   (slot ros-comm-init (type SYMBOL) (allowed-values TRUE FALSE) (default FALSE))
-  (slot model-loaded (type SYMBOL) (allowed-values TRUE FALSE) (default FALSE))
   (slot fact-reset-file (type STRING) (default ""))
+  ; These slots are handled through rl-get-status
+  (slot mode (type SYMBOL) (allowed-values UNSET TRAINING EXECUTION))
+  (slot episode (type INTEGER))
+  (slot step (type INTEGER))
+  (slot total-steps (type INTEGER))
+  (slot model-loaded (type SYMBOL) (allowed-values TRUE FALSE) (default FALSE))
+)
+
+
+(deftemplate rl-get-status
+" Assert this to query latest updates of the environment.
+  Causes the corresponding cx-rl-node fact to be updated.
+"
+  (slot node (type STRING) (default "/cx_rl_node"))
+  (slot request-id (type INTEGER))
 )
 
 (deftemplate rl-end-training
