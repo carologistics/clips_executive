@@ -129,14 +129,14 @@ class CXRLGym(Env):
         # initialize other internal state
         self.reset_env_result = None
         self.get_free_robot_result = None
-        self.action_selection_send_goal_futures = [None] * number_robots
-        self.action_selection_get_result_futures = [None] * number_robots
-        self.action_selection_results = [None] * number_robots
-        self.action_selection_goal_handles = [None] * number_robots
+        self.action_selection_send_goal_futures = {}
+        self.action_selection_get_result_futures = {}
+        self.action_selection_results = {}
+        self.action_selection_goal_handles = {}
 
         self.time_sleep = 0.001
         self.shutdown = False
-        self.next_robot = None
+        self.next_robot = ''
         self.robot_locked = False
         self.executable_actions_dicts_for_robot = {}
         self.executable_actions_dict = {}
@@ -205,15 +205,16 @@ class CXRLGym(Env):
         self.current_step += 1
         self.total_steps += 1
         action_string = self.action_dict[action]
+        robot = self.next_robot
 
         self.node.get_logger().info(f'In step function with action {action}: {action_string}')
 
-        if action_string in self.executable_actions_dicts_for_robot[self.next_robot]:
-            action_id = self.executable_actions_dicts_for_robot[self.next_robot][action_string]
+        if action_string in self.executable_actions_dicts_for_robot[robot]:
+            action_id = self.executable_actions_dicts_for_robot[robot][action_string]
         else:
             self.node.get_logger().info(
                 f'Action {action_string} not executable for robot \
-                {self.next_robot}!'
+                {robot}!'
             )
             self.robot_locked = False
             # state = self.get_env_state()
@@ -225,20 +226,19 @@ class CXRLGym(Env):
             return state, reward, terminated, truncated, info
 
         action_msg = ActionSelection.Goal()
-        action_msg.actionid = action_id
-        robot_index = int(self.next_robot[5]) - 1
+        action_msg.action_id = action_id
         self.action_selection_client.wait_for_server()
-        self.action_selection_send_goal_futures[robot_index] = (
+        self.action_selection_send_goal_futures[robot] = (
             self.action_selection_client.send_goal_async(
                 action_msg,
-                partial(self.action_selection_feedback_callback, robot_index=robot_index),
+                partial(self.action_selection_feedback_callback, robot=robot),
             )
         )
-        self.action_selection_send_goal_futures[robot_index].add_done_callback(
-            partial(self.action_selection_goal_response_callback, robot_index=robot_index)
+        self.action_selection_send_goal_futures[robot].add_done_callback(
+            partial(self.action_selection_goal_response_callback, robot=robot)
         )
 
-        while self.action_selection_results[robot_index] is None:
+        while self.action_selection_results.get(robot) is None:
             if self.shutdown:
                 self.node.get_logger().info('Shutdown triggered!')
                 state = None
@@ -250,8 +250,8 @@ class CXRLGym(Env):
 
             time.sleep(self.time_sleep)
 
-        result = self.action_selection_results[robot_index]
-        self.action_selection_results[robot_index] = None
+        result = self.action_selection_results[robot]
+        self.action_selection_results[robot] = None
 
         result_action_id = result.action_id
         result_reward = result.reward
@@ -381,8 +381,8 @@ class CXRLGym(Env):
                 return np.zeros((self.n_actions), dtype=np.int8)
             time.sleep(self.time_sleep)
         self.robot_locked = True
-        self.next_robot = self.get_free_robot()
-        if self.next_robot == 'Aborted':
+        success, self.next_robot = self.get_free_robot()
+        if not success:
             self.node.get_logger().info('get_free_robot aborted, unlocking robot selection...')
             self.robot_locked = False
             return np.zeros((self.n_actions), dtype=np.int8)
@@ -879,7 +879,7 @@ class CXRLGym(Env):
         else:
             self.node.get_logger().info('Failed to cancel reset_env!')
 
-    def get_free_robot(self) -> str:
+    def get_free_robot(self) -> tuple[bool, str]:
         """
         Retrieve a currently available robot.
 
@@ -887,6 +887,8 @@ class CXRLGym(Env):
 
         Returns
         -------
+        boool
+                Indicates whether the retrieval was successful
         str
                 The name or identifier of the free robot.
 
@@ -900,10 +902,15 @@ class CXRLGym(Env):
             self.get_free_robot_goal_response_callback
         )
         while self.get_free_robot_result is None:
+            if self.shutdown == True:
+                if self.get_free_robot_goal_handle and self.get_free_robot_goal_handle.is_active:
+                    self.get_free_robot_goal_handle.cancel_goal_async()
+                return False, ''
             time.sleep(self.time_sleep)
+        success = self.get_free_robot_result.success
         robot = self.get_free_robot_result.robot
         self.get_free_robot_result = None
-        return robot
+        return success, robot
 
     def get_free_robot_goal_response_callback(self, future: Future) -> None:
         """
@@ -968,7 +975,7 @@ class CXRLGym(Env):
         else:
             self.node.get_logger().info('Failed to cancel get_free_robot!')
 
-    def action_selection_goal_response_callback(self, future: Future, robot_index: int) -> None:
+    def action_selection_goal_response_callback(self, future: Future, robot: str) -> None:
         """
         Handle goal responses from the action selection server via callback.
 
@@ -976,8 +983,8 @@ class CXRLGym(Env):
         ----------
         future : Future
                 The future representing the goal response.
-        robot_index : int
-                Index of the robot associated with this goal.
+        robot : str
+                name of the robot associated with this goal.
 
         """
         goal_handle = future.result()
@@ -985,13 +992,13 @@ class CXRLGym(Env):
             self.node.get_logger().info('Action selection rejected')
             return
         self.node.get_logger().info('Action selection accepted')
-        self.action_selection_goal_handles[robot_index] = goal_handle
-        self.action_selection_get_result_futures[robot_index] = goal_handle.get_result_async()
-        self.action_selection_get_result_futures[robot_index].add_done_callback(
-            partial(self.action_selection_get_result_callback, robot_index=robot_index)
+        self.action_selection_goal_handles[robot] = goal_handle
+        self.action_selection_get_result_futures[robot] = goal_handle.get_result_async()
+        self.action_selection_get_result_futures[robot].add_done_callback(
+            partial(self.action_selection_get_result_callback, robot=robot)
         )
 
-    def action_selection_get_result_callback(self, future: Future, robot_index: int) -> None:
+    def action_selection_get_result_callback(self, future: Future, robot: str) -> None:
         """
         Handle action selection results via callback.
 
@@ -999,17 +1006,17 @@ class CXRLGym(Env):
         ----------
         future : Future
                 The future containing the action result.
-        robot_index : int
-                Index of the robot for which the result applies.
+        robot : str
+                Name of the robot for which the result applies.
 
         """
-        self.action_selection_results[robot_index] = future.result().result
+        self.action_selection_results[robot] = future.result().result
         self.node.get_logger().info(
-            f'Result for action {self.action_selection_results[robot_index].actionid} received'
+            f'Result for action {self.action_selection_results[robot].action_id} received'
         )
 
     def action_selection_feedback_callback(
-        self, feedback_msg: ActionSelection.Feedback, robot_index: int
+        self, feedback_msg: ActionSelection.Feedback, robot: str
     ) -> None:
         """
         Handle feedback messages during action selection via callback.
@@ -1021,21 +1028,21 @@ class CXRLGym(Env):
         ----------
         feedback_msg : ActionSelection.Feedback
                 Feedback message from the action.
-        robot_index : int
-                Index of the robot for which feedback applies.
+        robot : str
+                Name of the robot for which feedback applies.
 
         """
         feedback = feedback_msg.feedback.feedback
         if feedback == 'Action selection fact asserted':
             self.robot_locked = False
             self.node.get_logger().info(
-                f'Action selection fact for robot{robot_index+1} asserted, \
+                f'Action selection fact for {robot} asserted, \
                 unlocking robot selection...'
             )
             return
         self.node.get_logger().info(feedback)
 
-    def action_selection_cancel_done(self, future: Future, robot_index: int) -> None:
+    def action_selection_cancel_done(self, future: Future, robot: str) -> None:
         """
         Invoke via callback once a cancel request for action selection is completed.
 
@@ -1043,17 +1050,15 @@ class CXRLGym(Env):
         ----------
         future : Future
                 The future representing the cancel result.
-        robot_index : int
-                Index of the robot for which the cancel applies.
+        robot : str
+                Name of the robot for which the cancel applies.
 
         """
         cancel_response = future.result()
         if len(cancel_response.goals_canceling) > 0:
-            self.node.get_logger().info(f'Action selection for robot{robot_index+1} canceled')
+            self.node.get_logger().info(f'Action selection for {robot} canceled')
         else:
-            self.node.get_logger().info(
-                f'Failed to cancel action selection for robot{robot_index+1}!'
-            )
+            self.node.get_logger().info(f'Failed to cancel action selection for {robot}!')
 
     """
             ===HELPER-FUNCTIONS===

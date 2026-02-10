@@ -97,7 +97,7 @@
 =>
   (printout ?*CX-RL-LOG-LEVEL* "ResetEnv: Aborting robot search" crlf)
   (bind ?result (cx-rl-interfaces-get-free-robot-result-create))
-  (cx-rl-interfaces-get-free-robot-result-set-field ?result "robot" "Aborted")
+  (cx-rl-interfaces-get-free-robot-result-set-field ?result "success" FALSE)
   (cx-rl-interfaces-get-free-robot-server-goal-handle-abort ?ptr ?result)
   (cx-rl-interfaces-get-free-robot-result-destroy ?result)
   (cx-rl-interfaces-get-free-robot-server-goal-handle-destroy ?ptr)
@@ -115,6 +115,7 @@
   (if (neq ?robot "") then
   (cx-rl-interfaces-get-free-robot-result-set-field ?result "robot" ?robot)
   )
+  (cx-rl-interfaces-get-free-robot-result-set-field ?result "success" TRUE)
   (cx-rl-interfaces-get-free-robot-server-goal-handle-succeed ?ptr ?result)
   (cx-rl-interfaces-get-free-robot-result-destroy ?result)
   (cx-rl-interfaces-get-free-robot-server-goal-handle-destroy ?ptr)

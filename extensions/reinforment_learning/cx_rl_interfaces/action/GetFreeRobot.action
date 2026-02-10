@@ -1,5 +1,6 @@
 
 ---
+bool success
 string robot
 ---
 string feedback
