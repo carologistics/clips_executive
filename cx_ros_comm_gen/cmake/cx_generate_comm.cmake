@@ -36,10 +36,15 @@ macro(cx_generate_bindings package msg_name type)
   if(NOT EXISTS "${GENERATOR_SCRIPT}")
       message(FATAL_ERROR "Python script ${GENERATOR_SCRIPT} does not exist")
   endif()
+  ament_index_has_resource(package_prefix "packages" "cx_rl_interfaces")
+  set(interface_file
+    ${package_prefix}/share/${package}/${type}/${msg_name}.${type}
+  )
   add_custom_command(
       OUTPUT  ${plugin_name}.cpp ${plugin_name}.hpp ${plugin_name}.xml
       COMMAND ${Python3_EXECUTABLE} ${GENERATOR_SCRIPT} ${type} ${package} ${msg_name}
       DEPENDS ${GENERATOR_SCRIPT}
+              ${interace_file}
               ${TEMPLATES_DIR}/${type}.jinja.cpp
               ${TEMPLATES_DIR}/${type}.jinja.hpp
               ${TEMPLATES_DIR}/plugin.jinja.xml
