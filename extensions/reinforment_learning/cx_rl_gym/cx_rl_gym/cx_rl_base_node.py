@@ -102,7 +102,7 @@ class CXRLBaseNode(LifecycleNode):
         self.get_logger().info('Activating RL node')
 
         try:
-            self.create_env()
+            self.set_env()
             self.set_model()
             if self.get_parameter('rl_mode').value.upper() == 'TRAINING':
                 self.training_thread = Thread(target=self.run_training, daemon=True)
@@ -116,8 +116,17 @@ class CXRLBaseNode(LifecycleNode):
         return TransitionCallbackReturn.SUCCESS
 
     def on_deactivate(self, state):
-        if self.env:
-            self.env.shutdown = True
+        visited = set()
+        env = self.env
+
+        # clean up recursively, in case env is wrapped
+        while env is not None and id(env) not in visited:
+            visited.add(id(env))
+
+            if isinstance(env, CXRLGym):
+                env.shutdown = True
+                break
+            env = getattr(env, 'env', None)
 
         if hasattr(self, 'training_thread'):
             self.training_thread.join(timeout=2.0)
@@ -144,7 +153,7 @@ class CXRLBaseNode(LifecycleNode):
         os.makedirs(self.log_dir, exist_ok=True)
         os.makedirs(self.checkpoint_dir, exist_ok=True)
 
-    def create_env(self):
+    def set_env(self):
         """Instantiate the environment from the entrypoint parameter."""
         mod_name, attr_name = self.get_parameter('env.entrypoint').value.split(':')
         mod = importlib.import_module(mod_name)
