@@ -55,6 +55,7 @@ class CXRLMaskablePPONode(CXRLBaseNode):
 
     def set_model(self):
         rl_mode = self.get_parameter('rl_mode').value.upper()
+        sb3_logger = configure(self.log_dir, ['stdout', 'csv', 'log'])
         if rl_mode == 'TRAINING':
             if self.get_parameter('training.retraining').value:
                 self.get_logger().info('Retraining existing agent...')
@@ -65,10 +66,12 @@ class CXRLMaskablePPONode(CXRLBaseNode):
         elif rl_mode == 'EXECUTION':
             self.get_logger().info('Executing existing agent...')
             self.model = self.load_model()
+        self.env.env.set_rl_model(self.model)
+        self.model.set_logger(sb3_logger)
         return self.model
 
     def create_new_model(self) -> MultiRobotMaskablePPO:
-        self.model = MultiRobotMaskablePPO(
+        return MultiRobotMaskablePPO(
             policy=MaskableActorCriticPolicy,
             env=self.env,
             learning_rate=self.get_parameter('model.learning_rate').value,
@@ -87,19 +90,12 @@ class CXRLMaskablePPONode(CXRLBaseNode):
             deadzone=5,
             wait_for_all_robots=self.get_parameter('model.wait_for_all_robots').value,
         )
-        sb3_logger = configure(self.log_dir, ['stdout', 'csv', 'log'])
-        self.model.set_logger(sb3_logger)
-        self.env.env.set_rl_model(self.model)
-        return self.model
 
     def load_model(self) -> MultiRobotMaskablePPO:
         agent_path = os.path.join(
             self.save_dir, str(self.get_parameter('model_name').value) + '.zip'
         )
-        self.model = MultiRobotMaskablePPO.load(agent_path, env=self.env)
-        self.env.env.set_rl_model(self.model)
-        self.get_logger().info('Agent loaded')
-        return self.model
+        return MultiRobotMaskablePPO.load(agent_path, env=self.env)
 
     def run_training(self):
         callback_max_episodes = StopTrainingOnMaxEpisodes(
