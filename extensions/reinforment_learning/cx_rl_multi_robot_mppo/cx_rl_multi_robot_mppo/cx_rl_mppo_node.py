@@ -34,7 +34,7 @@ class CXRLMaskablePPONode(CXRLBaseNode):
         self.declare_parameters(
             namespace='',
             parameters=[
-                ('agent_name', rclpy.Parameter.Type.STRING),
+                ('model_name', rclpy.Parameter.Type.STRING),
                 ('training.retraining', rclpy.Parameter.Type.BOOL),
                 ('training.max_episodes', rclpy.Parameter.Type.INTEGER),
                 ('model.learning_rate', rclpy.Parameter.Type.DOUBLE),
@@ -94,7 +94,7 @@ class CXRLMaskablePPONode(CXRLBaseNode):
 
     def load_model(self) -> MultiRobotMaskablePPO:
         agent_path = os.path.join(
-            self.save_dir, str(self.get_parameter('agent_name').value) + '.zip'
+            self.save_dir, str(self.get_parameter('model_name').value) + '.zip'
         )
         self.model = MultiRobotMaskablePPO.load(agent_path, env=self.env)
         self.env.env.set_rl_model(self.model)
@@ -114,7 +114,7 @@ class CXRLMaskablePPONode(CXRLBaseNode):
             log_interval=1,
         )
 
-        self.model.save(os.path.join(self.save_dir, str(self.get_parameter('agent_name').value)))
+        self.model.save(os.path.join(self.save_dir, str(self.get_parameter('model_name').value)))
 
         self.env.env.on_training_end()
         self.get_logger().info('Finished training')

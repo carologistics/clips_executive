@@ -2,7 +2,7 @@
   ros__parameters:
     # storage_dir: defaults to ros logging dir
 
-    agent_name: "cx_rl_agent"
+    model_name: "cx_rl_agent"
     number_of_robots: 1
 
     training:
