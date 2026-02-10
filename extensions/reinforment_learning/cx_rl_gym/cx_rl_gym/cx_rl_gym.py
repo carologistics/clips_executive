@@ -65,11 +65,9 @@ class CXRLGym(Env):
     ----------
       node (rclpy.node.Node): ROS 2 node used to create service and action clients.
       mode (str): Reinforcement learning mode (e.g., "train" or "eval").
-      number_robots (int): Number of managed robots in the environment.
-
     """
 
-    def __init__(self, node: Node, mode: str, number_robots: int):
+    def __init__(self, node: Node, mode: str):
         super().__init__()
 
         self.node = node
@@ -78,7 +76,6 @@ class CXRLGym(Env):
         self.current_step = 0
         self.total_steps = 0
         self.rl_model = None
-        self.number_of_robots = number_robots
 
         self.node_name_prefix = node.get_name()  # <-- use this as the prefix
         self.node.get_logger().info('cxrl_gym init')

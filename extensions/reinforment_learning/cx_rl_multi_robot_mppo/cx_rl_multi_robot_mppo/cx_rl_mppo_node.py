@@ -81,7 +81,7 @@ class CXRLMaskablePPONode(CXRLBaseNode):
             n_steps=self.get_parameter('model.n_steps').value,
             seed=self.get_parameter('model.seed').value,
             verbose=self.get_parameter('model.verbose').value,
-            n_robots=self.get_parameter('number_of_robots').value,
+            n_robots=self.get_parameter('model.n_robots').value,
             time_based=False,
             n_time=300,
             deadzone=5,

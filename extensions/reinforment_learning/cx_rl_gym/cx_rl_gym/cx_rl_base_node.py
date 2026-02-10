@@ -37,10 +37,9 @@ class CXRLBaseNode(LifecycleNode):
         self.declare_parameters(
             namespace='',
             parameters=[
-                ('storage_dir', rclpy.Parameter.Type.STRING),
-                ('env.entrypoint', rclpy.Parameter.Type.STRING),
-                ('rl_mode', rclpy.Parameter.Type.STRING),
-                ('number_of_robots', rclpy.Parameter.Type.INTEGER),
+                ('storage_dir', rclpy.Parameter.Type.STRING, '/tmp'),
+                ('env.entrypoint', rclpy.Parameter.Type.STRING, 'cx_rl_gym.cx_rl_gym.CXRLGym'),
+                ('rl_mode', rclpy.Parameter.Type.STRING, 'TRAINING'),
             ],
         )
 
@@ -162,7 +161,6 @@ class CXRLBaseNode(LifecycleNode):
             env_class(
                 self,
                 self.get_parameter('rl_mode').value.upper(),
-                self.get_parameter('number_of_robots').value,
             )
         )
         return self.env
