@@ -1,6 +1,6 @@
-string actionid
+string action_id
 ---
-string actionid
+string action_id
 int32 reward
 string info
 ---

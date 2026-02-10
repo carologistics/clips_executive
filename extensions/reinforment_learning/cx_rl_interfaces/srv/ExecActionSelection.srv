@@ -1,4 +1,4 @@
 string state
 string[] actions
 ---
-string actionid
+string action_id

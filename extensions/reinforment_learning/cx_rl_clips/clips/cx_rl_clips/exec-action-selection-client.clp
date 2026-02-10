@@ -51,8 +51,8 @@
   ?msg-fact <- (ros-msgs-response (service ?s) (msg-ptr ?ptr) (request-id ?id))
   ?req-meta <- (rl-action-request-meta (node ?node) (service ?s) (request-id ?id))
 =>
-  (bind ?action-id (sym-cat (ros-msgs-get-field ?ptr "actionid")))
-  (printout ?*CX-RL-LOG-LEVEL* "Received actionid from " ?s ": " ?action-id crlf)
+  (bind ?action-id (sym-cat (ros-msgs-get-field ?ptr "action_id")))
+  (printout ?*CX-RL-LOG-LEVEL* "Received action_id from " ?s ": " ?action-id crlf)
   (ros-msgs-destroy-message ?ptr)
   (retract ?msg-fact)
   (modify ?req-meta (action-id ?action-id))

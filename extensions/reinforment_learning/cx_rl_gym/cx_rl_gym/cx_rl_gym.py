@@ -253,7 +253,7 @@ class CXRLGym(Env):
         result = self.action_selection_results[robot_index]
         self.action_selection_results[robot_index] = None
 
-        result_action_id = result.actionid
+        result_action_id = result.action_id
         result_reward = result.reward
         result_info = result.info
 
@@ -783,7 +783,7 @@ class CXRLGym(Env):
 
         if np.sum(action_mask) == 0:
             action_mask[0] = 1
-            response.actionid = 'no-op'
+            response.action_id = 'no-op'
             return response
 
         action, _ = self.rl_model.predict(
@@ -793,7 +793,7 @@ class CXRLGym(Env):
         )
 
         action_string = self.action_dict[int(action)]
-        response.actionid = self.executable_actions_dict[action_string]
+        response.action_id = self.executable_actions_dict[action_string]
         return response
 
     def reset_env(self) -> str:
