@@ -21,7 +21,7 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-install(DIRECTORY launch params pddl clips DESTINATION share/${PROJECT_NAME})
+install(DIRECTORY launch params clips DESTINATION share/${PROJECT_NAME})
 
 ament_export_dependencies(${dependencies})
 
