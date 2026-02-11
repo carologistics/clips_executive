@@ -47,18 +47,5 @@ clips_manager:
       plugin: "cx::FileLoadPlugin"
       pkg_share_dirs: ["cx_rl_bringup", "cx_rl_clips"]
       load: [
-        # # Specific isolated concepts
-        # "clips/cx_rl_bringup/start-tasks/start-tasks.clp",
-        # # General utility stuff
-        # "clips/cx_rl_bringup/defglobals.clp",
-        # "clips/cx_rl_bringup/deftemplates.clp",
-        # # Startup
-        # "clips/cx_rl_bringup_blocksworld/init-pddl.clp",
-        # # PDDL
-        # "clips/cx_rl_bringup_blocksworld/pddl/instances.clp",
-        # "clips/cx_rl_bringup_blocksworld/point-mapping.clp",
         "clips/cx_rl_bringup/init.clp",
-        # "clips/cx_rl_bringup_blocksworld/reset.clp",
-        # "clips/cx_rl_bringup_blocksworld/action-executability.clp",
-        # "clips/cx_rl_bringup_blocksworld/action-execution.clp"
       ]

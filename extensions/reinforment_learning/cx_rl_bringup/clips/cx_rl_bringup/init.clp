@@ -24,7 +24,6 @@
 
 (defrule init-stuff
 =>
- ; TODO: do i need rl-observable-predicate param-names
   (assert
     (rl-predefined-observable (name on-table) (params block1))
     (rl-predefined-observable (name on-table) (params block2))

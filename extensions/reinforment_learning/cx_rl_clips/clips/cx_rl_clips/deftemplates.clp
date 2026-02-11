@@ -17,7 +17,6 @@
   ?*CX-RL-LOG-LEVEL* = info
 
   ?*CX-RL-GET-FREE-ROBOT-SEARCH-UPDATE-INTERVAL* = 5
-  ?*RESET-GAME-TIMER* = 1.0
 
   ?*CX-RL-REWARD-EPISODE-SUCCESS* = 0
   ?*CX-RL-REWARD-EPISODE-FAILURE* = 0
@@ -46,10 +45,10 @@
 
 (deftemplate rl-reset-env
 " Asserted by the environment."
+  (slot node (type STRING) (default "/cx_rl_node"))
   (slot state (type SYMBOL)
     (allowed-values ABORT-RUNNING-ACTIONS USER-CLEANUP LOAD-FACTS USER-INIT DONE))
   (slot uuid (type STRING))
-  (slot node (type STRING) (default "/cx_rl_node"))
 )
 
 (deftemplate cx-rl-node
