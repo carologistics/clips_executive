@@ -3,7 +3,6 @@
     # storage_dir: defaults to ros logging dir
 
     model_name: "cx_rl_agent"
-    number_of_robots: 1
 
     training:
       retraining: false
@@ -22,6 +21,7 @@
       max_grad_norm: 0.5
       batch_size: 64
       n_steps: 5
+      n_robots: 1
       seed: 42
       verbose: 1
       wait_for_all_robots: false
