@@ -21,9 +21,9 @@
         (eq ?end-f:node \"" ?*CX-RL-NODE-NAME* "\")
         (bind ?end TRUE)
         (if ?end-f:success then
-            (bind ?reward ?*REWARD-EPISODE-SUCCESS*)
+            (bind ?reward ?*CX-RL-REWARD-EPISODE-SUCCESS*)
           else
-            (bind ?reward ?*REWARD-EPISODE-FAILURE*)
+            (bind ?reward ?*CX-RL-REWARD-EPISODE-FAILURE*)
         )
     )
     (ros-msgs-set-field ?response \"episode_end\" ?end)
