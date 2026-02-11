@@ -36,9 +36,18 @@ macro(cx_generate_bindings package msg_name type)
   if(NOT EXISTS "${GENERATOR_SCRIPT}")
       message(FATAL_ERROR "Python script ${GENERATOR_SCRIPT} does not exist")
   endif()
+  ament_index_get_resource(idl_paths "rosidl_interfaces" ${package})
+  string(REPLACE "\n" ";" idl_path_list "${idl_paths}")
+  set(pattern "${msg_name}.${type}$")
+  set(idl_suffix ${idl_path_list})
+  list(FILTER idl_suffix INCLUDE REGEX "${pattern}")
+  if(NOT idl_suffix)
+    message(FATAL_ERROR "No matching interface definition found for ${msg_name}.${type} in package ${package}.")
+  endif()
+
   ament_index_has_resource(package_prefix "packages" "cx_rl_interfaces")
   set(interface_file
-    ${package_prefix}/share/${package}/${type}/${msg_name}.${type}
+    ${package_prefix}/share/${package}/${idl_suffix}
   )
   add_custom_command(
       OUTPUT  ${plugin_name}.cpp ${plugin_name}.hpp ${plugin_name}.xml
