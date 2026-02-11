@@ -25,19 +25,18 @@ def generate_launch_description():
     # -----------------------------
     # Launch arguments
     # -----------------------------
-    declare_log_level = DeclareLaunchArgument(
-        'log_level',
-        default_value='info',
-        description='Logging level for cx_node executable',
+    declare_package = DeclareLaunchArgument(
+        'package',
+        default_value='cx_pddl_bringup',
+        description='The name of package where to look for the manager config',
     )
-
     declare_manager_config = DeclareLaunchArgument(
         'manager_config',
         default_value='pddl_agents/structured_agent.yaml',
         description='Name of the CLIPS environment manager configuration',
     )
 
-    log_level = LaunchConfiguration('log_level')
+    package = LaunchConfiguration('package')
     manager_config = LaunchConfiguration('manager_config')
 
     # -----------------------------
@@ -61,9 +60,8 @@ def generate_launch_description():
     include_cx_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(cx_launch_file),
         launch_arguments={
-            'package': 'cx_pddl_bringup',
+            'package': package,
             'manager_config': manager_config,
-            'log_level': log_level,
         }.items(),
     )
 
@@ -71,7 +69,7 @@ def generate_launch_description():
     # Build LaunchDescription
     # -----------------------------
     ld = LaunchDescription()
-    ld.add_action(declare_log_level)
+    ld.add_action(declare_package)
     ld.add_action(declare_manager_config)
     ld.add_action(include_pddl_manager)
     ld.add_action(include_cx_launch)
