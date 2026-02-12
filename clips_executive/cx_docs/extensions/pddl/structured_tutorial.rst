@@ -32,18 +32,7 @@ You will learn how to:
 Prerequisites
 -------------
 
-Before starting, make sure you’ve completed the :doc:`Interfacing with a PDDL Manager <pddl_interface_tutorial>` tutorial.
-
-You need a workspace with:
-
-* The ``cx_pddl_bringup`` package,
-* The ``cx_pddl_clips`` package,
-* A working PDDL Manager instance running via:
-
-  .. code-block:: bash
-
-     ros2 launch cx_pddl_bringup pddl_manager_launch.py
-
+This tutorial assumes that |CX| is installed and that you are familiar with creating and configuring a custom package using it.
 
 Configuration
 -------------

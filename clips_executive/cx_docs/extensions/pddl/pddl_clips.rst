@@ -24,9 +24,9 @@ Required |CX| Plugins
 
 In order to integrate the PDDL manager with the |CX|, the following plugins are needed:
 
-- ``cx::ExecutivePlugin`` — manages the overall reasoning and control flow, interleaving ROS feedback with CLIPS reasoning.
-- ``cx::RosMsgsPlugin`` provides access to ROS interfaces of the PDDL manager from within CLIPS.
-- ``cx::AmentIndexPlugin`` resolves package paths via ``ament_index``. While not required, it is very useful in order to load PDDL files.
+- :ref:`cx::ExecutivePlugin <usage_executive_plugin>`: Manages the overall reasoning and control flow, interleaving ROS feedback with CLIPS reasoning.
+- :ref:`cx::RosMsgsPlugin <usage_ros_msgs_plugin>`: Provides access to ROS interfaces of the PDDL manager from within CLIPS.
+- :ref:`cx::AmentIndexPlugin <usage_ament_index_plugin>`: Resolves package paths via ``ament_index``. While not required, it is very useful in order to load PDDL files.
 
 Also, as the current configuration is compatible with ROS 2 jazzy, action client introspection is not supported, hence the following plugins are needed to trigger temporal planning and obtain the resulting plan:
 
@@ -104,7 +104,7 @@ Predefined Interfaces
 The idea is to have templates for facts that correspond to the individual endpoints of the PDDL manager.
 The workflow then is for users to simply assert a fact of a defined template to trigger the request to the PDDL manager, then using rules to observe the provided slots for the outcome.
 
-Example: Loading a PDDL Problem and Pbtaining the initial State
+Example: Loading a PDDL Problem and Obtaining the initial State
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The following example demonstrates how to initialize the connection to the external
