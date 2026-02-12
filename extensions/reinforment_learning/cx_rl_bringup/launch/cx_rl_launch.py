@@ -49,13 +49,13 @@ def generate_launch_description():
 
     declare_manager_config = DeclareLaunchArgument(
         'manager_config',
-        default_value='training_agent.yaml',
+        default_value='rl_agent.yaml',
         description='Name of the CLIPS environment manager configuration',
     )
 
     declare_training_config = DeclareLaunchArgument(
         'training_config',
-        default_value='training_config.yaml',
+        default_value='rl_node_config.yaml',
         description='Name of the RL training configuration',
     )
 

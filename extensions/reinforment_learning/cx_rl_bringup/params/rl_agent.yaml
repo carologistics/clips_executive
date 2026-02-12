@@ -23,13 +23,16 @@ clips_manager:
       publish_on_refresh: false
       assert_time: true
       refresh_rate: 10
+
     ros_msgs:
       plugin: "cx::RosMsgsPlugin"
+
     ros_param:
       plugin: "cx::RosParamPlugin"
 
     reset_env:
       plugin: "cx::CXCxRlInterfacesResetEnvPlugin"
+
     action_selection:
       plugin: "cx::CXCxRlInterfacesActionSelectionPlugin"
 
@@ -45,7 +48,7 @@ clips_manager:
 
     files:
       plugin: "cx::FileLoadPlugin"
-      pkg_share_dirs: ["cx_rl_bringup", "cx_rl_clips"]
+      pkg_share_dirs: ["cx_rl_bringup"]
       load: [
-        "clips/cx_rl_bringup/init.clp",
+        "clips/cx_rl_bringup/rl-blocksworld.clp",
       ]

@@ -13,31 +13,28 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
-; Do we need this?
-; (defrule init-agent-config
-; =>
-;   (unwatch facts time)
-;   (unwatch rules time-retract)
-;   (bind ?share-dir (ament-index-get-package-share-directory "cx_rl_bringup"))
-;   (config-load (str-cat ?share-dir "/params/agent_config.yaml") "/")
-; )
+; Step 0: Configuration via Global Variables
 
-(defrule init-stuff
+(defglobal
+  ?*CX-RL-REWARD-EPISODE-SUCCESS* = 100
+  ?*CX-RL-REWARD-EPISODE-FAILURE* = -100
+)
+
+; Step 1: Defining the Environment
+
+(defrule rl-blocksworld-initial-state
+  (not (cx-rl-node))
 =>
   (assert
-    (rl-predefined-observable (name on-table) (params block1))
-    (rl-predefined-observable (name on-table) (params block2))
-    (rl-predefined-observable (name on-table) (params block3))
-    (rl-predefined-observable (name on-table) (params block4))
+    (rl-observable-type (type robot) (objects robot1))
+    (rl-observable-type (type block) (objects block1 block2 block3 block4))
+    (rl-observable-predicate (name on-table) (param-names a) (param-types block))
     (rl-observable-predicate (name clear) (param-names a) (param-types block))
     (rl-observable-predicate (name can-hold) (param-names r) (param-types robot))
     (rl-observable-predicate (name holding) (param-names r a) (param-types robot block))
     (rl-observable-predicate (name on) (param-names a b) (param-types block block))
     (rl-observable-predicate (name target-on) (param-names a b) (param-types block block))
-    (rl-observable-predicate (name target-on-table) (param-names a b) (param-types block))
-    (rl-observable-type (type robot) (objects robot1))
-    (rl-observable-type (type block) (objects block1 block2 block3 block4))
-    (rl-robot (name robot1) (waiting TRUE))
+    (rl-observable-predicate (name target-on-table) (param-names a) (param-types block))
     (rl-observation (name clear) (param-values block1))
     (rl-observation (name clear) (param-values block2))
     (rl-observation (name clear) (param-values block3))
@@ -57,52 +54,30 @@
     (rl-observation (name clear) (param-values block4))
     (rl-observable-action (name stack) (param-names r b1 b2) (param-types robot block block))
     (rl-observable-action (name pickup) (param-names r b) (param-types robot block))
+    (rl-robot (name robot1) (waiting TRUE))
   )
-  (if (not (any-factp ((?node cx-rl-node)) (eq ?node:name ?*CX-RL-NODE-NAME*))) then
-   (assert (cx-rl-node (name ?*CX-RL-NODE-NAME*) (mode UNSET)))
-  )
+  (assert (cx-rl-node (name ?*CX-RL-NODE-NAME*) (mode UNSET)))
 )
 
-(defrule reset-to-load-facts
+; Step 2: Defining the Reset Procedure
+
+(defrule rl-blocksworld-reset-to-load-facts
  ?reset <- (rl-reset-env (state USER-CLEANUP))
  =>
  (modify ?reset (state LOAD-FACTS))
 )
 
-(defrule reset-to-done
+(defrule rl-blocksworld-reset-to-done
  ?reset <- (rl-reset-env (state USER-INIT))
  =>
  (modify ?reset (state DONE))
 )
 
-(defrule execution-ask-for-execution
-  (cx-rl-node (mode EXECUTION))
-  (not (rl-current-action-space))
-  =>
-  (assert (rl-current-action-space (state PENDING)))
-)
+; Step 3: Action Execution
 
-(defrule execution-no-action-possible
-  (cx-rl-node (mode EXECUTION))
-  (rl-robot (name ?robot))
-  (rl-action (id no-op) (is-selected TRUE) (assigned-to ?robot))
-  =>
-  (printout green "Execution done, no more actions to select" crlf)
-)
+; providing actions given a pending current action space
 
-(defrule execution-assign-actions
-  (rl-current-action-space (state DONE))
-  (cx-rl-node (mode EXECUTION))
-  (rl-robot (name ?robot) (waiting TRUE))
-  (rl-action (assigned-to nil))
-  =>
-  (delayed-do-for-all-facts ((?action rl-action))
-    (eq ?action:assigned-to nil)
-    (modify ?action (assigned-to ?robot))
-  )
-)
-
-(defrule training-provide-action-stack
+(defrule rl-blocksworld-provide-action-stack
   (rl-current-action-space (state PENDING))
   (rl-robot (name ?robot) (waiting TRUE))
   (rl-observation (name holding) (param-values ?robot ?some-block))
@@ -116,7 +91,7 @@
   (assert (rl-action (id ?id) (name ?name)))
 )
 
-(defrule training-provide-action-pickup
+(defrule rl-blocksworld-provide-action-pickup
   (rl-current-action-space (state PENDING))
   (rl-robot (name ?robot) (waiting TRUE))
   (rl-observation (name can-hold) (param-values ?robot))
@@ -129,12 +104,14 @@
   (assert (rl-action (id ?id) (name ?name)))
 )
 
-(defrule training-actions-generation-done
+(defrule rl-blocksworld-actions-generation-done
   (declare (salience -1000))
   ?action-space <- (rl-current-action-space (state PENDING))
   =>
   (modify ?action-space (state DONE))
 )
+
+; handling selected actions, applying rewards and updated observations
 
 (defrule action-selected-action-done-pickup
   (rl-robot (name ?robot))
@@ -175,7 +152,9 @@
   (modify ?action (is-finished TRUE) (reward ?reward))
 )
 
-(defrule blocksworld-episode-end-succes
+; Training
+
+(defrule rl-blocksworld-episode-end-succes
   (declare (salience 10000))
   (rl-observation (name target-on) (param-values $?target1))
   (rl-observation (name target-on) (param-values $?target2))
@@ -187,13 +166,33 @@
   ?action <- (rl-action (name ?name) (is-selected TRUE) (is-finished TRUE))
   (not (rl-episode-end (success TRUE)))
   =>
-  (printout green "SUCCESS!!!!!!" crlf)
+  (printout green "SUCCESS!" crlf)
   (assert (rl-episode-end (success TRUE)))
   (modify ?action (reward 1000))
 )
 
-(defrule rl-stop-agent-on-training-end
+(defrule rl-blocksworld-stop-agent-on-training-end
   (rl-end-training)
   =>
   (cx-shutdown)
+)
+
+; Execution
+
+(defrule rl-blocksworld-ask-for-execution
+  (cx-rl-node (mode EXECUTION))
+  (not (execution-done))
+  (not (rl-current-action-space))
+  =>
+  (assert (rl-current-action-space (state PENDING)))
+)
+
+(defrule rl-locksworld-no-action-possible
+  (cx-rl-node (mode EXECUTION))
+  (rl-robot (name ?robot))
+  (rl-action (id no-op) (is-selected TRUE) (assigned-to ?robot))
+  (not (execution-done))
+  =>
+  (printout green "Execution done, no more actions to select" crlf)
+  (assert (execution-done))
 )
