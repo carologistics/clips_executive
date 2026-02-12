@@ -15,6 +15,7 @@
 
 
 (defrule cx-rl-exec-action-selection-request
+  (not (executive-finalize))
   (cx-rl-node (name ?node) (mode EXECUTION) (model-loaded TRUE))
   (ros-msgs-client (service ?s&:(eq ?s (str-cat ?node "/exec_action_selection"))) (type ?type))
   (not (rl-action-request-meta (service ?s)))
