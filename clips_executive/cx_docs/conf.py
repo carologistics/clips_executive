@@ -42,6 +42,14 @@ local = True
 
 html_theme = 'alabaster'
 # html_static_path = ['_static']
+# Add static path for custom CSS
+html_static_path = ['_static']
+
+
+# Include custom CSS file
+def setup(app):
+    app.add_css_file('custom_figure.css')
+
 
 if local:
     extlinks = {

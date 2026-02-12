@@ -15,6 +15,7 @@
 .. _NEXTFLAP planner: https://github.com/aiplan4eu/up-nextflap
 .. _sb3_contrib: https://sb3-contrib.readthedocs.io/en/master/index.html
 .. _MaskableActorCriticPolicy: https://sb3-contrib.readthedocs.io/en/master/modules/ppo_mask.html
+.. _blocksworld: https://en.wikipedia.org/wiki/Blocks_world
 
 
 .. |CX| replace:: ROS2 CLIPS-Executive

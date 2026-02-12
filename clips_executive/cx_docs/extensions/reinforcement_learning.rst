@@ -1,6 +1,10 @@
 Reinforcement Learning Integration for CLIPS
 ============================================
 
+.. attention::
+
+   This extension targets ROS kilted or later. While technically possible to use with earlier versions of ROS, the provided example and supporting CLIPS code require kilted or later.
+
 This extension provides an implementation for using Reinforcement Learning (RL) alongside CLIPS.
 
 If you need one of the following features, you may find this useful:
@@ -28,21 +32,26 @@ Through repeated interaction, the agent refines its policy to maximize cumulativ
 Overview
 ++++++++
 
-The Reinforcement Learning (RL) integration is provided through the CXRLGym class.
-It provides a Gym environemnt that utilizes ROS interaces to customize training and execution, which can be called through the |CX| plugins that handle ROS communication.
+The Reinforcement Learning (RL) integration is provided through a **ROS 2 node** that manages both a Gym environment and a corresponding RL model.
 
-Additionally, an RL algorithm is needed as well as a node to utilize both.
-We provide a multi-robot Maskable Proximal Policy Optimization (MPPO) algorithm thorugh the ``cx_rl_multi_robot_mppo`` package, which alsoprovides a suitable ``cx_rl_node`` to use CXRLGym based environments and the multi-robot MPPO policy to train and apply policies.
+- The **Gym environment** is implemented via the **`CXRLGym`** class. It sets up the environment, training routines, and execution workflows using ROS interfaces, allowing seamless information exchange with the |CX| framework via ROS.
 
-In order to reduce the manual overhead, the ``cx_rl_clips`` package provides a CLIPS-based interface for interacting with the PDDL Manager node in ROS 2.
-This allows to interact with the CXRLGym manager by simply asserting and monitoring CLIPS facts, without the need to do direct ROS communication (e.g., populating ROS messages or waiting for service feedback).
+- The **RL model**, **`MultiRobotMaskablePPO`**, implements a multi-robot **Maskable Proximal Policy Optimization (MPPO)** algorithm. This model supports environments with multiple robots acting asynchronously and allows for masking of unavailable actions, improving training efficiency in complex robotic tasks.
 
-This makes it possible to:
+A **node skeleton**, **`CXRLBaseNode`**, is provided to simplify node development. It implements a **ROS 2 lifecycle node** with optional **bond capabilities**, and manages both the Gym environment (`CXRLGym`) and the RL model.
 
-* Train reinforcement learning agents using ROS
-* Integrate symbolic reasoning and learning-based control by combining it with CLIPS
-* Evaluate trained models directly on real or simulated robots
+**CXRLBaseNode** can be extended to easily integrate other RL models, allowing developers to reuse the lifecycle and environment management infrastructure without re-implementing boilerplate code.
 
+The **`cx_rl_mppo_node`** is a ready-to-use node that extends `CXRLBaseNode` and comes preconfigured to use the **CXRLGym** environment and the **MultiRobotMaskablePPO** model.
+
+To reduce manual ROS overhead, the **`cx_rl_clips`** package provides a **CLIPS-based interface** for interacting with the PDDL Manager node. This allows users to interact with the `CXRLGym` manager by asserting and monitoring **CLIPS facts**, without requiring direct ROS communication (e.g., publishing messages or waiting for service feedback).
+
+This architecture enables users to:
+
+* **Train RL agents** within ROS 2 environments.
+* **Combine symbolic reasoning and learning-based control** by integrating CLIPS with the Gym-based RL node.
+* **Easily extend to other RL models** by leveraging the `CXRLBaseNode` skeleton.
+* **Evaluate trained models** directly on real or simulated robots, with minimal boilerplate.
 
 Content
 +++++++
@@ -51,5 +60,7 @@ Content
    :maxdepth: 2
 
    rl/usage.rst
-   rl/cx_rl.rst
+   rl/cx_rl_gym.rst
+   rl/multi_robot_mppo.rst
    rl/rl_clips.rst
+   rl/blocksworld_tutorial.rst
