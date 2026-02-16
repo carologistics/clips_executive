@@ -30,7 +30,7 @@
     (bind ?state-string "{")
     (do-for-all-facts ((?ob rl-observation))
             (eq ?ob:node ?node)
-        (bind ?fact-string (str-cat "\"" ?ob:name "(" (cx-rl-create-slot-value-string ?ob:param-values) ")\","))
+        (bind ?fact-string (str-cat "\"" ?ob:name "(" (cx-rl-create-slot-value-string ?ob:params) ")\","))
         (bind ?state-string (str-cat ?state-string ?fact-string))
     )
     (bind ?state-string (str-cat (sub-string 1 (- (str-length ?state-string) 1) ?state-string) "}"))

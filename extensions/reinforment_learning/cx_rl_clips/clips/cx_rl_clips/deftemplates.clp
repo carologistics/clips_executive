@@ -152,7 +152,7 @@
 "
   (slot node (type STRING) (default "/cx_rl_node"))
   (slot name (type SYMBOL))
-  (multislot param-values (type SYMBOL))
+  (multislot params (type SYMBOL))
 )
 
 (deftemplate rl-robot
