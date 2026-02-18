@@ -8,35 +8,33 @@ We provide the **CXRLNode** node for this purpose which  deploys a variant of mu
 
 Starting the CX RL Node
 ************************
+Aside from the regular |CX| node, the RL extension additionally requires a node that provides a policy and environment based on the ``CXRLBaseNode`` class (see :ref:`cx_rl_base_node`).
 
-Aside from the regular |CX| node, the RL extension additionally requires a RL node that implemnts  **PDDL Manager** node (a lifecycle node with a bond timer).
-
-To just launch a standalone node, just run the following command:
-
-.. code-block:: bash
-
-  ros2 run cx_pddl_manager pddl_manager
-
-A more practical way to to start the node is to utilize the launch file of the `cx_pddl_bringup`, which wraps the |CX| launch file and additionally starts the PDDL Manager alongside of it:
+This package includes a reference implementation that can be started directly:
 
 .. code-block:: bash
 
-  ros2 launch cx_pddl_bringup cx_pddl_launch.py
+  ros2 run cx_rl_multi_robot_mppo cx_rl_mppo_node
+
+For typical usage, it is recommended to start the system via the launch file provided by the ``cx_rl_bringup`` package.
+This launch file wraps the |CX| launch configuration and starts the RL node alongside it:
+
+.. code-block:: bash
+
+  ros2 launch cx_rl_bringup cx_rl_launch.py
 
 .. hint::
 
-  Use the `--show-args` option to learn about all parameters that the launch file provides.
-
+  Use the `--show-args` option to display all available launch parameters.
 
 Example
 *******
 
-An example application is provided through the :docsite:`cx_rl_bringup` package and can be started via:
-The following example showcases how an RL agent can be trained and utilzied with CLIPS-based execution. Here, a simple blocksworld domain is considered, where four blocks A, B, C and D need to be stacked using the actions pickup (picking up a block) and stack (placing one block on top of another block).
+The following example showcases how an RL agent can be trained and utilzied with CLIPS-based execution. Here, a simple blocksworld domain is considered, where four blocks need to be stacked using the actions pickup (picking up a block) and stack (placing one block on top of another block).
 
 .. code-block:: bash
 
-  ros2 launch cx_rl_bringup agent.launch.py
+  ros2 launch cx_rl_bringup cx_rl_launch.py
 
 .. hint::
 

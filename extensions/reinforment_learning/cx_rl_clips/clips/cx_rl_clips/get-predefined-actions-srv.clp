@@ -17,14 +17,18 @@
 (str-cat
 "(deffunction " ?*CX-RL-NODE-NAME* "/get_predefined_actions-service-callback (?service-name ?request ?response)
     (printout ?*CX-RL-LOG-LEVEL* \"Collecting cx rl predefined actions\" crlf)
-    (bind ?actions (create$))
+    (bind ?action-list (create$))
 
     (do-for-all-facts ((?pa rl-predefined-action))
             (eq ?pa:node \"" ?*CX-RL-NODE-NAME* "\")
-        (printout ?*CX-RL-LOG-LEVEL* "\predefined action \" ?pa:name ?pa:params crlf)
-        (bind ?actions (insert$ ?actions (+ (length$ ?actions) 1) (str-cat ?pa:name \"(\" (cx-rl-create-slot-value-string ?pa:params) \")\")))
+      (bind ?action-msg (ros-msgs-create-message \"cx_rl_interfaces/msg/Action\"))
+      (ros-msgs-set-field ?action-msg \"name\" ?pa:name)
+      (ros-msgs-set-field ?action-msg \"params\" ?pa:params)
+      (bind ?action-list (insert$ ?action-list 1 ?action-msg))
     )
-
-    (ros-msgs-set-field ?response \"actions\" ?actions)
+    (ros-msgs-set-field ?response \"actions\" ?action-list)
+    (foreach ?action-msg-item ?action-list
+      (ros-msgs-destroy-message ?action-msg-item)
+    )
 )"
 ))

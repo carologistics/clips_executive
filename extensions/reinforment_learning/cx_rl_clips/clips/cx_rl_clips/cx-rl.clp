@@ -25,7 +25,6 @@
 ; load all regular files
 (foreach ?f (create$
 deftemplates.clp
-rl-utils.clp
 action-selection-action.clp
 exec-action-selection-client.clp
 get-status-client.clp
@@ -42,10 +41,10 @@ rl-execution.clp
 ; (all service provider feedback functions depend on the node name)
 ; The procedures fot storing the initial database depend on the required ROS interfaces
 (foreach ?f (create$
-  create-rl-env-state-srv.clp
   end-training-srv.clp
   get-action-list-robot-srv.clp
   get-action-list-srv.clp
+  get-current-observations-srv.clp
   get-episode-end-srv.clp
   get-observable-objects-srv.clp
   get-observable-predicates-srv.clp

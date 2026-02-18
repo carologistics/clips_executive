@@ -1,4 +1,5 @@
-string state
-string[] actions
+Observation[] observations
+Action[] actions
+string[] action_ids
 ---
 string action_id

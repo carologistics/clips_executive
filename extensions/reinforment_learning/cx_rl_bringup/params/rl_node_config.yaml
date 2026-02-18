@@ -6,20 +6,20 @@
 
     training:
       retraining: false
-      max_episodes: 1
-      timesteps: 100000000
+      max_episodes: 100
+      timesteps: 10
 
     env:
       entrypoint: "cx_rl_gym.cx_rl_gym:CXRLGym"
 
     model:
-      learning_rate: 0.03
+      learning_rate: 0.0003
       gamma: 0.99
       gae_lambda: 0.95
-      ent_coef: 0.0
+      ent_coef: 0.01
       vf_coef: 0.5
       max_grad_norm: 0.5
-      batch_size: 64
+      batch_size: 128
       n_steps: 5
       n_robots: 1
       seed: 42

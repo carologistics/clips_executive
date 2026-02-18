@@ -15,20 +15,18 @@
 
 (build
 (str-cat
-"(deffunction " ?*CX-RL-NODE-NAME* "/get_predefined_observables-service-callback (?service-name ?request ?response)
-    (printout ?*CX-RL-LOG-LEVEL* \"Collecting cx rl predefined observables\" crlf)
-    (bind ?observables (create$))
-    (bind ?obs-list (create$))
-    (do-for-all-facts ((?po rl-predefined-observable))
-            (eq ?po:node \"" ?*CX-RL-NODE-NAME* "\")
+"(deffunction " ?*CX-RL-NODE-NAME* "/get_current_observations-service-callback (?service-name ?request ?response)
+  (bind ?obs-list (create$))
+  (do-for-all-facts ((?obs rl-observation)) (eq ?obs:node ?*CX-RL-NODE-NAME*)
       (bind ?observation-msg (ros-msgs-create-message \"cx_rl_interfaces/msg/Observation\"))
-      (ros-msgs-set-field ?observation-msg \"name\" ?po:name)
-      (ros-msgs-set-field ?observation-msg \"params\" ?po:params)
+      (ros-msgs-set-field ?observation-msg \"name\" ?obs:name)
+      (ros-msgs-set-field ?observation-msg \"params\" ?obs:params)
       (bind ?obs-list (insert$ ?obs-list 1 ?observation-msg))
-    )
-    (ros-msgs-set-field ?response \"observables\" ?obs-list)
-    (foreach ?observation-msg-item ?obs-list
-      (ros-msgs-destroy-message ?observation-msg-item)
-    )
+  )
+  (ros-msgs-set-field ?response \"observations\" ?obs-list)
+  (foreach ?observation-msg-item ?obs-list
+    (ros-msgs-destroy-message ?observation-msg-item)
+  )
 )"
-))
+)
+)

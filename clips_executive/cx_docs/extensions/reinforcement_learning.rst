@@ -34,17 +34,17 @@ Overview
 
 The Reinforcement Learning (RL) integration is provided through a **ROS 2 node** that manages both a Gym environment and a corresponding RL model.
 
-- The **Gym environment** is implemented via the **`CXRLGym`** class. It sets up the environment, training routines, and execution workflows using ROS interfaces, allowing seamless information exchange with the |CX| framework via ROS.
+- The **Gym environment** is implemented via the **CXRLGym** class. It sets up the environment, training routines, and execution workflows using ROS interfaces, allowing seamless information exchange with the |CX| framework via ROS.
 
-- The **RL model**, **`MultiRobotMaskablePPO`**, implements a multi-robot **Maskable Proximal Policy Optimization (MPPO)** algorithm. This model supports environments with multiple robots acting asynchronously and allows for masking of unavailable actions, improving training efficiency in complex robotic tasks.
+- The **RL model**, **MultiRobotMaskablePPO**, implements a multi-robot **Maskable Proximal Policy Optimization (MPPO)** algorithm. This model supports environments with multiple robots acting asynchronously and allows for masking of unavailable actions, improving training efficiency in complex robotic tasks.
 
-A **node skeleton**, **`CXRLBaseNode`**, is provided to simplify node development. It implements a **ROS 2 lifecycle node** with optional **bond capabilities**, and manages both the Gym environment (`CXRLGym`) and the RL model.
+A **node skeleton**, **CXRLBaseNode**, is provided to simplify node development. It implements a **ROS 2 lifecycle node** with optional **bond capabilities**, and manages both the Gym environment (`CXRLGym`) and the RL model.
 
 **CXRLBaseNode** can be extended to easily integrate other RL models, allowing developers to reuse the lifecycle and environment management infrastructure without re-implementing boilerplate code.
 
-The **`cx_rl_mppo_node`** is a ready-to-use node that extends `CXRLBaseNode` and comes preconfigured to use the **CXRLGym** environment and the **MultiRobotMaskablePPO** model.
+The **cx_rl_mppo_node** is a ready-to-use node that extends `CXRLBaseNode` and comes preconfigured to use the **CXRLGym** environment and the **MultiRobotMaskablePPO** model.
 
-To reduce manual ROS overhead, the **`cx_rl_clips`** package provides a **CLIPS-based interface** for interacting with the PDDL Manager node. This allows users to interact with the `CXRLGym` manager by asserting and monitoring **CLIPS facts**, without requiring direct ROS communication (e.g., publishing messages or waiting for service feedback).
+To reduce manual ROS overhead, the **cx_rl_clips** package provides a **CLIPS-based interface** for interacting with the PDDL Manager node. This allows users to interact with the `CXRLGym` manager by asserting and monitoring **CLIPS facts**, without requiring direct ROS communication (e.g., publishing messages or waiting for service feedback).
 
 This architecture enables users to:
 

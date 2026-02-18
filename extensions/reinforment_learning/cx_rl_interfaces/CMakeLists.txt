@@ -9,8 +9,13 @@ find_package(std_srvs REQUIRED)
 find_package(builtin_interfaces REQUIRED)
 find_package(action_msgs REQUIRED)
 
+set(MESSAGES
+  "msg/Action.msg"
+  "msg/Observation.msg"
+)
+
 set(SERVICES
-  "srv/GetEnvState.srv"
+  "srv/GetObservations.srv"
   "srv/EndTraining.srv"
   "srv/ExecActionSelection.srv"
   "srv/GetActionID.srv"
@@ -30,6 +35,8 @@ set(ACTIONS
   "action/ResetEnv.action"
 )
 rosidl_generate_interfaces(${PROJECT_NAME}
+  ${MESSAGES}
+
   ${SERVICES}
 
   ${ACTIONS}

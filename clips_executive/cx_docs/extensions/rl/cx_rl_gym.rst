@@ -73,9 +73,9 @@ The observation and action spaces are constructed by combining predefined observ
 Predefined observables/actions are added directly.
 For each observable predicate/action, the cartesian product of the relevant parameter objects is generated to form all possible grounded predicates/actions.
 
-The resulting observation/action space is a list of strings representing all states/actions that the RL agent can perceive.
+The resulting observation/action space is a list of strings representing all observations/actions that the RL agent can perceive.
 
-The action space is further augmented by a default action called `no-op`, which is used to handle sitations where no action is available or all actions are masked.
+The action space is further augmented by a default action called `no-op`, which is used to handle situations where no action is available or all actions are masked.
 
 
 
@@ -122,7 +122,7 @@ Reset
     :align: left
 
 The environment reset triggers the `/reset_env` action.
-Once completed, the initial environment state is retrieved.
+Once completed, the initial environment observations are retrieved.
 
 .. raw:: html
 
@@ -132,7 +132,7 @@ Once completed, the initial environment state is retrieved.
 Interfaces:
 
  * /reset_env
- * /get_env_state
+ * /get_current_observations
 
 Action Masking
 ~~~~~~~~~~~~~~
@@ -165,9 +165,9 @@ Step
     :align: left
 
 During a step, the CXRLGym environment first checks whether the selected action is valid (i.e., not the special no-op action).
-If the action is valid, it is executed via the action_selection action. Once execution finishes, a reward is returned and the new environment state is retrieved.
+If the action is valid, it is executed via the action_selection action. Once execution finishes, a reward is returned and the new environment observations are retrieved.
 
-If the action is invalid (no-op), no execution occurs. Instead, the environment queries whether the episode should terminate and updates the state accordingly.
+If the action is invalid (no-op), no execution occurs. Instead, the environment queries whether the episode should terminate and updates the observations accordingly.
 
 .. raw:: html
 
@@ -176,7 +176,7 @@ If the action is invalid (no-op), no execution occurs. Instead, the environment 
 Interfaces:
 
  * /action_selection
- * /get_env_state
+ * /get_current_observations
  * /get_episode_end
 
 
@@ -200,6 +200,8 @@ Interfaces:
 
  * /exec_action_selection
 
+
+.. _cx_rl_base_node:
 
 CXRLBaseNode
 ************

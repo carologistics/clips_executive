@@ -54,6 +54,10 @@
     (rl-observation (name clear) (params block4))
     (rl-observable-action (name stack) (param-names r b1 b2) (param-types robot block block))
     (rl-observable-action (name pickup) (param-names r b) (param-types robot block))
+    (rl-predefined-action (name pickup) (params robot1 block1))
+    (rl-predefined-action (name pickup) (params robot1 block2))
+    (rl-predefined-action (name pickup) (params robot1 block3))
+    (rl-predefined-action (name pickup) (params robot1 block4))
     (rl-robot (name robot1) (waiting TRUE))
   )
   (assert (cx-rl-node (name ?*CX-RL-NODE-NAME*) (mode UNSET)))
@@ -83,12 +87,9 @@
   (rl-observation (name holding) (params ?robot ?some-block))
   (rl-observation (name clear) (params ?other-block))
   (test (neq ?some-block ?other-block))
-  =>
-  (bind ?block1 (sub-string 6 6 ?some-block))
-  (bind ?block2 (sub-string 6 6 ?other-block))
-  (bind ?id (sym-cat "stack" ?block1 ?block2))
-  (bind ?name (sym-cat "stack(" ?robot "#" ?some-block "#" ?other-block ")"))
-  (assert (rl-action (id ?id) (name ?name)))
+=>
+  (bind ?id (sym-cat "stack" (gensym*)))
+  (assert (rl-action (id ?id) (name stack) (params ?robot ?some-block ?other-block)))
 )
 
 (defrule rl-blocksworld-provide-action-pickup
@@ -97,28 +98,46 @@
   (rl-observation (name can-hold) (params ?robot))
   (rl-observation (name on-table) (params ?some-block))
   (rl-observation (name clear) (params ?some-block))
-  =>
-  (bind ?block1 (sub-string 6 6 ?some-block))
+=>
   (bind ?id (sym-cat "pickup" (gensym*)))
-  (bind ?name (sym-cat "pickup(" ?robot "#" ?some-block ")"))
-  (assert (rl-action (id ?id) (name ?name)))
+  (assert (rl-action (id ?id) (name pickup) (params ?robot ?some-block)))
 )
 
 (defrule rl-blocksworld-actions-generation-done
-  (declare (salience -1000))
+  (declare (salience -2))
   ?action-space <- (rl-current-action-space (state PENDING))
-  =>
+=>
   (modify ?action-space (state DONE))
 )
 
 ; handling selected actions, applying rewards and updated observations
 
+(defrule action-selected-action-done-stack
+  (rl-robot (name ?robot))
+  ?obs1 <- (rl-observation (name holding) (params ?robot ?block))
+  ?action <- (rl-action (name stack) (params ?robot ?block ?other-block) (is-selected TRUE) (is-finished FALSE))
+  (rl-observable-type (type block) (objects $? ?other-block&:(neq ?other-block ?block) $?))
+  ?obs2 <- (rl-observation (name clear) (params ?other-block2&:(eq ?other-block2 (sym-cat ?other-block))))
+=>
+  (retract ?obs1 ?obs2)
+  (assert (rl-observation (name on) (params ?block (sym-cat ?other-block))))
+  (assert (rl-observation (name can-hold) (params ?robot)))
+  (bind ?reward 0)
+  (do-for-fact ((?target rl-observation))
+    (and (eq ?target:name target-on)
+         (eq ?target:params (create$ ?block (sym-cat ?other-block))))
+    (printout green "useful action on "?target:params crlf)
+    (bind ?reward 100)
+  )
+  (modify ?action (is-finished TRUE) (reward ?reward))
+)
+
 (defrule action-selected-action-done-pickup
   (rl-robot (name ?robot))
   ?obs1 <- (rl-observation (name can-hold) (params ?robot))
   ?obs2 <- (rl-observation (name on-table) (params ?block))
-  ?action <- (rl-action (name ?name&:(str-index ?block ?name)) (is-selected TRUE) (is-finished FALSE))
-  =>
+  ?action <- (rl-action (name pickup) (params ?robot ?block) (is-selected TRUE) (is-finished FALSE))
+=>
   (retract ?obs1 ?obs2)
   (assert (rl-observation (name holding) (params ?robot ?block)))
   (bind ?reward 0)
@@ -131,31 +150,10 @@
   (modify ?action (is-finished TRUE) (reward ?reward))
 )
 
-(defrule action-selected-action-done-stack
-  (rl-robot (name ?robot))
-  ?obs1 <- (rl-observation (name holding) (params ?robot ?block))
-  (rl-observable-type (type block) (objects $? ?other-block&:(neq ?other-block ?block) $?))
-  ?obs2 <- (rl-observation (name clear) (params ?other-block2&:(eq ?other-block2 (sym-cat ?other-block))))
-  ?action <- (rl-action (name ?name) (is-selected TRUE) (is-finished FALSE))
-  (test (and (str-index stack ?name) (str-index ?robot ?name) (str-index ?block ?name) (str-index ?other-block ?name)))
-  =>
-  (retract ?obs1 ?obs2)
-  (assert (rl-observation (name on) (params ?block (sym-cat ?other-block))))
-  (assert (rl-observation (name can-hold) (params ?robot)))
-  (bind ?reward -100)
-  (do-for-fact ((?target rl-observation))
-    (and (eq ?target:name target-on)
-         (eq ?target:params (create$ ?block (sym-cat ?other-block))))
-    (printout green "useful action on "?target:params crlf)
-    (bind ?reward 100)
-  )
-  (modify ?action (is-finished TRUE) (reward ?reward))
-)
-
 ; Training
 
-(defrule rl-blocksworld-episode-end-succes
-  (declare (salience 10000))
+(defrule rl-blocksworld-episode-end-success
+  (declare (salience 1))
   (rl-observation (name target-on) (params $?target1))
   (rl-observation (name target-on) (params $?target2))
   (rl-observation (name target-on) (params $?target3))
@@ -165,15 +163,25 @@
   (rl-observation (name on) (params $?target3))
   ?action <- (rl-action (name ?name) (is-selected TRUE) (is-finished TRUE))
   (not (rl-episode-end (success TRUE)))
-  =>
+=>
   (printout green "SUCCESS!" crlf)
   (assert (rl-episode-end (success TRUE)))
   (modify ?action (reward 1000))
 )
 
+(defrule rl-blocksworld-episode-end-failure
+  (declare (salience -1))
+  (cx-rl-node (name ?node) (mode TRAINING))
+  (rl-current-action-space (node ?node) (state PENDING))
+  (not (rl-action (node ?node) (is-selected FALSE)))
+  (not (rl-episode-end (node ?node) (success ?success)))
+=>
+  (assert (rl-episode-end (node ?node) (success FALSE)))
+)
+
 (defrule rl-blocksworld-stop-agent-on-training-end
   (rl-end-training)
-  =>
+=>
   (cx-shutdown)
 )
 
@@ -181,18 +189,8 @@
 
 (defrule rl-blocksworld-ask-for-execution
   (cx-rl-node (mode EXECUTION))
-  (not (execution-done))
   (not (rl-current-action-space))
-  =>
+  (not (rl-action (is-selected TRUE) (is-finished FALSE)))
+=>
   (assert (rl-current-action-space (state PENDING)))
-)
-
-(defrule rl-locksworld-no-action-possible
-  (cx-rl-node (mode EXECUTION))
-  (rl-robot (name ?robot))
-  (rl-action (id no-op) (is-selected TRUE) (assigned-to ?robot))
-  (not (execution-done))
-  =>
-  (printout green "Execution done, no more actions to select" crlf)
-  (assert (execution-done))
 )

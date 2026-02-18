@@ -25,21 +25,21 @@ state and actions are managed via ROS 2 services and actions.
 """
 
 
-import ast
 from functools import partial
 from itertools import product
 import time
 
 from cx_rl_interfaces.action import ActionSelection, GetFreeRobot, ResetEnv
+from cx_rl_interfaces.msg import Action
 from cx_rl_interfaces.srv import (
     EndTraining,
     ExecActionSelection,
     GetActionListRobot,
-    GetEnvState,
     GetEpisodeEnd,
     GetObservableActions,
     GetObservableObjects,
     GetObservablePredicates,
+    GetObservations,
     GetPredefinedActions,
     GetPredefinedObservables,
     GetStatus,
@@ -107,7 +107,9 @@ class CXRLGym(Env):
         self.get_episode_end_client = self.node.create_client(
             GetEpisodeEnd, prefixed('get_episode_end')
         )
-        self.get_env_state_client = self.node.create_client(GetEnvState, prefixed('get_env_state'))
+        self.get_current_observations_client = self.node.create_client(
+            GetObservations, prefixed('get_current_observations')
+        )
 
         # Service provider
         self.get_status_service = self.node.create_service(
@@ -155,6 +157,11 @@ class CXRLGym(Env):
         self.action_space = Discrete(self.n_actions)
 
         self.node.get_logger().info('cxrl_gym init complete')
+
+    def get_id(self, name: str, args: list[str]) -> str:
+        if not args:
+            return name
+        return f"{name}({'#'.join(args)})"
 
     def on_training_end(self):
         while not self.end_training_client.wait_for_service(1.0):
@@ -214,7 +221,6 @@ class CXRLGym(Env):
                 {robot}!'
             )
             self.robot_locked = False
-            # state = self.get_env_state()
             state = self.get_observation()
 
             terminated, reward = self.get_episode_end()
@@ -325,7 +331,7 @@ class CXRLGym(Env):
         """
         Reset the environment and return the initial observation.
 
-        Calls the `/reset_env` action and queries `/get_env_state`
+        Calls the `/reset_env` action and queries `/get_current_observations`
         for the initial environment state.
 
         Parameters
@@ -448,8 +454,15 @@ class CXRLGym(Env):
         while not future.done():
             time.sleep(self.time_sleep)
         response = future.result()
-        dict_action_ids = self.unpack_transmitted_action_list(response.actions)
-        return dict_action_ids
+        return self.unpack_transmitted_actions(response.actions, response.action_ids)
+
+    def unpack_transmitted_actions(self, action_list: list[Action], action_ids: list[str]):
+        action_encoded_ids = [self.get_id(obj.name, obj.params) for obj in action_list]
+        assert len(action_encoded_ids) == len(
+            action_ids
+        ), 'Action list and action IDs must have the same length'
+
+        return dict(zip(action_encoded_ids, action_ids))
 
     def get_observable_objects(self, obj_type: str) -> list[str]:
         """
@@ -484,6 +497,11 @@ class CXRLGym(Env):
 
         observable_objects = response.objects
         return observable_objects
+
+    def encode_name_args(self, name: str, args: list[str]) -> str:
+        if not args:
+            return name
+        return f"{name}({'#'.join(args)})"
 
     def get_observable_predicates(self) -> dict:
         """
@@ -540,7 +558,8 @@ class CXRLGym(Env):
         while not future.done():
             time.sleep(self.time_sleep)
         response = future.result()
-        return response.observables
+        ids = [self.get_id(predicate.name, predicate.params) for predicate in response.observables]
+        return ids
 
     def get_predefined_actions(self) -> list:
         """
@@ -565,7 +584,8 @@ class CXRLGym(Env):
         while not future.done():
             time.sleep(self.time_sleep)
         response = future.result()
-        return response.actions
+        ids = [self.get_id(action.name, action.params) for action in response.actions]
+        return ids
 
     def get_observable_actions(self) -> dict:
         """
@@ -615,9 +635,7 @@ class CXRLGym(Env):
         action_space = []
 
         # Step 1: Add predefined actions
-        predefined_actions = (
-            self.get_predefined_actions()
-        )  # assumes a service call similar to get_predefined_observables
+        predefined_actions = self.get_predefined_actions()
         action_space += predefined_actions
 
         # Step 2: Add parameterized actions
@@ -662,11 +680,11 @@ class CXRLGym(Env):
         self.node.get_logger().info('Action space size: ' + str(len(action_space)))
         return action_space
 
-    def get_env_state(self) -> str:
+    def get_current_observations(self) -> str:
         """
         Create a new RL environment state.
 
-        Calls the `GetEnvState` service to generate a new environment state for
+        Calls the `GetObservations` service to generate a new environment state for
         reinforcement learning execution.
 
         Returns
@@ -674,17 +692,18 @@ class CXRLGym(Env):
             str: The generated environment state as a serialized string.
 
         """
-        while not self.get_env_state_client.wait_for_service(1.0):
-            self.node.get_logger().info('Waiting for service (get_env_state) to be ready...')
+        while not self.get_current_observations_client.wait_for_service(1.0):
+            self.node.get_logger().info(
+                'Waiting for service (get_current_observations) to be ready...'
+            )
 
-        request = GetEnvState.Request()
-        future = self.get_env_state_client.call_async(request)
+        request = GetObservations.Request()
+        future = self.get_current_observations_client.call_async(request)
         while not future.done():
             time.sleep(self.time_sleep)
         response = future.result()
 
-        rl_env_state = response.state
-        return rl_env_state
+        return [self.get_id(pred.name, pred.params) for pred in response.observations]
 
     def get_episode_end(self) -> tuple[bool, int]:
         """
@@ -769,9 +788,11 @@ class CXRLGym(Env):
         """
         self.node.get_logger().info('Selecting action...')
 
-        raw_facts = ast.literal_eval(request.state)
-        observation = self.get_state_from_facts(raw_facts)
-        self.executable_actions_dict = self.unpack_transmitted_action_list(request.actions)
+        observation_ids = [self.get_id(pred.name, pred.params) for pred in request.observations]
+        observation = self.get_observation_encoding_fron_ids(observation_ids)
+        self.executable_actions_dict = self.unpack_transmitted_actions(
+            request.actions, request.action_ids
+        )
         action_mask = np.zeros((self.n_actions), dtype=int)
         for action in self.executable_actions_dict.keys():
             pos = self.inv_action_dict.get(action)
@@ -1065,7 +1086,7 @@ class CXRLGym(Env):
         """
         Generate the current RL observation vector.
 
-        Creates a new RL environment state using `get_env_state()`,
+        Creates a new RL environment state using `get_current_observations()`,
         parses the returned fact string into Python objects, and converts
         them into a numerical observation vector suitable for the RL model.
 
@@ -1075,9 +1096,7 @@ class CXRLGym(Env):
                 The observation vector as a NumPy array of type float32.
 
         """
-        fact_string = self.get_env_state()
-        raw_facts = ast.literal_eval(fact_string)
-        return self.get_state_from_facts(raw_facts)
+        return self.get_observation_encoding_fron_ids(self.get_current_observations())
 
     def expand_grid(self, dictionary: dict) -> pd.DataFrame:
         """
@@ -1143,40 +1162,38 @@ class CXRLGym(Env):
             entities[name] = params
         return entities
 
-    def unpack_transmitted_action_list(self, action_list: list[str]) -> dict:
+        entities = {}
+        param_counter = 0
+
+        for i in range(len(names)):
+            name = names[i]
+            number_params = param_counts[i]
+
+            params = {}
+            args = []
+
+            param_range = param_counter + number_params
+
+            while param_counter < param_range:
+                param_name = param_names[param_counter]
+                param_type = param_types[param_counter]
+
+                params[param_name] = param_type
+                args.append(param_name)
+
+                param_counter += 1
+
+            entities[name] = params
+
+            self.get_id(name, args)
+
+        return entities
+
+    def get_observation_encoding_fron_ids(self, obs_facts) -> npt.NDArray[np.float32]:
         """
-        Parse a list of encoded action strings into a dictionary mapping names to IDs.
+        Convert a set of observation ids into a binary state vector.
 
-        Each action string is expected to have the format:
-        ``"<action_id>|<action_name>"``.
-
-        Parameters
-        ----------
-        action_list : list[str]
-                List of encoded action strings.
-
-        Returns
-        -------
-        dict
-                Mapping from action names to action IDs.
-
-        """
-        dict_action_ids = {}
-        for action in action_list:
-            action_splitted = action.split('|')
-
-            action_id = action_splitted[0]
-            action_name = action_splitted[1]
-
-            dict_action_ids[action_name] = action_id
-
-        return dict_action_ids
-
-    def get_state_from_facts(self, obs_facts) -> npt.NDArray[np.float32]:
-        """
-        Convert a set of observation facts into a binary state vector.
-
-        Each fact is matched against the internal observation dictionary.
+        Each id is matched against the internal observation dictionary.
         The corresponding index is set to 1.0 if the fact is present, 0.0 otherwise.
 
         Parameters

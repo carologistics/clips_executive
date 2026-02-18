@@ -108,7 +108,7 @@ corresponding CLIPS deftemplates (all deftemplate definitions can be found).
    * - :abbr:`/reset_env (Reset the RL environment)`
      - :ref:`rl-reset-env`, :ref:`cx-rl-node`
 
-   * - :abbr:`/get_env_state (Fetch current environment observations)`
+   * - :abbr:`/get_current_observations (Fetch current environment observations)`
      - :ref:`rl-observation`, :ref:`rl-robot`
 
    * - :abbr:`/get_free_robot (Query a free robot for action execution)`
@@ -192,8 +192,8 @@ The below example registers `clear(block1)` and `on-table(block1)` as current ob
 .. code-block:: lisp
 
    (assert
-    (rl-observation (name clear) (param-values block1))
-    (rl-observation (name on-table) (param-values block1))
+    (rl-observation (name clear) (params block1))
+    (rl-observation (name on-table) (params block1))
    )
 
 Once the observation space, action space, and initial observations are available, the RL environment is ready to be initialized.
@@ -328,7 +328,7 @@ In execution mode, action selection is explicitly controlled by the user:
    execution goals are satisfied.
 
 
-If no actions are specified before setting the :ref:`rl-current-action-space` fact to ``DONE``, then the prediction assigns a :ref:`rl-action` fact with name ``no-op``.
+If no actions are specified before setting the :ref:`rl-current-action-space` fact to ``DONE``, then the prediction asserts a :ref:`rl-action` fact with name ``no-op``.
 
 
 .. _rl_deftemplates:
@@ -344,25 +344,24 @@ They are used to define symbolic observation and action spaces, represent the
 current environment state, generate and execute actions, and control training
 and execution workflows.
 
+When working with templates, make sure you understand which facts and slots are automatically populated by cx_rl_clips and which must be defined by the user.
+Providing or overriding automatically managed fields may lead to unintended behavior.
+
 .. _rl-reset-env:
 
 rl-reset-env
 ~~~~~~~~~~~~
 
 Represents a request to reset the RL environment.
-This fact is asserted by the environment and processed by CLIPS rules to
-coordinate cleanup, initialization, and reset transitions.
+This fact is asserted by the environment and processed to coordinate cleanup, initialization, and reset transitions.
+Users are responsible to transition the ``state`` slot from `USER-CLEANUP` to `LOAD-FACTS` and from `USER-INIT` to `DONE`.
 
 .. code-block:: lisp
 
-  ; Asserted by: System
   (deftemplate rl-reset-env
-    ; Controlled by: User
     (slot node (type STRING) (default "/cx_rl_node"))
-    ; Controlled by: User, System
     (slot state (type SYMBOL)
       (allowed-values ABORT-RUNNING-ACTIONS USER-CLEANUP LOAD-FACTS USER-INIT DONE))
-    ; Controlled by: System
     (slot uuid (type STRING))
   )
 
@@ -373,19 +372,18 @@ cx-rl-node
 ~~~~~~~~~~
 
 Represents the RL node instance and its current lifecycle state.
-This fact is asserted once during initialization and updated automatically
-via status queries.
-
 It also serves as the main entry point for tracking training and execution
 progress.
 
+This fact is asserted once by the user during initialization and updated automatically
+via status queries.
+Users should assert this fact and specify the slot ``name`` according to the global variable `*?CX-RL-NODE-NAME*` used for loading ``cx_rl_clips``.
+
+
 .. code-block:: lisp
 
-  ; Asserted by: User
   (deftemplate cx-rl-node
-    ; Controlled by: User
     (slot name (type STRING) (default "/cx_rl_node"))
-    ; Controlled by: System
     (slot ros-comm-init (type SYMBOL) (allowed-values TRUE FALSE) (default FALSE))
     (slot fact-reset-file (type STRING) (default ""))
     (slot mode (type SYMBOL) (allowed-values UNSET TRAINING EXECUTION))
@@ -403,17 +401,14 @@ rl-get-status
 
 Request the current status of the RL environment.
 Asserting this fact causes the corresponding :ref:`cx-rl-node` fact to be updated.
-users may request updates to observe training progression.
 The system initially requests updates in order to monitor the startup process.
+Users may assert this fact (and set the slot ``node``) request updates to observe training progression.
 
 .. code-block:: lisp
 
-  ; Asserted by: User, System
   (deftemplate rl-get-status
-    ; Controlled by: User
     (slot node (type STRING) (default "/cx_rl_node"))
-    ; Controlled by: System
-    (slot request-id (type INTEGER))
+    (slot request-id (type INTEGER)) ; internal
   )
 
 
@@ -422,11 +417,11 @@ The system initially requests updates in order to monitor the startup process.
 rl-end-training
 ~~~~~~~~~~~~~~~
 
-Signals that training has completed.
+Signals that training has completed. This fact is asserted by the environmnent
+and notifies users about the end of training.
 
 .. code-block:: lisp
 
-  ; Asserted by: System
   (deftemplate rl-end-training
     (slot node (type STRING) (default "/cx_rl_node"))
   )
@@ -438,11 +433,11 @@ rl-episode-end
 ~~~~~~~~~~~~~~
 
 Marks the end of an episode during training.
-This can be used to indicate success or failure and trigger environment resets.
+Users can assert this to indicate indicate success or failure of the current episode and trigger environment resets.
+
 
 .. code-block:: lisp
 
-  ; Asserted by: User,System
   (deftemplate rl-episode-end
     (slot node (type STRING) (default "/cx_rl_node"))
     (slot success (type SYMBOL)
@@ -457,7 +452,7 @@ rl-observable-type
 ~~~~~~~~~~~~~~~~~~
 
 Defines a symbolic type and its corresponding objects.
-Used to construct grounded observation and action spaces.
+These definitions are provided by the user and used to construct grounded observation and action spaces.
 
 .. code-block:: lisp
 
@@ -475,7 +470,8 @@ rl-observable-predicate
 
 Defines a predicate with typed parameters.
 All valid groundings are generated using the objects defined via
-:ref:`rl-observable-type`.
+:ref:`rl-observable-type` for spanning the observation space.
+Users are responsible for asserting facts of this type.
 
 .. code-block:: lisp
 
@@ -493,7 +489,8 @@ rl-predefined-observable
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 Defines a grounded observable directly.
-Used to inject fixed or task-specific observations into the observation space.
+Used to add individual observations into the observation space.
+Users are responsible for asserting facts of this type.
 
 .. code-block:: lisp
 
@@ -510,7 +507,8 @@ rl-predefined-action
 ~~~~~~~~~~~~~~~~~~~~
 
 Defines a grounded action directly.
-Useful for fixed actions or actions not derived from parameterized definitions.
+Used to add individual actions into the action space.
+Users are responsible for asserting facts of this type.
 
 .. code-block:: lisp
 
@@ -528,6 +526,7 @@ rl-observable-action
 
 Defines a parameterized symbolic action.
 All valid groundings are generated based on the defined parameter types and objects.
+Users are responsible for asserting facts of this type.
 
 .. code-block:: lisp
 
@@ -546,13 +545,14 @@ rl-observation
 
 Represents a currently active observation.
 The set of all asserted ``rl-observation`` facts defines the current environment state.
+Users are responsible for asserting facts of this type.
 
 .. code-block:: lisp
 
   (deftemplate rl-observation
     (slot node (type STRING) (default "/cx_rl_node"))
     (slot name (type SYMBOL))
-    (multislot param-values (type SYMBOL))
+    (multislot params (type SYMBOL))
   )
 
 
@@ -560,9 +560,10 @@ The set of all asserted ``rl-observation`` facts defines the current environment
 
 rl-robot
 ~~~~~~~~
-
 Represents a robot that can execute actions.
-The ``waiting`` slot is managed automatically by the RL interface.
+A corresponding fact must be asserted for each robot whose actions are to be controlled by RL.
+The ``waiting`` slot is managed automatically by the RL interface, indicating
+that a robot is idling and ready for getting a new action assigned.
 
 .. code-block:: lisp
 
@@ -577,10 +578,9 @@ The ``waiting`` slot is managed automatically by the RL interface.
 
 rl-current-action-space
 ~~~~~~~~~~~~~~~~~~~~~~~
-
-Marks the generation phase of the current action space.
-Actions are asserted as :ref:`rl-action` facts while the state is ``PENDING``.
-Once set to ``DONE``, action selection proceeds.
+Asserted automatically to indicate the generation phase of the current action space.
+Facts of this type are created with the slot ``state`` set to `PENDING`, signaling that the user must assert :ref:`rl-action` facts before advancing the ``state`` to `DONE`.
+Once the state is set to ``DONE``, action selection proceeds automatically.
 
 .. code-block:: lisp
 
@@ -595,12 +595,21 @@ Once set to ``DONE``, action selection proceeds.
 rl-action
 ~~~~~~~~~
 
-Represents an executable action.
-Actions are selected automatically by the RL interface and must be executed
-by user-defined rules.
-Rewards and completion state must be reported explicitly.
+Users must assert facts of this type whenever a corresponding
+:ref:`rl-current-action-space` fact is present.
+When asserting an ``rl-action`` fact, the slots ``node``, ``id``,
+``name``, and ``params`` must be specified.
+Note that the slot ``id`` should uniquely identify ``rl-action`` facts, while the slot ``name`` and ``params`` have to match those used when creating the action space.
 
-Note that the slot ``id`` should uniquely identify ``rl-action`` facts, while the slot ``name`` must match the string encoding of an action in the action space.
+The slots ``is-selected`` and ``assigned-to`` are managed automatically.
+They indicate whether the action has been selected for execution and
+which :ref:`rl-robot` is assigned to execute it.
+
+Once an action is selected, the user is responsible for carrying out
+its execution. Upon completion, the user must update the slots
+``is-finished`` and ``reward`` to signal termination and provide the
+reward obtained from the execution.
+
 
 .. code-block:: lisp
 
@@ -608,10 +617,11 @@ Note that the slot ``id`` should uniquely identify ``rl-action`` facts, while th
     (slot node (type STRING) (default "/cx_rl_node"))
     (slot id (type SYMBOL))
     (slot name (type SYMBOL))
-    (slot is-selected (type SYMBOL) (allowed-values TRUE FALSE) (default FALSE))
+    (multislot params (type SYMBOL))
     (slot is-finished (type SYMBOL) (allowed-values TRUE FALSE) (default FALSE))
-    (slot assigned-to (type SYMBOL) (default nil))
     (slot reward (type INTEGER) (default 0))
+    (slot is-selected (type SYMBOL) (allowed-values TRUE FALSE) (default FALSE))
+    (slot assigned-to (type SYMBOL) (default nil))
   )
 
 
@@ -620,8 +630,8 @@ Note that the slot ``id`` should uniquely identify ``rl-action`` facts, while th
 rl-ros-action-meta-get-free-robot
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Internal metadata for the ``get_free_robot`` ROS action.
-Used to track execution state and cancellation requests.
+Represents internal metadata associated with the ``get_free_robot`` ROS action.
+Facts of this type are asserted and managed automatically by the framework.
 
 .. code-block:: lisp
 
@@ -641,6 +651,7 @@ rl-ros-action-meta-action-selection
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Internal metadata for the ``action_selection`` ROS action.
+Facts of this type are asserted and managed automatically by the framework.
 
 .. code-block:: lisp
 
@@ -658,7 +669,7 @@ rl-action-request-meta
 ~~~~~~~~~~~~~~~~~~~~~~
 
 Internal request tracking for ROS service calls.
-These facts are managed automatically and should not be modified by user rules.
+Facts of this type are asserted and managed automatically by the framework.
 
 .. code-block:: lisp
 

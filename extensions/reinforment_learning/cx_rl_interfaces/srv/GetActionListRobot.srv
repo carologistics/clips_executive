@@ -1,3 +1,4 @@
 string robot
 ---
-string[] actions
+Action[] actions
+string[] action_ids

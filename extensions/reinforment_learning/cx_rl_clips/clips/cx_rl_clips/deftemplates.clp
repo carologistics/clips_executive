@@ -14,7 +14,7 @@
 ; limitations under the License.
 
 (defglobal
-  ?*CX-RL-LOG-LEVEL* = info
+  ?*CX-RL-LOG-LEVEL* = debug
 
   ?*CX-RL-GET-FREE-ROBOT-SEARCH-UPDATE-INTERVAL* = 5
 
@@ -22,7 +22,7 @@
   ?*CX-RL-REWARD-EPISODE-FAILURE* = 0
 
   ?*CX-RL-SERVICES* = (create$
-      get_env_state GetEnvState
+      get_current_observations GetObservations
       end_training EndTraining
       get_action_list_executable_for_robot GetActionListRobot
       get_episode_end GetEpisodeEnd
@@ -189,6 +189,7 @@
   (slot id (type SYMBOL))
   (slot node (type STRING) (default "/cx_rl_node"))
   (slot name (type SYMBOL))
+  (multislot params (type SYMBOL))
   (slot is-selected (type SYMBOL)
                     (allowed-values TRUE FALSE)
                      (default FALSE))

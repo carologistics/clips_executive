@@ -85,12 +85,3 @@
   (modify ?a (assigned-to nil))
   (modify ?rw (waiting TRUE))
 )
-
-(defrule cx-rl-episode-end-failure
-  (cx-rl-node (name ?node) (mode TRAINING))
-  (rl-current-action-space (node ?node) (state DONE))
-  (not (rl-action (node ?node) (is-selected FALSE)))
-  (not (rl-episode-end (node ?node) (success ?success)))
-  =>
-  (assert (rl-episode-end (node ?node) (success FALSE)))
-)
