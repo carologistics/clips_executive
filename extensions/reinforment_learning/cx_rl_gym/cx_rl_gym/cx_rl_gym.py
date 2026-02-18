@@ -78,7 +78,7 @@ class CXRLGym(Env):
         self.rl_model = None
 
         self.node_name_prefix = node.get_name()  # <-- use this as the prefix
-        self.node.get_logger().info('cxrl_gym init')
+        self.node.get_logger().debug('cx_rl_gym init')
 
         # Helper function to prepend the node name to topic/service names
         def prefixed(name: str) -> str:
@@ -156,7 +156,7 @@ class CXRLGym(Env):
         self.n_actions = len(sorted_actions)
         self.action_space = Discrete(self.n_actions)
 
-        self.node.get_logger().info('cxrl_gym init complete')
+        self.node.get_logger().debug('cxrl_gym init complete')
 
     def get_id(self, name: str, args: list[str]) -> str:
         if not args:
@@ -216,7 +216,7 @@ class CXRLGym(Env):
         if action_string in self.executable_actions_dicts_for_robot[robot]:
             action_id = self.executable_actions_dicts_for_robot[robot][action_string]
         else:
-            self.node.get_logger().info(
+            self.node.get_logger().debug(
                 f'Action {action_string} not executable for robot \
                 {robot}!'
             )
@@ -243,7 +243,7 @@ class CXRLGym(Env):
 
         while self.action_selection_results.get(robot) is None:
             if self.shutdown:
-                self.node.get_logger().info('Shutdown triggered!')
+                self.node.get_logger().debug('Shutdown triggered!')
                 state = None
                 reward = None
                 terminated = None
@@ -260,9 +260,9 @@ class CXRLGym(Env):
         result_reward = result.reward
         result_info = result.info
 
-        self.node.get_logger().info('Getting observation of current state')
+        self.node.get_logger().debug('Getting observation of current state')
         state = self.get_observation()
-        self.node.get_logger().info('Current state observed')
+        self.node.get_logger().debug('Current state observed')
 
         self.node.get_logger().info(
             f'Action {result_action_id} finished with reward {result_reward}. {result_info}'
@@ -283,7 +283,7 @@ class CXRLGym(Env):
         return state, reward, done, truncated, info
 
     def generate_observation_space(self) -> list[str]:
-        self.node.get_logger().info('Generating observation space...')
+        self.node.get_logger().debug('Generating observation space...')
         obs_space = []
         predefined_observables = self.get_predefined_observables()
         obs_space += predefined_observables
@@ -321,8 +321,8 @@ class CXRLGym(Env):
 
             obs_space += values
 
-        self.node.get_logger().info(f'Observation space: {obs_space}')
-        self.node.get_logger().info('Observation space size: ' + str(len(obs_space)))
+        self.node.get_logger().debug(f'Observation space: {obs_space}')
+        self.node.get_logger().debug('Observation space size: ' + str(len(obs_space)))
         return obs_space
 
     def reset(
@@ -354,8 +354,7 @@ class CXRLGym(Env):
         self.current_episode += 1
         self.current_step = 0
         super().reset(seed=seed)
-        result = self.reset_env()
-        self.node.get_logger().info(result)
+        self.reset_env()
 
         state = self.get_observation()
 
@@ -378,7 +377,7 @@ class CXRLGym(Env):
         raise NotImplementedError()
 
     def action_masks(self) -> npt.NDArray[np.int8]:
-        self.node.get_logger().info('Creating action masks...')
+        self.node.get_logger().debug('Creating action masks...')
         while self.robot_locked:
             if self.shutdown:
                 return np.zeros((self.n_actions), dtype=np.int8)
@@ -386,7 +385,7 @@ class CXRLGym(Env):
         self.robot_locked = True
         success, self.next_robot = self.get_free_robot()
         if not success:
-            self.node.get_logger().info('get_free_robot aborted, unlocking robot selection...')
+            self.node.get_logger().debug('get_free_robot aborted, unlocking robot selection...')
             self.robot_locked = False
             return np.zeros((self.n_actions), dtype=np.int8)
         self.executable_actions_dicts_for_robot[self.next_robot] = (
@@ -631,7 +630,7 @@ class CXRLGym(Env):
         list[str]
             A list of action strings for the RL environment.
         """
-        self.node.get_logger().info('Generating action space...')
+        self.node.get_logger().debug('Generating action space...')
         action_space = []
 
         # Step 1: Add predefined actions
@@ -786,7 +785,7 @@ class CXRLGym(Env):
             The populated response containing the selected action ID.
 
         """
-        self.node.get_logger().info('Selecting action...')
+        self.node.get_logger().debug('Selecting action...')
 
         observation_ids = [self.get_id(pred.name, pred.params) for pred in request.observations]
         observation = self.get_observation_encoding_fron_ids(observation_ids)
@@ -848,9 +847,9 @@ class CXRLGym(Env):
         """
         goal_handle = future.result()
         if not goal_handle.accepted:
-            self.node.get_logger().info('reset_env rejected')
+            self.node.get_logger().debug('reset_env rejected')
             return
-        self.node.get_logger().info('reset_env accepted')
+        self.node.get_logger().debug('reset_env accepted')
         self.reset_env_goal_handle = goal_handle
         self.reset_env_get_result_future = goal_handle.get_result_async()
         self.reset_env_get_result_future.add_done_callback(self.reset_env_get_result_callback)
@@ -865,7 +864,7 @@ class CXRLGym(Env):
                 The future containing the action result.
 
         """
-        self.node.get_logger().info('Result for reset_env received')
+        self.node.get_logger().debug('Result for reset_env received')
         self.reset_env_result = future.result().result
 
     def reset_env_feedback_callback(self, feedback_msg: ResetEnv.Feedback) -> None:
@@ -879,7 +878,7 @@ class CXRLGym(Env):
 
         """
         feedback = feedback_msg.feedback.feedback
-        self.node.get_logger().info(feedback)
+        self.node.get_logger().debug(feedback)
 
     def reset_env_cancel_done(self, future: Future) -> None:
         """
@@ -893,9 +892,9 @@ class CXRLGym(Env):
         """
         cancel_response = future.result()
         if len(cancel_response.goals_canceling) > 0:
-            self.node.get_logger().info('reset_env canceled')
+            self.node.get_logger().debug('reset_env canceled')
         else:
-            self.node.get_logger().info('Failed to cancel reset_env!')
+            self.node.get_logger().error('Failed to cancel reset_env!')
 
     def get_free_robot(self) -> tuple[bool, str]:
         """
@@ -942,9 +941,9 @@ class CXRLGym(Env):
         """
         goal_handle = future.result()
         if not goal_handle.accepted:
-            self.node.get_logger().info('get_free_robot rejected')
+            self.node.get_logger().debug('get_free_robot rejected')
             return
-        self.node.get_logger().info('get_free robot accepted')
+        self.node.get_logger().debug('get_free robot accepted')
         self.get_free_robot_goal_handle = goal_handle
         self.get_free_robot_get_result_future = goal_handle.get_result_async()
         self.get_free_robot_get_result_future.add_done_callback(
@@ -961,7 +960,7 @@ class CXRLGym(Env):
                 The future containing the action result.
 
         """
-        self.node.get_logger().info('Result for get_free_robot received')
+        self.node.get_logger().debug('Result for get_free_robot received')
         self.get_free_robot_result = future.result().result
 
     def get_free_robot_feedback_callback(self, feedback_msg: GetFreeRobot.Feedback) -> None:
@@ -975,7 +974,7 @@ class CXRLGym(Env):
 
         """
         feedback = feedback_msg.feedback.feedback
-        self.node.get_logger().info(feedback)
+        self.node.get_logger().debug(feedback)
 
     def get_free_robot_cancel_done(self, future: Future) -> None:
         """
@@ -989,9 +988,9 @@ class CXRLGym(Env):
         """
         cancel_response = future.result()
         if len(cancel_response.goals_canceling) > 0:
-            self.node.get_logger().info('get_free_robot canceled')
+            self.node.get_logger().debug('get_free_robot canceled')
         else:
-            self.node.get_logger().info('Failed to cancel get_free_robot!')
+            self.node.get_logger().error('Failed to cancel get_free_robot!')
 
     def action_selection_goal_response_callback(self, future: Future, robot: str) -> None:
         """
@@ -1007,9 +1006,9 @@ class CXRLGym(Env):
         """
         goal_handle = future.result()
         if not goal_handle.accepted:
-            self.node.get_logger().info('Action selection rejected')
+            self.node.get_logger().debug('Action selection rejected')
             return
-        self.node.get_logger().info('Action selection accepted')
+        self.node.get_logger().debug('Action selection accepted')
         self.action_selection_goal_handles[robot] = goal_handle
         self.action_selection_get_result_futures[robot] = goal_handle.get_result_async()
         self.action_selection_get_result_futures[robot].add_done_callback(
@@ -1029,7 +1028,7 @@ class CXRLGym(Env):
 
         """
         self.action_selection_results[robot] = future.result().result
-        self.node.get_logger().info(
+        self.node.get_logger().debug(
             f'Result for action {self.action_selection_results[robot].action_id} received'
         )
 
@@ -1053,12 +1052,12 @@ class CXRLGym(Env):
         feedback = feedback_msg.feedback.feedback
         if feedback == 'Action selection fact asserted':
             self.robot_locked = False
-            self.node.get_logger().info(
+            self.node.get_logger().debug(
                 f'Action selection fact for {robot} asserted, \
                 unlocking robot selection...'
             )
             return
-        self.node.get_logger().info(feedback)
+        self.node.get_logger().debug(feedback)
 
     def action_selection_cancel_done(self, future: Future, robot: str) -> None:
         """
@@ -1074,9 +1073,9 @@ class CXRLGym(Env):
         """
         cancel_response = future.result()
         if len(cancel_response.goals_canceling) > 0:
-            self.node.get_logger().info(f'Action selection for {robot} canceled')
+            self.node.get_logger().debug(f'Action selection for {robot} canceled')
         else:
-            self.node.get_logger().info(f'Failed to cancel action selection for {robot}!')
+            self.node.get_logger().error(f'Failed to cancel action selection for {robot}!')
 
     """
             ===HELPER-FUNCTIONS===
