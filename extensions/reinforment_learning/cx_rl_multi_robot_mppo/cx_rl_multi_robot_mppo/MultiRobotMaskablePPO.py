@@ -337,7 +337,8 @@ class MultiRobotMaskablePPO(MaskablePPO):
             if use_masking:
                 action_masks = get_action_masks(env)
                 if np.sum(action_masks) == 0:
-                    action_masks[0] = 1
+                    action_masks[0, :] = 0
+                    action_masks[0, 0] = 1
                 actions, values, log_probs = self.policy(obs_tensor, action_masks=action_masks)
                 actions = actions.cpu().numpy()
             else:
