@@ -64,7 +64,8 @@ class CXRLGym(Env):
     Parameters
     ----------
       node (rclpy.node.Node): ROS 2 node used to create service and action clients.
-      mode (str): Reinforcement learning mode (e.g., "train" or "eval").
+      mode (str): Reinforcement learning mode (e.g., "TRAINING" or "EXECUTION").
+
     """
 
     def __init__(self, node: Node, mode: str):
@@ -82,7 +83,7 @@ class CXRLGym(Env):
 
         # Helper function to prepend the node name to topic/service names
         def prefixed(name: str) -> str:
-            return f"{self.node_name_prefix}/{name}"
+            return f'{self.node_name_prefix}/{name}'
 
         # Service clients
         self.end_training_client = self.node.create_client(EndTraining, prefixed('end_training'))
@@ -629,6 +630,7 @@ class CXRLGym(Env):
         -------
         list[str]
             A list of action strings for the RL environment.
+
         """
         self.node.get_logger().debug('Generating action space...')
         action_space = []
@@ -919,7 +921,7 @@ class CXRLGym(Env):
             self.get_free_robot_goal_response_callback
         )
         while self.get_free_robot_result is None:
-            if self.shutdown == True:
+            if self.shutdown is True:
                 if self.get_free_robot_goal_handle and self.get_free_robot_goal_handle.is_active:
                     self.get_free_robot_goal_handle.cancel_goal_async()
                 return False, ''
@@ -1147,6 +1149,7 @@ class CXRLGym(Env):
         dict
             A mapping from entity names (predicates or actions) to dictionaries
             of parameter names and types.
+
         """
         entities = {}
         param_counter = 0

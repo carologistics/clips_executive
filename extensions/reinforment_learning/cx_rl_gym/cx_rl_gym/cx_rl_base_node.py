@@ -18,6 +18,7 @@ import os
 from threading import Thread
 
 from bondpy import bondpy
+from cx_rl_gym import CXRLGym
 from lifecycle_msgs.msg import State
 import rclpy
 from rclpy.callback_groups import ReentrantCallbackGroup
@@ -28,7 +29,12 @@ from stable_baselines3.common.monitor import Monitor
 
 
 class CXRLBaseNode(LifecycleNode):
-    """Base class for RL nodes: handles environment and general RL setup, as well as Lifecycle and Bond features."""
+    """
+    Base class for RL nodes.
+
+    Handles environment and general RL setup, as well as
+    Lifecycle and Bond features.
+    """
 
     def __init__(self, node_name='cx_rl_node'):
         super().__init__(node_name)
@@ -144,7 +150,6 @@ class CXRLBaseNode(LifecycleNode):
 
     def set_dirs(self):
         storage_path = self.get_parameter('storage_dir').value
-        self.get_logger().info(f"{storage_path}")
         self.save_dir = os.path.join(storage_path, 'cx_rl_data', 'trained_agents')
         self.log_dir = os.path.join(storage_path, 'cx_rl_data', 'logs')
         self.checkpoint_dir = os.path.join(storage_path, 'checkpoint_agents')
@@ -166,16 +171,24 @@ class CXRLBaseNode(LifecycleNode):
         return self.env
 
     def set_model(self):
-        """Implemented in subclass: Called on activation to load a model, store it to self.model"""
+        """
+        Load the model on activation and store it in self.model.
+
+        Implemented in subclass.
+        """
         raise NotImplementedError('Subclasses must implement set_model()')
 
     def run_training(self):
-        """Implemented in subclass: Called in separate thread, if rl_mode is set to 'TRAINING'."""
+        """
+        Run the training loop in a separate thread if rl_mode is 'TRAINING'.
+
+        Implemented in subclass.
+        """
         raise NotImplementedError('Subclasses must implement run_training()')
 
     def create_bond(self):
         if self.bond_heartbeat_period > 0.0:
-            self.get_logger().info(f"Creating bond ({self.get_name()}) to lifecycle manager")
+            self.get_logger().info(f'Creating bond ({self.get_name()}) to lifecycle manager')
             self.bond = bondpy.Bond(self.get_name(), node=self)
             self.bond.start()
             self.bond.set_heartbeat_period(self.bond_heartbeat_period)
@@ -183,7 +196,7 @@ class CXRLBaseNode(LifecycleNode):
 
     def destroy_bond(self):
         if getattr(self, 'bond', None):
-            self.get_logger().info(f"Destroying bond ({self.get_name()})")
+            self.get_logger().info(f'Destroying bond ({self.get_name()})')
             self.bond.break_bond()
             self.bond = None
 
