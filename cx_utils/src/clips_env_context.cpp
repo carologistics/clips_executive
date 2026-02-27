@@ -81,77 +81,77 @@ CLIPSLogger::~CLIPSLogger()
     free(component_);
   }
 }
-
 void CLIPSLogger::log(const char * logical_name, const char * str)
 {
-  size_t i = 0;
-  while (str[i]) {
-    i++;
+  if (!str || str[0] == '\0') {
+    return;
   }
-  if (str[i - 1] == '\n') {
-    if (i > 1) {
-      buffer_ += str;
+
+  // Always buffer raw text only
+  buffer_ += str;
+
+  size_t pos;
+  while ((pos = buffer_.find('\n')) != std::string::npos) {
+    // Extract one complete line (without newline)
+    std::string line = buffer_.substr(0, pos);
+
+    // Remove processed part (+ newline)
+    buffer_.erase(0, pos + 1);
+
+    // Ignore stdin
+    if (strcmp(logical_name, clips::STDIN) == 0) {
+      continue;
     }
+
+    // ------------------------
+    // Apply color at emit time
+    // ------------------------
+    std::string colored_line = line;
+
     if (strcmp(logical_name, "red") == 0) {
-      RCLCPP_INFO(this->logger_, (std::string(cx::RED) + terminal_buffer_ + cx::RESET).c_str());
+      colored_line = std::string(cx::RED) + line + cx::RESET;
     } else if (strcmp(logical_name, "bold") == 0) {
-      RCLCPP_INFO(this->logger_, (std::string(cx::BOLD) + terminal_buffer_ + cx::RESET).c_str());
+      colored_line = std::string(cx::BOLD) + line + cx::RESET;
     } else if (strcmp(logical_name, "green") == 0) {
-      RCLCPP_INFO(this->logger_, (std::string(cx::GREEN) + terminal_buffer_ + cx::RESET).c_str());
+      colored_line = std::string(cx::GREEN) + line + cx::RESET;
     } else if (strcmp(logical_name, "yellow") == 0) {
-      RCLCPP_INFO(this->logger_, (std::string(cx::YELLOW) + terminal_buffer_ + cx::RESET).c_str());
+      colored_line = std::string(cx::YELLOW) + line + cx::RESET;
     } else if (strcmp(logical_name, "blue") == 0) {
-      RCLCPP_INFO(this->logger_, (std::string(cx::BLUE) + terminal_buffer_ + cx::RESET).c_str());
+      colored_line = std::string(cx::BLUE) + line + cx::RESET;
     } else if (strcmp(logical_name, "magenta") == 0) {
-      RCLCPP_INFO(this->logger_, (std::string(cx::MAGENTA) + terminal_buffer_ + cx::RESET).c_str());
+      colored_line = std::string(cx::MAGENTA) + line + cx::RESET;
     } else if (strcmp(logical_name, "cyan") == 0) {
-      RCLCPP_INFO(this->logger_, (std::string(cx::CYAN) + terminal_buffer_ + cx::RESET).c_str());
+      colored_line = std::string(cx::CYAN) + line + cx::RESET;
     } else if (strcmp(logical_name, "white") == 0) {
-      RCLCPP_INFO(this->logger_, (std::string(cx::WHITE) + terminal_buffer_ + cx::RESET).c_str());
-    } else if (
+      colored_line = std::string(cx::WHITE) + line + cx::RESET;
+    }
+
+    // ------------------------
+    // ROS logging level routing
+    // ------------------------
+    if (
       strcmp(logical_name, "debug") == 0 || strcmp(logical_name, "logdebug") == 0 ||
       (stdout_to_debug_ && strcmp(logical_name, clips::STDOUT) == 0)) {
-      RCLCPP_DEBUG(this->logger_, terminal_buffer_.c_str());
+      RCLCPP_DEBUG(this->logger_, "%s", colored_line.c_str());
+
     } else if (
       strcmp(logical_name, "warn") == 0 || strcmp(logical_name, "logwarn") == 0 ||
       strcmp(logical_name, clips::STDWRN) == 0) {
-      RCLCPP_WARN(this->logger_, terminal_buffer_.c_str());
+      RCLCPP_WARN(this->logger_, "%s", colored_line.c_str());
+
     } else if (
       strcmp(logical_name, "error") == 0 || strcmp(logical_name, "logerror") == 0 ||
       strcmp(logical_name, clips::STDERR) == 0) {
-      RCLCPP_ERROR(this->logger_, terminal_buffer_.c_str());
-    } else if (strcmp(logical_name, clips::STDIN) == 0) {
-      // ignored
-    } else {
-      RCLCPP_INFO(this->logger_, terminal_buffer_.c_str());
-    }
-    // log any output to a dedicated clips log file
-    clips_logger_->info(buffer_.c_str());
-    clips_logger_->flush();
-    buffer_.clear();
-    terminal_buffer_.clear();
+      RCLCPP_ERROR(this->logger_, "%s", colored_line.c_str());
 
-  } else {
-    if (strcmp(logical_name, "red") == 0) {
-      terminal_buffer_ += std::string(cx::RED) + str + cx::RESET;
-    } else if (strcmp(logical_name, "bold") == 0) {
-      terminal_buffer_ += std::string(cx::BOLD) + str + cx::RESET;
-    } else if (strcmp(logical_name, "green") == 0) {
-      terminal_buffer_ += std::string(cx::GREEN) + str + cx::RESET;
-    } else if (strcmp(logical_name, "yellow") == 0) {
-      terminal_buffer_ += std::string(cx::YELLOW) + str + cx::RESET;
-    } else if (strcmp(logical_name, "blue") == 0) {
-      terminal_buffer_ += std::string(cx::BLUE) + str + cx::RESET;
-    } else if (strcmp(logical_name, "magenta") == 0) {
-      terminal_buffer_ += std::string(cx::MAGENTA) + str + cx::RESET;
-    } else if (strcmp(logical_name, "cyan") == 0) {
-      terminal_buffer_ += std::string(cx::CYAN) + str + cx::RESET;
-    } else if (strcmp(logical_name, "white") == 0) {
-      terminal_buffer_ += std::string(cx::WHITE) + str + cx::RESET;
     } else {
-      terminal_buffer_ += str;
+      RCLCPP_INFO(this->logger_, "%s", colored_line.c_str());
     }
-    buffer_ += str;
+
+    // ------------------------
+    // File logging (plain text)
+    // ------------------------
+    clips_logger_->info("{}", line);
   }
 }
 
