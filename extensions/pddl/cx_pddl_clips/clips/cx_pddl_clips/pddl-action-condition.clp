@@ -24,7 +24,7 @@
   (not (pddl-service-request-meta (service ?s) (meta ?action-id)))
   =>
   (bind ?new-req (ros-msgs-create-request ?type))
-  (bind ?action-msg (ros-msgs-create-message "cx_pddl_msgs/msg/Fluent"))
+  (bind ?action-msg (ros-msgs-create-message "cx_pddl_interfaces/msg/Fluent"))
   (ros-msgs-set-field ?action-msg "pddl_instance" ?instance)
   (ros-msgs-set-field ?action-msg "name" ?name)
   (ros-msgs-set-field ?action-msg "args" ?params)

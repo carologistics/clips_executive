@@ -34,11 +34,11 @@
 )
 
 (defrule plan-start-status-checks
-  ?gr-f <- (pddl-msgs-plan-temporal-goal-response (server ?server) (client-goal-handle-ptr ?cgh-ptr))
+  ?gr-f <- (pddl-interfaces-plan-temporal-goal-response (server ?server) (client-goal-handle-ptr ?cgh-ptr))
   ?pc-f <- (pddl-planner-call (status PENDING))
   =>
-  (bind ?status (pddl-msgs-plan-temporal-client-goal-handle-get-status ?cgh-ptr))
-  (bind ?uuid (pddl-msgs-plan-temporal-client-goal-handle-get-goal-id ?cgh-ptr))
+  (bind ?status (pddl-interfaces-plan-temporal-client-goal-handle-get-status ?cgh-ptr))
+  (bind ?uuid (pddl-interfaces-plan-temporal-client-goal-handle-get-goal-id ?cgh-ptr))
   (modify ?pc-f (uuid ?uuid)
     (status (client-status-to-sym ?status))
     (client-goal-handle ?cgh-ptr)
@@ -50,7 +50,7 @@
   ?pc <- (pddl-planner-call (status ?status&: (member$ ?status (create$ UNKNOWN ACCEPTED EXECUTING CANCELING))) (client-goal-handle ?cgh-ptr))
   (time ?) ; poll the update
   =>
-  (bind ?new-status (pddl-msgs-plan-temporal-client-goal-handle-get-status ?cgh-ptr))
+  (bind ?new-status (pddl-interfaces-plan-temporal-client-goal-handle-get-status ?cgh-ptr))
   (bind ?new-status (client-status-to-sym ?new-status))
   (if (neq ?status ?new-status) then
     (modify ?pc (status ?new-status))
@@ -59,25 +59,25 @@
 
 (defrule plan-get-result
   ?pc-f <- (pddl-planner-call (client-goal-handle ?cgh-ptr) (goal ?goal-ptr) (uuid ?goal-id) (context ?context))
-  ?wr-f <- (pddl-msgs-plan-temporal-wrapped-result (server "/pddl_manager/temp_plan") (goal-id ?goal-id) (code SUCCEEDED) (result-ptr ?res-ptr))
+  ?wr-f <- (pddl-interfaces-plan-temporal-wrapped-result (server "/pddl_manager/temp_plan") (goal-id ?goal-id) (code SUCCEEDED) (result-ptr ?res-ptr))
   =>
-  (bind ?plan-found (pddl-msgs-plan-temporal-result-get-field ?res-ptr "success"))
+  (bind ?plan-found (pddl-interfaces-plan-temporal-result-get-field ?res-ptr "success"))
   (printout green "planning done" crlf)
   (bind ?plan-id (gensym*))
   (bind ?instance nil)
   (if ?plan-found then
-    (bind ?plan (pddl-msgs-plan-temporal-result-get-field ?res-ptr "actions"))
+    (bind ?plan (pddl-interfaces-plan-temporal-result-get-field ?res-ptr "actions"))
     (foreach ?action ?plan
-      (bind ?instance (sym-cat (pddl-msgs-timed-plan-action-get-field ?action "pddl_instance")))
-      (bind ?name (sym-cat (pddl-msgs-timed-plan-action-get-field ?action "name")))
-      (bind ?args (pddl-msgs-timed-plan-action-get-field ?action "args"))
+      (bind ?instance (sym-cat (pddl-interfaces-timed-plan-action-get-field ?action "pddl_instance")))
+      (bind ?name (sym-cat (pddl-interfaces-timed-plan-action-get-field ?action "name")))
+      (bind ?args (pddl-interfaces-timed-plan-action-get-field ?action "args"))
       (bind ?arg-syms (create$))
       (foreach ?arg ?args
         (bind ?arg-syms (create$ ?arg-syms (sym-cat ?arg)))
       )
-      (bind ?equiv_class (pddl-msgs-timed-plan-action-get-field ?action "equiv_class"))
-      (bind ?ps-time (pddl-msgs-timed-plan-action-get-field ?action "start_time"))
-      (bind ?p-duration (pddl-msgs-timed-plan-action-get-field ?action "duration"))
+      (bind ?equiv_class (pddl-interfaces-timed-plan-action-get-field ?action "equiv_class"))
+      (bind ?ps-time (pddl-interfaces-timed-plan-action-get-field ?action "start_time"))
+      (bind ?p-duration (pddl-interfaces-timed-plan-action-get-field ?action "duration"))
       (assert (pddl-action (id (gensym*)) (plan ?plan-id) (instance ?instance) (name ?name) (params ?arg-syms)
                    (plan-order-class ?equiv_class) (planned-start-time ?ps-time) (planned-duration ?p-duration)))
       (assert (pddl-plan (id ?plan-id) (instance ?instance) (context ?context)))
@@ -85,9 +85,9 @@
    else
     (printout red "plan not found!" crlf)
   )
-  (pddl-msgs-plan-temporal-result-destroy ?res-ptr)
-  (pddl-msgs-plan-temporal-goal-destroy ?goal-ptr)
-  (pddl-msgs-plan-temporal-client-goal-handle-destroy ?cgh-ptr)
+  (pddl-interfaces-plan-temporal-result-destroy ?res-ptr)
+  (pddl-interfaces-plan-temporal-goal-destroy ?goal-ptr)
+  (pddl-interfaces-plan-temporal-client-goal-handle-destroy ?cgh-ptr)
   (retract ?pc-f)
   (retract ?wr-f)
 )

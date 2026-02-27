@@ -25,7 +25,7 @@
   (bind ?fluent-add-msgs (create$))
   (bind ?fluent-rm-msgs (create$))
   (do-for-all-facts ((?ppf pddl-fluent-change)) (and (eq ?ppf:state PENDING) (eq ?ppf:instance ?instance))
-    (bind ?fluent-msg (ros-msgs-create-message "cx_pddl_msgs/msg/Fluent"))
+    (bind ?fluent-msg (ros-msgs-create-message "cx_pddl_interfaces/msg/Fluent"))
     (ros-msgs-set-field ?fluent-msg "pddl_instance" ?ppf:instance)
     (ros-msgs-set-field ?fluent-msg "name" ?ppf:name)
     (ros-msgs-set-field ?fluent-msg "args" ?ppf:params)

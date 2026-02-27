@@ -23,7 +23,7 @@
   =>
   (bind ?function-msgs (create$))
   (do-for-all-facts ((?ppf pddl-numeric-fluent-change)) (and (eq ?ppf:state PENDING) (eq ?ppf:instance ?instance))
-    (bind ?function-msg (ros-msgs-create-message "cx_pddl_msgs/msg/Function"))
+    (bind ?function-msg (ros-msgs-create-message "cx_pddl_interfaces/msg/Function"))
     (ros-msgs-set-field ?function-msg "pddl_instance" ?ppf:instance)
     (ros-msgs-set-field ?function-msg "name" ?ppf:name)
     (ros-msgs-set-field ?function-msg "args" ?ppf:params)

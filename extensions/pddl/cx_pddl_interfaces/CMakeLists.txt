@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16...3.28)
-project(cx_pddl_msgs)
+project(cx_pddl_interfaces)
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
@@ -23,7 +23,6 @@ set(SERVICES
     "srv/GetPredicates.srv"
     "srv/GetTypeObjects.srv"
     "srv/AddPddlInstance.srv"
-    "srv/AddFluent.srv"
     "srv/AddObjects.srv"
     "srv/RemoveObjects.srv"
     "srv/RemoveFluents.srv"

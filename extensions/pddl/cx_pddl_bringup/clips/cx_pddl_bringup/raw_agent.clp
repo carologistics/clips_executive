@@ -31,7 +31,7 @@
         (bind ?service-type (nth$ (+ ?index 1) ?services))
         (ros-msgs-create-client
             (str-cat "/pddl_manager" "/" ?service-name)
-            (str-cat "cx_pddl_msgs/srv/" ?service-type)
+            (str-cat "cx_pddl_interfaces/srv/" ?service-type)
         )
         (bind ?index (+ ?index 2))
     )
@@ -42,7 +42,7 @@
     (not (pddl-planning-client-created))
     (pddl-services-loaded)
     =>
-    (cx-pddl-msgs-plan-temporal-create-client (str-cat "/pddl_manager" "/temp_plan"))
+    (cx-pddl-interfaces-plan-temporal-create-client (str-cat "/pddl_manager" "/temp_plan"))
     (assert (pddl-planning-client-created))
 )
 
@@ -167,12 +167,12 @@
     (bind ?new-req (ros-msgs-create-request ?type))
     (bind ?fluent-goal-msgs (create$))
 
-    (bind ?fluent-msg (ros-msgs-create-message "cx_pddl_msgs/msg/Fluent"))
+    (bind ?fluent-msg (ros-msgs-create-message "cx_pddl_interfaces/msg/Fluent"))
     (ros-msgs-set-field ?fluent-msg "pddl_instance" "test")
     (ros-msgs-set-field ?fluent-msg "name" "on")
     (ros-msgs-set-field ?fluent-msg "args" (create$ "a" "b"))
     (bind ?fluent-goal-msgs (create$ ?fluent-goal-msgs ?fluent-msg))
-    (bind ?fluent-msg (ros-msgs-create-message "cx_pddl_msgs/msg/Fluent"))
+    (bind ?fluent-msg (ros-msgs-create-message "cx_pddl_interfaces/msg/Fluent"))
     (ros-msgs-set-field ?fluent-msg "pddl_instance" "test")
     (ros-msgs-set-field ?fluent-msg "name" "on")
     (ros-msgs-set-field ?fluent-msg "args" (create$ "b" "c"))
@@ -213,34 +213,34 @@
 
 
 (defrule pddl-plan
-    (cx-pddl-msgs-plan-temporal-client (server ?server&:(eq ?server "/pddl_manager/temp_plan")))
+    (cx-pddl-interfaces-plan-temporal-client (server ?server&:(eq ?server "/pddl_manager/temp_plan")))
     (not (planned))
     (pddl-goals-set)
     =>
     (printout green "Start planning" crlf)
-    (bind ?goal (cx-pddl-msgs-plan-temporal-goal-create))
-    (cx-pddl-msgs-plan-temporal-goal-set-field ?goal "pddl_instance" "test")
-    (cx-pddl-msgs-plan-temporal-goal-set-field ?goal "goal_instance" "active-goal")
-    (cx-pddl-msgs-plan-temporal-send-goal ?goal ?server)
+    (bind ?goal (cx-pddl-interfaces-plan-temporal-goal-create))
+    (cx-pddl-interfaces-plan-temporal-goal-set-field ?goal "pddl_instance" "test")
+    (cx-pddl-interfaces-plan-temporal-goal-set-field ?goal "goal_instance" "active-goal")
+    (cx-pddl-interfaces-plan-temporal-send-goal ?goal ?server)
     (assert (planned))
 )
 
 (defrule pddl-plan-result
-    ?wr-f <- (cx-pddl-msgs-plan-temporal-wrapped-result (server "/pddl_manager/temp_plan") (code SUCCEEDED) (result-ptr ?res-ptr))
+    ?wr-f <- (cx-pddl-interfaces-plan-temporal-wrapped-result (server "/pddl_manager/temp_plan") (code SUCCEEDED) (result-ptr ?res-ptr))
     =>
-    (bind ?plan-found (cx-pddl-msgs-plan-temporal-result-get-field ?res-ptr "success"))
+    (bind ?plan-found (cx-pddl-interfaces-plan-temporal-result-get-field ?res-ptr "success"))
     (printout green "planning done" crlf)
     (if ?plan-found then
-        (bind ?plan (cx-pddl-msgs-plan-temporal-result-get-field ?res-ptr "actions"))
+        (bind ?plan (cx-pddl-interfaces-plan-temporal-result-get-field ?res-ptr "actions"))
         (foreach ?action ?plan
-        (bind ?name (sym-cat (cx-pddl-msgs-timed-plan-action-get-field ?action "name")))
-        (bind ?args (cx-pddl-msgs-timed-plan-action-get-field ?action "args"))
-        (bind ?ps-time (cx-pddl-msgs-timed-plan-action-get-field ?action "start_time"))
-        (bind ?p-duration (cx-pddl-msgs-timed-plan-action-get-field ?action "duration"))
+        (bind ?name (sym-cat (cx-pddl-interfaces-timed-plan-action-get-field ?action "name")))
+        (bind ?args (cx-pddl-interfaces-timed-plan-action-get-field ?action "args"))
+        (bind ?ps-time (cx-pddl-interfaces-timed-plan-action-get-field ?action "start_time"))
+        (bind ?p-duration (cx-pddl-interfaces-timed-plan-action-get-field ?action "duration"))
         (printout t ?ps-time "(" ?p-duration ")   " ?name ?args crlf)
         )
     else
         (printout red "plan not found!" crlf)
     )
-    (cx-pddl-msgs-plan-temporal-result-destroy ?res-ptr)
+    (cx-pddl-interfaces-plan-temporal-result-destroy ?res-ptr)
 )

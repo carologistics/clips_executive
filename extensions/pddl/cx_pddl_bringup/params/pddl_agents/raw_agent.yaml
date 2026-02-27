@@ -27,6 +27,6 @@
       load: ["clips/cx_pddl_bringup/raw_agent.clp"]
 
     plan_temporal_action:
-      plugin: "cx::CXCxPddlMsgsPlanTemporalPlugin"
+      plugin: "cx::CXCxPddlInterfacesPlanTemporalPlugin"
     timed_plan_action_msg:
-      plugin: "cx::CXCxPddlMsgsTimedPlanActionPlugin"
+      plugin: "cx::CXCxPddlInterfacesTimedPlanActionPlugin"
