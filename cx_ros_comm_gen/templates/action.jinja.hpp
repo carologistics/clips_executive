@@ -130,6 +130,10 @@ private:
 
   void server_goal_handle_destroy(void *handle_ptr);
 
+void process_cancel_response(
+    clips::Environment *env, const std::string &server_name,
+    const action_msgs::srv::CancelGoal::Response::SharedPtr &response);
+
   void server_goal_handle_abort(void *goal_handle_raw, void *result_raw, clips::UDFContext *udfc);
   void server_goal_handle_succeed(void *goal_handle_raw, void *result_raw, clips::UDFContext *udfc);
   void server_goal_handle_canceled(void *goal_handle_raw, void *result_raw, clips::UDFContext *udfc);

@@ -167,6 +167,20 @@ bool {{name_camel}}::clips_env_destroyed(std::shared_ptr<clips::Environment> &en
     RCLCPP_WARN(*logger_,
               "{{name_kebab}}-accepted-goal can not be undefined");
   }
+  curr_tmpl = clips::FindDeftemplate(env.get(), "{{name_kebab}}-cancel-goal-response");
+  if(curr_tmpl) {
+    clips::Undeftemplate(curr_tmpl, env.get());
+  } else {
+    RCLCPP_WARN(*logger_,
+              "{{name_kebab}}-cancel-goal-response can not be undefined");
+  }
+  curr_tmpl = clips::FindDeftemplate(env.get(), "{{name_kebab}}-cancel-goal-entry");
+  if(curr_tmpl) {
+    clips::Undeftemplate(curr_tmpl, env.get());
+  } else {
+    RCLCPP_WARN(*logger_,
+              "{{name_kebab}}-cancel-goal-entry can not be undefined");
+  }
   return true;
 }
 
@@ -468,6 +482,155 @@ bool {{name_camel}}::clips_env_init(std::shared_ptr<clips::Environment> &env) {
     },
     "server_goal_handle_destroy", this);
 
+    fun_name = "{{name_kebab}}-client-cancel-goal";
+    function_names_.insert(fun_name);
+    clips::AddUDF(
+    env.get(), fun_name.c_str(), "v", 2, 2, ";sy;e",
+    [](clips::Environment *env, clips::UDFContext *udfc,
+    clips::UDFValue * /*out*/) {
+      auto *instance = static_cast<{{name_camel}} *>(udfc->context);
+      clips::UDFValue goal_handle_val, server_name_val;
+      using namespace clips;
+
+      clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &server_name_val);
+      clips::UDFNthArgument(udfc, 2, EXTERNAL_ADDRESS_BIT, &goal_handle_val);
+
+      std::string server_name = server_name_val.lexemeValue->contents;
+
+      std::scoped_lock lock{instance->map_mtx_};
+
+      auto gh_it = instance->client_goal_handles_.find(
+          goal_handle_val.externalAddressValue->contents);
+      if (gh_it == instance->client_goal_handles_.end()) {
+        RCLCPP_ERROR(*(instance->logger_),
+                     "client-cancel-goal: Unknown goal handle");
+        clips::UDFThrowError(udfc);
+        return;
+      }
+
+      auto goal_handle = gh_it->second;
+      auto context = CLIPSEnvContext::get_context(env);
+      std::string env_name = context->env_name_;
+
+      instance->clients_[env_name][server_name]
+          ->async_cancel_goal(goal_handle,
+            [env,instance, server_name](auto response) {
+              instance->process_cancel_response(env,server_name ,response);
+            });
+    }, "client_cancel_goal", this);
+
+    fun_name = "{{name_kebab}}-client-cancel-all-goals";
+    function_names_.insert(fun_name);
+    clips::AddUDF(
+    env.get(), fun_name.c_str(), "v", 1, 1, ";sy",
+    [](clips::Environment *env, clips::UDFContext *udfc,
+    clips::UDFValue * /*out*/) {
+        auto *instance = static_cast<{{name_camel}} *>(udfc->context);
+        clips::UDFValue server_name_val;
+        using namespace clips;
+
+        clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &server_name_val);
+        std::string server_name = server_name_val.lexemeValue->contents;
+
+        auto context = CLIPSEnvContext::get_context(env);
+        std::string env_name = context->env_name_;
+
+        instance->clients_[env_name][server_name]
+            ->async_cancel_all_goals(
+              [env,instance, server_name](auto response) {
+              instance->process_cancel_response(env,server_name ,response);
+              });
+        },
+    "client_cancel_all_goals", this);
+
+    fun_name = "{{name_kebab}}-client-cancel-goals-before";
+    function_names_.insert(fun_name);
+    clips::AddUDF(
+    env.get(), fun_name.c_str(), "v", 2, 2, ";sy;f",
+    [](clips::Environment *env, clips::UDFContext *udfc,
+    clips::UDFValue * /*out*/) {
+        auto *instance = static_cast<{{name_camel}} *>(udfc->context);
+        clips::UDFValue server_name_val, stamp_val;
+        using namespace clips;
+
+        clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &server_name_val);
+        clips::UDFNthArgument(udfc, 2, FLOAT_BIT, &stamp_val);
+
+        std::string server_name = server_name_val.lexemeValue->contents;
+        double stamp_seconds = stamp_val.floatValue->contents;
+
+        rclcpp::Time stamp(
+            static_cast<int64_t>(stamp_seconds * 1e9));
+
+        auto context = CLIPSEnvContext::get_context(env);
+        std::string env_name = context->env_name_;
+
+        instance->clients_[env_name][server_name]
+            ->async_cancel_goals_before(
+              stamp,
+              [env,instance, server_name](auto response) {
+              instance->process_cancel_response(env,server_name ,response);
+              });
+    },
+    "client_cancel_goals_before", this);
+
+    fun_name = "{{name_kebab}}-client-goal-handle-stop-callbacks";
+    function_names_.insert(fun_name);
+
+    clips::AddUDF(
+      env.get(), fun_name.c_str(), "v", 2, 2, ";sy;e",
+      [](clips::Environment *env,
+         clips::UDFContext *udfc,
+         clips::UDFValue * /*out*/)
+      {
+        auto *instance = static_cast<{{name_camel}} *>(udfc->context);
+        using namespace clips;
+
+        clips::UDFValue goal_handle_val, server_name_val;
+
+        clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &server_name_val);
+        clips::UDFNthArgument(udfc, 2, EXTERNAL_ADDRESS_BIT, &goal_handle_val);
+
+        std::string server_name = server_name_val.lexemeValue->contents;
+
+        std::scoped_lock lock{instance->map_mtx_};
+
+        // Lookup goal handle
+        auto gh_it = instance->client_goal_handles_.find(
+            goal_handle_val.externalAddressValue->contents);
+
+        if (gh_it == instance->client_goal_handles_.end()) {
+          RCLCPP_ERROR(*(instance->logger_),
+                       "client-goal-handle-stop-callbacks: Unknown goal handle");
+          clips::UDFThrowError(udfc);
+          return;
+        }
+
+        auto goal_handle = gh_it->second;
+
+        // Determine environment
+        auto context = CLIPSEnvContext::get_context(env);
+        std::string env_name = context->env_name_;
+
+        // Lookup client
+        auto client_it =
+            instance->clients_[env_name].find(server_name);
+
+        if (client_it == instance->clients_[env_name].end()) {
+          RCLCPP_ERROR(*(instance->logger_),
+                       "client-goal-handle-stop-callbacks: Unknown server '%s'",
+                       server_name.c_str());
+          clips::UDFThrowError(udfc);
+          return;
+        }
+
+        // Stop callbacks using UUID
+        client_it->second->stop_callbacks(
+            goal_handle->get_goal_id());
+      },
+      "client_goal_handle_stop_callbacks",
+      this);
+
   // add fact templates
   clips::Build(env.get(),"(deftemplate {{name_kebab}}-client \
             (slot server (type STRING)))");
@@ -492,8 +655,19 @@ bool {{name_camel}}::clips_env_init(std::shared_ptr<clips::Environment> &env) {
             (slot server (type STRING) ) \
             (slot server-goal-handle-ptr (type EXTERNAL-ADDRESS)) \
             )");
+  clips::Build(env.get(),"(deftemplate {{name_kebab}}-cancel-goal-response \
+            (slot server (type STRING) ) \
+            (slot return-code (type SYMBOL)) \
+            (slot num-goals (type INTEGER)) \
+            )");
+  clips::Build(env.get(),"(deftemplate {{name_kebab}}-cancel-goal-entry \
+            (slot server (type STRING) ) \
+            (slot goal-id (type STRING)) \
+            (slot stamp (type FLOAT)) \
+            )");
   return true;
-}
+
+  }
 
 {% set template_part = "definition" %}
 {% set template_slots = goal_slots %}
@@ -516,6 +690,80 @@ bool {{name_camel}}::clips_env_init(std::shared_ptr<clips::Environment> &env) {
 {% set template_fun_name = "get_field_feedback" %}
 {% include 'get_field.jinja.cpp' with context %}
 {% include 'create.jinja.cpp' with context %}
+
+
+void {{name_camel}}::process_cancel_response(
+    clips::Environment *env, const std::string &server_name,
+    const action_msgs::srv::CancelGoal::Response::SharedPtr &response)
+{
+  task_queue_.push([this, env, server_name, response]() {
+
+    auto context = CLIPSEnvContext::get_context(env);
+    std::lock_guard<std::mutex> guard(context->env_mtx_);
+
+    // ---- Map return code ----
+    std::string return_code_str = "ERROR_UNKNOWN";
+
+    switch (response->return_code) {
+      case action_msgs::srv::CancelGoal::Response::ERROR_NONE:
+        return_code_str = "ERROR_NONE";
+        break;
+      case action_msgs::srv::CancelGoal::Response::ERROR_REJECTED:
+        return_code_str = "ERROR_REJECTED";
+        break;
+      case action_msgs::srv::CancelGoal::Response::ERROR_UNKNOWN_GOAL_ID:
+        return_code_str = "ERROR_UNKNOWN_GOAL_ID";
+        break;
+      case action_msgs::srv::CancelGoal::Response::ERROR_GOAL_TERMINATED:
+        return_code_str = "ERROR_GOAL_TERMINATED";
+        break;
+    }
+
+    // ---- Assert global response fact ----
+    {
+      clips::FactBuilder *fb =
+          clips::CreateFactBuilder(env,
+              "{{name_kebab}}-cancel-goal-response");
+
+      clips::FBPutSlotString(fb, "server", server_name.c_str());
+      clips::FBPutSlotSymbol(fb, "return-code",
+                             return_code_str.c_str());
+      clips::FBPutSlotInteger(fb, "num-goals",
+                              response->goals_canceling.size());
+
+      clips::FBAssert(fb);
+      clips::FBDispose(fb);
+    }
+
+    // ---- Assert one fact per canceled goal ----
+    for (const auto &goal_info : response->goals_canceling) {
+
+      clips::FactBuilder *fb =
+          clips::CreateFactBuilder(env,
+              "{{name_kebab}}-cancel-goal-entry");
+
+      clips::FBPutSlotString(fb, "server", server_name.c_str());
+
+      std::string uuid_str =
+          rclcpp_action::to_string(goal_info.goal_id.uuid);
+
+      clips::FBPutSlotString(fb, "goal-id", uuid_str.c_str());
+      double stamp =
+        static_cast<double>(goal_info.stamp.sec) +
+        static_cast<double>(goal_info.stamp.nanosec) * 1e-9;
+
+      clips::FBPutSlotFloat(fb, "stamp",
+                              stamp);
+
+      clips::FBAssert(fb);
+      clips::FBDispose(fb);
+    }
+
+  });
+
+  cv_.notify_one();
+}
+
 
 void {{name_camel}}::feedback_destroy({{message_type}}::Feedback *fb) {
   std::scoped_lock map_lock{map_mtx_};
