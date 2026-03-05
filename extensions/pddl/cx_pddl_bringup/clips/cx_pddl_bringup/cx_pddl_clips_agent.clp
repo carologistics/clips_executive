@@ -16,12 +16,12 @@
 
 ; ---------------- SETUP INSTANCE ------------------
 
-(defrule cx-pdll-clips-agent-pddl-init
+(defrule cx-pddl-clips-agent-pddl-init
 =>
   (assert (pddl-manager (node "/pddl_manager")))
 )
 
-(defrule cx-pdll-clips-agent-pddl-add-instance
+(defrule cx-pddl-clips-agent-pddl-add-instance
 " Setup PDDL instance with an active goal to plan for "
   (pddl-manager (ros-comm-init TRUE))
   =>
@@ -43,7 +43,7 @@
 )
 
 
-(defrule cx-pdll-clips-agent-select-action
+(defrule cx-pddl-clips-agent-select-action
 " Start executing the first action of the resulting plan "
   (not (plan-start ?t))
   ?pa <- (pddl-action (planned-start-time ?t) (state IDLE))
@@ -53,7 +53,7 @@
   (assert (plan-start (now)))
 )
 
-(defrule cx-pdll-clips-agent-check-action
+(defrule cx-pddl-clips-agent-check-action
 " Before executing an action check the condition to make sure it is feasible "
   (pddl-action (id ?id) (state SELECTED) (name ?name) (params $?params))
   (not (pddl-action-condition (action ?id)))
@@ -61,7 +61,7 @@
   (assert (pddl-action-condition (instance test) (action ?id)))
 )
 
-(defrule cx-pdll-clips-agent-executable-action
+(defrule cx-pddl-clips-agent-executable-action
 " Condition is satisfied, go ahead with execution "
   (plan-start ?t)
   (pddl-action-condition (action ?action-id) (state CONDITION-SAT))
@@ -70,7 +70,7 @@
   (modify ?pa (state EXECUTING) (actual-start-time (- (now) ?t)))
 )
 
-(defrule cx-pdll-clips-agent-execution-done
+(defrule cx-pddl-clips-agent-execution-done
 " After the duration has elapsed, the action is done "
   (time ?now)
   (plan-start ?t)
@@ -83,7 +83,7 @@
   (assert (pddl-action-get-effect (action ?id) (apply TRUE)))
 )
 
-(defrule cx-pdll-clips-agent-select-next-action
+(defrule cx-pddl-clips-agent-select-next-action
 " Once an action is done, select one with lowest planned start time next "
   (not (pddl-action (state EXECUTING|SELECTED)))
   (not (pddl-action-get-effect (state ~DONE)))
@@ -94,7 +94,7 @@
   (modify ?pa (state SELECTED))
 )
 
-(defrule cx-pdll-clips-agent-print-exec-times
+(defrule cx-pddl-clips-agent-print-exec-times
 " Once everything is done, print out planned vs actual times "
   (pddl-action)
   (not (pddl-action (state ~DONE)))
