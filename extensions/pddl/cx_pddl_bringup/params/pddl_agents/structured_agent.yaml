@@ -1,9 +1,9 @@
 /**:
   ros__parameters:
     autostart_node: true
-    environments: ["structured_pddl_agent"]
+    environments: ["cx_pddl_clips_agent"]
 
-    structured_pddl_agent:
+    cx_pddl_clips_agent:
       plugins: ["executive", "ros_msgs",
                 "ament_index",
                 "plan_temporal_action",

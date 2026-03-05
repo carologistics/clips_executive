@@ -1,9 +1,9 @@
 /**:
   ros__parameters:
     autostart_node: true
-    environments: ["raw_pddl_agent"]
+    environments: ["cx_bringup_raw_agent"]
 
-    raw_pddl_agent:
+    cx_bringup_raw_agent:
       plugins: ["executive", "ros_msgs",
                 "ament_index",
                 "plan_temporal_action",
@@ -28,5 +28,6 @@
 
     plan_temporal_action:
       plugin: "cx::CXCxPddlInterfacesPlanTemporalPlugin"
+
     timed_plan_action_msg:
       plugin: "cx::CXCxPddlInterfacesTimedPlanActionPlugin"
