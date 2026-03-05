@@ -14,48 +14,19 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
-(defrule structured-agent-pddl-init
-" Initiate the service clients for the pddl manager "
-  (not (pddl-services-loaded))
-  =>
-  ; create clints for all services
-  (bind ?services (create$
-      add_fluents AddFluents
-      add_pddl_instance AddPddlInstance
-      get_fluents GetFluents
-      set_goals SetGoals
-  check_action_condition CheckActionCondition
-      create_goal_instance CreateGoalInstance
-  get_action_effects GetActionEffects
-      add_fluents AddFluents
-      rm_fluents RemoveFluents
-
-  ))
-  (bind ?index 1)
-  (bind ?length (length$ ?services))
-  (while (< ?index ?length)
-      (bind ?service-name (nth$ ?index ?services))
-      (bind ?service-type (nth$ (+ ?index 1) ?services))
-      (ros-msgs-create-client
-          (str-cat "/pddl_manager" "/" ?service-name)
-          (str-cat "cx_pddl_msgs/srv/" ?service-type)
-      )
-      (bind ?index (+ ?index 2))
-  )
-  (cx-pddl-msgs-plan-temporal-create-client (str-cat "/pddl_manager" "/temp_plan"))
-  (assert (pddl-services-loaded))
-)
-
 ; ---------------- SETUP INSTANCE ------------------
+
+(defrule structured-agent-pddl-init
+=>
+  (assert (pddl-manager (node "/pddl_manager")))
+)
 
 (defrule structured-agent-pddl-add-instance
 " Setup PDDL instance with an active goal to plan for "
-  (not (pddl-loaded))
-  (pddl-services-loaded)
+  (pddl-manager (ros-comm-init TRUE))
   =>
   (bind ?share-dir (ament-index-get-package-share-directory "cx_pddl_bringup"))
   (assert
-    (pddl-manager (node "/pddl_manager"))
     (pddl-instance
       (name test)
       (domain "domain.pddl")
@@ -67,55 +38,10 @@
     (pddl-goal-fluent (instance test) (goal active-goal) (name on) (params a b))
     (pddl-goal-fluent (instance test) (goal active-goal) (name on) (params b c))
     (pddl-set-goals (instance test) (goal active-goal))
+    (pddl-plan (instance test) (goal active-goal) (plan-type TEMPORAL))
   )
 )
 
-(defrule structured-agent-pddl-plan
-" Start the planner once the set-goals request is done "
-  (cx-pddl-msgs-plan-temporal-client (server ?server&:(eq ?server "/pddl_manager/temp_plan")))
-  (not (planned))
-  (pddl-set-goals (state DONE))
-  =>
-  (printout green "Start planning" crlf)
-  (bind ?goal (cx-pddl-msgs-plan-temporal-goal-create))
-  (cx-pddl-msgs-plan-temporal-goal-set-field ?goal "pddl_instance" "test")
-  (cx-pddl-msgs-plan-temporal-goal-set-field ?goal "goal_instance" "active-goal")
-  (cx-pddl-msgs-plan-temporal-send-goal ?goal ?server)
-  (assert (planned))
-)
-
-(defrule structured-agent-pddl-plan-result
-" Retrieve the resulting plan "
-  ?wr-f <- (cx-pddl-msgs-plan-temporal-wrapped-result
-    (server "/pddl_manager/temp_plan") (code SUCCEEDED) (result-ptr ?res-ptr)
-  )
-  =>
-  (bind ?plan-found (cx-pddl-msgs-plan-temporal-result-get-field ?res-ptr "success"))
-  (printout green "planning done" crlf)
-  (bind ?id 0)
-  (if ?plan-found then
-    (bind ?plan (cx-pddl-msgs-plan-temporal-result-get-field ?res-ptr "actions"))
-    (foreach ?action ?plan
-      (bind ?name (sym-cat (cx-pddl-msgs-timed-plan-action-get-field ?action "name")))
-      (bind ?args (cx-pddl-msgs-timed-plan-action-get-field ?action "args"))
-      (bind ?ps-time (cx-pddl-msgs-timed-plan-action-get-field ?action "start_time"))
-      (bind ?p-duration (cx-pddl-msgs-timed-plan-action-get-field ?action "duration"))
-      (assert (pddl-action
-        (id ?id)
-        (instance test)
-        (name ?name)
-        (params ?args)
-        (planned-start-time ?ps-time)
-        (planned-duration ?p-duration))
-      )
-      (printout t ?ps-time "(" ?p-duration ")   " ?name ?args crlf)
-      (bind ?id (+ ?id 1))
-    )
-  else
-    (printout red "plan not found!" crlf)
-  )
-  (cx-pddl-msgs-plan-temporal-result-destroy ?res-ptr)
-)
 
 (defrule structured-agent-select-action
 " Start executing the first action of the resulting plan "
@@ -148,10 +74,12 @@
 " After the duration has elapsed, the action is done "
   (time ?now)
   (plan-start ?t)
-  ?pa <- (pddl-action (id ?id) (state EXECUTING) (planned-duration ?d)
+  ?pa <- (pddl-action (id ?id) (state EXECUTING) (planned-duration ?d) (name ?name)
     (actual-start-time ?s&:(< (+ ?s ?d ?t) ?now)))
   =>
-  (modify ?pa (state DONE) (actual-duration (- (now) (+ ?s ?t))))
+  (bind ?duration (- (now) (+ ?s ?t)))
+  (printout info "Executed action " ?name " in " ?duration " seconds" crlf)
+  (modify ?pa (state DONE) (actual-duration ?duration))
   (assert (pddl-action-get-effect (action ?id) (apply TRUE)))
 )
 

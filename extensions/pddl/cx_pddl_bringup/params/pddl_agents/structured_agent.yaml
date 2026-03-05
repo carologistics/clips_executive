@@ -12,6 +12,7 @@
                 "files"]
       log_clips_to_file: true
       watch: ["facts", "rules"]
+      redirect_stdout_to_debug: true
 
     ament_index:
       plugin: "cx::AmentIndexPlugin"

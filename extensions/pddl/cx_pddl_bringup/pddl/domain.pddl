@@ -28,7 +28,7 @@
 
     (:durative-action pick-up
         :parameters (?ob - block)
-        :duration (= ?duration 10)
+        :duration (= ?duration 1)
         :condition
             (and
                 (at start (clear ?ob))
@@ -43,7 +43,7 @@
 
     (:durative-action put-down
         :parameters (?ob - block)
-        :duration (= ?duration 10)
+        :duration (= ?duration 1)
         :condition (at start (holding ?ob))
         :effect
             (and
@@ -55,7 +55,7 @@
 
     (:durative-action stack
         :parameters (?ob1 - block ?ob2 - block)
-        :duration (= ?duration 10)
+        :duration (= ?duration 2)
         :condition (and (at start (holding ?ob1)) (at start (clear ?ob2)))
         :effect
             (and
@@ -68,7 +68,7 @@
 
     (:durative-action unstack
         :parameters (?ob1 - block ?ob2 - block)
-        :duration (= ?duration 10)
+        :duration (= ?duration 1)
         :condition
             (and
                 (at start (on ?ob1 ?ob2))

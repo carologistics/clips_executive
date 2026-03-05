@@ -19,10 +19,9 @@
 (deftemplate pddl-action
   (slot instance (type SYMBOL))
   (slot id (type SYMBOL)) ; this should be a globally unique ID
-  (slot plan (type SYMBOL))
   (slot name (type SYMBOL))
   (multislot params (type SYMBOL) (default (create$)))
-  (slot plan-order-class (type INTEGER))
+  (slot plan (type SYMBOL))
   (slot planned-start-time (type FLOAT))
   (slot planned-duration (type FLOAT))
   (slot actual-start-time (type FLOAT))
