@@ -94,9 +94,10 @@ Supported since Kilted:
   ; Process the response by using the client goal handle functions:
   ; - ros-msgs-client-goal-handle-get-goal-id
   ; - ros-msgs-client-goal-handle-get-goal-stamp
+  ; - ros-msgs-client-goal-handle-get-status
   ; Call ros-msgs-destroy-client-goal-handle before retracting.
   ; Clean up only after goal is completely handled by the server.
-  (deftemplate ros-msgs-action-response
+  (deftemplate ros-msgs-goal-response
     (slot server (type STRING))
     (slot client-goal-handle-ptr (type EXTERNAL-ADDRESS))
   )
@@ -148,6 +149,10 @@ Functions
   ; Retrieve a field of a message.
   ; If the field is a message, then a pointer is returned that can be further inspected by passing it to ros-msgs-get-field.
   (ros-msgs-get-field ?msg-ptr ?field-name)
+
+  ; Convert an array representation of a goal uuid to a symbol using rclcpp_action::to_string.
+  (bind ?uuid-sym (ros-msgs-goal-uuid-to-string ?uuid-multifield)) ; example arg: (43 47 40 182 6 191 57 8 170 98 1 22 43 138 62 142)
+                                                                   ; example ret: 2b2f28b6-06bf-3908-aa62-01162b8a3e8e
 
 
 Supported since Jazzy:
@@ -205,7 +210,7 @@ Supported since Kilted:
   ; Send a goal request to an action server.
   ; This registers three callbacks: response, feedback and result.
   ; These assert the corrending facts of the following types:
-  ; - ros-msgs-action-response
+  ; - ros-msgs-goal-response
   ; - ros-msgs-wrapped-result
   ; - ros-msgs-feedback
   (ros-msgs-async-send-goal ?action-server ?req-ptr) ; example args: "fibonacci" <Pointer-C-0x7f1550001d20>
@@ -219,6 +224,14 @@ Supported since Kilted:
   ; Provide the goal stamp using get_goal_stamp().seconds()
   (bind ?ts (ros-msgs-client-goal-handle-get-goal-stamp ?client-goal-handle-ptr)) ; example args: <Pointer-C-0x7f1550001d20>
                                                                                   ; example ret: 1698326401.123456
+
+  ; Checks if a feedback callback is registered (should always return true, as the plugin always registers one.
+  (bind ?aware (ros-msgs-client-goal-handle-is-feedback-aware ?client-goal-handle-ptr)) ; example args: <Pointer-C-0x7f1550001d20>
+                                                                                        ; example ret: TRUE
+
+  ; Checks if a result callback is registered (should always return true, as the plugin always registers one.
+  (bind ?aware (ros-msgs-client-goal-handle-is-result-aware ?client-goal-handle-ptr)) ; example args: <Pointer-C-0x7f1550001d20>
+                                                                                      ; example ret: TRUE
 
   ; Delete a client goal handle. Use this only after the associated goal is fully processed.
   (ros-msgs-destroy-client-goal-handle ?client-goal-handle-ptr) ; example args: <Pointer-C-0x7f1550001d20>
@@ -579,13 +592,9 @@ A minimal working example is provided by the :docsite:`cx_bringup` package. Run 
 
     ros2 launch cx_bringup cx_launch.py manager_config:=plugin_examples/ros_msgs_action_client.yaml
 
-It creates an action client ``/fibonacci`` (of type ``example_interfaces/action/Fibonacci``) and requests the fibonacci sequence of order 10.
-
-In order to launch the corresponding server, run the following command:
-
-.. code-block:: bash
-
-    ros2 run action_tutorials_cpp fibonacci_action_server
+The launch file starts two CLIPS environments:
+ - One environment provides an action server that computes Fibonacci sequences. It is implemented using generated bindings for the server via :docsite:`cx_ros_comm_gen`.
+ - The second environment acts as an action client. It first requests a Fibonacci sequence of order 5. After the goal completes, it sends a second request for a sequence of order 10. The second goal is canceled after the sixth element has been computed.
 
 Configuration
 ~~~~~~~~~~~~~
@@ -596,24 +605,44 @@ File :source-master:`cx_bringup/params/plugin_examples/ros_msgs_action_client.ya
 
   /**:
     ros__parameters:
-      environments: ["cx_ros_msgs_action_client"]
+      environments: ["cx_ros_msgs_action_client", "cx_fibonacci_server"]
+
       cx_ros_msgs_action_client:
-        plugins: ["executive", "ros_msgs", "files"]
+        plugins: ["executive", "ros_msgs", "files_client"]
         log_clips_to_file: true
         watch: ["facts", "rules"]
+        redirect_stdout_to_debug: true
+
+      cx_fibonacci_server:
+        plugins: ["executive", "fibonacci", "files_server"]
+        log_clips_to_file: true
+        watch: ["facts", "rules"]
+        redirect_stdout_to_debug: true
 
       executive:
         plugin: "cx::ExecutivePlugin"
         publish_on_refresh: false
         assert_time: true
         refresh_rate: 10
+
+      fibonacci:
+        plugin: "cx::CXExampleInterfacesFibonacciPlugin"
+
       ros_msgs:
         plugin: "cx::RosMsgsPlugin"
-      files:
+
+      files_client:
         plugin: "cx::FileLoadPlugin"
         pkg_share_dirs: ["cx_bringup"]
         load: [
           "clips/plugin_examples/ros-msgs-action-client.clp"]
+
+      files_server:
+        plugin: "cx::FileLoadPlugin"
+        pkg_share_dirs: ["cx_bringup"]
+        load: [
+          "clips/plugin_examples/fibonacci-action-server.clp"]
+
 
 
 Code
@@ -625,65 +654,117 @@ File :source-master:`cx_bringup/clips/plugin_examples/ros-msgs-action-client.clp
 
   (defrule ros-msgs-action-client-init
   " Create a client for fibonacci example action server."
-    (not (ros-msgs-action-client (server "fibonacci")))
+    (not (ros-msgs-action-client (server "ros_cx_fibonacci")))
     (not (executive-finalize))
   =>
-    (ros-msgs-create-action-client "fibonacci" "example_interfaces/action/Fibonacci")
-    (printout green "Opening client on /fibonacci" crlf)
-    (printout green "Run a corresponding server using 'ros2 run action_tutorials_cpp fibonacci_action_server'" crlf)
+    (ros-msgs-create-action-client "ros_cx_fibonacci" "example_interfaces/action/Fibonacci")
+    (printout yellow "Created client for /ros_cx_fibonacci" crlf)
   )
 
   (defrule ros-msgs-action-client-send-goal
   " Send a goal request for the 10th fibonacci number. "
     (ros-msgs-action-client (server ?server))
-    (not (request ?))
-    (not (already-requested))
-    =>
+    (not (send-request))
+  =>
+    (assert (send-request))
     (bind ?new-req (ros-msgs-create-goal-request "example_interfaces/action/Fibonacci"))
-    (ros-msgs-set-field ?new-req "order" 10)
+    (ros-msgs-set-field ?new-req "order" 5)
     (bind ?val (ros-msgs-get-field ?new-req "order"))
-    (printout blue "i have this value: " ?val crlf)
     (bind ?id (ros-msgs-async-send-goal ?new-req ?server))
-    (assert (request ?new-req))
-    (assert (already-requested))
+    (assert (fibonacci-goal ?new-req))
+    (printout yellow "Sending goal fibonacci(5)" crlf)
     ; do not destroy goal directly, it is kept alive
     ;(ros-msgs-destroy-message ?new-req)
   )
 
   (defrule ros-msgs-action-client-check-client-goal-handle
   " Process the response for the requested goal."
-    (ros-msgs-action-response (server "fibonacci") (client-goal-handle-ptr ?cgh-ptr))
+    (ros-msgs-action-client (server ?server))
+    (ros-msgs-goal-response (server ?server) (client-goal-handle-ptr ?cgh-ptr))
   =>
     (bind ?g-id (ros-msgs-client-goal-handle-get-goal-id ?cgh-ptr))
     (bind ?stamp (ros-msgs-client-goal-handle-get-goal-stamp ?cgh-ptr))
-    (printout t "goal id " ?g-id " at stamp " ?stamp crlf)
+    (printout yellow "Response: goal id " ?g-id " at stamp " ?stamp " with status " (ros-msgs-client-goal-handle-get-status ?cgh-ptr) crlf)
   )
 
   (defrule ros-msgs-action-client-read-feedback
-   ?fact <- (ros-msgs-feedback (server "fibonacci") (client-goal-handle-ptr ?cgh-ptr) (feedback-ptr ?msg-ptr))
+    (ros-msgs-action-client (server ?server))
+   ?fact <- (ros-msgs-feedback (server ?server) (client-goal-handle-ptr ?cgh-ptr) (feedback-ptr ?msg-ptr))
   =>
     (bind ?seq (ros-msgs-get-field ?msg-ptr "sequence"))
-    (printout yellow "partial sequence " ?seq crlf)
+    (printout yellow "partial sequence: " ?seq crlf)
     (ros-msgs-destroy-message ?msg-ptr)
+    (if (= (length$ ?seq) 7) then
+       (assert (cancel-goal))
+    )
     (retract ?fact)
   )
 
-  (defrule ros-msgs-action-client-process-result
-    ?response-f <- (ros-msgs-action-response (server "fibonacci") (client-goal-handle-ptr ?cgh-ptr))
-    ?result-f <- (ros-msgs-wrapped-result (server "fibonacci") (goal-id ?id) (code ?code) (result-ptr ?res-ptr))
+  (defrule ros-msgs-action-client-cleanup-after-wrapped-result
+    ?response-f <- (ros-msgs-goal-response (server ?server) (client-goal-handle-ptr ?cgh-ptr))
+    ?result-f <- (ros-msgs-wrapped-result (server ?server) (goal-id ?id) (code ?code) (result-ptr ?res-ptr))
     (test (eq ?id (ros-msgs-client-goal-handle-get-goal-id ?cgh-ptr)))
-    ?req-f <- (request ?req-ptr)
-    =>
-    (printout info "Action result: " ?code crlf)
+    ?req-f <- (fibonacci-goal ?req-ptr)
+  =>
+    (printout yellow "Action result: " ?code crlf)
     (if (eq ?code SUCCEEDED)
       then
-      (bind ?result (ros-msgs-get-field ?res-ptr "sequence"))
-      (printout green "fibonacci sequence of order 10 is: " ?result crlf)
+      (bind ?seq (ros-msgs-get-field ?res-ptr "sequence"))
+      (printout yellow "Final fibonacci sequence: " ?seq crlf)
+    )
+    (if (eq ?code CANCELED)
+      then
+      (bind ?seq (ros-msgs-get-field ?res-ptr "sequence"))
+      (printout yellow "Canceled fibonacci sequence: " ?seq crlf)
     )
     (ros-msgs-destroy-message ?res-ptr)
     (ros-msgs-destroy-message ?req-ptr)
     (ros-msgs-destroy-client-goal-handle ?cgh-ptr)
     (retract ?response-f ?result-f ?req-f)
+  )
+
+  (defrule ros-msgs-action-client-send-goal-that-cancels-later
+  " Send out a second goal for the fibonacci sequence of order 10 once the previous goal is completed. "
+    (ros-msgs-action-client (server ?server))
+    (send-request)
+    (not (fibonacci-goal ?))
+    (not (send-request-again))
+  =>
+    (assert (send-request-again))
+    (printout yellow "Request fibonacci(10), will cancel before finish" crlf)
+    (bind ?new-req (ros-msgs-create-goal-request "example_interfaces/action/Fibonacci"))
+    (ros-msgs-set-field ?new-req "order" 10)
+    (bind ?val (ros-msgs-get-field ?new-req "order"))
+    (bind ?id (ros-msgs-async-send-goal ?new-req ?server))
+    (assert (fibonacci-goal ?new-req))
+    ; do not destroy goal directly, it is kept alive
+    ;(ros-msgs-destroy-message ?new-req)
+  )
+
+  (defrule ros-msgs-action-client-request-cancel
+  " Send out a cancel request after the partial feedback provides a sequence of length 7. "
+    (cancel-goal)
+    (ros-msgs-action-client (server ?server))
+    (ros-msgs-goal-response (server ?server) (client-goal-handle-ptr ?ghp))
+  =>
+    (ros-msgs-async-cancel-goal ?server ?ghp)
+    (printout yellow "Canceling current goal" crlf)
+  )
+
+  (defrule ros-msgs-action-client-cleanup-cancel-response
+  " Process the cancel response and clean up afterwards. "
+    ?msg-f <- (ros-msgs-cancel-response (cancel-response-ptr ?msg))
+  =>
+    (bind ?error-code (ros-msgs-get-field ?msg "return_code"))
+    (bind ?goals-canceling (ros-msgs-get-field ?msg "goals_canceling"))
+    (foreach ?g ?goals-canceling
+      (bind ?goal-id-msg (ros-msgs-get-field ?g "goal_id"))
+      (bind ?goal-id (ros-msgs-get-field ?goal-id-msg "uuid"))
+      (bind ?goal-id-str (ros-msgs-goal-uuid-to-string ?goal-id))
+      (printout yellow "Canceled goal with id: " ?goal-id-str crlf)
+      (ros-msgs-destroy-message ?goal-id-msg)
+    )
+    (ros-msgs-destroy-message ?msg)
   )
 
   (defrule ros-msgs-action-client-finalize
