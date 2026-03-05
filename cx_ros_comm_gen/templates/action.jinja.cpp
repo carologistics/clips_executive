@@ -896,7 +896,21 @@ void {{name_camel}}::create_new_server(clips::Environment *env, const std::strin
     // no need to delete goal pointer manually, it is not copied
     clips::FCBCall(fcb,"{{name_kebab}}-handle-goal-callback",&ret);
     clips::FCBDispose(fcb);
-    return static_cast<rclcpp_action::GoalResponse>(ret.integerValue->contents);
+
+    int value = ret.integerValue->contents;
+
+    if (value == 3) {
+      return rclcpp_action::GoalResponse::ACCEPT_AND_DEFER;
+    }
+    if (value == 2) {
+      return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE;
+    }
+    if (value == 1) {
+      return rclcpp_action::GoalResponse::REJECT;
+    }
+
+    RCLCPP_ERROR(*logger_, "Invalid goal response from CLIPS: %d", value);
+    return rclcpp_action::GoalResponse::REJECT;
   };
   auto handle_cancel = [this, env, server_name](const std::shared_ptr<rclcpp_action::ServerGoalHandle<{{message_type}}>> goal_handle) {
     auto context = CLIPSEnvContext::get_context(env);
@@ -920,8 +934,18 @@ void {{name_camel}}::create_new_server(clips::Environment *env, const std::strin
     clips::CLIPSValue ret;
     clips::FCBCall(fcb,"{{name_kebab}}-cancel-goal-callback",&ret);
     clips::FCBDispose(fcb);
-    return static_cast<rclcpp_action::CancelResponse>(ret.integerValue->contents);
-  };
+    int value = ret.integerValue->contents;
+
+    if (value == 2) {
+      return rclcpp_action::CancelResponse::ACCEPT;
+    }
+    if (value == 1) {
+      return rclcpp_action::CancelResponse::REJECT;
+    }
+
+    RCLCPP_ERROR(*logger_, "Invalid cancel response from CLIPS: %d", value);
+    return rclcpp_action::CancelResponse::REJECT;
+    };
 
   auto handle_accepted = [this, env, server_name](const std::shared_ptr<rclcpp_action::ServerGoalHandle<{{message_type}}>> goal_handle) {
     auto context = CLIPSEnvContext::get_context(env);
