@@ -14,6 +14,30 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
+(defglobal
+  ?*CX-PDDL-SERVICE-CLIENTS* = (create$
+    add_pddl_instance AddPddlInstance
+    check_action_condition CheckActionCondition
+    get_action_effects GetActionEffects
+    get_action_names GetActionNames
+    get_fluents GetFluents
+    add_fluents AddFluents
+    rm_fluents RemoveFluents
+    add_objects AddObjects
+    rm_objects RemoveObjects
+    set_functions SetFunctions
+    get_functions GetFunctions
+    set_goals SetGoals
+    clear_goals ClearGoals
+    set_action_filter SetActionFilter
+    set_object_filter SetObjectFilter
+    set_fluent_filter SetFluentFilter
+    create_goal_instance CreateGoalInstance
+    get_predictes GetPredicates
+    get_type_objects GetTypeObjects
+  )
+)
+
 (deftemplate pddl-service-request-meta
   (slot service (type STRING))
   (slot request-id (type INTEGER))
@@ -24,23 +48,47 @@
 " Store information on the external pddl manager.
 "
   (slot node (type STRING) (default "/pddl_manager"))
+  (slot ros-comm-init (type SYMBOL) (allowed-values TRUE FALSE) (default FALSE))
 )
+
+(deftemplate pddl-instance
+" Interface for instances.clp
+  Assert a fact of this type to initialize a pddl instance with the external pddl manager.
+  @slot name: unique name to refer to when using this instance
+  @slot domain: name of a domain.pddl file to be loaded.
+  @slot problem: optional name of the problem.pddl, leave empty if no problem should be loaded initially.
+  Slots set automatically:
+  @slot state:
+   - PENDING: The instance was not registered yet.
+   - LOADED: The instance is loaded and ready for usage.
+   - ERROR: The fluents were not fetched due to an error.
+  @busy-with: Indicates the current operation
+  @slot error: provide information on encountered errors.
+"
+  (slot name (type SYMBOL))
+  (slot domain (type STRING))
+  (slot problem (type STRING))
+  (slot directory (type STRING))
+  (slot state (type SYMBOL) (allowed-values PENDING LOADED ERROR) (default PENDING))
+  (slot busy-with (type SYMBOL) (allowed-values FALSE OBJECTS FLUENTS NUMERIC-FLUENTS ACTION-EFFECTS CREATE-GOAL-INSTANCE CLEAR-GOALS SET-GOALS CHECK-CONDITIONS GET-FLUENTS GET-NUMERIC-FLUENTS GET-PREDICATES GET-TYPE-OBJECTS GET-ACTION-NAMES SET-ACTION-FILTER SET-OBJECT-FILTER SET-FLUENT-FILTER CREATE-GOAL-INSTANCE) (default FALSE))
+  (slot error (type STRING))
+)
+
 
 (deftemplate pddl-action
 " Represents a grounded pddl action in a pddl instance.
   @slot instance: pddl instance belonging to the action.
   @slot name: name of the action.
   @slot params: parameters of the  action.
-  @slot plan-order-class: partial order class of the action in theplan
+  @slot plan: name of the associated plan
   @slot: planned-start-time: start time of the action in the plan
   @slot: planned-duration: assumed duration of the action according to plan
 "
   (slot instance (type SYMBOL))
   (slot id (type SYMBOL)) ; this should be a globally unique ID
-  (slot plan (type SYMBOL))
   (slot name (type SYMBOL))
   (multislot params (type SYMBOL) (default (create$)))
-  (slot plan-order-class (type INTEGER))
+  (slot plan (type SYMBOL))
   (slot planned-start-time (type FLOAT))
   (slot planned-duration (type FLOAT))
 )
@@ -151,12 +199,6 @@
   (slot instance (type SYMBOL))
   (slot type (type SYMBOL))
   (multislot objects (type STRING) (default (create$)))
-)
-
-(deftemplate pddl-plan
-  (slot id (type SYMBOL))
-  (slot instance (type SYMBOL))
-  (slot duration (type FLOAT))
 )
 
 (deftemplate pddl-action-condition
@@ -414,6 +456,18 @@
   (slot state (type SYMBOL) (allowed-values PENDING WAITING ERROR ON-HOLD) (default PENDING))
   (slot error (type STRING))
 )
+
+(deftemplate pddl-plan
+"Assert a fact of this fact to plan"
+  (slot instance (type SYMBOL))
+  (slot goal (type SYMBOL))
+  (slot goal-ptr (type EXTERNAL-ADDRESS))
+  (slot plan-type (type SYMBOL) (allowed-values CLASSICAL TEMPORAL) (default CLASSICAL))
+  (slot goal-handle (type EXTERNAL-ADDRESS))
+  (slot type (type SYMBOL) (allowed-values TEMPORAL CLASSICAL))
+  (slot state (type SYMBOL) (allowed-values PENDING WAITING PLANNING REQUEST-CANCELING CANCELING CANCELED SUCCESS FAILURE) (default PENDING))
+)
+
 
 (deftemplate pddl-planning-filter
 " This currently mainly is a transient layer betweeen the general pddl interface and our domain-specific usage.

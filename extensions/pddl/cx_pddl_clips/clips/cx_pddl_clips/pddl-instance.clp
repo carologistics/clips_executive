@@ -13,29 +13,6 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
-(deftemplate pddl-instance
-" Interface for instances.clp
-  Assert a fact of this type to initialize a pddl instance with the external pddl manager.
-  @slot name: unique name to refer to when using this instance
-  @slot domain: name of a domain.pddl file to be loaded.
-  @slot problem: optional name of the problem.pddl, leave empty if no problem should be loaded initially.
-  Slots set automatically:
-  @slot state:
-   - PENDING: The instance was not registered yet.
-   - LOADED: The instance is loaded and ready for usage.
-   - ERROR: The fluents were not fetched due to an error.
-  @busy-with: Indicates the current operation
-  @slot error: provide information on encountered errors.
-"
-  (slot name (type SYMBOL))
-  (slot domain (type STRING))
-  (slot problem (type STRING))
-  (slot directory (type STRING))
-  (slot state (type SYMBOL) (allowed-values PENDING LOADED ERROR) (default PENDING))
-  (slot busy-with (type SYMBOL) (allowed-values FALSE OBJECTS FLUENTS NUMERIC-FLUENTS ACTION-EFFECTS CREATE-GOAL-INSTANCE CLEAR-GOALS SET-GOALS CHECK-CONDITIONS GET-FLUENTS GET-NUMERIC-FLUENTS GET-PREDICATES GET-TYPE-OBJECTS GET-ACTION-NAMES SET-ACTION-FILTER SET-OBJECT-FILTER SET-FLUENT-FILTER CREATE-GOAL-INSTANCE) (default FALSE))
-  (slot error (type STRING))
-)
-
 (defrule pddl-instance-request
   (declare (salience ?*PRIORITY-PDDL-INSTANCES*))
   (pddl-instance (state PENDING) (name ?instance) (domain ?domain) (problem ?problem) (directory ?dir))
@@ -43,7 +20,7 @@
   (ros-msgs-client (service ?s&:(eq ?s (str-cat ?node "/add_pddl_instance"))) (type ?type))
   (not (pddl-service-request-meta (service ?s)))
   (time ?any-time) ; used to continuously attempt to request the service until success
-  =>
+=>
   (bind ?new-req (ros-msgs-create-request ?type))
   (ros-msgs-set-field ?new-req "name" ?instance)
   (ros-msgs-set-field ?new-req "directory" ?dir)

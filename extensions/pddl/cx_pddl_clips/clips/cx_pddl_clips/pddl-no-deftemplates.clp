@@ -15,6 +15,7 @@
 
 (foreach ?f (create$
 saliences.clp
+pddl-ros-comm-init.clp
 pddl-instance.clp
 pddl-object-change.clp
 pddl-fluent-change.clp
@@ -29,6 +30,7 @@ pddl-get-numeric-fluents.clp
 pddl-get-predicates.clp
 pddl-get-type-objects.clp
 pddl-planning-filter.clp
+pddl-plan-temporal-client.clp
 pddl-set-goals.clp
 )
 (load* (str-cat (ament-index-get-package-share-directory "cx_pddl_clips") "/clips/cx_pddl_clips/" ?f))
