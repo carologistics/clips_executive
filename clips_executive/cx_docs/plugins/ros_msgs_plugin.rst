@@ -302,15 +302,17 @@ File :source-master:`cx_bringup/params/plugin_examples/ros_msgs.yaml`.
   clips_manager:
     ros__parameters:
       environments: ["cx_ros_msgs"]
+
       cx_ros_msgs:
         plugins: ["executive", "ros_msgs", "files"]
         watch: ["facts", "rules"]
 
       executive:
         plugin: "cx::ExecutivePlugin"
-        refresh_rate: 10
+
       ros_msgs:
         plugin: "cx::RosMsgsPlugin"
+
       files:
         plugin: "cx::FileLoadPlugin"
         pkg_share_dirs: ["cx_bringup"]
@@ -417,15 +419,17 @@ File :source-master:`cx_bringup/params/plugin_examples/ros_msgs_client.yaml`.
   clips_manager:
     ros__parameters:
       environments: ["cx_ros_msgs_client"]
+
       cx_ros_msgs_client:
         plugins: ["executive", "ros_msgs", "files"]
         watch: ["facts", "rules"]
 
       executive:
         plugin: "cx::ExecutivePlugin"
-        refresh_rate: 10
+
       ros_msgs:
         plugin: "cx::RosMsgsPlugin"
+
       files:
         plugin: "cx::FileLoadPlugin"
         pkg_share_dirs: ["cx_bringup"]
@@ -528,6 +532,7 @@ File :source-master:`cx_bringup/params/plugin_examples/ros_msgs_service.yaml`.
   /**:
     ros__parameters:
       environments: ["cx_ros_msgs_service"]
+
       cx_ros_msgs_service:
         plugins: ["executive", "ros_msgs", "files"]
         log_clips_to_file: true
@@ -535,11 +540,11 @@ File :source-master:`cx_bringup/params/plugin_examples/ros_msgs_service.yaml`.
 
       executive:
         plugin: "cx::ExecutivePlugin"
-        publish_on_refresh: false
         assert_time: true
-        refresh_rate: 10
+
       ros_msgs:
         plugin: "cx::RosMsgsPlugin"
+
       files:
         plugin: "cx::FileLoadPlugin"
         pkg_share_dirs: ["cx_bringup"]
@@ -621,9 +626,7 @@ File :source-master:`cx_bringup/params/plugin_examples/ros_msgs_action_client.ya
 
       executive:
         plugin: "cx::ExecutivePlugin"
-        publish_on_refresh: false
         assert_time: true
-        refresh_rate: 10
 
       fibonacci:
         plugin: "cx::CXExampleInterfacesFibonacciPlugin"
