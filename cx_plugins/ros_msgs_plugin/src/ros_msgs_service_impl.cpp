@@ -230,6 +230,7 @@ void RosMsgsPlugin::service_callback(
     clips::FCBDispose(fcb);
   }
   destroy_msg(request_info.get());
+  destroy_msg(response_info.get());
 }
 
 void RosMsgsPlugin::destroy_client(clips::Environment * env, const std::string & service_name)
