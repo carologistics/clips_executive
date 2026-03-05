@@ -17,6 +17,7 @@
 import concurrent.futures as cf
 from typing import Callable
 
+from bondpy import bondpy
 from cx_pddl_interfaces.action import PlanTemporal
 from cx_pddl_interfaces.msg import Fluent as FluentMsg
 from cx_pddl_interfaces.msg import FluentEffect, Function, FunctionEffect
@@ -64,8 +65,8 @@ class PddlManagerLifecycleNode(LifecycleNode):
 
     def __init__(self):
         super().__init__('pddl_problem_manager')
-        self.my_executor = cf.ProcessPoolExecutor(max_workers=4)
-        self.add_fluent_srv = None
+        self.register_rcl_preshutdown_callback()
+        self.process_pool_executor = cf.ProcessPoolExecutor(max_workers=4)
         self.add_fluents_srv = None
         self.rm_fluents_srv = None
         self.add_objects_srv = None
@@ -112,7 +113,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
             is_right_open=False,
         )
         self.instance_update_pub = None
-        self.get_logger().info('Lifecycle node created.')
+        self.get_logger().debug('Lifecycle node created.')
 
         self.autostart_timer = self.create_timer(
             0.0, self.autostart_callback, callback_group=self.srv_cb_group  # fire immediately
@@ -120,7 +121,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
 
     def autostart_callback(self):
         self.autostart_timer.cancel()
-        self.get_logger().info(f'Auto-starting node: {self.get_name()}')
+        self.get_logger().debug(f'Auto-starting node: {self.get_name()}')
 
         configure_result = self.trigger_configure()
         if configure_result != TransitionCallbackReturn.SUCCESS:
@@ -132,15 +133,53 @@ class PddlManagerLifecycleNode(LifecycleNode):
             self.get_logger().error(f'Auto-starting node {self.get_name()} failed to activate!')
             return
 
+    def register_rcl_preshutdown_callback(self):
+        context = self.context
+        context.on_shutdown(self.on_rcl_preshutdown)
+
+    def on_rcl_preshutdown(self):
+        # Best-effort cleanup
+        self.run_cleanups()
+
+        # Break bond cleanly
+        self.destroy_bond()
+
+    def destroy_bond(self):
+        if getattr(self, 'bond', None):
+            self.get_logger().debug(f'Destroying bond ({self.get_name()})')
+            self.bond.break_bond()
+            self.bond = None
+
+    def create_bond(self):
+        if self.bond_heartbeat_period > 0.0:
+            self.get_logger().debug(f'Creating bond ({self.get_name()}) to lifecycle manager')
+            self.bond = bondpy.Bond(self.get_name(), node=self)
+            self.bond.start()
+            self.bond.set_heartbeat_period(self.bond_heartbeat_period)
+            self.bond.set_heartbeat_timeout(4.0)
+
+    def run_cleanups(self):
+        state = self._state_machine.current_state[0]
+
+        if state == State.PRIMARY_STATE_ACTIVE:
+            self.trigger_deactivate()
+        state = self._state_machine.current_state[0]
+
+        if state == State.PRIMARY_STATE_INACTIVE:
+            self.trigger_cleanup()
+        state = self._state_machine.current_state[0]
+
+        if state == State.PRIMARY_STATE_UNCONFIGURED:
+            self.trigger_shutdown()
+
     def on_configure(self, state: State) -> TransitionCallbackReturn:
-        self.get_logger().info('Configuring node...')
+        self.get_logger().debug('Configuring node...')
+
+        self.bond_heartbeat_period = self.get_parameter_or(
+            'bond_heartbeat_period',
+            rclpy.Parameter('bond_heartbeat_period', rclpy.Parameter.Type.DOUBLE, 0.0),
+        ).value
         # Create the service when the node enters the 'inactive' state
-        self.add_fluent_srv = self.create_service(
-            AddFluent,
-            f'{self.get_name()}/add_fluent',
-            self.handle_add_fluent,
-            callback_group=self.srv_cb_group,
-        )
         self.add_pddl_instance_srv = self.create_service(
             AddPddlInstance,
             f'{self.get_name()}/add_pddl_instance',
@@ -265,29 +304,31 @@ class PddlManagerLifecycleNode(LifecycleNode):
         self.instance_update_pub = self.create_publisher(
             String, f'{self.get_name()}/instance_update', 10
         )
-        self.get_logger().info('Service created successfully.')
+        self.get_logger().debug('Service created successfully.')
         return TransitionCallbackReturn.SUCCESS
 
     def on_activate(self, state: State) -> TransitionCallbackReturn:
-        self.get_logger().info('Activating node...')
-        self.get_logger().info('Node is active.')
+        self.get_logger().debug('Activating node...')
+        self.create_bond()
         return TransitionCallbackReturn.SUCCESS
 
     def on_deactivate(self, state: State) -> TransitionCallbackReturn:
-        self.get_logger().info('Deactivating node...')
+        self.get_logger().debug('Deactivating node...')
         # You can make the service unavailable here if needed
         return TransitionCallbackReturn.SUCCESS
 
     def on_cleanup(self, state: State) -> TransitionCallbackReturn:
-        self.get_logger().info('Cleaning up resources...')
+        self.get_logger().debug('Cleaning up resources...')
         if self.srv:
             self.srv.destroy()
             self.srv = None
-        self.get_logger().info('Resources cleaned up.')
+        self.get_logger().debug('Resources cleaned up.')
         return TransitionCallbackReturn.SUCCESS
 
     def on_shutdown(self, state: State) -> TransitionCallbackReturn:
-        self.get_logger().info('Shutting down node...')
+        self.get_logger().debug('Shutting down node...')
+        if self.process_pool_executor:
+            self.process_pool_executor.shutdown(wait=True, cancel_futures=True)
         return TransitionCallbackReturn.SUCCESS
 
     def try_set_object(self, obj, value):
@@ -334,14 +375,6 @@ class PddlManagerLifecycleNode(LifecycleNode):
             return True, ''
         except Exception as e:
             return False, f'error while {"adding" if value else "removing"} fluent: {e}'
-
-    def handle_add_fluent(self, request, response):
-        fluent = request.fluent
-        response.success, response.error = self.try_set_fluent(fluent, True)
-        msg = String()
-        msg.data = request.fluent.pddl_instance
-        self.instance_update_pub.publish(msg)
-        return response
 
     def handle_add_fluents(self, request, response):
         success = True
@@ -558,7 +591,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
                 self.managed_problems[name] = ManagedProblem(
                     self.reader.parse_problem_string(domain_rendered), self.env, name
                 )
-            self.get_logger().info(f'Loading domain {domain} {problem}')
+            self.get_logger().debug(f'Loading domain {domain} {problem}')
             response.success = True
             self.get_logger().debug(f'{self.managed_problems[name].base_problem}')
         except Exception as e:
@@ -935,6 +968,8 @@ def main(args=None):
     except KeyboardInterrupt:
         pass
     finally:
+        executor.shutdown()
+
         # Ensure proper cleanup
         if node:
             executor.remove_node(node)
