@@ -66,7 +66,7 @@ include_directories(include)
 
 pluginlib_export_plugin_description_file(cx_plugin ros_msgs_plugin.xml)
 
-add_library(${PROJECT_NAME} SHARED src/ros_msgs_plugin.cpp)
+add_library(${PROJECT_NAME} SHARED src/ros_msgs_plugin.cpp src/ros_msgs_client_impl.cpp src/ros_msgs_service_impl.cpp src/ros_msgs_action_client_impl.cpp)
 target_link_libraries(${PROJECT_NAME} ClipsNS::libclips_ns  ICU::uc ICU::i18n)
 ament_target_dependencies(${PROJECT_NAME} ${dependencies})
 

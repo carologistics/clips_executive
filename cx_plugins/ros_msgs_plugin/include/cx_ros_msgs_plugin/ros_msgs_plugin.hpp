@@ -34,6 +34,7 @@
 #include "rclcpp/generic_service.hpp"
 #endif
 #ifdef HAVE_GENERIC_ACTION_CLIENT
+#include "action_msgs/srv/cancel_goal.hpp"
 #include "rclcpp_action/generic_client.hpp"
 #endif
 
@@ -196,6 +197,9 @@ private:
     void * source_msg);
 
 #ifdef HAVE_GENERIC_CLIENT
+  void finalize_generic_client_bindings();
+  void init_generic_client_bindings(std::shared_ptr<clips::Environment> env);
+  void destroy_generic_client_bindings(std::shared_ptr<clips::Environment> env);
   clips::UDFValue create_request(clips::Environment * env, const std::string & service_type);
   void create_new_client(
     clips::Environment * env, const std::string & service_name, const std::string & service_type);
@@ -205,6 +209,9 @@ private:
 #endif
 
 #ifdef HAVE_GENERIC_SERVICE
+  void finalize_generic_service_bindings();
+  void init_generic_service_bindings(std::shared_ptr<clips::Environment> env);
+  void destroy_generic_service_bindings(std::shared_ptr<clips::Environment> env);
   void create_new_service(
     clips::Environment * env, const std::string & service_name, const std::string & service_type);
 
@@ -216,6 +223,9 @@ private:
 
 #endif
 #ifdef HAVE_GENERIC_ACTION_CLIENT
+  void finalize_generic_action_client_bindings();
+  void init_generic_action_client_bindings(std::shared_ptr<clips::Environment> env);
+  void destroy_generic_action_client_bindings(std::shared_ptr<clips::Environment> env);
   void create_new_action_client(
     clips::Environment * env, const std::string & server_name, const std::string & server_type);
   void destroy_action_client(clips::Environment * env, const std::string & server_name);
@@ -235,6 +245,13 @@ private:
 
   void deep_copy_msg(
     const void * src, void * dest, const rosidl_typesupport_introspection_cpp::MessageMembers *);
+
+  std::shared_ptr<RosMsgsPlugin::MessageInfo> store_generic_action_cancel_response(
+    std::shared_ptr<action_msgs::srv::CancelGoal_Response> cancel_response);
+  void process_cancel_response(
+    clips::Environment * env, const std::string & server_name,
+    std::shared_ptr<rclcpp_action::GenericClientGoalHandle> goal_handle,
+    const action_msgs::srv::CancelGoal::Response::SharedPtr & response);
 #endif
 
   std::unique_ptr<rclcpp::Logger> logger_;
