@@ -30,7 +30,7 @@
   (if ?id then
     (assert (pddl-service-request-meta (service ?s) (request-id ?id) (meta ?instance)))
    else
-    (printout error "Sending of request failed, is the service " ?s " running?" crlf)
+    (printout warn "Sending of request failed, is the service " ?s " running?" crlf)
   )
   (ros-msgs-destroy-message ?new-req)
 )

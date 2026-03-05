@@ -115,6 +115,7 @@
         )
       )
       (ros-msgs-destroy-message ?function-msg)
+      (ros-msgs-destroy-message ?fun)
     )
     (bind ?fluent-effs (ros-msgs-get-field ?ptr "fluent_effects"))
     (foreach ?fluent ?fluent-effs
@@ -134,6 +135,7 @@
           (delete (not ?value)) (state PENDING) (instance ?instance)))
       ); endif target-time-point matches effect
       (ros-msgs-destroy-message ?fluent-msg)
+      (ros-msgs-destroy-message ?fluent)
     )
    else
     (printout error "Failed to retrieve effect for action \"" ?action-id "\":" ?error crlf)
