@@ -44,4 +44,4 @@ Content
    pddl/pddl_clips.rst
    pddl/domain.rst
    pddl/raw_tutorial.rst
-   pddl/structured_tutorial.rst
+   pddl/cx_pddl_clips_tutorial.rst
