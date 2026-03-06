@@ -35,7 +35,7 @@
     files:
       plugin: "cx::FileLoadPlugin"
       pkg_share_dirs: ["cx_pddl_bringup"]
-      load: ["clips/cx_pddl_bringup/cx_pddl_clips_agent.clp"]
+      load: ["clips/cx_pddl_bringup/cx-pddl-clips-agent.clp"]
 
     plan_temporal_action:
       plugin: "cx::CXCxPddlInterfacesPlanTemporalPlugin"

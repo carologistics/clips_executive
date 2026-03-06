@@ -14,7 +14,7 @@
 ; limitations under the License.
 
 (define (problem bw-1)
-    (:domain bw)
+    (:domain blocksworld)
 
     (:objects A B C - block)
 
