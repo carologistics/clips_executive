@@ -460,6 +460,7 @@
 (deftemplate pddl-plan
 "Assert a fact of this fact to plan"
   (slot instance (type SYMBOL))
+  (slot id (type SYMBOL))
   (slot goal (type SYMBOL))
   (slot goal-ptr (type EXTERNAL-ADDRESS))
   (slot plan-type (type SYMBOL) (allowed-values CLASSICAL TEMPORAL) (default CLASSICAL))

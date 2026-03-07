@@ -84,7 +84,7 @@
 " Retrieve the resulting plan "
   (pddl-manager (node ?node))
   (pddl-instance (name ?instance) (state LOADED) (busy-with FALSE))
-  ?pp <- (pddl-plan (instance ?instance) (goal ?goal) (goal-ptr ?goal-ptr) (type TEMPORAL) (state PLANNING) (goal-handle ?gh-ptr))
+  ?pp <- (pddl-plan (instance ?instance) (id ?plan-id) (goal ?goal) (goal-ptr ?goal-ptr) (type TEMPORAL) (state PLANNING) (goal-handle ?gh-ptr))
   ?wr-f <- (cx-pddl-interfaces-plan-temporal-wrapped-result
     (server ?server&:(eq ?server (str-cat ?node "/temp_plan"))) (goal-id ?uuid) (code SUCCEEDED) (result-ptr ?res-ptr))
   (test (eq (cx-pddl-interfaces-plan-temporal-client-goal-handle-get-goal-id ?gh-ptr) ?uuid))
@@ -100,6 +100,7 @@
       (bind ?p-duration (cx-pddl-interfaces-timed-plan-action-get-field ?action "duration"))
       (assert (pddl-action
         (id ?id)
+        (plan ?plan-id)
         (instance ?instance)
         (name ?name)
         (params ?args)
