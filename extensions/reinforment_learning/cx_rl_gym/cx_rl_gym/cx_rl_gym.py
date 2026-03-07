@@ -157,7 +157,7 @@ class CXRLGym(Env):
         self.n_actions = len(sorted_actions)
         self.action_space = Discrete(self.n_actions)
 
-        self.node.get_logger().debug('cxrl_gym init complete')
+        self.node.get_logger().debug('cx_rl_gym init complete')
 
     def get_id(self, name: str, args: list[str]) -> str:
         if not args:

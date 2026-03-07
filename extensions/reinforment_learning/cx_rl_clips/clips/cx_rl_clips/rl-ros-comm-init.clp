@@ -14,7 +14,7 @@
 ; limitations under the License.
 
 (defrule rl-service-init
-" Initiate the service clients for the pddl manager "
+" Initiate the service interfaces for cx_rl_gym "
   ?node-f <- (cx-rl-node (name ?node-name) (ros-comm-init FALSE))
   =>
   ; create clients for all services

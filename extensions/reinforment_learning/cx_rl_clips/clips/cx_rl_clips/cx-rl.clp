@@ -16,42 +16,11 @@
 ; batch this file to load all of the pddl definitions
 
 ; optionally use default node name if not provided
-(if (not (member$ CX-NODE (get-defglobal-list)))
-  then
-  (load* (str-cat (ament-index-get-package-share-directory "cx_rl_clips") "/clips/cx_rl_clips/node-name.clp"))
-)
 
-
-; load all regular files
-(foreach ?f (create$
-deftemplates.clp
-action-selection-action.clp
-exec-action-selection-client.clp
-get-status-client.clp
-get-free-robot-action.clp
-reset-env-action.clp
-rl-reset-env.clp
-rl-ros-comm-init.clp
-rl-execution.clp
-)
-(load* (str-cat (ament-index-get-package-share-directory "cx_rl_clips") "/clips/cx_rl_clips/" ?f))
-)
-
-; batch-load everything that is dynamcially created
-; (all service provider feedback functions depend on the node name)
-; The procedures fot storing the initial database depend on the required ROS interfaces
-(foreach ?f (create$
-  end-training-srv.clp
-  get-action-list-robot-srv.clp
-  get-action-list-srv.clp
-  get-current-observations-srv.clp
-  get-episode-end-srv.clp
-  get-observable-objects-srv.clp
-  get-observable-predicates-srv.clp
-  get-predefined-observables-srv.clp
-  get-observable-actions-srv.clp
-  get-predefined-actions-srv.clp
-  rl-save-facts.clp
-)
-(batch* (str-cat (ament-index-get-package-share-directory "cx_rl_clips") "/clips/cx_rl_clips/" ?f))
+(foreach ?f
+  (create$
+    deftemplates.clp
+    cx-rl-no-deftemplates.clp
+  )
+  (batch* (str-cat (ament-index-get-package-share-directory "cx_rl_clips") "/clips/cx_rl_clips/" ?f))
 )

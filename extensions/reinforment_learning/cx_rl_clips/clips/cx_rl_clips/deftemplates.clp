@@ -13,6 +13,10 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
+(if (not (member$ CX-NODE (get-defglobal-list)))
+  then
+  (load* (str-cat (ament-index-get-package-share-directory "cx_rl_clips") "/clips/cx_rl_clips/node-name.clp"))
+)
 (defglobal
   ?*CX-RL-LOG-LEVEL* = debug
 
