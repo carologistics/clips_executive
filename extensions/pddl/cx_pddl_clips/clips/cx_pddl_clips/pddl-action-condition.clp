@@ -15,6 +15,7 @@
 
 
 (defrule pddl-action-condition-check-request
+  (declare (salience ?*PRIORITY-PDDL-CHECK-CONDITION*))
   (pddl-action (id ?action-id) (name ?name) (instance ?instance) (params $?params))
   ?check-fact <- (pddl-action-condition (action ?action-id) (state PENDING))
   (not (pddl-action-condition (action ?action-id) (state CHECK-CONDITION)))
