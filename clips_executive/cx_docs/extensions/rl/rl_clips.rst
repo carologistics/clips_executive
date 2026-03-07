@@ -24,7 +24,13 @@ Also, as the current configuration is compatible with ROS 2 kilted or above, act
 - ``cx::CXCxRlInterfacesExecActionSelectionPlugin``
 - ``cx::CXCxRlInterfacesResetEnvPlugin``
 
-With all required plugins loaded, a single CLIPS file ``cx_rl.clp`` is required to obtain the CLIPS interface from the ``cx_rl_clips`` package.
+With all required plugins loaded, the CLIPS interface can be initialized in one of two ways:
+
+- By batch-loading the ``cx-rl.clp`` file from the ``cx_rl_clips`` package as provided.
+- By loading ``deftemplates.clp`` and ``cx_rl_no_deftemplates.clp`` separately.
+
+The latter approach allows extending or modifying the provided ``deftemplate`` definitions between the two loading steps.
+
 A minimal configuration file is depicted below.
 
 .. code-block:: yaml

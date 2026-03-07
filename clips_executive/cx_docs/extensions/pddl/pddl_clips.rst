@@ -19,19 +19,6 @@ The PDDL Manager node has the following responsibilities:
 - Applying planning filters to narrow down problems to a subset of actions, objects, and fluents for more detailed execution models.
 - Trigger planning a for each goal concurrently.
 
-Required |CX| Plugins
-*********************
-
-In order to integrate the PDDL manager with the |CX|, the following plugins are needed:
-
-- :ref:`cx::ExecutivePlugin <usage_executive_plugin>`: Manages the overall reasoning and control flow, interleaving ROS feedback with CLIPS reasoning.
-- :ref:`cx::RosMsgsPlugin <usage_ros_msgs_plugin>`: Provides access to ROS interfaces of the PDDL manager from within CLIPS.
-- :ref:`cx::AmentIndexPlugin <usage_ament_index_plugin>`: Resolves package paths via ``ament_index``. While not required, it is very useful in order to load PDDL files.
-
-Also, as the current configuration is compatible with ROS 2 jazzy, action client introspection is not supported, hence the following plugins are needed to trigger temporal planning and obtain the resulting plan:
-
-- ``cx::CXCxPddlMsgsPlanTemporalPlugin``
-- ``cx::CXCxPddlMsgsTimedPlanActionPlugin``
 
 PDDL Manager Services
 *********************
@@ -93,50 +80,107 @@ CLIPS Integration
 CLIPS needs to interact with the PDDL Manager by creating subscriptions and clients for the endpoints to then utilize the features as desired.
 In order to reduce manual overhead, predefined rules and deftemplates are available, which are described in the remainder of this document.
 
-An example for using the interfaces directly without this additional abstraction can be found in the :ref:`Tutorial for using the PDDL Manager directly <raw_pddl_agent>`.
-
-
-Predefined Interfaces
-~~~~~~~~~~~~~~~~~~~~~
-
 The idea is to have templates for facts that correspond to the individual endpoints of the PDDL manager.
 The workflow then is for users to simply assert a fact of a defined template to trigger the request to the PDDL manager, then using rules to observe the provided slots for the outcome.
 
-Example: Loading a PDDL Problem and Obtaining the initial State
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+A comprehensive example for using this integration is given in the :ref:`Tutorial for using the PDDL Manager with cx_pddl_clips <cx_pddl_clips_tutorial>`
+An example for using the interfaces directly without this additional integration can be found in the :ref:`Tutorial for using the PDDL Manager directly <raw_pddl_agent>`.
 
-The following example rule demonstrates how to initialize the connection to the external
-PDDL manager and load a PDDL problem into CLIPS.
+Request Execution Model
+~~~~~~~~~~~~~~~~~~~~~~~
+
+The CLIPS interface allows users to assert multiple request facts concurrently
+(e.g., adding fluents, creating goal instances, or checking action conditions).
+However, most interactions with the external PDDL manager must be processed
+**sequentially per PDDL instance**.
+
+To guarantee consistency between CLIPS and the PDDL manager, the rule base
+ensures that only **one request affecting a given PDDL instance is active at a
+time**. Additional requests remain pending until the current operation has
+completed.
+
+This coordination is handled using the ``busy-with`` slot of the
+:ref:`pddl-instance` fact. While an instance is marked as busy, other rules that
+would trigger conflicting service calls are temporarily blocked.
+
+
+Example:
+
+* A request to add fluents must finish before conditions are checked.
+* Retrieving fluents or predicates waits until previous updates have completed.
+* Goal configuration steps (creating goal instances, setting goals, applying
+  filters) are executed in order.
+
+Parallel Planning
+~~~~~~~~~~~~~~~~~
+
+Planning requests are handled differently.
+
+Once a goal instance has been created and the goals are registered, a planning
+request (e.g., via :ref:`pddl-plan`) is sent to the planner asynchronously.
+Multiple planning tasks may therefore run **in parallel**, allowing the system
+to evaluate different goals or planning configurations concurrently.
+
+When a plan is returned, the CLIPS interface automatically creates the
+corresponding :ref:`pddl-plan` and :ref:`pddl-action` facts.
+
+Rule Priorities
+~~~~~~~~~~~~~~~
+
+Internally, the rule base uses custom saliences (priorities) to enforce a
+deterministic ordering of PDDL-related operations (e.g., instance management,
+object updates, fluent updates, goal configuration, and planning). This ensures
+that dependent operations are always processed in a consistent order while
+allowing CLIPS reasoning to interleave with ROS communication.
+
+THe full list of used rule saliences is depicted below:
+
 .. code-block:: lisp
 
-  (defrule example-pddl-add-instance
-    " Setup PDDL instance and fetch initial facts "
-    =>
-    (assert
-      (pddl-manager (node "/pddl_manager"))
-      (pddl-instance
-        (name test)
-        (domain "domain.pddl")
-        (problem "problem.pddl")
-        (directory "<absolute path to directory>")
-      )
-      (pddl-get-fluents (instance test))
-    )
+   (defglobal
+    ?*PRIORITY-PDDL-INSTANCES* = -5100
+    ?*PRIORITY-PDDL-GET-ACTION-NAMES* = -5300
+    ?*PRIORITY-PDDL-OBJECTS* = -5400
+    ?*PRIORITY-PDDL-FLUENTS* = -5500
+    ?*PRIORITY-PDDL-APPLY-EFFECT* = -5600
+    ?*PRIORITY-PDDL-CLEAR-GOALS* = -5700
+    ?*PRIORITY-PDDL-CREATE-GOAL-INSTANCE* = -5800
+    ?*PRIORITY-PDDL-SET-ACTION-FILTER* = -5900
+    ?*PRIORITY-PDDL-SET-FLUENT-FILTER* = -6000
+    ?*PRIORITY-PDDL-SET-OBJECT-FILTER* = -6100
+    ?*PRIORITY-PDDL-SET-GOALS* = -6200
+    ?*PRIORITY-PDDL-PLAN* = -6300
+    ?*PRIORITY-PDDL-CHECK-CONDITION* = -6400
+    ?*PRIORITY-PDDL-GET-FLUENTS* = -6500
   )
 
-The first step is to initialize the interfaces to a running PDDL manager instance by asserting a respective :ref:`pddl-manager` fact.
-To create an instance, a :ref:`pddl-instance` fact is asserted, providing the domain and
-problem files, as well as the directory containing them.
-In order to fetch the initial fluents of the instance (as provided in the problem file), a :ref:`pddl-get-fluents` fact is asserted.
+Template Overrides
+~~~~~~~~~~~~~~~~~~
 
-A more comprehensive example can be found in the :ref:`Structured PDDL Agent Tutorial <structured_pddl_agent>`.
+The templates provided by the `cx_pddl_clips` package contain a minimal set of slots to provide the functionality.
+In practical applications, it might be convenient to store additional information (e.g., context as to why a particular service call is made or hints about how to interpret the results).
+Therefore, deftemplate definitions are decoupled from the rules, allowing to first load the deftemplates, then loading re-definitions of them as needed, and finally loading the rule set.
+Potential overrides may add more slots, but need to contain all the original slots, as otherwise the predefined rule base will not work.
+
+In the :ref:`cx_pddl_clips Agent Tutorial <cx_pddl_clips_tutorial>`,
+this feature is used to extend the notion of PDDL actions.
 
 
-|CX| Configuration
-^^^^^^^^^^^^^^^^^^
+Using the |CX| with cx_pddl_clips
+*********************************
 
 The example configuration below demonstrates how to pre-load the code from the `cx_pddl_clips` package via batch loading, before loading the example code.
-Two files are needed. The template definitionsare bundled in ``deftemplates.clp``, while all required rules are loaded through ``pddl.clp``. This split is deliberate, as it allows to override the templates before loading rules, if needed as discussed in more detail later.
+In order to integrate the PDDL manager with the |CX|, the following plugins are needed:
+
+- :ref:`cx::ExecutivePlugin <usage_executive_plugin>`: Manages the overall reasoning and control flow, interleaving ROS feedback with CLIPS reasoning.
+- :ref:`cx::RosMsgsPlugin <usage_ros_msgs_plugin>`: Provides access to ROS interfaces of the PDDL manager from within CLIPS.
+- :ref:`cx::AmentIndexPlugin <usage_ament_index_plugin>`: Resolves package paths via ``ament_index``. While not required, it is very useful in order to load PDDL files.
+
+Also, as the current configuration is compatible with ROS 2 jazzy, action client introspection is not supported, hence the following plugins are needed to trigger temporal planning and obtain the resulting plan:
+
+- ``cx::CXCxPddlMsgsPlanTemporalPlugin``
+- ``cx::CXCxPddlMsgsTimedPlanActionPlugin``
+
 
 .. code-block:: yaml
 
@@ -173,20 +217,37 @@ Two files are needed. The template definitionsare bundled in ``deftemplates.clp`
          pkg_share_dirs: ["cx_pddl_bringup"]
          load: ["clips/cx_pddl_clips_agent.clp"]
 
+Example: Loading a PDDL Problem and Obtaining the initial State
+***************************************************************
 
-Template Overrides
-~~~~~~~~~~~~~~~~~~
+The following example rule demonstrates how to initialize the connection to the external
+PDDL manager and load a PDDL problem into CLIPS.
 
-The templates provided by the `cx_pddl_clips` package contain a minimal set of slots to provide the functionality.
-In practical applications, it might be convenient to store additional information (e.g., context as to why a particular service call is made or hints about how to interpret the results).
-Therefore, deftemplate definitions are decoupled from the rules, allowing to first load the deftemplates, then loading re-definitions of them as needed, and finally loading the rule set.
-Potential overrides may add more slots, but need to contain all the original slots, as otherwise the predefined rule base will not work.
+.. code-block:: lisp
 
-In the :ref:`Structured PDDL Agent Tutorial <structured_pddl_agent>`,
-this feature is used to extend the notion of PDDL actions.
+  (defrule example-pddl-add-instance
+    " Setup PDDL instance and fetch initial facts "
+    =>
+    (assert
+      (pddl-manager (node "/pddl_manager"))
+      (pddl-instance
+        (name test)
+        (domain "domain.pddl")
+        (problem "problem.pddl")
+        (directory "<absolute path to directory>")
+      )
+      (pddl-get-fluents (instance test))
+    )
+  )
+
+The first step is to initialize the interfaces to a running PDDL manager instance by asserting a respective :ref:`pddl-manager` fact.
+To create an instance, a :ref:`pddl-instance` fact is asserted, providing the domain and
+problem files, as well as the directory containing them.
+In order to fetch the initial fluents of the instance (as provided in the problem file), a :ref:`pddl-get-fluents` fact is asserted.
+
 
 Provided Deftemplates
-~~~~~~~~~~~~~~~~~~~~~
+*********************
 
 In the remainder of this document, all provided deftemplates of the `cx_pddl_clips` are described.
 

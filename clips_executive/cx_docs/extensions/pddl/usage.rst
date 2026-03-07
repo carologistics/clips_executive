@@ -31,7 +31,7 @@ The following example showcases simple interactions between CLIPS and PDDL by ru
 
 .. code-block:: bash
 
-   ros2 launch cx_pddl_bringup cx_pddl_launch.py manager_config:=pddl_agents/structured_agent.yaml
+   ros2 launch cx_pddl_bringup cx_pddl_launch.py manager_config:=pddl_agents/cx_pddl_clips_agent.yaml
 
 
 Check out the :ref:`Intefacing Guide <pddl/pddl_clips.html>` page to learn how to write your own CLIPS applications while leveraging PDDL.

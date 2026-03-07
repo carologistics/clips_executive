@@ -1,6 +1,10 @@
 PDDL Integration for CLIPS
 ==========================
 
+.. attention::
+
+   This extension targets ROS jazzy or later. While technically possible to use with earlier versions of ROS, the provided example and supporting CLIPS code require jazzy or later.
+
 This extension provides an implementation for using PDDL alongside CLIPS.
 
 If you need one of the following features, you may find this useful:
