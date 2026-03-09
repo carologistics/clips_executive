@@ -19,6 +19,31 @@ It provides a clear execution flow guided through it's lifecycle states:
 
 Additionally, the node also supports the usage of :rosdoc:`bond` for advanced system health monitoring (e.g., via the :rosdoc:`nav2_lifecycle_manager`).
 
+
+CLIPS Environments
+++++++++++++++++++
+
+Each CLIPS environment created and managed by the |CX| is a **standard, isolated CLIPS environment**.
+The environments are only extended in a minimal and well-defined way to support integration
+with ROS and system-level control:
+
+* **Logging router**
+  A custom CLIPS output router is registered to forward CLIPS output to ROS logging facilities
+  and, optionally, to log file (see :doc:`logging` for more details).
+
+* **Initial watch configuration**
+  The default CLIPS watch settings are disabled on creation and selectively re-enabled based
+  on ROS parameters (see :doc:`configuration` for more details).
+
+* **System shutdown hook**
+  A CLIPS function ``(cx-shutdown)`` is injected into each environment.
+  When called, it requests a clean ROS shutdown, enabling CLIPS-based executive logic to
+  explicitly terminate the system in a controlled manner.
+
+Aside from these extensions, each environment behaves exactly like a normal CLIPS environment.
+No additional functions, facts, or rules are introduced implicitly, and all higher-level behavior
+is provided through explicitly loaded plugins.
+
 Starting the |CX|
 +++++++++++++++++
 

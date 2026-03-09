@@ -7,6 +7,7 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
+   cx_rl_gym.cx_rl_base_node
    cx_rl_gym.cx_rl_gym
 
 Module contents

@@ -8,6 +8,7 @@
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=86f27845" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom_figure.css" />
 
   
   
@@ -61,7 +62,7 @@
 <li class="toctree-l4"><a class="reference internal" href="pddl_clips.html">PDDL CLIPS Interfaces</a></li>
 <li class="toctree-l4"><a class="reference internal" href="domain.html">PDDL Domain and Problem File Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="raw_tutorial.html">Tutorial: Interfacing with a PDDL Manager directly</a></li>
-<li class="toctree-l4"><a class="reference internal" href="structured_tutorial.html">Tutorial: Structured PDDL Agent</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cx_pddl_clips_tutorial.html">Tutorial: cx_pddl_clips Agent</a></li>
 </ul>
 </li>
 </ul>
@@ -109,7 +110,7 @@
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>cx_pddl_manager<span class="w"> </span>pddl_manager
 </pre></div>
 </div>
-<p>A more practical way to to start the node is to utilize the launch file of the <cite>cx_pddl_bringup</cite>, which wraps the ROS2 CLIPS-Executive launch file and additionally starts the PDDL Manager alongside of it:</p>
+<p>A more practical way to to start the node is to utilize the launch file of the <cite>cx_pddl_bringup</cite> package, which wraps the ROS2 CLIPS-Executive launch file and additionally starts the PDDL Manager alongside of it:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>cx_pddl_bringup<span class="w"> </span>cx_pddl_launch.py
 </pre></div>
 </div>

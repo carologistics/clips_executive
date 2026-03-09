@@ -1,8 +1,0 @@
-TimedPlanAction
-===============
-This is a ROS message definition.
-
-**Source**
-
-.. literalinclude:: ../../../../../../extensions/pddl/cx_pddl_msgs/msg/TimedPlanAction.msg
-

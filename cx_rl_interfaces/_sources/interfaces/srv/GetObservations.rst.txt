@@ -1,0 +1,8 @@
+GetObservations
+===============
+This is a ROS service definition.
+
+**Source**
+
+.. literalinclude:: ../../../../../../extensions/reinforment_learning/cx_rl_interfaces/srv/GetObservations.srv
+

@@ -8,6 +8,7 @@
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=86f27845" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom_figure.css" />
 
   
   
@@ -92,7 +93,7 @@
   <section id="logging-and-routing">
 <h1>Logging and Routing<a class="headerlink" href="#logging-and-routing" title="Link to this heading"></a></h1>
 <p>The CLIPS Environment manager provides a custom CLIPS logger that logs CLIPS output to ROS and also saves CLIPS output of each environment to files if configured so.
-The log files are stored at the ROS logging directory “~/.ros/log/” and are named using the name of the environment followed by a timestamp.</p>
+The log files are stored at the ROS logging directory ( typically <code class="docutils literal notranslate"><span class="pre">~/.ros/log/</span></code>, see also the <a class="reference external" href="https://docs.ros.org/en/humble/Tutorials/Demos/Logging-and-logger-configuration.html#logging-directory-configuration">ROS logging tutorial</a>) and are named using the name of the environment followed by a timestamp.</p>
 <p>For log routing inside CLIPS, the custom loggers accepts the following logical names that log to the file and additionally also in some cases to ROS:</p>
 <blockquote>
 <div><ul class="simple">

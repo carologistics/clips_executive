@@ -9,7 +9,7 @@ Submodules
 
    cx_rl_multi_robot_mppo.MultiRobotMaskablePPO
    cx_rl_multi_robot_mppo.MultiRobotMaskableRolloutBuffer
-   cx_rl_multi_robot_mppo.cx_rl_node
+   cx_rl_multi_robot_mppo.cx_rl_mppo_node
 
 Module contents
 ---------------

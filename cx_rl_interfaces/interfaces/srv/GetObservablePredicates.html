@@ -18,7 +18,7 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="GetPredefinedObservables" href="GetPredefinedObservables.html" />
+    <link rel="next" title="GetObservations" href="GetObservations.html" />
     <link rel="prev" title="GetObservableObjects" href="GetObservableObjects.html" /> 
 </head>
 
@@ -45,17 +45,24 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../message_definitions.html">Message Definitions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../msg/Action.html">Action</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../msg/Observation.html">Observation</a></li>
+</ul>
+</li>
 <li class="toctree-l1 current"><a class="reference internal" href="../service_definitions.html">Service Definitions</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="CreateRLEnvState.html">CreateRLEnvState</a></li>
+<li class="toctree-l2"><a class="reference internal" href="EndTraining.html">EndTraining</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ExecActionSelection.html">ExecActionSelection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="GetActionID.html">GetActionID</a></li>
-<li class="toctree-l2"><a class="reference internal" href="GetActionList.html">GetActionList</a></li>
 <li class="toctree-l2"><a class="reference internal" href="GetActionListRobot.html">GetActionListRobot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="GetEpisodeEnd.html">GetEpisodeEnd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GetObservableActions.html">GetObservableActions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="GetObservableObjects.html">GetObservableObjects</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">GetObservablePredicates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GetObservations.html">GetObservations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GetPredefinedActions.html">GetPredefinedActions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="GetPredefinedObservables.html">GetPredefinedObservables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="SetRLMode.html">SetRLMode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GetStatus.html">GetStatus</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../action_definitions.html">Action Definitions</a><ul>
@@ -103,10 +110,10 @@
 <p>This is a ROS service definition.</p>
 <p><strong>Source</strong></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">---</span>
-<span class="n">string</span><span class="p">[]</span> <span class="n">predicatenames</span>
-<span class="n">uint8</span><span class="p">[]</span> <span class="n">paramcounts</span>
-<span class="n">string</span><span class="p">[]</span> <span class="n">paramnames</span>
-<span class="n">string</span><span class="p">[]</span> <span class="n">paramtypes</span>
+<span class="n">string</span><span class="p">[]</span> <span class="n">predicate_names</span>
+<span class="n">uint8</span><span class="p">[]</span> <span class="n">param_counts</span>
+<span class="n">string</span><span class="p">[]</span> <span class="n">param_names</span>
+<span class="n">string</span><span class="p">[]</span> <span class="n">param_types</span>
 </pre></div>
 </div>
 </section>
@@ -116,7 +123,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="GetObservableObjects.html" class="btn btn-neutral float-left" title="GetObservableObjects" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="GetPredefinedObservables.html" class="btn btn-neutral float-right" title="GetPredefinedObservables" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="GetObservations.html" class="btn btn-neutral float-right" title="GetObservations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

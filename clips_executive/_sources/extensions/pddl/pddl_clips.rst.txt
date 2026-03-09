@@ -24,9 +24,9 @@ Required |CX| Plugins
 
 In order to integrate the PDDL manager with the |CX|, the following plugins are needed:
 
-- ``cx::ExecutivePlugin`` — manages the overall reasoning and control flow, interleaving ROS feedback with CLIPS reasoning.
-- ``cx::RosMsgsPlugin`` provides access to ROS interfaces of the PDDL manager from within CLIPS.
-- ``cx::AmentIndexPlugin`` resolves package paths via ``ament_index``. While not required, it is very useful in order to load PDDL files.
+- :ref:`cx::ExecutivePlugin <usage_executive_plugin>`: Manages the overall reasoning and control flow, interleaving ROS feedback with CLIPS reasoning.
+- :ref:`cx::RosMsgsPlugin <usage_ros_msgs_plugin>`: Provides access to ROS interfaces of the PDDL manager from within CLIPS.
+- :ref:`cx::AmentIndexPlugin <usage_ament_index_plugin>`: Resolves package paths via ``ament_index``. While not required, it is very useful in order to load PDDL files.
 
 Also, as the current configuration is compatible with ROS 2 jazzy, action client introspection is not supported, hence the following plugins are needed to trigger temporal planning and obtain the resulting plan:
 
@@ -44,13 +44,11 @@ The PDDL Manager exposes a wide range of ROS 2 interfaces.
 
    * - Service / Topic
      - Corresponding Deftemplate(s)
-   * - :abbr:`/add_fluent (Add a single fluent to a PDDL instance)`
-     - :ref:`pddl-fluent`, :ref:`pddl-fluent-change`
    * - :abbr:`/add_pddl_instance (Add a new PDDL instance to the manager)`
      - :ref:`pddl-instance`
    * - :abbr:`/check_action_condition (Check if the preconditions of a PDDL action are satisfied)`
      - :ref:`pddl-action-condition`
-   * - :abbr:`get_action_effects (Retrieve the effects of a PDDL action)`
+   * - :abbr:`/get_action_effects (Retrieve the effects of a PDDL action)`
      - :ref:`pddl-action-get-effect`
    * - :abbr:`/get_action_names (Get the list of available action names for a PDDL instance)`
      - :ref:`pddl-action-names`
@@ -62,15 +60,15 @@ The PDDL Manager exposes a wide range of ROS 2 interfaces.
      - :ref:`pddl-fluent-change`
    * - :abbr:`/add_objects (Add objects to a PDDL instance)`
      - :ref:`pddl-object-change`
-   * - :abbr:`rm_objects (Remove objects from a PDDL instance)`
+   * - :abbr:`/rm_objects (Remove objects from a PDDL instance)`
      - :ref:`pddl-object-change`
-   * - :abbr:`set_functions (Set values for numeric functions in the PDDL instance)`
+   * - :abbr:`/set_functions (Set values for numeric functions in the PDDL instance)`
      - :ref:`pddl-numeric-fluent-change`
-   * - :abbr:`get_functions (Retrieve values of numeric functions)`
+   * - :abbr:`/get_functions (Retrieve values of numeric functions)`
      - :ref:`pddl-get-numeric-fluents`
-   * - :abbr:`set_goals (Register goal conditions with the PDDL manager)`
+   * - :abbr:`/set_goals (Register goal conditions with the PDDL manager)`
      - :ref:`pddl-set-goals`
-   * - :abbr:`clear_goals (Clear all goal conditions of a PDDL instance)`
+   * - :abbr:`/clear_goals (Clear all goal conditions of a PDDL instance)`
      - :ref:`pddl-clear-goals`
    * - :abbr:`/set_action_filter (Apply a filter to restrict planning to specific actions)`
      - :ref:`pddl-planning-filter`
@@ -104,65 +102,15 @@ Predefined Interfaces
 The idea is to have templates for facts that correspond to the individual endpoints of the PDDL manager.
 The workflow then is for users to simply assert a fact of a defined template to trigger the request to the PDDL manager, then using rules to observe the provided slots for the outcome.
 
-Example: Loading a PDDL Problem and Pbtaining the initial State
+Example: Loading a PDDL Problem and Obtaining the initial State
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The following example demonstrates how to initialize the connection to the external
-PDDL manager and load a PDDL problem into CLIPS. It shows two rules:
-
-1. One rule sets up service clients for communicating with the PDDL manager node.
-2. Another rule creates and registers a PDDL instance, requesting its initial state.
-
-These examples can serve as a starting point for integrating PDDL planning with
-CLIPS-based reasoning systems.
-
-A more comprehensive example can be found in the :ref:`Structured PDDL Agent Tutorial <structured_pddl_agent>`.
-
-Creating Service Clients
-^^^^^^^^^^^^^^^^^^^^^^^^
-
-The first rule initializes the required ROS service clients for the PDDL manager.
-It also asserts a ``pddl-services-loaded``
-fact to ensure coherent ordering.
-
-.. code-block:: lisp
-
-  (defrule example-pddl-init
-    " Initiate the service clients for the pddl manager "
-    =>
-    (bind ?services (create$
-        add_pddl_instance AddPddlInstance
-        get_fluents GetFluents
-    ))
-    (bind ?index 1)
-    (bind ?length (length$ ?services))
-    (while (< ?index ?length)
-        (bind ?service-name (nth$ ?index ?services))
-        (bind ?service-type (nth$ (+ ?index 1) ?services))
-        (ros-msgs-create-client
-            (str-cat "/pddl_manager" "/" ?service-name)
-            (str-cat "cx_pddl_msgs/srv/" ?service-type)
-        )
-        (bind ?index (+ ?index 2))
-    )
-    (assert (pddl-services-loaded))
-  )
-
-
-Loading the PDDL Instance
-^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Once the service clients are available, the next rule defines and registers a
-PDDL instance with the external manager. This includes specifying the domain and
-problem files, as well as the directory containing them. After registration, it
-triggers fetching of the initial fluents representing the problem’s initial state.
-
-
+The following example rule demonstrates how to initialize the connection to the external
+PDDL manager and load a PDDL problem into CLIPS.
 .. code-block:: lisp
 
   (defrule example-pddl-add-instance
     " Setup PDDL instance and fetch initial facts "
-    (pddl-services-loaded)
     =>
     (assert
       (pddl-manager (node "/pddl_manager"))
@@ -176,10 +124,13 @@ triggers fetching of the initial fluents representing the problem’s initial st
     )
   )
 
+The first step is to initialize the interfaces to a running PDDL manager instance by asserting a respective :ref:`pddl-manager` fact.
+To create an instance, a :ref:`pddl-instance` fact is asserted, providing the domain and
+problem files, as well as the directory containing them.
+In order to fetch the initial fluents of the instance (as provided in the problem file), a :ref:`pddl-get-fluents` fact is asserted.
 
+A more comprehensive example can be found in the :ref:`Structured PDDL Agent Tutorial <structured_pddl_agent>`.
 
-Here, three predefined templates are utilized, which are `pddl-manager`_ (registering the node name), `pddl-instance`_ (creating a PDDL instance from filesand naming it) and `pddl-get-fluents`_ (requesting the initial set of fluents).
-The ``pddl-get-fluents`` fact triggers a request to the set of `pddl-fluent`_ facts representing the initial state.
 
 |CX| Configuration
 ^^^^^^^^^^^^^^^^^^
@@ -214,15 +165,13 @@ Two files are needed. The template definitionsare bundled in ``deftemplates.clp`
          plugin: "cx::FileLoadPlugin"
          pkg_share_dirs: ["cx_pddl_clips"]
          batch: [
-           "clips/cx_pddl_clips/deftemplates.clp",
            "clips/cx_pddl_clips/pddl.clp"
-
          ]
 
        files:
          plugin: "cx::FileLoadPlugin"
          pkg_share_dirs: ["cx_pddl_bringup"]
-         load: ["clips/structured_agent.clp"]
+         load: ["clips/cx_pddl_clips_agent.clp"]
 
 
 Template Overrides
@@ -647,10 +596,17 @@ Consists of individual `pddl-action` facts with matching plan id.
 .. code-block:: lisp
 
   (deftemplate pddl-plan
-    (slot id (type SYMBOL))
     (slot instance (type SYMBOL))
-    (slot duration (type FLOAT))
+    (slot id (type SYMBOL))
+    (slot goal (type SYMBOL))
+    (slot goal-ptr (type EXTERNAL-ADDRESS))
+    (slot plan-type (type SYMBOL) (allowed-values CLASSICAL TEMPORAL) (default CLASSICAL))
+    (slot goal-handle (type EXTERNAL-ADDRESS))
+    (slot type (type SYMBOL) (allowed-values TEMPORAL CLASSICAL))
+    (slot state (type SYMBOL) (allowed-values PENDING WAITING PLANNING REQUEST-CANCELING CANCELING CANCELED SUCCESS FAILURE) (default PENDING))
+    (slot plan-start (type FLOAT) (default 0.0))
   )
+
 
 .. _pddl-planning-filter:
 

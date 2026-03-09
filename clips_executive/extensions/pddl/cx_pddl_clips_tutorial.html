@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tutorial: cx_pddl_clips Agent &mdash; clips_executive 0.1.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=86f27845" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom_figure.css" />
+
+  
+  
+        <script src="../../_static/jquery.js?v=8dae8fb0"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=360bc84d"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Reinforcement Learning Integration for CLIPS" href="../reinforcement_learning.html" />
+    <link rel="prev" title="Tutorial: Interfacing with a PDDL Manager directly" href="raw_tutorial.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            clips_executive
+          </a>
+              <div class="version">
+                0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started/index.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plugins/index.html">CLIPS Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plugin_generator/index.html">ROS Interface Plugin Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Extensions</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../PDDL.html">PDDL Integration for CLIPS</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../PDDL.html#background-pddl">Background: PDDL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../PDDL.html#overview">Overview</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../PDDL.html#content">Content</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pddl_clips.html">PDDL CLIPS Interfaces</a></li>
+<li class="toctree-l4"><a class="reference internal" href="domain.html">PDDL Domain and Problem File Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="raw_tutorial.html">Tutorial: Interfacing with a PDDL Manager directly</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Tutorial: cx_pddl_clips Agent</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../reinforcement_learning.html">Reinforcement Learning Integration for CLIPS</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../standards.html">Standard Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../__readme_include.html">README</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">clips_executive</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Extensions</a></li>
+          <li class="breadcrumb-item"><a href="../PDDL.html">PDDL Integration for CLIPS</a></li>
+      <li class="breadcrumb-item active">Tutorial: cx_pddl_clips Agent</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/extensions/pddl/cx_pddl_clips_tutorial.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tutorial-cx-pddl-clips-agent">
+<span id="structured-pddl-agent"></span><h1>Tutorial: cx_pddl_clips Agent<a class="headerlink" href="#tutorial-cx-pddl-clips-agent" title="Link to this heading"></a></h1>
+<p><strong>Goal:</strong> Use CLIPS to plan and execute PDDL actions with monitoring and timing using the interfaces provided by <code class="docutils literal notranslate"><span class="pre">cx_pddl_clips</span></code>.</p>
+<p><strong>Tutorial level:</strong> Advanced</p>
+<p><strong>Time:</strong> 45–60 minutes</p>
+<nav class="contents local" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#overview" id="id1">Overview</a></p></li>
+<li><p><a class="reference internal" href="#prerequisites" id="id2">Prerequisites</a></p></li>
+<li><p><a class="reference internal" href="#package-layout" id="id3">Package Layout</a></p></li>
+<li><p><a class="reference internal" href="#directory-layout" id="id4">Directory Layout</a></p></li>
+<li><p><a class="reference internal" href="#configuration" id="id5">Configuration</a></p></li>
+<li><p><a class="reference internal" href="#defining-the-pddl-action-template" id="id6">Defining the PDDL Action Template</a></p></li>
+<li><p><a class="reference internal" href="#agent-code-logic" id="id7">Agent Code Logic</a></p></li>
+<li><p><a class="reference internal" href="#initializing-the-pddl-manager" id="id8">Initializing the PDDL Manager</a></p></li>
+<li><p><a class="reference internal" href="#uploading-the-pddl-instance" id="id9">Uploading the PDDL Instance</a></p></li>
+<li><p><a class="reference internal" href="#action-execution" id="id10">Action Execution</a></p></li>
+<li><p><a class="reference internal" href="#finalizing-execution" id="id11">Finalizing Execution</a></p>
+<ul>
+<li><p><a class="reference internal" href="#pddl-domain" id="id12">PDDL Domain</a></p></li>
+<li><p><a class="reference internal" href="#pddl-problem" id="id13">PDDL Problem</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#running-the-pddl-agent" id="id14">Running the PDDL Agent</a></p></li>
+<li><p><a class="reference internal" href="#summary" id="id15">Summary</a></p></li>
+</ul>
+</nav>
+<section id="overview">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Overview</a><a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>This tutorial uses the interfaces provided by <code class="docutils literal notranslate"><span class="pre">cx_pddl_clips</span></code> to implement PDDL-based planning and action execution.
+The presented agent not only requests a plan but also <strong>executes and monitors actions</strong> step by step, checking preconditions, applying effects and tracking execution times.</p>
+<p>You will learn how to:</p>
+<ol class="arabic simple">
+<li><p>Extend fact templates provided by <code class="docutils literal notranslate"><span class="pre">cx_pddl_clips</span></code>,</p></li>
+<li><p>Plan using the PDDL Manager,</p></li>
+<li><p>Execute actions while checking feasibility conditions,</p></li>
+</ol>
+</section>
+<section id="prerequisites">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Prerequisites</a><a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h2>
+<p>This tutorial assumes that ROS2 CLIPS-Executive is installed and that you are familiar with creating and configuring a custom package using it.</p>
+</section>
+<section id="package-layout">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Package Layout</a><a class="headerlink" href="#package-layout" title="Link to this heading"></a></h2>
+<p>Below the relevant directory layout to configure and run the PDDL CLIPS agent is shown.
+The code is part of the <code class="docutils literal notranslate"><span class="pre">cx_pddl_bringup</span></code> package.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>cx_pddl_bringup
+├── CMakeLists.txt
+├── package.xml
+├── config
+│   └── cx_pddl_clips_agent.yaml
+├── clips
+│   └── cx_pddl_bringup
+│       ├── cx-pddl-clips-agent.clp
+│       └── deftemplate-overrides.clp
+└── pddl
+    ├── domain.pddl
+    └── problem.pddl
+</pre></div>
+</div>
+</section>
+<section id="directory-layout">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Directory Layout</a><a class="headerlink" href="#directory-layout" title="Link to this heading"></a></h2>
+<p>The package contains several directories with different responsibilities:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">config/</span></code>
+Contains configuration files used to configure the CLIPS agent and plugins.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">clips/</span></code>
+Contains the CLIPS rule files implementing the agent logic.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pddl/</span></code>
+Contains the PDDL domain and problem definitions.</p></li>
+</ul>
+</section>
+<section id="configuration">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Configuration</a><a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
+<p>The file <code class="docutils literal notranslate"><span class="pre">config/cx_pddl_clips_agent.yaml</span></code> configures the CLIPS agent,
+loads the required plugins and defines which CLIPS files should be loaded.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">/**</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">autostart_node</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_pddl_clips_agent&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">    </span><span class="nt">cx_pddl_clips_agent</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;executive&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;ros_msgs&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">                </span><span class="s">&quot;ament_index&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">                </span><span class="s">&quot;plan_temporal_action&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">                </span><span class="s">&quot;timed_plan_action_msg&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">                </span><span class="s">&quot;pddl_files&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">                </span><span class="s">&quot;files&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">log_clips_to_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">watch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facts&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;rules&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">redirect_stdout_to_debug</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="w">    </span><span class="nt">ament_index</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::AmentIndexPlugin&quot;</span>
+
+<span class="w">    </span><span class="nt">executive</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::ExecutivePlugin&quot;</span>
+
+<span class="w">    </span><span class="nt">ros_msgs</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::RosMsgsPlugin&quot;</span>
+
+<span class="w">    </span><span class="nt">pddl_files</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::FileLoadPlugin&quot;</span>
+<span class="w">      </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_pddl_clips&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;cx_pddl_bringup&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">batch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span>
+<span class="w">        </span><span class="s">&quot;clips/cx_pddl_clips/deftemplates.clp&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">        </span><span class="s">&quot;clips/cx_pddl_bringup/deftemplate-overrides.clp&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">        </span><span class="s">&quot;clips/cx_pddl_clips/pddl-no-deftemplates.clp&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">]</span>
+
+<span class="w">    </span><span class="nt">files</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::FileLoadPlugin&quot;</span>
+<span class="w">      </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_pddl_bringup&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;clips/cx_pddl_bringup/cx_pddl_clips_agent.clp&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">    </span><span class="nt">plan_temporal_action</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::CXCxPddlInterfacesPlanTemporalPlugin&quot;</span>
+
+<span class="w">    </span><span class="nt">timed_plan_action_msg</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::CXCxPddlInterfacesTimedPlanActionPlugin&quot;</span>
+</pre></div>
+</div>
+<p>The configuration creates a single CLIPS environment, which is augmented by several plugins:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ament_index</span></code>
+Used to locate PDDL files from within CLIPS.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">executive</span></code>
+Provides the core execution loop for the CLIPS agent</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ros_msgs</span></code>
+Enables ROS interactions.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pddl_files</span></code>
+Loads reusable CLIPS templates and rules related to PDDL integration.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">files</span></code>
+Loads the tutorial-specific CLIPS rule file implementing the agent logic.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plan_temporal_action</span></code>
+Enables access to temporal planning via action servers (generic action clients are not covered by the generic ROS communication plugin in ROS Jazzy).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">timed_plan_action_msg</span></code>
+Needed for the nested definition inside of the temporal plan action.</p></li>
+</ul>
+</section>
+<section id="defining-the-pddl-action-template">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Defining the PDDL Action Template</a><a class="headerlink" href="#defining-the-pddl-action-template" title="Link to this heading"></a></h2>
+<p>This tutorial agent overrides the default <code class="docutils literal notranslate"><span class="pre">pddl-action</span></code> template to include
+execution state, planned timing, and runtime tracking.
+Further, it extends the <code class="docutils literal notranslate"><span class="pre">pddl-plan</span></code> template  by a <code class="docutils literal notranslate"><span class="pre">plan-start</span></code> slot to
+mark the execution start of the plan.
+The extended templates are defined in the file <code class="docutils literal notranslate"><span class="pre">cx_pddl_bringup/deftemplate-overrides.clp</span></code>.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-action</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">id</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span><span class="w"> </span><span class="c1">; this should be a globally unique ID</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">params</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="p">(</span><span class="nv">create$</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">plan</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">planned-start-time</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">FLOAT</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">planned-duration</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">FLOAT</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">actual-start-time</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">FLOAT</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">actual-duration</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">FLOAT</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">state</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">IDLE</span><span class="w"> </span><span class="nv">SELECTED</span><span class="w"> </span><span class="nv">EXECUTING</span><span class="w"> </span><span class="nv">DONE</span><span class="p">))</span>
+<span class="p">)</span>
+
+<span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-plan</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">id</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">goal</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">goal-ptr</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">EXTERNAL-ADDRESS</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">plan-type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">CLASSICAL</span><span class="w"> </span><span class="nv">TEMPORAL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">CLASSICAL</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">goal-handle</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">EXTERNAL-ADDRESS</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">TEMPORAL</span><span class="w"> </span><span class="nv">CLASSICAL</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">state</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">PENDING</span><span class="w"> </span><span class="nv">WAITING</span><span class="w"> </span><span class="nv">PLANNING</span><span class="w"> </span><span class="nv">REQUEST-CANCELING</span><span class="w"> </span><span class="nv">CANCELING</span><span class="w"> </span><span class="nv">CANCELED</span><span class="w"> </span><span class="nv">SUCCESS</span><span class="w"> </span><span class="nv">FAILURE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">PENDING</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">plan-start</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">FLOAT</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="mf">0.0</span><span class="p">))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The template override is loaded after the initial template definition
+provided by the PDDL interface, but before any rules depending on the
+template are defined. The override retains all original slots and only adds
+additional ones required by this tutorial.</p>
+<p>This approach ensures that the rule set provided by the interface can still be
+loaded without modification, while allowing the tutorial agent to extend the
+template with additional execution-related information.</p>
+</section>
+<section id="agent-code-logic">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">Agent Code Logic</a><a class="headerlink" href="#agent-code-logic" title="Link to this heading"></a></h2>
+<p>The file <code class="docutils literal notranslate"><span class="pre">clips/cx_pddl_bringup/cx-pddl-clips-agent.clp</span></code> contains the custom logic for the tutorial agent:</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">cx-pddl-clips-agent-pddl-init</span>
+<span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">pddl-manager</span><span class="w"> </span><span class="p">(</span><span class="nv">node</span><span class="w"> </span><span class="s">&quot;/pddl_manager&quot;</span><span class="p">)))</span>
+<span class="p">)</span>
+
+<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">cx-pddl-clips-agent-pddl-add-instance</span>
+<span class="s">&quot; Setup PDDL instance with an active goal to plan for &quot;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">pddl-manager</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-comm-init</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">))</span>
+<span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?share-dir</span><span class="w"> </span><span class="p">(</span><span class="nv">ament-index-get-package-share-directory</span><span class="w"> </span><span class="s">&quot;cx_pddl_bringup&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">assert</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">pddl-instance</span>
+<span class="w">      </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">test</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="nv">domain</span><span class="w"> </span><span class="s">&quot;domain.pddl&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="nv">problem</span><span class="w"> </span><span class="s">&quot;problem.pddl&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">directory</span><span class="w"> </span><span class="p">(</span><span class="nv">str-cat</span><span class="w"> </span><span class="nv">?share-dir</span><span class="w"> </span><span class="s">&quot;/pddl&quot;</span><span class="p">))</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">pddl-get-fluents</span><span class="w"> </span><span class="p">(</span><span class="nv">instance</span><span class="w"> </span><span class="nv">test</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">pddl-create-goal-instance</span><span class="w"> </span><span class="p">(</span><span class="nv">instance</span><span class="w"> </span><span class="nv">test</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">goal</span><span class="w"> </span><span class="nv">active-goal</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">pddl-goal-fluent</span><span class="w"> </span><span class="p">(</span><span class="nv">instance</span><span class="w"> </span><span class="nv">test</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">goal</span><span class="w"> </span><span class="nv">active-goal</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">pddl-goal-fluent</span><span class="w"> </span><span class="p">(</span><span class="nv">instance</span><span class="w"> </span><span class="nv">test</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">goal</span><span class="w"> </span><span class="nv">active-goal</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="nv">c</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">pddl-set-goals</span><span class="w"> </span><span class="p">(</span><span class="nv">instance</span><span class="w"> </span><span class="nv">test</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">goal</span><span class="w"> </span><span class="nv">active-goal</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">pddl-plan</span><span class="w"> </span><span class="p">(</span><span class="nv">id</span><span class="w"> </span><span class="nv">test-plan</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">instance</span><span class="w"> </span><span class="nv">test</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">goal</span><span class="w"> </span><span class="nv">active-goal</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">plan-type</span><span class="w"> </span><span class="nv">TEMPORAL</span><span class="p">))</span>
+<span class="w">  </span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">cx-pddl-clips-agent-select-action</span>
+<span class="s">&quot; Start executing the first action of the resulting plan &quot;</span>
+<span class="w">  </span><span class="nv">?plan</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">pddl-plan</span><span class="w"> </span><span class="p">(</span><span class="nv">id</span><span class="w"> </span><span class="nv">?plan-id</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">plan-start</span><span class="w"> </span><span class="nv">?p-start</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">pddl-action</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">EXECUTING|SELECTED)))</span>
+<span class="nv">  ?pa &lt;- (pddl-action (plan ?plan-id) (planned-start-time ?t) (state IDLE))</span>
+<span class="nv">  (not (pddl-action (plan ?plan-id) (state IDLE) (planned-start-time ?ot&amp;:(&lt; ?ot ?t))))</span>
+<span class="nv">=&gt;</span>
+<span class="nv">  (if (= ?p-start 0.0) then (modify ?plan (plan-start (now))))</span>
+<span class="nv">  (modify ?pa (state SELECTED))</span>
+<span class="nv">)</span>
+
+<span class="nv">(defrule cx-pddl-clips-agent-check-action</span>
+<span class="nv">&quot; Before executing an action check the condition to make sure it is feasible &quot;</span>
+<span class="nv">  (pddl-action (id ?id) (state SELECTED) (name ?name) (params $?params))</span>
+<span class="nv">  (not (pddl-action-condition (action ?id)))</span>
+<span class="nv">=&gt;</span>
+<span class="nv">  (assert (pddl-action-condition (instance test) (action ?id)))</span>
+<span class="nv">)</span>
+
+<span class="nv">(defrule cx-pddl-clips-agent-executable-action</span>
+<span class="nv">&quot; Condition is satisfied, go ahead with execution &quot;</span>
+<span class="nv">  (pddl-plan (id ?plan-id) (plan-start ?t))</span>
+<span class="nv">  (pddl-action-condition (action ?action-id) (state CONDITION-SAT))</span>
+<span class="nv">  ?pa &lt;- (pddl-action (id ?action-id) (plan ?plan-id) (name ?name) (params $?params) (state SELECTED))</span>
+<span class="nv">=&gt;</span>
+<span class="nv">  (modify ?pa (state EXECUTING) (actual-start-time (- (now) ?t)))</span>
+<span class="nv">)</span>
+
+<span class="nv">(defrule cx-pddl-clips-agent-execution-done</span>
+<span class="nv">&quot; After the duration has elapsed, the action is done &quot;</span>
+<span class="nv">  (time ?now)</span>
+<span class="nv">  (pddl-plan (id ?plan-id) (plan-start ?t))</span>
+<span class="nv">  ?pa &lt;- (pddl-action (id ?id) (plan ?plan-id) (state EXECUTING) (planned-duration ?d) (name ?name)</span>
+<span class="nv">    (actual-start-time ?s&amp;:(&lt; (+ ?s ?d ?t) ?now)))</span>
+<span class="nv">=&gt;</span>
+<span class="nv">  (bind ?duration (- (now) (+ ?s ?t)))</span>
+<span class="nv">  (printout info &quot;Executed action &quot; ?name &quot; in &quot; ?duration &quot; seconds&quot; crlf)</span>
+<span class="nv">  (modify ?pa (state DONE) (actual-duration ?duration))</span>
+<span class="nv">  (assert (pddl-action-get-effect (action ?id) (apply TRUE)))</span>
+<span class="nv">)</span>
+
+<span class="nv">(defrule cx-pddl-clips-agent-print-exec-times</span>
+<span class="nv">&quot; Once everything is done, print out planned vs actual times &quot;</span>
+<span class="nv">  (pddl-action)</span>
+<span class="nv">  (not (pddl-action (state ~DONE)))</span>
+<span class="nv">  (not (printed))</span>
+<span class="nv">=&gt;</span>
+<span class="nv">  (printout blue &quot;Execution done&quot; crlf)</span>
+<span class="nv">  (do-for-all-facts ((?pa pddl-action)) TRUE</span>
+<span class="nv">     (printout green &quot;action &quot; ?pa:name &quot; &quot;</span>
+<span class="nv">       ?pa:params &quot; &quot; ?pa:planned-start-time &quot;|</span><span class="s">&quot; ?pa:planned-duration</span>
+<span class="s">       &quot;</span><span class="w"> </span><span class="nv">vs</span><span class="w"> </span><span class="nv">actual</span><span class="w"> </span><span class="s">&quot; ?pa:actual-start-time &quot;</span><span class="err">|&quot;</span><span class="w"> </span><span class="nv">?pa:actual-duration</span><span class="w"> </span><span class="nv">crlf</span>
+<span class="w">     </span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">printed</span><span class="p">))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Let us look at the different rules more closely.</p>
+</section>
+<section id="initializing-the-pddl-manager">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">Initializing the PDDL Manager</a><a class="headerlink" href="#initializing-the-pddl-manager" title="Link to this heading"></a></h2>
+<p>The rule <code class="docutils literal notranslate"><span class="pre">cx-pddl-clips-agent-pddl-init</span></code> initializes the setup of the PDDL manager.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">cx-pddl-clips-agent-pddl-init</span>
+<span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">pddl-manager</span><span class="w"> </span><span class="p">(</span><span class="nv">node</span><span class="w"> </span><span class="s">&quot;/pddl_manager&quot;</span><span class="p">)))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="uploading-the-pddl-instance">
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">Uploading the PDDL Instance</a><a class="headerlink" href="#uploading-the-pddl-instance" title="Link to this heading"></a></h2>
+<p>Once initialized, the rule <code class="docutils literal notranslate"><span class="pre">cx-pddl-clips-agent-pddl-add-instance</span></code> sets up the
+domain and problem to be planned for, defines the goal fluents and triggers plan generation.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">cx-pddl-clips-agent-pddl-add-instance</span>
+<span class="s">&quot; Setup PDDL instance with an active goal to plan for &quot;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">pddl-manager</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-comm-init</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">))</span>
+<span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?share-dir</span><span class="w"> </span><span class="p">(</span><span class="nv">ament-index-get-package-share-directory</span><span class="w"> </span><span class="s">&quot;cx_pddl_bringup&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">assert</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">pddl-instance</span>
+<span class="w">      </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">test</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="nv">domain</span><span class="w"> </span><span class="s">&quot;domain.pddl&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="nv">problem</span><span class="w"> </span><span class="s">&quot;problem.pddl&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">directory</span><span class="w"> </span><span class="p">(</span><span class="nv">str-cat</span><span class="w"> </span><span class="nv">?share-dir</span><span class="w"> </span><span class="s">&quot;/pddl&quot;</span><span class="p">))</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">pddl-get-fluents</span><span class="w"> </span><span class="p">(</span><span class="nv">instance</span><span class="w"> </span><span class="nv">test</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">pddl-create-goal-instance</span><span class="w"> </span><span class="p">(</span><span class="nv">instance</span><span class="w"> </span><span class="nv">test</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">goal</span><span class="w"> </span><span class="nv">active-goal</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">pddl-goal-fluent</span><span class="w"> </span><span class="p">(</span><span class="nv">instance</span><span class="w"> </span><span class="nv">test</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">goal</span><span class="w"> </span><span class="nv">active-goal</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">pddl-goal-fluent</span><span class="w"> </span><span class="p">(</span><span class="nv">instance</span><span class="w"> </span><span class="nv">test</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">goal</span><span class="w"> </span><span class="nv">active-goal</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="nv">c</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">pddl-set-goals</span><span class="w"> </span><span class="p">(</span><span class="nv">instance</span><span class="w"> </span><span class="nv">test</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">goal</span><span class="w"> </span><span class="nv">active-goal</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">pddl-plan</span><span class="w"> </span><span class="p">(</span><span class="nv">id</span><span class="w"> </span><span class="nv">test-plan</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">instance</span><span class="w"> </span><span class="nv">test</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">goal</span><span class="w"> </span><span class="nv">active-goal</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">plan-type</span><span class="w"> </span><span class="nv">TEMPORAL</span><span class="p">))</span>
+<span class="w">  </span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The interface provided by <code class="docutils literal notranslate"><span class="pre">cx_pddl_clips</span></code> takes care of translating the asserted facts into appropriate service requests.
+It also enforces a strict ordering whenever multiple operations are requested at the same time, as in this case.</p>
+</section>
+<section id="action-execution">
+<h2><a class="toc-backref" href="#id10" role="doc-backlink">Action Execution</a><a class="headerlink" href="#action-execution" title="Link to this heading"></a></h2>
+<p>Once the PDDL manager is done processing the requests, the result is a temporal plan including <code class="docutils literal notranslate"><span class="pre">pddl-action</span></code> facts representing the actions to execute.
+Here, a mockup execution and monitoring loop is provided that takes care of sequentially executing the actions by:</p>
+<ol class="arabic simple">
+<li><p>selecting an action with lowest planned start time</p></li>
+</ol>
+<blockquote>
+<div><div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">cx-pddl-clips-agent-select-action</span>
+<span class="s">&quot; Start executing the first action of the resulting plan &quot;</span>
+<span class="w">  </span><span class="nv">?plan</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">pddl-plan</span><span class="w"> </span><span class="p">(</span><span class="nv">id</span><span class="w"> </span><span class="nv">?plan-id</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">plan-start</span><span class="w"> </span><span class="nv">?p-start</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">pddl-action</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">EXECUTING</span><span class="err">|</span><span class="nv">SELECTED</span><span class="p">)))</span>
+<span class="w">  </span><span class="nv">?pa</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">pddl-action</span><span class="w"> </span><span class="p">(</span><span class="nv">plan</span><span class="w"> </span><span class="nv">?plan-id</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">planned-start-time</span><span class="w"> </span><span class="nv">?t</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">IDLE</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">pddl-action</span><span class="w"> </span><span class="p">(</span><span class="nv">plan</span><span class="w"> </span><span class="nv">?plan-id</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">IDLE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">planned-start-time</span><span class="w"> </span><span class="nv">?ot&amp;:</span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="nv">?ot</span><span class="w"> </span><span class="nv">?t</span><span class="p">))))</span>
+<span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="nv">?p-start</span><span class="w"> </span><span class="mf">0.0</span><span class="p">)</span><span class="w"> </span><span class="nv">then</span><span class="w"> </span><span class="p">(</span><span class="nv">modify</span><span class="w"> </span><span class="nv">?plan</span><span class="w"> </span><span class="p">(</span><span class="nv">plan-start</span><span class="w"> </span><span class="p">(</span><span class="nv">now</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">modify</span><span class="w"> </span><span class="nv">?pa</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">SELECTED</span><span class="p">))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+<ol class="arabic simple" start="2">
+<li><p>checking the condition of the selected action</p></li>
+</ol>
+<blockquote>
+<div><div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">cx-pddl-clips-agent-check-action</span>
+<span class="s">&quot; Before executing an action check the condition to make sure it is feasible &quot;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">pddl-action</span><span class="w"> </span><span class="p">(</span><span class="nv">id</span><span class="w"> </span><span class="nv">?id</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">SELECTED</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">?name</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">$?params</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">pddl-action-condition</span><span class="w"> </span><span class="p">(</span><span class="nv">action</span><span class="w"> </span><span class="nv">?id</span><span class="p">)))</span>
+<span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">pddl-action-condition</span><span class="w"> </span><span class="p">(</span><span class="nv">instance</span><span class="w"> </span><span class="nv">test</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">action</span><span class="w"> </span><span class="nv">?id</span><span class="p">)))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+<ol class="arabic simple" start="3">
+<li><p>given a satisfied condition, the action is executed by means of waiting the planned duration of the action.</p></li>
+</ol>
+<blockquote>
+<div><div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">cx-pddl-clips-agent-executable-action</span>
+<span class="s">&quot; Condition is satisfied, go ahead with execution &quot;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">pddl-plan</span><span class="w"> </span><span class="p">(</span><span class="nv">id</span><span class="w"> </span><span class="nv">?plan-id</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">plan-start</span><span class="w"> </span><span class="nv">?t</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">pddl-action-condition</span><span class="w"> </span><span class="p">(</span><span class="nv">action</span><span class="w"> </span><span class="nv">?action-id</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">CONDITION-SAT</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">?pa</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">pddl-action</span><span class="w"> </span><span class="p">(</span><span class="nv">id</span><span class="w"> </span><span class="nv">?action-id</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">plan</span><span class="w"> </span><span class="nv">?plan-id</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">?name</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">$?params</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">SELECTED</span><span class="p">))</span>
+<span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">modify</span><span class="w"> </span><span class="nv">?pa</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">EXECUTING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">actual-start-time</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="p">(</span><span class="nv">now</span><span class="p">)</span><span class="w"> </span><span class="nv">?t</span><span class="p">)))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+<ol class="arabic simple" start="4">
+<li><p>Once the planned duration elapsed, the action effect is applied</p></li>
+</ol>
+<blockquote>
+<div><div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">cx-pddl-clips-agent-execution-done</span>
+<span class="s">&quot; After the duration has elapsed, the action is done &quot;</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">time</span><span class="w"> </span><span class="nv">?now</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">pddl-plan</span><span class="w"> </span><span class="p">(</span><span class="nv">id</span><span class="w"> </span><span class="nv">?plan-id</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">plan-start</span><span class="w"> </span><span class="nv">?t</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">?pa</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">pddl-action</span><span class="w"> </span><span class="p">(</span><span class="nv">id</span><span class="w"> </span><span class="nv">?id</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">plan</span><span class="w"> </span><span class="nv">?plan-id</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">EXECUTING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">planned-duration</span><span class="w"> </span><span class="nv">?d</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">?name</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">actual-start-time</span><span class="w"> </span><span class="nv">?s&amp;:</span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="nv">?s</span><span class="w"> </span><span class="nv">?d</span><span class="w"> </span><span class="nv">?t</span><span class="p">)</span><span class="w"> </span><span class="nv">?now</span><span class="p">)))</span>
+<span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?duration</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="p">(</span><span class="nv">now</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="nv">?s</span><span class="w"> </span><span class="nv">?t</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">info</span><span class="w"> </span><span class="s">&quot;Executed action &quot;</span><span class="w"> </span><span class="nv">?name</span><span class="w"> </span><span class="s">&quot; in &quot;</span><span class="w"> </span><span class="nv">?duration</span><span class="w"> </span><span class="s">&quot; seconds&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">modify</span><span class="w"> </span><span class="nv">?pa</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">DONE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">actual-duration</span><span class="w"> </span><span class="nv">?duration</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">pddl-action-get-effect</span><span class="w"> </span><span class="p">(</span><span class="nv">action</span><span class="w"> </span><span class="nv">?id</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">apply</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">)))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="finalizing-execution">
+<h2><a class="toc-backref" href="#id11" role="doc-backlink">Finalizing Execution</a><a class="headerlink" href="#finalizing-execution" title="Link to this heading"></a></h2>
+<p>Once all actions have completed, CLIPS prints a timing summary.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">cx-pddl-clips-agent-print-exec-times</span>
+<span class="s">&quot; Once everything is done, print out planned vs actual times &quot;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">pddl-action</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">pddl-action</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">~DONE</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">printed</span><span class="p">))</span>
+<span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">blue</span><span class="w"> </span><span class="s">&quot;Execution done&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">do-for-all-facts</span><span class="w"> </span><span class="p">((</span><span class="nv">?pa</span><span class="w"> </span><span class="nv">pddl-action</span><span class="p">))</span><span class="w"> </span><span class="nv">TRUE</span>
+<span class="w">     </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;action &quot;</span><span class="w"> </span><span class="nv">?pa:name</span><span class="w"> </span><span class="s">&quot; &quot;</span>
+<span class="w">       </span><span class="nv">?pa:params</span><span class="w"> </span><span class="s">&quot; &quot;</span><span class="w"> </span><span class="nv">?pa:planned-start-time</span><span class="w"> </span><span class="s">&quot;|&quot;</span><span class="w"> </span><span class="nv">?pa:planned-duration</span>
+<span class="w">       </span><span class="s">&quot; vs actual &quot;</span><span class="w"> </span><span class="nv">?pa:actual-start-time</span><span class="w"> </span><span class="s">&quot;|&quot;</span><span class="w"> </span><span class="nv">?pa:actual-duration</span><span class="w"> </span><span class="nv">crlf</span>
+<span class="w">     </span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">printed</span><span class="p">))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The planning model used in this tutorial is defined in two files located in the package:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>cx_pddl_bringup
+└── pddl
+    ├── domain.pddl
+    └── problem.pddl
+</pre></div>
+</div>
+<p>The <strong>domain file</strong> describes the available actions and predicates of the planning
+environment, while the <strong>problem file</strong> defines a specific planning task including
+objects, the initial state and the desired goal state.</p>
+<p>The tutorial uses a simple <strong>Blocks World</strong> planning domain. In this domain, a robot
+manipulates blocks on a table in order to achieve a desired stacking configuration.</p>
+<p>The robot can perform the following actions:</p>
+<ul class="simple">
+<li><p>pick up a block from the table</p></li>
+<li><p>put down a block onto the table</p></li>
+<li><p>stack a block onto another block</p></li>
+<li><p>unstack a block from another block</p></li>
+</ul>
+<p>Each action has <strong>preconditions</strong> that must be satisfied before execution and
+<strong>effects</strong> that modify the world state. All actions are modeled as
+<strong>durative actions</strong>, meaning they take a certain amount of time to execute.</p>
+<section id="pddl-domain">
+<h3><a class="toc-backref" href="#id12" role="doc-backlink">PDDL Domain</a><a class="headerlink" href="#pddl-domain" title="Link to this heading"></a></h3>
+<p>The domain definition is located at <code class="docutils literal notranslate"><span class="pre">pddl/domain.pddl</span></code></p>
+<p>It describes the <strong>types</strong>, <strong>predicates</strong>, and <strong>actions</strong> available to the planner.</p>
+<div class="highlight-PDDL notranslate"><div class="highlight"><pre><span></span>(define (domain blocksworld)
+
+  (:types
+      block - object
+  )
+
+  (:predicates
+      (on ?x - block ?y - block)      ; block ?x is on block ?y
+      (on-table ?x - block)           ; block ?x is on the table
+      (clear ?x - block)              ; nothing is on top of ?x
+      (arm-empty)                     ; the robot is not holding anything
+      (holding ?x - block)            ; the robot is holding block ?x
+  )
+
+  (:durative-action pick-up
+      :parameters (?ob - block)
+      :duration (= ?duration 1)
+      :condition
+          (and
+              (at start (clear ?ob))
+              (at start (on-table ?ob))
+              (at start (arm-empty)))
+      :effect
+          (and
+              (at end (not (on-table ?ob)))
+              (at end (not (clear ?ob)))
+              (at end (not (arm-empty)))
+              (at end (holding ?ob))))
+
+  (:durative-action put-down
+      :parameters (?ob - block)
+      :duration (= ?duration 1)
+      :condition
+          (at start (holding ?ob))
+      :effect
+          (and
+              (at end (not (holding ?ob)))
+              (at end (clear ?ob))
+              (at end (arm-empty))
+              (at end (on-table ?ob)))
+  )
+
+  (:durative-action stack
+      :parameters (?ob1 - block ?ob2 - block)
+      :duration (= ?duration 2)
+      :condition
+          (and
+              (at start (holding ?ob1))
+              (at start (clear ?ob2)))
+      :effect
+          (and
+              (at end (not (holding ?ob1)))
+              (at end (not (clear ?ob2)))
+              (at end (clear ?ob1))
+              (at end (arm-empty))
+              (at end (on ?ob1 ?ob2)))
+  )
+
+  (:durative-action unstack
+      :parameters (?ob1 - block ?ob2 - block)
+      :duration (= ?duration 1)
+      :condition
+          (and
+              (at start (on ?ob1 ?ob2))
+              (at start (clear ?ob1))
+              (at start (arm-empty)))
+      :effect
+          (and
+              (at end (holding ?ob1))
+              (at end (clear ?ob2))
+              (at end (not (clear ?ob1)))
+              (at end (not (arm-empty)))
+              (at end (not (on ?ob1 ?ob2))))
+  )
+)
+</pre></div>
+</div>
+</section>
+<section id="pddl-problem">
+<h3><a class="toc-backref" href="#id13" role="doc-backlink">PDDL Problem</a><a class="headerlink" href="#pddl-problem" title="Link to this heading"></a></h3>
+<p>The problem definition is located at <code class="docutils literal notranslate"><span class="pre">pddl/problem.pddl</span></code>:</p>
+<p>The problem file defines a <strong>specific scenario</strong> for the domain. It specifies
+the available objects, the initial world state, and the desired goal configuration.</p>
+<div class="highlight-PDDL notranslate"><div class="highlight"><pre><span></span>(define (problem bw-1)
+    (:domain blocksworld)
+
+    (:objects A B C - block)
+
+    (:init
+        (arm-empty)
+        (on-table A)
+        (on B A)
+        (on C B)
+        (clear C)
+    )
+
+    (:goal
+        (and
+            (on A B)
+            (on B C)
+        )
+    )
+)
+</pre></div>
+</div>
+<p>In the initial configuration, block <code class="docutils literal notranslate"><span class="pre">C</span></code> is on <code class="docutils literal notranslate"><span class="pre">B</span></code> and <code class="docutils literal notranslate"><span class="pre">B</span></code> is on <code class="docutils literal notranslate"><span class="pre">A</span></code>.
+The planner must compute a sequence of actions that rearranges the blocks
+so that <code class="docutils literal notranslate"><span class="pre">A</span></code> is on <code class="docutils literal notranslate"><span class="pre">B</span></code> and <code class="docutils literal notranslate"><span class="pre">B</span></code> is on <code class="docutils literal notranslate"><span class="pre">C</span></code>.</p>
+</section>
+</section>
+<section id="running-the-pddl-agent">
+<h2><a class="toc-backref" href="#id14" role="doc-backlink">Running the PDDL Agent</a><a class="headerlink" href="#running-the-pddl-agent" title="Link to this heading"></a></h2>
+<p>The tutorial uses the generic launch file provided by <code class="docutils literal notranslate"><span class="pre">cx_pddl_bringup</span></code>.
+This launch file starts the PDDL manager and the CLIPS agent and loads the
+configuration specified via the <code class="docutils literal notranslate"><span class="pre">manager_config</span></code> argument.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>cx_pddl_bringup<span class="w"> </span>cx_pddl_launch.py<span class="w"> </span>manager_config:<span class="o">=</span>pddl_agents/cx_pddl_clips_agent.yaml
+</pre></div>
+</div>
+<p>You should see the CLIPS output showing initialization, goal setup, planning,
+and the full action execution process with timing data.</p>
+<div class="highlight-bash: notranslate"><div class="highlight"><pre><span></span>[cx_node-2] [clips_manager] [INFO] Activated [clips_manager]...
+<span class="hll">[cx_node-2] [ros_msgs] [WARN] service /pddl_manager/add_pddl_instance not available, abort request.
+</span><span class="hll">[cx_node-2] [cx_pddl_clips_agent] [WARN] Sending of request failed, is the service /pddl_manager/add_pddl_instance running?
+</span>[pddl_manager-1] [pddl_manager] [INFO] Start planning...
+[pddl_manager-1] [pddl_manager] [INFO] Successfully planned
+[cx_node-2] [cx_pddl_clips_agent] [INFO] Executed action unstack in 1.1000874042511 seconds
+[cx_node-2] [cx_pddl_clips_agent] [INFO] Executed action put-down in 1.09998250007629 seconds
+[cx_node-2] [cx_pddl_clips_agent] [INFO] Executed action unstack in 1.09951519966125 seconds
+[cx_node-2] [cx_pddl_clips_agent] [INFO] Executed action stack in 2.09970760345459 seconds
+[cx_node-2] [cx_pddl_clips_agent] [INFO] Executed action pick-up in 1.09947609901428 seconds
+[cx_node-2] [cx_pddl_clips_agent] [INFO] Executed action stack in 2.09946322441101 seconds
+[cx_node-2] [cx_pddl_clips_agent] [INFO] Execution done
+[cx_node-2] [cx_pddl_clips_agent] [INFO] action unstack (&quot;c&quot; &quot;b&quot;) 0.0|1.0 vs actual 0.0989217758178711|1.1000874042511
+[cx_node-2] [cx_pddl_clips_agent] [INFO] action put-down (&quot;c&quot;) 1.001|1.0 vs actual 1.49925684928894|1.09998250007629
+[cx_node-2] [cx_pddl_clips_agent] [INFO] action unstack (&quot;b&quot; &quot;a&quot;) 2.002|1.0 vs actual 2.89918994903564|1.09951519966125
+[cx_node-2] [cx_pddl_clips_agent] [INFO] action stack (&quot;b&quot; &quot;c&quot;) 3.003|2.0 vs actual 4.29887771606445|2.09970760345459
+[cx_node-2] [cx_pddl_clips_agent] [INFO] action pick-up (&quot;a&quot;) 5.004|1.0 vs actual 6.69945955276489|1.09947609901428
+[cx_node-2] [cx_pddl_clips_agent] [INFO] action stack (&quot;a&quot; &quot;b&quot;) 6.005|2.0 vs actual 8.09942483901978|2.09946322441101
+</pre></div>
+</div>
+<p>Note that you might observe a warning message while running this example. This is expected, as the CX node may complete startup before the PDDL Manager does, requesting a service which is not available yet. The request is automatically retried again.</p>
+</section>
+<section id="summary">
+<h2><a class="toc-backref" href="#id15" role="doc-backlink">Summary</a><a class="headerlink" href="#summary" title="Link to this heading"></a></h2>
+<p>You now have a <strong>CLIPS PDDL agent</strong> capable of:</p>
+<ul class="simple">
+<li><p>Setting up planning problems,</p></li>
+<li><p>Setting planning goals and requesting plans,</p></li>
+<li><p>Executing and monitoring actions,</p></li>
+<li><p>Comparing planned vs. actual execution durations.</p></li>
+</ul>
+<p>This provides a powerful base for integrating reasoning and execution control
+in robotic systems using the ROS2 CLIPS-Executive framework.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="raw_tutorial.html" class="btn btn-neutral float-left" title="Tutorial: Interfacing with a PDDL Manager directly" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../reinforcement_learning.html" class="btn btn-neutral float-right" title="Reinforcement Learning Integration for CLIPS" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Tarik Viehmann.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

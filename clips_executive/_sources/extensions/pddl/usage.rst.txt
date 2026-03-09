@@ -13,7 +13,7 @@ To just launch a standalone node, just run the following command:
 
   ros2 run cx_pddl_manager pddl_manager
 
-A more practical way to to start the node is to utilize the launch file of the `cx_pddl_bringup`, which wraps the |CX| launch file and additionally starts the PDDL Manager alongside of it:
+A more practical way to to start the node is to utilize the launch file of the `cx_pddl_bringup` package, which wraps the |CX| launch file and additionally starts the PDDL Manager alongside of it:
 
 .. code-block:: bash
 

@@ -31,7 +31,7 @@ Facts
 
 .. code-block:: lisp
 
-  ; Asserted by the respective creat-client function.
+  ; Asserted by the respective create-client function.
   ; Retracted by the respective destroy-client function.
   (<pkg-kebab>-<srv-kebab>-client (service ?service-name-string))
 

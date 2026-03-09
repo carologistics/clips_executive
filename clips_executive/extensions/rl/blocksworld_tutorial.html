@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tutorial: Building an RL Agent for Blocksworld &mdash; clips_executive 0.1.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=86f27845" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom_figure.css" />
+
+  
+  
+        <script src="../../_static/jquery.js?v=8dae8fb0"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=360bc84d"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Standard Documents" href="../../standards.html" />
+    <link rel="prev" title="Reinforcement Learning CLIPS Interfaces" href="rl_clips.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            clips_executive
+          </a>
+              <div class="version">
+                0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started/index.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plugins/index.html">CLIPS Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plugin_generator/index.html">ROS Interface Plugin Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Extensions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../PDDL.html">PDDL Integration for CLIPS</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../reinforcement_learning.html">Reinforcement Learning Integration for CLIPS</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../reinforcement_learning.html#background-reinforcement-learning">Background: Reinforcement Learning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reinforcement_learning.html#overview">Overview</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../reinforcement_learning.html#content">Content</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cx_rl_gym.html">CXRLGym - ROS 2 Reinforcement Learning Environment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multi_robot_mppo.html">CXRLMaskablePPONode: RL Model Multi-Robot Applications</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rl_clips.html">Reinforcement Learning CLIPS Interfaces</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Tutorial: Building an RL Agent for Blocksworld</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../standards.html">Standard Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../__readme_include.html">README</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">clips_executive</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Extensions</a></li>
+          <li class="breadcrumb-item"><a href="../reinforcement_learning.html">Reinforcement Learning Integration for CLIPS</a></li>
+      <li class="breadcrumb-item active">Tutorial: Building an RL Agent for Blocksworld</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/extensions/rl/blocksworld_tutorial.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tutorial-building-an-rl-agent-for-blocksworld">
+<span id="structured-rl-agent"></span><h1>Tutorial: Building an RL Agent for Blocksworld<a class="headerlink" href="#tutorial-building-an-rl-agent-for-blocksworld" title="Link to this heading"></a></h1>
+<p><strong>Goal:</strong> Use CLIPS to define a reinforcement learning agent for
+<a class="reference external" href="https://en.wikipedia.org/wiki/Blocks_world">blocksworld</a>,
+generate symbolic actions, assign rewards, and train or execute an RL policy.</p>
+<p><strong>Tutorial level:</strong> Advanced</p>
+<p><strong>Time:</strong> 45–60 minutes</p>
+<nav class="contents local" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#overview" id="id1">Overview</a></p></li>
+<li><p><a class="reference internal" href="#prerequisites" id="id2">Prerequisites</a></p></li>
+<li><p><a class="reference internal" href="#package-structure" id="id3">Package Structure</a></p></li>
+<li><p><a class="reference internal" href="#configuration" id="id4">Configuration</a></p></li>
+<li><p><a class="reference internal" href="#defining-environment-logic" id="id5">Defining Environment Logic</a></p>
+<ul>
+<li><p><a class="reference internal" href="#blocksworld-step-0-configuration-via-global-variables" id="id6">Blocksworld Step 0: Configuration via Global Variables</a></p></li>
+<li><p><a class="reference internal" href="#blocksworld-step-1-defining-the-environment" id="id7">Blocksworld Step 1: Defining the Environment</a></p></li>
+<li><p><a class="reference internal" href="#blocksworld-step-2-defining-the-reset-procedure" id="id8">Blocksworld Step 2: Defining the Reset Procedure</a></p></li>
+<li><p><a class="reference internal" href="#blocksworld-step-3-action-execution" id="id9">Blocksworld Step 3: Action Execution</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section id="overview">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Overview</a><a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>This tutorial demonstrates how to integrate the blocksworld domain with the <code class="docutils literal notranslate"><span class="pre">CXRLGym</span></code> reinforcement learning environment using CLIPS.</p>
+<p>You will learn how to:</p>
+<ol class="arabic simple">
+<li><p>figure the CLIPS RL agent and required plugins,</p></li>
+<li><p>Define symbolic observables and actions,</p></li>
+<li><p>Implement the reset lifecycle,</p></li>
+<li><p>Generate candidate RL actions,</p></li>
+<li><p>Execute selected actions and assign rewards,</p></li>
+<li><p>Detect episode termination,</p></li>
+<li><p>Run the agent in both training and execution mode.</p></li>
+</ol>
+</section>
+<section id="prerequisites">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Prerequisites</a><a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h2>
+<p>This tutorial assumes that ROS2 CLIPS-Executive is installed and that you are familiar with creating and configuring a custom package using it.</p>
+<p>It provides the steps to replicate the default agent of the <code class="docutils literal notranslate"><span class="pre">cx_rl_bringup</span></code> package.</p>
+</section>
+<section id="package-structure">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Package Structure</a><a class="headerlink" href="#package-structure" title="Link to this heading"></a></h2>
+<p>The following structure should be present, create missing directories and files as depicted</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>clips<span class="w"> </span>params
+touch<span class="w"> </span>clips/rl-blocksworld.clp
+touch<span class="w"> </span>params/rl_agent.yaml
+touch<span class="w"> </span>params/rl_node_config.yaml
+<span class="c1"># Resulting package:</span>
+.
+├──<span class="w"> </span>clips
+│<span class="w">   </span>└──<span class="w"> </span>rl-blocksword.clp
+├──<span class="w"> </span>CMakeLists.txt
+├──<span class="w"> </span>package.xml
+└──<span class="w"> </span>params
+<span class="w">    </span>├──<span class="w"> </span>rl_agent.yaml
+<span class="w">    </span>└──<span class="w"> </span>rl_node_config.yaml
+</pre></div>
+</div>
+</section>
+<section id="configuration">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Configuration</a><a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
+<p>The CLIPS agent is configured via <code class="docutils literal notranslate"><span class="pre">rl_agent.yaml</span></code>.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">clips_manager</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_rl_bringup&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">cx_rl_bringup</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;executive&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">                </span><span class="s">&quot;ament_index&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">                </span><span class="s">&quot;ros_msgs&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">                </span><span class="s">&quot;ros_param&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">                </span><span class="s">&quot;action_selection&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">                </span><span class="s">&quot;get_free_robot&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">                </span><span class="s">&quot;reset_env&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">                </span><span class="s">&quot;rl_files&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">                </span><span class="s">&quot;files&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">log_clips_to_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">watch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facts&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;rules&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">redirect_stdout_to_debug</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="w">    </span><span class="nt">ament_index</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::AmentIndexPlugin&quot;</span>
+
+<span class="w">    </span><span class="nt">executive</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::ExecutivePlugin&quot;</span>
+<span class="w">      </span><span class="nt">publish_on_refresh</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">      </span><span class="nt">assert_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">refresh_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+
+<span class="w">    </span><span class="nt">ros_msgs</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::RosMsgsPlugin&quot;</span>
+
+<span class="w">    </span><span class="nt">ros_param</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::RosParamPlugin&quot;</span>
+
+<span class="w">    </span><span class="nt">reset_env</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::CXCxRlInterfacesResetEnvPlugin&quot;</span>
+
+<span class="w">    </span><span class="nt">action_selection</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::CXCxRlInterfacesActionSelectionPlugin&quot;</span>
+
+<span class="w">    </span><span class="nt">get_free_robot</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::CXCxRlInterfacesGetFreeRobotPlugin&quot;</span>
+
+<span class="w">    </span><span class="nt">rl_files</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::FileLoadPlugin&quot;</span>
+<span class="w">      </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_rl_clips&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">batch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span>
+<span class="w">        </span><span class="s">&quot;clips/cx_rl_clips/cx-rl.clp&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">      </span><span class="p p-Indicator">]</span>
+
+<span class="w">    </span><span class="nt">files</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::FileLoadPlugin&quot;</span>
+<span class="w">      </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_rl_bringup&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span>
+<span class="w">        </span><span class="s">&quot;clips/cx_rl_bringup/rl-blocksworld.clp&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">      </span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+<p>The following plugins are used:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">executive</span></code> – Controls reasoning cycles</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ros_msgs</span></code> – Provides ROS communication</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">reset_env</span></code> – Enables environment reset</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">action_selection</span></code> – Executes symbolic actions</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">get_free_robot</span></code> – Handles robot availability</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rl_files</span></code> – Loads reusable RL CLIPS interfaces</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">files</span></code> – Loads the BlocksWorld rule base</p></li>
+</ul>
+<div class="admonition-separate-fielloadplugins admonition">
+<p class="admonition-title">Separate FielLoadPlugins</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">cx_rl.clp</span></code> file provided by <code class="docutils literal notranslate"><span class="pre">cx_rl_clips</span></code> must be batch loaded rather than using a standard load. This is because it contains not only deftemplates and rules, but also CLIPS commands that must be executed during loading.</p>
+<p>To accommodate this, we use a separate FileLoadPlugin for batch loading the interface, while user-defined rules (e.g., <code class="docutils literal notranslate"><span class="pre">rl-blocksworld.clp</span></code>) are loaded using a separate FileLoadPlugin. Loading both the interface and user code with a single plugin would not work, as batch commands are only executed after the plugin processes all load entries.</p>
+</div>
+<p>Additionally, the RL node is configured with the <code class="docutils literal notranslate"><span class="pre">rl_node_config</span></code> file:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">/**</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># storage_dir: defaults to ros logging dir</span>
+<span class="w">    </span><span class="nt">model_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx_rl_agent&quot;</span>
+
+<span class="w">    </span><span class="nt">training</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">retraining</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">      </span><span class="nt">max_episodes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<span class="w">      </span><span class="nt">timesteps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+
+<span class="w">    </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">entrypoint</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx_rl_gym.cx_rl_gym:CXRLGym&quot;</span>
+
+<span class="w">    </span><span class="nt">model</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">learning_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.03</span>
+<span class="w">      </span><span class="nt">gamma</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.99</span>
+<span class="w">      </span><span class="nt">gae_lambda</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.95</span>
+<span class="w">      </span><span class="nt">ent_coef</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
+<span class="w">      </span><span class="nt">vf_coef</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">      </span><span class="nt">max_grad_norm</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">      </span><span class="nt">batch_size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
+<span class="w">      </span><span class="nt">n_steps</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
+<span class="w">      </span><span class="nt">n_robots</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">      </span><span class="nt">seed</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">42</span>
+<span class="w">      </span><span class="nt">verbose</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">      </span><span class="nt">wait_for_all_robots</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+</pre></div>
+</div>
+</section>
+<section id="defining-environment-logic">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Defining Environment Logic</a><a class="headerlink" href="#defining-environment-logic" title="Link to this heading"></a></h2>
+<p>The goal is to define an environment consisting of four blocks (<code class="docutils literal notranslate"><span class="pre">block1</span></code>, <code class="docutils literal notranslate"><span class="pre">block2</span></code>, <code class="docutils literal notranslate"><span class="pre">block3</span></code> and <code class="docutils literal notranslate"><span class="pre">block4</span></code>) that have to be stacked to an ordered tower (<code class="docutils literal notranslate"><span class="pre">block1</span></code> at the bottom, <code class="docutils literal notranslate"><span class="pre">block4</span></code> on top). Initially all blocks lay on the table.
+Available actions are to pick up a block from a table and to stack the picked up block onto another block.</p>
+<p>This tutorial follows along the steps defined in the <a class="reference internal" href="rl_clips.html#clips-workflows"><span class="std std-ref">RL CLIPS interface doucmentation</span></a>.</p>
+<p>The full example code is listed below and further discussed in the remainder of this tutorial:</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defglobal</span>
+<span class="w">  </span><span class="nv">?*CX-RL-REWARD-EPISODE-SUCCESS*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="mi">100</span>
+<span class="w">  </span><span class="nv">?*CX-RL-REWARD-EPISODE-FAILURE*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="mi">-100</span>
+<span class="p">)</span>
+
+<span class="c1">; Step 1: Defining the Environment</span>
+
+<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">rl-blocksworld-initial-state</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">cx-rl-node</span><span class="p">))</span>
+<span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">assert</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observable-type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">robot</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">objects</span><span class="w"> </span><span class="nv">robot1</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observable-type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="k">block</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">objects</span><span class="w"> </span><span class="nv">block1</span><span class="w"> </span><span class="nv">block2</span><span class="w"> </span><span class="nv">block3</span><span class="w"> </span><span class="nv">block4</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observable-predicate</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on-table</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-names</span><span class="w"> </span><span class="nv">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-types</span><span class="w"> </span><span class="k">block</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observable-predicate</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-names</span><span class="w"> </span><span class="nv">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-types</span><span class="w"> </span><span class="k">block</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observable-predicate</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">can-hold</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-names</span><span class="w"> </span><span class="nv">r</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-types</span><span class="w"> </span><span class="nv">robot</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observable-predicate</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">holding</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-names</span><span class="w"> </span><span class="nv">r</span><span class="w"> </span><span class="nv">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-types</span><span class="w"> </span><span class="nv">robot</span><span class="w"> </span><span class="k">block</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observable-predicate</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-names</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-types</span><span class="w"> </span><span class="k">block</span><span class="w"> </span><span class="k">block</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observable-predicate</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">target-on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-names</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-types</span><span class="w"> </span><span class="k">block</span><span class="w"> </span><span class="k">block</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observable-predicate</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">target-on-table</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-names</span><span class="w"> </span><span class="nv">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-types</span><span class="w"> </span><span class="k">block</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block1</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block2</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block3</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block4</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on-table</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block1</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on-table</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block2</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on-table</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block3</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on-table</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block4</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">target-on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block4</span><span class="w"> </span><span class="nv">block3</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">target-on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block3</span><span class="w"> </span><span class="nv">block2</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">target-on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block2</span><span class="w"> </span><span class="nv">block1</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">target-on-table</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block1</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">can-hold</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">robot1</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block1</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block2</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block3</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block4</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observable-action</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">stack</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-names</span><span class="w"> </span><span class="nv">r</span><span class="w"> </span><span class="nv">b1</span><span class="w"> </span><span class="nv">b2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-types</span><span class="w"> </span><span class="nv">robot</span><span class="w"> </span><span class="k">block</span><span class="w"> </span><span class="k">block</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observable-action</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">pickup</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-names</span><span class="w"> </span><span class="nv">r</span><span class="w"> </span><span class="nv">b</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-types</span><span class="w"> </span><span class="nv">robot</span><span class="w"> </span><span class="k">block</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-predefined-action</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">pickup</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">robot1</span><span class="w"> </span><span class="nv">block1</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-predefined-action</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">pickup</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">robot1</span><span class="w"> </span><span class="nv">block2</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-predefined-action</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">pickup</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">robot1</span><span class="w"> </span><span class="nv">block3</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-predefined-action</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">pickup</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">robot1</span><span class="w"> </span><span class="nv">block4</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-robot</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">robot1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">waiting</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">))</span>
+<span class="w">  </span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">cx-rl-node</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">?*CX-RL-NODE-NAME*</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">mode</span><span class="w"> </span><span class="nv">UNSET</span><span class="p">)))</span>
+<span class="p">)</span>
+
+<span class="c1">; Step 2: Defining the Reset Procedure</span>
+
+<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">rl-blocksworld-reset-to-load-facts</span>
+<span class="w"> </span><span class="nv">?reset</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-reset-env</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">USER-CLEANUP</span><span class="p">))</span>
+<span class="w"> </span><span class="nv">=&gt;</span>
+<span class="w"> </span><span class="p">(</span><span class="nv">modify</span><span class="w"> </span><span class="nv">?reset</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">LOAD-FACTS</span><span class="p">))</span>
+<span class="p">)</span>
+
+<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">rl-blocksworld-reset-to-done</span>
+<span class="w"> </span><span class="nv">?reset</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-reset-env</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">USER-INIT</span><span class="p">))</span>
+<span class="w"> </span><span class="nv">=&gt;</span>
+<span class="w"> </span><span class="p">(</span><span class="nv">modify</span><span class="w"> </span><span class="nv">?reset</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">DONE</span><span class="p">))</span>
+<span class="p">)</span>
+
+<span class="c1">; Step 3: Action Execution</span>
+
+<span class="c1">; providing actions given a pending current action space</span>
+
+<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">rl-blocksworld-provide-action-stack</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-current-action-space</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">PENDING</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-robot</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">?robot</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">waiting</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">holding</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">?robot</span><span class="w"> </span><span class="nv">?some-block</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">?other-block</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">test</span><span class="w"> </span><span class="p">(</span><span class="nv">neq</span><span class="w"> </span><span class="nv">?some-block</span><span class="w"> </span><span class="nv">?other-block</span><span class="p">))</span>
+<span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?id</span><span class="w"> </span><span class="p">(</span><span class="nv">sym-cat</span><span class="w"> </span><span class="s">&quot;stack&quot;</span><span class="w"> </span><span class="p">(</span><span class="nv">gensym*</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-action</span><span class="w"> </span><span class="p">(</span><span class="nv">id</span><span class="w"> </span><span class="nv">?id</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">stack</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">?robot</span><span class="w"> </span><span class="nv">?some-block</span><span class="w"> </span><span class="nv">?other-block</span><span class="p">)))</span>
+<span class="p">)</span>
+
+<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">rl-blocksworld-provide-action-pickup</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-current-action-space</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">PENDING</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-robot</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">?robot</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">waiting</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">can-hold</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">?robot</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on-table</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">?some-block</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">?some-block</span><span class="p">))</span>
+<span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?id</span><span class="w"> </span><span class="p">(</span><span class="nv">sym-cat</span><span class="w"> </span><span class="s">&quot;pickup&quot;</span><span class="w"> </span><span class="p">(</span><span class="nv">gensym*</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-action</span><span class="w"> </span><span class="p">(</span><span class="nv">id</span><span class="w"> </span><span class="nv">?id</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">pickup</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">?robot</span><span class="w"> </span><span class="nv">?some-block</span><span class="p">)))</span>
+<span class="p">)</span>
+
+<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">rl-blocksworld-actions-generation-done</span>
+<span class="w">  </span><span class="p">(</span><span class="k">declare</span><span class="w"> </span><span class="p">(</span><span class="nv">salience</span><span class="w"> </span><span class="mi">-2</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">?action-space</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-current-action-space</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">PENDING</span><span class="p">))</span>
+<span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">modify</span><span class="w"> </span><span class="nv">?action-space</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">DONE</span><span class="p">))</span>
+<span class="p">)</span>
+
+<span class="c1">; handling selected actions, applying rewards and updated observations</span>
+
+<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">action-selected-action-done-stack</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-robot</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">?robot</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">?obs1</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">holding</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">?robot</span><span class="w"> </span><span class="nv">?block</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">?action</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-action</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">stack</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">?robot</span><span class="w"> </span><span class="nv">?block</span><span class="w"> </span><span class="nv">?other-block</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">is-selected</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">is-finished</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-observable-type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="k">block</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">objects</span><span class="w"> </span><span class="nv">$?</span><span class="w"> </span><span class="nv">?other-block&amp;:</span><span class="p">(</span><span class="nv">neq</span><span class="w"> </span><span class="nv">?other-block</span><span class="w"> </span><span class="nv">?block</span><span class="p">)</span><span class="w"> </span><span class="nv">$?</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">?obs2</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">?other-block2&amp;:</span><span class="p">(</span><span class="nb">eq</span><span class="w"> </span><span class="nv">?other-block2</span><span class="w"> </span><span class="p">(</span><span class="nv">sym-cat</span><span class="w"> </span><span class="nv">?other-block</span><span class="p">))))</span>
+<span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?obs1</span><span class="w"> </span><span class="nv">?obs2</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">?block</span><span class="w"> </span><span class="p">(</span><span class="nv">sym-cat</span><span class="w"> </span><span class="nv">?other-block</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">can-hold</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">?robot</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?reward</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">do-for-fact</span><span class="w"> </span><span class="p">((</span><span class="nv">?target</span><span class="w"> </span><span class="nv">rl-observation</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">and</span><span class="w"> </span><span class="p">(</span><span class="nb">eq</span><span class="w"> </span><span class="nv">?target:name</span><span class="w"> </span><span class="nv">target-on</span><span class="p">)</span>
+<span class="w">         </span><span class="p">(</span><span class="nb">eq</span><span class="w"> </span><span class="nv">?target:params</span><span class="w"> </span><span class="p">(</span><span class="nv">create$</span><span class="w"> </span><span class="nv">?block</span><span class="w"> </span><span class="p">(</span><span class="nv">sym-cat</span><span class="w"> </span><span class="nv">?other-block</span><span class="p">))))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;useful action on &quot;</span><span class="nv">?target:params</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?reward</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">modify</span><span class="w"> </span><span class="nv">?action</span><span class="w"> </span><span class="p">(</span><span class="nv">is-finished</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">reward</span><span class="w"> </span><span class="nv">?reward</span><span class="p">))</span>
+<span class="p">)</span>
+
+<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">action-selected-action-done-pickup</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-robot</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">?robot</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">?obs1</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">can-hold</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">?robot</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">?obs2</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on-table</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">?block</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">?action</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-action</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">pickup</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">?robot</span><span class="w"> </span><span class="nv">?block</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">is-selected</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">is-finished</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">))</span>
+<span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?obs1</span><span class="w"> </span><span class="nv">?obs2</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">holding</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">?robot</span><span class="w"> </span><span class="nv">?block</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?reward</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">do-for-fact</span><span class="w"> </span><span class="p">((</span><span class="nv">?target</span><span class="w"> </span><span class="nv">rl-observation</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">and</span><span class="w"> </span><span class="p">(</span><span class="nb">eq</span><span class="w"> </span><span class="nv">?target:name</span><span class="w"> </span><span class="nv">target-on-table</span><span class="p">)</span>
+<span class="w">         </span><span class="p">(</span><span class="nb">eq</span><span class="w"> </span><span class="nv">?target:params</span><span class="w"> </span><span class="p">(</span><span class="nv">create$</span><span class="w"> </span><span class="nv">?block</span><span class="p">)))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">red</span><span class="w"> </span><span class="s">&quot;useless action pickup &quot;</span><span class="nv">?target:params</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?reward</span><span class="w"> </span><span class="mi">-100</span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">modify</span><span class="w"> </span><span class="nv">?action</span><span class="w"> </span><span class="p">(</span><span class="nv">is-finished</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">reward</span><span class="w"> </span><span class="nv">?reward</span><span class="p">))</span>
+<span class="p">)</span>
+
+<span class="c1">; Training</span>
+
+<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">rl-blocksworld-episode-end-success</span>
+<span class="w">  </span><span class="p">(</span><span class="k">declare</span><span class="w"> </span><span class="p">(</span><span class="nv">salience</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">target-on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">$?target1</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">target-on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">$?target2</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">target-on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">$?target3</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">test</span><span class="w"> </span><span class="p">(</span><span class="nb">and</span><span class="w"> </span><span class="p">(</span><span class="nv">neq</span><span class="w"> </span><span class="nv">?target1</span><span class="w"> </span><span class="nv">?target2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">neq</span><span class="w"> </span><span class="nv">?target1</span><span class="w"> </span><span class="nv">?target3</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">neq</span><span class="w"> </span><span class="nv">?target2</span><span class="w"> </span><span class="nv">?target3</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">$?target1</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">$?target2</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">$?target3</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">?action</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-action</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">?name</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">is-selected</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">is-finished</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-episode-end</span><span class="w"> </span><span class="p">(</span><span class="nv">success</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">)))</span>
+<span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;SUCCESS!&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-episode-end</span><span class="w"> </span><span class="p">(</span><span class="nv">success</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">modify</span><span class="w"> </span><span class="nv">?action</span><span class="w"> </span><span class="p">(</span><span class="nv">reward</span><span class="w"> </span><span class="mi">1000</span><span class="p">))</span>
+<span class="p">)</span>
+
+<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">rl-blocksworld-episode-end-failure</span>
+<span class="w">  </span><span class="p">(</span><span class="k">declare</span><span class="w"> </span><span class="p">(</span><span class="nv">salience</span><span class="w"> </span><span class="mi">-1</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">cx-rl-node</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">?node</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">mode</span><span class="w"> </span><span class="nv">TRAINING</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-current-action-space</span><span class="w"> </span><span class="p">(</span><span class="nv">node</span><span class="w"> </span><span class="nv">?node</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">PENDING</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-action</span><span class="w"> </span><span class="p">(</span><span class="nv">node</span><span class="w"> </span><span class="nv">?node</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">is-selected</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-episode-end</span><span class="w"> </span><span class="p">(</span><span class="nv">node</span><span class="w"> </span><span class="nv">?node</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">success</span><span class="w"> </span><span class="nv">?success</span><span class="p">)))</span>
+<span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-episode-end</span><span class="w"> </span><span class="p">(</span><span class="nv">node</span><span class="w"> </span><span class="nv">?node</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">success</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">)))</span>
+<span class="p">)</span>
+
+<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">rl-blocksworld-stop-agent-on-training-end</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-end-training</span><span class="p">)</span>
+<span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">cx-shutdown</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1">; Execution</span>
+
+<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">rl-blocksworld-ask-for-execution</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">cx-rl-node</span><span class="w"> </span><span class="p">(</span><span class="nv">mode</span><span class="w"> </span><span class="nv">EXECUTION</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-current-action-space</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-action</span><span class="w"> </span><span class="p">(</span><span class="nv">is-selected</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">is-finished</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">)))</span>
+<span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-current-action-space</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">PENDING</span><span class="p">)))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<section id="blocksworld-step-0-configuration-via-global-variables">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">Blocksworld Step 0: Configuration via Global Variables</a><a class="headerlink" href="#blocksworld-step-0-configuration-via-global-variables" title="Link to this heading"></a></h3>
+<p>Keeping the default node name untouched, the only thing to do is to define some rewards for episod failure or success.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defglobal</span>
+<span class="w">  </span><span class="nv">?*CX-RL-REWARD-EPISODE-SUCCESS*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="mi">100</span>
+<span class="w">  </span><span class="nv">?*CX-RL-REWARD-EPISODE-FAILURE*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="mi">-100</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="blocksworld-step-1-defining-the-environment">
+<h3><a class="toc-backref" href="#id7" role="doc-backlink">Blocksworld Step 1: Defining the Environment</a><a class="headerlink" href="#blocksworld-step-1-defining-the-environment" title="Link to this heading"></a></h3>
+<p>A single rule can take care of this step:</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">rl-blocksworld-initial-state</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">cx-rl-node</span><span class="p">))</span>
+<span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">assert</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observable-type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">robot</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">objects</span><span class="w"> </span><span class="nv">robot1</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observable-type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="k">block</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">objects</span><span class="w"> </span><span class="nv">block1</span><span class="w"> </span><span class="nv">block2</span><span class="w"> </span><span class="nv">block3</span><span class="w"> </span><span class="nv">block4</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observable-predicate</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on-table</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-names</span><span class="w"> </span><span class="nv">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-types</span><span class="w"> </span><span class="k">block</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observable-predicate</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-names</span><span class="w"> </span><span class="nv">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-types</span><span class="w"> </span><span class="k">block</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observable-predicate</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">can-hold</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-names</span><span class="w"> </span><span class="nv">r</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-types</span><span class="w"> </span><span class="nv">robot</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observable-predicate</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">holding</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-names</span><span class="w"> </span><span class="nv">r</span><span class="w"> </span><span class="nv">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-types</span><span class="w"> </span><span class="nv">robot</span><span class="w"> </span><span class="k">block</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observable-predicate</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-names</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-types</span><span class="w"> </span><span class="k">block</span><span class="w"> </span><span class="k">block</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observable-predicate</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">target-on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-names</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-types</span><span class="w"> </span><span class="k">block</span><span class="w"> </span><span class="k">block</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observable-predicate</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">target-on-table</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-names</span><span class="w"> </span><span class="nv">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-types</span><span class="w"> </span><span class="k">block</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observable-action</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">stack</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-names</span><span class="w"> </span><span class="nv">r</span><span class="w"> </span><span class="nv">b1</span><span class="w"> </span><span class="nv">b2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-types</span><span class="w"> </span><span class="nv">robot</span><span class="w"> </span><span class="k">block</span><span class="w"> </span><span class="k">block</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observable-action</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">pickup</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-names</span><span class="w"> </span><span class="nv">r</span><span class="w"> </span><span class="nv">b</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-types</span><span class="w"> </span><span class="nv">robot</span><span class="w"> </span><span class="k">block</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block1</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block2</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block3</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block4</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on-table</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block1</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on-table</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block2</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on-table</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block3</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on-table</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block4</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">target-on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block4</span><span class="w"> </span><span class="nv">block3</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">target-on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block3</span><span class="w"> </span><span class="nv">block2</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">target-on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block2</span><span class="w"> </span><span class="nv">block1</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">target-on-table</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block1</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">can-hold</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">robot1</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block1</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block2</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block3</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block4</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">rl-robot</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">robot1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">waiting</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">cx-rl-node</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">?*CX-RL-NODE-NAME*</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">mode</span><span class="w"> </span><span class="nv">UNSET</span><span class="p">))</span>
+<span class="w">  </span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The rule condition ensures that this rule only fires exactly onces, as it asserts an cx-rl-node fact.
+This ensures that it is not accidentally called again after the environment resets during training.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">rl-blocksworld-initial-state</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">cx-rl-node</span><span class="p">))</span>
+<span class="nv">=&gt;</span>
+</pre></div>
+</div>
+<p>In order to define the blocksworld environment, a few parameterized predicates are defined.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">rl-observable-type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">robot</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">objects</span><span class="w"> </span><span class="nv">robot1</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">rl-observable-type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="k">block</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">objects</span><span class="w"> </span><span class="nv">block1</span><span class="w"> </span><span class="nv">block2</span><span class="w"> </span><span class="nv">block3</span><span class="w"> </span><span class="nv">block4</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">rl-observable-predicate</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on-table</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-names</span><span class="w"> </span><span class="nv">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-types</span><span class="w"> </span><span class="k">block</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">rl-observable-predicate</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-names</span><span class="w"> </span><span class="nv">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-types</span><span class="w"> </span><span class="k">block</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">rl-observable-predicate</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">can-hold</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-names</span><span class="w"> </span><span class="nv">r</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-types</span><span class="w"> </span><span class="nv">robot</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">rl-observable-predicate</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">holding</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-names</span><span class="w"> </span><span class="nv">r</span><span class="w"> </span><span class="nv">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-types</span><span class="w"> </span><span class="nv">robot</span><span class="w"> </span><span class="k">block</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">rl-observable-predicate</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-names</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-types</span><span class="w"> </span><span class="k">block</span><span class="w"> </span><span class="k">block</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">rl-observable-predicate</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">target-on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-names</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-types</span><span class="w"> </span><span class="k">block</span><span class="w"> </span><span class="k">block</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">rl-observable-predicate</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">target-on-table</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-names</span><span class="w"> </span><span class="nv">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-types</span><span class="w"> </span><span class="k">block</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Intuitively, this provides the following symbolic representation of the environment:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>on-table(blockX)</cite>: The block <code class="docutils literal notranslate"><span class="pre">blockX</span></code> is on the table</p></li>
+<li><p><cite>clear(blockX)</cite>: The block <code class="docutils literal notranslate"><span class="pre">blockX</span></code> can be used as stacking base, as no other block is on top if.</p></li>
+<li><p><cite>can-hold(robotX)</cite>: The robot <code class="docutils literal notranslate"><span class="pre">robotX</span></code> is ready to pick up a block.</p></li>
+<li><p><cite>holding(robotX, blockX)</cite> The robot <code class="docutils literal notranslate"><span class="pre">robotX</span></code> is ready is holding <code class="docutils literal notranslate"><span class="pre">blockX</span></code> and therfore ready to stack it on another block.</p></li>
+<li><p><cite>on(blockX, blockY)</cite>: The block <code class="docutils literal notranslate"><span class="pre">blockX</span></code> is stacked on top of <code class="docutils literal notranslate"><span class="pre">blockY</span></code>.</p></li>
+<li><p><cite>target-on-table(blockX)</cite>: The goal is to have block <code class="docutils literal notranslate"><span class="pre">blockX</span></code> on the table</p></li>
+<li><p><cite>-target-on(blockX, blockY</cite>: The goal is to have block <code class="docutils literal notranslate"><span class="pre">blockX</span></code> stacked on top of <code class="docutils literal notranslate"><span class="pre">blockY</span></code>.</p></li>
+</ul>
+</div></blockquote>
+<p>Similarly, parameterized actions span the action space.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">rl-observable-action</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">stack</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-names</span><span class="w"> </span><span class="nv">r</span><span class="w"> </span><span class="nv">b1</span><span class="w"> </span><span class="nv">b2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-types</span><span class="w"> </span><span class="nv">robot</span><span class="w"> </span><span class="k">block</span><span class="w"> </span><span class="k">block</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">rl-observable-action</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">pickup</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-names</span><span class="w"> </span><span class="nv">r</span><span class="w"> </span><span class="nv">b</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-types</span><span class="w"> </span><span class="nv">robot</span><span class="w"> </span><span class="k">block</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>This provides a sufficient model for the actions a robot may take.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><cite>stack(robotX, blockX, blockY)</cite>: Robot <code class="docutils literal notranslate"><span class="pre">robotX</span></code> stacks block <code class="docutils literal notranslate"><span class="pre">blockX</span></code> on top of <code class="docutils literal notranslate"><span class="pre">blockY</span></code>.</p></li>
+<li><p><cite>pickup(robotX, blockX)</cite>: Robot <code class="docutils literal notranslate"><span class="pre">robotX</span></code> picks up block <code class="docutils literal notranslate"><span class="pre">blockX</span></code>.</p></li>
+</ul>
+</div></blockquote>
+<p>The parameters are grounded using the objects of the associated types and therfore form an observation space with 49 entries, as well as an action space with 20 entries.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Full observation space is a discrete encoding of this vector</span>
+<span class="p">[</span><span class="s1">&#39;on-table(block1)&#39;</span><span class="p">,</span> <span class="s1">&#39;on-table(block2)&#39;</span><span class="p">,</span> <span class="s1">&#39;on-table(block3)&#39;</span><span class="p">,</span> <span class="s1">&#39;on-table(block4)&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;clear(block1)&#39;</span><span class="p">,</span> <span class="s1">&#39;clear(block2)&#39;</span><span class="p">,</span> <span class="s1">&#39;clear(block3)&#39;</span><span class="p">,</span> <span class="s1">&#39;clear(block4)&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;can-hold(robot1)&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;holding(robot1#block1)&#39;</span><span class="p">,</span> <span class="s1">&#39;holding(robot1#block2)&#39;</span><span class="p">,</span> <span class="s1">&#39;holding(robot1#block3)&#39;</span><span class="p">,</span> <span class="s1">&#39;holding(robot1#block4)&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;on(block1#block1)&#39;</span><span class="p">,</span> <span class="s1">&#39;on(block1#block2)&#39;</span><span class="p">,</span> <span class="s1">&#39;on(block1#block3)&#39;</span><span class="p">,</span> <span class="s1">&#39;on(block1#block4)&#39;</span><span class="p">,</span> <span class="s1">&#39;on(block2#block1)&#39;</span><span class="p">,</span> <span class="s1">&#39;on(block2#block2)&#39;</span><span class="p">,</span> <span class="s1">&#39;on(block2#block3)&#39;</span><span class="p">,</span> <span class="s1">&#39;on(block2#block4)&#39;</span><span class="p">,</span> <span class="s1">&#39;on(block3#block1)&#39;</span><span class="p">,</span> <span class="s1">&#39;on(block3#block2)&#39;</span><span class="p">,</span> <span class="s1">&#39;on(block3#block3)&#39;</span><span class="p">,</span> <span class="s1">&#39;on(block3#block4)&#39;</span><span class="p">,</span> <span class="s1">&#39;on(block4#block1)&#39;</span><span class="p">,</span> <span class="s1">&#39;on(block4#block2)&#39;</span><span class="p">,</span> <span class="s1">&#39;on(block4#block3)&#39;</span><span class="p">,</span> <span class="s1">&#39;on(block4#block4)&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;target-on(block1#block1)&#39;</span><span class="p">,</span> <span class="s1">&#39;target-on(block1#block2)&#39;</span><span class="p">,</span> <span class="s1">&#39;target-on(block1#block3)&#39;</span><span class="p">,</span> <span class="s1">&#39;target-on(block1#block4)&#39;</span><span class="p">,</span> <span class="s1">&#39;target-on(block2#block1)&#39;</span><span class="p">,</span> <span class="s1">&#39;target-on(block2#block2)&#39;</span><span class="p">,</span> <span class="s1">&#39;target-on(block2#block3)&#39;</span><span class="p">,</span> <span class="s1">&#39;target-on(block2#block4)&#39;</span><span class="p">,</span> <span class="s1">&#39;target-on(block3#block1)&#39;</span><span class="p">,</span> <span class="s1">&#39;target-on(block3#block2)&#39;</span><span class="p">,</span> <span class="s1">&#39;target-on(block3#block3)&#39;</span><span class="p">,</span> <span class="s1">&#39;target-on(block3#block4)&#39;</span><span class="p">,</span> <span class="s1">&#39;target-on(block4#block1)&#39;</span><span class="p">,</span> <span class="s1">&#39;target-on(block4#block2)&#39;</span><span class="p">,</span> <span class="s1">&#39;target-on(block4#block3)&#39;</span><span class="p">,</span> <span class="s1">&#39;target-on(block4#block4)&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;target-on-table(block1)&#39;</span><span class="p">,</span> <span class="s1">&#39;target-on-table(block2)&#39;</span><span class="p">,</span> <span class="s1">&#39;target-on-table(block3)&#39;</span><span class="p">,</span> <span class="s1">&#39;target-on-table(block4)&#39;</span><span class="p">]</span>
+
+<span class="c1"># Full action space is a discrete encoding of this vector</span>
+<span class="c1"># plus the additional no-op action that is added automatically.</span>
+<span class="p">[</span><span class="s1">&#39;stack(robot1#block1#block1)&#39;</span><span class="p">,</span> <span class="s1">&#39;stack(robot1#block1#block2)&#39;</span><span class="p">,</span> <span class="s1">&#39;stack(robot1#block1#block3)&#39;</span><span class="p">,</span> <span class="s1">&#39;stack(robot1#block1#block4)&#39;</span><span class="p">,</span> <span class="s1">&#39;stack(robot1#block2#block1)&#39;</span><span class="p">,</span> <span class="s1">&#39;stack(robot1#block2#block2)&#39;</span><span class="p">,</span> <span class="s1">&#39;stack(robot1#block2#block3)&#39;</span><span class="p">,</span> <span class="s1">&#39;stack(robot1#block2#block4)&#39;</span><span class="p">,</span> <span class="s1">&#39;stack(robot1#block3#block1)&#39;</span><span class="p">,</span> <span class="s1">&#39;stack(robot1#block3#block2)&#39;</span><span class="p">,</span> <span class="s1">&#39;stack(robot1#block3#block3)&#39;</span><span class="p">,</span> <span class="s1">&#39;stack(robot1#block3#block4)&#39;</span><span class="p">,</span> <span class="s1">&#39;stack(robot1#block4#block1)&#39;</span><span class="p">,</span> <span class="s1">&#39;stack(robot1#block4#block2)&#39;</span><span class="p">,</span> <span class="s1">&#39;stack(robot1#block4#block3)&#39;</span><span class="p">,</span> <span class="s1">&#39;stack(robot1#block4#block4)&#39;</span><span class="p">,</span>
+<span class="s1">&#39;pickup(robot1#block1)&#39;</span><span class="p">,</span> <span class="s1">&#39;pickup(robot1#block2)&#39;</span><span class="p">,</span> <span class="s1">&#39;pickup(robot1#block3)&#39;</span><span class="p">,</span> <span class="s1">&#39;pickup(robot1#block4)&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Aside from the general observation space, the initial observations have to be specified:</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-values</span><span class="w"> </span><span class="nv">block1</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-values</span><span class="w"> </span><span class="nv">block2</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-values</span><span class="w"> </span><span class="nv">block3</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-values</span><span class="w"> </span><span class="nv">block4</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on-table</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-values</span><span class="w"> </span><span class="nv">block1</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on-table</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-values</span><span class="w"> </span><span class="nv">block2</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on-table</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-values</span><span class="w"> </span><span class="nv">block3</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on-table</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-values</span><span class="w"> </span><span class="nv">block4</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">target-on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-values</span><span class="w"> </span><span class="nv">block4</span><span class="w"> </span><span class="nv">block3</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">target-on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-values</span><span class="w"> </span><span class="nv">block3</span><span class="w"> </span><span class="nv">block2</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">target-on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-values</span><span class="w"> </span><span class="nv">block2</span><span class="w"> </span><span class="nv">block1</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">target-on-table</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-values</span><span class="w"> </span><span class="nv">block1</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">can-hold</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-values</span><span class="w"> </span><span class="nv">robot1</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-values</span><span class="w"> </span><span class="nv">block1</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-values</span><span class="w"> </span><span class="nv">block2</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-values</span><span class="w"> </span><span class="nv">block3</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-values</span><span class="w"> </span><span class="nv">block4</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Hence, in the beginning, all blocks are placed on the table.</p>
+<p>Next, the robot is initialized as acting entity, waiting to get a task assigned:</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">rl-robot</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">robot1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">waiting</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The setup is completed by asserting the cx-rl-node fact to notify the system.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="w">   </span><span class="p">(</span><span class="nv">cx-rl-node</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">?*CX-RL-NODE-NAME*</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">mode</span><span class="w"> </span><span class="nv">UNSET</span><span class="p">))</span>
+<span class="w">  </span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="blocksworld-step-2-defining-the-reset-procedure">
+<h3><a class="toc-backref" href="#id8" role="doc-backlink">Blocksworld Step 2: Defining the Reset Procedure</a><a class="headerlink" href="#blocksworld-step-2-defining-the-reset-procedure" title="Link to this heading"></a></h3>
+<p>The reset procedure is guided through the <code class="docutils literal notranslate"><span class="pre">state</span></code> slot of a fact of type  <code class="docutils literal notranslate"><span class="pre">rl-reset-env</span></code>, which is asserted by the system whenever an environment reset is required (typically to start a new episode of training).
+Per default it restores a backup of the fact base that is made after the <code class="docutils literal notranslate"><span class="pre">cx-rl-node</span></code> fact is asserted.</p>
+<p>Users may define routins acting before (in state <code class="docutils literal notranslate"><span class="pre">USER-CLEANUP</span></code>) and afterwards (in state <code class="docutils literal notranslate"><span class="pre">USER-INIT</span></code>).
+For this example, we use the default behavior and directly transition to from <code class="docutils literal notranslate"><span class="pre">USER-CLEANUP</span></code> to backup restoration (state <code class="docutils literal notranslate"><span class="pre">LOAD-FACTS</span></code>) and from <code class="docutils literal notranslate"><span class="pre">USER-INIT</span></code> to <code class="docutils literal notranslate"><span class="pre">DONE</span></code>, completing the reset.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">reset-to-load-facts</span>
+<span class="w">  </span><span class="nv">?reset</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-reset-env</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">USER-CLEANUP</span><span class="p">))</span>
+<span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">modify</span><span class="w"> </span><span class="nv">?reset</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">LOAD-FACTS</span><span class="p">))</span>
+<span class="p">)</span>
+
+<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">reset-to-done</span>
+<span class="w">  </span><span class="nv">?reset</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-reset-env</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">USER-INIT</span><span class="p">))</span>
+<span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">modify</span><span class="w"> </span><span class="nv">?reset</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">DONE</span><span class="p">))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="blocksworld-step-3-action-execution">
+<h3><a class="toc-backref" href="#id9" role="doc-backlink">Blocksworld Step 3: Action Execution</a><a class="headerlink" href="#blocksworld-step-3-action-execution" title="Link to this heading"></a></h3>
+<p>Action execution in both training and execution mode of the CXRLGym environment are centered around a fact of type <code class="docutils literal notranslate"><span class="pre">rl-current-action-space</span></code>.</p>
+<p>Whenever the current action space is in state <cite>PENDING</cite>, <code class="docutils literal notranslate"><span class="pre">rl-action</span></code> facts have to be asserted accordingly that reflect the current options for execution (utilizing the action masking feature of the provided policy).</p>
+<p>Afterwards, a suitable action is automatically selected and execution needs to be triggered manually. In this example no actual execution is implemented, instead each selected is simply marked as finished directly.</p>
+<section id="providing-the-current-action-space">
+<h4>Providing the Current Action Space<a class="headerlink" href="#providing-the-current-action-space" title="Link to this heading"></a></h4>
+<p>The rule <code class="docutils literal notranslate"><span class="pre">rl-blocksworld-provide-action-stack</span></code> asserts an <code class="docutils literal notranslate"><span class="pre">rl-action</span></code>
+for stacking the currently held block onto any block that is clear.
+This guarantees that only legally valid stacking actions are generated.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">rl-blocksworld-provide-action-stack</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-current-action-space</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">PENDING</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-robot</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">?robot</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">waiting</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">holding</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">?robot</span><span class="w"> </span><span class="nv">?some-block</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">?other-block</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">test</span><span class="w"> </span><span class="p">(</span><span class="nv">neq</span><span class="w"> </span><span class="nv">?some-block</span><span class="w"> </span><span class="nv">?other-block</span><span class="p">))</span>
+<span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?id</span><span class="w"> </span><span class="p">(</span><span class="nv">sym-cat</span><span class="w"> </span><span class="s">&quot;stack&quot;</span><span class="w"> </span><span class="p">(</span><span class="nv">gensym*</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-action</span><span class="w"> </span><span class="p">(</span><span class="nv">id</span><span class="w"> </span><span class="nv">?id</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">stack</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">?robot</span><span class="w"> </span><span class="nv">?some-block</span><span class="w"> </span><span class="nv">?other-block</span><span class="p">)))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Similarly, the rule <code class="docutils literal notranslate"><span class="pre">rl-blocksworld-provide-action-pickup</span></code> asserts an
+<code class="docutils literal notranslate"><span class="pre">rl-action</span></code> fact representing the pickup of a block by a robot.</p>
+<p>The action is generated only if the robot is able to hold a block and
+the target block is on the table and clear of other blocks.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">rl-blocksworld-provide-action-pickup</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-current-action-space</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">PENDING</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-robot</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">?robot</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">waiting</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">can-hold</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">?robot</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on-table</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">?some-block</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">?some-block</span><span class="p">))</span>
+<span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?id</span><span class="w"> </span><span class="p">(</span><span class="nv">sym-cat</span><span class="w"> </span><span class="s">&quot;pickup&quot;</span><span class="w"> </span><span class="p">(</span><span class="nv">gensym*</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-action</span><span class="w"> </span><span class="p">(</span><span class="nv">id</span><span class="w"> </span><span class="nv">?id</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">pickup</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">?robot</span><span class="w"> </span><span class="nv">?some-block</span><span class="p">)))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Finally, a rule with low salience marks the completion of the current
+action space generation.</p>
+<p>Assigning it a low salience guarantees that all action-generating
+rules are triggered before this rule fires.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">rl-blocksworld-actions-generation-done</span>
+<span class="w">  </span><span class="p">(</span><span class="k">declare</span><span class="w"> </span><span class="p">(</span><span class="nv">salience</span><span class="w"> </span><span class="mi">-2</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">?action-space</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-current-action-space</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">PENDING</span><span class="p">))</span>
+<span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">modify</span><span class="w"> </span><span class="nv">?action-space</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">DONE</span><span class="p">))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="applying-action-effects">
+<h4>Applying Action Effects<a class="headerlink" href="#applying-action-effects" title="Link to this heading"></a></h4>
+<p>After an action has been selected (during training or execution mode),
+additional rules are required to:</p>
+<ol class="arabic simple">
+<li><p>Apply the effects of the action to the environment,</p></li>
+<li><p>Update the current observations accordingly, and</p></li>
+<li><p>Mark the corresponding <code class="docutils literal notranslate"><span class="pre">rl-action</span></code> fact as finished by setting
+the slot <code class="docutils literal notranslate"><span class="pre">is-finished</span></code> to <code class="docutils literal notranslate"><span class="pre">TRUE</span></code> and assigning a reward.</p></li>
+</ol>
+<p>The rule <code class="docutils literal notranslate"><span class="pre">action-selected-action-done-stack</span></code> handles the execution
+of a <code class="docutils literal notranslate"><span class="pre">stack</span></code> action.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">action-selected-action-done-stack</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-robot</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">?robot</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">?obs1</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">holding</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">?robot</span><span class="w"> </span><span class="nv">?block</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">?action</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-action</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">stack</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">?robot</span><span class="w"> </span><span class="nv">?block</span><span class="w"> </span><span class="nv">?other-block</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">is-selected</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">is-finished</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-observable-type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="k">block</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">objects</span><span class="w"> </span><span class="nv">$?</span><span class="w"> </span><span class="nv">?other-block&amp;:</span><span class="p">(</span><span class="nv">neq</span><span class="w"> </span><span class="nv">?other-block</span><span class="w"> </span><span class="nv">?block</span><span class="p">)</span><span class="w"> </span><span class="nv">$?</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">?obs2</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">?other-block2&amp;:</span><span class="p">(</span><span class="nb">eq</span><span class="w"> </span><span class="nv">?other-block2</span><span class="w"> </span><span class="p">(</span><span class="nv">sym-cat</span><span class="w"> </span><span class="nv">?other-block</span><span class="p">))))</span>
+<span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?obs1</span><span class="w"> </span><span class="nv">?obs2</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">?block</span><span class="w"> </span><span class="p">(</span><span class="nv">sym-cat</span><span class="w"> </span><span class="nv">?other-block</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">can-hold</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">?robot</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?reward</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">do-for-fact</span><span class="w"> </span><span class="p">((</span><span class="nv">?target</span><span class="w"> </span><span class="nv">rl-observation</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">and</span><span class="w"> </span><span class="p">(</span><span class="nb">eq</span><span class="w"> </span><span class="nv">?target:name</span><span class="w"> </span><span class="nv">target-on</span><span class="p">)</span>
+<span class="w">         </span><span class="p">(</span><span class="nb">eq</span><span class="w"> </span><span class="nv">?target:params</span><span class="w"> </span><span class="p">(</span><span class="nv">create$</span><span class="w"> </span><span class="nv">?block</span><span class="w"> </span><span class="p">(</span><span class="nv">sym-cat</span><span class="w"> </span><span class="nv">?other-block</span><span class="p">))))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;useful action on &quot;</span><span class="nv">?target:params</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?reward</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">modify</span><span class="w"> </span><span class="nv">?action</span><span class="w"> </span><span class="p">(</span><span class="nv">is-finished</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">reward</span><span class="w"> </span><span class="nv">?reward</span><span class="p">))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>When a <code class="docutils literal notranslate"><span class="pre">stack</span></code> action is selected:</p>
+<ul class="simple">
+<li><p>The robot is no longer considered to be holding the block.</p></li>
+<li><p>The target block is no longer marked as clear.</p></li>
+<li><p>A new observation is created to reflect that the block is now placed
+on top of the target block.</p></li>
+<li><p>The robot is marked as able to hold another block again.</p></li>
+</ul>
+<p>Reward computation:</p>
+<ul class="simple">
+<li><p>A default reward of <code class="docutils literal notranslate"><span class="pre">0</span></code> is assigned.</p></li>
+<li><p>If the resulting <code class="docutils literal notranslate"><span class="pre">on</span></code> relation matches a <code class="docutils literal notranslate"><span class="pre">target-on</span></code> observation,
+the reward is updated to <code class="docutils literal notranslate"><span class="pre">100</span></code>, indicating that the block should indeed be stacked the provided way according to the training target.</p></li>
+<li><p>Finally, the corresponding <code class="docutils literal notranslate"><span class="pre">rl-action</span></code> fact is modified by setting
+<code class="docutils literal notranslate"><span class="pre">is-finished</span></code> to <code class="docutils literal notranslate"><span class="pre">TRUE</span></code> and assigning the computed reward.</p></li>
+</ul>
+<p>Accordingly, the rule <code class="docutils literal notranslate"><span class="pre">action-selected-action-done-pickup</span></code> handles the execution of a <code class="docutils literal notranslate"><span class="pre">pickup</span></code> action.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">action-selected-action-done-pickup</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-robot</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">?robot</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">?obs1</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">can-hold</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">?robot</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">?obs2</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on-table</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">?block</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">?action</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-action</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">pickup</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">?robot</span><span class="w"> </span><span class="nv">?block</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">is-selected</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">is-finished</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">))</span>
+<span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?obs1</span><span class="w"> </span><span class="nv">?obs2</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">holding</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">?robot</span><span class="w"> </span><span class="nv">?block</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?reward</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">do-for-fact</span><span class="w"> </span><span class="p">((</span><span class="nv">?target</span><span class="w"> </span><span class="nv">rl-observation</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">and</span><span class="w"> </span><span class="p">(</span><span class="nb">eq</span><span class="w"> </span><span class="nv">?target:name</span><span class="w"> </span><span class="nv">target-on-table</span><span class="p">)</span>
+<span class="w">         </span><span class="p">(</span><span class="nb">eq</span><span class="w"> </span><span class="nv">?target:params</span><span class="w"> </span><span class="p">(</span><span class="nv">create$</span><span class="w"> </span><span class="nv">?block</span><span class="p">)))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">red</span><span class="w"> </span><span class="s">&quot;useless action pickup &quot;</span><span class="nv">?target:params</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?reward</span><span class="w"> </span><span class="mi">-100</span><span class="p">)</span>
+<span class="w">  </span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">modify</span><span class="w"> </span><span class="nv">?action</span><span class="w"> </span><span class="p">(</span><span class="nv">is-finished</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">reward</span><span class="w"> </span><span class="nv">?reward</span><span class="p">))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>When a <code class="docutils literal notranslate"><span class="pre">pickup</span></code> action is selected:</p>
+<ul class="simple">
+<li><p>The robot is no longer marked as able to hold a block.</p></li>
+<li><p>The block is no longer considered to be on the table.</p></li>
+<li><p>A new observation is created indicating that the robot is now holding the block.</p></li>
+</ul>
+<p>Reward computation:</p>
+<ul class="simple">
+<li><p>A default reward of <code class="docutils literal notranslate"><span class="pre">0</span></code> is assigned.</p></li>
+<li><p>If the picked block was supposed to remain on the table (according
+to a <code class="docutils literal notranslate"><span class="pre">target-on-table</span></code> observation), the reward is set to <code class="docutils literal notranslate"><span class="pre">-100</span></code>.</p></li>
+<li><p>Finally, the corresponding <code class="docutils literal notranslate"><span class="pre">rl-action</span></code> fact is marked as finished
+and updated with the computed reward.</p></li>
+</ul>
+</section>
+<section id="training-specific-workflows">
+<h4>Training-specific Workflows<a class="headerlink" href="#training-specific-workflows" title="Link to this heading"></a></h4>
+<p>During training, additional rules monitor the episode outcome and
+control the lifecycle of the learning process.</p>
+<p>The rule <code class="docutils literal notranslate"><span class="pre">rl-blocksworld-episode-end-success</span></code> detects when the task
+has been completed successfully to end the the current episode, causing an additional reward as specified through the global variable <code class="docutils literal notranslate"><span class="pre">?*CX-RL-EPISODE-END-SUCCESS*</span></code>.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">rl-blocksworld-episode-end-success</span>
+<span class="w">  </span><span class="p">(</span><span class="k">declare</span><span class="w"> </span><span class="p">(</span><span class="nv">salience</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">target-on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">$?target1</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">target-on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">$?target2</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">target-on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">$?target3</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">test</span><span class="w"> </span><span class="p">(</span><span class="nb">and</span><span class="w"> </span><span class="p">(</span><span class="nv">neq</span><span class="w"> </span><span class="nv">?target1</span><span class="w"> </span><span class="nv">?target2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">neq</span><span class="w"> </span><span class="nv">?target1</span><span class="w"> </span><span class="nv">?target3</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">neq</span><span class="w"> </span><span class="nv">?target2</span><span class="w"> </span><span class="nv">?target3</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">$?target1</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">$?target2</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">$?target3</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">?action</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-action</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">?name</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">is-selected</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">is-finished</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-episode-end</span><span class="w"> </span><span class="p">(</span><span class="nv">success</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">)))</span>
+<span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;SUCCESS!&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-episode-end</span><span class="w"> </span><span class="p">(</span><span class="nv">success</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">modify</span><span class="w"> </span><span class="nv">?action</span><span class="w"> </span><span class="p">(</span><span class="nv">reward</span><span class="w"> </span><span class="mi">1000</span><span class="p">))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Success is reached when the blocks are arranged exactly as specified by the
+goal configuration expressed through the <code class="docutils literal notranslate"><span class="pre">target-on</span></code> and <code class="docutils literal notranslate"><span class="pre">target-on-table</span></code> observations.</p>
+<p>The higher salience of this rule ensures that success is detected
+immediately once the goal configuration is achieved.</p>
+<p>The rule <code class="docutils literal notranslate"><span class="pre">rl-blocksworld-episode-end-failure</span></code> handles unsuccessful
+episodes during training.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">rl-blocksworld-episode-end-failure</span>
+<span class="w">  </span><span class="p">(</span><span class="k">declare</span><span class="w"> </span><span class="p">(</span><span class="nv">salience</span><span class="w"> </span><span class="mi">-1</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">cx-rl-node</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">?node</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">mode</span><span class="w"> </span><span class="nv">TRAINING</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-current-action-space</span><span class="w"> </span><span class="p">(</span><span class="nv">node</span><span class="w"> </span><span class="nv">?node</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">PENDING</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-action</span><span class="w"> </span><span class="p">(</span><span class="nv">node</span><span class="w"> </span><span class="nv">?node</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">is-selected</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-episode-end</span><span class="w"> </span><span class="p">(</span><span class="nv">node</span><span class="w"> </span><span class="nv">?node</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">success</span><span class="w"> </span><span class="nv">?success</span><span class="p">)))</span>
+<span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">execution-done</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-episode-end</span><span class="w"> </span><span class="p">(</span><span class="nv">node</span><span class="w"> </span><span class="nv">?node</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">success</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">)))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Failure is detected when the current action space is about to finish generation, but no further actions are available for selection.
+This indicates that no action is viable in the current state.</p>
+<p>In this case, an <code class="docutils literal notranslate"><span class="pre">rl-episode-end</span></code> fact with <code class="docutils literal notranslate"><span class="pre">success</span> <span class="pre">FALSE</span></code> is
+asserted, marking the episode as failed.</p>
+<p>The rule <code class="docutils literal notranslate"><span class="pre">rl-blocksworld-stop-agent-on-training-end</span></code> reacts to the
+<code class="docutils literal notranslate"><span class="pre">rl-end-training</span></code> fact.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">rl-blocksworld-stop-agent-on-training-end</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-end-training</span><span class="p">)</span>
+<span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">cx-shutdown</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>When training is complete, the system triggers <code class="docutils literal notranslate"><span class="pre">cx-shutdown</span></code> the agent and its surrounding infrastructure are cleanly stopped.</p>
+</section>
+<section id="execution-specific-workflows">
+<h4>Execution-specific Workflows<a class="headerlink" href="#execution-specific-workflows" title="Link to this heading"></a></h4>
+<p>In <code class="docutils literal notranslate"><span class="pre">EXECUTION</span></code> mode, the system no longer performs learning.
+Instead, it repeatedly requests an action from the trained policy
+until no further actions are available.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">rl-blocksworld-ask-for-execution</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">cx-rl-node</span><span class="w"> </span><span class="p">(</span><span class="nv">mode</span><span class="w"> </span><span class="nv">EXECUTION</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-current-action-space</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-action</span><span class="w"> </span><span class="p">(</span><span class="nv">is-selected</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">is-finished</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">)))</span>
+<span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-current-action-space</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">PENDING</span><span class="p">)))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The rule <code class="docutils literal notranslate"><span class="pre">rl-blocksworld-ask-for-execution</span></code> continuously initiates action
+selection during execution as needed.
+This triggers the standard action space generation process,
+allowing the trained policy to select the next action to execute.</p>
+<p>It makes use of the fact that a <code class="docutils literal notranslate"><span class="pre">no-op</span></code> action is automatically inserted if the prediction cannot select any action (becuase all actions are masked).
+Hence, once no actions are feasible anymore the execution loop is effectively stopped.</p>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="rl_clips.html" class="btn btn-neutral float-left" title="Reinforcement Learning CLIPS Interfaces" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../standards.html" class="btn btn-neutral float-right" title="Standard Documents" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Tarik Viehmann.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

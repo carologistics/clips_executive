@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CXRLMaskablePPONode: RL Model Multi-Robot Applications &mdash; clips_executive 0.1.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=86f27845" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom_figure.css" />
+
+  
+  
+        <script src="../../_static/jquery.js?v=8dae8fb0"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=360bc84d"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Reinforcement Learning CLIPS Interfaces" href="rl_clips.html" />
+    <link rel="prev" title="CXRLGym - ROS 2 Reinforcement Learning Environment" href="cx_rl_gym.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            clips_executive
+          </a>
+              <div class="version">
+                0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started/index.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plugins/index.html">CLIPS Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plugin_generator/index.html">ROS Interface Plugin Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Extensions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../PDDL.html">PDDL Integration for CLIPS</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../reinforcement_learning.html">Reinforcement Learning Integration for CLIPS</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../reinforcement_learning.html#background-reinforcement-learning">Background: Reinforcement Learning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reinforcement_learning.html#overview">Overview</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../reinforcement_learning.html#content">Content</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cx_rl_gym.html">CXRLGym - ROS 2 Reinforcement Learning Environment</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">CXRLMaskablePPONode: RL Model Multi-Robot Applications</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rl_clips.html">Reinforcement Learning CLIPS Interfaces</a></li>
+<li class="toctree-l4"><a class="reference internal" href="blocksworld_tutorial.html">Tutorial: Building an RL Agent for Blocksworld</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../standards.html">Standard Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../__readme_include.html">README</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">clips_executive</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Extensions</a></li>
+          <li class="breadcrumb-item"><a href="../reinforcement_learning.html">Reinforcement Learning Integration for CLIPS</a></li>
+      <li class="breadcrumb-item active">CXRLMaskablePPONode: RL Model Multi-Robot Applications</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/extensions/rl/multi_robot_mppo.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="cxrlmaskablepponode-rl-model-multi-robot-applications">
+<span id="cx-rl-mppo"></span><h1>CXRLMaskablePPONode: RL Model Multi-Robot Applications<a class="headerlink" href="#cxrlmaskablepponode-rl-model-multi-robot-applications" title="Link to this heading"></a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">CXRLMaskablePPONode</span></code> class provides a ROS 2 node integrated with a
+maskable, multi-robot Proximal Policy Optimization (PPO) agent
+(<code class="docutils literal notranslate"><span class="pre">MultiRobotMaskablePPO</span></code>). This allows training and executing reinforcement
+learning policies in environments with multiple robots while automatically
+handling invalid action masking.</p>
+<p>It extends the <code class="docutils literal notranslate"><span class="pre">CXRLBaseNode</span></code> and integrates a custom maskable PPO
+implementation compatible with Stable-Baselines3 and SB3-Contrib.</p>
+<p>Key features:</p>
+<ul class="simple">
+<li><p>Multi-robot support with configurable number of parallel agents.</p></li>
+<li><p>Maskable PPO allowing invalid actions to be ignored during training.</p></li>
+<li><p>Time-based or step-based rollout collection.</p></li>
+<li><p>Integration with ROS 2 for lifecycle, parameter management, and execution.</p></li>
+<li><p>Automatic logging, checkpointing, and training termination.</p></li>
+</ul>
+<section id="multirobotmaskableppo">
+<h2>MultiRobotMaskablePPO<a class="headerlink" href="#multirobotmaskableppo" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">MultiRobotMaskablePPO</span></code> class is a custom extension of
+<a class="reference external" href="https://sb3-contrib.readthedocs.io/en/master/modules/ppo_mask.html">MaskableActorCriticPolicy</a> from <a class="reference external" href="https://sb3-contrib.readthedocs.io/en/master/index.html">sb3_contrib</a>. It supports multi-robot environments and
+invalid action masking.</p>
+<p>Key points:</p>
+<ul class="simple">
+<li><p>Rollout collection uses multithreading to simulate multiple robots in
+parallel. Each thread executes actions for a specific robot and steps the environment concurrently, enabling faster collection of experiences while respecting per-robot action masks.</p></li>
+<li><p>Supports <code class="docutils literal notranslate"><span class="pre">time_based</span></code> or <code class="docutils literal notranslate"><span class="pre">step_based</span></code> rollout collection.</p></li>
+<li><p>Integrates with <code class="docutils literal notranslate"><span class="pre">MultiRobotMaskableRolloutBuffer</span></code> and
+<code class="docutils literal notranslate"><span class="pre">MultiRobotMaskableDictRolloutBuffer</span></code> for action masking.</p></li>
+<li><p>Computes returns and advantages, accounting for terminal states
+even if episodes are truncated.</p></li>
+</ul>
+</section>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">CXRLMaskablePPONode</span></code> exposes the following ROS 2 parameters for configuring the RL agent and training:</p>
+<section id="base-ppo-parameters-forwarded-from-maskableppo">
+<h3>Base PPO Parameters (forwarded from MaskablePPO)<a class="headerlink" href="#base-ppo-parameters-forwarded-from-maskableppo" title="Link to this heading"></a></h3>
+<p>These parameters are standard PPO hyperparameters, forwarded directly to the underlying <code class="docutils literal notranslate"><span class="pre">MultiRobotMaskablePPO</span></code> implementation:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>model.learning_rate</p></td>
+<td><p>double</p></td>
+<td><p>Learning rate of the PPO agent</p></td>
+</tr>
+<tr class="row-odd"><td><p>model.gamma</p></td>
+<td><p>double</p></td>
+<td><p>Discount factor for future rewards</p></td>
+</tr>
+<tr class="row-even"><td><p>model.gae_lambda</p></td>
+<td><p>double</p></td>
+<td><p>Factor for Generalized Advantage Estimation</p></td>
+</tr>
+<tr class="row-odd"><td><p>model.ent_coef</p></td>
+<td><p>double</p></td>
+<td><p>Entropy coefficient for the PPO loss</p></td>
+</tr>
+<tr class="row-even"><td><p>model.vf_coef</p></td>
+<td><p>double</p></td>
+<td><p>Value function coefficient for the PPO loss</p></td>
+</tr>
+<tr class="row-odd"><td><p>model.max_grad_norm</p></td>
+<td><p>double</p></td>
+<td><p>Maximum gradient norm for gradient clipping</p></td>
+</tr>
+<tr class="row-even"><td><p>model.batch_size</p></td>
+<td><p>integer</p></td>
+<td><p>Minibatch size for PPO updates</p></td>
+</tr>
+<tr class="row-odd"><td><p>model.n_steps</p></td>
+<td><p>integer</p></td>
+<td><p>Number of steps per environment for rollout</p></td>
+</tr>
+<tr class="row-even"><td><p>model.seed</p></td>
+<td><p>integer</p></td>
+<td><p>Random seed for reproducibility</p></td>
+</tr>
+<tr class="row-odd"><td><p>model.verbose</p></td>
+<td><p>integer</p></td>
+<td><p>Verbosity level for logging (0=none, 1=info, 2=debug)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>Not all parameters of the underlying PPO/MPPO model are exposed as ROS parameters.
+To access advanced settings (such as custom network architectures, <cite>policy_kwargs</cite>, or other
+Stable Baselines3 options), create a class that derives from <code class="docutils literal notranslate"><span class="pre">CXRLMaskablePPONode</span></code> override the <code class="docutils literal notranslate"><span class="pre">create_new_model()</span></code> method (see the <a class="reference internal" href="#cxrlmppo-interfaces"><span class="std std-ref">Interfaces</span></a> section for more information).</p>
+</div>
+</section>
+<section id="multi-robot-custom-parameters">
+<h3>Multi-Robot / Custom Parameters<a class="headerlink" href="#multi-robot-custom-parameters" title="Link to this heading"></a></h3>
+<p>These parameters are specific to the multi-robot maskable variant:</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">CXRLMaskablePPONode</span></code> utilizes the following parameters:</p>
+<dl class="field-list">
+<dt class="field-odd">model_name<span class="colon">:</span></dt>
+<dd class="field-odd"><table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Type</p></td>
+<td><p>Default</p></td>
+</tr>
+<tr class="row-even"><td><p>string</p></td>
+<td><p>“default_agent”</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="simple">
+<dt>Description</dt><dd><p>Name of the RL model for saving or loading.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">training.retraining<span class="colon">:</span></dt>
+<dd class="field-even"><table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Type</p></td>
+<td><p>Default</p></td>
+</tr>
+<tr class="row-even"><td><p>boolean</p></td>
+<td><p>False</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="simple">
+<dt>Description</dt><dd><p>Whether to retrain an existing model.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">training.max_episodes<span class="colon">:</span></dt>
+<dd class="field-odd"><table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Type</p></td>
+<td><p>Default</p></td>
+</tr>
+<tr class="row-even"><td><p>integer</p></td>
+<td><p>1000</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="simple">
+<dt>Description</dt><dd><p>Maximum number of training episodes.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">training.timesteps<span class="colon">:</span></dt>
+<dd class="field-even"><table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Type</p></td>
+<td><p>Default</p></td>
+</tr>
+<tr class="row-even"><td><p>integer</p></td>
+<td><p>100000</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="simple">
+<dt>Description</dt><dd><p>Total number of timesteps for the learning procedure.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">model.n_robots<span class="colon">:</span></dt>
+<dd class="field-odd"><table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Type</p></td>
+<td><p>Default</p></td>
+</tr>
+<tr class="row-even"><td><p>integer</p></td>
+<td><p>3</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="simple">
+<dt>Description</dt><dd><p>Number of robots to simulate in parallel during rollout collection.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">model.wait_for_all_robots<span class="colon">:</span></dt>
+<dd class="field-even"><table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Type</p></td>
+<td><p>Default</p></td>
+</tr>
+<tr class="row-even"><td><p>boolean</p></td>
+<td><p>True</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="simple">
+<dt>Description</dt><dd><p>Whether to wait for all robot threads to finish before computing returns. Ensures rollouts are fully collected for all robots.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">model.time_based<span class="colon">:</span></dt>
+<dd class="field-odd"><table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Type</p></td>
+<td><p>Default</p></td>
+</tr>
+<tr class="row-even"><td><p>boolean</p></td>
+<td><p>False</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="simple">
+<dt>Description</dt><dd><p>If True, rollouts are collected for a fixed duration instead of a fixed number of steps.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">model.n_time<span class="colon">:</span></dt>
+<dd class="field-even"><table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Type</p></td>
+<td><p>Default</p></td>
+</tr>
+<tr class="row-even"><td><p>integer</p></td>
+<td><p>450</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="simple">
+<dt>Description</dt><dd><p>Maximum duration (in seconds) of a time-based rollout when <code class="docutils literal notranslate"><span class="pre">time_based=True</span></code>.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">model.deadzone<span class="colon">:</span></dt>
+<dd class="field-odd"><table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Type</p></td>
+<td><p>Default</p></td>
+</tr>
+<tr class="row-even"><td><p>integer</p></td>
+<td><p>10</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="simple">
+<dt>Description</dt><dd><p>Time buffer (in seconds) to prevent starting new threads near the end of a time-based rollout.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</section>
+<section id="interfaces">
+<span id="cxrlmppo-interfaces"></span><h2>Interfaces<a class="headerlink" href="#interfaces" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">CXRLMaskablePPONode</span></code> provides the following methods:</p>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">set_model()</span> <span class="pre">→</span> <span class="pre">MultiRobotMaskablePPO</span></code></dt><dd><p>Populate <code class="docutils literal notranslate"><span class="pre">self.model</span></code> with an RL agent depending on the current <code class="docutils literal notranslate"><span class="pre">rl_mode</span></code> and links it with the <code class="docutils literal notranslate"><span class="pre">CXRLGym</span></code> environemnt.</p>
+<p>Behavior:</p>
+<ul class="simple">
+<li><p><strong>TRAINING</strong>: creates a new agent or loads an existing one if <code class="docutils literal notranslate"><span class="pre">training.retraining=True</span></code>.</p></li>
+<li><p><strong>EXECUTION</strong>: loads a previously trained agent.</p></li>
+</ul>
+<p>Returns the loaded or newly created <code class="docutils literal notranslate"><span class="pre">MultiRobotMaskablePPO</span></code> instance.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">create_new_model()</span> <span class="pre">→</span> <span class="pre">MultiRobotMaskablePPO</span></code></dt><dd><p>Helper method to <code class="docutils literal notranslate"><span class="pre">set_model</span></code>.
+Creates a new MPPO agent from scratch with parameters read from ROS parameters.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">load_model()</span> <span class="pre">→</span> <span class="pre">MultiRobotMaskablePPO</span></code></dt><dd><p>Helper method to <code class="docutils literal notranslate"><span class="pre">set_model</span></code>.
+Loads a previously trained MPPO agent from disk.
+Updates <code class="docutils literal notranslate"><span class="pre">self.model</span></code> and links it with <code class="docutils literal notranslate"><span class="pre">self.env</span></code>.
+Logs a message once loading is complete.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">run_training()</span></code></dt><dd><p>Starts the training loop of the RL agent according to the parameters
+<code class="docutils literal notranslate"><span class="pre">training.max_episodes</span></code> and <code class="docutils literal notranslate"><span class="pre">training.timesteps</span></code>.
+Handles callbacks for stopping and checkpointing.
+Saves the trained agent to disk and calls <code class="docutils literal notranslate"><span class="pre">self.env.env.on_training_end()</span></code>.
+Performs node shutdown after training completes.</p>
+</dd>
+</dl>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cx_rl_gym.html" class="btn btn-neutral float-left" title="CXRLGym - ROS 2 Reinforcement Learning Environment" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="rl_clips.html" class="btn btn-neutral float-right" title="Reinforcement Learning CLIPS Interfaces" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Tarik Viehmann.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

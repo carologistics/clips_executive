@@ -18,8 +18,8 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="SetRLMode" href="SetRLMode.html" />
-    <link rel="prev" title="GetObservablePredicates" href="GetObservablePredicates.html" /> 
+    <link rel="next" title="GetStatus" href="GetStatus.html" />
+    <link rel="prev" title="GetPredefinedActions" href="GetPredefinedActions.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -45,17 +45,24 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../message_definitions.html">Message Definitions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../msg/Action.html">Action</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../msg/Observation.html">Observation</a></li>
+</ul>
+</li>
 <li class="toctree-l1 current"><a class="reference internal" href="../service_definitions.html">Service Definitions</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="CreateRLEnvState.html">CreateRLEnvState</a></li>
+<li class="toctree-l2"><a class="reference internal" href="EndTraining.html">EndTraining</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ExecActionSelection.html">ExecActionSelection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="GetActionID.html">GetActionID</a></li>
-<li class="toctree-l2"><a class="reference internal" href="GetActionList.html">GetActionList</a></li>
 <li class="toctree-l2"><a class="reference internal" href="GetActionListRobot.html">GetActionListRobot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="GetEpisodeEnd.html">GetEpisodeEnd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GetObservableActions.html">GetObservableActions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="GetObservableObjects.html">GetObservableObjects</a></li>
 <li class="toctree-l2"><a class="reference internal" href="GetObservablePredicates.html">GetObservablePredicates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GetObservations.html">GetObservations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GetPredefinedActions.html">GetPredefinedActions</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">GetPredefinedObservables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="SetRLMode.html">SetRLMode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="GetStatus.html">GetStatus</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../action_definitions.html">Action Definitions</a><ul>
@@ -103,7 +110,7 @@
 <p>This is a ROS service definition.</p>
 <p><strong>Source</strong></p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">---</span>
-<span class="n">string</span><span class="p">[]</span> <span class="n">observables</span>
+<span class="n">Observation</span><span class="p">[]</span> <span class="n">observables</span>
 </pre></div>
 </div>
 </section>
@@ -112,8 +119,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="GetObservablePredicates.html" class="btn btn-neutral float-left" title="GetObservablePredicates" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="SetRLMode.html" class="btn btn-neutral float-right" title="SetRLMode" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="GetPredefinedActions.html" class="btn btn-neutral float-left" title="GetPredefinedActions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="GetStatus.html" class="btn btn-neutral float-right" title="GetStatus" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

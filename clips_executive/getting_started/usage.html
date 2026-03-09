@@ -8,6 +8,7 @@
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=86f27845" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom_figure.css" />
 
   
   
@@ -52,6 +53,7 @@
 <li class="toctree-l2"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Usage</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#ros-node">ROS Node</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#clips-environments">CLIPS Environments</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#starting-the-cx">Starting the ROS2 CLIPS-Executive</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#example">Example</a></li>
 </ul>
@@ -116,6 +118,27 @@
 </ul>
 </div></blockquote>
 <p>Additionally, the node also supports the usage of <a class="reference external" href="https://docs.ros.org/en/humble/p/bond">bond</a> for advanced system health monitoring (e.g., via the <a class="reference external" href="https://docs.ros.org/en/humble/p/nav2_lifecycle_manager">nav2_lifecycle_manager</a>).</p>
+</section>
+<section id="clips-environments">
+<h2>CLIPS Environments<a class="headerlink" href="#clips-environments" title="Link to this heading"></a></h2>
+<p>Each CLIPS environment created and managed by the ROS2 CLIPS-Executive is a <strong>standard, isolated CLIPS environment</strong>.
+The environments are only extended in a minimal and well-defined way to support integration
+with ROS and system-level control:</p>
+<ul class="simple">
+<li><p><strong>Logging router</strong>
+A custom CLIPS output router is registered to forward CLIPS output to ROS logging facilities
+and, optionally, to log file (see <a class="reference internal" href="logging.html"><span class="doc">Logging and Routing</span></a> for more details).</p></li>
+<li><p><strong>Initial watch configuration</strong>
+The default CLIPS watch settings are disabled on creation and selectively re-enabled based
+on ROS parameters (see <a class="reference internal" href="configuration.html"><span class="doc">Configuration</span></a> for more details).</p></li>
+<li><p><strong>System shutdown hook</strong>
+A CLIPS function <code class="docutils literal notranslate"><span class="pre">(cx-shutdown)</span></code> is injected into each environment.
+When called, it requests a clean ROS shutdown, enabling CLIPS-based executive logic to
+explicitly terminate the system in a controlled manner.</p></li>
+</ul>
+<p>Aside from these extensions, each environment behaves exactly like a normal CLIPS environment.
+No additional functions, facts, or rules are introduced implicitly, and all higher-level behavior
+is provided through explicitly loaded plugins.</p>
 </section>
 <section id="starting-the-cx">
 <h2>Starting the ROS2 CLIPS-Executive<a class="headerlink" href="#starting-the-cx" title="Link to this heading"></a></h2>

@@ -10,7 +10,7 @@ ROS interfaces for using reinforcement learning with the ROS2 CLIPS-Executive
 
 
 
-
+   Message Definitions <interfaces/message_definitions>
    Service Definitions <interfaces/service_definitions>
    Action Definitions <interfaces/action_definitions>
    Standard Documents <standards>

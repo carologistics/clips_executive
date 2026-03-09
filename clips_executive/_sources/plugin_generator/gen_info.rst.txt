@@ -54,4 +54,4 @@ Instead, object lifetimes need to be managed more explicitly through the usage o
 
 It is advised to clean up all objects as soon as they are not needed anymore in order to free up memory.
 
-This is mostly straight-forward in case of short lifetimes (e.g., creating a message and immediately sending it), but can be a bit tricky in case of long-lasting references, such as goals and goal handles in action clients/servers. In particular, it is advised to clean up resources belonging to a goal to only be cleaned up once the goal is fully processed and either rejected or finished.
+This is mostly straight-forward in case of short lifetimes (e.g., creating a message and immediately sending it), but can be a bit tricky in case of long-lasting references, such as goals and goal handles in action clients/servers. In particular, it is advised to clean up resources belonging to a goal once the goal is fully processed and either rejected or finished.

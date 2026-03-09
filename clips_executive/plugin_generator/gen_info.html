@@ -8,6 +8,7 @@
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=86f27845" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom_figure.css" />
 
   
   
@@ -139,7 +140,7 @@ In that case it is necessary to also generate bindings for the nested messages.<
 <p>Since clips stores objects via void pointers, dynamic object lifetime management via <cite>std::shared_ptr</cite> does not work directly from within CLIPS.
 Instead, object lifetimes need to be managed more explicitly through the usage of <cite>create</cite> and <cite>destroy</cite> functions.</p>
 <p>It is advised to clean up all objects as soon as they are not needed anymore in order to free up memory.</p>
-<p>This is mostly straight-forward in case of short lifetimes (e.g., creating a message and immediately sending it), but can be a bit tricky in case of long-lasting references, such as goals and goal handles in action clients/servers. In particular, it is advised to clean up resources belonging to a goal to only be cleaned up once the goal is fully processed and either rejected or finished.</p>
+<p>This is mostly straight-forward in case of short lifetimes (e.g., creating a message and immediately sending it), but can be a bit tricky in case of long-lasting references, such as goals and goal handles in action clients/servers. In particular, it is advised to clean up resources belonging to a goal once the goal is fully processed and either rejected or finished.</p>
 </section>
 </section>
 </section>

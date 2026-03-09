@@ -1,0 +1,8 @@
+FluentEffect
+============
+This is a ROS message definition.
+
+**Source**
+
+.. literalinclude:: ../../../../../../extensions/pddl/cx_pddl_interfaces/msg/FluentEffect.msg
+

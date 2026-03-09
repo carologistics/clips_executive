@@ -3,7 +3,7 @@
 cx_pddl_clips
 =============
 
-TODO: Package description
+CLIPS snippets to help using the cx_pddl_interfaces with CLIPS.
 
 .. toctree::
    :maxdepth: 2

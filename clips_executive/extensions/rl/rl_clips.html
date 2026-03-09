@@ -8,6 +8,7 @@
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=86f27845" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom_figure.css" />
 
   
   
@@ -21,8 +22,8 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Standard Documents" href="../../standards.html" />
-    <link rel="prev" title="RL Node" href="cx_rl.html" /> 
+    <link rel="next" title="Tutorial: Building an RL Agent for Blocksworld" href="blocksworld_tutorial.html" />
+    <link rel="prev" title="CXRLMaskablePPONode: RL Model Multi-Robot Applications" href="multi_robot_mppo.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -59,8 +60,10 @@
 <li class="toctree-l3"><a class="reference internal" href="../reinforcement_learning.html#overview">Overview</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="../reinforcement_learning.html#content">Content</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="usage.html">Usage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="cx_rl.html">RL Node</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cx_rl_gym.html">CXRLGym - ROS 2 Reinforcement Learning Environment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multi_robot_mppo.html">CXRLMaskablePPONode: RL Model Multi-Robot Applications</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">Reinforcement Learning CLIPS Interfaces</a></li>
+<li class="toctree-l4"><a class="reference internal" href="blocksworld_tutorial.html">Tutorial: Building an RL Agent for Blocksworld</a></li>
 </ul>
 </li>
 </ul>
@@ -99,116 +102,41 @@
              
   <section id="reinforcement-learning-clips-interfaces">
 <h1>Reinforcement Learning CLIPS Interfaces<a class="headerlink" href="#reinforcement-learning-clips-interfaces" title="Link to this heading"></a></h1>
-<p>To facilitate the development of CLIPS-based RL agents, this extensions provides CLIPS code toabstract away the ROS interactions and to provide a symbolic representation of the RL workflow as provided by the environments derived fro mthe <code class="docutils literal notranslate"><span class="pre">CXRLGym</span></code> class.
+<p>To facilitate the development of CLIPS-based RL agents, this extension provides CLIPS logic to abstract away the ROS interactions and to provide a symbolic representation of the RL workflow as provided by the environments derived from the <code class="docutils literal notranslate"><span class="pre">CXRLGym</span></code> class.
 In the following, the CLIPS interface is described as provided by the <code class="docutils literal notranslate"><span class="pre">cx_rl_clips</span></code> package.</p>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">cx_rl_clips</span></code> package requires the usage of ROS Kilted or above as it heavily relies on service introspection.</p>
 </div>
-<section id="required-cx-plugins">
-<h2>Required ROS2 CLIPS-Executive Plugins<a class="headerlink" href="#required-cx-plugins" title="Link to this heading"></a></h2>
+<section id="using-the-cx-with-cx-rl-clips">
+<h2>Using the ROS2 CLIPS-Executive with cx_rl_clips<a class="headerlink" href="#using-the-cx-with-cx-rl-clips" title="Link to this heading"></a></h2>
 <p>In order to integrate the CXRLGym with the ROS2 CLIPS-Executive, the following plugins are needed:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">cx::ExecutivePlugin</span></code> — manages the overall reasoning and control flow, interleaving ROS feedback with CLIPS reasoning.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cx::RosMsgsPlugin</span></code> provides access to ROS interfaces of the PDDL manager from within CLIPS.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cx::AmentIndexPlugin</span></code> resolves package paths via <code class="docutils literal notranslate"><span class="pre">ament_index</span></code>. While not required, it is very useful in order to load agents.</p></li>
+<li><p><a class="reference internal" href="../../plugins/executive_plugin.html#usage-executive-plugin"><span class="std std-ref">cx::ExecutivePlugin</span></a>: Manages the overall reasoning and control flow, interleaving ROS feedback with CLIPS reasoning.</p></li>
+<li><p><a class="reference internal" href="../../plugins/ros_msgs_plugin.html#usage-ros-msgs-plugin"><span class="std std-ref">cx::RosMsgsPlugin</span></a>: Provides access to ROS interfaces.</p></li>
+<li><p><a class="reference internal" href="../../plugins/ros_param_plugin.html#usage-ros-param-plugin"><span class="std std-ref">cx::RosParamPlugin</span></a>: Used to fetch RL parameters that are also required within CLIPS.</p></li>
+<li><p><a class="reference internal" href="../../plugins/cx_ament_index.html#usage-ament-index-plugin"><span class="std std-ref">cx::AmentIndexPlugin</span></a>: Resolves package paths via <code class="docutils literal notranslate"><span class="pre">ament_index</span></code>. Required for setting up the CLIPS interfaces.</p></li>
 </ul>
-<p>Also, as the current configuration is compatible with ROS 2 kilted or above, action server introspection is not supported, hence the following plugins are needed:</p>
+<p>Also, as the current configuration is compatible with ROS 2 kilted or above, action server introspection is not supported, hence the following plugins (generated through <a class="reference internal" href="../../plugin_generator/index.html#usage-cx-ros-comm-gen"><span class="std std-ref">ros_comm_gen</span></a> by the <code class="docutils literal notranslate"><span class="pre">cx_rl_clips</span></code> package) are needed:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">cx::CXCxRlInterfacesGetFreeRobotPlugin</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">cx::CXCxRlInterfacesExecActionSelectionPlugin</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cx::CXCxRlInterfacesResetCXPlugin</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cx::CXCxRlInterfacesResetEnvPlugin</span></code></p></li>
 </ul>
-</section>
-<section id="clips-integration">
-<h2>CLIPS Integration<a class="headerlink" href="#clips-integration" title="Link to this heading"></a></h2>
-<p>CLIPS needs to interact with the CXRLGym environments by providing services and action servers for the relevant endpoints.
-In order to reduce manual overhead, predefined rules, functions and deftemplates are available, which are described in the remainder of this document.</p>
-<section id="predefined-interfaces">
-<h3>Predefined Interfaces<a class="headerlink" href="#predefined-interfaces" title="Link to this heading"></a></h3>
-<p>The idea is to have templates for facts that correspond to the individual endpoints of the PDDL manager.
-The workflow then is for users to simply assert a fact of a defined template to trigger the request to the PDDL manager, then using rules to observe the provided slots for the outcome.</p>
-</section>
-<section id="example-loading-a-pddl-problem-and-pbtaining-the-initial-state">
-<h3>Example: Loading a PDDL Problem and Pbtaining the initial State<a class="headerlink" href="#example-loading-a-pddl-problem-and-pbtaining-the-initial-state" title="Link to this heading"></a></h3>
-<p>The following example demonstrates how to initialize the connection to the external
-PDDL manager and load a PDDL problem into CLIPS. It shows two rules:</p>
-<ol class="arabic simple">
-<li><p>One rule sets up service clients for communicating with the PDDL manager node.</p></li>
-<li><p>Another rule creates and registers a PDDL instance, requesting its initial state.</p></li>
-</ol>
-<p>These examples can serve as a starting point for integrating PDDL planning with
-CLIPS-based reasoning systems.</p>
-<p>A more comprehensive example can be found in the <a class="reference internal" href="../pddl/structured_tutorial.html#structured-pddl-agent"><span class="std std-ref">Structured PDDL Agent Tutorial</span></a>.</p>
-<section id="creating-service-clients">
-<h4>Creating Service Clients<a class="headerlink" href="#creating-service-clients" title="Link to this heading"></a></h4>
-<p>The first rule initializes the required ROS service clients for the PDDL manager.
-It also asserts a <code class="docutils literal notranslate"><span class="pre">pddl-services-loaded</span></code>
-fact to ensure coherent ordering.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">example-pddl-init</span>
-<span class="w">  </span><span class="s">&quot; Initiate the service clients for the pddl manager &quot;</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?services</span><span class="w"> </span><span class="p">(</span><span class="nv">create$</span>
-<span class="w">      </span><span class="nv">add_pddl_instance</span><span class="w"> </span><span class="nv">AddPddlInstance</span>
-<span class="w">      </span><span class="nv">get_fluents</span><span class="w"> </span><span class="nv">GetFluents</span>
-<span class="w">  </span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?index</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?length</span><span class="w"> </span><span class="p">(</span><span class="nv">length$</span><span class="w"> </span><span class="nv">?services</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">while</span><span class="w"> </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="nv">?index</span><span class="w"> </span><span class="nv">?length</span><span class="p">)</span>
-<span class="w">      </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?service-name</span><span class="w"> </span><span class="p">(</span><span class="nv">nth$</span><span class="w"> </span><span class="nv">?index</span><span class="w"> </span><span class="nv">?services</span><span class="p">))</span>
-<span class="w">      </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?service-type</span><span class="w"> </span><span class="p">(</span><span class="nv">nth$</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="nv">?index</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="nv">?services</span><span class="p">))</span>
-<span class="w">      </span><span class="p">(</span><span class="nv">ros-msgs-create-client</span>
-<span class="w">          </span><span class="p">(</span><span class="nv">str-cat</span><span class="w"> </span><span class="s">&quot;/pddl_manager&quot;</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="w"> </span><span class="nv">?service-name</span><span class="p">)</span>
-<span class="w">          </span><span class="p">(</span><span class="nv">str-cat</span><span class="w"> </span><span class="s">&quot;cx_pddl_msgs/srv/&quot;</span><span class="w"> </span><span class="nv">?service-type</span><span class="p">)</span>
-<span class="w">      </span><span class="p">)</span>
-<span class="w">      </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?index</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="nv">?index</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span>
-<span class="w">  </span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">pddl-services-loaded</span><span class="p">))</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="loading-the-pddl-instance">
-<h4>Loading the PDDL Instance<a class="headerlink" href="#loading-the-pddl-instance" title="Link to this heading"></a></h4>
-<p>Once the service clients are available, the next rule defines and registers a
-PDDL instance with the external manager. This includes specifying the domain and
-problem files, as well as the directory containing them. After registration, it
-triggers fetching of the initial fluents representing the problem’s initial state.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">example-pddl-add-instance</span>
-<span class="w">  </span><span class="s">&quot; Setup PDDL instance and fetch initial facts &quot;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">pddl-services-loaded</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">assert</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">pddl-manager</span><span class="w"> </span><span class="p">(</span><span class="nv">node</span><span class="w"> </span><span class="s">&quot;/pddl_manager&quot;</span><span class="p">))</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">pddl-instance</span>
-<span class="w">      </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">test</span><span class="p">)</span>
-<span class="w">      </span><span class="p">(</span><span class="nv">domain</span><span class="w"> </span><span class="s">&quot;domain.pddl&quot;</span><span class="p">)</span>
-<span class="w">      </span><span class="p">(</span><span class="nv">problem</span><span class="w"> </span><span class="s">&quot;problem.pddl&quot;</span><span class="p">)</span>
-<span class="w">      </span><span class="p">(</span><span class="nb">directory</span><span class="w"> </span><span class="s">&quot;&lt;absolute path to directory&gt;&quot;</span><span class="p">)</span>
-<span class="w">    </span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">pddl-get-fluents</span><span class="w"> </span><span class="p">(</span><span class="nv">instance</span><span class="w"> </span><span class="nv">test</span><span class="p">))</span>
-<span class="w">  </span><span class="p">)</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-<p>Here, three predefined templates are utilized, which are <a class="reference internal" href="#pddl-manager">pddl-manager</a> (registering the node name), <a class="reference internal" href="#pddl-instance">pddl-instance</a> (creating a PDDL instance from filesand naming it) and <a class="reference internal" href="#pddl-get-fluents">pddl-get-fluents</a> (requesting the initial set of fluents).
-The <code class="docutils literal notranslate"><span class="pre">pddl-get-fluents</span></code> fact triggers a request to the set of <a class="reference internal" href="#pddl-fluent">pddl-fluent</a> facts representing the initial state.</p>
-</section>
-<section id="cx-configuration">
-<h4>ROS2 CLIPS-Executive Configuration<a class="headerlink" href="#cx-configuration" title="Link to this heading"></a></h4>
-<p>The example configuration below demonstrates how to pre-load the code from the <cite>cx_pddl_clips</cite> package via batch loading, before loading the example code.
-Two files are needed. The template definitionsare bundled in <code class="docutils literal notranslate"><span class="pre">deftemplates.clp</span></code>, while all required rules are loaded through <code class="docutils literal notranslate"><span class="pre">pddl.clp</span></code>. This split is deliberate, as it allows to override the templates before loading rules, if needed as discussed in more detail later.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">/**</span><span class="p">:</span>
+<p>With all required plugins loaded, a single CLIPS file <code class="docutils literal notranslate"><span class="pre">cx_rl.clp</span></code> is required to obtain the CLIPS interface from the <code class="docutils literal notranslate"><span class="pre">cx_rl_clips</span></code> package.
+A minimal configuration file is depicted below.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">clips_manager</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">autostart_node</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;example_agent&quot;</span><span class="p p-Indicator">]</span>
-
-<span class="w">    </span><span class="nt">structured_pddl_agent</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;executive&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;ros_msgs&quot;</span><span class="p p-Indicator">,</span>
-<span class="w">                </span><span class="s">&quot;pddl_files&quot;</span><span class="p p-Indicator">,</span>
-<span class="w">                </span><span class="s">&quot;files&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">      </span><span class="nt">log_clips_to_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">      </span><span class="nt">watch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facts&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;rules&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_rl_bringup&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">cx_rl_bringup</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;executive&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">                </span><span class="s">&quot;ament_index&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">                </span><span class="s">&quot;ros_msgs&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">                </span><span class="s">&quot;ros_param&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">                </span><span class="s">&quot;action_selection&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">                </span><span class="s">&quot;get_free_robot&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">                </span><span class="s">&quot;reset_env&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">                </span><span class="s">&quot;rl_files&quot;</span><span class="p p-Indicator">]</span>
 
 <span class="w">    </span><span class="nt">ament_index</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::AmentIndexPlugin&quot;</span>
@@ -219,400 +147,501 @@ Two files are needed. The template definitionsare bundled in <code class="docuti
 <span class="w">    </span><span class="nt">ros_msgs</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::RosMsgsPlugin&quot;</span>
 
-<span class="w">    </span><span class="nt">pddl_files</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">ros_param</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::RosParamPlugin&quot;</span>
+
+<span class="w">    </span><span class="nt">reset_env</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::CXCxRlInterfacesResetEnvPlugin&quot;</span>
+<span class="w">    </span><span class="nt">action_selection</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::CXCxRlInterfacesActionSelectionPlugin&quot;</span>
+
+<span class="w">    </span><span class="nt">get_free_robot</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::CXCxRlInterfacesGetFreeRobotPlugin&quot;</span>
+
+<span class="w">    </span><span class="nt">rl_files</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::FileLoadPlugin&quot;</span>
-<span class="w">      </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_pddl_clips&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_rl_clips&quot;</span><span class="p p-Indicator">]</span>
 <span class="w">      </span><span class="nt">batch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span>
-<span class="w">        </span><span class="s">&quot;clips/cx_pddl_clips/deftemplates.clp&quot;</span><span class="p p-Indicator">,</span>
-<span class="w">        </span><span class="s">&quot;clips/cx_pddl_clips/pddl.clp&quot;</span>
-
+<span class="w">        </span><span class="s">&quot;clips/cx_rl_clips/cx-rl.clp&quot;</span><span class="p p-Indicator">,</span>
 <span class="w">      </span><span class="p p-Indicator">]</span>
-
-<span class="w">    </span><span class="nt">files</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::FileLoadPlugin&quot;</span>
-<span class="w">      </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_pddl_bringup&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">      </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;clips/structured_agent.clp&quot;</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 </section>
+<section id="implementing-rl-workflows-in-clips">
+<span id="clips-workflows"></span><h2>Implementing RL Workflows in CLIPS<a class="headerlink" href="#implementing-rl-workflows-in-clips" title="Link to this heading"></a></h2>
+<p>Once the CLIPS interfaces are loaded, several deftemplates, rules and functions are loaded to the specified CLIPS environment to handle ROS communication and workflow logic to interact with RL nodes based on <a class="reference internal" href="cx_rl_gym.html#cx-rl-gym"><span class="std std-ref">CXRLGym environments</span></a>.</p>
+<p>The following table summarizes the mapping between ROS interfaces and their
+corresponding CLIPS deftemplates (all deftemplate definitions can be found).</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50.0%" />
+<col style="width: 50.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>ROS interface</p></th>
+<th class="head"><p>Corresponding Deftemplate(s)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><abbr title="Fetch predefined symbolic observables">/get_predefined_observables</abbr></p></td>
+<td><p><a class="reference internal" href="#rl-predefined-observable"><span class="std std-ref">rl-predefined-observable</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><abbr title="Fetch parameterized observable predicates">/get_observable_predicates</abbr></p></td>
+<td><p><a class="reference internal" href="#rl-observable-predicate"><span class="std std-ref">rl-observable-predicate</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><abbr title="Fetch objects grouped by type">/get_observable_objects</abbr></p></td>
+<td><p><a class="reference internal" href="#rl-observable-type"><span class="std std-ref">rl-observable-type</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><abbr title="Fetch predefined symbolic actions">/get_predefined_actions</abbr></p></td>
+<td><p><a class="reference internal" href="#rl-predefined-action"><span class="std std-ref">rl-predefined-action</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><abbr title="Fetch parameterized symbolic actions">/get_observable_actions</abbr></p></td>
+<td><p><a class="reference internal" href="#rl-observable-action"><span class="std std-ref">rl-observable-action</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><abbr title="Query RL node and environment status">/get_status</abbr></p></td>
+<td><p><a class="reference internal" href="#cx-rl-node"><span class="std std-ref">cx-rl-node</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><abbr title="Reset the RL environment">/reset_env</abbr></p></td>
+<td><p><a class="reference internal" href="#rl-reset-env"><span class="std std-ref">rl-reset-env</span></a>, <a class="reference internal" href="#cx-rl-node"><span class="std std-ref">cx-rl-node</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><abbr title="Fetch current environment observations">/get_current_observations</abbr></p></td>
+<td><p><a class="reference internal" href="#rl-observation"><span class="std std-ref">rl-observation</span></a>, <a class="reference internal" href="#rl-robot"><span class="std std-ref">rl-robot</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><abbr title="Query a free robot for action execution">/get_free_robot</abbr></p></td>
+<td><p><a class="reference internal" href="#rl-robot"><span class="std std-ref">rl-robot</span></a>, <a class="reference internal" href="#rl-ros-action-meta-get-free-robot"><span class="std std-ref">rl-ros-action-meta-get-free-robot</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><abbr title="Query executable actions">/get_action_list_executable_for_robot</abbr></p></td>
+<td><p><a class="reference internal" href="#rl-current-action-space"><span class="std std-ref">rl-current-action-space</span></a>, <a class="reference internal" href="#rl-action"><span class="std std-ref">rl-action</span></a>, <a class="reference internal" href="#rl-robot"><span class="std std-ref">rl-robot</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><abbr title="Execute a selected symbolic action">/action_selection</abbr></p></td>
+<td><p><a class="reference internal" href="#rl-action"><span class="std std-ref">rl-action</span></a>, <a class="reference internal" href="#rl-ros-action-meta-action-selection"><span class="std std-ref">rl-ros-action-meta-action-selection</span></a>,
+<a class="reference internal" href="#rl-action-request-meta"><span class="std std-ref">rl-action-request-meta</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><abbr title="Check whether the current episode ended">/get_episode_end</abbr></p></td>
+<td><p><a class="reference internal" href="#rl-episode-end"><span class="std std-ref">rl-episode-end</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><abbr title="Request policy-based action recommendation">/exec_action_selection</abbr></p></td>
+<td><p><a class="reference internal" href="#rl-current-action-space"><span class="std std-ref">rl-current-action-space</span></a>, <a class="reference internal" href="#rl-action"><span class="std std-ref">rl-action</span></a></p></td>
+</tr>
+</tbody>
+</table>
+<p>By using the provided deftemplates, the individual steps for training and executing RL models can be naturally integrated in CLIPS agents.</p>
+<section id="step-0-configuration-via-global-variables">
+<h3>Step 0: Configuration via Global Variables<a class="headerlink" href="#step-0-configuration-via-global-variables" title="Link to this heading"></a></h3>
+<p>Before starting the RL workflow, optional global configuration values can be defined
+to customize logging behavior, reward shaping, and node identification within CLIPS.</p>
+<p>These settings are provided as CLIPS global variables and influence the behavior
+of the predefined rules and interfaces.</p>
+<p>The following global variables may be overridden <strong>after</strong> loading the <code class="docutils literal notranslate"><span class="pre">cx_rl.clp</span></code>
+file by asserting a new <code class="docutils literal notranslate"><span class="pre">defglobal</span></code> definition:</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defglobal</span>
+<span class="w">  </span><span class="nv">?*CX-RL-LOG-LEVEL*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="nv">debug</span>
+
+<span class="w">  </span><span class="nv">?*CX-RL-REWARD-EPISODE-SUCCESS*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="nv">?*CX-RL-REWARD-EPISODE-FAILURE*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>To customize the ROS node name of the RL node, the following global variable must be
+defined <strong>before</strong> loading the <code class="docutils literal notranslate"><span class="pre">cx_rl.clp</span></code> file. If not specified, it defaults to
+<code class="docutils literal notranslate"><span class="pre">&quot;/cx_rl_node&quot;</span></code>.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defglobal</span>
+<span class="w">  </span><span class="nv">?*CX-RL-NODE-NAME*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
 </section>
-<section id="template-overrides">
-<h3>Template Overrides<a class="headerlink" href="#template-overrides" title="Link to this heading"></a></h3>
-<p>The templates provided by the <cite>cx_pddl_clips</cite> package contain a minimal set of slots to provide the functionality.
-In practical applications, it might be convenient to store additional information (e.g., context as to why a particular service call is made or hints about how to interpret the results).
-Therefore, deftemplate definitions are decoupled from the rules, allowing to first load the deftemplates, then loading re-definitions of them as needed, and finally loading the rule set.
-Potential overrides may add more slots, but need to contain all the original slots, as otherwise the predefined rule base will not work.</p>
-<p>In the <a class="reference internal" href="../pddl/structured_tutorial.html#structured-pddl-agent"><span class="std std-ref">Structured PDDL Agent Tutorial</span></a>,
-this feature is used to extend the notion of PDDL actions.</p>
+<section id="step-1-defining-the-environment">
+<h3>Step 1: Defining the Environment<a class="headerlink" href="#step-1-defining-the-environment" title="Link to this heading"></a></h3>
+<p>In order to define the RL observation space,
+individual observations can be added using <a class="reference internal" href="#rl-predefined-observable"><span class="std std-ref">rl-predefined-observable</span></a> facts.
+Parameterized observations can be added using r:ref:<cite>rl-observable-predicate</cite> facts, defining parameters and their types, along with <a class="reference internal" href="#rl-observable-type"><span class="std std-ref">rl-observable-type</span></a> facts describing the possible objects of a given type.
+Similarly, the action space is defined using <a class="reference internal" href="#rl-predefined-action"><span class="std std-ref">rl-predefined-action</span></a> and <cite>rl-observable-action</cite> facts, along with the observable types.</p>
+<p>The below snippet would describe an observation space containing <cite>on(block1#block2), clear(block1), clear(block2), clear(block3), clear(block4)</cite> and an action space containing <cite>pickup(robot1#block1)</cite>:</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nb">assert</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-predefined-observable</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block1</span><span class="w"> </span><span class="nv">block2</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-observable-predicate</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-names</span><span class="w"> </span><span class="nv">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-types</span><span class="w"> </span><span class="k">block</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-observable-type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="k">block</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">objects</span><span class="w"> </span><span class="nv">block1</span><span class="w"> </span><span class="nv">block2</span><span class="w"> </span><span class="nv">block3</span><span class="w"> </span><span class="nv">block4</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">rl-predefined-action</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">pickup</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">robot1</span><span class="w"> </span><span class="nv">block1</span><span class="p">))</span>
+<span class="w"> </span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Aside from the action and observation space, the initial state needs to be defined.
+This is handled through facts of type <a class="reference internal" href="#rl-observation"><span class="std std-ref">rl-observation</span></a>.</p>
+<p>The below example registers <cite>clear(block1)</cite> and <cite>on-table(block1)</cite> as current observation.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nb">assert</span>
+<span class="w"> </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block1</span><span class="p">))</span>
+<span class="w"> </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on-table</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block1</span><span class="p">))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Once the observation space, action space, and initial observations are available, the RL environment is ready to be initialized.</p>
+<p>Training or execution is started by asserting a <a class="reference internal" href="#cx-rl-node"><span class="std std-ref">cx-rl-node</span></a> fact. This assertion triggers a backup of the current fact base that can be used for resetting the environment (as detailed in <a class="reference internal" href="#cx-rl-clips-step2"><span class="std std-ref">Step 2</span></a>).
+The fact must only be asserted if it does not already exist, as it will persist and be updated across environment resets.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">any-factp</span><span class="w"> </span><span class="p">((</span><span class="nv">?node</span><span class="w"> </span><span class="nv">cx-rl-node</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">eq</span><span class="w"> </span><span class="nv">?node:name</span><span class="w"> </span><span class="nv">?*CX-RL-NODE-NAME*</span><span class="p">)))</span><span class="w"> </span><span class="nv">then</span>
+<span class="w"> </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">cx-rl-node</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">?*CX-RL-NODE-NAME*</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">mode</span><span class="w"> </span><span class="nv">UNSET</span><span class="p">)))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="step-2-defining-the-reset-procedure">
+<span id="cx-rl-clips-step2"></span><h3>Step 2: Defining the Reset Procedure<a class="headerlink" href="#step-2-defining-the-reset-procedure" title="Link to this heading"></a></h3>
+<p>During training, environment resets are triggered automatically by asserting
+an <a class="reference internal" href="#rl-reset-env"><span class="std std-ref">rl-reset-env</span></a> fact. The reset process is executed as a staged procedure,
+where progress is controlled via the <code class="docutils literal notranslate"><span class="pre">state</span></code> slot of the fact.</p>
+<p>The following reset states are processed in order:</p>
+<ul class="simple">
+<li><p><strong>ABORT-RUNNING-ACTIONS</strong>
+Automatic step that gracefully terminates any currently executing actions
+before the episode reset begins.</p></li>
+<li><p><strong>USER-CLEANUP</strong>
+User-defined hook executed before the default reset logic.
+From this state, users may either:</p>
+<ul>
+<li><p>transition to <code class="docutils literal notranslate"><span class="pre">LOAD-FACTS</span></code> to continue with the default reset behavior, or</p></li>
+<li><p>transition directly to <code class="docutils literal notranslate"><span class="pre">DONE</span></code> to fully replace the default reset procedure.</p></li>
+</ul>
+</li>
+<li><p><strong>LOAD-FACTS</strong>
+Automatic step that restores the CLIPS fact base to the snapshot taken after
+the initial assertion of the <code class="docutils literal notranslate"><span class="pre">cx-rl-node</span></code> fact.</p></li>
+<li><p><strong>USER-INIT</strong>
+User-defined hook executed after the default reset has completed and before
+the next episode starts. Transitioning to <code class="docutils literal notranslate"><span class="pre">DONE</span></code> resumes training.</p></li>
+<li><p><strong>DONE</strong>
+Finalizes the reset procedure and hands control back to the training loop.</p></li>
+</ul>
+<p>When no customization of the reset procedure is required, it is sufficient to
+define rules that advance the reset state through the user-defined stages
+without performing additional actions:</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">reset-to-load-facts</span>
+<span class="w">  </span><span class="nv">?reset</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-reset-env</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">USER-CLEANUP</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">modify</span><span class="w"> </span><span class="nv">?reset</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">LOAD-FACTS</span><span class="p">))</span>
+<span class="p">)</span>
+
+<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">reset-to-done</span>
+<span class="w">  </span><span class="nv">?reset</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-reset-env</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">USER-INIT</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">modify</span><span class="w"> </span><span class="nv">?reset</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">DONE</span><span class="p">))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="step-3-action-execution">
+<h3>Step 3: Action Execution<a class="headerlink" href="#step-3-action-execution" title="Link to this heading"></a></h3>
+<p>Action generation and selection are driven by the assertion of a
+<a class="reference internal" href="#rl-current-action-space"><span class="std std-ref">rl-current-action-space</span></a> fact. The workflow differs slightly depending on
+whether the system is operating in <strong>training</strong> or <strong>execution</strong> mode.</p>
+<section id="training-mode">
+<h4>Training Mode<a class="headerlink" href="#training-mode" title="Link to this heading"></a></h4>
+<p>During training, the action-selection cycle is initiated automatically:</p>
+<ol class="arabic">
+<li><p>An <a class="reference internal" href="#rl-current-action-space"><span class="std std-ref">rl-current-action-space</span></a> fact with state <code class="docutils literal notranslate"><span class="pre">PENDING</span></code> is asserted by the
+system once a robot becomes available and new observations are present.</p></li>
+<li><p>User-defined rules generate candidate actions by asserting <a class="reference internal" href="#rl-action"><span class="std std-ref">rl-action</span></a>
+facts based on the current observations and robot state.</p></li>
+<li><p>After all candidate actions have been generated, the user transitions
+<a class="reference internal" href="#rl-current-action-space"><span class="std std-ref">rl-current-action-space</span></a> to state <code class="docutils literal notranslate"><span class="pre">DONE</span></code>.</p></li>
+<li><p>The system automatically selects one of the candidate actions by:</p>
+<ul class="simple">
+<li><p>marking the corresponding <a class="reference internal" href="#rl-action"><span class="std std-ref">rl-action</span></a> fact with <code class="docutils literal notranslate"><span class="pre">is-selected</span> <span class="pre">TRUE</span></code>, and</p></li>
+<li><p>marking the associated <a class="reference internal" href="#rl-robot"><span class="std std-ref">rl-robot</span></a> as busy by setting the <code class="docutils literal notranslate"><span class="pre">waiting</span></code> slot to <code class="docutils literal notranslate"><span class="pre">FALSE</span></code>.</p></li>
+</ul>
+<p>If no candidate action is provided, the episode terminates pre-emptively.
+In this case, a <code class="docutils literal notranslate"><span class="pre">no-op</span></code> action is registered and rewarded using the value
+defined by the global variable <code class="docutils literal notranslate"><span class="pre">?*CX-RL-REWARD-EPISODE-SUCCESS*</span></code>.</p>
+</li>
+<li><p>The user executes the selected action and:</p>
+<ul class="simple">
+<li><p>updates environment observations via <a class="reference internal" href="#rl-observation"><span class="std std-ref">rl-observation</span></a> facts,</p></li>
+<li><p>marks the action as completed by setting the <code class="docutils literal notranslate"><span class="pre">is-finished</span></code> slot to <code class="docutils literal notranslate"><span class="pre">TRUE</span></code>,</p></li>
+<li><p>assigns a reward using the <code class="docutils literal notranslate"><span class="pre">reward</span></code> slot of the <a class="reference internal" href="#rl-action"><span class="std std-ref">rl-action</span></a> fact.</p></li>
+</ul>
+</li>
+<li><p>Collected rewards are consumed by the RL node to advance the learning
+procedure.</p></li>
+<li><p>The user may also explicitly terminate the episode by asserting an
+<a class="reference internal" href="#rl-episode-end"><span class="std std-ref">rl-episode-end</span></a> fact and setting the <code class="docutils literal notranslate"><span class="pre">success</span></code> slot accordingly.
+Depending on its value, either <code class="docutils literal notranslate"><span class="pre">?*CX-RL-REWARD-EPISODE-SUCCESS*</span></code> or
+<code class="docutils literal notranslate"><span class="pre">?*CX-RL-REWARD-EPISODE-FAILURE*</span></code> is registered.</p></li>
+<li><p>Once training is complete, the fact <a class="reference internal" href="#rl-end-training"><span class="std std-ref">rl-end-training</span></a> is asserted to inform the user.</p></li>
+</ol>
+</section>
+<section id="execution-mode">
+<h4>Execution Mode<a class="headerlink" href="#execution-mode" title="Link to this heading"></a></h4>
+<p>In execution mode, action selection is explicitly controlled by the user:</p>
+<ol class="arabic simple">
+<li><p>The user asserts an <a class="reference internal" href="#rl-current-action-space"><span class="std std-ref">rl-current-action-space</span></a> fact in <code class="docutils literal notranslate"><span class="pre">EXECUTION</span></code> mode.</p></li>
+<li><p>Based on the current observations and robot availability, the user asserts
+executable <a class="reference internal" href="#rl-action"><span class="std std-ref">rl-action</span></a> facts and assigns them to a robot.</p></li>
+<li><p>After all candidate actions have been defined, the user transitions
+<a class="reference internal" href="#rl-current-action-space"><span class="std std-ref">rl-current-action-space</span></a> to state <code class="docutils literal notranslate"><span class="pre">DONE</span></code>.</p></li>
+<li><p>The system automatically marks one of the candidate actions as selected by
+setting <code class="docutils literal notranslate"><span class="pre">is-selected</span> <span class="pre">TRUE</span></code> and marking the associated <a class="reference internal" href="#rl-robot"><span class="std std-ref">rl-robot</span></a> as busy by setting slot <code class="docutils literal notranslate"><span class="pre">waiting</span></code> to <code class="docutils literal notranslate"><span class="pre">FALSE</span></code>.</p></li>
+<li><p>The user executes the selected action and updates the environment state by
+asserting new  <a class="reference internal" href="#rl-observation"><span class="std std-ref">rl-observation</span></a> facts.</p></li>
+<li><p>This process may be repeated until no further actions are available or the
+execution goals are satisfied.</p></li>
+</ol>
+<p>If no actions are specified before setting the <a class="reference internal" href="#rl-current-action-space"><span class="std std-ref">rl-current-action-space</span></a> fact to <code class="docutils literal notranslate"><span class="pre">DONE</span></code>, then the prediction asserts a <a class="reference internal" href="#rl-action"><span class="std std-ref">rl-action</span></a> fact with name <code class="docutils literal notranslate"><span class="pre">no-op</span></code>.</p>
+</section>
+</section>
 </section>
 <section id="provided-deftemplates">
-<h3>Provided Deftemplates<a class="headerlink" href="#provided-deftemplates" title="Link to this heading"></a></h3>
-<p>In the remainder of this document, all provided deftemplates of the <cite>cx_pddl_clips</cite> are described.</p>
-<section id="pddl-action">
-<span id="id1"></span><h4>pddl-action<a class="headerlink" href="#pddl-action" title="Link to this heading"></a></h4>
-<p>Represents a grounded PDDL action in a PDDL instance.
-Automatically created when a plan is received.
-Can also be asserted directly, if actions are needed in different contexts (e.g., to apply effects).
-Used to track parameters, plan order, and scheduled times.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-action</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">id</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">plan</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">params</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="p">(</span><span class="nv">create$</span><span class="p">)))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">plan-order-class</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">planned-start-time</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">FLOAT</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">planned-duration</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">FLOAT</span><span class="p">))</span>
+<span id="rl-deftemplates"></span><h2>Provided Deftemplates<a class="headerlink" href="#provided-deftemplates" title="Link to this heading"></a></h2>
+<p>In the remainder of this document, all provided deftemplates of the <code class="docutils literal notranslate"><span class="pre">cx_rl_clips</span></code>
+integration are described. These templates form the symbolic interface between
+CLIPS-based reasoning and a CXRLGym reinforcement learning environment.</p>
+<p>They are used to define symbolic observation and action spaces, represent the
+current environment state, generate and execute actions, and control training
+and execution workflows.</p>
+<p>When working with templates, make sure you understand which facts and slots are automatically populated by cx_rl_clips and which must be defined by the user.
+Providing or overriding automatically managed fields may lead to unintended behavior.</p>
+<section id="rl-reset-env">
+<span id="id1"></span><h3>rl-reset-env<a class="headerlink" href="#rl-reset-env" title="Link to this heading"></a></h3>
+<p>Represents a request to reset the RL environment.
+This fact is asserted by the environment and processed to coordinate cleanup, initialization, and reset transitions.
+Users are responsible to transition the <code class="docutils literal notranslate"><span class="pre">state</span></code> slot from <cite>USER-CLEANUP</cite> to <cite>LOAD-FACTS</cite> and from <cite>USER-INIT</cite> to <cite>DONE</cite>.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-reset-env</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">node</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">state</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">ABORT-RUNNING-ACTIONS</span><span class="w"> </span><span class="nv">USER-CLEANUP</span><span class="w"> </span><span class="nv">LOAD-FACTS</span><span class="w"> </span><span class="nv">USER-INIT</span><span class="w"> </span><span class="nv">DONE</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">uuid</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </section>
-<section id="pddl-action-condition">
-<span id="id2"></span><h4>pddl-action-condition<a class="headerlink" href="#pddl-action-condition" title="Link to this heading"></a></h4>
-<p>Represents a condition of a PDDL action.
-Requires a <a class="reference internal" href="#pddl-action"><span class="std std-ref">pddl-action</span></a> fact with <code class="docutils literal notranslate"><span class="pre">id</span></code> matching the value in slot <code class="docutils literal notranslate"><span class="pre">action</span></code>.
-Obtains the satisfaction state and unsatisfied conditions.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-action-condition</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">action</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">condition-type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">ALL</span><span class="w"> </span><span class="nv">START</span><span class="w"> </span><span class="nv">OVERALL</span><span class="w"> </span><span class="nv">END</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">START</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">state</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">PENDING</span><span class="w"> </span><span class="nv">CHECK-CONDITION</span><span class="w"> </span><span class="nv">CONDITION-SAT</span><span class="w"> </span><span class="nv">CONDITION-UNSAT</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">PENDING</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">unsatisfied-conditions</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="p">(</span><span class="nv">create$</span><span class="p">)))</span>
+<section id="cx-rl-node">
+<span id="id2"></span><h3>cx-rl-node<a class="headerlink" href="#cx-rl-node" title="Link to this heading"></a></h3>
+<p>Represents the RL node instance and its current lifecycle state.
+It also serves as the main entry point for tracking training and execution
+progress.</p>
+<p>This fact is asserted once by the user during initialization and updated automatically
+via status queries.
+Users should assert this fact and specify the slot <code class="docutils literal notranslate"><span class="pre">name</span></code> according to the global variable <cite>*?CX-RL-NODE-NAME*</cite> used for loading <code class="docutils literal notranslate"><span class="pre">cx_rl_clips</span></code>.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">cx-rl-node</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">ros-comm-init</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">TRUE</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">fact-reset-file</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">mode</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">UNSET</span><span class="w"> </span><span class="nv">TRAINING</span><span class="w"> </span><span class="nv">EXECUTION</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">episode</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nb">step</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">total-steps</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">model-loaded</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">TRUE</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">))</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </section>
-<section id="pddl-action-get-effect">
-<span id="id3"></span><h4>pddl-action-get-effect<a class="headerlink" href="#pddl-action-get-effect" title="Link to this heading"></a></h4>
-<p>Request the effect of a grounded PDDL action.
-Requires a <a class="reference internal" href="#pddl-action"><span class="std std-ref">pddl-action</span></a> fact with <code class="docutils literal notranslate"><span class="pre">id</span></code> matching the value in slot <code class="docutils literal notranslate"><span class="pre">action</span></code>.
-Optionally, the effect can also be directly applied using the slot <code class="docutils literal notranslate"><span class="pre">apply</span></code>.
-If effectsa are also applied, corresponding <a class="reference internal" href="#pddl-fluent-change"><span class="std std-ref">pddl-fluent-change</span></a> and ref:<cite>pddl-numeric-fluent-change</cite> facts are asserted, before the state is set to <code class="docutils literal notranslate"><span class="pre">DONE</span></code>.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-action-get-effect</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">action</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">effect-type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">ALL</span><span class="w"> </span><span class="nv">START</span><span class="w"> </span><span class="nv">END</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">ALL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nb">apply</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">FALSE</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">state</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">PENDING</span><span class="w"> </span><span class="nv">WAITING</span><span class="w"> </span><span class="nv">START-EFFECT-APPLIED</span><span class="w"> </span><span class="nv">DONE</span><span class="w"> </span><span class="nv">ERROR</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">PENDING</span><span class="p">))</span>
+<section id="rl-get-status">
+<span id="id3"></span><h3>rl-get-status<a class="headerlink" href="#rl-get-status" title="Link to this heading"></a></h3>
+<p>Request the current status of the RL environment.
+Asserting this fact causes the corresponding <a class="reference internal" href="#cx-rl-node"><span class="std std-ref">cx-rl-node</span></a> fact to be updated.
+The system initially requests updates in order to monitor the startup process.
+Users may assert this fact (and set the slot <code class="docutils literal notranslate"><span class="pre">node</span></code>) request updates to observe training progression.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-get-status</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">node</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">request-id</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span><span class="w"> </span><span class="c1">; internal</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </section>
-<section id="pddl-action-names">
-<span id="id4"></span><h4>pddl-action-names<a class="headerlink" href="#pddl-action-names" title="Link to this heading"></a></h4>
-<p>Retrieve the list of action names for a PDDL instance.
-This is particularly useful for defining goal filters.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-action-names</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">action-names</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="p">(</span><span class="nv">create$</span><span class="p">)))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">state</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">PENDING</span><span class="w"> </span><span class="nv">DONE</span><span class="w"> </span><span class="nv">ERROR</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">PENDING</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nb">error</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
+<section id="rl-end-training">
+<span id="id4"></span><h3>rl-end-training<a class="headerlink" href="#rl-end-training" title="Link to this heading"></a></h3>
+<p>Signals that training has completed. This fact is asserted by the environmnent
+and notifies users about the end of training.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-end-training</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">node</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </section>
-<section id="pddl-clear-goals">
-<span id="id5"></span><h4>pddl-clear-goals<a class="headerlink" href="#pddl-clear-goals" title="Link to this heading"></a></h4>
-<p>Clears all goal conditions for a PDDL instance via the external manager.
-This assumes that a matching goal instance was created via <a class="reference internal" href="#pddl-create-goal-instance"><span class="std std-ref">pddl-create-goal-instance</span></a> beforehand.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-clear-goals</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">goal</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">state</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">PENDING</span><span class="w"> </span><span class="nv">DONE</span><span class="w"> </span><span class="nv">ERROR</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">PENDING</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nb">error</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
+<section id="rl-episode-end">
+<span id="id5"></span><h3>rl-episode-end<a class="headerlink" href="#rl-episode-end" title="Link to this heading"></a></h3>
+<p>Marks the end of an episode during training.
+Users can assert this to indicate indicate success or failure of the current episode and trigger environment resets.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-episode-end</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">node</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">success</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">TRUE</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">))</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </section>
-<section id="pddl-create-goal-instance">
-<span id="id6"></span><h4>pddl-create-goal-instance<a class="headerlink" href="#pddl-create-goal-instance" title="Link to this heading"></a></h4>
-<p>Create a new managed goal instance for a PDDL instance via the external manager.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-create-goal-instance</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">goal</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">state</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">PENDING</span><span class="w"> </span><span class="nv">DONE</span><span class="w"> </span><span class="nv">ERROR</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">PENDING</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nb">error</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="pddl-effect-fluent">
-<span id="id7"></span><h4>pddl-effect-fluent<a class="headerlink" href="#pddl-effect-fluent" title="Link to this heading"></a></h4>
-<p>Represents a boolean effect of a PDDL action.
-Asserted when retrieving an action effect via <a class="reference internal" href="#pddl-action-get-effect"><span class="std std-ref">pddl-action-get-effect</span></a>.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-effect-fluent</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">action</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">params</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="p">(</span><span class="nv">create$</span><span class="p">)))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">effect-type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">ALL</span><span class="w"> </span><span class="nv">START</span><span class="w"> </span><span class="nv">END</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">ALL</span><span class="p">))</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="pddl-effect-numeric-fluent">
-<span id="id8"></span><h4>pddl-effect-numeric-fluent<a class="headerlink" href="#pddl-effect-numeric-fluent" title="Link to this heading"></a></h4>
-<p>Represents a numeric effect of a PDDL action at a specific time.
-Asserted when retrieving an action effect via <a class="reference internal" href="#pddl-action-get-effect"><span class="std std-ref">pddl-action-get-effect</span></a>.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-effect-numeric-fluent</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">action</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">params</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="p">(</span><span class="nv">create$</span><span class="p">)))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">value</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">FLOAT</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">effect-type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">ALL</span><span class="w"> </span><span class="nv">START</span><span class="w"> </span><span class="nv">END</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">ALL</span><span class="p">))</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="pddl-fluent">
-<span id="id9"></span><h4>pddl-fluent<a class="headerlink" href="#pddl-fluent" title="Link to this heading"></a></h4>
-<p>Represents a boolean fluent in a PDDL instance.
-Do not assert/retract/modify directly; use <a class="reference internal" href="#pddl-fluent-change"><span class="std std-ref">pddl-fluent-change</span></a> to keep the external PDDL manager in sync.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-fluent</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">params</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="p">(</span><span class="nv">create$</span><span class="p">)))</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="pddl-fluent-change">
-<span id="id10"></span><h4>pddl-fluent-change<a class="headerlink" href="#pddl-fluent-change" title="Link to this heading"></a></h4>
-<p>Indicates that a boolean fluent should be added or removed.
-Acts as a transient layer to synchronize with the external PDDL manager.
-This automatically updates the corresponding <a class="reference internal" href="#pddl-fluent"><span class="std std-ref">pddl-fluent</span></a> fact.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-fluent-change</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">params</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="p">(</span><span class="nv">create$</span><span class="p">)))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nb">delete</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">FALSE</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">request-id</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">state</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">PENDING</span><span class="w"> </span><span class="nv">WAITING</span><span class="w"> </span><span class="nv">ERROR</span><span class="w"> </span><span class="nv">ON-HOLD</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">PENDING</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nb">error</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="pddl-get-fluents">
-<span id="id11"></span><h4>pddl-get-fluents<a class="headerlink" href="#pddl-get-fluents" title="Link to this heading"></a></h4>
-<p>Fetch all boolean fluents for a PDDL instance via the external manager.
-Asserts the corresponding <a class="reference internal" href="#pddl-fluent"><span class="std std-ref">pddl-fluent</span></a> facts.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-get-fluents</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">state</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">PENDING</span><span class="w"> </span><span class="nv">DONE</span><span class="w"> </span><span class="nv">ERROR</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">PENDING</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nb">error</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="pddl-get-numeric-fluents">
-<span id="id12"></span><h4>pddl-get-numeric-fluents<a class="headerlink" href="#pddl-get-numeric-fluents" title="Link to this heading"></a></h4>
-<p>Fetch all numeric fluents for a PDDL instance via the external manager.
-Asserts the corresponding <a class="reference internal" href="#pddl-numeric-fluent"><span class="std std-ref">pddl-numeric-fluent</span></a> facts.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-get-numeric-fluents</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">state</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">PENDING</span><span class="w"> </span><span class="nv">DONE</span><span class="w"> </span><span class="nv">ERROR</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">PENDING</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nb">error</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="pddl-get-predicates">
-<span id="id13"></span><h4>pddl-get-predicates<a class="headerlink" href="#pddl-get-predicates" title="Link to this heading"></a></h4>
-<p>Fetch all predicates for a PDDL instance via the external manager.
-Asserts the corresponding <a class="reference internal" href="#pddl-predicate"><span class="std std-ref">pddl-predicate</span></a> facts.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-get-predicates</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">state</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">PENDING</span><span class="w"> </span><span class="nv">DONE</span><span class="w"> </span><span class="nv">ERROR</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">PENDING</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nb">error</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="pddl-get-type-objects">
-<span id="id14"></span><h4>pddl-get-type-objects<a class="headerlink" href="#pddl-get-type-objects" title="Link to this heading"></a></h4>
-<p>Fetch all objects of a specific type for a PDDL instance via the external manager.
-Asserts the corresponding <a class="reference internal" href="#pddl-type-objects"><span class="std std-ref">pddl-type-objects</span></a> fact.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-get-type-objects</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<section id="rl-observable-type">
+<span id="id6"></span><h3>rl-observable-type<a class="headerlink" href="#rl-observable-type" title="Link to this heading"></a></h3>
+<p>Defines a symbolic type and its corresponding objects.
+These definitions are provided by the user and used to construct grounded observation and action spaces.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-observable-type</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">node</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">state</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">PENDING</span><span class="w"> </span><span class="nv">DONE</span><span class="w"> </span><span class="nv">ERROR</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">PENDING</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nb">error</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">objects</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="p">(</span><span class="nv">create$</span><span class="p">)))</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </section>
-<section id="pddl-goal-fluent">
-<span id="id15"></span><h4>pddl-goal-fluent<a class="headerlink" href="#pddl-goal-fluent" title="Link to this heading"></a></h4>
-<p>Represents a positive boolean goal condition for a PDDL instance. Negative conditions are not supported as of now.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-goal-fluent</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">goal</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<section id="rl-observable-predicate">
+<span id="id7"></span><h3>rl-observable-predicate<a class="headerlink" href="#rl-observable-predicate" title="Link to this heading"></a></h3>
+<p>Defines a predicate with typed parameters.
+All valid groundings are generated using the objects defined via
+<a class="reference internal" href="#rl-observable-type"><span class="std std-ref">rl-observable-type</span></a> for spanning the observation space.
+Users are responsible for asserting facts of this type.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-observable-predicate</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">node</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">params</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="p">(</span><span class="nv">create$</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">param-names</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">param-types</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </section>
-<section id="pddl-goal-numeric-fluent">
-<span id="id16"></span><h4>pddl-goal-numeric-fluent<a class="headerlink" href="#pddl-goal-numeric-fluent" title="Link to this heading"></a></h4>
-<p>Represents a numeric goal condition with a specific value in a PDDL instance.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-goal-numeric-fluent</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">goal</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<section id="rl-predefined-observable">
+<span id="id8"></span><h3>rl-predefined-observable<a class="headerlink" href="#rl-predefined-observable" title="Link to this heading"></a></h3>
+<p>Defines a grounded observable directly.
+Used to add individual observations into the observation space.
+Users are responsible for asserting facts of this type.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-predefined-observable</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">node</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">params</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="p">(</span><span class="nv">create$</span><span class="p">)))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">value</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">FLOAT</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">params</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </section>
-<section id="pddl-instance">
-<span id="id17"></span><h4>pddl-instance<a class="headerlink" href="#pddl-instance" title="Link to this heading"></a></h4>
-<p>Initialize a PDDL instance with the external manager.
-Also ensures that no confliction requests are made simultaneously, by always tracking, the current operation.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-instance</span>
+<section id="rl-predefined-action">
+<span id="id9"></span><h3>rl-predefined-action<a class="headerlink" href="#rl-predefined-action" title="Link to this heading"></a></h3>
+<p>Defines a grounded action directly.
+Used to add individual actions into the action space.
+Users are responsible for asserting facts of this type.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-predefined-action</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">node</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">domain</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">problem</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nb">directory</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">state</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">PENDING</span><span class="w"> </span><span class="nv">LOADED</span><span class="w"> </span><span class="nv">ERROR</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">PENDING</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">busy-with</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">FALSE</span><span class="w"> </span><span class="nv">OBJECTS</span><span class="w"> </span><span class="nv">FLUENTS</span><span class="w"> </span><span class="nv">NUMERIC-FLUENTS</span><span class="w"> </span><span class="nv">ACTION-EFFECTS</span><span class="w"> </span><span class="nv">CREATE-GOAL-INSTANCE</span><span class="w"> </span><span class="nv">CLEAR-GOALS</span><span class="w"> </span><span class="nv">SET-GOALS</span><span class="w"> </span><span class="nv">CHECK-CONDITIONS</span><span class="w"> </span><span class="nv">GET-FLUENTS</span><span class="w"> </span><span class="nv">GET-NUMERIC-FLUENTS</span><span class="w"> </span><span class="nv">GET-PREDICATES</span><span class="w"> </span><span class="nv">GET-TYPE-OBJECTS</span><span class="w"> </span><span class="nv">GET-ACTION-NAMES</span><span class="w"> </span><span class="nv">SET-ACTION-FILTER</span><span class="w"> </span><span class="nv">SET-OBJECT-FILTER</span><span class="w"> </span><span class="nv">SET-FLUENT-FILTER</span><span class="w"> </span><span class="nv">CREATE-GOAL-INSTANCE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nb">error</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">params</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </section>
-<section id="pddl-manager">
-<span id="id18"></span><h4>pddl-manager<a class="headerlink" href="#pddl-manager" title="Link to this heading"></a></h4>
-<p>Assert a fact of this type to specify the name of the PDDL manager node.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-manager</span>
-<span class="s">&quot; Store information on the external pddl manager.</span>
-<span class="s">&quot;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">node</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/pddl_manager&quot;</span><span class="p">))</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="pddl-numeric-fluent">
-<span id="id19"></span><h4>pddl-numeric-fluent<a class="headerlink" href="#pddl-numeric-fluent" title="Link to this heading"></a></h4>
-<p>Represents a numeric fluent in a PDDL instance.
-Use <cite>pddl-numeric-fluent-change</cite> to update values safely with the external PDDL manager.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-numeric-fluent</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<section id="rl-observable-action">
+<span id="id10"></span><h3>rl-observable-action<a class="headerlink" href="#rl-observable-action" title="Link to this heading"></a></h3>
+<p>Defines a parameterized symbolic action.
+All valid groundings are generated based on the defined parameter types and objects.
+Users are responsible for asserting facts of this type.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-observable-action</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">node</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">params</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="p">(</span><span class="nv">create$</span><span class="p">)))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">value</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">FLOAT</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">param-names</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">param-types</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </section>
-<section id="pddl-numeric-fluent-change">
-<span id="id20"></span><h4>pddl-numeric-fluent-change<a class="headerlink" href="#pddl-numeric-fluent-change" title="Link to this heading"></a></h4>
-<p>Indicates that a numeric fluent should be added or removed.
-Acts as a transient layer to synchronize with the external PDDL manager.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-numeric-fluent-change</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<section id="rl-observation">
+<span id="id11"></span><h3>rl-observation<a class="headerlink" href="#rl-observation" title="Link to this heading"></a></h3>
+<p>Represents a currently active observation.
+The set of all asserted <code class="docutils literal notranslate"><span class="pre">rl-observation</span></code> facts defines the current environment state.
+Users are responsible for asserting facts of this type.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-observation</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">node</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">params</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="p">(</span><span class="nv">create$</span><span class="p">)))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">value</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">FLOAT</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">request-id</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">state</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">PENDING</span><span class="w"> </span><span class="nv">WAITING</span><span class="w"> </span><span class="nv">ERROR</span><span class="w"> </span><span class="nv">ON-HOLD</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">PENDING</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">params</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </section>
-<section id="pddl-object-change">
-<span id="id21"></span><h4>pddl-object-change<a class="headerlink" href="#pddl-object-change" title="Link to this heading"></a></h4>
-<p>Indicates that an object should be added or removed from a PDDL instance.
-Acts as a transient layer to synchronize with the external PDDL manager.</p>
-<p>Note that this does not automatically update the <a class="reference internal" href="#pddl-type-objects"><span class="std std-ref">pddl-type-objects</span></a> facts.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-object-change</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<section id="rl-robot">
+<span id="id12"></span><h3>rl-robot<a class="headerlink" href="#rl-robot" title="Link to this heading"></a></h3>
+<p>Represents a robot that can execute actions.
+A corresponding fact must be asserted for each robot whose actions are to be controlled by RL.
+The <code class="docutils literal notranslate"><span class="pre">waiting</span></code> slot is managed automatically by the RL interface, indicating
+that a robot is idling and ready for getting a new action assigned.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-robot</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">node</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nb">delete</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">FALSE</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">request-id</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">state</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">PENDING</span><span class="w"> </span><span class="nv">WAITING</span><span class="w"> </span><span class="nv">ERROR</span><span class="w"> </span><span class="nv">ON-HOLD</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">PENDING</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nb">error</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">waiting</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">TRUE</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">))</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </section>
-<section id="pddl-plan">
-<span id="id22"></span><h4>pddl-plan<a class="headerlink" href="#pddl-plan" title="Link to this heading"></a></h4>
-<p>Represents a PDDL plan.</p>
-<p>Consists of individual <cite>pddl-action</cite> facts with matching plan id.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-plan</span>
+<section id="rl-current-action-space">
+<span id="id13"></span><h3>rl-current-action-space<a class="headerlink" href="#rl-current-action-space" title="Link to this heading"></a></h3>
+<p>Asserted automatically to indicate the generation phase of the current action space.
+Facts of this type are created with the slot <code class="docutils literal notranslate"><span class="pre">state</span></code> set to <cite>PENDING</cite>, signaling that the user must assert <a class="reference internal" href="#rl-action"><span class="std std-ref">rl-action</span></a> facts before advancing the <code class="docutils literal notranslate"><span class="pre">state</span></code> to <cite>DONE</cite>.
+Once the state is set to <code class="docutils literal notranslate"><span class="pre">DONE</span></code>, action selection proceeds automatically.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-current-action-space</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">node</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">state</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">PENDING</span><span class="w"> </span><span class="nv">DONE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">PENDING</span><span class="p">))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="rl-action">
+<span id="id14"></span><h3>rl-action<a class="headerlink" href="#rl-action" title="Link to this heading"></a></h3>
+<p>Users must assert facts of this type whenever a corresponding
+<a class="reference internal" href="#rl-current-action-space"><span class="std std-ref">rl-current-action-space</span></a> fact is present.
+When asserting an <code class="docutils literal notranslate"><span class="pre">rl-action</span></code> fact, the slots <code class="docutils literal notranslate"><span class="pre">node</span></code>, <code class="docutils literal notranslate"><span class="pre">id</span></code>,
+<code class="docutils literal notranslate"><span class="pre">name</span></code>, and <code class="docutils literal notranslate"><span class="pre">params</span></code> must be specified.
+Note that the slot <code class="docutils literal notranslate"><span class="pre">id</span></code> should uniquely identify <code class="docutils literal notranslate"><span class="pre">rl-action</span></code> facts, while the slot <code class="docutils literal notranslate"><span class="pre">name</span></code> and <code class="docutils literal notranslate"><span class="pre">params</span></code> have to match those used when creating the action space.</p>
+<p>The slots <code class="docutils literal notranslate"><span class="pre">is-selected</span></code> and <code class="docutils literal notranslate"><span class="pre">assigned-to</span></code> are managed automatically.
+They indicate whether the action has been selected for execution and
+which <a class="reference internal" href="#rl-robot"><span class="std std-ref">rl-robot</span></a> is assigned to execute it.</p>
+<p>Once an action is selected, the user is responsible for carrying out
+its execution. Upon completion, the user must update the slots
+<code class="docutils literal notranslate"><span class="pre">is-finished</span></code> and <code class="docutils literal notranslate"><span class="pre">reward</span></code> to signal termination and provide the
+reward obtained from the execution.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-action</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">node</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">id</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">duration</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">FLOAT</span><span class="p">))</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="pddl-planning-filter">
-<span id="id23"></span><h4>pddl-planning-filter<a class="headerlink" href="#pddl-planning-filter" title="Link to this heading"></a></h4>
-<p>A transient layer for planning filters between the general PDDL interface and domain-specific usage.
-Can filter actions, objects, or fluents by defining a whitelist.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-planning-filter</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">id</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">ACTIONS</span><span class="w"> </span><span class="nv">OBJECTS</span><span class="w"> </span><span class="nv">FLUENTS</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">filter</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="p">(</span><span class="nv">create$</span><span class="p">)))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">goal</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="pddl-predicate">
-<span id="id24"></span><h4>pddl-predicate<a class="headerlink" href="#pddl-predicate" title="Link to this heading"></a></h4>
-<p>Represents a predicate in a PDDL instance.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-predicate</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">param-types</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="p">(</span><span class="nv">create$</span><span class="p">)))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">param-names</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="p">(</span><span class="nv">create$</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">params</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">is-finished</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">TRUE</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">reward</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">is-selected</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">TRUE</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">assigned-to</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="no">nil</span><span class="p">))</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </section>
-<section id="pddl-service-request-meta">
-<span id="id25"></span><h4>pddl-service-request-meta<a class="headerlink" href="#pddl-service-request-meta" title="Link to this heading"></a></h4>
-<p>Facts of these types are used internally and should be ignored.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-service-request-meta</span>
+<section id="rl-ros-action-meta-get-free-robot">
+<span id="id15"></span><h3>rl-ros-action-meta-get-free-robot<a class="headerlink" href="#rl-ros-action-meta-get-free-robot" title="Link to this heading"></a></h3>
+<p>Represents internal metadata associated with the <code class="docutils literal notranslate"><span class="pre">get_free_robot</span></code> ROS action.
+Facts of this type are asserted and managed automatically by the framework.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-ros-action-meta-get-free-robot</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">uuid</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">node</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">robot</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">last-search</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">FLOAT</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">found</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">TRUE</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">abort-action</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">FALSE</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="rl-ros-action-meta-action-selection">
+<span id="id16"></span><h3>rl-ros-action-meta-action-selection<a class="headerlink" href="#rl-ros-action-meta-action-selection" title="Link to this heading"></a></h3>
+<p>Internal metadata for the <code class="docutils literal notranslate"><span class="pre">action_selection</span></code> ROS action.
+Facts of this type are asserted and managed automatically by the framework.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-ros-action-meta-action-selection</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">uuid</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">node</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">action-id</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">abort-action</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">FALSE</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="rl-action-request-meta">
+<span id="id17"></span><h3>rl-action-request-meta<a class="headerlink" href="#rl-action-request-meta" title="Link to this heading"></a></h3>
+<p>Internal request tracking for ROS service calls.
+Facts of this type are asserted and managed automatically by the framework.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-action-request-meta</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">node</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">service</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">request-id</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">meta</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">action-id</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="pddl-set-goals">
-<span id="id26"></span><h4>pddl-set-goals<a class="headerlink" href="#pddl-set-goals" title="Link to this heading"></a></h4>
-<p>Register goal conditions with the external PDDL manager.
-The goal conditions are defined using <a class="reference internal" href="#pddl-goal-fluent"><span class="std std-ref">pddl-goal-fluent</span></a> and <a class="reference internal" href="#pddl-goal-numeric-fluent"><span class="std std-ref">pddl-goal-numeric-fluent</span></a> facts with matching goal ids.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-set-goals</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">goal</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">state</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">PENDING</span><span class="w"> </span><span class="nv">DONE</span><span class="w"> </span><span class="nv">ERROR</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">PENDING</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nb">error</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="pddl-type-objects">
-<span id="id27"></span><h4>pddl-type-objects<a class="headerlink" href="#pddl-type-objects" title="Link to this heading"></a></h4>
-<p>Lists all objects of a certain type in a PDDL instance.
-Created using <a class="reference internal" href="#pddl-get-type-objects"><span class="std std-ref">pddl-get-type-objects</span></a>.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-type-objects</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">objects</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="p">(</span><span class="nv">create$</span><span class="p">)))</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</section>
 </section>
 </section>
 </section>
@@ -621,8 +650,8 @@ Created using <a class="reference internal" href="#pddl-get-type-objects"><span 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="cx_rl.html" class="btn btn-neutral float-left" title="RL Node" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../../standards.html" class="btn btn-neutral float-right" title="Standard Documents" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="multi_robot_mppo.html" class="btn btn-neutral float-left" title="CXRLMaskablePPONode: RL Model Multi-Robot Applications" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="blocksworld_tutorial.html" class="btn btn-neutral float-right" title="Tutorial: Building an RL Agent for Blocksworld" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

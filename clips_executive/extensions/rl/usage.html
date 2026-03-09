@@ -8,6 +8,7 @@
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=86f27845" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom_figure.css" />
 
   
   
@@ -21,7 +22,7 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="RL Node" href="cx_rl.html" />
+    <link rel="next" title="CXRLGym - ROS 2 Reinforcement Learning Environment" href="cx_rl_gym.html" />
     <link rel="prev" title="Reinforcement Learning Integration for CLIPS" href="../reinforcement_learning.html" /> 
 </head>
 
@@ -59,8 +60,10 @@
 <li class="toctree-l3"><a class="reference internal" href="../reinforcement_learning.html#overview">Overview</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="../reinforcement_learning.html#content">Content</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">Usage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="cx_rl.html">RL Node</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cx_rl_gym.html">CXRLGym - ROS 2 Reinforcement Learning Environment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multi_robot_mppo.html">CXRLMaskablePPONode: RL Model Multi-Robot Applications</a></li>
 <li class="toctree-l4"><a class="reference internal" href="rl_clips.html">Reinforcement Learning CLIPS Interfaces</a></li>
+<li class="toctree-l4"><a class="reference internal" href="blocksworld_tutorial.html">Tutorial: Building an RL Agent for Blocksworld</a></li>
 </ul>
 </li>
 </ul>
@@ -102,11 +105,27 @@
 <p>This document assumes you have the ROS2 CLIPS-Executive installed and sourced in your environment.</p>
 <p>Aside from the regular ROS2 CLIPS-Executive node, the RL extension additionally requires a node for the reinforcement learning agent.
 We provide the <strong>CXRLNode</strong> node for this purpose which  deploys a variant of multi-robot proximal policy optimization with invalid action masking via the <a class="reference external" href="https://carologistics.github.io/clips_executive/cx_rl_multi_robot_mppo">cx_rl_multi_robot_mppo</a> package.</p>
+<section id="starting-the-cx-rl-node">
+<h2>Starting the CX RL Node<a class="headerlink" href="#starting-the-cx-rl-node" title="Link to this heading"></a></h2>
+<p>Aside from the regular ROS2 CLIPS-Executive node, the RL extension additionally requires a node that provides a policy and environment based on the <code class="docutils literal notranslate"><span class="pre">CXRLBaseNode</span></code> class (see <a class="reference internal" href="cx_rl_gym.html#cx-rl-base-node"><span class="std std-ref">CXRLBaseNode</span></a>).</p>
+<p>This package includes a reference implementation that can be started directly:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>cx_rl_multi_robot_mppo<span class="w"> </span>cx_rl_mppo_node
+</pre></div>
+</div>
+<p>For typical usage, it is recommended to start the system via the launch file provided by the <code class="docutils literal notranslate"><span class="pre">cx_rl_bringup</span></code> package.
+This launch file wraps the ROS2 CLIPS-Executive launch configuration and starts the RL node alongside it:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>cx_rl_bringup<span class="w"> </span>cx_rl_launch.py
+</pre></div>
+</div>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Use the <cite>–show-args</cite> option to display all available launch parameters.</p>
+</div>
+</section>
 <section id="example">
 <h2>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
-<p>An example application is provided through the <a class="reference external" href="https://carologistics.github.io/clips_executive/cx_rl_bringup">cx_rl_bringup</a> package and can be started via:
-The following example showcases how an RL agent can be trained and utilzied with CLIPS-based execution. Here, a simple blocksworld domain is considered, where four blocks A, B, C and D need to be stacked using the actions pickup (picking up a block) and stack (placing one block on top of another block).</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>cx_rl_bringup<span class="w"> </span>agent.launch.py
+<p>The following example showcases how an RL agent can be trained and utilzied with CLIPS-based execution. Here, a simple blocksworld domain is considered, where four blocks need to be stacked using the actions pickup (picking up a block) and stack (placing one block on top of another block).</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>cx_rl_bringup<span class="w"> </span>cx_rl_launch.py
 </pre></div>
 </div>
 <div class="admonition hint">
@@ -122,7 +141,7 @@ The following example showcases how an RL agent can be trained and utilzied with
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../reinforcement_learning.html" class="btn btn-neutral float-left" title="Reinforcement Learning Integration for CLIPS" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="cx_rl.html" class="btn btn-neutral float-right" title="RL Node" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="cx_rl_gym.html" class="btn btn-neutral float-right" title="CXRLGym - ROS 2 Reinforcement Learning Environment" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

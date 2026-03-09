@@ -1,8 +1,0 @@
-PlanTemporal
-============
-This is a ROS action definition.
-
-**Source**
-
-.. literalinclude:: ../../../../../../extensions/pddl/cx_pddl_msgs/action/PlanTemporal.action
-
