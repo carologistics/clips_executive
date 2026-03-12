@@ -803,15 +803,31 @@ void RosMsgsPlugin::async_send_new_goal(
   // endlessly
   std::thread([this, env, deserialized_goal, action_server]() {
     auto context = CLIPSEnvContext::get_context(env);
-    auto scoped_lock = std::scoped_lock{map_mtx_};
-    if (!messages_.contains(deserialized_goal)) {
-      RCLCPP_ERROR(*logger_, "Failed to send goal, invalid msg pointer");
-    }
-    std::shared_ptr<MessageInfo> msg_info = messages_[deserialized_goal];
-    std::string msg_type = get_msg_type(msg_info->members);
+    std::shared_ptr<MessageInfo> msg_info;
+    std::shared_ptr<rclcpp_action::GenericClient> client;
     std::string env_name = context->env_name_;
+    {
+      auto scoped_lock = std::scoped_lock{map_mtx_};
+      if (!messages_.contains(deserialized_goal)) {
+        RCLCPP_ERROR(*logger_, "Failed to send goal, invalid msg pointer");
+      }
+      msg_info = messages_[deserialized_goal];
+      auto env_it = action_clients_.find(env_name);
+      if (env_it == action_clients_.end()) {
+        RCLCPP_ERROR(*logger_, "No clients for env %s", env_name.c_str());
+        return;
+      }
+      auto server_it = env_it->second.find(action_server);
+      if (server_it == env_it->second.end()) {
+        RCLCPP_ERROR(*logger_, "No client for server %s", action_server.c_str());
+        return;
+      }
+      client = server_it->second;
+    }
+
+    std::string msg_type = get_msg_type(msg_info->members);
     bool print_warning = true;
-    while (!stop_flag_ && !action_clients_[env_name][action_server]->wait_for_action_server(1s)) {
+    while (!stop_flag_ && !client->wait_for_action_server(1s)) {
       if (stop_flag_ || !rclcpp::ok()) {
         RCLCPP_ERROR(*logger_, "Interrupted while waiting for the server. Exiting.");
       }
@@ -989,7 +1005,7 @@ void RosMsgsPlugin::async_send_new_goal(
     RCLCPP_DEBUG(
       *logger_, "Sending Goal for %s of size %li", action_server.c_str(),
       goal_info->members->size_of_);
-    action_clients_[env_name][action_server]->async_send_goal(
+    client->async_send_goal(
       messages_[deserialized_goal]->msg_ptr, goal_info->members->size_of_, send_goal_options);
   }).detach();
 }
