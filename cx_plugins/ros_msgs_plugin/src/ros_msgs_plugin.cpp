@@ -780,10 +780,10 @@ void RosMsgsPlugin::move_field_to_parent(
       case rosidl_typesupport_introspection_cpp::ROS_TYPE_MESSAGE: {
         const auto * sub_members =
           static_cast<const rosidl_typesupport_introspection_cpp::MessageMembers *>(
-            parent_member->members_->data);
+            sub_member->members_->data);
 
-        if (parent_member->is_array_) {
-          if (!parent_member->is_upper_bound_) {
+        if (sub_member->is_array_) {
+          if (!sub_member->is_upper_bound_) {
             // Dynamically-sized array of sub-messages
             auto * source_vector = reinterpret_cast<std::vector<void *> *>(source_msg);
             auto * target_vector = reinterpret_cast<std::vector<void *> *>(target_field_ptr);
@@ -810,10 +810,7 @@ void RosMsgsPlugin::move_field_to_parent(
           }
         } else {
           // Single nested sub-message
-          for (size_t j = 0; j < sub_members->member_count_; ++j) {
-            const auto & sub_member = sub_members->members_[j];
-            move_field_to_parent(target_field_ptr, &sub_member, source_msg);
-          }
+          move_field_to_parent(target_field_ptr, sub_member, source_field_ptr);
         }
         break;
       }

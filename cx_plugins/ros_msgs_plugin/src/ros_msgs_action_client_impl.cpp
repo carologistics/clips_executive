@@ -757,7 +757,7 @@ void RosMsgsPlugin::deep_copy_msg(
         case rosidl_typesupport_introspection_cpp::ROS_TYPE_MESSAGE: {
           const auto * sub_members =
             static_cast<const rosidl_typesupport_introspection_cpp::MessageMembers *>(
-              member.members_->data);
+              sub_member->members_->data);
 
           if (member.is_array_) {
             if (!member.is_upper_bound_) {
