@@ -1,0 +1,19 @@
+name: Weekly Quay rebuild
+
+on:
+  schedule:
+    - cron: "0 3 * * 1"
+  workflow_dispatch:
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Quay build for all ROS distros
+        run: |
+          for tag in jazzy humble rolling kilted; do
+            curl -X POST "${{ secrets.QUAY_TRIGGER_URL }}" \
+              -H "Content-Type: application/json" \
+              -d '{"docker_tags":["'$tag'","'$tag'-'$(date +%Y-%m-%d)'"]}'
+          done
