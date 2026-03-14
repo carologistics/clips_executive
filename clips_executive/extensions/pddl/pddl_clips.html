@@ -118,20 +118,6 @@ This allows to interact with the PDDL manager by simply asserting and monitoring
 <li><p>Trigger planning a for each goal concurrently.</p></li>
 </ul>
 </section>
-<section id="required-cx-plugins">
-<h2>Required ROS2 CLIPS-Executive Plugins<a class="headerlink" href="#required-cx-plugins" title="Link to this heading"></a></h2>
-<p>In order to integrate the PDDL manager with the ROS2 CLIPS-Executive, the following plugins are needed:</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="../../plugins/executive_plugin.html#usage-executive-plugin"><span class="std std-ref">cx::ExecutivePlugin</span></a>: Manages the overall reasoning and control flow, interleaving ROS feedback with CLIPS reasoning.</p></li>
-<li><p><a class="reference internal" href="../../plugins/ros_msgs_plugin.html#usage-ros-msgs-plugin"><span class="std std-ref">cx::RosMsgsPlugin</span></a>: Provides access to ROS interfaces of the PDDL manager from within CLIPS.</p></li>
-<li><p><a class="reference internal" href="../../plugins/cx_ament_index.html#usage-ament-index-plugin"><span class="std std-ref">cx::AmentIndexPlugin</span></a>: Resolves package paths via <code class="docutils literal notranslate"><span class="pre">ament_index</span></code>. While not required, it is very useful in order to load PDDL files.</p></li>
-</ul>
-<p>Also, as the current configuration is compatible with ROS 2 jazzy, action client introspection is not supported, hence the following plugins are needed to trigger temporal planning and obtain the resulting plan:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">cx::CXCxPddlMsgsPlanTemporalPlugin</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cx::CXCxPddlMsgsTimedPlanActionPlugin</span></code></p></li>
-</ul>
-</section>
 <section id="pddl-manager-services">
 <h2>PDDL Manager Services<a class="headerlink" href="#pddl-manager-services" title="Link to this heading"></a></h2>
 <p>The PDDL Manager exposes a wide range of ROS 2 interfaces.</p>
@@ -147,67 +133,67 @@ This allows to interact with the PDDL manager by simply asserting and monitoring
 </thead>
 <tbody>
 <tr class="row-even"><td><p><abbr title="Add a new PDDL instance to the manager">/add_pddl_instance</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-instance"><span class="std std-ref">pddl-instance</span></a></p></td>
+<td><p><span class="xref std std-ref">pddl-instance</span></p></td>
 </tr>
 <tr class="row-odd"><td><p><abbr title="Check if the preconditions of a PDDL action are satisfied">/check_action_condition</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-action-condition"><span class="std std-ref">pddl-action-condition</span></a></p></td>
+<td><p><span class="xref std std-ref">pddl-action-condition</span></p></td>
 </tr>
 <tr class="row-even"><td><p><abbr title="Retrieve the effects of a PDDL action">/get_action_effects</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-action-get-effect"><span class="std std-ref">pddl-action-get-effect</span></a></p></td>
+<td><p><span class="xref std std-ref">pddl-action-get-effect</span></p></td>
 </tr>
 <tr class="row-odd"><td><p><abbr title="Get the list of available action names for a PDDL instance">/get_action_names</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-action-names"><span class="std std-ref">pddl-action-names</span></a></p></td>
+<td><p><span class="xref std std-ref">pddl-action-names</span></p></td>
 </tr>
 <tr class="row-even"><td><p><abbr title="Fetch all current boolean fluents of a PDDL instance">/get_fluents</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-get-fluents"><span class="std std-ref">pddl-get-fluents</span></a></p></td>
+<td><p><span class="xref std std-ref">pddl-get-fluents</span></p></td>
 </tr>
 <tr class="row-odd"><td><p><abbr title="Add multiple fluents to a PDDL instance">/add_fluents</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-fluent-change"><span class="std std-ref">pddl-fluent-change</span></a></p></td>
+<td><p><span class="xref std std-ref">pddl-fluent-change</span></p></td>
 </tr>
 <tr class="row-even"><td><p><abbr title="Remove multiple fluents from a PDDL instance">/rm_fluents</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-fluent-change"><span class="std std-ref">pddl-fluent-change</span></a></p></td>
+<td><p><span class="xref std std-ref">pddl-fluent-change</span></p></td>
 </tr>
 <tr class="row-odd"><td><p><abbr title="Add objects to a PDDL instance">/add_objects</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-object-change"><span class="std std-ref">pddl-object-change</span></a></p></td>
+<td><p><span class="xref std std-ref">pddl-object-change</span></p></td>
 </tr>
 <tr class="row-even"><td><p><abbr title="Remove objects from a PDDL instance">/rm_objects</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-object-change"><span class="std std-ref">pddl-object-change</span></a></p></td>
+<td><p><span class="xref std std-ref">pddl-object-change</span></p></td>
 </tr>
 <tr class="row-odd"><td><p><abbr title="Set values for numeric functions in the PDDL instance">/set_functions</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-numeric-fluent-change"><span class="std std-ref">pddl-numeric-fluent-change</span></a></p></td>
+<td><p><span class="xref std std-ref">pddl-numeric-fluent-change</span></p></td>
 </tr>
 <tr class="row-even"><td><p><abbr title="Retrieve values of numeric functions">/get_functions</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-get-numeric-fluents"><span class="std std-ref">pddl-get-numeric-fluents</span></a></p></td>
+<td><p><span class="xref std std-ref">pddl-get-numeric-fluents</span></p></td>
 </tr>
 <tr class="row-odd"><td><p><abbr title="Register goal conditions with the PDDL manager">/set_goals</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-set-goals"><span class="std std-ref">pddl-set-goals</span></a></p></td>
+<td><p><span class="xref std std-ref">pddl-set-goals</span></p></td>
 </tr>
 <tr class="row-even"><td><p><abbr title="Clear all goal conditions of a PDDL instance">/clear_goals</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-clear-goals"><span class="std std-ref">pddl-clear-goals</span></a></p></td>
+<td><p><span class="xref std std-ref">pddl-clear-goals</span></p></td>
 </tr>
 <tr class="row-odd"><td><p><abbr title="Apply a filter to restrict planning to specific actions">/set_action_filter</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-planning-filter"><span class="std std-ref">pddl-planning-filter</span></a></p></td>
+<td><p><span class="xref std std-ref">pddl-planning-filter</span></p></td>
 </tr>
 <tr class="row-even"><td><p><abbr title="Apply a filter to restrict planning to specific objects">/set_object_filter</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-planning-filter"><span class="std std-ref">pddl-planning-filter</span></a></p></td>
+<td><p><span class="xref std std-ref">pddl-planning-filter</span></p></td>
 </tr>
 <tr class="row-odd"><td><p><abbr title="Apply a filter to restrict planning to specific fluents">/set_fluent_filter</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-planning-filter"><span class="std std-ref">pddl-planning-filter</span></a></p></td>
+<td><p><span class="xref std std-ref">pddl-planning-filter</span></p></td>
 </tr>
 <tr class="row-even"><td><p><abbr title="Create a new goal instance for planning">/create_goal_instance</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-create-goal-instance"><span class="std std-ref">pddl-create-goal-instance</span></a></p></td>
+<td><p><span class="xref std std-ref">pddl-create-goal-instance</span></p></td>
 </tr>
 <tr class="row-odd"><td><p><abbr title="Fetch all predicates of a PDDL instance">/get_predicates</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-get-predicates"><span class="std std-ref">pddl-get-predicates</span></a></p></td>
+<td><p><span class="xref std std-ref">pddl-get-predicates</span></p></td>
 </tr>
 <tr class="row-even"><td><p><abbr title="Fetch all objects of a certain type in a PDDL instance">/get_type_objects</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-get-type-objects"><span class="std std-ref">pddl-get-type-objects</span></a></p></td>
+<td><p><span class="xref std std-ref">pddl-get-type-objects</span></p></td>
 </tr>
 <tr class="row-odd"><td><p><abbr title="Send a temporal planning goal and retrieve the resulting plan">/temp_plan</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-plan"><span class="std std-ref">pddl-plan</span></a>, <a class="reference internal" href="#pddl-action"><span class="std std-ref">pddl-action</span></a></p></td>
+<td><p><span class="xref std std-ref">pddl-plan</span>, <span class="xref std std-ref">pddl-action</span></p></td>
 </tr>
 <tr class="row-even"><td><p><abbr title="Publishes updates about instance changes in the manager">/instance_update</abbr></p></td>
-<td><p><a class="reference internal" href="#id18"><span class="std std-ref">pddl-manager</span></a></p></td>
+<td><p><span class="xref std std-ref">pddl-manager</span></p></td>
 </tr>
 </tbody>
 </table>
@@ -216,48 +202,92 @@ This allows to interact with the PDDL manager by simply asserting and monitoring
 <h2>CLIPS Integration<a class="headerlink" href="#clips-integration" title="Link to this heading"></a></h2>
 <p>CLIPS needs to interact with the PDDL Manager by creating subscriptions and clients for the endpoints to then utilize the features as desired.
 In order to reduce manual overhead, predefined rules and deftemplates are available, which are described in the remainder of this document.</p>
-<p>An example for using the interfaces directly without this additional abstraction can be found in the <a class="reference internal" href="raw_tutorial.html#raw-pddl-agent"><span class="std std-ref">Tutorial for using the PDDL Manager directly</span></a>.</p>
-<section id="predefined-interfaces">
-<h3>Predefined Interfaces<a class="headerlink" href="#predefined-interfaces" title="Link to this heading"></a></h3>
 <p>The idea is to have templates for facts that correspond to the individual endpoints of the PDDL manager.
 The workflow then is for users to simply assert a fact of a defined template to trigger the request to the PDDL manager, then using rules to observe the provided slots for the outcome.</p>
+<p>A comprehensive example for using this integration is given in the <span class="xref std std-ref">Tutorial for using the PDDL Manager with cx_pddl_clips</span>
+An example for using the interfaces directly without this additional integration can be found in the <a class="reference internal" href="raw_tutorial.html#raw-pddl-agent"><span class="std std-ref">Tutorial for using the PDDL Manager directly</span></a>.</p>
+<section id="request-execution-model">
+<h3>Request Execution Model<a class="headerlink" href="#request-execution-model" title="Link to this heading"></a></h3>
+<p>The CLIPS interface allows users to assert multiple request facts concurrently
+(e.g., adding fluents, creating goal instances, or checking action conditions).
+However, most interactions with the external PDDL manager must be processed
+<strong>sequentially per PDDL instance</strong>.</p>
+<p>To guarantee consistency between CLIPS and the PDDL manager, the rule base
+ensures that only <strong>one request affecting a given PDDL instance is active at a
+time</strong>. Additional requests remain pending until the current operation has
+completed.</p>
+<p>This coordination is handled using the <code class="docutils literal notranslate"><span class="pre">busy-with</span></code> slot of the
+<span class="xref std std-ref">pddl-instance</span> fact. While an instance is marked as busy, other rules that
+would trigger conflicting service calls are temporarily blocked.</p>
+<p>Example:</p>
+<ul class="simple">
+<li><p>A request to add fluents must finish before conditions are checked.</p></li>
+<li><p>Retrieving fluents or predicates waits until previous updates have completed.</p></li>
+<li><p>Goal configuration steps (creating goal instances, setting goals, applying
+filters) are executed in order.</p></li>
+</ul>
 </section>
-<section id="example-loading-a-pddl-problem-and-obtaining-the-initial-state">
-<h3>Example: Loading a PDDL Problem and Obtaining the initial State<a class="headerlink" href="#example-loading-a-pddl-problem-and-obtaining-the-initial-state" title="Link to this heading"></a></h3>
-<p>The following example rule demonstrates how to initialize the connection to the external
-PDDL manager and load a PDDL problem into CLIPS.
-.. code-block:: lisp</p>
-<blockquote>
-<div><dl>
-<dt>(defrule example-pddl-add-instance</dt><dd><p>“ Setup PDDL instance and fetch initial facts ”
-=&gt;
-(assert</p>
-<blockquote>
-<div><p>(pddl-manager (node “/pddl_manager”))
-(pddl-instance</p>
-<blockquote>
-<div><p>(name test)
-(domain “domain.pddl”)
-(problem “problem.pddl”)
-(directory “&lt;absolute path to directory&gt;”)</p>
-</div></blockquote>
-<p>)
-(pddl-get-fluents (instance test))</p>
-</div></blockquote>
-<p>)</p>
-</dd>
-</dl>
-<p>)</p>
-</div></blockquote>
-<p>The first step is to initialize the interfaces to a running PDDL manager instance by asserting a respective <a class="reference internal" href="#id18"><span class="std std-ref">pddl-manager</span></a> fact.
-To create an instance, a <a class="reference internal" href="#pddl-instance"><span class="std std-ref">pddl-instance</span></a> fact is asserted, providing the domain and
-problem files, as well as the directory containing them.
-In order to fetch the initial fluents of the instance (as provided in the problem file), a <a class="reference internal" href="#pddl-get-fluents"><span class="std std-ref">pddl-get-fluents</span></a> fact is asserted.</p>
-<p>A more comprehensive example can be found in the <a class="reference internal" href="cx_pddl_clips_tutorial.html#structured-pddl-agent"><span class="std std-ref">Structured PDDL Agent Tutorial</span></a>.</p>
-<section id="cx-configuration">
-<h4>ROS2 CLIPS-Executive Configuration<a class="headerlink" href="#cx-configuration" title="Link to this heading"></a></h4>
+<section id="parallel-planning">
+<h3>Parallel Planning<a class="headerlink" href="#parallel-planning" title="Link to this heading"></a></h3>
+<p>Planning requests are handled differently.</p>
+<p>Once a goal instance has been created and the goals are registered, a planning
+request (e.g., via <span class="xref std std-ref">pddl-plan</span>) is sent to the planner asynchronously.
+Multiple planning tasks may therefore run <strong>in parallel</strong>, allowing the system
+to evaluate different goals or planning configurations concurrently.</p>
+<p>When a plan is returned, the CLIPS interface automatically creates the
+corresponding <span class="xref std std-ref">pddl-plan</span> and <span class="xref std std-ref">pddl-action</span> facts.</p>
+</section>
+<section id="rule-priorities">
+<h3>Rule Priorities<a class="headerlink" href="#rule-priorities" title="Link to this heading"></a></h3>
+<p>Internally, the rule base uses custom saliences (priorities) to enforce a
+deterministic ordering of PDDL-related operations (e.g., instance management,
+object updates, fluent updates, goal configuration, and planning). This ensures
+that dependent operations are always processed in a consistent order while
+allowing CLIPS reasoning to interleave with ROS communication.</p>
+<p>THe full list of used rule saliences is depicted below:</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="p">(</span><span class="nv">defglobal</span>
+<span class="w">  </span><span class="nv">?*PRIORITY-PDDL-INSTANCES*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="mi">-5100</span>
+<span class="w">  </span><span class="nv">?*PRIORITY-PDDL-GET-ACTION-NAMES*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="mi">-5300</span>
+<span class="w">  </span><span class="nv">?*PRIORITY-PDDL-OBJECTS*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="mi">-5400</span>
+<span class="w">  </span><span class="nv">?*PRIORITY-PDDL-FLUENTS*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="mi">-5500</span>
+<span class="w">  </span><span class="nv">?*PRIORITY-PDDL-APPLY-EFFECT*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="mi">-5600</span>
+<span class="w">  </span><span class="nv">?*PRIORITY-PDDL-CLEAR-GOALS*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="mi">-5700</span>
+<span class="w">  </span><span class="nv">?*PRIORITY-PDDL-CREATE-GOAL-INSTANCE*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="mi">-5800</span>
+<span class="w">  </span><span class="nv">?*PRIORITY-PDDL-SET-ACTION-FILTER*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="mi">-5900</span>
+<span class="w">  </span><span class="nv">?*PRIORITY-PDDL-SET-FLUENT-FILTER*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="mi">-6000</span>
+<span class="w">  </span><span class="nv">?*PRIORITY-PDDL-SET-OBJECT-FILTER*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="mi">-6100</span>
+<span class="w">  </span><span class="nv">?*PRIORITY-PDDL-SET-GOALS*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="mi">-6200</span>
+<span class="w">  </span><span class="nv">?*PRIORITY-PDDL-PLAN*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="mi">-6300</span>
+<span class="w">  </span><span class="nv">?*PRIORITY-PDDL-CHECK-CONDITION*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="mi">-6400</span>
+<span class="w">  </span><span class="nv">?*PRIORITY-PDDL-GET-FLUENTS*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="mi">-6500</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="template-overrides">
+<h3>Template Overrides<a class="headerlink" href="#template-overrides" title="Link to this heading"></a></h3>
+<p>The templates provided by the <cite>cx_pddl_clips</cite> package contain a minimal set of slots to provide the functionality.
+In practical applications, it might be convenient to store additional information (e.g., context as to why a particular service call is made or hints about how to interpret the results).
+Therefore, deftemplate definitions are decoupled from the rules, allowing to first load the deftemplates, then loading re-definitions of them as needed, and finally loading the rule set.
+Potential overrides may add more slots, but need to contain all the original slots, as otherwise the predefined rule base will not work.</p>
+<p>In the <span class="xref std std-ref">cx_pddl_clips Agent Tutorial</span>,
+this feature is used to extend the notion of PDDL actions.</p>
+</section>
+</section>
+<section id="using-the-cx-with-cx-pddl-clips">
+<h2>Using the ROS2 CLIPS-Executive with cx_pddl_clips<a class="headerlink" href="#using-the-cx-with-cx-pddl-clips" title="Link to this heading"></a></h2>
 <p>The example configuration below demonstrates how to pre-load the code from the <cite>cx_pddl_clips</cite> package via batch loading, before loading the example code.
-Two files are needed. The template definitionsare bundled in <code class="docutils literal notranslate"><span class="pre">deftemplates.clp</span></code>, while all required rules are loaded through <code class="docutils literal notranslate"><span class="pre">pddl.clp</span></code>. This split is deliberate, as it allows to override the templates before loading rules, if needed as discussed in more detail later.</p>
+In order to integrate the PDDL manager with the ROS2 CLIPS-Executive, the following plugins are needed:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../plugins/executive_plugin.html#usage-executive-plugin"><span class="std std-ref">cx::ExecutivePlugin</span></a>: Manages the overall reasoning and control flow, interleaving ROS feedback with CLIPS reasoning.</p></li>
+<li><p><a class="reference internal" href="../../plugins/ros_msgs_plugin.html#usage-ros-msgs-plugin"><span class="std std-ref">cx::RosMsgsPlugin</span></a>: Provides access to ROS interfaces of the PDDL manager from within CLIPS.</p></li>
+<li><p><a class="reference internal" href="../../plugins/cx_ament_index.html#usage-ament-index-plugin"><span class="std std-ref">cx::AmentIndexPlugin</span></a>: Resolves package paths via <code class="docutils literal notranslate"><span class="pre">ament_index</span></code>. While not required, it is very useful in order to load PDDL files.</p></li>
+</ul>
+<p>Also, as the current configuration is compatible with ROS 2 jazzy, action client introspection is not supported, hence the following plugins are needed to trigger temporal planning and obtain the resulting plan:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cx::CXCxPddlMsgsPlanTemporalPlugin</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cx::CXCxPddlMsgsTimedPlanActionPlugin</span></code></p></li>
+</ul>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">/**</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">autostart_node</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
@@ -293,22 +323,35 @@ Two files are needed. The template definitionsare bundled in <code class="docuti
 </pre></div>
 </div>
 </section>
-</section>
-<section id="template-overrides">
-<h3>Template Overrides<a class="headerlink" href="#template-overrides" title="Link to this heading"></a></h3>
-<p>The templates provided by the <cite>cx_pddl_clips</cite> package contain a minimal set of slots to provide the functionality.
-In practical applications, it might be convenient to store additional information (e.g., context as to why a particular service call is made or hints about how to interpret the results).
-Therefore, deftemplate definitions are decoupled from the rules, allowing to first load the deftemplates, then loading re-definitions of them as needed, and finally loading the rule set.
-Potential overrides may add more slots, but need to contain all the original slots, as otherwise the predefined rule base will not work.</p>
-<p>In the <a class="reference internal" href="cx_pddl_clips_tutorial.html#structured-pddl-agent"><span class="std std-ref">Structured PDDL Agent Tutorial</span></a>,
-this feature is used to extend the notion of PDDL actions.</p>
+<section id="example-loading-a-pddl-problem-and-obtaining-the-initial-state">
+<h2>Example: Loading a PDDL Problem and Obtaining the initial State<a class="headerlink" href="#example-loading-a-pddl-problem-and-obtaining-the-initial-state" title="Link to this heading"></a></h2>
+<p>The following example rule demonstrates how to initialize the connection to the external
+PDDL manager and load a PDDL problem into CLIPS.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">example-pddl-add-instance</span>
+<span class="w">  </span><span class="s">&quot; Setup PDDL instance and fetch initial facts &quot;</span>
+<span class="w">  </span><span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">assert</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">pddl-manager</span><span class="w"> </span><span class="p">(</span><span class="nv">node</span><span class="w"> </span><span class="s">&quot;/pddl_manager&quot;</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">pddl-instance</span>
+<span class="w">      </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">test</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="nv">domain</span><span class="w"> </span><span class="s">&quot;domain.pddl&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="nv">problem</span><span class="w"> </span><span class="s">&quot;problem.pddl&quot;</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">directory</span><span class="w"> </span><span class="s">&quot;&lt;absolute path to directory&gt;&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nv">pddl-get-fluents</span><span class="w"> </span><span class="p">(</span><span class="nv">instance</span><span class="w"> </span><span class="nv">test</span><span class="p">))</span>
+<span class="w">  </span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The first step is to initialize the interfaces to a running PDDL manager instance by asserting a respective <span class="xref std std-ref">pddl-manager</span> fact.
+To create an instance, a <span class="xref std std-ref">pddl-instance</span> fact is asserted, providing the domain and
+problem files, as well as the directory containing them.
+In order to fetch the initial fluents of the instance (as provided in the problem file), a <span class="xref std std-ref">pddl-get-fluents</span> fact is asserted.</p>
 </section>
 <section id="provided-deftemplates">
-<h3>Provided Deftemplates<a class="headerlink" href="#provided-deftemplates" title="Link to this heading"></a></h3>
+<h2>Provided Deftemplates<a class="headerlink" href="#provided-deftemplates" title="Link to this heading"></a></h2>
 <p>In the remainder of this document, all provided deftemplates of the <cite>cx_pddl_clips</cite> are described.</p>
-<section id="pddl-action">
-<span id="id1"></span><h4>pddl-action<a class="headerlink" href="#pddl-action" title="Link to this heading"></a></h4>
-<p>Represents a grounded PDDL action in a PDDL instance.
+<p id="pddl-action">Represents a grounded PDDL action in a PDDL instance.
 Automatically created when a plan is received.
 Can also be asserted directly, if actions are needed in different contexts (e.g., to apply effects).
 Used to track parameters, plan order, and scheduled times.</p>
@@ -324,11 +367,8 @@ Used to track parameters, plan order, and scheduled times.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="pddl-action-condition">
-<span id="id2"></span><h4>pddl-action-condition<a class="headerlink" href="#pddl-action-condition" title="Link to this heading"></a></h4>
-<p>Represents a condition of a PDDL action.
-Requires a <a class="reference internal" href="#pddl-action"><span class="std std-ref">pddl-action</span></a> fact with <code class="docutils literal notranslate"><span class="pre">id</span></code> matching the value in slot <code class="docutils literal notranslate"><span class="pre">action</span></code>.
+<p id="pddl-action-condition">Represents a condition of a PDDL action.
+Requires a <span class="xref std std-ref">pddl-action</span> fact with <code class="docutils literal notranslate"><span class="pre">id</span></code> matching the value in slot <code class="docutils literal notranslate"><span class="pre">action</span></code>.
 Obtains the satisfaction state and unsatisfied conditions.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-action-condition</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
@@ -339,13 +379,10 @@ Obtains the satisfaction state and unsatisfied conditions.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="pddl-action-get-effect">
-<span id="id3"></span><h4>pddl-action-get-effect<a class="headerlink" href="#pddl-action-get-effect" title="Link to this heading"></a></h4>
-<p>Request the effect of a grounded PDDL action.
-Requires a <a class="reference internal" href="#pddl-action"><span class="std std-ref">pddl-action</span></a> fact with <code class="docutils literal notranslate"><span class="pre">id</span></code> matching the value in slot <code class="docutils literal notranslate"><span class="pre">action</span></code>.
+<p id="pddl-action-get-effect">Request the effect of a grounded PDDL action.
+Requires a <span class="xref std std-ref">pddl-action</span> fact with <code class="docutils literal notranslate"><span class="pre">id</span></code> matching the value in slot <code class="docutils literal notranslate"><span class="pre">action</span></code>.
 Optionally, the effect can also be directly applied using the slot <code class="docutils literal notranslate"><span class="pre">apply</span></code>.
-If effectsa are also applied, corresponding <a class="reference internal" href="#pddl-fluent-change"><span class="std std-ref">pddl-fluent-change</span></a> and ref:<cite>pddl-numeric-fluent-change</cite> facts are asserted, before the state is set to <code class="docutils literal notranslate"><span class="pre">DONE</span></code>.</p>
+If effectsa are also applied, corresponding <span class="xref std std-ref">pddl-fluent-change</span> and ref:<cite>pddl-numeric-fluent-change</cite> facts are asserted, before the state is set to <code class="docutils literal notranslate"><span class="pre">DONE</span></code>.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-action-get-effect</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">action</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">effect-type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">ALL</span><span class="w"> </span><span class="nv">START</span><span class="w"> </span><span class="nv">END</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">ALL</span><span class="p">))</span>
@@ -354,10 +391,7 @@ If effectsa are also applied, corresponding <a class="reference internal" href="
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="pddl-action-names">
-<span id="id4"></span><h4>pddl-action-names<a class="headerlink" href="#pddl-action-names" title="Link to this heading"></a></h4>
-<p>Retrieve the list of action names for a PDDL instance.
+<p id="pddl-action-names">Retrieve the list of action names for a PDDL instance.
 This is particularly useful for defining goal filters.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-action-names</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
@@ -367,11 +401,8 @@ This is particularly useful for defining goal filters.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="pddl-clear-goals">
-<span id="id5"></span><h4>pddl-clear-goals<a class="headerlink" href="#pddl-clear-goals" title="Link to this heading"></a></h4>
-<p>Clears all goal conditions for a PDDL instance via the external manager.
-This assumes that a matching goal instance was created via <a class="reference internal" href="#pddl-create-goal-instance"><span class="std std-ref">pddl-create-goal-instance</span></a> beforehand.</p>
+<p id="pddl-clear-goals">Clears all goal conditions for a PDDL instance via the external manager.
+This assumes that a matching goal instance was created via <span class="xref std std-ref">pddl-create-goal-instance</span> beforehand.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-clear-goals</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">goal</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
@@ -380,10 +411,7 @@ This assumes that a matching goal instance was created via <a class="reference i
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="pddl-create-goal-instance">
-<span id="id6"></span><h4>pddl-create-goal-instance<a class="headerlink" href="#pddl-create-goal-instance" title="Link to this heading"></a></h4>
-<p>Create a new managed goal instance for a PDDL instance via the external manager.</p>
+<p id="pddl-create-goal-instance">Create a new managed goal instance for a PDDL instance via the external manager.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-create-goal-instance</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">goal</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
@@ -392,11 +420,8 @@ This assumes that a matching goal instance was created via <a class="reference i
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="pddl-effect-fluent">
-<span id="id7"></span><h4>pddl-effect-fluent<a class="headerlink" href="#pddl-effect-fluent" title="Link to this heading"></a></h4>
-<p>Represents a boolean effect of a PDDL action.
-Asserted when retrieving an action effect via <a class="reference internal" href="#pddl-action-get-effect"><span class="std std-ref">pddl-action-get-effect</span></a>.</p>
+<p id="pddl-effect-fluent">Represents a boolean effect of a PDDL action.
+Asserted when retrieving an action effect via <span class="xref std std-ref">pddl-action-get-effect</span>.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-effect-fluent</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">action</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
@@ -406,11 +431,8 @@ Asserted when retrieving an action effect via <a class="reference internal" href
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="pddl-effect-numeric-fluent">
-<span id="id8"></span><h4>pddl-effect-numeric-fluent<a class="headerlink" href="#pddl-effect-numeric-fluent" title="Link to this heading"></a></h4>
-<p>Represents a numeric effect of a PDDL action at a specific time.
-Asserted when retrieving an action effect via <a class="reference internal" href="#pddl-action-get-effect"><span class="std std-ref">pddl-action-get-effect</span></a>.</p>
+<p id="pddl-effect-numeric-fluent">Represents a numeric effect of a PDDL action at a specific time.
+Asserted when retrieving an action effect via <span class="xref std std-ref">pddl-action-get-effect</span>.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-effect-numeric-fluent</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">action</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
@@ -421,11 +443,8 @@ Asserted when retrieving an action effect via <a class="reference internal" href
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="pddl-fluent">
-<span id="id9"></span><h4>pddl-fluent<a class="headerlink" href="#pddl-fluent" title="Link to this heading"></a></h4>
-<p>Represents a boolean fluent in a PDDL instance.
-Do not assert/retract/modify directly; use <a class="reference internal" href="#pddl-fluent-change"><span class="std std-ref">pddl-fluent-change</span></a> to keep the external PDDL manager in sync.</p>
+<p id="pddl-fluent">Represents a boolean fluent in a PDDL instance.
+Do not assert/retract/modify directly; use <span class="xref std std-ref">pddl-fluent-change</span> to keep the external PDDL manager in sync.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-fluent</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
@@ -433,12 +452,9 @@ Do not assert/retract/modify directly; use <a class="reference internal" href="#
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="pddl-fluent-change">
-<span id="id10"></span><h4>pddl-fluent-change<a class="headerlink" href="#pddl-fluent-change" title="Link to this heading"></a></h4>
-<p>Indicates that a boolean fluent should be added or removed.
+<p id="pddl-fluent-change">Indicates that a boolean fluent should be added or removed.
 Acts as a transient layer to synchronize with the external PDDL manager.
-This automatically updates the corresponding <a class="reference internal" href="#pddl-fluent"><span class="std std-ref">pddl-fluent</span></a> fact.</p>
+This automatically updates the corresponding <span class="xref std std-ref">pddl-fluent</span> fact.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-fluent-change</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
@@ -450,11 +466,8 @@ This automatically updates the corresponding <a class="reference internal" href=
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="pddl-get-fluents">
-<span id="id11"></span><h4>pddl-get-fluents<a class="headerlink" href="#pddl-get-fluents" title="Link to this heading"></a></h4>
-<p>Fetch all boolean fluents for a PDDL instance via the external manager.
-Asserts the corresponding <a class="reference internal" href="#pddl-fluent"><span class="std std-ref">pddl-fluent</span></a> facts.</p>
+<p id="pddl-get-fluents">Fetch all boolean fluents for a PDDL instance via the external manager.
+Asserts the corresponding <span class="xref std std-ref">pddl-fluent</span> facts.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-get-fluents</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">state</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">PENDING</span><span class="w"> </span><span class="nv">DONE</span><span class="w"> </span><span class="nv">ERROR</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">PENDING</span><span class="p">))</span>
@@ -462,11 +475,8 @@ Asserts the corresponding <a class="reference internal" href="#pddl-fluent"><spa
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="pddl-get-numeric-fluents">
-<span id="id12"></span><h4>pddl-get-numeric-fluents<a class="headerlink" href="#pddl-get-numeric-fluents" title="Link to this heading"></a></h4>
-<p>Fetch all numeric fluents for a PDDL instance via the external manager.
-Asserts the corresponding <a class="reference internal" href="#pddl-numeric-fluent"><span class="std std-ref">pddl-numeric-fluent</span></a> facts.</p>
+<p id="pddl-get-numeric-fluents">Fetch all numeric fluents for a PDDL instance via the external manager.
+Asserts the corresponding <span class="xref std std-ref">pddl-numeric-fluent</span> facts.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-get-numeric-fluents</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">state</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">PENDING</span><span class="w"> </span><span class="nv">DONE</span><span class="w"> </span><span class="nv">ERROR</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">PENDING</span><span class="p">))</span>
@@ -474,11 +484,8 @@ Asserts the corresponding <a class="reference internal" href="#pddl-numeric-flue
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="pddl-get-predicates">
-<span id="id13"></span><h4>pddl-get-predicates<a class="headerlink" href="#pddl-get-predicates" title="Link to this heading"></a></h4>
-<p>Fetch all predicates for a PDDL instance via the external manager.
-Asserts the corresponding <a class="reference internal" href="#pddl-predicate"><span class="std std-ref">pddl-predicate</span></a> facts.</p>
+<p id="pddl-get-predicates">Fetch all predicates for a PDDL instance via the external manager.
+Asserts the corresponding <span class="xref std std-ref">pddl-predicate</span> facts.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-get-predicates</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">state</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">PENDING</span><span class="w"> </span><span class="nv">DONE</span><span class="w"> </span><span class="nv">ERROR</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">PENDING</span><span class="p">))</span>
@@ -486,11 +493,8 @@ Asserts the corresponding <a class="reference internal" href="#pddl-predicate"><
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="pddl-get-type-objects">
-<span id="id14"></span><h4>pddl-get-type-objects<a class="headerlink" href="#pddl-get-type-objects" title="Link to this heading"></a></h4>
-<p>Fetch all objects of a specific type for a PDDL instance via the external manager.
-Asserts the corresponding <a class="reference internal" href="#pddl-type-objects"><span class="std std-ref">pddl-type-objects</span></a> fact.</p>
+<p id="pddl-get-type-objects">Fetch all objects of a specific type for a PDDL instance via the external manager.
+Asserts the corresponding <span class="xref std std-ref">pddl-type-objects</span> fact.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-get-type-objects</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
@@ -499,10 +503,7 @@ Asserts the corresponding <a class="reference internal" href="#pddl-type-objects
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="pddl-goal-fluent">
-<span id="id15"></span><h4>pddl-goal-fluent<a class="headerlink" href="#pddl-goal-fluent" title="Link to this heading"></a></h4>
-<p>Represents a positive boolean goal condition for a PDDL instance. Negative conditions are not supported as of now.</p>
+<p id="pddl-goal-fluent">Represents a positive boolean goal condition for a PDDL instance. Negative conditions are not supported as of now.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-goal-fluent</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">goal</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
@@ -511,10 +512,7 @@ Asserts the corresponding <a class="reference internal" href="#pddl-type-objects
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="pddl-goal-numeric-fluent">
-<span id="id16"></span><h4>pddl-goal-numeric-fluent<a class="headerlink" href="#pddl-goal-numeric-fluent" title="Link to this heading"></a></h4>
-<p>Represents a numeric goal condition with a specific value in a PDDL instance.</p>
+<p id="pddl-goal-numeric-fluent">Represents a numeric goal condition with a specific value in a PDDL instance.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-goal-numeric-fluent</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">goal</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
@@ -524,10 +522,7 @@ Asserts the corresponding <a class="reference internal" href="#pddl-type-objects
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="pddl-instance">
-<span id="id17"></span><h4>pddl-instance<a class="headerlink" href="#pddl-instance" title="Link to this heading"></a></h4>
-<p>Initialize a PDDL instance with the external manager.
+<p id="pddl-instance">Initialize a PDDL instance with the external manager.
 Also ensures that no confliction requests are made simultaneously, by always tracking, the current operation.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-instance</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
@@ -540,10 +535,7 @@ Also ensures that no confliction requests are made simultaneously, by always tra
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="id18">
-<span id="id19"></span><h4>pddl-manager<a class="headerlink" href="#id18" title="Link to this heading"></a></h4>
-<p>Assert a fact of this type to specify the name of the PDDL manager node.</p>
+<p id="id1">Assert a fact of this type to specify the name of the PDDL manager node.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-manager</span>
 <span class="s">&quot; Store information on the external pddl manager.</span>
 <span class="s">&quot;</span>
@@ -551,10 +543,7 @@ Also ensures that no confliction requests are made simultaneously, by always tra
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="pddl-numeric-fluent">
-<span id="id20"></span><h4>pddl-numeric-fluent<a class="headerlink" href="#pddl-numeric-fluent" title="Link to this heading"></a></h4>
-<p>Represents a numeric fluent in a PDDL instance.
+<p id="pddl-numeric-fluent">Represents a numeric fluent in a PDDL instance.
 Use <cite>pddl-numeric-fluent-change</cite> to update values safely with the external PDDL manager.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-numeric-fluent</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
@@ -564,10 +553,7 @@ Use <cite>pddl-numeric-fluent-change</cite> to update values safely with the ext
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="pddl-numeric-fluent-change">
-<span id="id21"></span><h4>pddl-numeric-fluent-change<a class="headerlink" href="#pddl-numeric-fluent-change" title="Link to this heading"></a></h4>
-<p>Indicates that a numeric fluent should be added or removed.
+<p id="pddl-numeric-fluent-change">Indicates that a numeric fluent should be added or removed.
 Acts as a transient layer to synchronize with the external PDDL manager.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-numeric-fluent-change</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
@@ -579,12 +565,9 @@ Acts as a transient layer to synchronize with the external PDDL manager.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="pddl-object-change">
-<span id="id22"></span><h4>pddl-object-change<a class="headerlink" href="#pddl-object-change" title="Link to this heading"></a></h4>
-<p>Indicates that an object should be added or removed from a PDDL instance.
+<p id="pddl-object-change">Indicates that an object should be added or removed from a PDDL instance.
 Acts as a transient layer to synchronize with the external PDDL manager.</p>
-<p>Note that this does not automatically update the <a class="reference internal" href="#pddl-type-objects"><span class="std std-ref">pddl-type-objects</span></a> facts.</p>
+<p>Note that this does not automatically update the <span class="xref std std-ref">pddl-type-objects</span> facts.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-object-change</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
@@ -596,10 +579,7 @@ Acts as a transient layer to synchronize with the external PDDL manager.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="pddl-plan">
-<span id="id23"></span><h4>pddl-plan<a class="headerlink" href="#pddl-plan" title="Link to this heading"></a></h4>
-<p>Represents a PDDL plan.</p>
+<p id="pddl-plan">Represents a PDDL plan.</p>
 <p>Consists of individual <cite>pddl-action</cite> facts with matching plan id.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-plan</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
@@ -614,10 +594,7 @@ Acts as a transient layer to synchronize with the external PDDL manager.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="pddl-planning-filter">
-<span id="id24"></span><h4>pddl-planning-filter<a class="headerlink" href="#pddl-planning-filter" title="Link to this heading"></a></h4>
-<p>A transient layer for planning filters between the general PDDL interface and domain-specific usage.
+<p id="pddl-planning-filter">A transient layer for planning filters between the general PDDL interface and domain-specific usage.
 Can filter actions, objects, or fluents by defining a whitelist.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-planning-filter</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">id</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
@@ -628,10 +605,7 @@ Can filter actions, objects, or fluents by defining a whitelist.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="pddl-predicate">
-<span id="id25"></span><h4>pddl-predicate<a class="headerlink" href="#pddl-predicate" title="Link to this heading"></a></h4>
-<p>Represents a predicate in a PDDL instance.</p>
+<p id="pddl-predicate">Represents a predicate in a PDDL instance.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-predicate</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
@@ -640,10 +614,7 @@ Can filter actions, objects, or fluents by defining a whitelist.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="pddl-service-request-meta">
-<span id="id26"></span><h4>pddl-service-request-meta<a class="headerlink" href="#pddl-service-request-meta" title="Link to this heading"></a></h4>
-<p>Facts of these types are used internally and should be ignored.</p>
+<p id="pddl-service-request-meta">Facts of these types are used internally and should be ignored.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-service-request-meta</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">service</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">request-id</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
@@ -651,11 +622,8 @@ Can filter actions, objects, or fluents by defining a whitelist.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="pddl-set-goals">
-<span id="id27"></span><h4>pddl-set-goals<a class="headerlink" href="#pddl-set-goals" title="Link to this heading"></a></h4>
-<p>Register goal conditions with the external PDDL manager.
-The goal conditions are defined using <a class="reference internal" href="#pddl-goal-fluent"><span class="std std-ref">pddl-goal-fluent</span></a> and <a class="reference internal" href="#pddl-goal-numeric-fluent"><span class="std std-ref">pddl-goal-numeric-fluent</span></a> facts with matching goal ids.</p>
+<p id="pddl-set-goals">Register goal conditions with the external PDDL manager.
+The goal conditions are defined using <span class="xref std std-ref">pddl-goal-fluent</span> and <span class="xref std std-ref">pddl-goal-numeric-fluent</span> facts with matching goal ids.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-set-goals</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">goal</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
@@ -664,11 +632,8 @@ The goal conditions are defined using <a class="reference internal" href="#pddl-
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="pddl-type-objects">
-<span id="id28"></span><h4>pddl-type-objects<a class="headerlink" href="#pddl-type-objects" title="Link to this heading"></a></h4>
-<p>Lists all objects of a certain type in a PDDL instance.
-Created using <a class="reference internal" href="#pddl-get-type-objects"><span class="std std-ref">pddl-get-type-objects</span></a>.</p>
+<p id="pddl-type-objects">Lists all objects of a certain type in a PDDL instance.
+Created using <span class="xref std std-ref">pddl-get-type-objects</span>.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">pddl-type-objects</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">instance</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
@@ -676,8 +641,6 @@ Created using <a class="reference internal" href="#pddl-get-type-objects"><span 
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-</section>
 </section>
 </section>
 

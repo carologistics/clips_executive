@@ -3,7 +3,7 @@
 cx_rl_clips
 ===========
 
-CLIPS snippets to help usint the cx_rl_interfaces.
+CLIPS snippets to help using the cx_rl_interfaces with CLIPS.
 
 .. toctree::
    :maxdepth: 2

@@ -123,8 +123,13 @@ In the following, the CLIPS interface is described as provided by the <code clas
 <li><p><code class="docutils literal notranslate"><span class="pre">cx::CXCxRlInterfacesExecActionSelectionPlugin</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">cx::CXCxRlInterfacesResetEnvPlugin</span></code></p></li>
 </ul>
-<p>With all required plugins loaded, a single CLIPS file <code class="docutils literal notranslate"><span class="pre">cx_rl.clp</span></code> is required to obtain the CLIPS interface from the <code class="docutils literal notranslate"><span class="pre">cx_rl_clips</span></code> package.
-A minimal configuration file is depicted below.</p>
+<p>With all required plugins loaded, the CLIPS interface can be initialized in one of two ways:</p>
+<ul class="simple">
+<li><p>By batch-loading the <code class="docutils literal notranslate"><span class="pre">cx-rl.clp</span></code> file from the <code class="docutils literal notranslate"><span class="pre">cx_rl_clips</span></code> package as provided.</p></li>
+<li><p>By loading <code class="docutils literal notranslate"><span class="pre">deftemplates.clp</span></code> and <code class="docutils literal notranslate"><span class="pre">cx_rl_no_deftemplates.clp</span></code> separately.</p></li>
+</ul>
+<p>The latter approach allows extending or modifying the provided <code class="docutils literal notranslate"><span class="pre">deftemplate</span></code> definitions between the two loading steps.</p>
+<p>A minimal configuration file is depicted below.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">clips_manager</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_rl_bringup&quot;</span><span class="p p-Indicator">]</span>
