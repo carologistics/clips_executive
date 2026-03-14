@@ -18,6 +18,7 @@
 #include <string>
 
 #include "cx_utils/clips_env_context.hpp"
+#include "rclcpp_action/rclcpp_action.hpp"
 #include "rcutils/types/uint8_array.h"
 #include "rmw/rmw.h"
 #include "rmw/serialized_message.h"
