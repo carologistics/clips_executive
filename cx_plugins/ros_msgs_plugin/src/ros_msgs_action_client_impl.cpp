@@ -109,7 +109,7 @@ void RosMsgsPlugin::init_generic_action_client_bindings(std::shared_ptr<clips::E
     [](clips::Environment * env, clips::UDFContext * udfc, clips::UDFValue * /*out*/) {
       auto * instance = static_cast<RosMsgsPlugin *>(udfc->context);
       clips::UDFValue goal_handle_val, server_name_val;
-      using namespace clips;
+      using namespace clips;  // NOLINT
 
       clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &server_name_val);
       clips::UDFNthArgument(udfc, 2, EXTERNAL_ADDRESS_BIT, &goal_handle_val);
