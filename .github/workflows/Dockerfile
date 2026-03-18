@@ -10,7 +10,11 @@ RUN apt-get update && apt-get install -y \
 
 ENV PIP_BREAK_SYSTEM_PACKAGES=1
 
-RUN pip install unified-planning --break-system-packages
+RUN if [ "$ROS_DISTRO" = "humble" ]; then \
+        pip install unified-planning; \
+    else \
+        pip install unified-planning --break-system-packages; \
+    fi
 
 WORKDIR /ros_ws
 
