@@ -17,6 +17,7 @@
 #include "cx_ros_msgs_plugin/ros_msgs_plugin.hpp"
 #include "cx_utils/clips_env_context.hpp"
 #include "rclcpp/create_generic_client.hpp"
+#include "rosidl_typesupport_introspection_cpp/identifier.hpp"
 #include "rosidl_typesupport_introspection_cpp/service_introspection.hpp"
 
 namespace cx
