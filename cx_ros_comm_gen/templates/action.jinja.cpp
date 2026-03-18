@@ -574,62 +574,62 @@ bool {{name_camel}}::clips_env_init(std::shared_ptr<clips::Environment> &env) {
     },
     "client_cancel_goals_before", this);
 
-    fun_name = "{{name_kebab}}-client-goal-handle-stop-callbacks";
-    function_names_.insert(fun_name);
-
-    clips::AddUDF(
-      env.get(), fun_name.c_str(), "v", 2, 2, ";sy;e",
-      [](clips::Environment *env,
-         clips::UDFContext *udfc,
-         clips::UDFValue * /*out*/)
-      {
-        auto *instance = static_cast<{{name_camel}} *>(udfc->context);
-        using namespace clips;
-
-        clips::UDFValue goal_handle_val, server_name_val;
-
-        clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &server_name_val);
-        clips::UDFNthArgument(udfc, 2, EXTERNAL_ADDRESS_BIT, &goal_handle_val);
-
-        std::string server_name = server_name_val.lexemeValue->contents;
-
-        std::scoped_lock lock{instance->map_mtx_};
-
-        // Lookup goal handle
-        auto gh_it = instance->client_goal_handles_.find(
-            goal_handle_val.externalAddressValue->contents);
-
-        if (gh_it == instance->client_goal_handles_.end()) {
-          RCLCPP_ERROR(*(instance->logger_),
-                       "client-goal-handle-stop-callbacks: Unknown goal handle");
-          clips::UDFThrowError(udfc);
-          return;
-        }
-
-        auto goal_handle = gh_it->second;
-
-        // Determine environment
-        auto context = CLIPSEnvContext::get_context(env);
-        std::string env_name = context->env_name_;
-
-        // Lookup client
-        auto client_it =
-            instance->clients_[env_name].find(server_name);
-
-        if (client_it == instance->clients_[env_name].end()) {
-          RCLCPP_ERROR(*(instance->logger_),
-                       "client-goal-handle-stop-callbacks: Unknown server '%s'",
-                       server_name.c_str());
-          clips::UDFThrowError(udfc);
-          return;
-        }
-
-        // Stop callbacks using UUID
-        client_it->second->stop_callbacks(
-            goal_handle->get_goal_id());
-      },
-      "client_goal_handle_stop_callbacks",
-      this);
+//     fun_name = "{{name_kebab}}-client-goal-handle-stop-callbacks";
+//     function_names_.insert(fun_name);
+//
+//     clips::AddUDF(
+//       env.get(), fun_name.c_str(), "v", 2, 2, ";sy;e",
+//       [](clips::Environment *env,
+//          clips::UDFContext *udfc,
+//          clips::UDFValue * /*out*/)
+//       {
+//         auto *instance = static_cast<{{name_camel}} *>(udfc->context);
+//         using namespace clips;
+//
+//         clips::UDFValue goal_handle_val, server_name_val;
+//
+//         clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &server_name_val);
+//         clips::UDFNthArgument(udfc, 2, EXTERNAL_ADDRESS_BIT, &goal_handle_val);
+//
+//         std::string server_name = server_name_val.lexemeValue->contents;
+//
+//         std::scoped_lock lock{instance->map_mtx_};
+//
+//         // Lookup goal handle
+//         auto gh_it = instance->client_goal_handles_.find(
+//             goal_handle_val.externalAddressValue->contents);
+//
+//         if (gh_it == instance->client_goal_handles_.end()) {
+//           RCLCPP_ERROR(*(instance->logger_),
+//                        "client-goal-handle-stop-callbacks: Unknown goal handle");
+//           clips::UDFThrowError(udfc);
+//           return;
+//         }
+//
+//         auto goal_handle = gh_it->second;
+//
+//         // Determine environment
+//         auto context = CLIPSEnvContext::get_context(env);
+//         std::string env_name = context->env_name_;
+//
+//         // Lookup client
+//         auto client_it =
+//             instance->clients_[env_name].find(server_name);
+//
+//         if (client_it == instance->clients_[env_name].end()) {
+//           RCLCPP_ERROR(*(instance->logger_),
+//                        "client-goal-handle-stop-callbacks: Unknown server '%s'",
+//                        server_name.c_str());
+//           clips::UDFThrowError(udfc);
+//           return;
+//         }
+//
+//         // Stop callbacks using UUID
+//         client_it->second->stop_callbacks(
+//             goal_handle->get_goal_id());
+//       },
+//       "client_goal_handle_stop_callbacks",
+//       this);
 
   // add fact templates
   clips::Build(env.get(),"(deftemplate {{name_kebab}}-client \
