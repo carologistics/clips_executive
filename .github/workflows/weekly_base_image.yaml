@@ -35,7 +35,7 @@ jobs:
         run: |
           echo "Building ROS distro: ${{ matrix.ros_distro }}"
           docker build \
-            -f Dockerfile \
+            -f .github/workflows/Dockerfile \
             --build-arg ROS_DISTRO=${{ matrix.ros_distro }} \
             -t $QUAY_REPO:${{ matrix.ros_distro }} \
             -t $QUAY_REPO:${{ matrix.ros_distro }}-${DATE_TAG} \
