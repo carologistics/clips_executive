@@ -3,7 +3,7 @@
 <package format="3">
   <name>cx_rl_clips</name>
   <version>0.1.0</version>
-  <description>CLIPS snippets to help using the cx_rl_interfaces with CLIPS.</description>
+  <description>CLIPS snippets to help using the cx_rl_interfaces with CLIPS</description>
 
   <maintainer email="viehmann@kbsg.rwth-aachen.de">Tarik Viehmann</maintainer>
   <maintainer email="frank.pier@rwth-aachen.de">Frank Pier</maintainer>
@@ -17,6 +17,5 @@
 
   <export>
     <build_type>ament_cmake</build_type>
-    <cx_plugin plugin="${prefix}/example_plugin.xml"/>
   </export>
 </package>

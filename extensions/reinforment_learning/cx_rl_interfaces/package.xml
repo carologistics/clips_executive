@@ -5,9 +5,9 @@
   <version>0.0.0</version>
   <description>ROS interfaces for using reinforcement learning with the ROS2 CLIPS-Executive</description>
   <maintainer email="viehmann@kbsg.rwth-aachen.de">Tarik Viehmann</maintainer>
+  <maintainer email="frank.pier@rwth-aachen.de">Frank Pier</maintainer>
 
   <license>Apache-2.0</license>
-  <author email="frank.pier@rwth-aachen.de">Frank Pier</author>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 

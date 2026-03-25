@@ -3,18 +3,19 @@
 <package format="3">
   <name>cx_rl_multi_robot_mppo</name>
   <version>0.0.0</version>
-  <description>Multi-robot maskable proximal policy optimization (mppo) implementation.</description>
+  <description>Multi-robot maskable proximal policy optimization (mppo) implementation</description>
   <maintainer email="viehmann@kbsg.rwth-aachen.de">Tarik Viehmann</maintainer>
   <maintainer email="frank.pier@rwth-aachen.de">Frank Pier</maintainer>
   <license>Apache-2.0</license>
 
   <depend>rclpy</depend>
-  <depend>ament_index_python</depend>
-  <depend>python3-gymnasium-pip</depend>
-  <depend>python3-numpy</depend>
-  <depend>python-pytorch-pip</depend>
-  <depend>python3-stable-baselines3-pip</depend>
-  <depend>python3-sb3-contrib-pip</depend>
+
+  <exec_depend>ament_index_python</exec_depend>
+  <exec_depend>python3-gymnasium-pip</exec_depend>
+  <exec_depend>python3-numpy</exec_depend>
+  <exec_depend>python3-pytorch-pip</exec_depend>
+  <exec_depend>python3-stable-baselines3-pip</exec_depend>
+  <exec_depend>python3-sb3-contrib-pip</exec_depend>
 
   <export>
     <build_type>ament_python</build_type>

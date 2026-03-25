@@ -2,10 +2,16 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>cx_pddl_manager</name>
-  <version>1.0.0</version>
-  <description>This package allows you to manage PDDL planning environments for use with the ROS2 CX.</description>
+  <version>0.0.0</version>
+  <description>This package allows you to manage PDDL planning environments for use with the ROS2 CX</description>
   <maintainer email="viehmann@kbsg.rwth-aachen.de">Tarik Viehmann</maintainer>
   <license>Apache-2.0</license>
+
+  <exec_depend>bondpy</exec_depend>
+  <exec_depend>cx_pddl_interfaces</exec_depend>
+  <exec_depend>python3-jinja2</exec_depend>
+  <exec_depend>python3-unified-planning-pip</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>

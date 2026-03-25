@@ -3,7 +3,7 @@
 <package format="3">
   <name>cx_up_nextflap</name>
   <version>0.0.0</version>
-  <description>NEXTFLAP temporal planner integrated into Unified Planning.</description>
+  <description>NEXTFLAP temporal planner integrated into Unified Planning</description>
   <maintainer email="viehmann@kbsg.rwth-aachen.de">Tarik Viehmann</maintainer>
   <author>Vercher Oscar Sapena Vercher</author>
   <license>Apache-2.0</license>
@@ -11,6 +11,8 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>cx_z3_vendor</depend>
+  <depend>pybind11_vendor</depend>
+  <depend>python3-dev</depend>
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
 
