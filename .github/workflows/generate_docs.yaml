@@ -3,7 +3,7 @@ name: Generate and Publish Docs
 on:
   push:
     branches:
-      - master  # Replace with your default branch
+      - master
   pull_request:
 
 jobs:
