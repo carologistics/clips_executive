@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16...3.28)
 project(cx_tf2_pose_tracker_plugin)
 
-# Uses c++ 20 or above
+# Uses C++20
 if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 20)
 endif()
@@ -20,23 +20,24 @@ find_package(clips REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(geometry_msgs REQUIRED)
 
-set(dependencies
-  ament_cmake
-  pluginlib
-  cx_plugin
-  cx_utils
-  clips_vendor
-  clips
-  tf2_ros
-  geometry_msgs
-)
-include_directories(include)
+add_library(${PROJECT_NAME} SHARED src/tf2_pose_tracker_plugin.cpp)
 
 pluginlib_export_plugin_description_file(cx_plugin tf2_pose_tracker_plugin.xml)
 
-add_library(${PROJECT_NAME} SHARED src/tf2_pose_tracker_plugin.cpp)
-target_link_libraries(${PROJECT_NAME} ClipsNS::libclips_ns)
-ament_target_dependencies(${PROJECT_NAME} ${dependencies})
+target_include_directories(${PROJECT_NAME}
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
+
+target_link_libraries(${PROJECT_NAME} PUBLIC
+  ClipsNS::libclips_ns
+  pluginlib::pluginlib
+  cx_plugin::cx_plugin
+  cx_utils::cx_utils
+  tf2_ros::tf2_ros
+  ${geometry_msgs_TARGETS}
+)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD ${CMAKE_CXX_STANDARD})
 
@@ -52,13 +53,22 @@ install(
 
 install(TARGETS
   ${PROJECT_NAME}
+  EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION lib/${PROJECT_NAME}
 )
 
-ament_export_include_directories(include)
-ament_export_libraries(${PROJECT_NAME})
-ament_export_dependencies(${dependencies})
+ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
+
+ament_export_dependencies(
+  pluginlib
+  cx_plugin
+  cx_utils
+  clips_vendor
+  clips
+  tf2_ros
+  geometry_msgs
+)
 
 ament_package()

@@ -63,7 +63,7 @@ macro(_cx_generate_linked_protobuf_plugin_base name lib PROTO_FILES)
     else()
       target_link_libraries(${snake_case_name} ClipsNS::libclips_ns ${lib})
     endif()
-    ament_target_dependencies(${snake_case_name} cx_plugin pluginlib cx_protobuf_plugin)
+    target_link_libraries(${snake_case_name} cx_plugin::cx_plugin pluginlib::pluginlib cx_protobuf_plugin::cx_protobuf_plugin)
     install(
       FILES ${CMAKE_CURRENT_BINARY_DIR}/${snake_case_name}.hpp
       DESTINATION include/

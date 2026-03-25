@@ -27,7 +27,7 @@ macro(cx_generate_bindings package msg_name type)
   find_package(clips REQUIRED)
   if("${type}" MATCHES "action")
     find_package(rclcpp_action)
-    set(extra_deps "rclcpp_action")
+    set(extra_deps "rclcpp_action::rclcpp_action")
   endif()
 
   # Generator script
@@ -69,8 +69,7 @@ macro(cx_generate_bindings package msg_name type)
   # Build plugin from library
   add_library(${plugin_name} SHARED ${plugin_name}.cpp)
   set_property(TARGET ${plugin_name} PROPERTY CXX_STANDARD 20)
-  target_link_libraries(${plugin_name} ClipsNS::libclips_ns)
-  ament_target_dependencies(${plugin_name} cx_plugin cx_utils pluginlib ${package} ${extra_deps})
+  target_link_libraries(${plugin_name} cx_plugin::cx_plugin cx_utils::cx_utils pluginlib::pluginlib ${${package}_TARGETS} ${extra_deps})
   install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/${plugin_name}.hpp
     DESTINATION include/

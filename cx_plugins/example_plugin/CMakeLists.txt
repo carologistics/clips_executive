@@ -19,22 +19,22 @@ find_package(cx_utils REQUIRED)
 find_package(clips_vendor REQUIRED)
 find_package(clips REQUIRED)
 
-set(dependencies
-  ament_cmake
-  rclcpp
-  pluginlib
-  cx_plugin
-  cx_utils
-  clips_vendor
-  clips
+add_library(${PROJECT_NAME} SHARED src/example_plugin.cpp)
+target_link_libraries(${PROJECT_NAME} PUBLIC
+  rclcpp::rclcpp
+  pluginlib::pluginlib
+  cx_plugin::cx_plugin
+  cx_utils::cx_utils
+  ClipsNS::libclips_ns
 )
-include_directories(include)
+
+target_include_directories(${PROJECT_NAME}
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
 
 pluginlib_export_plugin_description_file(cx_plugin example_plugin.xml)
-
-add_library(${PROJECT_NAME} SHARED src/example_plugin.cpp)
-target_link_libraries(${PROJECT_NAME} ClipsNS::libclips_ns)
-ament_target_dependencies(${PROJECT_NAME} ${dependencies})
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD ${CMAKE_CXX_STANDARD})
 
@@ -50,13 +50,21 @@ install(
 
 install(TARGETS
   ${PROJECT_NAME}
+  EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION lib/${PROJECT_NAME}
 )
 
 ament_export_include_directories(include)
-ament_export_libraries(${PROJECT_NAME})
-ament_export_dependencies(${dependencies})
+ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
+ament_export_dependencies(
+  rclcpp
+  pluginlib
+  cx_plugin
+  cx_utils
+  clips_vendor
+  clips
+)
 
 ament_package()

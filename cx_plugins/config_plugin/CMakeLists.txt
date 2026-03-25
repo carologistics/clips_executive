@@ -20,24 +20,22 @@ find_package(clips_vendor REQUIRED)
 find_package(clips REQUIRED)
 find_package(yaml-cpp REQUIRED)
 
-set(dependencies
-  ament_cmake
-  ament_index_cpp
-  cx_plugin
-  cx_utils
-  yaml-cpp
-  pluginlib
-)
-
 include_directories(include)
 
 pluginlib_export_plugin_description_file(cx_plugin config_plugin.xml)
 
 # END OF PLUGINS REGISTRATION
 add_library(${PROJECT_NAME} SHARED src/config_plugin.cpp)
-ament_target_dependencies(${PROJECT_NAME} ${dependencies})
-target_link_libraries(${PROJECT_NAME} ClipsNS::libclips_ns)
-target_link_libraries(${PROJECT_NAME} yaml-cpp)
+
+target_link_libraries(${PROJECT_NAME} PUBLIC
+  pluginlib::pluginlib
+  ament_index_cpp::ament_index_cpp
+  cx_plugin::cx_plugin
+  cx_utils::cx_utils
+  ClipsNS::libclips_ns
+  yaml-cpp
+)
+
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD ${CMAKE_CXX_STANDARD})
 
 install(
@@ -57,6 +55,7 @@ install(
 
 install(TARGETS
   ${PROJECT_NAME}
+  EXPORT export_${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION lib/${PROJECT_NAME}
@@ -64,6 +63,13 @@ install(TARGETS
 
 ament_export_include_directories(include)
 ament_export_libraries(${PROJECT_NAME})
-ament_export_dependencies(${dependencies})
-
+ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
+ament_export_dependencies(
+  ament_cmake
+  ament_index_cpp
+  cx_plugin
+  cx_utils
+  yaml-cpp
+  pluginlib
+)
 ament_package()
