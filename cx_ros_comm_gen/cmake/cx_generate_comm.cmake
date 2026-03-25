@@ -45,7 +45,7 @@ macro(cx_generate_bindings package msg_name type)
     message(FATAL_ERROR "No matching interface definition found for ${msg_name}.${type} in package ${package}.")
   endif()
 
-  ament_index_has_resource(package_prefix "packages" "cx_rl_interfaces")
+  ament_index_has_resource(package_prefix "packages" ${package})
   set(interface_file
     ${package_prefix}/share/${package}/${idl_suffix}
   )
