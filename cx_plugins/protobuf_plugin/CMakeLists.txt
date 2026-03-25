@@ -13,6 +13,7 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(rclcpp_lifecycle REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(cx_plugin REQUIRED)
 find_package(cx_utils REQUIRED)
@@ -42,6 +43,7 @@ target_link_libraries(clips_protobuf_comm PUBLIC
   protobuf::libprotobuf
   ProtobufComm::protobuf_comm
   ClipsNS::libclips_ns
+  rclcpp_lifecycle::rclcpp_lifecycle
 )
 
 target_link_libraries(clips_protobuf_comm PUBLIC

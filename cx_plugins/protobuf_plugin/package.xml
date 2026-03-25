@@ -12,6 +12,7 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>rclcpp</depend>
+  <depend>rclcpp_lifecycle</depend>
   <depend>cx_plugin</depend>
   <depend>cx_utils</depend>
   <depend>pluginlib</depend>
