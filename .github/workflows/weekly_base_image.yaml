@@ -38,12 +38,10 @@ jobs:
             -f .github/workflows/Dockerfile \
             --build-arg ROS_DISTRO=${{ matrix.ros_distro }} \
             -t $QUAY_REPO:${{ matrix.ros_distro }} \
-            -t $QUAY_REPO:${{ matrix.ros_distro }}-${DATE_TAG} \
             -t $QUAY_REPO:${{ matrix.ros_distro }}-${COMMIT_SHA::8} \
             .
 
       - name: Push Docker image
         run: |
           docker push $QUAY_REPO:${{ matrix.ros_distro }}
-          docker push $QUAY_REPO:${{ matrix.ros_distro }}-${DATE_TAG}
           docker push $QUAY_REPO:${{ matrix.ros_distro }}-${COMMIT_SHA::8}
