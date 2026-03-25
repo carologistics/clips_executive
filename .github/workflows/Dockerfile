@@ -1,7 +1,7 @@
 ARG ROS_DISTRO=jazzy
 FROM docker.io/library/ros:${ROS_DISTRO}
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get upgrade -y && apt-get install -y \
     python3-pip \
     python3-vcstool \
     python3-rosdep \
