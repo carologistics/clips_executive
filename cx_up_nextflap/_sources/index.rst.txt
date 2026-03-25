@@ -3,7 +3,7 @@
 cx_up_nextflap
 ==============
 
-NEXTFLAP temporal planner integrated into Unified Planning.
+NEXTFLAP temporal planner integrated into Unified Planning
 
 .. toctree::
    :maxdepth: 2

@@ -3,7 +3,7 @@
 cx_rl_gym
 =========
 
-Base class wrapping gym-functions for reinforcement learning to interface with CLIPS over cx_rl_interfaces.
+Base class wrapping gym-functions for reinforcement learning to interface with CLIPS over cx_rl_interfaces
 
 .. toctree::
    :maxdepth: 2

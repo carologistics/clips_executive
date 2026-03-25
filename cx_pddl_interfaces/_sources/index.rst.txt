@@ -3,7 +3,7 @@
 cx_pddl_interfaces
 ==================
 
-Messages, Services and Action files for the pddl extension of the ROS2 CX.
+Messages, Services and Action files for the pddl extension of the ROS2 CX
 
 .. toctree::
    :maxdepth: 2

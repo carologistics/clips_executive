@@ -98,18 +98,19 @@
 <span class="nt">&lt;package</span><span class="w"> </span><span class="na">format=</span><span class="s">&quot;3&quot;</span><span class="nt">&gt;</span>
 <span class="w">  </span><span class="nt">&lt;name&gt;</span>cx_rl_multi_robot_mppo<span class="nt">&lt;/name&gt;</span>
 <span class="w">  </span><span class="nt">&lt;version&gt;</span>0.0.0<span class="nt">&lt;/version&gt;</span>
-<span class="w">  </span><span class="nt">&lt;description&gt;</span>Multi-robot<span class="w"> </span>maskable<span class="w"> </span>proximal<span class="w"> </span>policy<span class="w"> </span>optimization<span class="w"> </span>(mppo)<span class="w"> </span>implementation.<span class="nt">&lt;/description&gt;</span>
+<span class="w">  </span><span class="nt">&lt;description&gt;</span>Multi-robot<span class="w"> </span>maskable<span class="w"> </span>proximal<span class="w"> </span>policy<span class="w"> </span>optimization<span class="w"> </span>(mppo)<span class="w"> </span>implementation<span class="nt">&lt;/description&gt;</span>
 <span class="w">  </span><span class="nt">&lt;maintainer</span><span class="w"> </span><span class="na">email=</span><span class="s">&quot;viehmann@kbsg.rwth-aachen.de&quot;</span><span class="nt">&gt;</span>Tarik<span class="w"> </span>Viehmann<span class="nt">&lt;/maintainer&gt;</span>
 <span class="w">  </span><span class="nt">&lt;maintainer</span><span class="w"> </span><span class="na">email=</span><span class="s">&quot;frank.pier@rwth-aachen.de&quot;</span><span class="nt">&gt;</span>Frank<span class="w"> </span>Pier<span class="nt">&lt;/maintainer&gt;</span>
 <span class="w">  </span><span class="nt">&lt;license&gt;</span>Apache-2.0<span class="nt">&lt;/license&gt;</span>
 
 <span class="w">  </span><span class="nt">&lt;depend&gt;</span>rclpy<span class="nt">&lt;/depend&gt;</span>
-<span class="w">  </span><span class="nt">&lt;depend&gt;</span>ament_index_python<span class="nt">&lt;/depend&gt;</span>
-<span class="w">  </span><span class="nt">&lt;depend&gt;</span>python3-gymnasium-pip<span class="nt">&lt;/depend&gt;</span>
-<span class="w">  </span><span class="nt">&lt;depend&gt;</span>python3-numpy<span class="nt">&lt;/depend&gt;</span>
-<span class="w">  </span><span class="nt">&lt;depend&gt;</span>python-pytorch-pip<span class="nt">&lt;/depend&gt;</span>
-<span class="w">  </span><span class="nt">&lt;depend&gt;</span>python3-stable-baselines3-pip<span class="nt">&lt;/depend&gt;</span>
-<span class="w">  </span><span class="nt">&lt;depend&gt;</span>python3-sb3-contrib-pip<span class="nt">&lt;/depend&gt;</span>
+
+<span class="w">  </span><span class="nt">&lt;exec_depend&gt;</span>ament_index_python<span class="nt">&lt;/exec_depend&gt;</span>
+<span class="w">  </span><span class="nt">&lt;exec_depend&gt;</span>python3-gymnasium-pip<span class="nt">&lt;/exec_depend&gt;</span>
+<span class="w">  </span><span class="nt">&lt;exec_depend&gt;</span>python3-numpy<span class="nt">&lt;/exec_depend&gt;</span>
+<span class="w">  </span><span class="nt">&lt;exec_depend&gt;</span>python3-pytorch-pip<span class="nt">&lt;/exec_depend&gt;</span>
+<span class="w">  </span><span class="nt">&lt;exec_depend&gt;</span>python3-stable-baselines3-pip<span class="nt">&lt;/exec_depend&gt;</span>
+<span class="w">  </span><span class="nt">&lt;exec_depend&gt;</span>python3-sb3-contrib-pip<span class="nt">&lt;/exec_depend&gt;</span>
 
 <span class="w">  </span><span class="nt">&lt;export&gt;</span>
 <span class="w">    </span><span class="nt">&lt;build_type&gt;</span>ament_python<span class="nt">&lt;/build_type&gt;</span>

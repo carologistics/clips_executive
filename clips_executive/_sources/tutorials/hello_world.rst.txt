@@ -63,7 +63,7 @@ The full ``CMakelists.txt`` should look like this (after removing some unnecessa
 
 .. code-block:: cmake
 
-    cmake_minimum_required(VERSION 3.8)
+    cmake_minimum_required(VERSION 3.16...3.31)
     project(cx_tutorial_agents)
 
     if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")

@@ -3,7 +3,7 @@
 cx_rl_multi_robot_mppo
 ======================
 
-Multi-robot maskable proximal policy optimization (mppo) implementation.
+Multi-robot maskable proximal policy optimization (mppo) implementation
 
 .. toctree::
    :maxdepth: 2
