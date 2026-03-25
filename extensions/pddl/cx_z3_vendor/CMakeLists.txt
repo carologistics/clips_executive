@@ -15,6 +15,7 @@ ament_vendor(z3
     -DZ3_BUILD_PYTHON_BINDINGS=OFF
     -DZ3_BUILD_JAVA_BINDINGS=OFF
     -DCMAKE_BUILD_TYPE=Release
+    -DCMAKE_CXX_FLAGS="-w"
 )
 
 ament_export_include_directories(${CMAKE_INSTALL_PREFIX}/opt/cx_z3_vendor/include)
