@@ -1,0 +1,14 @@
+%! TeX root = gym_comm_legend.tex
+
+\input{gym_comm_preamble.tex}
+\begin{document}
+\begin{tikzpicture}
+% --- Nodes / Lifelines ---
+\node (client) at (0,0) {\scriptsize client};
+\node (action_client) at (0,-1) {\scriptsize client};
+\node (server) at (3,0) {\scriptsize server};
+\node (action_server) at (3,-1) {\scriptsize server};
+\draw[service] (client) -- (server) node[midway, above] {service};
+\draw[action] (action_client) -- (action_server) node[midway, above] {action};
+\end{tikzpicture}
+\end{document}

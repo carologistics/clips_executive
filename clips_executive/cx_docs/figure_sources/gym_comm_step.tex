@@ -1,0 +1,25 @@
+%! TeX root = gym_comm_step.tex
+
+\input{gym_comm_preamble.tex}
+\begin{document}
+\begin{tikzpicture}
+\node[node] (CX) at (0,0) {CX System};
+\node[node] (Gym) at (6,0) {CXRLGym};
+\node[] (desc) at (3,0.5) {\underline{\textbf{Step}}};
+
+\draw[dashed, thick] (CX.south) -- ++(0,-6.5);
+\draw[dashed, thick] (Gym.south) -- ++(0,-6.5);
+
+\begin{scope}[shift={(Gym.south)}]
+\draw[dotted] (0,-1) -- ++(-6,0) node[midway, above] {\textbf{Step (action selected)}};
+\draw[action] (0,-2) -- ++(-6,0) node[midway, above] {/action\_selection};
+\draw[service] (0,-3) -- ++(-6,0) node[midway, above] {/get\_current\_observations};
+\end{scope}
+\begin{scope}[shift={($(Gym.south)+(0,-3)$)}]
+\draw[dotted] (0,-1) -- ++(-6,0) node[midway, above] {\textbf{Step (all actions masked)}};
+\draw[service] (0,-2) -- ++(-6,0) node[midway, above] {/get\_current\_observations};
+\draw[service] (0,-3) -- ++(-6,0) node[midway, above] {/get\_episode\_end};
+\end{scope}
+
+\end{tikzpicture}
+\end{document}

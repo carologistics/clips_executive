@@ -1,0 +1,14 @@
+.figure-container {
+    display: flex;
+    align-items: flex-start;  /* top-align image and text */
+    margin-bottom: 1em;
+}
+
+.figure-container .figure {
+    flex: 0 0 40%;          /* figure takes up 40% width */
+    margin-right: 1em;      /* spacing between figure and text */
+}
+
+.figure-container .figure-text {
+    flex: 1;                /* text takes remaining width */
+}

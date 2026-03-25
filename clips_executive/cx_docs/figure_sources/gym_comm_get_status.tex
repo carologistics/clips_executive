@@ -1,0 +1,16 @@
+%! TeX root = gym_comm_get_status.tex
+
+\input{gym_comm_preamble.tex}
+\begin{document}
+\begin{tikzpicture}
+\node[node] (CX) at (0,0) {CX System};
+\node[node] (Gym) at (6,0) {CXRLGym};
+\node[] (desc) at (3,0.5) {\underline{\textbf{Setup}}};
+
+\draw[dashed, thick] (CX.south) -- ++(0,-1.5);
+\draw[dashed, thick] (Gym.south) -- ++(0,-1.5);
+\begin{scope}[shift={($(CX.south)+(0,0)$)}]
+\draw[service] (0,-1) -- ++(6,0) node[midway, above] {/get\_status};
+\end{scope}
+\end{tikzpicture}
+\end{document}
