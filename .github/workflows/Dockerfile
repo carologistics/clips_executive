@@ -5,8 +5,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
     python3-pip \
     python3-vcstool \
     python3-rosdep \
-    git \
-    && rm -rf /var/lib/apt/lists/*
+    git
 
 ENV PIP_BREAK_SYSTEM_PACKAGES=1
 
