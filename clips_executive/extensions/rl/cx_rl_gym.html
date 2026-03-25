@@ -146,10 +146,10 @@ reward, done flags, and additional info.</p>
 <h3>Observation and Action Space<a class="headerlink" href="#observation-and-action-space" title="Link to this heading"></a></h3>
 <p>On initialization of the <code class="docutils literal notranslate"><span class="pre">CXRLGym</span></code> class, the observation and action space is defined.</p>
 <figure class="align-left" style="width: 50%">
-<a class="reference internal image-reference" href="figures/gym_comm_obs_action_space.svg"><img alt="figures/gym_comm_obs_action_space.svg" src="figures/gym_comm_obs_action_space.svg" /></a>
+<a class="reference internal image-reference" href="../../_images/gym_comm_obs_action_space.svg"><img alt="../../_images/gym_comm_obs_action_space.svg" height="294" src="../../_images/gym_comm_obs_action_space.svg" width="340" /></a>
 </figure>
 <figure class="align-right" style="width: 40%">
-<a class="reference internal image-reference" href="figures/gym_comm_legend.svg"><img alt="figures/gym_comm_legend.svg" src="figures/gym_comm_legend.svg" /></a>
+<a class="reference internal image-reference" href="../../_images/gym_comm_legend.svg"><img alt="../../_images/gym_comm_legend.svg" height="58" src="../../_images/gym_comm_legend.svg" width="166" /></a>
 </figure>
 <p>The observation and action spaces are constructed by combining predefined observables/actions with all valid combinations of observable predicates/action and their objects.
 Predefined observables/actions are added directly.
@@ -170,7 +170,7 @@ For each observable predicate/action, the cartesian product of the relevant para
 <section id="fetching-information">
 <h3>Fetching Information<a class="headerlink" href="#fetching-information" title="Link to this heading"></a></h3>
 <figure class="align-left" style="width: 50%">
-<a class="reference internal image-reference" href="figures/gym_comm_get_status.svg"><img alt="figures/gym_comm_get_status.svg" src="figures/gym_comm_get_status.svg" /></a>
+<a class="reference internal image-reference" href="../../_images/gym_comm_get_status.svg"><img alt="../../_images/gym_comm_get_status.svg" height="85" src="../../_images/gym_comm_get_status.svg" width="340" /></a>
 </figure>
 <p>Once the observation and action spaces have been initialized, the environment is fully set up.
 Current information get be fetched from the environment at will.</p>
@@ -187,7 +187,7 @@ Also, it provides information, whether a model is currently loaded, which is req
 <section id="reset">
 <h3>Reset<a class="headerlink" href="#reset" title="Link to this heading"></a></h3>
 <figure class="align-left" style="width: 50%">
-<a class="reference internal image-reference" href="figures/gym_comm_reset.svg"><img alt="figures/gym_comm_reset.svg" src="figures/gym_comm_reset.svg" /></a>
+<a class="reference internal image-reference" href="../../_images/gym_comm_reset.svg"><img alt="../../_images/gym_comm_reset.svg" height="112" src="../../_images/gym_comm_reset.svg" width="340" /></a>
 </figure>
 <p>The environment reset triggers the <cite>/reset_env</cite> action.
 Once completed, the initial environment observations are retrieved.</p>
@@ -202,7 +202,7 @@ Once completed, the initial environment observations are retrieved.</p>
 <section id="action-masking">
 <h3>Action Masking<a class="headerlink" href="#action-masking" title="Link to this heading"></a></h3>
 <figure class="align-left" style="width: 50%">
-<a class="reference internal image-reference" href="figures/gym_comm_action_masking.svg"><img alt="figures/gym_comm_action_masking.svg" src="figures/gym_comm_action_masking.svg" /></a>
+<a class="reference internal image-reference" href="../../_images/gym_comm_action_masking.svg"><img alt="../../_images/gym_comm_action_masking.svg" height="114" src="../../_images/gym_comm_action_masking.svg" width="340" /></a>
 </figure>
 <p>Action masking queries which robots or objects are free and
 computes which actions are currently executable. It prevents invalid
@@ -218,7 +218,7 @@ action selections during training.</p>
 <section id="step">
 <h3>Step<a class="headerlink" href="#step" title="Link to this heading"></a></h3>
 <figure class="align-left" style="width: 50%">
-<a class="reference internal image-reference" href="figures/gym_comm_step.svg"><img alt="figures/gym_comm_step.svg" src="figures/gym_comm_step.svg" /></a>
+<a class="reference internal image-reference" href="../../_images/gym_comm_step.svg"><img alt="../../_images/gym_comm_step.svg" height="234" src="../../_images/gym_comm_step.svg" width="340" /></a>
 </figure>
 <p>During a step, the CXRLGym environment first checks whether the selected action is valid (i.e., not the special no-op action).
 If the action is valid, it is executed via the action_selection action. Once execution finishes, a reward is returned and the new environment observations are retrieved.</p>
@@ -235,7 +235,7 @@ If the action is valid, it is executed via the action_selection action. Once exe
 <section id="model-execution">
 <h3>Model Execution<a class="headerlink" href="#model-execution" title="Link to this heading"></a></h3>
 <figure class="align-left" style="width: 50%">
-<a class="reference internal image-reference" href="figures/gym_comm_exec.svg"><img alt="figures/gym_comm_exec.svg" src="figures/gym_comm_exec.svg" /></a>
+<a class="reference internal image-reference" href="../../_images/gym_comm_exec.svg"><img alt="../../_images/gym_comm_exec.svg" height="84" src="../../_images/gym_comm_exec.svg" width="340" /></a>
 </figure>
 <p>When executing a trained policy, the executor can use a service to request a predction/recommendation, provided the current observations and available actions.</p>
 <div style="clear: both;"></div><p>Interfaces:</p>
