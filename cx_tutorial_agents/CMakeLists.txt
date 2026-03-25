@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16...3.28)
+cmake_minimum_required(VERSION 3.16...3.31)
 project(cx_tutorial_agents)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.16...3.31)
 project(cx_ros_param_plugin)
 
 # Default to C++20

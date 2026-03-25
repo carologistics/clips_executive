@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16...3.28)
+cmake_minimum_required(VERSION 3.16...3.31)
 project(cx_tf2_pose_tracker_plugin)
 
 # Uses C++20

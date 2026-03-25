@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.16...3.31)
 project(cx_up_nextflap)
 
 # Require C++23
