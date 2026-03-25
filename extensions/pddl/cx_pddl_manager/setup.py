@@ -37,7 +37,9 @@ setup(
     description='This package allows you to manage PDDL planning \
     environments for use with the ROS2 CX.',
     license='Apache-2.0',
-    tests_require=['pytest'],
+    extras_require={
+        'test': ['pytest', 'pytest-cov'],
+    },
     entry_points={
         'console_scripts': ['pddl_manager = cx_pddl_manager.pddl_manager:main'],
     },
