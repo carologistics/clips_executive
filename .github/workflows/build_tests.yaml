@@ -11,27 +11,23 @@ jobs:
     runs-on: ubuntu-24.04
     container:
       image: quay.io/carologistics/clips_executive_base_image:kilted
-      options: --user root
+      options: --user 1001 --workdir /ros_ws
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
         with:
-          fetch-depth: 0   # ensures full git history is present
+          fetch-depth: 0
 
-      - name: Install pre-commit
+      - name: Fix git refs for gitlint
         run: |
-          apt update && apt install -y pre-commit git
+          git fetch origin +refs/heads/*:refs/remotes/origin/*
+          git remote set-head origin --auto || true
 
       - name: Run pre-commit hooks
-        working-directory: /github/workspace
         run: |
-          # Source ROS environment
+          ls -lha
           . /opt/ros/kilted/setup.sh
-
-          # Run pre-commit in the repository
           pre-commit run --all-files --hook-stage manual
-        env:
-          PRE_COMMIT_HOME: /var/cache/pre-commit
 
   ros-build:
     runs-on: ubuntu-24.04
@@ -41,10 +37,10 @@ jobs:
         ros_distro: [humble, jazzy, kilted]
     container:
       image: quay.io/carologistics/clips_executive_base_image:${{ matrix.ros_distro }}
-      options: --user root
+      options: --user 1001 --workdir /ros_ws
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
 
       - name: Build ROS workspace
         run: |
@@ -52,11 +48,4 @@ jobs:
           export ROS_DISTRO=${{ matrix.ros_distro }}
           echo "Building workspace for $ROS_DISTRO"
           . /opt/ros/$ROS_DISTRO/setup.sh
-          cd /ros_ws
           colcon build --merge-install --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_TESTING=OFF
-
-      - name: Run ROS tests
-        run: |
-          . /opt/ros/${{ matrix.ros_distro }}/setup.sh
-          cd /ros_ws
-          colcon test

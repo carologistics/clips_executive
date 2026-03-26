@@ -5,6 +5,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
     python3-pip \
     python3-vcstool \
     python3-rosdep \
+    pre-commit \
     git
 
 ENV PIP_BREAK_SYSTEM_PACKAGES=1
@@ -24,3 +25,5 @@ RUN find . -name "*.repos" -exec vcs import --recursive --input {} src \;
 RUN rosdep update && \
     . /opt/ros/${ROS_DISTRO}/setup.sh && \
     rosdep install --from-paths src --ignore-src --skip-keys "python3-unified-planning-pip python3-sb3-contrib-pip" -r -y
+
+RUN rm -rfd src
