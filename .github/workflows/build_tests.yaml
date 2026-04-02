@@ -29,6 +29,12 @@ jobs:
           . /opt/ros/kilted/setup.sh
           pre-commit run --all-files --hook-stage manual
 
+      - name: Clone clips_vendor (humble only)
+        if: matrix.ros_distro == 'humble'
+        run: |
+          cd /ros_ws
+          git clone https://github.com/carologistics/clips_vendor.git
+
   ros-build:
     runs-on: ubuntu-24.04
     needs: pre-commit
