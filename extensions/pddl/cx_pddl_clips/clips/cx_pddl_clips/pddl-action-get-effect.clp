@@ -176,11 +176,11 @@
           (bind ?arg-syms (create$ ?arg-syms (sym-cat ?arg)))
         )
         (bind ?value (ros-msgs-get-field ?fun "value"))
-        (if (not (do-for-fact ((?pf pddl-fluent-change)) (and (eq ?name ?pf:name) (eq ?pf:params ?arg-syms))
+        (if (not (do-for-fact ((?pf pddl-numeric-fluent)) (and (eq ?name ?pf:name) (eq ?pf:params ?arg-syms))
           (assert (pddl-effect-numeric-fluent (name ?name) (params ?arg-syms)
             (value (pddl-apply-op ?op ?value ?pf:value)) (instance ?instance) (action ?action-id)))
         )) then
-          (printout error "pddl-fluent-change from action effect unknown" crlf)
+          (printout error "pddl-numeric-fluent from action effect unknown" crlf)
         )
       )
       (ros-msgs-destroy-message ?function-msg)
