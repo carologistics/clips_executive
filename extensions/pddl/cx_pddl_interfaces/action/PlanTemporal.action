@@ -1,5 +1,8 @@
 string pddl_instance
 string goal_instance
+
+# optional field, if set the planner also saves the domain and problem file, named <pddl_instance>_<goal_instance>_domain.pddl and <pddl_instance>_<goal_instance>_problem.pddl
+string output_dir
 ---
 bool success
 TimedPlanAction[] actions

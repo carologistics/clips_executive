@@ -14,6 +14,7 @@
 # limitations under the License.
 
 import concurrent.futures as cf
+from pathlib import Path
 
 from cx_pddl_interfaces.msg import TimedPlanAction
 from unified_planning.engines import PlanGenerationResultStatus
@@ -45,8 +46,9 @@ def run_planner_process(env, dom, prob):
 
 class ManagedGoal:
 
-    def __init__(self, problem, name='base'):
+    def __init__(self, problem, name='base', logger=None):
         self.problem = problem
+        self.logger = logger
         self.name = name
         self.goal_fluents = []
         self.object_filters = []
@@ -92,7 +94,7 @@ class ManagedGoal:
     def clear_goals(self):
         self.goal_fluents = []
 
-    def plan_in_pool(self):
+    def plan_in_pool(self, output_dir):
         action_filters = self.action_filters
         if len(self.action_filters) == 0:
             action_filters = None
@@ -112,6 +114,25 @@ class ManagedGoal:
         writer = PDDLWriter(goal_problem)
         dom = writer.get_domain()
         prob = writer.get_problem()
+
+        if output_dir:
+            output_path = Path(output_dir)
+
+            try:
+                # Create directory if it doesn't exist
+                output_path.mkdir(parents=True, exist_ok=True)
+                # Build file paths
+                domain_file = output_path / f"{self.problem.name}_{self.name}_domain.pddl"
+                problem_file = output_path / f"{self.problem.name}_{self.name}_problem.pddl"
+
+                # Write files
+                writer.write_domain(str(domain_file))
+                writer.write_problem(str(problem_file))
+
+            except Exception as e:
+                # Handle error without crashing
+                if self.logger:
+                    self.logger.error(f"[ERROR] Failed to write PDDL files: {e}")
 
         future = self.problem.executor.submit(run_planner_process, self.problem.env, dom, prob)
         result = future.result()
@@ -151,13 +172,14 @@ class ManagedGoal:
 
 class ManagedProblem:
 
-    def __init__(self, problem, env, name='base'):
+    def __init__(self, problem, env, name='base', logger=None):
         self.goals = {}
         self.base_problem = problem.clone()
         self.base_problem.clear_goals()
         self.name = name
+        self.logger = logger
 
-        self.goals['base'] = ManagedGoal(self)
+        self.goals['base'] = ManagedGoal(self, logger=self.logger)
         self.executor = cf.ProcessPoolExecutor(max_workers=4)
 
         self.env = env
@@ -240,7 +262,7 @@ class ManagedProblem:
         )
 
     def add_goal(self, goal='base'):
-        self.goals[goal] = ManagedGoal(self, goal)
+        self.goals[goal] = ManagedGoal(self, goal, logger=self.logger)
 
     def get_goal(self, goal='base'):
         return self.goals[goal]

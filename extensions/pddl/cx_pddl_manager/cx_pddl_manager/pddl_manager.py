@@ -586,10 +586,14 @@ class PddlManagerLifecycleNode(LifecycleNode):
                     self.reader.parse_problem_string(domain_rendered, problem_rendered),
                     self.env,
                     name,
+                    self.get_logger(),
                 )
             else:
                 self.managed_problems[name] = ManagedProblem(
-                    self.reader.parse_problem_string(domain_rendered), self.env, name
+                    self.reader.parse_problem_string(domain_rendered),
+                    self.env,
+                    name,
+                    self.get - logger(),
                 )
             self.get_logger().debug(f'Loading domain {domain} {problem}')
             response.success = True
@@ -937,7 +941,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
         result = (
             self.managed_problems[request.pddl_instance]
             .goals[request.goal_instance]
-            .plan_in_pool()
+            .plan_in_pool(request.output_dir)
         )
         response.actions = []
         if result:
