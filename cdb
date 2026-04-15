@@ -1,0 +1,46 @@
+TIME_STAMPS IN TICKS (ITERATIONS SINCE EXECUTION TO KEEP TRACK OF THE ORDER BEYOND TIMING)
+TABLE TIME_LOOKUP (STORES FOR EVERY RUN THE TIME AND TICK):
+TIMESTAMP (TIMESTAMP) | TICK (BIGINT) | RUN_NUM (BIGINT)
+
+CREATE TYPE timed_fact AS (
+    tick BIGINT,
+    value JSONB
+);
+
+Table Facts:
+id (BIGINT) | module (TEXT) | name (TEXT) | value (timed_fact[])
+
+
+Table Fact-lifetime:
+id (BIGINT) | from  (BIGINT) | to (BIGINT)
+
+
+{
+name: {
+  type: "String",
+  value: "..."
+}
+}
+
+value:
+[
+{
+  type: "...",
+  name: "...",
+  value: "..." / if type = multifield:
+  [
+	...
+  ]
+},
+...
+]
+
+Table RULE_EXECUTION:
+id (foreign key to RULES id) | base (In order of preconditions: array of fereign keys to fact_ids, NULL for not) | tick (BIGINT)
+
+Table RULES:
+id | name (TEXT) | module (TEXT) | lhs (TEXT) | rhs (TEXT)
+
+
+NOTE:
+NEED TO ASSERT LOW SALIENCE RULE THAT UPDATES THE TIME_LOOKUP AFTER EACH RUN
