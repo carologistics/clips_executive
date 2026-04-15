@@ -14,6 +14,10 @@
 
 #include <iomanip>
 #include <pqxx/pqxx>
+<<<<<<< Updated upstream
+=======
+#include <vector>
+>>>>>>> Stashed changes
 #undef RANGES
 
 namespace cx {
