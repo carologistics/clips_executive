@@ -18,7 +18,9 @@ find_package(cx_plugin REQUIRED)
 find_package(cx_utils REQUIRED)
 find_package(clips_vendor REQUIRED)
 find_package(clips REQUIRED)
-find_package(libpqxx REQUIRED)
+find_package(PkgConfig REQUIRED)
+
+pkg_check_modules(LIBPQXX REQUIRED IMPORTED_TARGET libpqxx)
 
 set(dependencies
   ament_cmake
@@ -28,7 +30,6 @@ set(dependencies
   cx_utils
   clips_vendor
   clips
-  libpqxx
 )
 
 include_directories(include)
@@ -36,7 +37,7 @@ include_directories(include)
 pluginlib_export_plugin_description_file(cx_plugin cdb_plugin.xml)
 
 add_library(${PROJECT_NAME} SHARED src/cdb_plugin.cpp src/db_handler.cpp)
-target_link_libraries(${PROJECT_NAME} ClipsNS::libclips_ns libpqxx::pqxx)
+target_link_libraries(${PROJECT_NAME} ClipsNS::libclips_ns PkgConfig::LIBPQXX)
 ament_target_dependencies(${PROJECT_NAME} ${dependencies})
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD ${CMAKE_CXX_STANDARD})

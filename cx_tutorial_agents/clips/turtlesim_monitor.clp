@@ -29,6 +29,14 @@
   (printout info "Listening to " ?*TURTLE-POSE-TOPIC* crlf)
 )
 
+(defrule print-time
+  (time ?now)
+  =>
+  (printout info "time between agenda refresh and rule fire: " (- (now) ?now) crlf)
+  (printout info "ROS time: " (now) crlf)
+  (printout info "sys time: " (now-systime) crlf)
+)
+
 (defrule turtle-pose-receive
 " React to incoming messages andcheck for critical pose. "
   (ros-msgs-subscription (topic ?t&:(eq ?t ?*TURTLE-POSE-TOPIC*)))

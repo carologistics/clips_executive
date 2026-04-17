@@ -15,12 +15,9 @@
 #include "cx_cdb_plugin/db_handler.hpp"
 #include <iostream>
 #include <thread>
-<<<<<<< Updated upstream
-=======
 #include <sstream>
 #include <vector>
 #include <stdexcept>
->>>>>>> Stashed changes
 
 namespace cx {
 
@@ -86,11 +83,7 @@ bool DBHandler::init_db(DBHandlerConfig config) {
         w.exec("CREATE TYPE timed_fact AS (tick BIGINT, value JSONB);");
         w.exec("CREATE TABLE time_lookup (timestamp TIMESTAMPTZ, tick BIGINT, "
                "run_number BIGINT);");
-<<<<<<< Updated upstream
-        w.exec("CREATE TABLE facts (fact_id SERIAL PRIMARY KEY, module TEXT, "
-=======
         w.exec("CREATE TABLE facts (fact_id SERIAL PRIMARY KEY, "
->>>>>>> Stashed changes
                "name TEXT, value timed_fact[]);");
         w.exec("CREATE TABLE fact_lifetime (fact_id INT REFERENCES "
                "facts(fact_id), start_tick BIGINT, end_tick BIGINT);");
@@ -126,8 +119,6 @@ bool DBHandler::init_db(DBHandlerConfig config) {
     }
 }
 
-<<<<<<< Updated upstream
-=======
 void DBHandler::assert_fact(long long id, std::string fact_json, long long tick) {
     if (!connection_ || !connection_->is_open()) {
         throw std::runtime_error("Database connection is not open");
@@ -352,5 +343,4 @@ void DBHandler::add_rule_fired(std::string name, std::string modulle, std::vecto
     }
 }
 
->>>>>>> Stashed changes
 } // namespace cx

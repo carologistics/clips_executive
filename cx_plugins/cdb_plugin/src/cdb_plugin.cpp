@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <format>
+// #include <format>
 #include <nlohmann/json_fwd.hpp>
 #include <pqxx/pqxx>
 #include <vector>
@@ -139,13 +139,8 @@ bool CDBPlugin::clips_env_init(std::shared_ptr<clips::Environment> &env) {
                 context->env_name_.c_str());
     clips::AddAssertFunction(env.get(), "cdb_assert_callback",
                              &cdb_assert_callback, 0, this);
-<<<<<<< Updated upstream
-    // clips::AddBeforeRuleFiresFunction(env.get(),
-    // "cdb_before_rule_callback",  &cdb_before_rule_callback, 0, this);
-=======
     clips::AddBeforeRuleFiresFunction(env.get(),
     "cdb_before_rule_callback",  &cdb_before_rule_callback, 0, this);
->>>>>>> Stashed changes
 
     DBHandlerConfig config = {hostname, port, username, password, db_name};
     try {
@@ -179,10 +174,7 @@ void CDBPlugin::cdb_before_rule_callback(clips::Environment *env,
         if (i < act->basis->bcount)
             RCLCPP_INFO(*cdb_plugin->logger_, ",");
     }
-<<<<<<< Updated upstream
-=======
     throw 5;
->>>>>>> Stashed changes
 }
 
 nlohmann::json CDBPlugin::slot_value_to_json(unsigned short type,
