@@ -4,14 +4,9 @@
     environments: ["turtlesim_monitor"]
 
     turtlesim_monitor:
-      plugins: ["cdb", "executive", "ros_msgs", "files"]
+      plugins: ["executive", "ros_msgs", "files", "cdb"]
       log_clips_to_file: true
       watch: ["facts", "rules"]
-    cdb:
-      plugin: "cx::CDBPlugin"
-      username: postgres
-      password: admin
-      #docker run --name postgres -e POSTGRES_PASSWORD=admin --network host -d postgres
 
     executive:
       plugin: "cx::ExecutivePlugin"
@@ -24,3 +19,8 @@
       pkg_share_dirs: ["cx_tutorial_agents"]
       load: ["clips/turtlesim_monitor.clp",
              "clips/turtlesim_teleport.clp"]
+    cdb:
+      plugin: "cx::CDBPlugin"
+      username: postgres
+      password: admin
+      #docker run --name postgres -e POSTGRES_PASSWORD=admin --network host -d postgres

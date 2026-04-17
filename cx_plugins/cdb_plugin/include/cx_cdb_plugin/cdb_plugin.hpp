@@ -15,42 +15,45 @@
 #ifndef CX_PLUGINS__CDB_PLUGIN_HPP_
 #define CX_PLUGINS__CDB_PLUGIN_HPP_
 
-#include "cx_plugin/clips_plugin.hpp"
-
 #include <memory>
 #include <nlohmann/json.hpp>
 
-namespace cx {
+#include "cx_plugin/clips_plugin.hpp"
+#include "db_handler.hpp"
 
-struct fact_assert {
-    long long tick;
-    std::string value;
+namespace cx
+{
+
+struct fact_assert
+{
+  long long tick;
+  std::string value;
 };
 
-class CDBPlugin : public ClipsPlugin {
-  public:
-    CDBPlugin();
-    ~CDBPlugin();
+class CDBPlugin : public ClipsPlugin
+{
+public:
+  CDBPlugin();
+  ~CDBPlugin();
 
-    void initialize() override;
+  void initialize() override;
 
-    static void cdb_assert_callback(clips::Environment *, void *, void *);
-    static void cdb_before_rule_callback(clips::Environment *,
-                                         clips::Activation *, void *);
-    bool clips_env_init(std::shared_ptr<clips::Environment> &env) override;
-    bool clips_env_destroyed(std::shared_ptr<clips::Environment> &env) override;
+  static void cdb_assert_callback(clips::Environment *, void *, void *);
+  static void cdb_before_rule_callback(clips::Environment *, clips::Activation *, void *);
+  bool clips_env_init(std::shared_ptr<clips::Environment> & env) override;
+  bool clips_env_destroyed(std::shared_ptr<clips::Environment> & env) override;
 
-  private:
-    inline nlohmann::json slot_value_to_json(unsigned short type,
-                                             clips::CLIPSValue *value);
-    inline std::vector<nlohmann::json>
-    multifield_to_json_list(clips::Multifield *theSegment);
-    std::string clips_fact_to_json(clips::Fact *f);
-    std::unique_ptr<rclcpp::Logger> logger_;
-    bool started_ = false;
-    long long tick_ = 0;
-    inline long long get_tick() { return tick_++; }
+private:
+  inline nlohmann::json slot_value_to_json(unsigned short type, clips::CLIPSValue * value);
+  inline std::vector<nlohmann::json> multifield_to_json_list(clips::Multifield * theSegment);
+  std::string clips_fact_to_json(clips::Fact * f);
+  std::unique_ptr<rclcpp::Logger> logger_;
+  bool started_ = false;
+  long long tick_ = 0;
+  inline long long get_tick() { return tick_++; }
+
+  std::shared_ptr<DBHandler> db_;
 };
-} // namespace cx
+}  // namespace cx
 
-#endif // !CX_PLUGINS__EXAMPLE_PLUGIN_HPP_
+#endif  // !CX_PLUGINS__EXAMPLE_PLUGIN_HPP_

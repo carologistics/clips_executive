@@ -23,7 +23,7 @@
 namespace cx
 {
 
-DBHandler::DBHandler(DBHandlerConfig& config, bool create_db) : config_(config)
+DBHandler::DBHandler(DBHandlerConfig & config, bool create_db) : config_(config)
 {
   if (create_db) {
     if (!init_db(config)) {
@@ -78,6 +78,7 @@ CREATE TABLE rules (
   module  TEXT NOT NULL,
   lhs     TEXT NOT NULL,
   rhs     TEXT NOT NULL,
+  salience  INTEGER NOT NULL,
   UNIQUE (name, module)
 );
 
@@ -131,7 +132,7 @@ FOR EACH ROW
 EXECUTE FUNCTION check_facts();
 )sql";
 
-bool DBHandler::init_db(DBHandlerConfig& config)
+bool DBHandler::init_db(DBHandlerConfig & config)
 {
   std::ostringstream admin_conn;
   admin_conn << "dbname=postgres gssencmode=disable "
@@ -174,12 +175,8 @@ bool DBHandler::init_db(DBHandlerConfig& config)
   }
 }
 
-void DBHandler::assert_fact(long long id, const std::string& fact_json, long long tick)
+void DBHandler::assert_fact(long long id, const std::string & fact_json, long long tick)
 {
-  if (!connection_ || !connection_->is_open()) {
-    throw std::runtime_error("Database connection is not open");
-  }
-
   try {
     pqxx::work w(*connection_);
 
@@ -193,10 +190,6 @@ void DBHandler::assert_fact(long long id, const std::string& fact_json, long lon
 
 void DBHandler::retract_fact(long long id, long long tick)
 {
-  if (!connection_ || !connection_->is_open()) {
-    throw std::runtime_error("Database connection is not open");
-  }
-
   try {
     pqxx::work w(*connection_);
 
@@ -215,12 +208,8 @@ void DBHandler::retract_fact(long long id, long long tick)
   }
 }
 
-void DBHandler::update_fact(long long id, const std::string& fact_json, long long tick)
+void DBHandler::update_fact(long long id, const std::string & fact_json, long long tick)
 {
-  if (!connection_ || !connection_->is_open()) {
-    throw std::runtime_error("Database connection is not open");
-  }
-
   try {
     pqxx::work w(*connection_);
 
@@ -239,18 +228,16 @@ void DBHandler::update_fact(long long id, const std::string& fact_json, long lon
   }
 }
 
-void DBHandler::add_rule(const std::string& name, const std::string& module_name, const std::string& definition)
+void DBHandler::add_rule(
+  const std::string & name, const std::string & module_name, const std::string & lhs,
+  const std::string & rhs, const int salience)
 {
-  if (!connection_ || !connection_->is_open()) {
-    throw std::runtime_error("Database connection is not open");
-  }
-
   try {
     pqxx::work w(*connection_);
 
     w.exec_params(
-      "INSERT INTO rules (name, module, lhs, rhs) VALUES ($1, $2, $3, $4)", name, module_name,
-      definition, "");
+      "INSERT INTO rules (name, module, lhs, rhs, salience) VALUES ($1, $2, $3, $4, $5)", name,
+      module_name, lhs, rhs, salience);
 
     w.commit();
   } catch (const std::exception & e) {
@@ -258,12 +245,9 @@ void DBHandler::add_rule(const std::string& name, const std::string& module_name
   }
 }
 
-void DBHandler::add_function(const std::string& name, const std::string& module_name, const std::string& definition)
+void DBHandler::add_function(
+  const std::string & name, const std::string & module_name, const std::string & definition)
 {
-  if (!connection_ || !connection_->is_open()) {
-    throw std::runtime_error("Database connection is not open");
-  }
-
   try {
     pqxx::work w(*connection_);
 
@@ -278,12 +262,9 @@ void DBHandler::add_function(const std::string& name, const std::string& module_
   }
 }
 
-void DBHandler::add_defglobal(const std::string& name, const std::string& module_name, const std::string& definition)
+void DBHandler::add_defglobal(
+  const std::string & name, const std::string & module_name, const std::string & definition)
 {
-  if (!connection_ || !connection_->is_open()) {
-    throw std::runtime_error("Database connection is not open");
-  }
-
   try {
     pqxx::work w(*connection_);
 
@@ -298,12 +279,9 @@ void DBHandler::add_defglobal(const std::string& name, const std::string& module
   }
 }
 
-void DBHandler::add_deftemplate(const std::string& name, const std::string& module_name, const std::string& definition)
+void DBHandler::add_deftemplate(
+  const std::string & name, const std::string & module_name, const std::string & definition)
 {
-  if (!connection_ || !connection_->is_open()) {
-    throw std::runtime_error("Database connection is not open");
-  }
-
   try {
     pqxx::work w(*connection_);
 
@@ -319,12 +297,9 @@ void DBHandler::add_deftemplate(const std::string& name, const std::string& modu
 }
 
 void DBHandler::add_rule_fired(
-  const std::string& name, const std::string& module, const std::vector<long long>& basis, long long tick)
+  const std::string & name, const std::string & module, const std::vector<long long> & basis,
+  long long tick)
 {
-  if (!connection_ || !connection_->is_open()) {
-    throw std::runtime_error("Database connection is not open");
-  }
-
   try {
     pqxx::work w(*connection_);
 

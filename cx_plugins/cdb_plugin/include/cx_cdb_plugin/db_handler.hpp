@@ -33,7 +33,9 @@ class DBHandler {
     void assert_fact(long long id, const std::string& fact_json, long long tick);
     void retract_fact(long long id, long long tick);
     void update_fact(long long id, const std::string& fact_json, long long tick);
-    void add_rule(const std::string& name, const std::string& module_name, const std::string& definition);
+    void add_rule(
+      const std::string & name, const std::string & module_name, const std::string & lhs,
+      const std::string & rhs, const int salience);
     void add_function(const std::string& name, const std::string& module_name, const std::string& definition);
     void add_defglobal(const std::string& name, const std::string& module_name, const std::string& definition);
     void add_deftemplate(const std::string& name, const std::string& module_name, const std::string& definition);
