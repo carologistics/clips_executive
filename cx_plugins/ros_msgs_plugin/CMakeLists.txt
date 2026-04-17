@@ -37,11 +37,20 @@ set(CMAKE_REQUIRED_INCLUDES
 
 check_include_file_cxx(rclcpp/create_generic_service.hpp HAVE_GENERIC_SERVICE)
 # workaround as create_generic_client missing include
+# also, rclcpp misses typesupport helper on jazzy atm
 check_cxx_source_compiles("
   #include <rclcpp/node_interfaces/node_waitables_interface.hpp>
   #include <rclcpp_action/create_generic_client.hpp>
+  #include <rclcpp/typesupport_helpers.hpp>
 
   int main() {
+  const rosidl_action_type_support_t *(*fn)(
+    const std::string &,
+    const std::string &,
+    rcpputils::SharedLibrary &
+  ) = &rclcpp::get_action_typesupport_handle;
+
+  (void)fn;
     return 0;
   }
 " HAVE_GENERIC_ACTION_CLIENT)
