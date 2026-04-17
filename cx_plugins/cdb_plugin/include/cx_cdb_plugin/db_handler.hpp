@@ -27,20 +27,20 @@ struct DBHandlerConfig {
 };
 class DBHandler {
   public:
-    DBHandler(DBHandlerConfig config, bool create_db = true);
+    DBHandler(DBHandlerConfig& config, bool create_db = true);
     ~DBHandler();
 
-    void assert_fact(long long id, std::string fact_json, long long tick);
+    void assert_fact(long long id, const std::string& fact_json, long long tick);
     void retract_fact(long long id, long long tick);
-    void update_fact(long long id, std::string fact_json, long long tick);
-    void add_rule(std::string name, std::string module_name, std::string definition);
-    void add_funtion(std::string name, std::string module_name, std::string definition);
-    void add_defglobal(std::string name, std::string module_name, std::string definition);
-    void add_deftemplate(std::string name, std::string module_name, std::string definition);
-    void add_rule_fired(std::string name, std::string modulle, std::vector<long long> basis, long long tick);
+    void update_fact(long long id, const std::string& fact_json, long long tick);
+    void add_rule(const std::string& name, const std::string& module_name, const std::string& definition);
+    void add_function(const std::string& name, const std::string& module_name, const std::string& definition);
+    void add_defglobal(const std::string& name, const std::string& module_name, const std::string& definition);
+    void add_deftemplate(const std::string& name, const std::string& module_name, const std::string& definition);
+    void add_rule_fired(const std::string& name, const std::string& modulle, const std::vector<long long>& basis, long long tick);
 
 
-    bool init_db(DBHandlerConfig config);
+    bool init_db(DBHandlerConfig& config);
 
   private:
     std::shared_ptr<pqxx::connection> connection_;

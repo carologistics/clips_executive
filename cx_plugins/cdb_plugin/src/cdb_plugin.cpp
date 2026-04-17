@@ -171,10 +171,8 @@ void CDBPlugin::cdb_before_rule_callback(clips::Environment *env,
         } else {
             RCLCPP_INFO(*cdb_plugin->logger_, "Fact: *");
         }
-        if (i < act->basis->bcount)
-            RCLCPP_INFO(*cdb_plugin->logger_, ",");
     }
-    throw 5;
+  RCLCPP_INFO(*cdb_plugin->logger_, "---");
 }
 
 nlohmann::json CDBPlugin::slot_value_to_json(unsigned short type,
