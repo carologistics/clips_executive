@@ -11,9 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
-#ifndef CX_PLUGINS__CDB_PLUGIN_HPP_
-#define CX_PLUGINS__CDB_PLUGIN_HPP_
+#pragma once
 
 #include <memory>
 #include <nlohmann/json.hpp>
@@ -46,14 +44,12 @@ public:
 private:
   inline nlohmann::json slot_value_to_json(unsigned short type, clips::CLIPSValue * value);
   inline std::vector<nlohmann::json> multifield_to_json_list(clips::Multifield * theSegment);
-  std::string clips_fact_to_json(clips::Fact * f);
+  std::string clips_fact_to_json(clips::Fact * f, const char * deftemplate_name);
   std::unique_ptr<rclcpp::Logger> logger_;
   bool started_ = false;
-  long long tick_ = 0;
-  inline long long get_tick() { return tick_++; }
+  static long long tick_;
+  static inline long long get_tick() { return tick_++; }
 
-  std::shared_ptr<DBHandler> db_;
+  static std::shared_ptr<DBHandler> db_;
 };
 }  // namespace cx
-
-#endif  // !CX_PLUGINS__EXAMPLE_PLUGIN_HPP_

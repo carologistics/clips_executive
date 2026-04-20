@@ -1,8 +1,11 @@
 // TODO RULE add the rule to the definiton no lhs rhs seperation possible
+// TODO ADD RUN TIME LOOKUP TABLE
 // TODO PATCH CLIPS TO GET CALLBACK ON RULE ADD
 // TODO PATCH CLIPS TO FAIL BATCH STAR ON REDFEINITION
 // TODO PATCH CLIPS TO GET CALLBACK ON ADD / UPDATE OF DEFGLOB
 // TODO PATCH CLIPS TO GET CALLBACK ON EACH RUN
+// TODO BATCH UPLOAD
+// TODO when restoring the rules the salience has to be taken from the field and not the pp since they could point to a defglobal that has changed in the meantime
 // Copyright (c) 2024-2025 Carologistics
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,16 +27,6 @@
 #undef RANGES
 // RANGES is defined in clips_ns/clips.h, which causes issues with
 // pqxx/pqxx
-#include <bits/types/struct_tm.h>
-#include <bits/types/time_t.h>
-#include <clips_ns/agenda.h>
-#include <clips_ns/engine.h>
-#include <clips_ns/entities.h>
-#include <clips_ns/factfun.h>
-#include <clips_ns/factmngr.h>
-#include <clips_ns/match.h>
-#include <clips_ns/utility.h>
-
 #include <ctime>
 #include <cx_utils/clips_env_context.hpp>
 #include <cx_utils/param_utils.hpp>
@@ -46,6 +39,8 @@
 // To export as plugin
 #include "pluginlib/class_list_macros.hpp"
 
+long long cx::CDBPlugin::tick_ = 0;
+std::shared_ptr<cx::DBHandler> cx::CDBPlugin::db_ = nullptr;
 namespace cx
 {
 CDBPlugin::CDBPlugin() {}
@@ -125,44 +120,43 @@ bool CDBPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
   for (theModule = clips::GetNextDefmodule(env.get(), NULL); theModule != NULL;
        theModule = clips::GetNextDefmodule(env.get(), theModule)) {
     clips::SetCurrentModule(env.get(), theModule);
-    const std::string module_name = theModule->header.name;
+    const std::string module_name = theModule->header.name->contents;
     for (theRule = clips::GetNextDefrule(env.get(), NULL); theRule != NULL;
          theRule = clips::GetNextDefrule(env.get(), theRule)) {
-      RCLCPP_INFO(*logger_, "Sailiance %i", theRule->salience);
-      RCLCPP_INFO(*logger_, "NAH %s", theRule->header.ppForm);
-      RCLCPP_INFO(*logger_, "name %s", theRule->header.name->contents);
       const std::string name = theRule->header.name->contents;
       const int salience = theRule->salience; 
+      const std::string definition = theRule->header.ppForm;
 
-      db_->add_rule(name, module_name, const std::string & definition)
+      db_->add_rule(name, module_name, definition, salience);
     }
     for (theDefGlobal = clips::GetNextDefglobal(env.get(), NULL); theDefGlobal != NULL;
          theDefGlobal = clips::GetNextDefglobal(env.get(), theDefGlobal)) {
-      RCLCPP_INFO(*logger_, "HALLO %s", theDefGlobal->header.ppForm);
-      RCLCPP_INFO(
-        *logger_, "HALLO %s",
-        slot_value_to_json(theDefGlobal->header.constructType, &theDefGlobal->current)
-          .dump()
-          .c_str());
-      RCLCPP_INFO(*logger_, "name %s", theDefGlobal->header.name->contents);
-      //TODO
+      std::string name = theDefGlobal->header.name->contents;
+      std::string value_json = slot_value_to_json(theDefGlobal->current.header->type, &theDefGlobal->current).dump();
+      db_->add_defglobal(name, module_name, value_json, 0);
     }
     for (theDefFunction = clips::GetNextDeffunction(env.get(), NULL); theDefFunction != NULL;
          theDefFunction = clips::GetNextDeffunction(env.get(), theDefFunction)) {
-      RCLCPP_INFO(*logger_, "NAH %s", theDefFunction->header.ppForm);
-      RCLCPP_INFO(*logger_, "name %s", theDefFunction->header.name->contents);
-      //TODO
+      std::string name = theDefFunction->header.name->contents;
+      std::string definition = theDefFunction->header.ppForm;
+      db_->add_function(name, module_name, definition);
     }
     for (theDefTemplate = clips::GetNextDeftemplate(env.get(), NULL); theDefTemplate != NULL;
          theDefTemplate = clips::GetNextDeftemplate(env.get(), theDefTemplate)) {
-      RCLCPP_INFO(*logger_, "NAH %s", theDefTemplate->header.ppForm);
-      RCLCPP_INFO(*logger_, "name %s", theDefTemplate->header.name->contents);
-      //TODO
+      std::string name = theDefTemplate->header.name->contents;
+      if (theDefTemplate->header.ppForm == nullptr) {
+        db_->add_deftemplate(name, module_name, std::nullopt);
+      } else {
+        db_->add_deftemplate(name, module_name, theDefTemplate->header.ppForm);
+      }
     }
   }
 
   RCLCPP_INFO(*logger_, "Initializing plugin for environment %s", context->env_name_.c_str());
+  // NOTE AssertFunction also get's called for updates
+  // TODO Update and Assert need to be handled in postgresql
   clips::AddAssertFunction(env.get(), "cdb_assert_callback", &cdb_assert_callback, 0, this);
+  // TODO AddRemoveFunction
   clips::AddBeforeRuleFiresFunction(
     env.get(), "cdb_before_rule_callback", &cdb_before_rule_callback, 0, this);
   return true;
@@ -172,18 +166,24 @@ void CDBPlugin::cdb_before_rule_callback(
   clips::Environment * env, clips::Activation * act, void * context)
 {
   CDBPlugin * cdb_plugin = static_cast<CDBPlugin *>(context);
-  RCLCPP_INFO(*cdb_plugin->logger_, "Rule %s is about to fire", act->theRule->header.ppForm);
+  // RCLCPP_INFO(*cdb_plugin->logger_, "Rule %s is about to fire", act->theRule->header.ppForm);
+  std::string name = act->theRule->header.name->contents;
+  std::string module_name = act->theRule->header.whichModule->theModule->header.name->contents;
+  std::vector<std::optional<long long>> basis;
   for (int i = 0; i < act->basis->bcount; i++) {
     if (
       (get_nth_pm_match(act->basis, i) != NULL) &&
       (get_nth_pm_match(act->basis, i)->matchingItem != NULL)) {
       clips::PatternEntity * matchingItem = get_nth_pm_match(act->basis, i)->matchingItem;
+      basis.push_back((((clips::Fact *)matchingItem))->factIndex);
       RCLCPP_INFO(*cdb_plugin->logger_, "Fact: %lli", (((clips::Fact *)matchingItem))->factIndex);
     } else {
+      basis.push_back(std::nullopt);
       RCLCPP_INFO(*cdb_plugin->logger_, "Fact: *");
     }
   }
   RCLCPP_INFO(*cdb_plugin->logger_, "---");
+  db_->add_rule_fired(name, module_name, basis, get_tick());
 }
 
 nlohmann::json CDBPlugin::slot_value_to_json(unsigned short type, clips::CLIPSValue * value)
@@ -212,17 +212,31 @@ nlohmann::json CDBPlugin::slot_value_to_json(unsigned short type, clips::CLIPSVa
     }
     case EXTERNAL_ADDRESS_TYPE: {
       json["type"] = "EXTERNAL_ADDRESS";
-      // auto test = (value->externalAddressValue->contents);
-      // json[field_name] = std::format("%p", test);
-      // TODO
+      void* address = (value->externalAddressValue->contents);
+      std::ostringstream oss;
+      oss << static_cast<const void*>(address);
+      json["value"] = oss.str();
       break;
     }
     case VOID_TYPE: {
       json["type"] = "VOID";
       break;
     }
+    case MULTIFIELD_TYPE: {
+      clips::Multifield * theSegment = value->multifieldValue;
+      json["value"] = multifield_to_json_list(theSegment);
+      json["type"] = "MULTIFIELD";
+      break;
+    }
+    case FACT_ADDRESS_TYPE: {
+      RCLCPP_ERROR(*logger_, "HALLO %lli", value->factValue->factIndex);
+      break;
+    }
     default:
       json["type"] = "UNKNOWN";
+      RCLCPP_ERROR(*logger_, "type %i", type);
+      throw;
+      // NOTE instance is for COOL; BITMAP is internal
   }
   return json;
 }
@@ -238,11 +252,10 @@ std::vector<nlohmann::json> CDBPlugin::multifield_to_json_list(clips::Multifield
   return json_list;
 }
 
-std::string CDBPlugin::clips_fact_to_json(clips::Fact * f)
+std::string CDBPlugin::clips_fact_to_json(clips::Fact * f, const char * deftemplate_name)
 {
   nlohmann::json json;
   clips::Deftemplate * deftemplate = f->whichDeftemplate;
-  const char * deftemplate_name = deftemplate->header.name->contents;
   json["deftemplate"] = deftemplate_name;
   // Logic stolen from factmngr.c void PrintFact(...)
   if (f->whichDeftemplate->implied == false) {
@@ -288,9 +301,9 @@ void CDBPlugin::cdb_assert_callback(clips::Environment *, void * fact, void * co
   CDBPlugin * cdb_plugin = static_cast<CDBPlugin *>(context);
   clips::Fact * f = static_cast<clips::Fact *>(fact);
 
-  RCLCPP_INFO(
-    *cdb_plugin->logger_, "Fact %lld asserted with json %s", f->factIndex,
-    cdb_plugin->clips_fact_to_json(f).c_str());
+  clips::Deftemplate * deftemplate = f->whichDeftemplate;
+  const char * deftemplate_name = deftemplate->header.name->contents;
+  db_->assert_fact(f->factIndex, deftemplate_name, cdb_plugin->clips_fact_to_json(f, deftemplate_name).c_str(), get_tick());
 }
 
 bool CDBPlugin::clips_env_destroyed(std::shared_ptr<clips::Environment> & env)

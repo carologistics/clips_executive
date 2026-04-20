@@ -11,41 +11,55 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+#pragma once
 
 #include <iomanip>
 #include <pqxx/pqxx>
 #include <vector>
 #undef RANGES
 
-namespace cx {
-struct DBHandlerConfig {
-    std::string hostname;
-    int port;
-    std::string username;
-    std::string password;
-    std::string db_name;
+namespace cx
+{
+struct DBHandlerConfig
+{
+  std::string hostname;
+  int port;
+  std::string username;
+  std::string password;
+  std::string db_name;
 };
-class DBHandler {
-  public:
-    DBHandler(DBHandlerConfig& config, bool create_db = true);
-    ~DBHandler();
+class DBHandler
+{
+public:
+  DBHandler(DBHandlerConfig & config, bool create_db = true);
+  ~DBHandler();
 
-    void assert_fact(long long id, const std::string& fact_json, long long tick);
-    void retract_fact(long long id, long long tick);
-    void update_fact(long long id, const std::string& fact_json, long long tick);
-    void add_rule(
-      const std::string & name, const std::string & module_name, const std::string & lhs,
-      const std::string & rhs, const int salience);
-    void add_function(const std::string& name, const std::string& module_name, const std::string& definition);
-    void add_defglobal(const std::string& name, const std::string& module_name, const std::string& definition);
-    void add_deftemplate(const std::string& name, const std::string& module_name, const std::string& definition);
-    void add_rule_fired(const std::string& name, const std::string& modulle, const std::vector<long long>& basis, long long tick);
+  void assert_fact(
+    long long id, const std::string & deftemplate, const std::string & fact_json, long long tick);
+  void retract_fact(long long id, long long tick);
+  void add_rule(
+    const std::string & name, const std::string & module_name, const std::string & definition,
+    const int salience);
+  void add_function(
+    const std::string & name, const std::string & module_name, const std::string & definition);
+  void add_defglobal(
+    const std::string & name, const std::string & module_name, const std::string & value_json,
+    long long tick);
+  void update_defglobal(
+    const std::string & name, const std::string & module_name, const std::string & value_json,
+    long long tick);
+  void un_defglobal(const std::string & name, const std::string & module_name, long tick);
+  void add_deftemplate(
+    const std::string & name, const std::string & module_name,
+    const std::optional<std::string> & definition);
+  void add_rule_fired(
+    const std::string & name, const std::string & module,
+    const std::vector<std::optional<long long int>> & basis, long long tick);
 
+  bool init_db(DBHandlerConfig & config);
 
-    bool init_db(DBHandlerConfig& config);
-
-  private:
-    std::shared_ptr<pqxx::connection> connection_;
-    DBHandlerConfig config_;
+private:
+  std::shared_ptr<pqxx::connection> connection_;
+  DBHandlerConfig config_;
 };
-} // namespace cx
+}  // namespace cx
