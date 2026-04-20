@@ -41,3 +41,8 @@
   (slot state (type SYMBOL) (allowed-values PENDING WAITING PLANNING REQUEST-CANCELING CANCELING CANCELED SUCCESS FAILURE) (default PENDING))
   (slot plan-start (type FLOAT) (default 0.0))
 )
+
+(deftemplate plan-timeline
+  (slot plan-id (type SYMBOL))
+  (slot current-time (type FLOAT) (default 0.0))
+)
