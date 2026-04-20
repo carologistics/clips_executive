@@ -35,23 +35,33 @@
     )
     (pddl-get-fluents (instance test))
     (pddl-create-goal-instance (instance test) (goal active-goal))
-    (pddl-goal-fluent (instance test) (goal active-goal) (name on) (params a b))
+    (pddl-goal-fluent (instance test) (goal active-goal) (name on) (params d b))
+    (pddl-goal-fluent (instance test) (goal active-goal) (name on-table) (params c))
     (pddl-goal-fluent (instance test) (goal active-goal) (name on) (params b c))
     (pddl-set-goals (instance test) (goal active-goal))
     (pddl-plan (id test-plan) (instance test) (goal active-goal) (plan-type TEMPORAL))
   )
 )
 
+(defrule cx-pddl-clips-agent-plan-received
+  (pddl-plan (id ?plan-id) (plan-start ?st))
+  (pddl-action (plan ?plan-id))
+  (not (plan-timeline (plan-id ?plan-id)))
+  =>
+  (assert (plan-timeline (plan-id ?plan-id) (current-time ?st))) 
+) 
 
 (defrule cx-pddl-clips-agent-select-action
 " Start executing the first action of the resulting plan "
   ?plan <- (pddl-plan (id ?plan-id) (plan-start ?p-start))
-  (not (pddl-action (state EXECUTING|SELECTED)))
+  ;(not (pddl-action (state EXECUTING|SELECTED)))
   ?pa <- (pddl-action (plan ?plan-id) (planned-start-time ?t) (state IDLE))
-  (not (pddl-action (plan ?plan-id) (state IDLE) (planned-start-time ?ot&:(< ?ot ?t))))
+  ?pt <- (plan-timeline (plan-id ?plan-id) (current-time ?st&:(< (- ?t ?st) 1)))
+  ;(not (pddl-action (plan ?plan-id) (state IDLE) (planned-start-time ?ot&:(< ?ot ?t))))
 =>
   (if (= ?p-start 0.0) then (modify ?plan (plan-start (now))))
   (modify ?pa (state SELECTED))
+  (modify ?pt (current-time ?t))
 )
 
 (defrule cx-pddl-clips-agent-check-action
@@ -77,11 +87,22 @@
   (pddl-plan (id ?plan-id) (plan-start ?t))
   ?pa <- (pddl-action (id ?id) (plan ?plan-id) (state EXECUTING) (planned-duration ?d) (name ?name)
     (actual-start-time ?s&:(< (+ ?s ?d ?t) ?now)))
+  ;?pt <- (plan-timeline (plan-id ?plan-id) (current-time ?st))
 =>
   (bind ?duration (- (now) (+ ?s ?t)))
   (printout info "Executed action " ?name " in " ?duration " seconds" crlf)
   (modify ?pa (state DONE) (actual-duration ?duration))
+  ;(modify ?pt (current-time (+ ?st ?d)))
   (assert (pddl-action-get-effect (action ?id) (apply TRUE)))
+)
+
+(defrule cx-pddl-clips-agent-update-timeline
+"When all parallel actions at a particular time are done, move the timeline forward."
+  (pddl-action (id ?id) (plan ?plan-id) (state DONE) (planned-start-time ?st) (planned-duration ?d)) 
+  (not (pddl-action (id ?o-id&:(neq ?id ?o-id)) (plan ?plan-id) (state ~DONE) (planned-start-time ?st) (planned-duration ?d)))
+  ?pt <- (plan-timeline (plan-id ?plan-id) (current-time ?st))
+  =>
+  (modify ?pt (current-time (+ ?st ?d))) 
 )
 
 (defrule cx-pddl-clips-agent-print-exec-times
