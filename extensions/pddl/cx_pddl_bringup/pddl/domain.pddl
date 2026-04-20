@@ -33,12 +33,13 @@
             (and
                 (at start (clear ?ob))
                 (at start (on-table ?ob))
-                (at start (arm-empty)))
+                ;(at start (arm-empty))
+            )
         :effect
             (and
                 (at end (not (on-table ?ob)))
                 (at end (not (clear ?ob)))
-                (at end (not (arm-empty)))
+                ;(at end (not (arm-empty)))
                 (at end (holding ?ob))))
 
     (:durative-action put-down
@@ -49,7 +50,7 @@
             (and
                 (at end (not (holding ?ob)))
                 (at end (clear ?ob))
-                (at end (arm-empty))
+                ;(at end (arm-empty))
                 (at end (on-table ?ob)))
     )
 
@@ -62,7 +63,7 @@
                 (at end (not (holding ?ob1)))
                 (at end (not (clear ?ob2)))
                 (at end (clear ?ob1))
-                (at end (arm-empty))
+                ;(at end (arm-empty))
                 (at end (on ?ob1 ?ob2)))
     )
 
@@ -72,14 +73,14 @@
         :condition
             (and
                 (at start (on ?ob1 ?ob2))
-                (at start (clear ?ob1))
-                (at start (arm-empty)))
+                (at start (clear ?ob1)))
+                ;(at start (arm-empty)))
         :effect
             (and
                 (at end (holding ?ob1))
                 (at end (clear ?ob2))
-                (at end (not (clear ?ob1)))
-                (at end (not (arm-empty)))
+                (at start (not (clear ?ob1)))
+                ;(at end (not (arm-empty)))
                 (at end (not (on ?ob1 ?ob2))))
     )
 );

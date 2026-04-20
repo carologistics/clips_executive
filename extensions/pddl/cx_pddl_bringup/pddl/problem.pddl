@@ -16,19 +16,22 @@
 (define (problem bw-1)
     (:domain blocksworld)
 
-    (:objects A B C - block)
+    (:objects A B C D - block)
 
     (:init
         (arm-empty)
         (on-table A)
+        (on-table D)
+        (on C D)
         (on B A)
-        (on C B)
         (clear C)
+        (clear B)
     )
 
     (:goal
         (and
-            (on A B)
+            (on D B)
+            (on-table C)
             (on B C)
         )
     )
