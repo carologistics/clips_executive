@@ -42,13 +42,13 @@ CLIPSLogger::CLIPSLogger(const char * component, bool log_to_file, bool stdout_t
 {
   auto now = std::chrono::system_clock::now();
   std::time_t now_time = std::chrono::system_clock::to_time_t(now);
+  std::string base_name = component_ ? std::string(component_) : "clips";
 
   if (log_to_file) {
     std::ostringstream oss;
     oss << std::put_time(std::localtime(&now_time), "%Y-%m-%d-%H-%M-%S");
 
     std::string formatted_time = oss.str();
-    std::string base_name = component_ ? std::string(component_) : "clips";
 #if defined(HUMBLE) || defined(JAZZY)
     std::string log_dir = rclcpp::get_logging_directory().string();
 #else
@@ -70,16 +70,15 @@ CLIPSLogger::CLIPSLogger(const char * component, bool log_to_file, bool stdout_t
   } else {
     // Disable the logger by setting the log level to a level that filters out
     // all messages
-    clips_logger_ = spdlog::stdout_color_mt("console");
+    clips_logger_ = spdlog::stdout_color_mt(base_name);
     clips_logger_->set_level(spdlog::level::off);
   }
 }
 
 CLIPSLogger::~CLIPSLogger()
 {
-  if (component_) {
-    free(component_);
-  }
+  std::string base_name = component_ ? std::string(component_) : "clips";
+  spdlog::drop(base_name);
 }
 void CLIPSLogger::log(const char * logical_name, const char * str)
 {
