@@ -52,8 +52,6 @@ public:
   explicit CLIPSEnvManager(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
   ~CLIPSEnvManager();
   using CallbackReturn = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
-  // using EnvsMap = std::unordered_map<std::string,
-  // cx::LockSharedPtr<clips::Environment>>;
 
   CallbackReturn on_configure(const rclcpp_lifecycle::State & state);
   CallbackReturn on_activate(const rclcpp_lifecycle::State & state);
@@ -61,11 +59,6 @@ public:
   CallbackReturn on_shutdown(const rclcpp_lifecycle::State & state);
   CallbackReturn on_error(const rclcpp_lifecycle::State & state);
 
-  // std::map<std::string, LockSharedPtr<clips::Environment>>
-  // getEnvironments() const;
-
-  // LockSharedPtr<clips::Environment>
-  // getEnvironmentByName(const std::string &env_name);
   void list_envs_callback(
     const std::shared_ptr<rmw_request_id_t> request_header,
     const std::shared_ptr<cx_msgs::srv::ListClipsEnvs::Request> request,
@@ -85,12 +78,6 @@ private:
   std::shared_ptr<clips::Environment> new_env(const std::string & env_name);
 
   bool delete_env(const std::string & env_name);
-  // void assert_plugins(LockSharedPtr<clips::Environment> &clips,
-  //                     bool immediate_assert);
-  // void add_functions(const std::string &env_name);
-  // bool guarded_load(LockSharedPtr<clips::Environment> &env, const std::string
-  // &filename);
-
   // ROS2 SERVICES
   rclcpp::Service<cx_msgs::srv::ListClipsEnvs>::SharedPtr list_envs_service_;
   rclcpp::Service<cx_msgs::srv::CreateClipsEnv>::SharedPtr create_env_service_;

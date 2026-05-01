@@ -235,10 +235,7 @@ void CLIPSEnvManager::create_env_callback(
   }
   if (env_exists) {
     RCLCPP_ERROR(
-      get_logger(),
-      "CLIPS environment '%s' already exists--> Should "
-      "be signaled! (e.g. as exception)",
-      request->env_name.c_str());
+      get_logger(), "CLIPS environment '%s' already exists, skipping!", request->env_name.c_str());
     response->success = false;
     response->error = "Enviroment " + request->env_name + " already exists!";
   } else {
