@@ -74,6 +74,9 @@ public:
     const std::shared_ptr<cx_msgs::srv::DestroyClipsEnv::Request> request,
     const std::shared_ptr<cx_msgs::srv::DestroyClipsEnv::Response> response);
 
+  void run_cleanups();
+  void destroy_bond();
+
 private:
   std::shared_ptr<clips::Environment> new_env(const std::string & env_name);
 
@@ -85,10 +88,8 @@ private:
 
 private:
   void create_bond();
-  void destroy_bond();
   void autostart();
   void register_rcl_preshutdown_callback();
-  void run_cleanups();
   void on_rcl_preshutdown();
 
   ClipsPluginManager plugin_manager_;
