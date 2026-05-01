@@ -102,6 +102,10 @@ CLIPSEnvManager::CLIPSEnvManager(const rclcpp::NodeOptions & options)
 
 CLIPSEnvManager::~CLIPSEnvManager()
 {
+  rclcpp::Context::SharedPtr context = get_node_base_interface()->get_context();
+
+  context->remove_pre_shutdown_callback(*rcl_preshutdown_cb_handle_);
+  rcl_preshutdown_cb_handle_.reset();
   {
     std::scoped_lock envs_lock(*map_mtx_);
     if (envs_.get()) {
