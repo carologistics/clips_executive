@@ -104,8 +104,27 @@ install(TARGETS
 )
 
 if(BUILD_TESTING)
-  find_package(ament_lint_auto REQUIRED)
-  ament_lint_auto_find_test_dependencies()
+  find_package(ament_cmake_gtest REQUIRED)
+  ament_add_gtest(${PROJECT_NAME}_resolve_files_test test/test_resolve_files.cpp)
+  target_include_directories(${PROJECT_NAME}_resolve_files_test PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+  )
+
+  target_link_libraries(${PROJECT_NAME}_resolve_files_test ${PROJECT_NAME})
+  ament_add_gtest(${PROJECT_NAME}_param_utils_test test/test_param_utils.cpp)
+  target_include_directories(${PROJECT_NAME}_param_utils_test PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+  )
+  target_link_libraries(${PROJECT_NAME}_param_utils_test ${PROJECT_NAME})
+
+  ament_add_gtest(${PROJECT_NAME}_clips_logger_test test/test_clips_logger.cpp)
+  target_include_directories(${PROJECT_NAME}_clips_logger_test PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+  )
+  target_link_libraries(${PROJECT_NAME}_clips_logger_test ${PROJECT_NAME})
 endif()
 
 # -----------------------------
