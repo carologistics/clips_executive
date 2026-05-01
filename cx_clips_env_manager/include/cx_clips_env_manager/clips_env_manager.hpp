@@ -31,6 +31,7 @@
 #include "cx_msgs/srv/create_clips_env.hpp"
 #include "cx_msgs/srv/destroy_clips_env.hpp"
 #include "cx_msgs/srv/list_clips_envs.hpp"
+#include "cx_utils/clips_env_context.hpp"
 #include "lifecycle_msgs/msg/state.hpp"
 #include "lifecycle_msgs/msg/transition.hpp"
 #include "rclcpp/clock.hpp"
@@ -107,6 +108,9 @@ private:
 
   std::shared_ptr<EnvsMap> envs_;
   std::shared_ptr<std::mutex> map_mtx_;
+
+  // env_name -> context
+  std::unordered_map<std::string, std::unique_ptr<CLIPSEnvContext>> contexts_;
 
   // Connection to tell that server is still up
   std::unique_ptr<bond::Bond> bond_{nullptr};

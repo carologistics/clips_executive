@@ -297,12 +297,12 @@ bool CLIPSEnvManager::delete_env(const std::string & env_name)
       auto context = CLIPSEnvContext::get_context(env);
       std::scoped_lock env_lock(context->env_mtx_);
       clips::DeleteRouter(env.get(), ROUTER_NAME);
-      clips::DestroyEnvironment(env.get());
     }
 
     {
       std::scoped_lock lock(*map_mtx_.get());
       envs_->erase(env_name);
+      contexts_.erase(env_name);
     }
 
     RCLCPP_WARN(get_logger(), "Deleted '%s' --- Clips Environment!", env_name.c_str());
@@ -350,13 +350,16 @@ clips::WatchItem get_watch_item_from_string(const std::string & watch_str)
 
 std::shared_ptr<clips::Environment> CLIPSEnvManager::new_env(const std::string & env_name)
 {
-  std::shared_ptr<clips::Environment> clips(clips::CreateEnvironment());
+  // This function assumes that the map_mtx_ lock is already acquired
+  std::shared_ptr<clips::Environment> clips(
+    clips::CreateEnvironment(), [](clips::Environment * e) { clips::DestroyEnvironment(e); });
 
   clips::Environment * env = clips.get();
   // no locking needed, as env is not shared yet
   // silent clips by default
   clips::Unwatch(env, clips::WatchItem::ALL);
-  if (!clips::AllocateEnvironmentData(env, USER_ENVIRONMENT_DATA, sizeof(CLIPSEnvContext), NULL)) {
+  if (!clips::AllocateEnvironmentData(
+        env, USER_ENVIRONMENT_DATA, sizeof(CLIPSEnvContext *), NULL)) {
     RCLCPP_ERROR(get_logger(), "Error allocating environment data for %s", env_name.c_str());
     clips::Writeln(env, "Error allocating environment data");
     clips::ExitRouter(env, EXIT_FAILURE);
@@ -379,10 +382,12 @@ std::shared_ptr<clips::Environment> CLIPSEnvManager::new_env(const std::string &
   bool stdout_to_debug = false;
   get_parameter(env_name + ".redirect_stdout_to_debug", stdout_to_debug);
 
-  auto context = CLIPSEnvContext::get_context(env);
-  context->env_name_ = env_name;
-  // mem allocated already, so construct object in-place
-  new (&context->logger_) CLIPSLogger(env_name.c_str(), log_to_file, stdout_to_debug);
+  using clips::environmentData;
+  contexts_[env_name] = std::make_unique<CLIPSEnvContext>(env_name, log_to_file, stdout_to_debug);
+  auto context_ptr =
+    static_cast<CLIPSEnvContext **>(GetEnvironmentData(env, USER_ENVIRONMENT_DATA));
+  *context_ptr = contexts_[env_name].get();
+  CLIPSEnvContext * context = *context_ptr;
 
   clips::AddRouter(
     env, ROUTER_NAME, /*router priority*/

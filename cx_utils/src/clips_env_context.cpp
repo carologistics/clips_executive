@@ -154,17 +154,19 @@ void CLIPSLogger::log(const char * logical_name, const char * str)
     clips_logger_->info("{}", line);
   }
 }
-
 CLIPSEnvContext * CLIPSEnvContext::get_context(clips::Environment * env)
 {
   using clips::environmentData;
-  return static_cast<CLIPSEnvContext *>(GetEnvironmentData(env, USER_ENVIRONMENT_DATA));
+  auto context_ptr =
+    static_cast<CLIPSEnvContext **>(GetEnvironmentData(env, USER_ENVIRONMENT_DATA));
+  return *context_ptr;
 }
 
 CLIPSEnvContext * CLIPSEnvContext::get_context(std::shared_ptr<clips::Environment> & env)
 {
   using clips::environmentData;
-  return static_cast<CLIPSEnvContext *>(GetEnvironmentData(env.get(), USER_ENVIRONMENT_DATA));
+  auto context_ptr =
+    static_cast<CLIPSEnvContext **>(GetEnvironmentData(env.get(), USER_ENVIRONMENT_DATA));
+  return *context_ptr;
 }
-
 }  // namespace cx
