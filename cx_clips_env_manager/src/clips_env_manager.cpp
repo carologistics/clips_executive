@@ -88,7 +88,7 @@ CLIPSEnvManager::CLIPSEnvManager(const rclcpp::NodeOptions & options)
 
   cx::cx_utils::declare_parameter_if_not_declared(
     this, "bond_heartbeat_period", rclcpp::ParameterValue(0.0));
-  get_parameter("bond_heartbeat_period", bond_heartbeat_period);
+  get_parameter("bond_heartbeat_period", bond_heartbeat_period_);
 
   bool autostart_node = false;
   cx::cx_utils::declare_parameter_if_not_declared(
@@ -454,12 +454,12 @@ void CLIPSEnvManager::register_rcl_preshutdown_callback()
 
 void CLIPSEnvManager::create_bond()
 {
-  if (bond_heartbeat_period > 0.0) {
+  if (bond_heartbeat_period_ > 0.0) {
     RCLCPP_INFO(get_logger(), "Creating bond (%s) to lifecycle manager.", this->get_name());
 
     bond_ = std::make_unique<bond::Bond>(std::string("bond"), this->get_name(), shared_from_this());
 
-    bond_->setHeartbeatPeriod(bond_heartbeat_period);
+    bond_->setHeartbeatPeriod(bond_heartbeat_period_);
     bond_->setHeartbeatTimeout(4.0);
     bond_->start();
   }
@@ -467,7 +467,7 @@ void CLIPSEnvManager::create_bond()
 
 void CLIPSEnvManager::destroy_bond()
 {
-  if (bond_heartbeat_period > 0.0) {
+  if (bond_heartbeat_period_ > 0.0) {
     RCLCPP_INFO(get_logger(), "Destroying bond (%s) to lifecycle manager.", this->get_name());
 
     if (bond_) {

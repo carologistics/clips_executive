@@ -101,7 +101,7 @@ private:
 
   // Connection to tell that server is still up
   std::unique_ptr<bond::Bond> bond_{nullptr};
-  double bond_heartbeat_period;
+  double bond_heartbeat_period_;
   rclcpp::TimerBase::SharedPtr autostart_timer_;
   std::unique_ptr<rclcpp::PreShutdownCallbackHandle> rcl_preshutdown_cb_handle_{nullptr};
 };
