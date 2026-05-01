@@ -243,7 +243,13 @@ void CLIPSEnvManager::create_env_callback(
     response->success = false;
     response->error = "Enviroment " + request->env_name + " already exists!";
   } else {
-    std::shared_ptr<clips::Environment> clips = new_env(request->env_name);
+    std::shared_ptr<clips::Environment> clips;
+    try {
+      clips = new_env(request->env_name);
+    } catch (const std::invalid_argument & e) {
+      RCLCPP_ERROR(
+        get_logger(), "Failed to create environment %s: %s", request->env_name.c_str(), e.what());
+    }
 
     const std::string & env_name = request->env_name;
 
