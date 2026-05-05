@@ -13,11 +13,10 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
-(defrule protobuf-init-example-client-server
+(defrule protobuf-init-example-client
   (not (executive-finalize))
   (not (client ?any-c-id))
   =>
-  (pb-server-enable 4446)
   (bind ?res (pb-connect 127.0.0.1 4446))
   (printout green "Connect to server: " ?res crlf)
   (assert (client ?res))
@@ -38,24 +37,10 @@
   (pb-destroy ?msg)
 )
 
-(defrule protobuf-msg-read
-  (protobuf-msg (type ?type) (comp-id ?comp-id) (msg-type ?msg-type)
-    (rcvd-via ?via) (rcvd-from ?address ?port) (rcvd-at ?rcvd-at)
-    (client-type ?c-type) (client-id ?c-id) (ptr ?ptr))
-  =>
-  (printout blue ?c-id "("?c-type") received" ?type
-    " (" ?comp-id " " ?msg-type ") from " ?address ":" ?port "
-    " (- (now)  ?rcvd-at) "s ago" crlf
-  )
-  (bind ?var (pb-tostring ?ptr))
-  (printout yellow ?var crlf)
-)
-
 (defrule protobuf-close
   (executive-finalize)
   ?f <- (client ?any-client)
   =>
   (pb-disconnect ?any-client)
-  (pb-server-disable)
   (retract ?f)
 )

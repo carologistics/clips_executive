@@ -14,27 +14,29 @@
 ; limitations under the License.
 
 (defrule protobuf-init-example-peer
+  (not (executive-finalize))
   (not (peer ?any-peer-id))
   =>
   (bind ?peer-1 (pb-peer-create-local 127.0.0.1 4444 4445))
-  (bind ?peer-2 (pb-peer-create-local 127.0.0.1 4445 4444))
-  (assert (peer ?peer-1))
-  (assert (peer ?peer-2))
+  (assert (peer ?peer-1 4444 4445))
+  (printout green "127.0.0.1 4444 4445" crlf)
+  (assert (started (now)))
 )
 
-(defrule peer-send-msg
-  (peer ?peer-id)
-  (not (protobuf-msg))
+(defrule protobuf-send-msg
+  (peer ?peer-id ?source ?target)
+  (started ?start)
+  (time ?now&:(> ?now (+ ?start 1)))
   =>
   (bind ?msg (pb-create "SearchRequest"))
   (pb-set-field ?msg "query" "hello")
-  (pb-set-field ?msg "page_number" ?peer-id)
-  (pb-set-field ?msg "results_per_page" ?peer-id)
+  (pb-set-field ?msg "page_number" ?source)
+  (pb-set-field ?msg "results_per_page" ?target)
   (pb-broadcast ?peer-id ?msg)
   (pb-destroy ?msg)
 )
 
-(defrule protobuf-msg-read
+(defrule protobuf-read-msg
   (protobuf-msg (type ?type) (comp-id ?comp-id) (msg-type ?msg-type)
     (rcvd-via ?via) (rcvd-from ?address ?port) (rcvd-at ?rcvd-at)
     (client-type ?c-type) (client-id ?c-id) (ptr ?ptr))
@@ -47,10 +49,9 @@
   (printout yellow ?var crlf)
 )
 
-
 (defrule protobuf-close-peer
   (executive-finalize)
-  ?f <- (peer ?any-peer-id)
+  ?f <- (peer ?any-peer-id $?)
   =>
   (pb-peer-destroy ?any-peer-id)
   (retract ?f)
