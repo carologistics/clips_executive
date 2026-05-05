@@ -193,16 +193,16 @@ bool {{name_camel}}::clips_env_init(std::shared_ptr<clips::Environment> &env) {
   fun_name = "{{name_kebab}}-send-request";
   function_names_.insert(fun_name);
   clips::AddUDF(
-    env.get(), fun_name.c_str(), "v", 2, 2, ";e;sy",
+    env.get(), fun_name.c_str(), "bl", 2, 2, ";e;sy",
     [](clips::Environment *env, clips::UDFContext *udfc,
-       clips::UDFValue * /*out*/) {
+       clips::UDFValue * out) {
       auto *instance = static_cast<{{name_camel}} *>(udfc->context);
       clips::UDFValue request, service_name;
       using namespace clips;
       clips::UDFNthArgument(udfc, 1, EXTERNAL_ADDRESS_BIT, &request);
       clips::UDFNthArgument(udfc, 2, LEXEME_BITS, &service_name);
 
-      instance->send_request(env, static_cast<{{message_type}}::Request*>(request.externalAddressValue->contents), service_name.lexemeValue->contents);
+      *out = instance->send_request(env, static_cast<{{message_type}}::Request*>(request.externalAddressValue->contents), service_name.lexemeValue->contents);
     },
     "send_request", this);
 
@@ -215,6 +215,7 @@ bool {{name_camel}}::clips_env_init(std::shared_ptr<clips::Environment> &env) {
   clips::Build(env.get(),"(deftemplate {{name_kebab}}-response \
             (slot service (type STRING) ) \
             (slot msg-ptr (type EXTERNAL-ADDRESS)) \
+            (slot request-id (type INTEGER)) \
             )");
 
 
@@ -236,44 +237,50 @@ bool {{name_camel}}::clips_env_init(std::shared_ptr<clips::Environment> &env) {
 {% include 'create.jinja.cpp' with context %}
 {% include 'destroy.jinja.cpp' with context %}
 
-void {{name_camel}}::send_request(clips::Environment *env, {{message_type}}::Request *req, const std::string &service_name) {
+clips::UDFValue {{name_camel}}::send_request(clips::Environment *env, {{message_type}}::Request *req, const std::string &service_name) {
   using namespace std::chrono_literals;
-  {{message_type}}::Request::SharedPtr req_shared = std::make_shared<{{message_type}}::Request>(*req);
 
-   // Handle the result asynchronously to not block clips engine potentially endlessly
-  std::thread([this, req_shared, service_name, env]() {
+  {{message_type}}::Request::SharedPtr req_shared = std::make_shared<{{message_type}}::Request>(*req);
+  clips::UDFValue result;
   auto context = CLIPSEnvContext::get_context(env);
   std::string env_name = context->env_name_;
-  bool print_warning = true;
-  while (!clients_[env_name][service_name]->wait_for_service(1s)) {
-    if (stop_flag_ || !rclcpp::ok()) {
-      RCLCPP_ERROR(*logger_, "Interrupted while waiting for the service. Exiting.");
-      return;
-    }
-    if(print_warning) {
-      RCLCPP_WARN(*logger_, "service %s not available, start waiting", service_name.c_str());
-      print_warning = false;
-    }
-    RCLCPP_DEBUG(*logger_, "service %s not available, waiting again...", service_name.c_str());
-  }
-  if(!print_warning) {
-      RCLCPP_INFO(*logger_, "service %s is finally reachable", service_name.c_str());
-  }
-  std::shared_ptr<{{message_type}}::Response> resp;
   {
     std::scoped_lock map_lock{map_mtx_};
-    auto future = clients_[env_name][service_name]->async_send_request(req_shared);
-    resp = future.get();
-    responses_.try_emplace(resp.get(), resp);
+    if (!clients_[env_name][service_name]->wait_for_service(1s)) {
+      RCLCPP_WARN(*logger_, "service %s not available, abort request.", service_name.c_str());
+      result.value = clips::CreateBoolean(env, false);
+      return result;
+    }
   }
-   std::lock_guard<std::mutex> guard(context->env_mtx_);
-   clips::FactBuilder *fact_builder = clips::CreateFactBuilder(env, "{{name_kebab}}-response");
-   clips::FBPutSlotString(fact_builder,"service",service_name.c_str());
-   clips::FBPutSlotCLIPSExternalAddress(fact_builder,"msg-ptr", clips::CreateCExternalAddress(env, resp.get()));
-   clips::FBAssert(fact_builder);
-   clips::FBDispose(fact_builder);
+
+  rclcpp::Client<{{message_type}}>::SharedFuture future;
+  int id = 0;
+  {
+    std::scoped_lock map_lock{map_mtx_};
+    rclcpp::Client<std_srvs::srv::SetBool>::FutureAndRequestId fut_and_req = clients_[env_name][service_name]->async_send_request(req_shared);
+    future = fut_and_req.share();
+    id = fut_and_req.request_id;
+  }
+
+   // Handle the result asynchronously to not block clips engine potentially endlessly
+  std::thread([this, req_shared, service_name, env, id, future, env_name]() {
+    auto context = CLIPSEnvContext::get_context(env);
+    std::shared_ptr<{{message_type}}::Response> resp = future.get();
+    {
+     std::scoped_lock map_lock{map_mtx_};
+     responses_.try_emplace(resp.get(), resp);
+    }
+    std::lock_guard<std::mutex> guard(context->env_mtx_);
+    clips::FactBuilder *fact_builder = clips::CreateFactBuilder(env, "{{name_kebab}}-response");
+    clips::FBPutSlotString(fact_builder,"service",service_name.c_str());
+    clips::FBPutSlotCLIPSExternalAddress(fact_builder,"msg-ptr", clips::CreateCExternalAddress(env, resp.get()));
+    clips::FBPutSlotInteger(fact_builder,"request-id",id);
+    clips::FBAssert(fact_builder);
+    clips::FBDispose(fact_builder);
 
   }).detach();
+  result.value = clips::CreateInteger(env, id);
+  return result;
 }
 
 void {{name_camel}}::create_new_service(clips::Environment *env, const std::string &service_name) {

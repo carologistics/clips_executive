@@ -41,7 +41,11 @@ Facts
 
   ; Asserted by the callback of a client once a response arrives.
   ; Process the response and then call response-destroy before retracting!
-  (<pkg-kebab>-<srv-kebab>-response (service ?service-name-string) (msg-ptr ?msg-ptr))
+  (<pkg-kebab>-<srv-kebab>-response
+    (service ?service-name-string)
+    (msg-ptr ?msg-ptr)
+    (request-id ?request-id-int)
+  )
 
 Functions
 ~~~~~~~~~
@@ -58,7 +62,7 @@ Functions
   ; Send a request to a service provider
   ; Requires the client to be created first using create-client.
   ; Callback will assert a response fact once received.
-  (<pkg-kebab>-<srv-kebab>-send-request ?msg-ptr ?topic-name)
+  (bind ?request-id-int (<pkg-kebab>-<srv-kebab>-send-request ?msg-ptr ?topic-name))
 
   ; Creating, destroying and processing of requests
   (bind ?msg-ptr (<pkg-kebab>-<srv-kebab>-request-create))
