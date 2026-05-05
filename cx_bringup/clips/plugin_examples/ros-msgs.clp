@@ -48,7 +48,7 @@
   =>
   (printout yellow "Sending Hello World Message!" crlf)
   (bind ?msg (ros-msgs-create-message "std_msgs/msg/String"))
-  (ros-msgs-set-field ?msg "data" "Hello world!")
+  (ros-msgs-set-field ?msg "data" "Hello World!")
   (ros-msgs-publish ?msg ?topic)
   (ros-msgs-destroy-message ?msg)
 )
