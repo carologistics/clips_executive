@@ -92,18 +92,26 @@ void ConfigPlugin::clips_config_load(
     }
     YAML::Node config = YAML::LoadFile(file);
     YAML::Node config_main = config;
-    std::istringstream path_stream(sanitized_cfg_prefix);
-    std::string segment;
-    while (std::getline(path_stream, segment, '/')) {
-      if (!segment.empty()) {
-        config_main = config_main[segment];
-        if (!config_main) {
-          RCLCPP_ERROR(*logger_, "Segment '%s' not found in YAML file.", segment.c_str());
-          break;
-        }
+    auto segments = splitPath(sanitized_cfg_prefix);
+
+    sanitized_cfg_prefix = "";
+    for (const auto & segment : segments) {
+      sanitized_cfg_prefix += "/" + segment;  // reconstruct to strip ''
+      config_main = config_main[segment];
+      if (!config_main) {
+        RCLCPP_ERROR(*logger_, "Segment '%s' not found in YAML file.", segment.c_str());
+        break;
       }
     }
-    iterateThroughYamlRecuresively(config_main, sanitized_cfg_prefix, env);
+    if (config_main.IsMap()) {
+      iterateThroughYamlRecuresively(config_main, sanitized_cfg_prefix, env);
+    } else if (config_main.IsSequence()) {
+      sequenceIterator(config_main, sanitized_cfg_prefix, env);
+    } else if (config_main.IsScalar()) {
+      emitScalar(config_main, sanitized_cfg_prefix, env);
+    } else {
+      RCLCPP_ERROR(*logger_, "Unsupported root node type after prefix traversal");
+    }
   } catch (const std::exception & e) {
     RCLCPP_ERROR_STREAM(*logger_, e.what());
     RCLCPP_WARN(*logger_, "Aborting config loading...");
@@ -134,43 +142,8 @@ void ConfigPlugin::iterateThroughYamlRecuresively(
 
       // If it is a ScalarNode -> Single key/value pair
       case YAML::NodeType::Scalar: {
-        type = std::move(getScalarType(item.second));
         path = config_path + "/" + item.first.as<std::string>();
-
-        if (type == "STRING") {
-          std::stringstream escaped_quotes;
-          escaped_quotes << std::quoted(item.second.as<std::string>());
-          // RCLCPP_INFO(*logger_,
-          //             "(confval (path \"%s\") (type %s) (value %s))",
-          //             path.c_str(), type.c_str(),
-          //             escaped_quotes.str().c_str());
-
-          clips::AssertString(
-            env, cx::format(
-                   "(confval (path \"{}\") (type {}) (value {}))", path.c_str(), type.c_str(),
-                   escaped_quotes.str().c_str())
-                   .c_str());
-        } else {
-          // RCLCPP_INFO(*logger_,
-          //             "(confval (path \"%s\") (type %s) (value %s))",
-          //             path.c_str(), type.c_str(),
-          //             item.second.as<std::string>().c_str());
-          if (item.second.as<std::string>() == "true" || item.second.as<std::string>() == "false") {
-            std::string val = item.second.as<std::string>();
-            std::transform(val.begin(), val.end(), val.begin(), ::toupper);
-            clips::AssertString(
-              env, cx::format(
-                     "(confval (path \"{}\") (type {}) (value {}))", path.c_str(), type.c_str(),
-                     val.c_str())
-                     .c_str());
-          } else {
-            clips::AssertString(
-              env, cx::format(
-                     "(confval (path \"{}\") (type {}) (value {}))", path.c_str(), type.c_str(),
-                     item.second.as<std::string>().c_str())
-                     .c_str());
-          }
-        }
+        emitScalar(item.second, path, env);
         break;
       }
 
@@ -299,6 +272,35 @@ void ConfigPlugin::sequenceIterator(
   }
 }
 
+void ConfigPlugin::emitScalar(
+  const YAML::Node & node, const std::string & path, clips::Environment * env)
+{
+  std::string type = getScalarType(node);
+
+  if (type == "STRING") {
+    std::stringstream escaped_quotes;
+    escaped_quotes << std::quoted(node.as<std::string>());
+
+    clips::AssertString(
+      env, cx::format(
+             "(confval (path \"{}\") (type {}) (value {}))", path.c_str(), type.c_str(),
+             escaped_quotes.str().c_str())
+             .c_str());
+  } else {
+    std::string val = node.as<std::string>();
+
+    if (val == "true" || val == "false") {
+      std::transform(val.begin(), val.end(), val.begin(), ::toupper);
+    }
+
+    clips::AssertString(
+      env,
+      cx::format(
+        "(confval (path \"{}\") (type {}) (value {}))", path.c_str(), type.c_str(), val.c_str())
+        .c_str());
+  }
+}
+
 std::string ConfigPlugin::getScalarType(const YAML::Node & input_node)
 {
   std::optional<bool> as_bool = YAML::as_if<bool, std::optional<bool>>(input_node)();
@@ -322,6 +324,37 @@ std::string ConfigPlugin::getScalarType(const YAML::Node & input_node)
     return "STRING";
   }
   return "UNKNOWN";
+}
+
+std::vector<std::string> ConfigPlugin::splitPath(const std::string & input)
+{
+  std::vector<std::string> result;
+  std::string current;
+  bool in_quotes = false;
+
+  for (size_t i = 0; i < input.size(); ++i) {
+    char c = input[i];
+
+    if (c == '\'') {
+      in_quotes = !in_quotes;
+      continue;
+    }
+
+    if (c == '/' && !in_quotes) {
+      if (!current.empty()) {
+        result.push_back(current);
+        current.clear();
+      }
+    } else {
+      current += c;
+    }
+  }
+
+  if (!current.empty()) {
+    result.push_back(current);
+  }
+
+  return result;
 }
 
 }  // namespace cx
