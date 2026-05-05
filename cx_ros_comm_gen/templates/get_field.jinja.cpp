@@ -26,7 +26,6 @@
 clips::UDFValue {{name_camel}}::{{template_type|snake_case}}{{snake_type_sep}}get_field(clips::Environment *env,
                                {{message_type}}{{cpp_type_sep}}{{template_type|camel_case}} *req,
                                const std::string &field, clips::UDFContext *udfc) {
-  std::scoped_lock map_lock{map_mtx_};
   clips::UDFValue res;
   std::vector<std::string> slots({ {% for slot in template_slots %}"{{ slot.name }}"{% if not loop.last %}, {% endif %}{% endfor %} });
   if(std::find(slots.begin(), slots.end(), field) == slots.end()) {
