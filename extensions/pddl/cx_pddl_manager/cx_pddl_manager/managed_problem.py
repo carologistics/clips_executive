@@ -122,8 +122,8 @@ class ManagedGoal:
                 # Create directory if it doesn't exist
                 output_path.mkdir(parents=True, exist_ok=True)
                 # Build file paths
-                domain_file = output_path / f"{self.problem.name}_{self.name}_domain.pddl"
-                problem_file = output_path / f"{self.problem.name}_{self.name}_problem.pddl"
+                domain_file = output_path / f'{self.problem.name}_{self.name}_domain.pddl'
+                problem_file = output_path / f'{self.problem.name}_{self.name}_problem.pddl'
 
                 # Write files
                 writer.write_domain(str(domain_file))
@@ -132,7 +132,7 @@ class ManagedGoal:
             except Exception as e:
                 # Handle error without crashing
                 if self.logger:
-                    self.logger.error(f"[ERROR] Failed to write PDDL files: {e}")
+                    self.logger.error(f'Failed to write PDDL files: {e}')
 
         future = self.problem.executor.submit(run_planner_process, self.problem.env, dom, prob)
         result = future.result()

@@ -593,7 +593,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
                     self.reader.parse_problem_string(domain_rendered),
                     self.env,
                     name,
-                    self.get - logger(),
+                    self.get_logger(),
                 )
             self.get_logger().debug(f'Loading domain {domain} {problem}')
             response.success = True
