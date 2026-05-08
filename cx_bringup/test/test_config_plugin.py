@@ -35,7 +35,8 @@ generate_test_description = pytest.mark.launch_test(
 
 
 def wait_for_confval(proc_output, path_suffix, cx_node, timeout=10.0, **kwargs):
-    """Wait for a confval fact matching path suffix and optional field values.
+    """
+    Wait for a confval fact matching path suffix and optional field values.
 
     All matchers are combined into a single regex to ensure they match the same line.
     path_suffix: the end of the path to match (e.g. 'environments')

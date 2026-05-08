@@ -33,7 +33,7 @@ def _assert_in_output(proc_output, expected, cx_node, timeout=10.0):
 
 
 def make_shutdown_test_class():
-    """Factory to create a post-shutdown test class with common checks."""
+    """Create a post-shutdown test class with common checks."""
 
     class BaseShutdownTest(unittest.TestCase):
 
@@ -53,7 +53,7 @@ def make_shutdown_test_class():
 
 
 def make_generate_test_description(config_yaml):
-    """Factory to create a generate_test_description function for a given yaml config."""
+    """Create a generate_test_description function for a given yaml config."""
     import launch
     from launch.substitutions import PathJoinSubstitution, TextSubstitution
     import launch_ros

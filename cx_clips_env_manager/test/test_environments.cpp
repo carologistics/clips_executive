@@ -13,14 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//#include <gtest/gtest.h>
-//
-//#include <rclcpp/rclcpp.hpp>
-//
-//#include "cx_clips_env_manager/clips_env_manager.hpp"
-//
-//#include <chrono>
-
 #include <gtest/gtest.h>
 
 #include <chrono>
