@@ -23,6 +23,7 @@ from cx_bringup_test_utils import (
     wait_for_fact_retracted,
     wait_for_output,
     wait_for_plugin_created,
+    wait_for_rule_fire,
 )
 import launch_testing
 import launch_testing.markers
@@ -58,17 +59,17 @@ class TestProtobufLinkedPluginOutput(unittest.TestCase):
             timeout=10.0,
         )
 
-    def test_server_init_rule_fires(self, cx_node, proc_output):
-        wait_for_output(
+    def test_server_init_rule_fire(self, cx_node, proc_output):
+        wait_for_rule_fire(
             proc_output,
-            '[cx_protobuf_server] [INFO] FIRE    1 protobuf-init-example-client-server',
+            'protobuf-init-example-client',
             cx_node,
         )
 
     def test_client_init_rule_fires(self, cx_node, proc_output):
-        wait_for_output(
+        wait_for_rule_fire(
             proc_output,
-            '[cx_protobuf_client] [INFO] FIRE    1 protobuf-init-example-client-server',
+            'protobuf-init-example-server',
             cx_node,
         )
 
