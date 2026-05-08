@@ -24,6 +24,7 @@
 #include <memory>
 #include <set>
 #include <string>
+#include <unordered_map>
 
 #include "bond/msg/constants.hpp"
 #include "bondcpp/bond.hpp"

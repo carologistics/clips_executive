@@ -22,6 +22,7 @@
 #include <memory>
 #include <string>
 #include <utility>
+#include <vector>
 
 #include "cx_plugin/clips_plugin.hpp"
 
