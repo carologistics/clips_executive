@@ -15,11 +15,15 @@
 
 #pragma once
 
+#include <pqxx/pqxx>
+#undef RANGES
+// RANGES is defined in clips_ns/clips.h, which causes issues with
+// pqxx/pqxx
+
 #include <cstdint>
 #include <memory>
 #include <optional>
-#include <pqxx/pqxx>
-#undef RANGES
+#include <rclcpp_lifecycle/lifecycle_node.hpp>
 
 namespace cx
 {
@@ -33,8 +37,10 @@ struct DBHandlerConfig
 };
 class DBHandler
 {
+  friend class CDBSaverPlugin;
+
 public:
-  DBHandler(DBHandlerConfig & config, bool create_db = true);
+  DBHandler(DBHandlerConfig & config, rclcpp_lifecycle::LifecycleNode::WeakPtr parent);
   ~DBHandler();
 
   void assert_fact(
@@ -77,8 +83,15 @@ public:
 
   bool init_db(DBHandlerConfig & config);
 
+  inline long long get_tick() { return tick_++; }
+
 private:
   std::shared_ptr<pqxx::connection> connection_;
   DBHandlerConfig config_;
+
+  long long tick_;
+  long long current_run_;
+
+  rclcpp_lifecycle::LifecycleNode::WeakPtr parent_;
 };
 }  // namespace cx

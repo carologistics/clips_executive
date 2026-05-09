@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>cx_cdb_plugin</name>
+  <name>cx_cdb_saver_plugin</name>
   <version>0.0.1</version>
-  <description>CLIPS Debugging Plugin that allows clips execution flow to be debugged with the CLIPS Debugger</description>
+  <description>CLIPS Debugger Saver Plugin that writes the clips execution flow to a postgresql DDB.</description>
 
   <maintainer email="tim.wendt@alumni.fh-aachen.de">Tim Wendt</maintainer>
 
@@ -21,6 +21,6 @@
 
   <export>
     <build_type>ament_cmake</build_type>
-    <cx_plugin plugin="${prefix}/cdb_plugin.xml"/>
+    <cx_plugin plugin="${prefix}/cdb_saver_plugin.xml"/>
   </export>
 </package>
