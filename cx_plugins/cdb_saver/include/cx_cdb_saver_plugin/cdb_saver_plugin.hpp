@@ -17,28 +17,26 @@
 
 #include <memory>
 #include <nlohmann/json.hpp>
+#include <string>
+#include <unordered_map>
 
+#include "cx_cdb_saver_plugin/db_handler.hpp"
 #include "cx_plugin/clips_plugin.hpp"
-#include "db_handler.hpp"
 
 namespace cx
 {
 
-struct fact_assert
-{
-  long long tick;
-  std::string value;
-};
-
-class CDBPlugin : public ClipsPlugin
+class CDBSaverPlugin : public ClipsPlugin
 {
 public:
-  CDBPlugin();
-  ~CDBPlugin();
+  CDBSaverPlugin();
+  ~CDBSaverPlugin();
 
   void initialize() override;
 
   static void cdb_assert_callback(clips::Environment *, void *, void *);
+  static void cdb_retract_callback(clips::Environment *, void *, void *);
+
   static void cdb_before_rule_callback(clips::Environment *, clips::Activation *, void *);
 
   static void cdb_before_run_callback(clips::Environment *, void *);
@@ -63,15 +61,11 @@ public:
   bool clips_env_destroyed(std::shared_ptr<clips::Environment> & env) override;
 
 private:
-  inline nlohmann::json slot_value_to_json(unsigned short type, clips::CLIPSValue * value);
-  inline std::vector<nlohmann::json> multifield_to_json_list(clips::Multifield * theSegment);
-  std::string clips_fact_to_json(clips::Fact * f, const char * deftemplate_name);
+  static inline nlohmann::json slot_value_to_json(unsigned short type, clips::CLIPSValue * value);
+  static inline std::vector<nlohmann::json> multifield_to_json_list(clips::Multifield * theSegment);
+  static std::string clips_fact_to_json(clips::Fact * f, const char * deftemplate_name);
   std::unique_ptr<rclcpp::Logger> logger_;
-  bool started_ = false;
-  static long long tick_;
-  static inline long long get_tick() { return tick_++; }
-  static long long current_run_;
 
-  static std::shared_ptr<DBHandler> db_;
+  std::unordered_map<std::string, std::unique_ptr<DBHandler>> db_handlers_;
 };
 }  // namespace cx

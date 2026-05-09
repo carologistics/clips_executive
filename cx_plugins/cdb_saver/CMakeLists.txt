@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(cx_cdb_plugin)
+project(cx_cdb_saver_plugin)
 
 # Default to C++17
 if(NOT CMAKE_CXX_STANDARD)
@@ -34,9 +34,9 @@ set(dependencies
 
 include_directories(include)
 
-pluginlib_export_plugin_description_file(cx_plugin cdb_plugin.xml)
+pluginlib_export_plugin_description_file(cx_plugin cdb_saver_plugin.xml)
 
-add_library(${PROJECT_NAME} SHARED src/cdb_plugin.cpp src/db_handler.cpp)
+add_library(${PROJECT_NAME} SHARED src/cdb_saver_plugin.cpp src/db_handler.cpp)
 target_link_libraries(${PROJECT_NAME} ClipsNS::libclips_ns PkgConfig::LIBPQXX)
 ament_target_dependencies(${PROJECT_NAME} ${dependencies})
 
@@ -48,7 +48,7 @@ install(
 )
 
 install(
-  FILES cdb_plugin.xml
+  FILES cdb_saver_plugin.xml
   DESTINATION share/${PROJECT_NAME}
 )
 

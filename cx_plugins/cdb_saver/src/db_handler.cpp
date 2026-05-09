@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "cx_cdb_plugin/db_handler.hpp"
+#include "cx_cdb_saver_plugin/db_handler.hpp"
 
 #include <iostream>
 #include <sstream>
@@ -23,12 +23,14 @@
 namespace cx
 {
 
-DBHandler::DBHandler(DBHandlerConfig & config, bool create_db) : config_(config)
+DBHandler::DBHandler(DBHandlerConfig & config, rclcpp_lifecycle::LifecycleNode::WeakPtr parent)
+: config_(config), parent_(parent)
 {
-  if (create_db) {
-    if (!init_db(config)) {
-      throw(std::runtime_error("Failed to initialize database"));
-    }
+  tick_ = 0;
+  current_run_ = -1;
+
+  if (!init_db(config)) {
+    throw(std::runtime_error("Failed to initialize database"));
   }
   try {
     std::string connection_settings{
@@ -422,10 +424,6 @@ bool DBHandler::init_db(DBHandlerConfig & config)
   if (admin_connection.is_open()) {
     pqxx::nontransaction n(admin_connection);
     n.exec("CREATE DATABASE " + config.db_name + " WITH OWNER " + config.username + ";");
-    // while(!n.exec("SELECT 1 FROM pg_database WHERE datname = '" +
-    // config.db_name + "';").empty()) {
-    //   std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    // }
     admin_connection.close();
   } else {
     return false;

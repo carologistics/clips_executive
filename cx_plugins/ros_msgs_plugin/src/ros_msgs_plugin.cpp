@@ -15,6 +15,8 @@
 
 #include "cx_ros_msgs_plugin/ros_msgs_plugin.hpp"
 
+#include <clips_ns/factmngr.h>
+
 #include <string>
 
 #include "cx_utils/clips_env_context.hpp"
