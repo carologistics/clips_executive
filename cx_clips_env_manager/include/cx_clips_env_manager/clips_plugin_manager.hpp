@@ -43,6 +43,9 @@ public:
   ClipsPluginManager();
   ~ClipsPluginManager();
 
+  using PluginCallback =
+    std::function<void(const std::string & env_name, const std::string & plugin_name)>;
+
   using PluginsMap = std::unordered_map<std::string, cx::ClipsPlugin::Ptr>;
 
   void configure(
@@ -88,6 +91,12 @@ public:
     const std::shared_ptr<cx_msgs::srv::ListClipsPlugins::Request> request,
     const std::shared_ptr<cx_msgs::srv::ListClipsPlugins::Response> response);
 
+  void add_plugin_load_callback(const std::string & callback_name, const PluginCallback & callback);
+  void add_plugin_unload_callback(
+    const std::string & callback_name, const PluginCallback & callback);
+  bool remove_plugin_load_callback(const std::string & callback_name);
+  bool remove_plugin_unload_callback(const std::string & callback_name);
+
 private:
   bool load_plugin_for_env(
     const std::string & plugin, const std::string & env_name,
@@ -105,6 +114,9 @@ private:
   std::shared_ptr<std::mutex> map_mtx_;
 
   std::unordered_map<std::string, std::vector<std::string>> loaded_plugins_;
+
+  std::unordered_map<std::string, PluginCallback> plugin_load_callbacks_;
+  std::unordered_map<std::string, PluginCallback> plugin_unload_callbacks_;
 
   PluginsMap plugins_;
 
