@@ -16,6 +16,7 @@
   <depend>pluginlib</depend>
   <depend>cx_plugin</depend>
   <depend>cx_utils</depend>
+  <depend>cx_clips_env_manager</depend>
   <depend>clips_vendor</depend>
   <depend>libpqxx</depend>
 

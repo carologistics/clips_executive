@@ -125,6 +125,15 @@ CREATE TABLE deffacts (
   end_tick   BIGINT
 );
 
+CREATE TABLE plugins (
+  name        TEXT NOT NULL PRIMARY KEY,
+  start_tick  BIGINT NOT NULL,
+  end_tick    BIGINT,
+  config      JSONB NOT NULL DEFAULT '{}'::jsonb,
+
+  CHECK (end_tick IS NULL OR end_tick >= start_tick)
+);
+
 CREATE UNIQUE INDEX defglobals_active_unique
 ON defglobals (name, module)
 WHERE end_tick IS NULL;
@@ -143,6 +152,10 @@ WHERE end_tick IS NULL;
 
 CREATE UNIQUE INDEX deffacts_active_unique
 ON deffacts (name, module)
+WHERE end_tick IS NULL;
+
+CREATE UNIQUE INDEX plugins_active_unique
+ON plugins (name)
 WHERE end_tick IS NULL;
 
 CREATE OR REPLACE FUNCTION assert_fact_upsert(
@@ -355,6 +368,36 @@ BEGIN
 
     IF NOT FOUND THEN
         RAISE EXCEPTION 'deffacts %.% not found or already retracted', p_module, p_name;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION plugin_load(
+    p_name TEXT,
+    p_tick BIGINT,
+    p_config JSONB DEFAULT '[]'::jsonb
+) RETURNS void AS $$
+BEGIN
+    INSERT INTO plugins (name, start_tick, end_tick, config)
+    VALUES (p_name, p_tick, NULL, p_config);
+
+EXCEPTION WHEN unique_violation THEN
+    RAISE EXCEPTION 'plugin % already loaded', p_name;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION plugin_unload(
+    p_name TEXT,
+    p_tick BIGINT
+) RETURNS void AS $$
+BEGIN
+    UPDATE plugins
+    SET end_tick = p_tick
+    WHERE name = p_name
+      AND end_tick IS NULL;
+
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'plugin % not found or already unloaded', p_name;
     END IF;
 END;
 $$ LANGUAGE plpgsql;
@@ -670,6 +713,33 @@ void DBHandler::assert_rule_fired(
     w.commit();
   } catch (const std::exception & e) {
     throw std::runtime_error("Failed to assert rule firing: " + std::string(e.what()));
+  }
+}
+
+void DBHandler::load_plugin(
+  const std::string & plugin_name, const std::string & config_json, long long tick)
+{
+  try {
+    pqxx::work w(*connection_);
+
+    w.exec_params("SELECT plugin_load($1, $2, $3::jsonb);", plugin_name, tick, config_json);
+
+    w.commit();
+  } catch (const std::exception & e) {
+    throw std::runtime_error("Failed to assert plugin load: " + std::string(e.what()));
+  }
+}
+
+void DBHandler::unload_plugin(const std::string & plugin_name, long long tick)
+{
+  try {
+    pqxx::work w(*connection_);
+
+    w.exec_params("SELECT plugin_unload($1, $2);", plugin_name, tick);
+
+    w.commit();
+  } catch (const std::exception & e) {
+    throw std::runtime_error("Failed to assert plugin unload: " + std::string(e.what()));
   }
 }
 

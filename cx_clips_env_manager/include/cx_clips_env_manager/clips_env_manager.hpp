@@ -62,6 +62,8 @@ public:
   CallbackReturn on_shutdown(const rclcpp_lifecycle::State & state);
   CallbackReturn on_error(const rclcpp_lifecycle::State & state);
 
+  ClipsPluginManager & get_plugin_manager() { return plugin_manager_; }
+
   void list_envs_callback(
     const std::shared_ptr<rmw_request_id_t> request_header,
     const std::shared_ptr<cx_msgs::srv::ListClipsEnvs::Request> request,

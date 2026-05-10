@@ -22,6 +22,7 @@
 
 #include "cx_cdb_saver_plugin/db_handler.hpp"
 #include "cx_plugin/clips_plugin.hpp"
+#include "rcl_interfaces/msg/list_parameters_result.hpp"
 
 namespace cx
 {
@@ -33,6 +34,7 @@ public:
   ~CDBSaverPlugin();
 
   void initialize() override;
+  void finalize() override;
 
   static void cdb_assert_callback(clips::Environment *, void *, void *);
   static void cdb_retract_callback(clips::Environment *, void *, void *);
@@ -60,9 +62,15 @@ public:
   bool clips_env_init(std::shared_ptr<clips::Environment> & env) override;
   bool clips_env_destroyed(std::shared_ptr<clips::Environment> & env) override;
 
+  void plugin_load_callback(const std::string & env_name, const std::string & plugin_name);
+  void plugin_unload_callback(const std::string & env_name, const std::string & plugin_name);
+
 private:
   static inline nlohmann::json slot_value_to_json(unsigned short type, clips::CLIPSValue * value);
   static inline std::vector<nlohmann::json> multifield_to_json_list(clips::Multifield * theSegment);
+  inline nlohmann::json parameter_list_to_json(
+    const rcl_interfaces::msg::ListParametersResult & parameters);
+
   static std::string clips_fact_to_json(clips::Fact * f, const char * deftemplate_name);
   std::unique_ptr<rclcpp::Logger> logger_;
 

@@ -14,7 +14,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <memory>
 #include <pqxx/pqxx>
+
+#include "cx_msgs/srv/list_clips_plugins.hpp"
+#include "rcl_interfaces/msg/list_parameters_result.hpp"
 #undef RANGES
 // RANGES is defined in clips_ns/clips.h, which causes issues with
 // pqxx/pqxx. It needs to be included before clips_ns/clips.h to avoid compilation errors.
@@ -31,6 +35,8 @@
 #include "cx_cdb_saver_plugin/cdb_saver_plugin.hpp"
 
 // To export as plugin
+#include "cx_clips_env_manager/clips_env_manager.hpp"
+#include "cx_clips_env_manager/clips_plugin_manager.hpp"
 #include "pluginlib/class_list_macros.hpp"
 
 namespace cx
@@ -49,6 +55,17 @@ void CDBSaverPlugin::initialize()
     return;
   }
 
+  CLIPSEnvManager * env_manager = static_cast<CLIPSEnvManager *>(parent_.lock().get());
+
+  env_manager->get_plugin_manager().add_plugin_load_callback(
+    "cdb_plugin_load_callback",
+    std::bind(
+      &CDBSaverPlugin::plugin_load_callback, this, std::placeholders::_1, std::placeholders::_2));
+  env_manager->get_plugin_manager().add_plugin_unload_callback(
+    "cdb_plugin_unload_callback",
+    std::bind(
+      &CDBSaverPlugin::plugin_unload_callback, this, std::placeholders::_1, std::placeholders::_2));
+
   cx::cx_utils::declare_parameter_if_not_declared(
     node, plugin_name_ + ".hostname", rclcpp::ParameterValue("localhost"));
   cx::cx_utils::declare_parameter_if_not_declared(
@@ -57,6 +74,13 @@ void CDBSaverPlugin::initialize()
     node, plugin_name_ + ".username", rclcpp::ParameterValue("anonymous"));
   cx::cx_utils::declare_parameter_if_not_declared(
     node, plugin_name_ + ".password", rclcpp::ParameterValue(std::string()));
+}
+
+void CDBSaverPlugin::finalize()
+{
+  CLIPSEnvManager * env_manager = static_cast<CLIPSEnvManager *>(parent_.lock().get());
+  env_manager->get_plugin_manager().remove_plugin_load_callback("cdb_plugin_load_callback");
+  env_manager->get_plugin_manager().remove_plugin_unload_callback("cdb_plugin_unload_callback");
 }
 
 bool CDBSaverPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
@@ -135,6 +159,15 @@ bool CDBSaverPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
     }
   }
 
+  CLIPSEnvManager * env_manager = static_cast<CLIPSEnvManager *>(parent_.lock().get());
+  std::vector<std::string> plugins = env_manager->get_plugin_manager().list_plugins(env_name);
+  for (auto plugin : plugins) {
+    rcl_interfaces::msg::ListParametersResult parameters =
+      parent_.lock()->list_parameters({plugin}, 0);
+    std::string config_json = parameter_list_to_json(parameters).dump();
+    db_handler_ptr->load_plugin(plugin, config_json, 0);
+  }
+
   clips::AddAssertFunction(
     env.get(), "cdb_assert_callback", &cdb_assert_callback, 0, db_handler_ptr);
   clips::AddRetractFunction(
@@ -178,6 +211,45 @@ bool CDBSaverPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
     env.get(), "cdb_defglobal_retract", &cdb_defglobal_retract_callback, 0, db_handler_ptr);
 
   return true;
+}
+
+void CDBSaverPlugin::plugin_load_callback(
+  const std::string & env_name, const std::string & plugin_name)
+{
+  auto db = db_handlers_.find(env_name);
+  if (db == db_handlers_.end()) {
+    return;
+  }
+
+  rcl_interfaces::msg::ListParametersResult parameters =
+    parent_.lock()->list_parameters({plugin_name}, 0);
+  std::string config_json = parameter_list_to_json(parameters).dump();
+  db->second->load_plugin(plugin_name, config_json, db->second->get_tick());
+}
+
+nlohmann::json CDBSaverPlugin::parameter_list_to_json(
+  const rcl_interfaces::msg::ListParametersResult & parameters)
+{
+  nlohmann::json json_list = nlohmann::json::array();
+  for (const auto & parameter : parameters.names) {
+    nlohmann::json param;
+    param["name"] = parameter;
+    rclcpp::Parameter value = parent_.lock()->get_parameter(parameter);
+    param["type"] = value.get_type_name();
+    param["value"] = value.value_to_string();
+    json_list.push_back(param);
+  }
+  return json_list;
+}
+
+void CDBSaverPlugin::plugin_unload_callback(
+  const std::string & env_name, const std::string & plugin_name)
+{
+  auto db = db_handlers_.find(env_name);
+  if (db == db_handlers_.end()) {
+    return;
+  }
+  db->second->unload_plugin(plugin_name, db->second->get_tick());
 }
 
 void CDBSaverPlugin::cdb_assert_callback(clips::Environment * /*env*/, void * fact, void * context)
