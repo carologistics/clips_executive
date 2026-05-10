@@ -36,9 +36,43 @@ set(dependencies
 
 include_directories(include)
 
+set(CDB_SQL_INPUT ${CMAKE_CURRENT_SOURCE_DIR}/sql/schema.sql)
+set(CDB_GENERATED_DIR ${CMAKE_CURRENT_BINARY_DIR}/generated)
+set(CDB_SQL_HEADER ${CDB_GENERATED_DIR}/cx_cdb_saver_plugin/schema_sql.hpp)
+
+add_custom_command(
+  OUTPUT ${CDB_SQL_HEADER}
+  COMMAND ${CMAKE_COMMAND}
+    -DINPUT=${CDB_SQL_INPUT}
+    -DOUTPUT=${CDB_SQL_HEADER}
+    -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/embed_sql.cmake
+  DEPENDS
+    ${CDB_SQL_INPUT}
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/embed_sql.cmake
+  COMMENT "Embedding SQL schema into header file"
+  VERBATIM
+)
+
+add_custom_target(
+  cx_cdb_saver_schema_header
+  DEPENDS ${CDB_SQL_HEADER}
+  COMMENT "Ensuring embedded SQL schema is regenerated on change"
+)
+
 pluginlib_export_plugin_description_file(cx_plugin cdb_saver_plugin.xml)
 
-add_library(${PROJECT_NAME} SHARED src/cdb_saver_plugin.cpp src/db_handler.cpp)
+add_library(${PROJECT_NAME} SHARED
+  src/cdb_saver_plugin.cpp
+  src/db_handler.cpp
+  ${CDB_SQL_HEADER}
+)
+
+target_include_directories(${PROJECT_NAME}
+  PUBLIC
+    include
+    ${CDB_GENERATED_DIR}
+)
+
 target_link_libraries(${PROJECT_NAME} ClipsNS::libclips_ns PkgConfig::LIBPQXX)
 ament_target_dependencies(${PROJECT_NAME} ${dependencies})
 
