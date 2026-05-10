@@ -81,9 +81,6 @@ void ClipsPluginManager::activate_env(
   node->get_parameter(env_name + ".plugins", plugins);
   for (const std::string & plugin : plugins) {
     load_plugin_for_env(plugin, env_name, env);
-    for (const auto & callback : plugin_load_callbacks_) {
-      callback.second(env_name, plugin);
-    }
   }
 }
 
@@ -117,6 +114,9 @@ bool ClipsPluginManager::load_plugin_for_env(
   }
   if (success) {
     loaded_plugins_[env_name].push_back(plugin);
+    for (const auto & callback : plugin_load_callbacks_) {
+      callback.second(env_name, plugin);
+    }
   }
   return success;
 }
@@ -174,10 +174,6 @@ void ClipsPluginManager::load_plugin_cb(
     response->success = load_plugin_for_env(plugin_name, env_name, clips);
     if (!response->success) {
       response->error = "error while loading plugin";
-    } else {
-      for (const auto & callback : plugin_load_callbacks_) {
-        callback.second(env_name, plugin_name);
-      }
     }
   } else {
     response->success = false;
@@ -247,6 +243,15 @@ void ClipsPluginManager::list_plugin_cb(
     response->error = "unknown environment";
     return;
   }
+}
+
+std::vector<std::string> ClipsPluginManager::list_plugins(const std::string & env_name)
+{
+  std::vector<std::string> plugin_list;
+  if (envs_->contains(env_name)) {
+    plugin_list = loaded_plugins_[env_name];
+  }
+  return plugin_list;
 }
 
 void ClipsPluginManager::add_plugin_load_callback(

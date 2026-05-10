@@ -60,6 +60,8 @@ public:
   CallbackReturn on_shutdown(const rclcpp_lifecycle::State & state);
   CallbackReturn on_error(const rclcpp_lifecycle::State & state);
 
+  ClipsPluginManager & get_plugin_manager() { return plugin_manager_; }
+
   // std::map<std::string, LockSharedPtr<clips::Environment>>
   // getEnvironments() const;
 

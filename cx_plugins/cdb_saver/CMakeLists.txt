@@ -16,6 +16,7 @@ find_package(rclcpp REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(cx_plugin REQUIRED)
 find_package(cx_utils REQUIRED)
+find_package(cx_clips_env_manager REQUIRED)
 find_package(clips_vendor REQUIRED)
 find_package(clips REQUIRED)
 find_package(PkgConfig REQUIRED)
@@ -28,6 +29,7 @@ set(dependencies
   pluginlib
   cx_plugin
   cx_utils
+  cx_clips_env_manager
   clips_vendor
   clips
 )

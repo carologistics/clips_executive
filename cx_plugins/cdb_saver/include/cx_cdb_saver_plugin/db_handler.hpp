@@ -78,6 +78,10 @@ public:
     const std::string & name, const std::string & module,
     const std::vector<std::optional<long long int>> & basis, long long tick);
 
+  void load_plugin(
+    const std::string & plugin_name, const std::string & config_json, long long tick);
+  void unload_plugin(const std::string & plugin_name, long long tick);
+
   long long start_run(int64_t start_time_ns, long long start_tick);
   void end_run(long long run_number, int64_t end_time_ns, long long end_tick);
 
