@@ -81,6 +81,9 @@ void ClipsPluginManager::activate_env(
   node->get_parameter(env_name + ".plugins", plugins);
   for (const std::string & plugin : plugins) {
     load_plugin_for_env(plugin, env_name, env);
+    for (const auto & callback : plugin_load_callbacks_) {
+      callback.second(env_name, plugin);
+    }
   }
 }
 
@@ -150,6 +153,9 @@ void ClipsPluginManager::deactivate_env(
   for (const auto & plugin : std::ranges::reverse_view(loaded_plugins_[env_name])) {
     std::scoped_lock env_lock(context->env_mtx_);
     plugins_[plugin]->clips_env_destroyed(env);
+    for (const auto & callback : plugin_unload_callbacks_) {
+      callback.second(env_name, plugin);
+    }
     RCLCPP_INFO(logger_, "[%s] Deactivated!", plugin.c_str());
   }
 }
@@ -168,6 +174,10 @@ void ClipsPluginManager::load_plugin_cb(
     response->success = load_plugin_for_env(plugin_name, env_name, clips);
     if (!response->success) {
       response->error = "error while loading plugin";
+    } else {
+      for (const auto & callback : plugin_load_callbacks_) {
+        callback.second(env_name, plugin_name);
+      }
     }
   } else {
     response->success = false;
@@ -197,6 +207,10 @@ void ClipsPluginManager::unload_plugin_cb(
       response->success = success;
       if (!success) {
         response->error = "error while unloading plugin";
+      } else {
+        for (const auto & callback : plugin_unload_callbacks_) {
+          callback.second(env_name, plugin_name);
+        }
       }
     } else {
       response->success = false;
@@ -233,6 +247,28 @@ void ClipsPluginManager::list_plugin_cb(
     response->error = "unknown environment";
     return;
   }
+}
+
+void ClipsPluginManager::add_plugin_load_callback(
+  const std::string & callback_name, const PluginCallback & callback)
+{
+  plugin_load_callbacks_[callback_name] = callback;
+}
+
+void ClipsPluginManager::add_plugin_unload_callback(
+  const std::string & callback_name, const PluginCallback & callback)
+{
+  plugin_unload_callbacks_[callback_name] = callback;
+}
+
+bool ClipsPluginManager::remove_plugin_load_callback(const std::string & callback_name)
+{
+  return plugin_load_callbacks_.erase(callback_name) > 0;
+}
+
+bool ClipsPluginManager::remove_plugin_unload_callback(const std::string & callback_name)
+{
+  return plugin_unload_callbacks_.erase(callback_name) > 0;
 }
 
 }  // namespace cx
