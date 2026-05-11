@@ -1,10 +1,8 @@
 cmake_minimum_required(VERSION 3.8)
 project(cx_cdb_loader_plugin)
 
-# Default to C++17
-if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 17)
-endif()
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -34,9 +32,42 @@ set(dependencies
 
 include_directories(include)
 
+set(CDB_SQL_INPUT ${CMAKE_CURRENT_SOURCE_DIR}/sql/schema.sql)
+set(CDB_GENERATED_DIR ${CMAKE_CURRENT_BINARY_DIR}/generated)
+set(CDB_SQL_HEADER ${CDB_GENERATED_DIR}/cx_cdb_loader_plugin/schema_sql.hpp)
+
+add_custom_command(
+  OUTPUT ${CDB_SQL_HEADER}
+  COMMAND ${CMAKE_COMMAND}
+    -DINPUT=${CDB_SQL_INPUT}
+    -DOUTPUT=${CDB_SQL_HEADER}
+    -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/embed_sql.cmake
+  DEPENDS
+    ${CDB_SQL_INPUT}
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/embed_sql.cmake
+  COMMENT "Embedding SQL schema into header file"
+  VERBATIM
+)
+
+add_custom_target(
+  cx_cdb_loader_schema_header
+  DEPENDS ${CDB_SQL_HEADER}
+  COMMENT "Ensuring embedded SQL schema is regenerated on change"
+)
+
 pluginlib_export_plugin_description_file(cx_plugin cdb_loader_plugin.xml)
 
-add_library(${PROJECT_NAME} SHARED src/cdb_loader_plugin.cpp)
+add_library(${PROJECT_NAME} SHARED
+  src/cdb_loader_plugin.cpp
+  ${CDB_SQL_HEADER}
+)
+
+target_include_directories(${PROJECT_NAME}
+  PUBLIC
+    include
+    ${CDB_GENERATED_DIR}
+)
+
 target_link_libraries(${PROJECT_NAME} ClipsNS::libclips_ns PkgConfig::LIBPQXX)
 ament_target_dependencies(${PROJECT_NAME} ${dependencies})
 

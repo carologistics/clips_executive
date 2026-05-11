@@ -58,3 +58,7 @@
   (printout info "Destroying subscription for " ?*TURTLE-POSE-TOPIC* crlf)
   (ros-msgs-destroy-subscription ?*TURTLE-POSE-TOPIC*)
 )
+
+(deffunction countdown (?c)
+(loop-for-count (?i 0 ?c) (println (- ?c ?i)))
+(void))
