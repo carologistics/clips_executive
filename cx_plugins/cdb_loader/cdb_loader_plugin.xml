@@ -1,0 +1,7 @@
+<class_libraries>
+  <library path="cx_cdb_loader_plugin">
+    <class type="cx::CDBLoaderPlugin" base_class_type="cx::ClipsPlugin">
+      <description>CLIPS Debugger Loader Plugin for the CLIPS Executive</description>
+    </class>
+  </library>
+</class_libraries>
