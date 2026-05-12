@@ -132,12 +132,6 @@ bool CDBLoaderPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
         case SlotType::Symbol:
           clips::DefglobalSetSymbol(global, value.value["value"].get<std::string>().c_str());
           break;
-        case SlotType::Void: {
-          clips::CLIPSValue v;
-          v.voidValue = env.get()->VoidConstant;
-          clips::DefglobalSetValue(global, &v);
-          break;
-        }
         case SlotType::ExternalAddress: {
           const std::string addressStr = value.value["value"].get<std::string>();
 
@@ -344,13 +338,6 @@ void CDBLoaderPlugin::append_json_to_multifield_builder(
 
       clips::MBAppendCLIPSExternalAddress(mb, clips::CreateCExternalAddress(env, address));
 
-      break;
-    }
-    case SlotType::Void: {
-      clips::CLIPSValue v;
-      v.voidValue = env->VoidConstant;
-
-      clips::MBAppend(mb, &v);
       break;
     }
     case SlotType::Multifield: {
