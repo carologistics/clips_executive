@@ -14,11 +14,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <memory>
 #include <pqxx/pqxx>
-
-#include "cx_msgs/srv/list_clips_plugins.hpp"
-#include "rcl_interfaces/msg/list_parameters_result.hpp"
 #undef RANGES
 // RANGES is defined in clips_ns/clips.h, which causes issues with
 // pqxx/pqxx. It needs to be included before clips_ns/clips.h to avoid compilation errors.
@@ -30,9 +26,12 @@
 #include <ctime>
 #include <cx_utils/clips_env_context.hpp>
 #include <cx_utils/param_utils.hpp>
+#include <memory>
 #include <nlohmann/json_fwd.hpp>
 
 #include "cx_cdb_saver_plugin/cdb_saver_plugin.hpp"
+#include "cx_msgs/srv/list_clips_plugins.hpp"
+#include "rcl_interfaces/msg/list_parameters_result.hpp"
 
 // To export as plugin
 #include "cx_clips_env_manager/clips_env_manager.hpp"
@@ -123,6 +122,7 @@ bool CDBSaverPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
   clips::Defglobal * theDefGlobal;
   clips::Deffunction * theDefFunction;
   clips::Deftemplate * theDefTemplate;
+  clips::Deffacts * theDefFacts;
 
   for (theModule = clips::GetNextDefmodule(env.get(), NULL); theModule != NULL;
        theModule = clips::GetNextDefmodule(env.get(), theModule)) {
@@ -156,6 +156,11 @@ bool CDBSaverPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
         continue;
       }
       db_handler_ptr->assert_deftemplate(name, module_name, theDefTemplate->header.ppForm, 0);
+    }
+    for (theDefFacts = clips::GetNextDeffacts(env.get(), NULL); theDefFacts != NULL;
+         theDefFacts = clips::GetNextDeffacts(env.get(), theDefFacts)) {
+      std::string name = theDefFacts->header.name->contents;
+      db_handler_ptr->assert_deffacts(name, module_name, theDefFacts->header.ppForm, 0);
     }
   }
 
