@@ -443,7 +443,12 @@ nlohmann::json CDBSaverPlugin::slot_value_to_json(unsigned short type, clips::CL
       break;
     }
     case VOID_TYPE: {
-      json["type"] = "VOID";
+      throw "VOID FOUND";
+      // NOTE Void type should only be used internally in CLIPS,
+      // so we shouldn't encounter it here. If we do, it's likely a bug.
+      // It's used a the default init state for return types of evaluations
+      // Or unset fact slots during construction
+      // but on assert it turns into SYMBOL nil
       break;
     }
     case MULTIFIELD_TYPE: {

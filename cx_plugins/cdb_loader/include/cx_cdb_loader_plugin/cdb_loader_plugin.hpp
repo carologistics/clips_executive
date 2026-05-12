@@ -133,7 +133,6 @@ enum class SlotType
   String,
   Symbol,
   ExternalAddress,
-  Void,
   Multifield,
   FactAddress
 };
@@ -144,7 +143,6 @@ NLOHMANN_JSON_SERIALIZE_ENUM(
              {SlotType::String, "STRING"},
              {SlotType::Symbol, "SYMBOL"},
              {SlotType::ExternalAddress, "EXTERNAL_ADDRESS"},
-             {SlotType::Void, "VOID"},
              {SlotType::Multifield, "MULTIFIELD"},
              {SlotType::FactAddress, "FACT_ADDRESS"}})
 
