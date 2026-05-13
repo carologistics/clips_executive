@@ -389,15 +389,13 @@ void CDBSaverPlugin::cdb_before_rule_callback(
 {
   std::string name = act->theRule->header.name->contents;
   std::string module_name = act->theRule->header.whichModule->theModule->header.name->contents;
-  std::vector<std::optional<long long>> basis;
+  std::vector<long long> basis;
   for (int i = 0; i < act->basis->bcount; i++) {
     if (
       (get_nth_pm_match(act->basis, i) != NULL) &&
       (get_nth_pm_match(act->basis, i)->matchingItem != NULL)) {
       clips::PatternEntity * matchingItem = get_nth_pm_match(act->basis, i)->matchingItem;
       basis.push_back((((clips::Fact *)matchingItem))->factIndex);
-    } else {
-      basis.push_back(std::nullopt);
     }
   }
   DBHandler * db = static_cast<DBHandler *>(context);

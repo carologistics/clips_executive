@@ -20,6 +20,7 @@
 // RANGES is defined in clips_ns/clips.h, which causes issues with
 // pqxx/pqxx. It needs to be included before clips_ns/clips.h to avoid compilation errors.
 
+#include <clips_ns/agenda.h>
 #include <clips_ns/clips.h>
 #include <clips_ns/tmpltutl.h>
 
@@ -221,9 +222,10 @@ bool CDBLoaderPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
       cv.multifieldValue = json_to_multifield(env.get(), value.value["value"]);
 
       clips::PutFactSlot(f, nullptr, &cv);
-      clips::Fact * fact = clips::Assert(f);
+      f = clips::Assert(f);
+      fact_id_mapping_[f->factIndex] = fact.fact_id;
       RCLCPP_WARN(
-        *logger_, "ASSERTED FACT %lli of type %s: %s", fact->factIndex,
+        *logger_, "ASSERTED FACT %lli of type %s: %s", f->factIndex,
         value.value["deftemplate"].get<std::string>().c_str(), value.value["value"].dump().c_str());
 
       continue;
@@ -269,8 +271,42 @@ bool CDBLoaderPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
       }
     }
 
-    clips::FBAssert(fb);
+    clips::Fact * f = clips::FBAssert(fb);
+    fact_id_mapping_[f->factIndex] = fact.fact_id;
+
     clips::FBDispose(fb);
+  }
+
+  clips::Defmodule * theModule;
+  clips::Activation * theActivation;
+
+  for (theModule = clips::GetNextDefmodule(env.get(), NULL); theModule != NULL;
+       theModule = clips::GetNextDefmodule(env.get(), theModule)) {
+    clips::SetCurrentModule(env.get(), theModule);
+    for (theActivation = clips::GetNextActivation(env.get(), NULL); theActivation != NULL;
+         theActivation = clips::GetNextActivation(env.get(), theActivation)) {
+      std::string name = theActivation->theRule->header.name->contents;
+      std::string module_name =
+        theActivation->theRule->header.whichModule->theModule->header.name->contents;
+
+      std::vector<long long> basis;
+      for (int i = 0; i < theActivation->basis->bcount; i++) {
+        if (
+          (get_nth_pm_match(theActivation->basis, i) != NULL) &&
+          (get_nth_pm_match(theActivation->basis, i)->matchingItem != NULL)) {
+          clips::PatternEntity * matchingItem =
+            get_nth_pm_match(theActivation->basis, i)->matchingItem;
+          basis.push_back(fact_id_mapping_[(((clips::Fact *)matchingItem))->factIndex]);
+        }
+      }
+      if (rule_firing_exists_before_tick(db, module_name, name, basis, 10000)) {
+        RCLCPP_ERROR(
+          *logger_,
+          "Removing activation of rule %s in module %s because it was already fired before %lli",
+          name.c_str(), module_name.c_str(), basis.empty() ? -1 : basis.back());
+        clips::RemoveActivation(env.get(), theActivation, true, true);
+      }
+    }
   }
 
   clips::Build(env.get(), "(assert cdb-restored)");
@@ -465,6 +501,47 @@ std::vector<Fact> CDBLoaderPlugin::load_facts(pqxx::connection & conn)
   tx.commit();
 
   return result;
+}
+
+bool CDBLoaderPlugin::rule_firing_exists_before_tick(
+  pqxx::connection & conn, const std::string & defmodule, const std::string & name,
+  const std::vector<long long> & bases, long long before_tick)
+{
+  pqxx::work tx{conn};
+
+  pqxx::params params;
+  params.append(defmodule);
+  params.append(name);
+  params.append(bases);
+  params.append(before_tick);
+
+  bool exists = tx.query_value<bool>(
+    R"SQL(
+            SELECT EXISTS (
+                SELECT 1
+                FROM defrules r
+                JOIN rule_firing rf
+                    ON rf.rule_id = r.rule_id
+                WHERE r.module = $1
+                  AND r.name = $2
+                  AND rf.tick < $4
+                  AND ARRAY(
+                        SELECT x
+                        FROM unnest(COALESCE(rf.base, '{}'::bigint[])) AS u(x)
+                        ORDER BY x
+                      )
+                      =
+                      ARRAY(
+                        SELECT x
+                        FROM unnest($3::bigint[]) AS u(x)
+                        ORDER BY x
+                      )
+            )
+        )SQL",
+    params);
+
+  tx.commit();
+  return exists;
 }
 
 clips::Multifield * CDBLoaderPlugin::json_to_multifield(

@@ -64,32 +64,6 @@ SELECT
     r.end_tick
 FROM defrules r;
 
-CREATE OR REPLACE VIEW rule_firing_cpp AS
-SELECT
-    rf.rule_id,
-    COALESCE(
-        to_jsonb(rf.base),
-        '[]'::jsonb
-    ) AS base,
-    rf.tick
-FROM rule_firing rf;
-
-CREATE OR REPLACE VIEW rule_firing_with_rule_cpp AS
-SELECT
-    rf.rule_id,
-    r.module AS rule_module,
-    r.name AS rule_name,
-    r.salience AS rule_salience,
-    COALESCE(
-        to_jsonb(rf.base),
-        '[]'::jsonb
-    ) AS base,
-    rf.tick
-FROM rule_firing rf
-JOIN defrules r
-    ON r.rule_id = rf.rule_id;
-
-
 CREATE OR REPLACE VIEW deffunctions_cpp AS
 SELECT
     d.name,
