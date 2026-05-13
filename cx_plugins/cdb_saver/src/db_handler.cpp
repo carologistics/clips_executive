@@ -278,36 +278,25 @@ void DBHandler::retract_deftemplate(
 }
 
 void DBHandler::assert_rule_fired(
-  const std::string & name, const std::string & module,
-  const std::vector<std::optional<long long>> & basis, long long tick)
+  const std::string & name, const std::string & module_name, const std::vector<long long> & basis,
+  long long tick)
 {
   try {
     pqxx::work w(*connection_);
 
-    std::ostringstream array_str;
-    array_str << "{";
-    for (size_t i = 0; i < basis.size(); ++i) {
-      if (i > 0) {
-        array_str << ",";
-      }
-
-      if (basis[i].has_value()) {
-        array_str << *basis[i];
-      } else {
-        array_str << "NULL";
-      }
-    }
-    array_str << "}";
-
     pqxx::result result = w.exec_params(
-      "INSERT INTO rule_firing (rule_id, base, tick) "
-      "SELECT rule_id, $3::bigint[], $4 "
-      "FROM defrules "
-      "WHERE name = $1 AND module = $2 AND end_tick IS NULL",
-      name, module, array_str.str(), tick);
+      R"SQL(
+            INSERT INTO rule_firing (rule_id, base, tick)
+            SELECT rule_id, $3::bigint[], $4
+            FROM defrules
+            WHERE name = $1
+              AND module = $2
+              AND end_tick IS NULL
+          )SQL",
+      name, module_name, basis, tick);
 
     if (result.affected_rows() != 1) {
-      throw std::runtime_error("Rule '" + name + "' in module '" + module + "' not found");
+      throw std::runtime_error("Rule '" + name + "' in module '" + module_name + "' not found");
     }
 
     w.commit();

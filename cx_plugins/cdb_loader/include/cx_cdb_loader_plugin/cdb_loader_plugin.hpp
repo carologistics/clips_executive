@@ -21,6 +21,7 @@
 // pqxx/pqxx. It needs to be included before clips_ns/clips.h to avoid compilation errors.
 
 #include <nlohmann/json.hpp>
+#include <unordered_map>
 
 #include "cx_plugin/clips_plugin.hpp"
 
@@ -58,7 +59,6 @@ struct TimeLookup
 struct Fact
 {
   std::int64_t fact_id;
-  std::string deftemplate;
   std::vector<TimedFact> value;
   Tick start_tick;
   std::optional<Tick> end_tick;
@@ -171,10 +171,16 @@ private:
   std::vector<Defrule> load_defrules(pqxx::connection & conn);
   std::vector<Fact> load_facts(pqxx::connection & conn);
 
+  bool rule_firing_exists_before_tick(
+    pqxx::connection & conn, const std::string & defmodule, const std::string & name,
+    const std::vector<long long> & bases, long long before_tick);
+
   clips::Multifield * json_to_multifield(clips::Environment * env, const nlohmann::json & json);
 
   void append_json_to_multifield_builder(
     clips::Environment * env, clips::MultifieldBuilder * mb, const nlohmann::json & valueJson);
+
+  std::unordered_map<long long, long long> fact_id_mapping_;
   //
 };
 }  // namespace cx
