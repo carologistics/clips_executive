@@ -121,8 +121,7 @@ BEGIN
         NULL
     )
     ON CONFLICT (fact_id) DO UPDATE
-    SET value = facts.value || ARRAY[ROW(p_tick, p_value)::timed_fact],
-        deftemplate = EXCLUDED.deftemplate;
+    SET value = facts.value || ARRAY[ROW(p_tick, p_value)::timed_fact]
 END;
 $$ LANGUAGE plpgsql;
 

@@ -71,7 +71,7 @@ private:
   inline nlohmann::json parameter_list_to_json(
     const rcl_interfaces::msg::ListParametersResult & parameters);
 
-  static std::string clips_fact_to_json(clips::Fact * f, const char * deftemplate_name);
+  static std::string clips_fact_to_json(clips::Fact * f);
   std::unique_ptr<rclcpp::Logger> logger_;
 
   std::unordered_map<std::string, std::unique_ptr<DBHandler>> db_handlers_;

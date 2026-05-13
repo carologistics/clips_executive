@@ -29,5 +29,5 @@
       plugin: "cx::CDBLoaderPlugin"
       username: postgres
       password: admin
-      database: "cdb_turtlesim_monitor_2026_05_11t05_07_06"
+      database: "cdb_turtlesim_monitor_2026_05_12t02_02_24"
       #docker run --name postgres -e POSTGRES_PASSWORD=admin --network host -d postgres
