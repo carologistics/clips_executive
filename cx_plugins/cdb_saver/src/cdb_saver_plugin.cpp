@@ -1,4 +1,5 @@
 // TODO BATCH UPLOAD
+// TODO do not remove deftemplates since it is necessary later when doing lookups
 // Copyright (c) 2024-2026 Carologistics
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -123,6 +124,7 @@ bool CDBSaverPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
   clips::Deffunction * theDefFunction;
   clips::Deftemplate * theDefTemplate;
   clips::Deffacts * theDefFacts;
+  clips::Fact * theFact;
 
   for (theModule = clips::GetNextDefmodule(env.get(), NULL); theModule != NULL;
        theModule = clips::GetNextDefmodule(env.get(), theModule)) {
@@ -161,6 +163,12 @@ bool CDBSaverPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
          theDefFacts = clips::GetNextDeffacts(env.get(), theDefFacts)) {
       std::string name = theDefFacts->header.name->contents;
       db_handler_ptr->assert_deffacts(name, module_name, theDefFacts->header.ppForm, 0);
+    }
+    for (theFact = clips::GetNextFact(env.get(), NULL); theFact != NULL;
+         theFact = clips::GetNextFact(env.get(), theFact)) {
+      theDefTemplate = theFact->whichDeftemplate;
+      std::string name = theDefTemplate->header.name->contents;
+      db_handler_ptr->assert_fact(theFact->factIndex, name, clips_fact_to_json(theFact), 0);
     }
   }
 
@@ -265,9 +273,7 @@ void CDBSaverPlugin::cdb_assert_callback(clips::Environment * /*env*/, void * fa
   const char * deftemplate_name = deftemplate->header.name->contents;
 
   DBHandler * db = static_cast<DBHandler *>(context);
-  db->assert_fact(
-    f->factIndex, deftemplate_name, clips_fact_to_json(f, deftemplate_name).c_str(),
-    db->get_tick());
+  db->assert_fact(f->factIndex, deftemplate_name, clips_fact_to_json(f).c_str(), db->get_tick());
 }
 
 void CDBSaverPlugin::cdb_retract_callback(clips::Environment * /*env*/, void * fact, void * context)
@@ -481,11 +487,11 @@ std::vector<nlohmann::json> CDBSaverPlugin::multifield_to_json_list(clips::Multi
   return json_list;
 }
 
-std::string CDBSaverPlugin::clips_fact_to_json(clips::Fact * f, const char * deftemplate_name)
+std::string CDBSaverPlugin::clips_fact_to_json(clips::Fact * f)
 {
   nlohmann::json json;
   clips::Deftemplate * deftemplate = f->whichDeftemplate;
-  json["deftemplate"] = deftemplate_name;
+  json["deftemplate"] = deftemplate->header.name->contents;
   // Logic stolen from factmngr.c void PrintFact(...)
   if (f->whichDeftemplate->implied == false) {
     /*=========================================*/

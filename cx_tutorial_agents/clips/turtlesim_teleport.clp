@@ -21,6 +21,12 @@
 (deftemplate hello
   (slot value))
 
+
+(deffacts start-condition " THe start condition"
+  (hello (value 1))
+  (hello (value 2))
+)
+
 (defrule turtle-teleport-client-init
 " Create publisher for ros_cx_out."
 =>
@@ -28,6 +34,12 @@
   (ros-msgs-create-client ?*TURTLE-SERVICE* ?*TURTLE-TELEPORT-TYPE*)
   (printout green "Opening client for " ?*TURTLE-SERVICE* crlf)
   (assert (hello (value 1)))
+)
+
+(defrule redefine-1
+?f <- (hello (value 1))
+=>
+(modify ?f (value 2))
 )
 
 (defrule turtle-teleport-request-teleport-mid

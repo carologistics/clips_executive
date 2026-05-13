@@ -167,6 +167,9 @@ private:
   std::vector<Deftemplate> load_deftemplates(pqxx::connection & conn);
   std::vector<Defglobal> load_defglobals(pqxx::connection & conn);
   std::vector<Deffunction> load_deffunctions(pqxx::connection & conn);
+  std::vector<Deffacts> load_deffacts(pqxx::connection & conn);
+  std::vector<Defrule> load_defrules(pqxx::connection & conn);
+  std::vector<Fact> load_facts(pqxx::connection & conn);
 
   clips::Multifield * json_to_multifield(clips::Environment * env, const nlohmann::json & json);
 
