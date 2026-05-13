@@ -20,13 +20,15 @@
 // RANGES is defined in clips_ns/clips.h, which causes issues with
 // pqxx/pqxx. It needs to be included before clips_ns/clips.h to avoid compilation errors.
 
-#include <clips_ns/agenda.h>
+// clang-format off
+// agenda.h has to be loaded after clips.h
 #include <clips_ns/clips.h>
+#include <clips_ns/agenda.h>
 #include <clips_ns/tmpltutl.h>
+// clang-format on
 
 #include <cx_utils/clips_env_context.hpp>
 #include <cx_utils/param_utils.hpp>
-#include <nlohmann/json_fwd.hpp>
 
 #include "cx_cdb_loader_plugin/cdb_loader_plugin.hpp"
 #include "cx_cdb_loader_plugin/schema_sql.hpp"
