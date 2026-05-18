@@ -59,7 +59,7 @@ struct TimeLookup
 
 struct Fact
 {
-  std::int64_t fact_id;
+  long long fact_id;
   std::vector<TimedFact> value;
   Tick start_tick;
   std::optional<Tick> end_tick;

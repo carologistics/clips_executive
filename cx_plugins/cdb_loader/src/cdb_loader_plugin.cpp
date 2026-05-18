@@ -1,5 +1,6 @@
 // TODO when restoring the rules the salience has to be taken from the field and not the pp since they could point to a defglobal that has changed in the meantime
 // TODO CHECK IF ARRAYS IN THE TYPES IS BETTER THAN A TABLE REFERENCING THE THE FACT!?
+// TODO FACT ID
 // Copyright (c) 2024-2026 Carologistics
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -102,7 +103,7 @@ bool CDBLoaderPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
 
   // Initializing databse views for easier parsing of composed types
   pqxx::work w(db);
-  w.exec(kSchemaSql);
+  w.exec(kViewSchemaSql);
   w.commit();
 
   std::vector<Deftemplate> deftemplates = load_deftemplates(db);

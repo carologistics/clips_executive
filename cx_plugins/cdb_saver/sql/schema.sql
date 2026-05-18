@@ -19,9 +19,16 @@ CREATE TABLE time_lookup (
 CREATE TABLE facts (
   fact_id     BIGINT PRIMARY KEY,
   deftemplate TEXT NOT NULL DEFAULT '',
-  value       timed_fact[] NOT NULL DEFAULT '{}',
   start_tick  BIGINT NOT NULL,
   end_tick    BIGINT
+);
+
+CREATE TABLE fact_values (
+  fact_id BIGINT NOT NULL REFERENCES facts(fact_id) ON DELETE CASCADE,
+  tick    BIGINT NOT NULL,
+  value   JSONB NOT NULL,
+
+  PRIMARY KEY (fact_id, tick)
 );
 
 CREATE TABLE defglobals (
@@ -112,16 +119,15 @@ CREATE OR REPLACE FUNCTION assert_fact_upsert(
     p_value JSONB
 ) RETURNS void AS $$
 BEGIN
-    INSERT INTO facts (fact_id, deftemplate, value, start_tick, end_tick)
-    VALUES (
-        p_fact_id,
-        p_deftemplate,
-        ARRAY[ROW(p_tick, p_value)::timed_fact],
-        p_tick,
-        NULL
-    )
+    INSERT INTO facts (fact_id, deftemplate, start_tick, end_tick)
+    VALUES (p_fact_id, p_deftemplate, p_tick, NULL)
     ON CONFLICT (fact_id) DO UPDATE
-    SET value = facts.value || ARRAY[ROW(p_tick, p_value)::timed_fact];
+    SET deftemplate = EXCLUDED.deftemplate;
+
+    INSERT INTO fact_values (fact_id, tick, value)
+    VALUES (p_fact_id, p_tick, p_value)
+    ON CONFLICT (fact_id, tick) DO UPDATE
+    SET value = EXCLUDED.value;
 END;
 $$ LANGUAGE plpgsql;
 
