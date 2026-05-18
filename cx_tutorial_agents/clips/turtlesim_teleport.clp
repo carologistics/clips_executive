@@ -18,6 +18,27 @@
   ?*TURTLE-TELEPORT-TYPE* = "turtlesim/srv/TeleportAbsolute"
 )
 
+(defglobal
+  ?*NICHT-RETRACTED* = (assert (nicht-retracted))
+  ?*RETRACTOR* = (assert (retractor))
+)
+
+(defrule retrator-retracten
+  ?f <- (retractor)
+=>
+  (retract ?f)
+  (assert (jonas 1))
+  (assert (jonas 2))
+)
+
+(defrule nicht-match
+  (jonas 1)
+  (not (jonas 3))
+  (jonas 2)
+=>
+  (printout blue "JONAS 3 NICHT DA ABER 1 2" crlf)
+)
+
 (deftemplate hello
   (slot value))
 
@@ -34,6 +55,14 @@
   (ros-msgs-create-client ?*TURTLE-SERVICE* ?*TURTLE-TELEPORT-TYPE*)
   (printout green "Opening client for " ?*TURTLE-SERVICE* crlf)
   (assert (hello (value 1)))
+  (assert (tim (assert (tim))))
+  (assert (jones (assert (jones))))
+)
+
+(defrule retractor
+  ?f <- (tim)
+=>
+  (retract ?f)
 )
 
 (defrule redefine-1

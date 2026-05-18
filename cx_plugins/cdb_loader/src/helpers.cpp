@@ -17,12 +17,15 @@
 
 namespace cx
 {
-clips::Multifield * json_to_multifield(clips::Environment * env, const nlohmann::json & json_array)
+clips::Multifield * json_to_multifield(
+  clips::Environment * env, const nlohmann::json & json_array,
+  std::unordered_map<long long, clips::Fact *> & id_to_fact_ptr,
+  std::vector<clips::Fact *> & created_nullptr_facts)
 {
   clips::MultifieldBuilder * mb = clips::CreateMultifieldBuilder(env, json_array.size());
 
   for (const nlohmann::json & element : json_array) {
-    append_json_to_multifield_builder(env, mb, element);
+    append_json_to_multifield_builder(env, mb, element, id_to_fact_ptr, created_nullptr_facts);
   }
 
   clips::Multifield * multifield = clips::MBCreate(mb);
@@ -31,7 +34,9 @@ clips::Multifield * json_to_multifield(clips::Environment * env, const nlohmann:
 }
 
 void append_json_to_multifield_builder(
-  clips::Environment * env, clips::MultifieldBuilder * mb, const nlohmann::json & valueJson)
+  clips::Environment * env, clips::MultifieldBuilder * mb, const nlohmann::json & valueJson,
+  std::unordered_map<long long, clips::Fact *> & id_to_fact_ptr,
+  std::vector<clips::Fact *> & created_nullptr_facts)
 {
   switch (valueJson["type"].get<SlotType>()) {
     case SlotType::String:
@@ -46,28 +51,35 @@ void append_json_to_multifield_builder(
     case SlotType::Float:
       clips::MBAppendFloat(mb, valueJson["value"].get<double>());
       break;
-    case SlotType::ExternalAddress: {
-      const std::string addressStr = valueJson["value"].get<std::string>();
-
-      const std::uintptr_t rawAddress =
-        static_cast<std::uintptr_t>(std::stoull(addressStr, nullptr, 0));
-
-      void * address = reinterpret_cast<void *>(rawAddress);
-
-      clips::MBAppendCLIPSExternalAddress(mb, clips::CreateCExternalAddress(env, address));
-
+    case SlotType::ExternalAddress:
+      clips::MBAppendCLIPSExternalAddress(mb, clips::CreateCExternalAddress(env, nullptr));
       break;
-    }
     case SlotType::Multifield: {
-      clips::Multifield * nested = json_to_multifield(env, valueJson);
-
+      clips::Multifield * nested =
+        json_to_multifield(env, valueJson, id_to_fact_ptr, created_nullptr_facts);
       clips::MBAppendMultifield(mb, nested);
       break;
     }
     case SlotType::FactAddress:
-      //TODO
-      throw std::runtime_error("FactAddress deserialization into multifield not implemented");
+      if (id_to_fact_ptr.contains(valueJson["value"].get<long long>())) {
+        clips::MBAppendFact(mb, id_to_fact_ptr[valueJson["value"].get<long long>()]);
+      } else {
+        clips::Fact * null_fact = get_nullptr_fact(
+          env, valueJson["value"].get<long long>(), id_to_fact_ptr, created_nullptr_facts);
+        clips::MBAppendFact(mb, null_fact);
+      }
   }
+}
+
+clips::Fact * get_nullptr_fact(
+  clips::Environment * env, long long fact_id,
+  std::unordered_map<long long, clips::Fact *> & id_to_fact_ptr,
+  std::vector<clips::Fact *> & created_nullptr_facts)
+{
+  clips::Fact * null_fact = clips::AssertString(env, std::format("(nullptr-{})", fact_id).c_str());
+  id_to_fact_ptr[fact_id] = null_fact;
+  created_nullptr_facts.push_back(null_fact);
+  return null_fact;
 }
 
 template <typename T>
@@ -261,14 +273,29 @@ std::vector<Fact> load_facts(pqxx::connection & conn)
 
 bool rule_firing_exists_before_tick(
   pqxx::connection & conn, const std::string & defmodule, const std::string & name,
-  const std::vector<long long> & bases, long long before_tick)
+  const std::vector<std::optional<long long>> & basis, long long before_tick)
 {
   pqxx::work tx{conn};
+
+  std::ostringstream array_str;
+  array_str << "{";
+  for (size_t i = 0; i < basis.size(); ++i) {
+    if (i > 0) {
+      array_str << ",";
+    }
+
+    if (basis[i].has_value()) {
+      array_str << *basis[i];
+    } else {
+      array_str << "NULL";
+    }
+  }
+  array_str << "}";
 
   pqxx::params params;
   params.append(defmodule);
   params.append(name);
-  params.append(bases);
+  params.append(array_str.str());
   params.append(before_tick);
 
   bool exists = tx.query_value<bool>(
