@@ -3,21 +3,25 @@ SELECT
     f.fact_id,
     f.deftemplate,
     COALESCE(
-        (
-            SELECT jsonb_agg(
-                jsonb_build_object(
-                    'tick', h.tick,
-                    'value', h.value
-                )
-                ORDER BY h.tick
+        jsonb_agg(
+            jsonb_build_object(
+                'tick', fv.tick,
+                'value', fv.value
             )
-            FROM unnest(f.value) AS h(tick, value)
-        ),
+            ORDER BY fv.tick
+        ) FILTER (WHERE fv.fact_id IS NOT NULL),
         '[]'::jsonb
     ) AS value_history,
     f.start_tick,
     f.end_tick
-FROM facts f;
+FROM facts f
+LEFT JOIN fact_values fv
+  ON fv.fact_id = f.fact_id
+GROUP BY
+    f.fact_id,
+    f.deftemplate,
+    f.start_tick,
+    f.end_tick;
 
 
 CREATE OR REPLACE VIEW defglobals_cpp AS

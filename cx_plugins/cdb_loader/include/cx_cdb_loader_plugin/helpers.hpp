@@ -148,9 +148,18 @@ NLOHMANN_JSON_SERIALIZE_ENUM(
              {SlotType::FactAddress, "FACT_ADDRESS"}})
 
 void append_json_to_multifield_builder(
-  clips::Environment * env, clips::MultifieldBuilder * mb, const nlohmann::json & valueJson);
+  clips::Environment * env, clips::MultifieldBuilder * mb, const nlohmann::json & valueJson,
+  std::unordered_map<long long, clips::Fact *> & id_to_fact_ptr,
+  std::vector<clips::Fact *> & created_nullptr_facts);
 
-clips::Multifield * json_to_multifield(clips::Environment * env, const nlohmann::json & json);
+clips::Multifield * json_to_multifield(
+  clips::Environment * env, const nlohmann::json & json,
+  std::unordered_map<long long, clips::Fact *> & id_to_fact_ptr,
+  std::vector<clips::Fact *> & created_nullptr_facts);
+clips::Fact * get_nullptr_fact(
+  clips::Environment * env, long long fact_id,
+  std::unordered_map<long long, clips::Fact *> & id_to_fact_ptr,
+  std::vector<clips::Fact *> & created_nullptr_facts);
 
 template <typename T>
 std::optional<T> optional_field(const pqxx::row & row, const char * column);
@@ -165,5 +174,5 @@ std::vector<Fact> load_facts(pqxx::connection & conn);
 
 bool rule_firing_exists_before_tick(
   pqxx::connection & conn, const std::string & defmodule, const std::string & name,
-  const std::vector<long long> & bases, long long before_tick);
+  const std::vector<std::optional<long long>> & basis, long long before_tick);
 }  // namespace cx
