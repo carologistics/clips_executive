@@ -41,11 +41,7 @@ Facts
 
   ; Asserted by the callback of a client once a response arrives.
   ; Process the response and then call response-destroy before retracting!
-  (<pkg-kebab>-<srv-kebab>-response
-    (service ?service-name-string)
-    (msg-ptr ?msg-ptr)
-    (request-id ?request-id-int)
-  )
+  (<pkg-kebab>-<srv-kebab>-response (service ?service-name-string) (msg-ptr ?msg-ptr))
 
 Functions
 ~~~~~~~~~
@@ -62,7 +58,7 @@ Functions
   ; Send a request to a service provider
   ; Requires the client to be created first using create-client.
   ; Callback will assert a response fact once received.
-  (bind ?request-id-int (<pkg-kebab>-<srv-kebab>-send-request ?msg-ptr ?topic-name))
+  (<pkg-kebab>-<srv-kebab>-send-request ?msg-ptr ?topic-name)
 
   ; Creating, destroying and processing of requests
   (bind ?msg-ptr (<pkg-kebab>-<srv-kebab>-request-create))
@@ -99,10 +95,21 @@ A minimal working example is provided by the :docsite:`cx_bringup` package. Run 
 
     ros2 launch cx_bringup cx_launch.py manager_config:=plugin_examples/set_bool_srv.yaml
 
-It creates a ``std_srvs/srv/SetBool`` service ``/ros_cx_srv`` and a matching client in a separate CLIPS environment.
+It creates a ``std_srvs/srv/SetBool`` service ``/ros_cx_srv``. The services answers by giving the requested value in success.
 
-The client sends two requests, one with data: FALSE and one with data: TRUE.
-The server response with a message containing the requested data field.
+A simple service call can be made using the ROS CLI tool:
+
+.. code-block:: bash
+
+  ros2 service call /ros_cx_srv std_srvs/srv/SetBool "{data: false}"
+
+Additionally, if ``true`` was requested, the example makes a new request with data ``true`` to a service called ``/ros_cx_srv_client``.
+To start a simple server accepting the request, simply run the following command:
+
+.. code-block:: bash
+
+    ros2 run cx_bringup test_service.py
+
 
 Configuration
 ~~~~~~~~~~~~~
@@ -111,17 +118,11 @@ File :source-master:`cx_bringup/params/plugin_examples/set_bool_srv.yaml`.
 
 .. code-block:: yaml
 
-  /**:
+  clips_manager:
     ros__parameters:
-      environments: ["cx_set_bool_srv", "cx_set_bool_client"]
-      cx_set_bool_srv:
-        plugins: ["executive", "set_bool", "files_srv"]
-        log_clips_to_file: true
-        watch: ["facts", "rules"]
-
-      cx_set_bool_client:
-        plugins: ["executive", "set_bool", "files_client"]
-        log_clips_to_file: true
+      environments: ["cx_set_bool_srvs"]
+      cx_set_bool_srvs:
+        plugins: ["executive", "set_bool", "files"]
         watch: ["facts", "rules"]
 
       executive:
@@ -129,107 +130,27 @@ File :source-master:`cx_bringup/params/plugin_examples/set_bool_srv.yaml`.
         publish_on_refresh: false
         assert_time: true
         refresh_rate: 10
-
       set_bool:
         plugin: "cx::CXStdSrvsSetBoolPlugin"
-
-      files_srv:
+      files:
         plugin: "cx::FileLoadPlugin"
         pkg_share_dirs: ["cx_bringup"]
         load: [
           "clips/plugin_examples/set-bool-srv.clp"]
 
-      files_client:
-        plugin: "cx::FileLoadPlugin"
-        pkg_share_dirs: ["cx_bringup"]
-        load: [
-          "clips/plugin_examples/set-bool-client.clp"]
-
 
 Code
 ~~~~
-
-File :source-master:`cx_bringup/clips/plugin_examples/set-bool-client.clp`.
-
-.. code-block:: lisp
-
-  (defrule set-bool-client-init
-  " Create a simple client using the generated bindings. "
-    (not (std-srvs-set-bool-client (service "set_bool_srv")))
-    (not (executive-finalize))
-  =>
-    (std-srvs-set-bool-create-client "set_bool_srv")
-    (printout info "Created client for /set_bool" crlf)
-    (assert (started (now)))
-  )
-
-  (defrule set-bool-client-send-out-request-false
-    (std-srvs-set-bool-client (service ?service))
-    (not (send-request FALSE ?))
-    (started ?start-time)
-    (time ?curr-time&:(> (- ?curr-time ?start-time) 1))
-    =>
-    ;example usage of sending a request
-    (printout info "Send a request with data: FALSE" crlf)
-    (bind ?new-req (std-srvs-set-bool-request-create))
-    (std-srvs-set-bool-request-set-field ?new-req "data" FALSE)
-    (bind ?id (std-srvs-set-bool-send-request ?new-req ?service))
-    (std-srvs-set-bool-request-destroy ?new-req)
-    (if ?id then
-      (assert (send-request FALSE ?id))
-    )
-  )
-
-  (defrule set-bool-client-send-out-request-true
-    (std-srvs-set-bool-client (service ?service))
-    ?sr <- (send-request FALSE ?)
-    (not (send-request TRUE ?))
-    (time ?)
-    =>
-    ;example usage of sending a request
-    (printout info "Additionally, send a request with data: TRUE" crlf)
-    (bind ?new-req (std-srvs-set-bool-request-create))
-    (std-srvs-set-bool-request-set-field ?new-req "data" TRUE)
-    (bind ?id (std-srvs-set-bool-send-request ?new-req ?service))
-    (std-srvs-set-bool-request-destroy ?new-req)
-    (if ?id then
-      (assert (send-request TRUE ?id))
-    )
-  )
-
-  (defrule set-bool-client-process-response
-    (std-srvs-set-bool-response (service ?serivce) (msg-ptr ?msg) (request-id ?id))
-    (send-request ?val ?id)
-  =>
-    (bind ?success (std-srvs-set-bool-response-get-field ?msg "success"))
-    (bind ?message (std-srvs-set-bool-response-get-field ?msg "message"))
-    (printout blue "Response (success: " ?success") for data: " ?val ": \"" ?message "\"" crlf)
-    (std-srvs-set-bool-response-destroy ?msg)
-  )
-
-  (defrule set-bool-client-cleanup
-    (executive-finalize)
-    (std-srvs-set-bool-client (service ?service))
-    =>
-    (std-srvs-set-bool-destroy-client ?service)
-  )
 
 File :source-master:`cx_bringup/clips/plugin_examples/set-bool-srv.clp`.
 
 .. code-block:: lisp
 
-  (defrule set-bool-service-init
-  " Create a simple service using the generated bindings. "
-    (not (std-srvs-set-bool-service (name "set_bool_srv")))
-  =>
-    (std-srvs-set-bool-create-service "set_bool_srv")
-    (printout info "Created service for /ros_cx_srv" crlf)
-  )
-
   ; this function needs to be defined in order to respond to messages
   (deffunction std-srvs-set-bool-service-callback (?service-name ?request ?response)
     (bind ?req-data (std-srvs-set-bool-request-get-field ?request "data"))
-    (printout green "Received request on " ?service-name ". Data: " ?req-data crlf)
+    (printout info "Received request on " ?service-name ". Data: " ?req-data crlf)
+    (printout info "Received " ?req-data ", responding with same value" crlf)
     (if ?req-data then
       (std-srvs-set-bool-response-set-field ?response "success" TRUE)
       (std-srvs-set-bool-response-set-field ?response "message" (str-cat "Received the request: " ?req-data))
@@ -240,9 +161,36 @@ File :source-master:`cx_bringup/clips/plugin_examples/set-bool-srv.clp`.
     )
   )
 
-  (defrule set-bool-srv-cleanup
-    (executive-finalize)
-    (std-srvs-set-bool-service (name ?service))
+  (defrule set-bool-client-service-init
+  " Create a simple client and service using the generated bindings. "
+    (not (std-srvs-set-bool-client (service "ros_cx_client")))
+    (not (std-srvs-set-bool-service (name "ros_cx_srv")))
+  =>
+    (std-srvs-set-bool-create-client "ros_cx_client")
+    (printout info "Created client for /ros_cx_client" crlf)
+    (std-srvs-set-bool-create-service "ros_cx_srv")
+    (printout info "Created service for /ros_cx_srv" crlf)
+  )
+
+  (defrule std-srvs-send-out-request-to-outbound
+    ?sr <- (send-request)
     =>
-    (std-srvs-set-bool-destroy-service ?service)
+    ;example usage of sending a request
+    (printout info "Additionally, request as client with data: True" crlf)
+    (bind ?new-req (std-srvs-set-bool-request-create))
+    (std-srvs-set-bool-request-set-field ?new-req "data" TRUE)
+    (std-srvs-set-bool-send-request ?new-req "ros_cx_client")
+    (std-srvs-set-bool-request-destroy ?new-req)
+    (retract ?sr)
+  )
+
+  (defrule set-bool-client-response-received
+  " Create a simple client and service using the generated bindings. "
+    ?msg-fact <- (std-srvs-set-bool-response (service ?service) (msg-ptr ?ptr))
+  =>
+    (bind ?succ (std-srvs-set-bool-response-get-field ?ptr "success"))
+    (bind ?msg (std-srvs-set-bool-response-get-field ?ptr "message"))
+    (printout green "Received response from " ?service " with: " ?succ " (" ?msg ")" crlf)
+    (std-srvs-set-bool-response-destroy ?ptr)
+    (retract ?msg-fact)
   )

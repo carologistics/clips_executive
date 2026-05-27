@@ -92,21 +92,17 @@
 <codeline lineno="44" refid="classcx_1_1CLIPSEnvContext" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal"><ref refid="classcx_1_1CLIPSEnvContext" kindref="compound">CLIPSEnvContext</ref></highlight></codeline>
 <codeline lineno="45"><highlight class="normal">{</highlight></codeline>
 <codeline lineno="46"><highlight class="normal"></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
-<codeline lineno="47"><highlight class="normal"><sp/><sp/><ref refid="classcx_1_1CLIPSEnvContext" kindref="compound">CLIPSEnvContext</ref>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;<sp/>env_name,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>log_to_file,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>stdout_to_debug)</highlight></codeline>
-<codeline lineno="48"><highlight class="normal"><sp/><sp/>:<sp/>env_name_(env_name),<sp/>logger_(env_name.c_str(),<sp/>log_to_file,<sp/>stdout_to_debug)</highlight></codeline>
-<codeline lineno="49"><highlight class="normal"><sp/><sp/>{</highlight></codeline>
-<codeline lineno="50"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
-<codeline lineno="51"><highlight class="normal"><sp/><sp/>std::string<sp/>env_name_;</highlight></codeline>
-<codeline lineno="52"><highlight class="normal"><sp/><sp/>std::mutex<sp/>env_mtx_;</highlight></codeline>
-<codeline lineno="53"><highlight class="normal"><sp/><sp/><ref refid="classcx_1_1CLIPSLogger" kindref="compound">CLIPSLogger</ref><sp/>logger_;</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/>std::string<sp/>env_name_;</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/>std::mutex<sp/>env_mtx_;</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><ref refid="classcx_1_1CLIPSLogger" kindref="compound">CLIPSLogger</ref><sp/>logger_;</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="classcx_1_1CLIPSEnvContext" kindref="compound">CLIPSEnvContext</ref><sp/>*<sp/>get_context(clips::Environment<sp/>*<sp/>env);</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="classcx_1_1CLIPSEnvContext" kindref="compound">CLIPSEnvContext</ref><sp/>*<sp/>get_context(std::shared_ptr&lt;clips::Environment&gt;<sp/>&amp;<sp/>env);</highlight></codeline>
+<codeline lineno="53"><highlight class="normal">};</highlight></codeline>
 <codeline lineno="54"><highlight class="normal"></highlight></codeline>
-<codeline lineno="55"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="classcx_1_1CLIPSEnvContext" kindref="compound">CLIPSEnvContext</ref><sp/>*<sp/>get_context(clips::Environment<sp/>*<sp/>env);</highlight></codeline>
-<codeline lineno="56"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/><ref refid="classcx_1_1CLIPSEnvContext" kindref="compound">CLIPSEnvContext</ref><sp/>*<sp/>get_context(std::shared_ptr&lt;clips::Environment&gt;<sp/>&amp;<sp/>env);</highlight></codeline>
-<codeline lineno="57"><highlight class="normal">};</highlight></codeline>
-<codeline lineno="58"><highlight class="normal"></highlight></codeline>
-<codeline lineno="59"><highlight class="normal">}<sp/><sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>cx</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="60"><highlight class="normal"></highlight></codeline>
-<codeline lineno="61"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/><sp/></highlight><highlight class="comment">//<sp/>CX_UTILS__CLIPS_ENV_CONTEXT_HPP_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal">}<sp/><sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>cx</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/><sp/></highlight><highlight class="comment">//<sp/>CX_UTILS__CLIPS_ENV_CONTEXT_HPP_</highlight><highlight class="normal"></highlight></codeline>
     </programlisting>
     <location file="include/cx_utils/clips_env_context.hpp"/>
   </compounddef>

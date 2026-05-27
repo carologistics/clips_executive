@@ -413,7 +413,7 @@ Additionally, it creates a publisher on <code class="docutils literal notranslat
 <span class="w">  </span><span class="nv">=&gt;</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">yellow</span><span class="w"> </span><span class="s">&quot;Sending Hello World Message!&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-create-message</span><span class="w"> </span><span class="s">&quot;std_msgs/msg/String&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-set-field</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="s">&quot;data&quot;</span><span class="w"> </span><span class="s">&quot;Hello World!&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-set-field</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="s">&quot;data&quot;</span><span class="w"> </span><span class="s">&quot;Hello world!&quot;</span><span class="p">)</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-publish</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="nv">?topic</span><span class="p">)</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-destroy-message</span><span class="w"> </span><span class="nv">?msg</span><span class="p">)</span>
 <span class="p">)</span>
@@ -476,21 +476,20 @@ Additionally, it creates a publisher on <code class="docutils literal notranslat
 <section id="id2">
 <h3>Configuration<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
 <p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/params/plugin_examples/ros_msgs_client.yaml">cx_bringup/params/plugin_examples/ros_msgs_client.yaml</a>.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">/**</span><span class="p">:</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">clips_manager</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_ros_msgs_client&quot;</span><span class="p p-Indicator">]</span>
+
 <span class="w">    </span><span class="nt">cx_ros_msgs_client</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;executive&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;ros_msgs&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;files&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">      </span><span class="nt">log_clips_to_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">      </span><span class="nt">watch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facts&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;rules&quot;</span><span class="p p-Indicator">]</span>
 
 <span class="w">    </span><span class="nt">executive</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::ExecutivePlugin&quot;</span>
-<span class="w">      </span><span class="nt">publish_on_refresh</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">      </span><span class="nt">assert_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">      </span><span class="nt">refresh_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+
 <span class="w">    </span><span class="nt">ros_msgs</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::RosMsgsPlugin&quot;</span>
+
 <span class="w">    </span><span class="nt">files</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::FileLoadPlugin&quot;</span>
 <span class="w">      </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_bringup&quot;</span><span class="p p-Indicator">]</span>
@@ -501,7 +500,7 @@ Additionally, it creates a publisher on <code class="docutils literal notranslat
 </section>
 <section id="id3">
 <h3>Code<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
-<p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/ros-msgs-client.clp">cx_bringup/clips/plugin_examples/ros-msgs-client.clp</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/ros-msgs.clp">cx_bringup/clips/plugin_examples/ros-msgs.clp</a>.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">ros-msgs-client-init</span>
 <span class="s">&quot; Create publisher for ros_cx_out.&quot;</span>
 <span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-client</span><span class="w"> </span><span class="p">(</span><span class="nv">service</span><span class="w"> </span><span class="s">&quot;ros_cx_client&quot;</span><span class="p">)))</span>
@@ -582,6 +581,7 @@ Additionally, it creates a publisher on <code class="docutils literal notranslat
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">/**</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_ros_msgs_service&quot;</span><span class="p p-Indicator">]</span>
+
 <span class="w">    </span><span class="nt">cx_ros_msgs_service</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;executive&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;ros_msgs&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;files&quot;</span><span class="p p-Indicator">]</span>
 <span class="w">      </span><span class="nt">log_clips_to_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
@@ -589,11 +589,11 @@ Additionally, it creates a publisher on <code class="docutils literal notranslat
 
 <span class="w">    </span><span class="nt">executive</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::ExecutivePlugin&quot;</span>
-<span class="w">      </span><span class="nt">publish_on_refresh</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">      </span><span class="nt">assert_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">      </span><span class="nt">refresh_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+
 <span class="w">    </span><span class="nt">ros_msgs</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::RosMsgsPlugin&quot;</span>
+
 <span class="w">    </span><span class="nt">files</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::FileLoadPlugin&quot;</span>
 <span class="w">      </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_bringup&quot;</span><span class="p p-Indicator">]</span>
@@ -605,33 +605,31 @@ Additionally, it creates a publisher on <code class="docutils literal notranslat
 <section id="id5">
 <h3>Code<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
 <p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/ros-msgs-service.clp">cx_bringup/clips/plugin_examples/ros-msgs-service.clp</a>.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">set-bool-service-init</span>
-<span class="s">&quot; Create a simple service using the generated bindings. &quot;</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">std-srvs-set-bool-service</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="s">&quot;set_bool_srv&quot;</span><span class="p">)))</span>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">ros-msgs-service-init</span>
+<span class="s">&quot; Create a service /ros_cx_service&quot;</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-service</span><span class="w"> </span><span class="p">(</span><span class="nv">service</span><span class="w"> </span><span class="s">&quot;ros_cx_service&quot;</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">executive-finalize</span><span class="p">))</span>
 <span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">std-srvs-set-bool-create-service</span><span class="w"> </span><span class="s">&quot;set_bool_srv&quot;</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">info</span><span class="w"> </span><span class="s">&quot;Created service for /ros_cx_srv&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-create-service</span><span class="w"> </span><span class="s">&quot;ros_cx_service&quot;</span><span class="w"> </span><span class="s">&quot;std_srvs/srv/SetBool&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;Opening service on /ros_cx_service&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;Call it via &#39;ros2 service call /ros_cx_service std_srvs/srv/SetBool \&quot;{data: true}\&quot;&quot;</span><span class="o">&#39;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
 <span class="p">)</span>
 
-<span class="c1">; this function needs to be defined in order to respond to messages</span>
-<span class="p">(</span><span class="nv">deffunction</span><span class="w"> </span><span class="nv">std-srvs-set-bool-service-callback</span><span class="w"> </span><span class="p">(</span><span class="nv">?service-name</span><span class="w"> </span><span class="nv">?request</span><span class="w"> </span><span class="nv">?response</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?req-data</span><span class="w"> </span><span class="p">(</span><span class="nv">std-srvs-set-bool-request-get-field</span><span class="w"> </span><span class="nv">?request</span><span class="w"> </span><span class="s">&quot;data&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;Received request on &quot;</span><span class="w"> </span><span class="nv">?service-name</span><span class="w"> </span><span class="s">&quot;. Data: &quot;</span><span class="w"> </span><span class="nv">?req-data</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="nv">?req-data</span><span class="w"> </span><span class="nv">then</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">std-srvs-set-bool-response-set-field</span><span class="w"> </span><span class="nv">?response</span><span class="w"> </span><span class="s">&quot;success&quot;</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">std-srvs-set-bool-response-set-field</span><span class="w"> </span><span class="nv">?response</span><span class="w"> </span><span class="s">&quot;message&quot;</span><span class="w"> </span><span class="p">(</span><span class="nv">str-cat</span><span class="w"> </span><span class="s">&quot;Received the request: &quot;</span><span class="w"> </span><span class="nv">?req-data</span><span class="p">))</span>
-<span class="w">    </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">send-request</span><span class="p">))</span>
-<span class="w">   </span><span class="nv">else</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">std-srvs-set-bool-response-set-field</span><span class="w"> </span><span class="nv">?response</span><span class="w"> </span><span class="s">&quot;success&quot;</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">std-srvs-set-bool-response-set-field</span><span class="w"> </span><span class="nv">?response</span><span class="w"> </span><span class="s">&quot;message&quot;</span><span class="w"> </span><span class="p">(</span><span class="nv">str-cat</span><span class="w"> </span><span class="s">&quot;Received the request: &quot;</span><span class="w"> </span><span class="nv">?req-data</span><span class="p">))</span>
-<span class="w">  </span><span class="p">)</span>
+<span class="p">(</span><span class="nv">deffunction</span><span class="w"> </span><span class="nv">ros_cx_service-service-callback</span><span class="w"> </span><span class="p">(</span><span class="nv">?name</span><span class="w"> </span><span class="nv">?request</span><span class="w"> </span><span class="nv">?response</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;Received a request&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?data</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-get-field</span><span class="w"> </span><span class="nv">?request</span><span class="w"> </span><span class="s">&quot;data&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">yellow</span><span class="w"> </span><span class="nv">?data</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-set-field</span><span class="w"> </span><span class="nv">?response</span><span class="w"> </span><span class="s">&quot;success&quot;</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-set-field</span><span class="w"> </span><span class="nv">?response</span><span class="w"> </span><span class="s">&quot;message&quot;</span><span class="w"> </span><span class="p">(</span><span class="nv">str-cat</span><span class="w"> </span><span class="s">&quot;Received &quot;</span><span class="w"> </span><span class="nv">?data</span><span class="p">))</span>
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">set-bool-srv-cleanup</span>
+<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">ros-msgs-service-finalize</span>
+<span class="s">&quot; Delete the service on executive finalize. &quot;</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">executive-finalize</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">std-srvs-set-bool-service</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">?service</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">std-srvs-set-bool-destroy-service</span><span class="w"> </span><span class="nv">?service</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-service</span><span class="w"> </span><span class="p">(</span><span class="nv">service</span><span class="w"> </span><span class="nv">?service</span><span class="p">))</span>
+<span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">info</span><span class="w"> </span><span class="s">&quot;Destroying service&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-destroy-service</span><span class="w"> </span><span class="nv">?service</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>

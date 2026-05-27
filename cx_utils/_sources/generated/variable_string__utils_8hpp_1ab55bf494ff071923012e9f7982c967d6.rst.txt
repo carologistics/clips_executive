@@ -1,0 +1,14 @@
+.. _exhale_variable_string__utils_8hpp_1ab55bf494ff071923012e9f7982c967d6:
+
+Variable cx::rd
+===============
+
+- Defined in :ref:`file_include_cx_utils_string_utils.hpp`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: cx::rd
+   :project: cx_utils Doxygen Project

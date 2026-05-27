@@ -8,7 +8,7 @@ This package allows you to manage PDDL planning environments for use with the RO
 .. toctree::
    :maxdepth: 2
 
-
+   Python API <modules>
 
 
 

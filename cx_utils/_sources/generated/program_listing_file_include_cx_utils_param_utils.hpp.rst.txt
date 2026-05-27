@@ -85,25 +85,17 @@ Program Listing for File param_utils.hpp
      try {
        if (!node->get_parameter(plugin_name + ".plugin", plugin_type)) {
          RCLCPP_FATAL(node->get_logger(), "'plugin' param not defined for %s", plugin_name.c_str());
-         throw std::runtime_error(std::string("'plugin' param not defined for '") + plugin_name + "'");
+         exit(-1);
        }
      } catch (rclcpp::exceptions::ParameterUninitializedException & ex) {
        RCLCPP_FATAL(
          node->get_logger(), "'plugin' param not defined for %s. Error: %s", plugin_name.c_str(),
          ex.what());
-       throw std::runtime_error(std::string("'plugin' param not defined for '") + plugin_name + "'");
+       exit(-1);
      }
    
      return plugin_type;
    }
-   
-   /* Resolves a list of files by checking absolute paths and package share directories.
-    * @param files_in List of file paths to resolve (absolute or relative).
-    * @param share_dirs List of ROS package names to search in for relative paths.
-    * @param files_out Output vector where resolved absolute paths are written.
-    * @throws std::runtime_error if a file cannot be resolved via any of the provided paths.
-    * @note Packages in share_dirs that are not found in the ament index are skipped
-    */
    void resolve_files(
      const std::vector<std::string> & files_in, const std::vector<std::string> & share_dirs,
      std::vector<std::string> & files_out);

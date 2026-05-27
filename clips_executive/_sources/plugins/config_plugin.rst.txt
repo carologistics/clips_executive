@@ -42,11 +42,6 @@ Functions
 
   ; Load all config values from a file (absolute path) given a prefix and store them into (confval) facts.
   ; The prefix can be used to restrict the loaded values to a prefix
-  ; Use / for nesting, e.g., foo/bar for only retrieving values under bar in this example:
-  ;  foo:
-  ;    bar:
-  ;      ...
-  ; For / inside of keys, wrap the whole key by single quotes ', e.g., '/foo'/bar if the key is "/foo" instead of "foo".
   (config-load ?file ?prefix)
 
 Usage Example
@@ -97,14 +92,9 @@ File :source-master:`cx_bringup/clips/plugin_examples/config.clp`.
     =>
     (bind ?share-dir (ament-index-get-package-share-directory "cx_bringup"))
     (bind ?file (str-cat ?share-dir "/params/plugin_examples/config.yaml"))
-    (printout green "Loading from file " ?file crlf)
-    ; test loading of sequence
-    (printout green " 1. Prefix leading to environments (sequence): " crlf)
-    (config-load ?file "'/**'/ros__parameters/environments")
-    ; test loading of map
-    (printout green " 2. Prefix leading to environment config (map):" crlf)
-    (config-load ?file "'/**'/ros__parameters/cx_config/")
-    ; test loading of value
-    (printout green " 3. Prefix leading to config plugin string (scalar):" crlf)
-    (config-load ?file "'/**'/ros__parameters/config/plugin")
+    (printout green "Loading yaml file: " ?file crlf)
+    (config-load ?file "/")
+    (delayed-do-for-all-facts ((?cv confval))
+      (ppfact ?cv blue)
+    )
   )

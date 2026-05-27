@@ -38,7 +38,7 @@ Includes
 
 - ``spdlog/spdlog.h``
 
-- ``string``
+- ``string`` (:ref:`file_include_cx_utils_string_utils.hpp`)
 
 
 

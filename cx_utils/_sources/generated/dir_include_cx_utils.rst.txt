@@ -19,5 +19,6 @@ Files
 - :ref:`file_include_cx_utils_clips_env_context.hpp`
 - :ref:`file_include_cx_utils_format.hpp`
 - :ref:`file_include_cx_utils_param_utils.hpp`
+- :ref:`file_include_cx_utils_string_utils.hpp`
 
 

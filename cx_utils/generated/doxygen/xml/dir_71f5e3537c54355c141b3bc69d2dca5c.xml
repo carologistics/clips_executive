@@ -5,6 +5,7 @@
     <innerfile refid="clips__env__context_8hpp">clips_env_context.hpp</innerfile>
     <innerfile refid="format_8hpp">format.hpp</innerfile>
     <innerfile refid="param__utils_8hpp">param_utils.hpp</innerfile>
+    <innerfile refid="string__utils_8hpp">string_utils.hpp</innerfile>
     <briefdescription>
     </briefdescription>
     <detaileddescription>

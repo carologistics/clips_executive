@@ -157,32 +157,24 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>  <span class="keywordflow">try</span> {</div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    <span class="keywordflow">if</span> (!node-&gt;get_parameter(plugin_name + <span class="stringliteral">&quot;.plugin&quot;</span>, plugin_type)) {</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>      RCLCPP_FATAL(node-&gt;get_logger(), <span class="stringliteral">&quot;&#39;plugin&#39; param not defined for %s&quot;</span>, plugin_name.c_str());</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>      <span class="keywordflow">throw</span> std::runtime_error(std::string(<span class="stringliteral">&quot;&#39;plugin&#39; param not defined for &#39;&quot;</span>) + plugin_name + <span class="stringliteral">&quot;&#39;&quot;</span>);</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>      exit(-1);</div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    }</div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  } <span class="keywordflow">catch</span> (rclcpp::exceptions::ParameterUninitializedException &amp; ex) {</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    RCLCPP_FATAL(</div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>      node-&gt;get_logger(), <span class="stringliteral">&quot;&#39;plugin&#39; param not defined for %s. Error: %s&quot;</span>, plugin_name.c_str(),</div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>      ex.what());</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    <span class="keywordflow">throw</span> std::runtime_error(std::string(<span class="stringliteral">&quot;&#39;plugin&#39; param not defined for &#39;&quot;</span>) + plugin_name + <span class="stringliteral">&quot;&#39;&quot;</span>);</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    exit(-1);</div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>  }</div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>  <span class="keywordflow">return</span> plugin_type;</div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>}</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="comment">/* Resolves a list of files by checking absolute paths and package share directories.</span></div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span><span class="comment"> * @param files_in List of file paths to resolve (absolute or relative).</span></div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span><span class="comment"> * @param share_dirs List of ROS package names to search in for relative paths.</span></div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span><span class="comment"> * @param files_out Output vector where resolved absolute paths are written.</span></div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><span class="comment"> * @throws std::runtime_error if a file cannot be resolved via any of the provided paths.</span></div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span><span class="comment"> * @note Packages in share_dirs that are not found in the ament index are skipped</span></div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span><span class="keywordtype">void</span> resolve_files(</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>  <span class="keyword">const</span> std::vector&lt;std::string&gt; &amp; files_in, <span class="keyword">const</span> std::vector&lt;std::string&gt; &amp; share_dirs,</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>  std::vector&lt;std::string&gt; &amp; files_out);</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>}  <span class="comment">// namespace cx_utils</span></div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>}  <span class="comment">// namespace cx</span></div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span><span class="preprocessor">#endif  </span><span class="comment">// CX_UTILS__PARAM_UTILS_HPP_</span></div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="keywordtype">void</span> resolve_files(</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>  <span class="keyword">const</span> std::vector&lt;std::string&gt; &amp; files_in, <span class="keyword">const</span> std::vector&lt;std::string&gt; &amp; share_dirs,</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>  std::vector&lt;std::string&gt; &amp; files_out);</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>}  <span class="comment">// namespace cx_utils</span></div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>}  <span class="comment">// namespace cx</span></div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><span class="preprocessor">#endif  </span><span class="comment">// CX_UTILS__PARAM_UTILS_HPP_</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
