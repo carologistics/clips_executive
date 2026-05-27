@@ -11,22 +11,20 @@ jobs:
     name: Build and Deploy Documentation
     runs-on: ubuntu-latest
 
+    container:
+      image: ros:jazzy
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Setup ROS 2
-        uses: ros-tooling/setup-ros@v0.7
-        with:
-          distribution: lyrical
-
       - name: Install rosdoc2
-        run: sudo apt-get update && sudo apt-get install -y python3-rosdoc2
+        run: sudo apt-get update && sudo apt-get install -y python3-rosdoc2 python3-pip
 
-      - name: Install Python Dependencies for Sphinx
+      - name: Install Sphinx deps via apt
         run: |
-          python3 -m pip install --upgrade pip
-          python3 -m pip install sphinx-copybutton
+          apt-get update
+          apt-get install -y python3-docutils python3-myst-parser python3-sphinx-copybutton
 
 
       - name: Discover ROS 2 Packages

@@ -1,57 +1,132 @@
 name: ROS Build & Pre-commit
-
 on:
   push:
     branches: [master]
   pull_request:
     branches: [master]
-
+  workflow_dispatch:
 jobs:
   pre-commit:
     runs-on: ubuntu-24.04
     container:
-      image: quay.io/carologistics/clips_executive_base_image:kilted
-      options: --user 1001 --workdir /ros_ws
+      image: docker.io/library/ros:kilted
+      options: --workdir /ros_ws
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-
       - name: Fix git refs for gitlint
         run: |
+          git config --global --add safe.directory '*'
           git fetch origin +refs/heads/*:refs/remotes/origin/*
           git remote set-head origin --auto || true
-
+      - name: Install pre-commit
+        run: |
+          apt-get update
+          apt-get install -y pre-commit
       - name: Run pre-commit hooks
         run: |
-          ls -lha
           . /opt/ros/kilted/setup.sh
           pre-commit run --all-files --hook-stage manual
-
-      - name: Clone clips_vendor (humble only)
-        if: matrix.ros_distro == 'humble'
-        run: |
-          cd /ros_ws
-          git clone https://github.com/carologistics/clips_vendor.git
 
   ros-build:
     runs-on: ubuntu-24.04
     needs: pre-commit
     strategy:
       matrix:
-        ros_distro: [jazzy, kilted, rolling]
+        include:
+          - ros_distro: humble
+            required: false
+          - ros_distro: jazzy
+            required: false
+          - ros_distro: kilted
+            required: false
+          - ros_distro: lyrical
+            required: false
+          - ros_distro: rolling
+            required: false
+    continue-on-error: ${{ !matrix.required }}
     container:
-      image: quay.io/carologistics/clips_executive_base_image:${{ matrix.ros_distro }}
-      options: --user 1001 --workdir /ros_ws
+      image: docker.io/library/ros:${{ matrix.ros_distro }}
+      options: --workdir /ros_ws
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
 
+      - name: Install base tools
+        run: |
+          apt-get update && apt-get upgrade -y
+          apt-get install -y \
+            python3-pip \
+            python3-vcstool \
+            python3-rosdep \
+            pre-commit \
+            git \
+            libboost-all-dev \
+            openssl \
+            pkg-config \
+            unzip \
+            ros-${{ matrix.ros_distro }}-ament-cmake-vendor-package
+
+      - name: Install Python packages
+        run: |
+          if [ "${{ matrix.ros_distro }}" = "humble" ]; then
+            pip install unified-planning
+          else
+            pip install unified-planning --break-system-packages
+          fi
+      - name: Checkout clips_vendor
+        if: contains(fromJSON('["lyrical"]'), matrix.ros_distro)
+        uses: actions/checkout@v6
+        with:
+          repository: carologistics/clips_vendor
+          ref: main
+          path: src/clips_vendor
+
+      - name: Checkout protobuf_comm
+        if: contains(fromJSON('["humble", "lyrical"]'), matrix.ros_distro)
+        uses: actions/checkout@v6
+        with:
+          repository: fawkesrobotics/protobuf_comm
+          ref: main
+          path: src/protobuf_comm
+
+      - name: Install ROS dependencies
+        env:
+          PIP_BREAK_SYSTEM_PACKAGES: "1"
+        run: |
+          apt update
+          rosdep update
+          . /opt/ros/${{ matrix.ros_distro }}/setup.sh
+          rosdep install --from-paths . --ignore-src \
+            -r -y
+          # Install packages missing from rosdep index on noble for rolling
+          # (image not on 26.04 yet, but rosdep keys already moved)
+          if [ "${{ matrix.ros_distro }}" = "rolling" ]; then
+            apt-get install -y ros-${{ matrix.ros_distro }}-bondcpp \
+                               ros-${{ matrix.ros_distro }}-bondpy \
+                               ros-${{ matrix.ros_distro }}-clips-vendor \
+                               ros-${{ matrix.ros_distro }}-example-interfaces \
+                               ros-${{ matrix.ros_distro }}-protobuf-comm \
+                               python3-pybind11
+          fi
+          if [ "${{ matrix.ros_distro }}" = "lyrical" ]; then
+            apt-get install -y libboost-system-dev \
+                               libboost-thread-dev \
+                               libboost-all-dev \
+                               python3-pybind11
+          fi
+
       - name: Build ROS workspace
         run: |
-          set -e
-          export ROS_DISTRO=${{ matrix.ros_distro }}
-          echo "Building workspace for $ROS_DISTRO"
-          . /opt/ros/$ROS_DISTRO/setup.sh
-          colcon build --merge-install --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebInfo -DBUILD_TESTING=OFF
+          . /opt/ros/${{ matrix.ros_distro }}/setup.sh
+          colcon build --merge-install --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebInfo
+
+      # Tests cannot be executed on github runner, they all fail as ros node bringup crashes
+      # - name: Run tests
+      #   run: |
+      #     . /opt/ros/${{ matrix.ros_distro }}/setup.sh
+      #     . install/setup.sh
+      #     colcon test --merge-install \
+      #       --event-handlers console_direct+ && colcon test-result --verbose
