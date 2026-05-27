@@ -4,6 +4,7 @@
     <member refid="classcx_1_1CLIPSEnvContext_1ad1c67e36e0f50a0612a6a8b27f091999" kind="variable"><name>env_name_</name></member>
     <member refid="classcx_1_1CLIPSEnvContext_1a062a2781d611ba4c980121f287da4b85" kind="variable"><name>env_mtx_</name></member>
     <member refid="classcx_1_1CLIPSEnvContext_1a5f879804216e90ec49fbda6e5b6c3e48" kind="variable"><name>logger_</name></member>
+    <member refid="classcx_1_1CLIPSEnvContext_1a209a2b89a0b35b81e5c0e0388b32c781" kind="function"><name>CLIPSEnvContext</name></member>
     <member refid="classcx_1_1CLIPSEnvContext_1a641c2466c193ef0d61c8b9837b67f912" kind="function"><name>get_context</name></member>
     <member refid="classcx_1_1CLIPSEnvContext_1adc8a28f3406289ea8e8019804f49d2ca" kind="function"><name>get_context</name></member>
   </compound>
@@ -19,10 +20,6 @@
     <member refid="classcx_1_1CLIPSLogger_1ab0ecbf1459675aac82e4c8a8dda38fc9" kind="function"><name>log</name></member>
   </compound>
   <compound refid="namespacecx" kind="namespace"><name>cx</name>
-    <member refid="string__utils_8hpp_1acbb48e2352e3fd2b0daec29318a59372" kind="variable"><name>chars</name></member>
-    <member refid="string__utils_8hpp_1ab55bf494ff071923012e9f7982c967d6" kind="variable"><name>rd</name></member>
-    <member refid="string__utils_8hpp_1a1810683f407b6fadb41a3b8f1df0fd8a" kind="function"><name>generator</name></member>
-    <member refid="string__utils_8hpp_1a59c4b9715ff132a1ac5adcde1c341ff6" kind="function"><name>generate_rnd_string</name></member>
   </compound>
   <compound refid="namespacecx_1_1cx__utils" kind="namespace"><name>cx::cx_utils</name>
     <member refid="param__utils_8hpp_1a4283b7b92aee51add4e373d310ce452c" kind="function"><name>declare_parameter_if_not_declared</name></member>
@@ -35,8 +32,6 @@
   <compound refid="format_8hpp" kind="file"><name>format.hpp</name>
   </compound>
   <compound refid="param__utils_8hpp" kind="file"><name>param_utils.hpp</name>
-  </compound>
-  <compound refid="string__utils_8hpp" kind="file"><name>string_utils.hpp</name>
   </compound>
   <compound refid="dir_71f5e3537c54355c141b3bc69d2dca5c" kind="dir"><name>include/cx_utils</name>
   </compound>

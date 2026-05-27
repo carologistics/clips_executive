@@ -108,24 +108,32 @@
 <codeline lineno="85"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">try</highlight><highlight class="normal"><sp/>{</highlight></codeline>
 <codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(!node-&gt;get_parameter(plugin_name<sp/>+<sp/></highlight><highlight class="stringliteral">&quot;.plugin&quot;</highlight><highlight class="normal">,<sp/>plugin_type))<sp/>{</highlight></codeline>
 <codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>RCLCPP_FATAL(node-&gt;get_logger(),<sp/></highlight><highlight class="stringliteral">&quot;&apos;plugin&apos;<sp/>param<sp/>not<sp/>defined<sp/>for<sp/>%s&quot;</highlight><highlight class="normal">,<sp/>plugin_name.c_str());</highlight></codeline>
-<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>exit(-1);</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">throw</highlight><highlight class="normal"><sp/>std::runtime_error(std::string(</highlight><highlight class="stringliteral">&quot;&apos;plugin&apos;<sp/>param<sp/>not<sp/>defined<sp/>for<sp/>&apos;&quot;</highlight><highlight class="normal">)<sp/>+<sp/>plugin_name<sp/>+<sp/></highlight><highlight class="stringliteral">&quot;&apos;&quot;</highlight><highlight class="normal">);</highlight></codeline>
 <codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
 <codeline lineno="90"><highlight class="normal"><sp/><sp/>}<sp/></highlight><highlight class="keywordflow">catch</highlight><highlight class="normal"><sp/>(rclcpp::exceptions::ParameterUninitializedException<sp/>&amp;<sp/>ex)<sp/>{</highlight></codeline>
 <codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/>RCLCPP_FATAL(</highlight></codeline>
 <codeline lineno="92"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>node-&gt;get_logger(),<sp/></highlight><highlight class="stringliteral">&quot;&apos;plugin&apos;<sp/>param<sp/>not<sp/>defined<sp/>for<sp/>%s.<sp/>Error:<sp/>%s&quot;</highlight><highlight class="normal">,<sp/>plugin_name.c_str(),</highlight></codeline>
 <codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/>ex.what());</highlight></codeline>
-<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/>exit(-1);</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">throw</highlight><highlight class="normal"><sp/>std::runtime_error(std::string(</highlight><highlight class="stringliteral">&quot;&apos;plugin&apos;<sp/>param<sp/>not<sp/>defined<sp/>for<sp/>&apos;&quot;</highlight><highlight class="normal">)<sp/>+<sp/>plugin_name<sp/>+<sp/></highlight><highlight class="stringliteral">&quot;&apos;&quot;</highlight><highlight class="normal">);</highlight></codeline>
 <codeline lineno="95"><highlight class="normal"><sp/><sp/>}</highlight></codeline>
 <codeline lineno="96"><highlight class="normal"></highlight></codeline>
 <codeline lineno="97"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>plugin_type;</highlight></codeline>
 <codeline lineno="98"><highlight class="normal">}</highlight></codeline>
-<codeline lineno="99"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>resolve_files(</highlight></codeline>
-<codeline lineno="100"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;std::string&gt;<sp/>&amp;<sp/>files_in,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;std::string&gt;<sp/>&amp;<sp/>share_dirs,</highlight></codeline>
-<codeline lineno="101"><highlight class="normal"><sp/><sp/>std::vector&lt;std::string&gt;<sp/>&amp;<sp/>files_out);</highlight></codeline>
-<codeline lineno="102"><highlight class="normal">}<sp/><sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>cx_utils</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="103"><highlight class="normal">}<sp/><sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>cx</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="104"><highlight class="normal"></highlight></codeline>
-<codeline lineno="105"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/><sp/></highlight><highlight class="comment">//<sp/>CX_UTILS__PARAM_UTILS_HPP_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="99"><highlight class="normal"></highlight></codeline>
+<codeline lineno="101"><highlight class="comment">/*<sp/>Resolves<sp/>a<sp/>list<sp/>of<sp/>files<sp/>by<sp/>checking<sp/>absolute<sp/>paths<sp/>and<sp/>package<sp/>share<sp/>directories.</highlight></codeline>
+<codeline lineno="102"><highlight class="comment"><sp/>*<sp/>@param<sp/>files_in<sp/>List<sp/>of<sp/>file<sp/>paths<sp/>to<sp/>resolve<sp/>(absolute<sp/>or<sp/>relative).</highlight></codeline>
+<codeline lineno="103"><highlight class="comment"><sp/>*<sp/>@param<sp/>share_dirs<sp/>List<sp/>of<sp/>ROS<sp/>package<sp/>names<sp/>to<sp/>search<sp/>in<sp/>for<sp/>relative<sp/>paths.</highlight></codeline>
+<codeline lineno="104"><highlight class="comment"><sp/>*<sp/>@param<sp/>files_out<sp/>Output<sp/>vector<sp/>where<sp/>resolved<sp/>absolute<sp/>paths<sp/>are<sp/>written.</highlight></codeline>
+<codeline lineno="105"><highlight class="comment"><sp/>*<sp/>@throws<sp/>std::runtime_error<sp/>if<sp/>a<sp/>file<sp/>cannot<sp/>be<sp/>resolved<sp/>via<sp/>any<sp/>of<sp/>the<sp/>provided<sp/>paths.</highlight></codeline>
+<codeline lineno="106"><highlight class="comment"><sp/>*<sp/>@note<sp/>Packages<sp/>in<sp/>share_dirs<sp/>that<sp/>are<sp/>not<sp/>found<sp/>in<sp/>the<sp/>ament<sp/>index<sp/>are<sp/>skipped</highlight></codeline>
+<codeline lineno="107"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="108"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>resolve_files(</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;std::string&gt;<sp/>&amp;<sp/>files_in,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::vector&lt;std::string&gt;<sp/>&amp;<sp/>share_dirs,</highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/>std::vector&lt;std::string&gt;<sp/>&amp;<sp/>files_out);</highlight></codeline>
+<codeline lineno="111"><highlight class="normal">}<sp/><sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>cx_utils</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="112"><highlight class="normal">}<sp/><sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>cx</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="113"><highlight class="normal"></highlight></codeline>
+<codeline lineno="114"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/><sp/></highlight><highlight class="comment">//<sp/>CX_UTILS__PARAM_UTILS_HPP_</highlight><highlight class="normal"></highlight></codeline>
     </programlisting>
     <location file="include/cx_utils/param_utils.hpp"/>
   </compounddef>
