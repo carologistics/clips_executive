@@ -356,7 +356,7 @@ long long DBHandler::start_run(int64_t start_time_ns, long long start_tick)
       R"sql(
         INSERT INTO time_lookup (start_time, start_tick)
         VALUES (
-          TIMESTAMPTZ 'epoch' + ($1::bigint / 1000000) * INTERVAL '1 millisecond',
+          TIMESTAMP 'epoch' + ($1::numeric / 1000000000.0) * INTERVAL '1 second',
           $2
         )
         RETURNING run_number;
@@ -381,8 +381,9 @@ void DBHandler::end_run(long long run_number, int64_t end_time_ns, long long end
     pqxx::result result = w.exec_params(
       R"sql(
         UPDATE time_lookup
-        SET end_time = TIMESTAMPTZ 'epoch' + ($2::bigint / 1000000) * INTERVAL '1 millisecond',
-            end_tick = $3
+        SET
+          end_time = TIMESTAMP 'epoch' + ($2::numeric / 1000000000.0) * INTERVAL '1 second',
+          end_tick = $3
         WHERE run_number = $1
           AND end_tick IS NULL;
       )sql",

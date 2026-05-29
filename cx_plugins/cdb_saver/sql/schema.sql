@@ -10,9 +10,9 @@ CREATE TYPE timed_text AS (
 
 CREATE TABLE time_lookup (
   run_number BIGSERIAL PRIMARY KEY,
-  start_time TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  end_time   TIMESTAMPTZ,
-  start_tick BIGINT      NOT NULL,
+  start_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  end_time   TIMESTAMP,
+  start_tick BIGINT     NOT NULL,
   end_tick   BIGINT
 );
 

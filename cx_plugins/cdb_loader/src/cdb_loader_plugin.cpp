@@ -20,8 +20,11 @@
 // TODO: This license is not consistent with the license used in the project.
 //       Delete the inconsistent license and above line and rerun pre-commit to insert a good license.
 // TODO EXTERNAL ADDRESS AS VALUE
+// TODO Check weather the db exists porperly
 
 #include <pqxx/pqxx>
+
+#include "cx_cdb_loader_plugin/helpers.hpp"
 #undef RANGES
 // RANGES is defined in clips_ns/clips.h, which causes issues with
 // pqxx/pqxx. It needs to be included before clips_ns/clips.h to avoid compilation errors.
@@ -68,6 +71,13 @@ void CDBLoaderPlugin::initialize()
     node, plugin_name_ + ".password", rclcpp::ParameterValue(std::string()));
   cx::cx_utils::declare_parameter_if_not_declared(
     node, plugin_name_ + ".database", rclcpp::ParameterValue(std::string()));
+
+  cx::cx_utils::declare_parameter_if_not_declared(
+    node, plugin_name_ + ".restore_run", rclcpp::ParameterValue(std::string()));
+  cx::cx_utils::declare_parameter_if_not_declared(
+    node, plugin_name_ + ".restore_tick", rclcpp::ParameterValue(std::string()));
+  cx::cx_utils::declare_parameter_if_not_declared(
+    node, plugin_name_ + ".restore_time", rclcpp::ParameterValue(std::string()));
 }
 
 bool CDBLoaderPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
@@ -84,12 +94,29 @@ bool CDBLoaderPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
   node->get_parameter(plugin_name_ + ".password", password);
   node->get_parameter(plugin_name_ + ".database", database);
 
-  time_t t = std::time(nullptr);
-  std::tm tm{};
-  gmtime_r(&t, &tm);
+  std::string restore_run_param;
+  std::string restore_tick_param;
+  std::string restore_time_param;
 
-  std::ostringstream oss;
-  oss << std::put_time(&tm, "%Y_%m_%dt%H_%M_%S");
+  node->get_parameter(plugin_name_ + ".restore_run", restore_run_param);
+  node->get_parameter(plugin_name_ + ".restore_tick", restore_tick_param);
+  node->get_parameter(plugin_name_ + ".restore_time", restore_time_param);
+
+  bool restore_run_is_set = restore_run_param != "";
+
+  bool restore_tick_is_set = restore_tick_param != "";
+
+  bool restore_time_is_set = restore_time_param != "";
+
+  if (
+    static_cast<int>(restore_run_is_set) + static_cast<int>(restore_tick_is_set) +
+      static_cast<int>(restore_time_is_set) !=
+    1) {
+    RCLCPP_ERROR(
+      *logger_,
+      "Exactly one of restore_run, restore_tick and restore_time parameters has to be set");
+    return false;
+  }
 
   std::string env_name = CLIPSEnvContext::get_context(env)->env_name_;
 
@@ -111,16 +138,34 @@ bool CDBLoaderPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
   w.exec(kViewSchemaSql);
   w.commit();
 
-  std::vector<Deftemplate> deftemplates = load_deftemplates(db);
+  long long restore_tick;
+  if (restore_run_is_set) {
+    long long run = strtoll(restore_run_param.c_str(), nullptr, 10);
+    restore_tick = get_end_tick_for_run(db, run);
+  } else if (restore_tick_is_set) {
+    restore_tick = resolve_restore_tick(db, strtoll(restore_tick_param.c_str(), nullptr, 10));
+  } else {
+    restore_tick = resolve_restore_time(db, restore_time_param, *logger_);
+  }
+
+  RCLCPP_INFO(*logger_, "Restoring environment %s to tick %lli", env_name.c_str(), restore_tick);
+
+  std::vector<Deftemplate> deftemplates = load_deftemplates(db, restore_tick);
   for (Deftemplate deftemplate : deftemplates) {
-    RCLCPP_ERROR(
-      *logger_, "DEFTEMPLATE %s in %s, created at %li ended at %li", deftemplate.name.c_str(),
-      deftemplate.defmodule.c_str(), deftemplate.start_tick, deftemplate.end_tick.value_or(-1));
-    for (TimedText value : deftemplate.value) {
-      RCLCPP_ERROR(*logger_, "VALUE AT %li: %s", value.tick, value.value.c_str());
-      clips::Build(env.get(), value.value.c_str());
+    // RCLCPP_ERROR(
+    //   *logger_, "DEFTEMPLATE %s in %s, created at %lli ended at %lli", deftemplate.name.c_str(),
+    //   deftemplate.defmodule.c_str(), deftemplate.start_tick, deftemplate.end_tick.value_or(-1));
+    std::optional<TimedText> value = latest_timed_text_at_tick(deftemplate.value, restore_tick);
+    if (value.has_value()) {
+      clips::Build(env.get(), value.value().value.c_str());
+    } else {
+      RCLCPP_ERROR(
+        *logger_, "No value found for deftemplate %s in %s at tick %lli", deftemplate.name.c_str(),
+        deftemplate.defmodule.c_str(), restore_tick);
     }
   }
+
+  ((clips::Fact *)nullptr)->factIndex = -1;
 
   std::vector<Fact> facts = load_facts(db);
   std::unordered_map<long long, clips::Fact *> id_to_fact_ptr;
