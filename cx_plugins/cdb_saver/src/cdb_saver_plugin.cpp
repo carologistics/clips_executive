@@ -559,72 +559,72 @@ bool CDBSaverPlugin::clips_env_destroyed(std::shared_ptr<clips::Environment> & e
       context->env_name_.c_str());
     return false;
   }
-  if(!clips::RemoveAfterRunFiresFunction(env.get(), "cdb_after_run_callback"){
+  if (!clips::RemoveAfterRunFiresFunction(env.get(), "cdb_after_run_callback")) {
     RCLCPP_ERROR(
       *logger_, "Failed to remove after run callback for environment %s",
       context->env_name_.c_str());
     return false;
   }
 
-  if(!clips::RemoveDefruleAssertFunction(env.get(), "cdb_defrule_assert_callback")) {
+  if (!clips::RemoveDefruleAssertFunction(env.get(), "cdb_defrule_assert_callback")) {
     RCLCPP_ERROR(
       *logger_, "Failed to remove defrule assert callback for environment %s",
       context->env_name_.c_str());
     return false;
   }
-  if(!clips::RemoveDefruleRetractFunction(env.get(), "cdb_defrule_retract_callback")) {
+  if (!clips::RemoveDefruleRetractFunction(env.get(), "cdb_defrule_retract_callback")) {
     RCLCPP_ERROR(
       *logger_, "Failed to remove defrule retract callback for environment %s",
       context->env_name_.c_str());
     return false;
   }
 
-  if(!clips::RemoveDeftemplateAssertFunction(env.get(), "cdb_deftemplate_assert_callback")) {
+  if (!clips::RemoveDeftemplateAssertFunction(env.get(), "cdb_deftemplate_assert_callback")) {
     RCLCPP_ERROR(
       *logger_, "Failed to remove deftemplate assert callback for environment %s",
       context->env_name_.c_str());
     return false;
   }
-  if(!clips::RemoveDeftemplateRetractFunction(env.get(), "cdb_deftemplate_retract_callback")) {
+  if (!clips::RemoveDeftemplateRetractFunction(env.get(), "cdb_deftemplate_retract_callback")) {
     RCLCPP_ERROR(
       *logger_, "Failed to remove deftemplate retract callback for environment %s",
       context->env_name_.c_str());
     return false;
   }
 
-  if(clips::RemoveDeffunctionAssertFunction(env.get(), "cdb_deffunction_assert_callback")) {
+  if (clips::RemoveDeffunctionAssertFunction(env.get(), "cdb_deffunction_assert_callback")) {
     RCLCPP_ERROR(
       *logger_, "Failed to remove deffunction assert callback for environment %s",
       context->env_name_.c_str());
     return false;
   }
-  if(clips::RemoveDeffunctionRetractFunction(env.get(), "cdb_deffunction_retract_callback")) {
+  if (clips::RemoveDeffunctionRetractFunction(env.get(), "cdb_deffunction_retract_callback")) {
     RCLCPP_ERROR(
       *logger_, "Failed to remove deffunction retract callback for environment %s",
       context->env_name_.c_str());
     return false;
   }
 
-  if(clips::RemoveDeffactsAssertFunction(env.get(), "cdb_deffacts_assert_callback")) {
+  if (clips::RemoveDeffactsAssertFunction(env.get(), "cdb_deffacts_assert_callback")) {
     RCLCPP_ERROR(
       *logger_, "Failed to remove deffacts assert callback for environment %s",
       context->env_name_.c_str());
     return false;
   }
-  if(!clips::RemoveDeffactsRetractFunction(env.get(), "cdb_deffacts_retract_callback")) {
+  if (!clips::RemoveDeffactsRetractFunction(env.get(), "cdb_deffacts_retract_callback")) {
     RCLCPP_ERROR(
       *logger_, "Failed to remove deffacts retract callback for environment %s",
       context->env_name_.c_str());
     return false;
   }
 
-  if(!clips::RemoveDefglobalAssertFunction(env.get(), "cdb_defglobal_assert")) {
+  if (!clips::RemoveDefglobalAssertFunction(env.get(), "cdb_defglobal_assert")) {
     RCLCPP_ERROR(
       *logger_, "Failed to remove defglobal assert callback for environment %s",
       context->env_name_.c_str());
     return false;
   }
-  if(clips::RemoveDefglobalRetractFunction(env.get(), "cdb_defglobal_retract")) {
+  if (clips::RemoveDefglobalRetractFunction(env.get(), "cdb_defglobal_retract")) {
     RCLCPP_ERROR(
       *logger_, "Failed to remove defglobal retract callback for environment %s",
       context->env_name_.c_str());

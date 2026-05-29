@@ -130,3 +130,84 @@ SELECT
     d.start_tick,
     d.end_tick
 FROM deffacts d;
+
+CREATE OR REPLACE FUNCTION cdb_max_tick()
+RETURNS BIGINT AS $$
+DECLARE
+    result BIGINT;
+BEGIN
+    SELECT MAX(tick)
+    INTO result
+    FROM (
+        SELECT start_tick AS tick FROM time_lookup
+        UNION ALL
+        SELECT end_tick AS tick FROM time_lookup WHERE end_tick IS NOT NULL
+
+        UNION ALL
+        SELECT start_tick AS tick FROM facts
+        UNION ALL
+        SELECT end_tick AS tick FROM facts WHERE end_tick IS NOT NULL
+        UNION ALL
+        SELECT tick AS tick FROM fact_values
+
+        UNION ALL
+        SELECT start_tick AS tick FROM defglobals
+        UNION ALL
+        SELECT end_tick AS tick FROM defglobals WHERE end_tick IS NOT NULL
+        UNION ALL
+        SELECT h.tick AS tick
+        FROM defglobals d
+        CROSS JOIN LATERAL unnest(d.value) AS h(tick, value)
+
+        UNION ALL
+        SELECT start_tick AS tick FROM defrules
+        UNION ALL
+        SELECT end_tick AS tick FROM defrules WHERE end_tick IS NOT NULL
+        UNION ALL
+        SELECT h.tick AS tick
+        FROM defrules r
+        CROSS JOIN LATERAL unnest(r.value) AS h(tick, value)
+
+        UNION ALL
+        SELECT tick AS tick FROM rule_firing
+
+        UNION ALL
+        SELECT start_tick AS tick FROM deffunctions
+        UNION ALL
+        SELECT end_tick AS tick FROM deffunctions WHERE end_tick IS NOT NULL
+        UNION ALL
+        SELECT h.tick AS tick
+        FROM deffunctions d
+        CROSS JOIN LATERAL unnest(d.value) AS h(tick, value)
+
+        UNION ALL
+        SELECT start_tick AS tick FROM deftemplates
+        UNION ALL
+        SELECT end_tick AS tick FROM deftemplates WHERE end_tick IS NOT NULL
+        UNION ALL
+        SELECT h.tick AS tick
+        FROM deftemplates d
+        CROSS JOIN LATERAL unnest(d.value) AS h(tick, value)
+
+        UNION ALL
+        SELECT start_tick AS tick FROM deffacts
+        UNION ALL
+        SELECT end_tick AS tick FROM deffacts WHERE end_tick IS NOT NULL
+        UNION ALL
+        SELECT h.tick AS tick
+        FROM deffacts d
+        CROSS JOIN LATERAL unnest(d.value) AS h(tick, value)
+
+        UNION ALL
+        SELECT start_tick AS tick FROM plugins
+        UNION ALL
+        SELECT end_tick AS tick FROM plugins WHERE end_tick IS NOT NULL
+    ) all_ticks;
+
+    IF result IS NULL THEN
+        RAISE EXCEPTION 'Could not resolve max tick: no ticks found in database';
+    END IF;
+
+    RETURN result;
+END;
+$$ LANGUAGE plpgsql;

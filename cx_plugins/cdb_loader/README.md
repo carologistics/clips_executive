@@ -228,30 +228,48 @@ clips_manager:
       # - restore_time
       #
       # If more than one is set, the configuration is invalid.
+      #
+      # restore_run and restore_tick are strings because the values are parsed
+      # as long long by the loader.
 
-      # Restore a complete run.
+      # Restore the state after a complete run.
       #
       # Positive values are zero-based:
-      #   0  = first recorded run
-      #   1  = second recorded run
+      #   "0"  = first recorded run
+      #   "1"  = second recorded run
       #
       # Negative values count backwards from the end:
-      #  -1  = latest recorded run
-      #  -2  = run before the latest recorded run
+      #   "-1" = latest recorded run
+      #   "-2" = run before the latest recorded run
       #
-      # restore_run: -1
+      restore_run: ""
 
       # Restore by tick.
       #
       # Positive values are zero-based:
-      #   0  = first recorded tick
-      #   1  = second recorded tick
+      #   "0"  = first recorded tick
+      #   "1"  = second recorded tick
       #
       # Negative values count backwards from the end:
-      #  -1  = last recorded tick
-      #  -2  = tick before the last recorded tick
+      #   "-1" = last recorded tick
+      #   "-2" = tick before the last recorded tick
       #
-      # restore_tick: -1
+      # Mutually exclusive with restore_run and restore_time.
+      #
+      restore_tick: ""
+
+      # Restore by time.
+      #
+      # A value starting with T+ is interpreted relative to the start time of the
+      # first recorded run. A normal timestamp is interpreted as an absolute time.
+      #
+      # The loader selects the run whose end_time is closest to the requested time
+      # and restores that run's end_tick.
+      #
+      # Mutually exclusive with restore_run and restore_tick.
+      #
+      # restore_time: "T+00:50:23"
+      # restore_time: "2026-05-11T10:50:23Z"
 
       # Restore by time.
       #
@@ -263,13 +281,19 @@ clips_manager:
       # restore_time: "2026-05-11T10:50:23Z"
       # restore_time: "2026-05-11 10:50:23+00"
       #
-      # restore_time: "T+00:50:23"
+      restore_time: ""
 
       # Facts containing external addresses cannot be restored reliably.
       # If true, facts containing external addresses are dropped.
       # If false, they are restored with placeholder external addresses.
       # Defaults to false.
       drop_external_addresses: false
+
+      # If true, external addresses are restored as nullptr external addresses.
+      # If false, external address values are restored as invalid external address values.
+      # This is only used when drop_external_addresses is false.
+      # Defaults to true.
+      restore_external_addresses_as_nullptr: true
 
       # Module filtering.
       modules:

@@ -25,16 +25,14 @@
 // clang-format on
 
 #include <nlohmann/json.hpp>
+#include <rclcpp/rclcpp.hpp>
 
 namespace cx
 {
 
 using json = nlohmann::json;
-using Tick = std::int64_t;
-
-// Store timestamptz as string first.
-// Example PostgreSQL output: "2026-05-11 12:30:00+09"
-using TimestampText = std::string;
+// TODO decide wether this should be long long or std::int64_t and be consistent about it
+using Tick = long long;
 
 struct TimedFact
 {
@@ -51,8 +49,8 @@ struct TimedText
 struct TimeLookup
 {
   std::int64_t run_number;
-  TimestampText start_time;
-  std::optional<TimestampText> end_time;
+  std::string start_time;
+  std::optional<std::string> end_time;
   Tick start_tick;
   std::optional<Tick> end_tick;
 };
@@ -165,7 +163,7 @@ template <typename T>
 std::optional<T> optional_field(const pqxx::row & row, const char * column);
 std::vector<TimedText> parse_timed_text_history(const pqxx::row & row);
 std::vector<TimedFact> parse_timed_fact_history(const pqxx::row & row);
-std::vector<Deftemplate> load_deftemplates(pqxx::connection & conn);
+std::vector<Deftemplate> load_deftemplates(pqxx::connection & conn, Tick restore_tick);
 std::vector<Defglobal> load_defglobals(pqxx::connection & conn);
 std::vector<Deffunction> load_deffunctions(pqxx::connection & conn);
 std::vector<Deffacts> load_deffacts(pqxx::connection & conn);
@@ -175,4 +173,11 @@ std::vector<Fact> load_facts(pqxx::connection & conn);
 bool rule_firing_exists_before_tick(
   pqxx::connection & conn, const std::string & defmodule, const std::string & name,
   const std::vector<std::optional<long long>> & basis, long long before_tick);
+long long get_end_tick_for_run(pqxx::connection & db, long long run_index);
+long long resolve_restore_tick(pqxx::connection & db, long long restore_tick_index);
+long long resolve_restore_time(
+  pqxx::connection & db, const std::string & restore_time, const rclcpp::Logger & logger);
+std::optional<TimedText> latest_timed_text_at_tick(
+  const std::vector<TimedText> & values, Tick restore_tick);
+
 }  // namespace cx
