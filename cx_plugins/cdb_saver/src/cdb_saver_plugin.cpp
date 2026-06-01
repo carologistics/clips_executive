@@ -20,6 +20,7 @@
 // pqxx/pqxx. It needs to be included before clips_ns/clips.h to avoid compilation errors.
 
 #include <clips_ns/clips.h>
+#include <clips_ns/modulpsr.h>
 
 #include <cstddef>
 #include <cstdio>
@@ -165,9 +166,14 @@ bool CDBSaverPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
     for (theFact = clips::GetNextFact(env.get(), NULL); theFact != NULL;
          theFact = clips::GetNextFact(env.get(), theFact)) {
       theDefTemplate = theFact->whichDeftemplate;
-      std::string name = theDefTemplate->header.name->contents;
-      db_handler_ptr->assert_fact(theFact->factIndex, name, clips_fact_to_json(theFact), 0);
+      std::string deftemplate_name = theDefTemplate->header.name->contents;
+      std::string module_name =
+        theDefTemplate->header.whichModule->theModule->header.name->contents;
+      db_handler_ptr->assert_fact(
+        theFact->factIndex, module_name, deftemplate_name, clips_fact_to_json(theFact), 0);
     }
+    db_handler_ptr->assert_defmodule(
+      theModule->header.name->contents, get_module_defintion(theModule), 0);
   }
 
   CLIPSEnvManager * env_manager = static_cast<CLIPSEnvManager *>(parent_.lock().get());
@@ -221,6 +227,9 @@ bool CDBSaverPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
   clips::AddDefglobalRetractFunction(
     env.get(), "cdb_defglobal_retract", &cdb_defglobal_retract_callback, 0, db_handler_ptr);
 
+  clips::AddAfterModuleDefinedFunction(
+    env.get(), "cdb_module_defined_callback", &cdb_module_defined_callback, 0, db_handler_ptr);
+
   return true;
 }
 
@@ -269,9 +278,11 @@ void CDBSaverPlugin::cdb_assert_callback(clips::Environment * /*env*/, void * fa
 
   clips::Deftemplate * deftemplate = f->whichDeftemplate;
   const char * deftemplate_name = deftemplate->header.name->contents;
+  std::string module_name = deftemplate->header.whichModule->theModule->header.name->contents;
 
   DBHandler * db = static_cast<DBHandler *>(context);
-  db->assert_fact(f->factIndex, deftemplate_name, clips_fact_to_json(f).c_str(), db->get_tick());
+  db->assert_fact(
+    f->factIndex, module_name, deftemplate_name, clips_fact_to_json(f).c_str(), db->get_tick());
 }
 
 void CDBSaverPlugin::cdb_retract_callback(clips::Environment * /*env*/, void * fact, void * context)
@@ -414,6 +425,14 @@ void CDBSaverPlugin::cdb_after_run_callback(clips::Environment * /*env*/, void *
   db->end_run(db->current_run_, db->parent_.lock()->now().nanoseconds(), db->tick_);
 }
 
+void CDBSaverPlugin::cdb_module_defined_callback(clips::Environment * env, void * context)
+{
+  DBHandler * db = static_cast<DBHandler *>(context);
+  clips::Defmodule * theModule = clips::GetCurrentModule(env);
+  db->assert_defmodule(
+    theModule->header.name->contents, get_module_defintion(theModule), db->get_tick());
+}
+
 nlohmann::json CDBSaverPlugin::slot_value_to_json(unsigned short type, clips::CLIPSValue * value)
 {
   nlohmann::json json;
@@ -489,7 +508,6 @@ std::string CDBSaverPlugin::clips_fact_to_json(clips::Fact * f)
 {
   nlohmann::json json;
   clips::Deftemplate * deftemplate = f->whichDeftemplate;
-  json["deftemplate"] = deftemplate->header.name->contents;
   // Logic stolen from factmngr.c void PrintFact(...)
   if (f->whichDeftemplate->implied == false) {
     /*=========================================*/
@@ -624,15 +642,32 @@ bool CDBSaverPlugin::clips_env_destroyed(std::shared_ptr<clips::Environment> & e
       context->env_name_.c_str());
     return false;
   }
-  if (clips::RemoveDefglobalRetractFunction(env.get(), "cdb_defglobal_retract")) {
+  if (!clips::RemoveDefglobalRetractFunction(env.get(), "cdb_defglobal_retract")) {
     RCLCPP_ERROR(
       *logger_, "Failed to remove defglobal retract callback for environment %s",
+      context->env_name_.c_str());
+    return false;
+  }
+
+  if (!clips::RemoveAfterModuleDefinedFunction(env.get(), "cdb_module_defined_callback")) {
+    RCLCPP_ERROR(
+      *logger_, "Failed to remove module defined callback for environment %s",
       context->env_name_.c_str());
     return false;
   }
   db_handlers_.erase(context->env_name_);
   return true;
 }
+
+const std::string CDBSaverPlugin::get_module_defintion(clips::Defmodule * defmodule)
+{
+  if (defmodule->header.ppForm != nullptr) {
+    return defmodule->header.ppForm;
+  }
+  std::string definition = std::format("(defmodule {})", defmodule->header.name->contents);
+  return definition;
+}
+
 }  // namespace cx
 
 PLUGINLIB_EXPORT_CLASS(cx::CDBSaverPlugin, cx::ClipsPlugin)

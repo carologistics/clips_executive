@@ -1,6 +1,7 @@
 CREATE OR REPLACE VIEW facts_cpp AS
 SELECT
     f.fact_id,
+    f.module,
     f.deftemplate,
     COALESCE(
         jsonb_agg(

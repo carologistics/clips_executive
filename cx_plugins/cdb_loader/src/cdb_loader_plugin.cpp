@@ -40,6 +40,7 @@
 #include <cx_utils/param_utils.hpp>
 
 #include "cx_cdb_loader_plugin/cdb_loader_plugin.hpp"
+#include "cx_cdb_loader_plugin/parser.hpp"
 #include "cx_cdb_loader_plugin/schema_sql.hpp"
 
 // To export as plugin
@@ -56,7 +57,7 @@ void CDBLoaderPlugin::initialize()
 {
   logger_ = std::make_unique<rclcpp::Logger>(rclcpp::get_logger(plugin_name_));
 
-  std::shared_ptr<rclcpp_lifecycle::LifecycleNode> node = parent_.lock();
+  rclcpp_lifecycle::LifecycleNode::SharedPtr node = parent_.lock();
   if (!node) {
     return;
   }
@@ -150,20 +151,38 @@ bool CDBLoaderPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
 
   RCLCPP_INFO(*logger_, "Restoring environment %s to tick %lli", env_name.c_str(), restore_tick);
 
-  std::vector<Deftemplate> deftemplates = load_deftemplates(db, restore_tick);
-  for (Deftemplate deftemplate : deftemplates) {
-    // RCLCPP_ERROR(
-    //   *logger_, "DEFTEMPLATE %s in %s, created at %lli ended at %lli", deftemplate.name.c_str(),
-    //   deftemplate.defmodule.c_str(), deftemplate.start_tick, deftemplate.end_tick.value_or(-1));
-    std::optional<TimedText> value = latest_timed_text_at_tick(deftemplate.value, restore_tick);
-    if (value.has_value()) {
-      clips::Build(env.get(), value.value().value.c_str());
-    } else {
+  RegexConfig config = populate_regex_config(node, plugin_name_);
+
+  std::vector<Defmodule> defmodules = load_defmodules(db, restore_tick);
+
+  filter_defmodule_in_place(defmodules, config.module_rules);
+
+  for (const Defmodule & defmodule : defmodules) {
+    clips::Build(env.get(), defmodule.value.c_str());
+  }
+
+  if (!config.skip_deftemplates) {
+    std::vector<Deftemplate> deftemplates = load_deftemplates(db, restore_tick);
+    filter_in_place(
+      deftemplates, config.module_rules, config.deftemplate_rules,
+      [](const Deftemplate & value) -> const std::string & { return value.defmodule; },
+      [](const Deftemplate & value) -> const std::string & { return value.name; });
+    for (Deftemplate deftemplate : deftemplates) {
       RCLCPP_ERROR(
-        *logger_, "No value found for deftemplate %s in %s at tick %lli", deftemplate.name.c_str(),
-        deftemplate.defmodule.c_str(), restore_tick);
+        *logger_, "DEFTEMPLATE %s in %s, created at %lli ended at %lli", deftemplate.name.c_str(),
+        deftemplate.defmodule.c_str(), deftemplate.start_tick, deftemplate.end_tick.value_or(-1));
+      std::optional<TimedText> value = latest_timed_text_at_tick(deftemplate.value, restore_tick);
+      if (value.has_value()) {
+        clips::Build(env.get(), value.value().value.c_str());
+      } else {
+        RCLCPP_ERROR(
+          *logger_, "No value found for deftemplate %s in %s at tick %lli",
+          deftemplate.name.c_str(), deftemplate.defmodule.c_str(), restore_tick);
+      }
     }
   }
+
+  RCLCPP_ERROR(*logger_, "CRASHING NOW BYE!");
 
   ((clips::Fact *)nullptr)->factIndex = -1;
 
@@ -172,9 +191,14 @@ bool CDBLoaderPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
   std::vector<clips::Fact *> created_nullptr_facts;
   for (Fact fact : facts) {
     TimedFact value = fact.value.back();
-    clips::Deftemplate * deftemplate =
-      clips::FindDeftemplate(env.get(), value.value["deftemplate"].get<std::string>().c_str());
+    const std::string qualified_name =
+      std::format("{}::{}", fact.module_name, fact.deftemplate_name);
+    clips::Deftemplate * deftemplate = clips::FindDeftemplate(env.get(), qualified_name.c_str());
     if (!value.value["type"].is_null() && deftemplate == nullptr) {
+      clips::Defmodule * defmodule = clips::FindDefmodule(env.get(), fact.module_name.c_str());
+      if (defmodule == nullptr) {
+      }
+
       clips::CLIPSLexeme * sym =
         clips::CreateSymbol(env.get(), value.value["deftemplate"].get<std::string>().c_str());
       deftemplate = clips::CreateImpliedDeftemplate(env.get(), sym, true);
@@ -206,7 +230,7 @@ bool CDBLoaderPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
 
       continue;
     }
-    RCLCPP_ERROR(*logger_, "VALUE AT %li: %s", value.tick, value.value.dump().c_str());
+    RCLCPP_ERROR(*logger_, "VALUE AT %lli: %s", value.tick, value.value.dump().c_str());
 
     for (nlohmann::json slot : value.value["slots"]) {
       clips::CLIPSValue cv;
@@ -256,12 +280,12 @@ bool CDBLoaderPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
   std::vector<Defglobal> defglobals = load_defglobals(db);
   for (Defglobal defglobal : defglobals) {
     RCLCPP_ERROR(
-      *logger_, "DEFGLOBAL %s in %s created at %li ended at %li", defglobal.name.c_str(),
+      *logger_, "DEFGLOBAL %s in %s created at %lli ended at %lli", defglobal.name.c_str(),
       defglobal.defmodule.c_str(), defglobal.start_tick, defglobal.end_tick.value_or(-1));
     // for(TimedFact value : defglobal.value)
     {
       TimedFact value = defglobal.value.back();
-      RCLCPP_ERROR(*logger_, "VALUE AT %li: %s", value.tick, value.value.dump().c_str());
+      RCLCPP_ERROR(*logger_, "VALUE AT %lli: %s", value.tick, value.value.dump().c_str());
       clips::Build(
         env.get(),
         std::format("(defglobal {} ?*{}* = nil)", defglobal.defmodule, defglobal.name).c_str());
@@ -320,7 +344,7 @@ bool CDBLoaderPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
     //   *logger_, "DEFFUNCTION %s in %s created at %li ended at %li", deffunction.name.c_str(),
     //   deffunction.defmodule.c_str(), deffunction.start_tick, deffunction.end_tick.value_or(-1));
     for (TimedText value : deffunction.value) {
-      RCLCPP_ERROR(*logger_, "VALUE AT %li: %s", value.tick, value.value.c_str());
+      RCLCPP_ERROR(*logger_, "VALUE AT %lli: %s", value.tick, value.value.c_str());
       clips::Build(env.get(), value.value.c_str());
     }
   }
@@ -331,7 +355,7 @@ bool CDBLoaderPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
     //   *logger_, "DEFFACTS %s in %s created at %li ended at %li", deffact.name.c_str(),
     //   deffact.defmodule.c_str(), deffact.start_tick, deffact.end_tick.value_or(-1));
     for (TimedText value : deffact.value) {
-      RCLCPP_ERROR(*logger_, "VALUE AT %li: %s", value.tick, value.value.c_str());
+      RCLCPP_ERROR(*logger_, "VALUE AT %lli: %s", value.tick, value.value.c_str());
       clips::Build(env.get(), value.value.c_str());
     }
   }
@@ -342,7 +366,7 @@ bool CDBLoaderPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
     //   *logger_, "DEFRULE %s in %s created at %li ended at %li", defrule.name.c_str(),
     //   defrule.defmodule.c_str(), defrule.start_tick, defrule.end_tick.value_or(-1));
     for (TimedText value : defrule.value) {
-      RCLCPP_ERROR(*logger_, "VALUE AT %li: %s", value.tick, value.value.c_str());
+      RCLCPP_ERROR(*logger_, "VALUE AT %lli: %s", value.tick, value.value.c_str());
       clips::Build(env.get(), value.value.c_str());
     }
   }
@@ -384,7 +408,7 @@ bool CDBLoaderPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
         RCLCPP_ERROR(
           *logger_,
           "Removing activation of rule %s in module %s because it was already fired before %lli",
-          name.c_str(), module_name.c_str(), basis.empty() ? -1 : basis.back());
+          name.c_str(), module_name.c_str(), basis.empty() ? -1 : basis.back().value_or(-1));
         clips::RemoveActivation(env.get(), theActivation, true, true);
       }
     }

@@ -44,7 +44,8 @@ public:
   ~DBHandler();
 
   void assert_fact(
-    long long id, const std::string & deftemplate, const std::string & fact_json, long long tick);
+    long long id, const std::string & module_name, const std::string & deftemplate,
+    const std::string & fact_json, long long tick);
   void retract_fact(long long id, long long tick);
 
   void assert_defrule(
@@ -77,6 +78,8 @@ public:
   void assert_rule_fired(
     const std::string & name, const std::string & module_name,
     const std::vector<std::optional<long long>> & basis, long long tick);
+
+  void assert_defmodule(const std::string & name, const std::string & definition, long long tick);
 
   void load_plugin(
     const std::string & plugin_name, const std::string & config_json, long long tick);

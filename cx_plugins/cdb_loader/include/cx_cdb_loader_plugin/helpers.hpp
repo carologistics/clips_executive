@@ -58,6 +58,8 @@ struct TimeLookup
 struct Fact
 {
   long long fact_id;
+  std::string module_name;
+  std::string deftemplate_name;
   std::vector<TimedFact> value;
   Tick start_tick;
   std::optional<Tick> end_tick;
@@ -117,6 +119,13 @@ struct Deffacts
   std::optional<Tick> end_tick;
 };
 
+struct Defmodule
+{
+  std::string name;
+  std::string value;
+  Tick start_tick;
+};
+
 struct Plugin
 {
   std::string name;
@@ -163,6 +172,7 @@ template <typename T>
 std::optional<T> optional_field(const pqxx::row & row, const char * column);
 std::vector<TimedText> parse_timed_text_history(const pqxx::row & row);
 std::vector<TimedFact> parse_timed_fact_history(const pqxx::row & row);
+std::vector<Defmodule> load_defmodules(pqxx::connection & conn, Tick restore_tick);
 std::vector<Deftemplate> load_deftemplates(pqxx::connection & conn, Tick restore_tick);
 std::vector<Defglobal> load_defglobals(pqxx::connection & conn);
 std::vector<Deffunction> load_deffunctions(pqxx::connection & conn);

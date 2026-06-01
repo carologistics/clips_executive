@@ -92,13 +92,15 @@ bool DBHandler::init_db(DBHandlerConfig & config)
 }
 
 void DBHandler::assert_fact(
-  long long id, const std::string & deftemplate, const std::string & fact_json, long long tick)
+  long long id, const std::string & module_name, const std::string & deftemplate,
+  const std::string & fact_json, long long tick)
 {
   try {
     pqxx::work w(*connection_);
 
     w.exec_params(
-      "SELECT assert_fact_upsert($1, $2, $3, $4::jsonb);", id, deftemplate, tick, fact_json);
+      "SELECT assert_fact_upsert($1, $2, $3, $4, $5::jsonb);", id, deftemplate, module_name, tick,
+      fact_json);
 
     w.commit();
   } catch (const std::exception & e) {
@@ -317,6 +319,32 @@ void DBHandler::assert_rule_fired(
     w.commit();
   } catch (const std::exception & e) {
     throw std::runtime_error("Failed to assert rule firing: " + std::string(e.what()));
+  }
+}
+
+void DBHandler::assert_defmodule(
+  const std::string & name, const std::string & definition, long long tick)
+{
+  try {
+    pqxx::work w(*connection_);
+
+    pqxx::result result = w.exec_params(
+      R"SQL(
+            INSERT INTO defmodules (name, value, start_tick)
+            VALUES ($1, $2, $3)
+            ON CONFLICT (name) DO UPDATE
+            SET
+              value = EXCLUDED.value
+          )SQL",
+      name, definition, tick);
+
+    if (result.affected_rows() != 1) {
+      throw std::runtime_error("Defmodule '" + name + "' not added");
+    }
+
+    w.commit();
+  } catch (const std::exception & e) {
+    throw std::runtime_error("Failed to assert defmodule: " + std::string(e.what()));
   }
 }
 

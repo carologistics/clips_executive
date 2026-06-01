@@ -11,6 +11,7 @@ This plugin aims to restore recorded CLIPS environments as comprehensively as po
 - **Fact references to missing facts:** If a fact or defglobal referenced a fact that was retracted or is not loaded due to this plugin's configuration, the relationship is preserved, but the relative fact ID of the referenced fact is lost.
 - **Defglobal initial values:** Defglobals reset to their initial value on `(reset)`. This initial value is not recorded, so restored defglobals reset to `nil`.
 - **Rules fired before `CDBSaverPlugin` was loaded:** CLIPS does not keep a history of fired rules. Therefore, only rule firings that happened while `CDBSaverPlugin` was loaded can be recorded and restored.
+- **MAIN defmodule redefinition time:** MAIN is the default CLIPS defmodule and may therefore be redefined once to expose ports. This redefinition is recorded, but the exact tick at which the exported ports became available is not. As a result, when restoring an earlier tick, MAIN is loaded with the definition from its redefinition, even if that redefinition happened after the requested restore tick.
 
 The primary use case of this plugin is inspection and debugging. It allows a recorded environment to be restored to a specific point in time so that it can be investigated using tools such as `cx_cdb_cli` and `cx_cdb_analyzer`.
 
@@ -41,7 +42,7 @@ If the loader is configured to keep external address values, equality relationsh
 
 However, restored external addresses are not valid pointers in the restored process. Keeping external address values is therefore not recommended if the restored environment is intended to continue running, because **using these addresses as function input can crash CLIPS**.
 
-If facts containing external addresses should not be restored at all, enable:
+If facts and defglobals containing external addresses should not be restored at all, enable:
 
 ```text
 drop_external_addresses
@@ -63,15 +64,13 @@ In general, `CDBLoaderPlugin` asserts facts in the same relative order as in the
 
 The original relationship is still preserved. If two restored values pointed to the same missing fact in the recording, they will also point to the same placeholder fact after restoration.
 
-Since these placeholder facts are retracted, their fact ID cannot be recovered from the fact name through normal CLIPS fact inspection. However, comparisons between fact addresses are still possible. If your code depends on the order or identity of missing fact references, you can keep a multifield list of relevant fact addresses and compare against it after restoration.
-
 ## Restoring fired activations
 
 Fired activations can be restored to the extent that they were recorded.
 
 To do this, the loader first restores facts and rules. It then iterates over the activations that would currently be eligible to fire and removes the activations that were already recorded as fired in the original run.
 
-This only works for facts and rules that are restored by the loader plugin.
+This only works for facts and rules that are restored by the this plugin.
 
 Rules fired before `CDBSaverPlugin` was loaded cannot be removed during restoration, because they were never recorded. For this reason, it is generally recommended to load `CDBSaverPlugin` from the start of the environment.
 
@@ -99,9 +98,9 @@ First, modules can be included or excluded using regexes.
 
 By default, CLIPS code is in the module `MAIN`.
 
-An empty string `""` is the default include regex and is treated as “match everything”.
+The default include regex is "", which matches everything.
 
-For exclude regexes, an empty string `""` is treated as “match nothing”.
+The default exclude regex is "", which matches nothing.
 
 ## Configurable restore types
 
@@ -160,14 +159,7 @@ Ordered facts such as:
 
 have a deftemplate internally. Here, it is `init`.
 
-Value expressions match key-value pairs. These expressions must be provided as pairs of regexes:
-
-1. one regex matching the field name
-2. one regex matching the field value
-
-External addresses are matched as pointer strings, for example `0x7f553c024eb0`. Fact addresses are matched as the fact ID represented as an integer.
-
-If the field is a multifield, the expression is considered a match if any value in the multifield matches the value regex. It is skipped if any value in the multifield matches the skip condition.
+If facts need to be skipped based on their slot values, load a `cx::FileLoadPlugin` after `cx::CDBLoaderPlugin` and provide CLIPS rules that retract the restored facts you do not want to keep.
 
 ## Contains matching
 
@@ -268,14 +260,6 @@ clips_manager:
       #
       # Mutually exclusive with restore_run and restore_tick.
       #
-      # restore_time: "T+00:50:23"
-      # restore_time: "2026-05-11T10:50:23Z"
-
-      # Restore by time.
-      #
-      # A value starting with T+ is interpreted relative to the start of the run.
-      # A normal timestamp is interpreted as an absolute timestamp.
-      #
       # Examples:
       # restore_time: "T+00:50:23"
       # restore_time: "2026-05-11T10:50:23Z"
@@ -331,36 +315,14 @@ clips_manager:
         skip: false
 
         # Regexes matched against the fact deftemplate.
-        # Empty string means match everything.
+        # "" matches everything.
         # Defaults to [""]
-        deftemplate_load_if_match: [""]
+        load_if_match: [""]
 
         # Regexes matched against the fact deftemplate.
-        # Empty string means match nothing.
+        # "" matches nothing.
         # Defaults to [""]
-        deftemplate_skip_if_match: [""]
-
-        # Field-value based include filters.
-        # Each entry contains a pair of regexes:
-        # - field: regex matched against the field name
-        # - value: regex matched against the field value
-        #
-        # For multifields, the value regex matches if any multifield value matches.
-        #
-        # Defaults to an empty list.
-        load_if_value_match:
-          - field: "name"
-            value: "/robot"
-
-        # Field-value based exclude filters.
-        # Each entry contains a pair of regexes:
-        # - field: regex matched against the field name
-        # - value: regex matched against the field value
-        #
-        # Defaults to an empty list.
-        skip_if_value_match:
-          - field: "type"
-            value: "ros-subscription"
+        skip_if_match: [""]
 
       defrules:
         # If true, do not restore defrules.

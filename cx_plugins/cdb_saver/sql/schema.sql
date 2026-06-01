@@ -19,6 +19,7 @@ CREATE TABLE time_lookup (
 CREATE TABLE facts (
   fact_id     BIGINT PRIMARY KEY,
   deftemplate TEXT NOT NULL DEFAULT '',
+  module      TEXT NOT NULL,
   start_tick  BIGINT NOT NULL,
   end_tick    BIGINT
 );
@@ -79,6 +80,12 @@ CREATE TABLE deffacts (
   end_tick   BIGINT
 );
 
+CREATE TABLE defmodules (
+  name       TEXT PRIMARY KEY,
+  value      TEXT NOT NULL,
+  start_tick BIGINT NOT NULL
+);
+
 CREATE TABLE plugins (
   name        TEXT NOT NULL PRIMARY KEY,
   start_tick  BIGINT NOT NULL,
@@ -114,13 +121,14 @@ WHERE end_tick IS NULL;
 
 CREATE OR REPLACE FUNCTION assert_fact_upsert(
     p_fact_id BIGINT,
+    p_module TEXT,
     p_deftemplate TEXT,
     p_tick BIGINT,
     p_value JSONB
 ) RETURNS void AS $$
 BEGIN
-    INSERT INTO facts (fact_id, deftemplate, start_tick, end_tick)
-    VALUES (p_fact_id, p_deftemplate, p_tick, NULL)
+    INSERT INTO facts (fact_id, deftemplate, module, start_tick, end_tick)
+    VALUES (p_fact_id, p_deftemplate, p_module, p_tick, NULL)
     ON CONFLICT (fact_id) DO UPDATE
     SET deftemplate = EXCLUDED.deftemplate;
 
