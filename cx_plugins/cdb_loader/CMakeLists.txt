@@ -60,6 +60,7 @@ pluginlib_export_plugin_description_file(cx_plugin cdb_loader_plugin.xml)
 add_library(${PROJECT_NAME} SHARED
   src/cdb_loader_plugin.cpp
   src/helpers.cpp
+  src/parser.cpp
   ${CDB_SQL_HEADER}
 )
 

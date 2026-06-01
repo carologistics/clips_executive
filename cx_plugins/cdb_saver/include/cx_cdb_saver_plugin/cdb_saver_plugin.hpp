@@ -59,6 +59,8 @@ public:
   static void cdb_deffunction_assert_callback(clips::Environment *, clips::Deffunction *, void *);
   static void cdb_deffunction_retract_callback(clips::Environment *, clips::Deffunction *, void *);
 
+  static void cdb_module_defined_callback(clips::Environment *, void *);
+
   bool clips_env_init(std::shared_ptr<clips::Environment> & env) override;
   bool clips_env_destroyed(std::shared_ptr<clips::Environment> & env) override;
 
@@ -75,5 +77,7 @@ private:
   std::unique_ptr<rclcpp::Logger> logger_;
 
   std::unordered_map<std::string, std::unique_ptr<DBHandler>> db_handlers_;
+
+  static inline const std::string get_module_defintion(clips::Defmodule * defmodule);
 };
 }  // namespace cx

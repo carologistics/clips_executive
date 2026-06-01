@@ -14,6 +14,8 @@ The saver plugin can also be loaded after an environment has already started. In
 
 Because `CDBLoaderPlugin` cannot remove activations that were fired before the saver plugin was loaded, it is generally recommended to load this plugin from the start of the environment.
 
+Deleting a defmodule is not supported but can be done using the `clear` command; This is not supported and generally speaking not recommended.
+
 ## Database Creation
 
 The saver plugin creates a new database for each run. Therefore, the configured PostgreSQL user must have permission to create databases.

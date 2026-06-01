@@ -511,4 +511,32 @@ std::optional<TimedText> latest_timed_text_at_tick(
   return *best;
 }
 
+std::vector<Defmodule> load_defmodules(pqxx::connection & conn, Tick restore_tick)
+{
+  pqxx::work tx{conn};
+
+  pqxx::result rows = tx.exec_params(
+    R"sql(
+      SELECT name, value, start_tick
+      FROM defmodules
+      WHERE start_tick <= $1
+      ORDER BY name, start_tick
+    )sql",
+    restore_tick);
+
+  std::vector<Defmodule> result;
+  result.reserve(rows.size());
+
+  for (const pqxx::row & row : rows) {
+    result.push_back(Defmodule{
+      .name = row["name"].as<std::string>(),
+      .value = row["value"].as<std::string>(),
+      .start_tick = row["start_tick"].as<Tick>()});
+  }
+
+  tx.commit();
+
+  return result;
+}
+
 }  // namespace cx
