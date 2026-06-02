@@ -17,7 +17,6 @@
 
 // clang-format off
 #include <pqxx/pqxx>
-#include "cx_cdb_loader_plugin/helpers.hpp"
 #undef RANGES
 // RANGES is defined in clips_ns/clips.h, which causes issues with
 // pqxx/pqxx. It needs to be included before clips_ns/clips.h to avoid compilation errors.
@@ -33,6 +32,8 @@
 
 namespace cx
 {
+
+struct Defmodule;
 
 struct RegexRule
 {
@@ -83,21 +84,15 @@ GenericRegexRule populate_generic_regex_rule(
 RegexConfig populate_regex_config(
   rclcpp_lifecycle::LifecycleNode::SharedPtr & node, const std::string & plugin_name);
 
-void filter_defmodule_in_place(
-  std::vector<Defmodule> & values, const GenericRegexRule & module_rules);
-
-template <typename T, typename ModuleGetter, typename ObjectNameGetter>
+template <typename T, typename ObjectNameGetter>
 void filter_in_place(
-  std::vector<T> & values, const GenericRegexRule & module_rules,
-  const GenericRegexRule & object_rules, ModuleGetter get_module, ObjectNameGetter get_object_name)
+  std::vector<T> & values, const GenericRegexRule & object_rules, ObjectNameGetter get_object_name)
 {
   values.erase(
     std::remove_if(
       values.begin(), values.end(),
       [&](const T & value) {
-        return !(
-          allowed_by_generic_regex_rule(module_rules, get_module(value)) &&
-          allowed_by_generic_regex_rule(object_rules, get_object_name(value)));
+        return !allowed_by_generic_regex_rule(object_rules, get_object_name(value));
       }),
     values.end());
 }

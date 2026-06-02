@@ -16,6 +16,8 @@ Because `CDBLoaderPlugin` cannot remove activations that were fired before the s
 
 Deleting a defmodule is not supported but can be done using the `clear` command; This is not supported and generally speaking not recommended.
 
+CLIPS global scoping is strictly hierarchical and one-directional: if module A can access constructs from module B, then module B cannot access constructs from module A. To restore an environment correctly, this module hierarchy must be recorded. This is only possible if the saver plugin is loaded before any additional modules are defined.
+
 ## Database Creation
 
 The saver plugin creates a new database for each run. Therefore, the configured PostgreSQL user must have permission to create databases.

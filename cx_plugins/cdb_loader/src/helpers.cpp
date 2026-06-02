@@ -19,15 +19,17 @@
 
 namespace cx
 {
+
 clips::Multifield * json_to_multifield(
   clips::Environment * env, const nlohmann::json & json_array,
   std::unordered_map<long long, clips::Fact *> & id_to_fact_ptr,
-  std::vector<clips::Fact *> & created_nullptr_facts)
+  std::vector<clips::Fact *> & created_nullptr_facts, const RegexConfig & config)
 {
   clips::MultifieldBuilder * mb = clips::CreateMultifieldBuilder(env, json_array.size());
 
   for (const nlohmann::json & element : json_array) {
-    append_json_to_multifield_builder(env, mb, element, id_to_fact_ptr, created_nullptr_facts);
+    append_json_to_multifield_builder(
+      env, mb, element, id_to_fact_ptr, created_nullptr_facts, config);
   }
 
   clips::Multifield * multifield = clips::MBCreate(mb);
@@ -38,7 +40,7 @@ clips::Multifield * json_to_multifield(
 void append_json_to_multifield_builder(
   clips::Environment * env, clips::MultifieldBuilder * mb, const nlohmann::json & valueJson,
   std::unordered_map<long long, clips::Fact *> & id_to_fact_ptr,
-  std::vector<clips::Fact *> & created_nullptr_facts)
+  std::vector<clips::Fact *> & created_nullptr_facts, const RegexConfig & config)
 {
   switch (valueJson["type"].get<SlotType>()) {
     case SlotType::String:
@@ -54,11 +56,21 @@ void append_json_to_multifield_builder(
       clips::MBAppendFloat(mb, valueJson["value"].get<double>());
       break;
     case SlotType::ExternalAddress:
-      clips::MBAppendCLIPSExternalAddress(mb, clips::CreateCExternalAddress(env, nullptr));
+      if (config.external_address_values_as_nullptr) {
+        clips::MBAppendCLIPSExternalAddress(mb, clips::CreateCExternalAddress(env, nullptr));
+      } else {
+        const std::string addressStr = valueJson["value"].get<std::string>();
+
+        std::uintptr_t rawAddress =
+          static_cast<std::uintptr_t>(std::stoull(addressStr, nullptr, 0));
+
+        void * address = reinterpret_cast<void *>(rawAddress);
+        clips::MBAppendCLIPSExternalAddress(mb, clips::CreateCExternalAddress(env, address));
+      }
       break;
     case SlotType::Multifield: {
       clips::Multifield * nested =
-        json_to_multifield(env, valueJson, id_to_fact_ptr, created_nullptr_facts);
+        json_to_multifield(env, valueJson, id_to_fact_ptr, created_nullptr_facts, config);
       clips::MBAppendMultifield(mb, nested);
       break;
     }
@@ -94,57 +106,60 @@ std::optional<T> optional_field(const pqxx::row & row, const char * column)
   return row[column].as<T>();
 }
 
-std::vector<TimedFact> parse_timed_fact_history(const pqxx::row & row)
+TimedFact parse_timed_fact(const pqxx::row & row)
 {
-  std::vector<TimedFact> result;
-
-  if (row["value_history"].is_null()) {
-    return result;
-  }
-
-  json history = json::parse(row["value_history"].as<std::string>());
-
-  for (const auto & entry : history) {
-    result.push_back(TimedFact{.tick = entry.at("tick").get<Tick>(), .value = entry.at("value")});
-  }
-
-  return result;
+  return TimedFact{
+    .tick = row["value_tick"].as<Tick>(), .value = json::parse(row["value"].as<std::string>())};
 }
 
-std::vector<TimedText> parse_timed_text_history(const pqxx::row & row)
+TimedText parse_timed_text(const pqxx::row & row)
 {
-  std::vector<TimedText> history;
-
-  if (row["value_history"].is_null()) {
-    return history;
-  }
-
-  json entries = json::parse(row["value_history"].as<std::string>());
-
-  for (const auto & entry : entries) {
-    TimedText item{
-      .tick = entry.at("tick").get<Tick>(),
-      .value = entry.at("value").is_null() ? "" : entry.at("value").get<std::string>()};
-
-    history.push_back(std::move(item));
-  }
-
-  return history;
+  return TimedText{
+    .tick = row["value_tick"].as<Tick>(),
+    .value = row["value"].is_null() ? "" : row["value"].as<std::string>()};
 }
 
-std::vector<Deftemplate> load_deftemplates(pqxx::connection & conn, Tick restore_tick)
+std::vector<Defmodule> load_defmodules(pqxx::connection & conn, Tick restore_tick)
 {
   pqxx::work tx{conn};
 
   pqxx::result rows = tx.exec_params(
     R"sql(
       SELECT *
-      FROM deftemplates_cpp
+      FROM defmodules
       WHERE start_tick <= $1
-        AND (end_tick IS NULL OR end_tick > $1)
-      ORDER BY module, name, start_tick
+      ORDER BY name, start_tick
     )sql",
     restore_tick);
+
+  std::vector<Defmodule> result;
+  result.reserve(rows.size());
+
+  for (const pqxx::row & row : rows) {
+    result.push_back(Defmodule{
+      .name = row["name"].as<std::string>(),
+      .value = row["value"].as<std::string>(),
+      .start_tick = row["start_tick"].as<Tick>()});
+  }
+
+  tx.commit();
+
+  return result;
+}
+
+std::vector<Deftemplate> load_deftemplates(
+  pqxx::connection & conn, const std::string & defmodule, Tick restore_tick)
+{
+  pqxx::work tx{conn};
+
+  pqxx::result rows = tx.exec_params(
+    R"sql(
+      SELECT *
+      FROM deftemplates_cpp_at($1)
+      WHERE module = $2
+      ORDER BY start_tick, name
+    )sql",
+    restore_tick, defmodule);
 
   std::vector<Deftemplate> result;
   result.reserve(rows.size());
@@ -153,7 +168,7 @@ std::vector<Deftemplate> load_deftemplates(pqxx::connection & conn, Tick restore
     Deftemplate item{
       .name = row["name"].as<std::string>(),
       .defmodule = row["module"].as<std::string>(),
-      .value = parse_timed_text_history(row),
+      .value = parse_timed_text(row),
       .start_tick = row["start_tick"].as<Tick>(),
       .end_tick = optional_field<Tick>(row, "end_tick")};
 
@@ -165,11 +180,45 @@ std::vector<Deftemplate> load_deftemplates(pqxx::connection & conn, Tick restore
   return result;
 }
 
-std::vector<Defglobal> load_defglobals(pqxx::connection & conn)
+std::vector<std::string> get_module_defglobal_names(
+  pqxx::connection & conn, const std::string & defmodule, Tick restore_tick,
+  bool skip_external_addresses)
 {
   pqxx::work tx{conn};
 
-  pqxx::result rows = tx.exec("SELECT * FROM defglobals_cpp");
+  pqxx::result rows = tx.exec_params(
+    R"sql(
+      SELECT name
+      FROM defglobals_cpp_at($1, $3)
+      WHERE module = $2
+      ORDER BY start_tick, name
+    )sql",
+    restore_tick, defmodule, skip_external_addresses);
+
+  std::vector<std::string> result;
+  result.reserve(rows.size());
+
+  for (const pqxx::row & row : rows) {
+    result.push_back(row["name"].as<std::string>());
+  }
+
+  tx.commit();
+
+  return result;
+}
+
+std::vector<Defglobal> load_defglobals(
+  pqxx::connection & conn, Tick restore_tick, bool skip_external_addresses)
+{
+  pqxx::work tx{conn};
+
+  pqxx::result rows = tx.exec_params(
+    R"sql(
+      SELECT *
+      FROM defglobals_cpp_at($1, $2)
+      ORDER BY start_tick, name
+    )sql",
+    restore_tick, skip_external_addresses);
 
   std::vector<Defglobal> result;
   result.reserve(rows.size());
@@ -178,7 +227,7 @@ std::vector<Defglobal> load_defglobals(pqxx::connection & conn)
     result.push_back(Defglobal{
       .name = row["name"].as<std::string>(),
       .defmodule = row["module"].as<std::string>(),
-      .value = parse_timed_fact_history(row),
+      .value = parse_timed_fact(row),
       .start_tick = row["start_tick"].as<Tick>(),
       .end_tick = optional_field<Tick>(row, "end_tick")});
   }
@@ -188,11 +237,19 @@ std::vector<Defglobal> load_defglobals(pqxx::connection & conn)
   return result;
 }
 
-std::vector<Deffunction> load_deffunctions(pqxx::connection & conn)
+std::vector<Deffunction> load_deffunctions(
+  pqxx::connection & conn, const std::string & defmodule, Tick restore_tick)
 {
   pqxx::work tx{conn};
 
-  pqxx::result rows = tx.exec("SELECT * FROM deffunctions_cpp");
+  pqxx::result rows = tx.exec_params(
+    R"sql(
+      SELECT *
+      FROM deffunctions_cpp_at($1)
+      WHERE module = $2
+      ORDER BY start_tick, name
+    )sql",
+    restore_tick, defmodule);
 
   std::vector<Deffunction> result;
   result.reserve(rows.size());
@@ -201,7 +258,7 @@ std::vector<Deffunction> load_deffunctions(pqxx::connection & conn)
     result.push_back(Deffunction{
       .name = row["name"].as<std::string>(),
       .defmodule = row["module"].as<std::string>(),
-      .value = parse_timed_text_history(row),
+      .value = parse_timed_text(row),
       .start_tick = row["start_tick"].as<Tick>(),
       .end_tick = optional_field<Tick>(row, "end_tick")});
   }
@@ -211,34 +268,19 @@ std::vector<Deffunction> load_deffunctions(pqxx::connection & conn)
   return result;
 }
 
-std::vector<Deffacts> load_deffacts(pqxx::connection & conn)
+std::vector<Defrule> load_defrules(
+  pqxx::connection & conn, const std::string & defmodule, Tick restore_tick)
 {
   pqxx::work tx{conn};
 
-  pqxx::result rows = tx.exec("SELECT * FROM deffacts_cpp");
-
-  std::vector<Deffacts> result;
-  result.reserve(rows.size());
-
-  for (const pqxx::row & row : rows) {
-    result.push_back(Deffacts{
-      .name = row["name"].as<std::string>(),
-      .defmodule = row["module"].as<std::string>(),
-      .value = parse_timed_text_history(row),
-      .start_tick = row["start_tick"].as<Tick>(),
-      .end_tick = optional_field<Tick>(row, "end_tick")});
-  }
-
-  tx.commit();
-
-  return result;
-}
-
-std::vector<Defrule> load_defrules(pqxx::connection & conn)
-{
-  pqxx::work tx{conn};
-
-  pqxx::result rows = tx.exec("SELECT * FROM defrules_cpp");
+  pqxx::result rows = tx.exec_params(
+    R"sql(
+      SELECT *
+      FROM defrules_cpp_at($1)
+      WHERE module = $2
+      ORDER BY start_tick, name
+    )sql",
+    restore_tick, defmodule);
 
   std::vector<Defrule> result;
   result.reserve(rows.size());
@@ -248,7 +290,7 @@ std::vector<Defrule> load_defrules(pqxx::connection & conn)
       .rule_id = row["rule_id"].as<int>(),
       .name = row["name"].as<std::string>(),
       .defmodule = row["module"].as<std::string>(),
-      .value = parse_timed_text_history(row),
+      .value = parse_timed_text(row),
       .salience = row["salience"].as<int>(),
       .start_tick = row["start_tick"].as<Tick>(),
       .end_tick = optional_field<Tick>(row, "end_tick")});
@@ -259,19 +301,60 @@ std::vector<Defrule> load_defrules(pqxx::connection & conn)
   return result;
 }
 
-std::vector<Fact> load_facts(pqxx::connection & conn)
+std::vector<Deffacts> load_deffacts(
+  pqxx::connection & conn, const std::string & defmodule, Tick restore_tick)
 {
   pqxx::work tx{conn};
 
-  pqxx::result rows = tx.exec("SELECT * FROM facts_cpp");
+  //TODO CHECK
+  pqxx::result rows = tx.exec_params(
+    R"sql(
+      SELECT *
+      FROM deffacts_cpp_at($1)
+      WHERE module = $2
+      ORDER BY start_tick, name
+    )sql",
+    restore_tick, defmodule);
+
+  std::vector<Deffacts> result;
+  result.reserve(rows.size());
+
+  for (const pqxx::row & row : rows) {
+    result.push_back(Deffacts{
+      .name = row["name"].as<std::string>(),
+      .defmodule = row["module"].as<std::string>(),
+      .value = parse_timed_text(row),
+      .start_tick = row["start_tick"].as<Tick>(),
+      .end_tick = optional_field<Tick>(row, "end_tick")});
+  }
+
+  tx.commit();
+
+  return result;
+}
+
+std::vector<Fact> load_facts(
+  pqxx::connection & conn, Tick restore_tick, bool skip_external_addresses)
+{
+  pqxx::work tx{conn};
+
+  pqxx::result rows = tx.exec_params(
+    R"sql(
+      SELECT *
+      FROM facts_cpp_at($1, $2)
+      ORDER BY fact_id
+    )sql",
+    restore_tick, skip_external_addresses);
 
   std::vector<Fact> result;
   result.reserve(rows.size());
 
   for (const pqxx::row & row : rows) {
     result.push_back(Fact{
-      .fact_id = row["fact_id"].as<std::int64_t>(),
-      .value = parse_timed_fact_history(row),
+      .fact_id = row["fact_id"].as<long long>(),
+      .defmodule = row["module"].as<std::string>(),
+      .deftemplate_name = row["deftemplate"].as<std::string>(),
+      .value = parse_timed_fact(row),
       .start_tick = row["start_tick"].as<Tick>(),
       .end_tick = optional_field<Tick>(row, "end_tick")});
   }
@@ -489,54 +572,6 @@ long long resolve_restore_time(
     restore_time.c_str(), requested_time.c_str(), run_number, selected_end_time.c_str(), end_tick);
 
   return end_tick;
-}
-
-std::optional<TimedText> latest_timed_text_at_tick(
-  const std::vector<TimedText> & values, Tick restore_tick)
-{
-  const TimedText * best = nullptr;
-
-  for (const TimedText & value : values) {
-    if (value.tick <= restore_tick) {
-      if (best == nullptr || value.tick > best->tick) {
-        best = &value;
-      }
-    }
-  }
-
-  if (best == nullptr) {
-    return std::nullopt;
-  }
-
-  return *best;
-}
-
-std::vector<Defmodule> load_defmodules(pqxx::connection & conn, Tick restore_tick)
-{
-  pqxx::work tx{conn};
-
-  pqxx::result rows = tx.exec_params(
-    R"sql(
-      SELECT name, value, start_tick
-      FROM defmodules
-      WHERE start_tick <= $1
-      ORDER BY name, start_tick
-    )sql",
-    restore_tick);
-
-  std::vector<Defmodule> result;
-  result.reserve(rows.size());
-
-  for (const pqxx::row & row : rows) {
-    result.push_back(Defmodule{
-      .name = row["name"].as<std::string>(),
-      .value = row["value"].as<std::string>(),
-      .start_tick = row["start_tick"].as<Tick>()});
-  }
-
-  tx.commit();
-
-  return result;
 }
 
 }  // namespace cx
