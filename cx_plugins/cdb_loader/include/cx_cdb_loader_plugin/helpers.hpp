@@ -154,6 +154,14 @@ NLOHMANN_JSON_SERIALIZE_ENUM(
              {SlotType::Multifield, "MULTIFIELD"},
              {SlotType::FactAddress, "FACT_ADDRESS"}})
 
+clips::Multifield * json_to_multifield(
+  clips::Environment * env, const nlohmann::json & json_array, clips::Fact * tmp_fact,
+  const RegexConfig & config, bool & contains_fact);
+
+void append_json_to_multifield_builder(
+  clips::Environment * env, clips::MultifieldBuilder * mb, const nlohmann::json & valueJson,
+  clips::Fact * tmp_fact, const RegexConfig & config, bool & contains_fact);
+
 void append_json_to_multifield_builder(
   clips::Environment * env, clips::MultifieldBuilder * mb, const nlohmann::json & valueJson,
   std::unordered_map<long long, clips::Fact *> & id_to_fact_ptr,
@@ -177,7 +185,8 @@ std::vector<Defmodule> load_defmodules(pqxx::connection & conn, Tick restore_tic
 std::vector<Deftemplate> load_deftemplates(
   pqxx::connection & conn, const std::string & defmodule, Tick restore_tick);
 std::vector<Defglobal> load_defglobals(
-  pqxx::connection & conn, Tick restore_tick, bool skip_external_addresses);
+  pqxx::connection & conn, const std::string & defmodule, Tick restore_tick,
+  bool skip_external_addresses);
 std::vector<Deffunction> load_deffunctions(
   pqxx::connection & conn, const std::string & defmodule, Tick restore_tick);
 std::vector<Defrule> load_defrules(
@@ -195,7 +204,4 @@ long long resolve_restore_tick(pqxx::connection & db, long long restore_tick_ind
 long long resolve_restore_time(
   pqxx::connection & db, const std::string & restore_time, const rclcpp::Logger & logger);
 
-std::vector<std::string> get_module_defglobal_names(
-  pqxx::connection & conn, const std::string & defmodule, Tick restore_tick,
-  bool skip_external_addresses);
 }  // namespace cx

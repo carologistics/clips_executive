@@ -21,6 +21,63 @@ namespace cx
 {
 
 clips::Multifield * json_to_multifield(
+  clips::Environment * env, const nlohmann::json & json_array, clips::Fact * tmp_fact,
+  const RegexConfig & config, bool & contains_fact)
+{
+  clips::MultifieldBuilder * mb = clips::CreateMultifieldBuilder(env, json_array.size());
+
+  for (const nlohmann::json & element : json_array) {
+    append_json_to_multifield_builder(env, mb, element, tmp_fact, config, contains_fact);
+  }
+
+  clips::Multifield * multifield = clips::MBCreate(mb);
+  clips::MBDispose(mb);
+  return multifield;
+}
+
+void append_json_to_multifield_builder(
+  clips::Environment * env, clips::MultifieldBuilder * mb, const nlohmann::json & valueJson,
+  clips::Fact * tmp_fact, const RegexConfig & config, bool & contains_fact)
+{
+  switch (valueJson["type"].get<SlotType>()) {
+    case SlotType::String:
+      clips::MBAppendString(mb, valueJson["value"].get<std::string>().c_str());
+      break;
+    case SlotType::Symbol:
+      clips::MBAppendSymbol(mb, valueJson["value"].get<std::string>().c_str());
+      break;
+    case SlotType::Integer:
+      clips::MBAppendInteger(mb, valueJson["value"].get<long long>());
+      break;
+    case SlotType::Float:
+      clips::MBAppendFloat(mb, valueJson["value"].get<double>());
+      break;
+    case SlotType::ExternalAddress:
+      if (config.external_address_values_as_nullptr) {
+        clips::MBAppendCLIPSExternalAddress(mb, clips::CreateCExternalAddress(env, nullptr));
+      } else {
+        const std::string addressStr = valueJson["value"].get<std::string>();
+
+        std::uintptr_t rawAddress =
+          static_cast<std::uintptr_t>(std::stoull(addressStr, nullptr, 0));
+
+        void * address = reinterpret_cast<void *>(rawAddress);
+        clips::MBAppendCLIPSExternalAddress(mb, clips::CreateCExternalAddress(env, address));
+      }
+      break;
+    case SlotType::Multifield: {
+      clips::Multifield * nested =
+        json_to_multifield(env, valueJson, tmp_fact, config, contains_fact);
+      clips::MBAppendMultifield(mb, nested);
+      break;
+    }
+    case SlotType::FactAddress:
+      clips::MBAppendFact(mb, tmp_fact);
+      contains_fact = true;
+  }
+}
+
+clips::Multifield * json_to_multifield(
   clips::Environment * env, const nlohmann::json & json_array,
   std::unordered_map<long long, clips::Fact *> & id_to_fact_ptr,
   std::vector<clips::Fact *> & created_nullptr_facts, const RegexConfig & config)
@@ -128,7 +185,7 @@ std::vector<Defmodule> load_defmodules(pqxx::connection & conn, Tick restore_tic
       SELECT *
       FROM defmodules
       WHERE start_tick <= $1
-      ORDER BY name, start_tick
+      ORDER BY start_tick ASC
     )sql",
     restore_tick);
 
@@ -180,7 +237,7 @@ std::vector<Deftemplate> load_deftemplates(
   return result;
 }
 
-std::vector<std::string> get_module_defglobal_names(
+std::vector<Defglobal> load_defglobals(
   pqxx::connection & conn, const std::string & defmodule, Tick restore_tick,
   bool skip_external_addresses)
 {
@@ -188,37 +245,12 @@ std::vector<std::string> get_module_defglobal_names(
 
   pqxx::result rows = tx.exec_params(
     R"sql(
-      SELECT name
-      FROM defglobals_cpp_at($1, $3)
-      WHERE module = $2
-      ORDER BY start_tick, name
-    )sql",
-    restore_tick, defmodule, skip_external_addresses);
-
-  std::vector<std::string> result;
-  result.reserve(rows.size());
-
-  for (const pqxx::row & row : rows) {
-    result.push_back(row["name"].as<std::string>());
-  }
-
-  tx.commit();
-
-  return result;
-}
-
-std::vector<Defglobal> load_defglobals(
-  pqxx::connection & conn, Tick restore_tick, bool skip_external_addresses)
-{
-  pqxx::work tx{conn};
-
-  pqxx::result rows = tx.exec_params(
-    R"sql(
       SELECT *
       FROM defglobals_cpp_at($1, $2)
+      WHERE module = $3
       ORDER BY start_tick, name
     )sql",
-    restore_tick, skip_external_addresses);
+    restore_tick, skip_external_addresses, defmodule);
 
   std::vector<Defglobal> result;
   result.reserve(rows.size());

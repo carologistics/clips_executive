@@ -13,6 +13,7 @@ This plugin aims to restore recorded CLIPS environments as comprehensively as po
 - **Rules fired before `CDBSaverPlugin` was loaded:** CLIPS does not keep a history of fired rules. Therefore, only rule firings that happened while `CDBSaverPlugin` was loaded can be recorded and restored.
 - **MAIN defmodule redefinition time:** MAIN is the default CLIPS defmodule and may therefore be redefined once to expose ports. This redefinition is recorded, but the exact tick at which the exported ports became available is not. As a result, when restoring an earlier tick, MAIN is loaded with the definition from its redefinition, even if that redefinition happened after the requested restore tick.
 
+TODO ADD SECTION ABOUT DEFGLOBAL AND SALIENCE EVAULTION
 The primary use case of this plugin is inspection and debugging. It allows a recorded environment to be restored to a specific point in time so that it can be investigated using tools such as `cx_cdb_cli` and `cx_cdb_analyzer`.
 
 The restored environment must provide the same CLIPS functions that were available during the original recording run. In practice, this usually means loading the same plugins before loading this plugin. The loader compares the recorded configuration with the current configuration and emits a warning if differences are detected. Proceed with caution if such a warning appears, because the restored environment may be incomplete or behave differently from the recorded run.
