@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "cx_cdb_loader_plugin/parser.hpp"
+#include "cx_cdb_loader_plugin/helpers.hpp"
 
 namespace cx
 {
@@ -149,18 +149,6 @@ RegexConfig populate_regex_config(
   config.fact_rules = populate_generic_regex_rule(node, plugin_name + ".facts");
 
   return config;
-}
-
-void filter_defmodule_in_place(
-  std::vector<Defmodule> & values, const GenericRegexRule & module_rules)
-{
-  values.erase(
-    std::remove_if(
-      values.begin(), values.end(),
-      [&](const Defmodule & value) {
-        return !allowed_by_generic_regex_rule(module_rules, value.name);
-      }),
-    values.end());
 }
 
 }  // namespace cx

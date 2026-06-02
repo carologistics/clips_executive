@@ -13,12 +13,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// TODO when restoring the rules the salience has to be taken from the field and not the pp since they could point to a defglobal that has changed in the meantime
 // TODO CHECK IF ARRAYS IN THE TYPES IS BETTER THAN A TABLE REFERENCING THE THE FACT!?
 // TODO DEFFACTS MANUAL
 // TODO PLUGIN CHECK
-// TODO: This license is not consistent with the license used in the project.
-//       Delete the inconsistent license and above line and rerun pre-commit to insert a good license.
 // TODO EXTERNAL ADDRESS AS VALUE
 // TODO Check weather the db exists porperly
 
@@ -79,6 +76,260 @@ void CDBLoaderPlugin::initialize()
     node, plugin_name_ + ".restore_tick", rclcpp::ParameterValue(std::string()));
   cx::cx_utils::declare_parameter_if_not_declared(
     node, plugin_name_ + ".restore_time", rclcpp::ParameterValue(std::string()));
+}
+
+void CDBLoaderPlugin::assert_deftemplates(
+  clips::Environment * env, pqxx::connection & conn, const RegexConfig & config,
+  const std::string & defmodule, Tick restore_tick)
+{
+  std::vector<Deftemplate> deftemplates = load_deftemplates(conn, defmodule, restore_tick);
+  filter_in_place(
+    deftemplates, config.deftemplate_rules,
+    [](const Deftemplate & value) -> const std::string & { return value.name; });
+  for (Deftemplate deftemplate : deftemplates) {
+    RCLCPP_DEBUG(
+      *logger_, "ASSERTING DEFTEMPLATE %s in %s, with value from tick %lli: %s",
+      deftemplate.name.c_str(), deftemplate.defmodule.c_str(), deftemplate.value.tick,
+      deftemplate.value.value.c_str());
+    clips::Build(env, deftemplate.value.value.c_str());
+  }
+}
+
+void CDBLoaderPlugin::assert_deffunctions(
+  clips::Environment * env, pqxx::connection & conn, const RegexConfig & config,
+  const std::string & defmodule, Tick restore_tick)
+{
+  std::vector<Deffunction> deffunctions = load_deffunctions(conn, defmodule, restore_tick);
+  filter_in_place(
+    deffunctions, config.deffunction_rules,
+    [](const Deffunction & value) -> const std::string & { return value.name; });
+  for (Deffunction deffunction : deffunctions) {
+    RCLCPP_DEBUG(
+      *logger_, "ASSERTING DEFFUNCTION %s in %s with value from tick %lli: %s",
+      deffunction.name.c_str(), deffunction.defmodule.c_str(), deffunction.value.tick,
+      deffunction.value.value.c_str());
+    clips::Build(env, deffunction.value.value.c_str());
+  }
+}
+
+void CDBLoaderPlugin::assert_defrules(
+  clips::Environment * env, pqxx::connection & conn, const RegexConfig & config,
+  const std::string & defmodule, Tick restore_tick)
+{
+  std::vector<Defrule> defrules = load_defrules(conn, defmodule, restore_tick);
+  filter_in_place(defrules, config.defrule_rules, [](const Defrule & value) -> const std::string & {
+    return value.name;
+  });
+  for (Defrule defrule : defrules) {
+    RCLCPP_DEBUG(
+      *logger_, "ASSERTING DEFRULE %s in %s with value from tick %lli: %s", defrule.name.c_str(),
+      defrule.defmodule.c_str(), defrule.value.tick, defrule.value.value.c_str());
+    clips::Build(env, defrule.value.value.c_str());
+  }
+}
+
+void CDBLoaderPlugin::assert_deffacts(
+  clips::Environment * env, pqxx::connection & conn, const RegexConfig & config,
+  const std::string & defmodule, Tick restore_tick)
+{
+  std::vector<Deffacts> deffacts = load_deffacts(conn, defmodule, restore_tick);
+  filter_in_place(
+    deffacts, config.deffacts_rules,
+    [](const Deffacts & value) -> const std::string & { return value.name; });
+  for (Deffacts deffact : deffacts) {
+    RCLCPP_DEBUG(
+      *logger_, "ASSERTING DEFFACTS %s in %s with value from tick %lli: %s", deffact.name.c_str(),
+      deffact.defmodule.c_str(), deffact.value.tick, deffact.value.value.c_str());
+    clips::Build(env, deffact.value.value.c_str());
+  }
+}
+void CDBLoaderPlugin::prepare_defglobals(
+  clips::Environment * env, pqxx::connection & conn, const RegexConfig & config,
+  const std::string & defmodule, Tick restore_tick)
+{
+  std::vector<std::string> defglobals =
+    get_module_defglobal_names(conn, defmodule, restore_tick, config.skip_external_address_values);
+  filter_in_place(
+    defglobals, config.defglobal_rules,
+    [](const std::string & value) -> const std::string & { return value; });
+  for (std::string defglobal : defglobals) {
+    RCLCPP_DEBUG(*logger_, "PREPARING DEFGLOBAL %s in %s", defglobal.c_str(), defmodule.c_str());
+    clips::Build(env, std::format("(defglobal {} ?*{}* = nil)", defmodule, defglobal).c_str());
+  }
+}
+
+void CDBLoaderPlugin::assert_defglobals(
+  clips::Environment * env, pqxx::connection & conn, const RegexConfig & config,
+  std::unordered_map<long long, clips::Fact *> id_to_fact_ptr,
+  std::vector<clips::Fact *> created_nullptr_facts, Tick restore_tick)
+{
+  std::vector<Defglobal> defglobals =
+    load_defglobals(conn, restore_tick, config.skip_external_address_values);
+  filter_in_place(
+    defglobals, config.defglobal_rules,
+    [](const Defglobal & value) -> const std::string & { return value.name; });
+  for (Defglobal defglobal : defglobals) {
+    RCLCPP_DEBUG(
+      *logger_, "UPDATING DEFGLOBAL %s in %s to value from tick %lli: %s", defglobal.name.c_str(),
+      defglobal.defmodule.c_str(), defglobal.value.tick, defglobal.value.value.dump().c_str());
+    clips::Defglobal * global =
+      clips::FindDefglobal(env, std::format("{}::{}", defglobal.defmodule, defglobal.name).c_str());
+    switch (defglobal.value.value["type"].get<SlotType>()) {
+      case SlotType::String:
+        clips::DefglobalSetString(
+          global, defglobal.value.value["value"].get<std::string>().c_str());
+        break;
+      case SlotType::Symbol:
+        clips::DefglobalSetSymbol(
+          global, defglobal.value.value["value"].get<std::string>().c_str());
+        break;
+      case SlotType::ExternalAddress: {
+        if (config.external_address_values_as_nullptr) {
+          clips::DefglobalSetCLIPSExternalAddress(
+            global, clips::CreateCExternalAddress(env, nullptr));
+        } else {
+          const std::string addressStr = defglobal.value.value["value"].get<std::string>();
+
+          std::uintptr_t rawAddress =
+            static_cast<std::uintptr_t>(std::stoull(addressStr, nullptr, 0));
+
+          void * address = reinterpret_cast<void *>(rawAddress);
+
+          clips::DefglobalSetCLIPSExternalAddress(
+            global, clips::CreateCExternalAddress(env, address));
+        }
+        break;
+      }
+      case SlotType::Integer:
+        clips::DefglobalSetInteger(global, defglobal.value.value["value"].get<long long>());
+        break;
+      case SlotType::Float:
+        clips::DefglobalSetFloat(global, defglobal.value.value["value"].get<double>());
+        break;
+      case SlotType::FactAddress:
+        if (id_to_fact_ptr.contains(defglobal.value.value["value"].get<long long>())) {
+          clips::DefglobalSetFact(
+            global, id_to_fact_ptr[defglobal.value.value["value"].get<long long>()]);
+        } else {
+          clips::Fact * null_fact = get_nullptr_fact(
+            env, defglobal.value.value["value"].get<long long>(), id_to_fact_ptr,
+            created_nullptr_facts);
+          RCLCPP_WARN(
+            *logger_,
+            "Defglobal %s::%s references a fact %lli that is not present in the current "
+            "environment, setting it to nullptr",
+            defglobal.defmodule.c_str(), defglobal.name.c_str(),
+            defglobal.value.value["value"].get<long long>());
+          clips::DefglobalSetFact(global, null_fact);
+        }
+        break;
+      case SlotType::Multifield: {
+        clips::Multifield * multifield = json_to_multifield(
+          env, defglobal.value.value["value"], id_to_fact_ptr, created_nullptr_facts, config);
+        clips::DefglobalSetMultifield(global, multifield);
+        break;
+      }
+    }
+  }
+}
+
+void CDBLoaderPlugin::assert_facts(
+  clips::Environment * env, pqxx::connection & conn, const RegexConfig & config,
+  std::unordered_map<long long, clips::Fact *> id_to_fact_ptr,
+  std::vector<clips::Fact *> created_nullptr_facts, Tick restore_tick)
+{
+  std::vector<Fact> facts = load_facts(conn, restore_tick, config.skip_external_address_values);
+  filter_in_place(facts, config.fact_rules, [](const Fact & value) -> const std::string & {
+    return value.deftemplate_name;
+  });
+  for (Fact fact : facts) {
+    const std::string qualified_name = std::format("{}::{}", fact.defmodule, fact.deftemplate_name);
+    clips::Deftemplate * deftemplate = clips::FindDeftemplate(env, qualified_name.c_str());
+    if (!fact.value.value["type"].is_null() && deftemplate == nullptr) {
+      clips::Defmodule * defmodule = clips::FindDefmodule(env, fact.defmodule.c_str());
+      if (defmodule == nullptr) {
+      }
+
+      clips::CLIPSLexeme * sym = clips::CreateSymbol(env, qualified_name.c_str());
+      deftemplate = clips::CreateImpliedDeftemplate(env, sym, true);
+    }
+    clips::Fact * f = clips::CreateFact(deftemplate);
+    RCLCPP_DEBUG(*logger_, "PREPARING FACT id %lli as new ID: %lli", fact.fact_id, f->factIndex);
+    id_to_fact_ptr[fact.fact_id] = f;
+  }
+  clips::Fact * f;
+  for (Fact fact : facts) {
+    f = id_to_fact_ptr[fact.fact_id];
+    RCLCPP_DEBUG(
+      *logger_, "UPDATING FACT id %lli of deftemplate %s::%s with value from tick %lli: %s",
+      f->factIndex, fact.defmodule.c_str(), fact.deftemplate_name.c_str(), fact.value.tick,
+      fact.value.value.dump().c_str());
+    if (!fact.value.value["type"].is_null()) {
+      clips::CLIPSValue cv;
+      cv.multifieldValue = json_to_multifield(
+        env, fact.value.value["value"], id_to_fact_ptr, created_nullptr_facts, config);
+
+      clips::PutFactSlot(f, nullptr, &cv);
+      f = clips::Assert(f);
+      fact_id_mapping_[f->factIndex] = fact.fact_id;
+
+      continue;
+    }
+
+    for (nlohmann::json slot : fact.value.value["slots"]) {
+      clips::CLIPSValue cv;
+      switch (slot["type"].get<SlotType>()) {
+        case SlotType::String:
+          cv.lexemeValue = clips::CreateString(env, slot["value"].get<std::string>().c_str());
+          break;
+        case SlotType::Symbol:
+          cv.lexemeValue = clips::CreateSymbol(env, slot["value"].get<std::string>().c_str());
+          break;
+        case SlotType::ExternalAddress:
+          if (config.external_address_values_as_nullptr) {
+            cv.externalAddressValue = clips::CreateCExternalAddress(env, nullptr);
+          } else {
+            const std::string addressStr = fact.value.value["value"].get<std::string>();
+
+            std::uintptr_t rawAddress =
+              static_cast<std::uintptr_t>(std::stoull(addressStr, nullptr, 0));
+
+            void * address = reinterpret_cast<void *>(rawAddress);
+            cv.externalAddressValue = clips::CreateCExternalAddress(env, address);
+          }
+          break;
+        case SlotType::Integer:
+          cv.integerValue = clips::CreateInteger(env, slot["value"].get<long long>());
+          break;
+        case SlotType::Float:
+          cv.floatValue = clips::CreateFloat(env, slot["value"].get<double>());
+          break;
+        case SlotType::FactAddress:
+          if (id_to_fact_ptr.contains(slot["value"].get<long long>())) {
+            cv.factValue = id_to_fact_ptr[slot["value"].get<long long>()];
+          } else {
+            clips::Fact * null_fact = get_nullptr_fact(
+              env, slot["value"].get<long long>(), id_to_fact_ptr, created_nullptr_facts);
+            RCLCPP_WARN(
+              *logger_,
+              "Fact %lli from previous run references a fact %lli that is not present in the "
+              "current environment, setting it to nullptr",
+              fact.fact_id, slot["value"].get<long long>());
+            cv.factValue = null_fact;
+          }
+          break;
+        case SlotType::Multifield:
+          cv.multifieldValue =
+            json_to_multifield(env, slot["value"], id_to_fact_ptr, created_nullptr_facts, config);
+          break;
+      }
+
+      clips::PutFactSlot(f, slot["name"].get<std::string>().c_str(), &cv);
+    }
+
+    f = clips::Assert(f);
+    fact_id_mapping_[f->factIndex] = fact.fact_id;
+  }
 }
 
 bool CDBLoaderPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
@@ -155,220 +406,37 @@ bool CDBLoaderPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
 
   std::vector<Defmodule> defmodules = load_defmodules(db, restore_tick);
 
-  filter_defmodule_in_place(defmodules, config.module_rules);
+  filter_in_place(
+    defmodules, config.module_rules,
+    [](const Defmodule & value) -> const std::string & { return value.name; });
 
-  for (const Defmodule & defmodule : defmodules) {
-    clips::Build(env.get(), defmodule.value.c_str());
-  }
-
-  if (!config.skip_deftemplates) {
-    std::vector<Deftemplate> deftemplates = load_deftemplates(db, restore_tick);
-    filter_in_place(
-      deftemplates, config.module_rules, config.deftemplate_rules,
-      [](const Deftemplate & value) -> const std::string & { return value.defmodule; },
-      [](const Deftemplate & value) -> const std::string & { return value.name; });
-    for (Deftemplate deftemplate : deftemplates) {
-      RCLCPP_ERROR(
-        *logger_, "DEFTEMPLATE %s in %s, created at %lli ended at %lli", deftemplate.name.c_str(),
-        deftemplate.defmodule.c_str(), deftemplate.start_tick, deftemplate.end_tick.value_or(-1));
-      std::optional<TimedText> value = latest_timed_text_at_tick(deftemplate.value, restore_tick);
-      if (value.has_value()) {
-        clips::Build(env.get(), value.value().value.c_str());
-      } else {
-        RCLCPP_ERROR(
-          *logger_, "No value found for deftemplate %s in %s at tick %lli",
-          deftemplate.name.c_str(), deftemplate.defmodule.c_str(), restore_tick);
-      }
-    }
-  }
-
-  RCLCPP_ERROR(*logger_, "CRASHING NOW BYE!");
-
-  ((clips::Fact *)nullptr)->factIndex = -1;
-
-  std::vector<Fact> facts = load_facts(db);
   std::unordered_map<long long, clips::Fact *> id_to_fact_ptr;
   std::vector<clips::Fact *> created_nullptr_facts;
-  for (Fact fact : facts) {
-    TimedFact value = fact.value.back();
-    const std::string qualified_name =
-      std::format("{}::{}", fact.module_name, fact.deftemplate_name);
-    clips::Deftemplate * deftemplate = clips::FindDeftemplate(env.get(), qualified_name.c_str());
-    if (!value.value["type"].is_null() && deftemplate == nullptr) {
-      clips::Defmodule * defmodule = clips::FindDefmodule(env.get(), fact.module_name.c_str());
-      if (defmodule == nullptr) {
-      }
-
-      clips::CLIPSLexeme * sym =
-        clips::CreateSymbol(env.get(), value.value["deftemplate"].get<std::string>().c_str());
-      deftemplate = clips::CreateImpliedDeftemplate(env.get(), sym, true);
+  for (const Defmodule & defmodule : defmodules) {
+    clips::Build(env.get(), defmodule.value.c_str());
+    if (!config.skip_deftemplates) {
+      assert_deftemplates(env.get(), db, config, defmodule.name, restore_tick);
     }
-    if (deftemplate == nullptr) {
-      RCLCPP_ERROR(
-        *logger_, "Could not find deftemplate %s for fact %lli",
-        value.value["deftemplate"].get<std::string>().c_str(), fact.fact_id);
-      continue;
+    if (!config.skip_defglobals) {
+      prepare_defglobals(env.get(), db, config, defmodule.name, restore_tick);
     }
-    clips::Fact * f = clips::CreateFact(deftemplate);
-    id_to_fact_ptr[fact.fact_id] = f;
-  }
-  clips::Fact * f;
-  for (Fact fact : facts) {
-    TimedFact value = fact.value.back();
-    f = id_to_fact_ptr[fact.fact_id];
-    if (!value.value["type"].is_null()) {
-      clips::CLIPSValue cv;
-      cv.multifieldValue =
-        json_to_multifield(env.get(), value.value["value"], id_to_fact_ptr, created_nullptr_facts);
-
-      clips::PutFactSlot(f, nullptr, &cv);
-      f = clips::Assert(f);
-      fact_id_mapping_[f->factIndex] = fact.fact_id;
-      RCLCPP_WARN(
-        *logger_, "ASSERTED FACT %lli of type %s: %s", f->factIndex,
-        value.value["deftemplate"].get<std::string>().c_str(), value.value["value"].dump().c_str());
-
-      continue;
+    if (!config.skip_deffunctions) {
+      assert_deffunctions(env.get(), db, config, defmodule.name, restore_tick);
     }
-    RCLCPP_ERROR(*logger_, "VALUE AT %lli: %s", value.tick, value.value.dump().c_str());
-
-    for (nlohmann::json slot : value.value["slots"]) {
-      clips::CLIPSValue cv;
-      switch (slot["type"].get<SlotType>()) {
-        case SlotType::String:
-          cv.lexemeValue = clips::CreateString(env.get(), slot["value"].get<std::string>().c_str());
-          break;
-        case SlotType::Symbol:
-          cv.lexemeValue = clips::CreateSymbol(env.get(), slot["value"].get<std::string>().c_str());
-          break;
-        case SlotType::ExternalAddress:
-          cv.externalAddressValue = clips::CreateCExternalAddress(env.get(), nullptr);
-          break;
-        case SlotType::Integer:
-          cv.integerValue = clips::CreateInteger(env.get(), slot["value"].get<long long>());
-          break;
-        case SlotType::Float:
-          cv.floatValue = clips::CreateFloat(env.get(), slot["value"].get<double>());
-          break;
-        case SlotType::FactAddress:
-          if (id_to_fact_ptr.contains(slot["value"].get<long long>())) {
-            cv.factValue = id_to_fact_ptr[slot["value"].get<long long>()];
-          } else {
-            clips::Fact * null_fact = get_nullptr_fact(
-              env.get(), slot["value"].get<long long>(), id_to_fact_ptr, created_nullptr_facts);
-            RCLCPP_WARN(
-              *logger_,
-              "Fact %lli from previous run references a fact %lli that is not present in the "
-              "current environment, setting it to nullptr",
-              fact.fact_id, slot["value"].get<long long>());
-            cv.factValue = null_fact;
-          }
-          break;
-        case SlotType::Multifield:
-          cv.multifieldValue =
-            json_to_multifield(env.get(), slot["value"], id_to_fact_ptr, created_nullptr_facts);
-          break;
-      }
-
-      clips::PutFactSlot(f, slot["name"].get<std::string>().c_str(), &cv);
+    if (!config.skip_defrules) {
+      assert_defrules(env.get(), db, config, defmodule.name, restore_tick);
     }
-
-    f = clips::Assert(f);
-    fact_id_mapping_[f->factIndex] = fact.fact_id;
-  }
-
-  std::vector<Defglobal> defglobals = load_defglobals(db);
-  for (Defglobal defglobal : defglobals) {
-    RCLCPP_ERROR(
-      *logger_, "DEFGLOBAL %s in %s created at %lli ended at %lli", defglobal.name.c_str(),
-      defglobal.defmodule.c_str(), defglobal.start_tick, defglobal.end_tick.value_or(-1));
-    // for(TimedFact value : defglobal.value)
-    {
-      TimedFact value = defglobal.value.back();
-      RCLCPP_ERROR(*logger_, "VALUE AT %lli: %s", value.tick, value.value.dump().c_str());
-      clips::Build(
-        env.get(),
-        std::format("(defglobal {} ?*{}* = nil)", defglobal.defmodule, defglobal.name).c_str());
-      clips::Defglobal * global = clips::FindDefglobal(
-        env.get(), std::format("{}::{}", defglobal.defmodule, defglobal.name).c_str());
-      switch (value.value["type"].get<SlotType>()) {
-        case SlotType::String:
-          clips::DefglobalSetString(global, value.value["value"].get<std::string>().c_str());
-          break;
-        case SlotType::Symbol:
-          clips::DefglobalSetSymbol(global, value.value["value"].get<std::string>().c_str());
-          break;
-        case SlotType::ExternalAddress: {
-          const std::string addressStr = value.value["value"].get<std::string>();
-          //TODO SKIP OPTION
-          clips::DefglobalSetCLIPSExternalAddress(
-            global, clips::CreateCExternalAddress(env.get(), nullptr));
-          break;
-        }
-        case SlotType::Integer:
-          clips::DefglobalSetInteger(global, value.value["value"].get<long long>());
-          break;
-        case SlotType::Float:
-          clips::DefglobalSetFloat(global, value.value["value"].get<double>());
-          break;
-        case SlotType::FactAddress:
-          if (id_to_fact_ptr.contains(value.value["value"].get<long long>())) {
-            clips::DefglobalSetFact(global, id_to_fact_ptr[value.value["value"].get<long long>()]);
-          } else {
-            clips::Fact * null_fact = get_nullptr_fact(
-              env.get(), value.value["value"].get<long long>(), id_to_fact_ptr,
-              created_nullptr_facts);
-            RCLCPP_WARN(
-              *logger_,
-              "Defglobal %s::%s references a fact %lli that is not present in the current "
-              "environment, setting it to nullptr",
-              defglobal.defmodule.c_str(), defglobal.name.c_str(),
-              value.value["value"].get<long long>());
-            clips::DefglobalSetFact(global, null_fact);
-          }
-          break;
-        case SlotType::Multifield: {
-          clips::Multifield * multifield = json_to_multifield(
-            env.get(), value.value["value"], id_to_fact_ptr, created_nullptr_facts);
-          clips::DefglobalSetMultifield(global, multifield);
-          break;
-        }
-      }
-    }
-  }
-  clips::SetResetGlobals(env.get(), false);
-
-  std::vector<Deffunction> deffunctions = load_deffunctions(db);
-  for (Deffunction deffunction : deffunctions) {
-    // RCLCPP_ERROR(
-    //   *logger_, "DEFFUNCTION %s in %s created at %li ended at %li", deffunction.name.c_str(),
-    //   deffunction.defmodule.c_str(), deffunction.start_tick, deffunction.end_tick.value_or(-1));
-    for (TimedText value : deffunction.value) {
-      RCLCPP_ERROR(*logger_, "VALUE AT %lli: %s", value.tick, value.value.c_str());
-      clips::Build(env.get(), value.value.c_str());
+    if (!config.skip_deffacts) {
+      assert_deffacts(env.get(), db, config, defmodule.name, restore_tick);
     }
   }
 
-  std::vector<Deffacts> deffacts = load_deffacts(db);
-  for (Deffacts deffact : deffacts) {
-    // RCLCPP_ERROR(
-    //   *logger_, "DEFFACTS %s in %s created at %li ended at %li", deffact.name.c_str(),
-    //   deffact.defmodule.c_str(), deffact.start_tick, deffact.end_tick.value_or(-1));
-    for (TimedText value : deffact.value) {
-      RCLCPP_ERROR(*logger_, "VALUE AT %lli: %s", value.tick, value.value.c_str());
-      clips::Build(env.get(), value.value.c_str());
-    }
+  if (!config.skip_facts) {
+    assert_facts(env.get(), db, config, id_to_fact_ptr, created_nullptr_facts, restore_tick);
   }
 
-  std::vector<Defrule> defrules = load_defrules(db);
-  for (Defrule defrule : defrules) {
-    // RCLCPP_ERROR(
-    //   *logger_, "DEFRULE %s in %s created at %li ended at %li", defrule.name.c_str(),
-    //   defrule.defmodule.c_str(), defrule.start_tick, defrule.end_tick.value_or(-1));
-    for (TimedText value : defrule.value) {
-      RCLCPP_ERROR(*logger_, "VALUE AT %lli: %s", value.tick, value.value.c_str());
-      clips::Build(env.get(), value.value.c_str());
-    }
+  if (!config.skip_defglobals) {
+    assert_defglobals(env.get(), db, config, id_to_fact_ptr, created_nullptr_facts, restore_tick);
   }
 
   clips::Defmodule * theModule;
@@ -377,8 +445,15 @@ bool CDBLoaderPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
   for (theModule = clips::GetNextDefmodule(env.get(), NULL); theModule != NULL;
        theModule = clips::GetNextDefmodule(env.get(), theModule)) {
     clips::SetCurrentModule(env.get(), theModule);
+    if (!allowed_by_generic_regex_rule(config.module_rules, theModule->header.name->contents)) {
+      continue;
+    }
     for (theActivation = clips::GetNextActivation(env.get(), NULL); theActivation != NULL;
          theActivation = clips::GetNextActivation(env.get(), theActivation)) {
+      if (!allowed_by_generic_regex_rule(
+            config.activation_rules, theActivation->theRule->header.name->contents)) {
+        continue;
+      }
       std::string name = theActivation->theRule->header.name->contents;
       std::string module_name =
         theActivation->theRule->header.whichModule->theModule->header.name->contents;
@@ -404,11 +479,18 @@ bool CDBLoaderPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
       if (not_found) {
         continue;
       }
-      if (rule_firing_exists_before_tick(db, module_name, name, basis, 10000)) {
-        RCLCPP_ERROR(
+      if (rule_firing_exists_before_tick(db, module_name, name, basis, restore_tick)) {
+        RCLCPP_DEBUG(
           *logger_,
-          "Removing activation of rule %s in module %s because it was already fired before %lli",
-          name.c_str(), module_name.c_str(), basis.empty() ? -1 : basis.back().value_or(-1));
+          "REMOVING ACTIOVATION of DEFRULE %s::%s with previous basis:", module_name.c_str(),
+          name.c_str());
+        for (auto partial : basis) {
+          if (partial.has_value()) {
+            RCLCPP_DEBUG(*logger_, "%lli", partial.value());
+          } else {
+            RCLCPP_DEBUG(*logger_, "*");
+          }
+        }
         clips::RemoveActivation(env.get(), theActivation, true, true);
       }
     }
@@ -419,8 +501,8 @@ bool CDBLoaderPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
     clips::Retract(f);
   }
 
-  clips::Eval(env.get(), "(facts)", NULL);
-  clips::ShowDefglobals(env.get(), clips::STDOUT, NULL);
+  RCLCPP_INFO(
+    *logger_, "Finished Restoring environment %s to tick %lli", env_name.c_str(), restore_tick);
 
   return true;
 }

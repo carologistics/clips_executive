@@ -99,7 +99,7 @@ void DBHandler::assert_fact(
     pqxx::work w(*connection_);
 
     w.exec_params(
-      "SELECT assert_fact_upsert($1, $2, $3, $4, $5::jsonb);", id, deftemplate, module_name, tick,
+      "SELECT assert_fact_upsert($1, $2, $3, $4, $5::jsonb);", id, module_name, deftemplate, tick,
       fact_json);
 
     w.commit();

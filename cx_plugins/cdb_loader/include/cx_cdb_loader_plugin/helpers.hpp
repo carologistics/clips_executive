@@ -24,6 +24,7 @@
 #include <clips_ns/clips.h>
 // clang-format on
 
+#include <cx_cdb_loader_plugin/parser.hpp>
 #include <nlohmann/json.hpp>
 #include <rclcpp/rclcpp.hpp>
 
@@ -31,7 +32,6 @@ namespace cx
 {
 
 using json = nlohmann::json;
-// TODO decide wether this should be long long or std::int64_t and be consistent about it
 using Tick = long long;
 
 struct TimedFact
@@ -48,7 +48,7 @@ struct TimedText
 
 struct TimeLookup
 {
-  std::int64_t run_number;
+  long long run_number;
   std::string start_time;
   std::optional<std::string> end_time;
   Tick start_tick;
@@ -58,9 +58,9 @@ struct TimeLookup
 struct Fact
 {
   long long fact_id;
-  std::string module_name;
+  std::string defmodule;
   std::string deftemplate_name;
-  std::vector<TimedFact> value;
+  TimedFact value;
   Tick start_tick;
   std::optional<Tick> end_tick;
 };
@@ -69,7 +69,7 @@ struct Defglobal
 {
   std::string name;
   std::string defmodule;
-  std::vector<TimedFact> value;
+  TimedFact value;
   Tick start_tick;
   std::optional<Tick> end_tick;
 };
@@ -79,7 +79,7 @@ struct Defrule
   int rule_id;
   std::string name;
   std::string defmodule;
-  std::vector<TimedText> value;
+  TimedText value;
   int salience;
   Tick start_tick;
   std::optional<Tick> end_tick;
@@ -88,7 +88,7 @@ struct Defrule
 struct RuleFiring
 {
   int rule_id;
-  std::vector<std::int64_t> base;
+  std::vector<long long> base;
   Tick tick;
 };
 
@@ -96,7 +96,7 @@ struct Deffunction
 {
   std::string name;
   std::string defmodule;
-  std::vector<TimedText> value;
+  TimedText value;
   Tick start_tick;
   std::optional<Tick> end_tick;
 };
@@ -105,7 +105,7 @@ struct Deftemplate
 {
   std::string name;
   std::string defmodule;
-  std::vector<TimedText> value;
+  TimedText value;
   Tick start_tick;
   std::optional<Tick> end_tick;
 };
@@ -114,7 +114,7 @@ struct Deffacts
 {
   std::string name;
   std::string defmodule;
-  std::vector<TimedText> value;
+  TimedText value;
   Tick start_tick;
   std::optional<Tick> end_tick;
 };
@@ -157,12 +157,13 @@ NLOHMANN_JSON_SERIALIZE_ENUM(
 void append_json_to_multifield_builder(
   clips::Environment * env, clips::MultifieldBuilder * mb, const nlohmann::json & valueJson,
   std::unordered_map<long long, clips::Fact *> & id_to_fact_ptr,
-  std::vector<clips::Fact *> & created_nullptr_facts);
+  std::vector<clips::Fact *> & created_nullptr_facts, const RegexConfig & config);
 
 clips::Multifield * json_to_multifield(
   clips::Environment * env, const nlohmann::json & json,
   std::unordered_map<long long, clips::Fact *> & id_to_fact_ptr,
-  std::vector<clips::Fact *> & created_nullptr_facts);
+  std::vector<clips::Fact *> & created_nullptr_facts, const RegexConfig & config);
+
 clips::Fact * get_nullptr_fact(
   clips::Environment * env, long long fact_id,
   std::unordered_map<long long, clips::Fact *> & id_to_fact_ptr,
@@ -170,15 +171,21 @@ clips::Fact * get_nullptr_fact(
 
 template <typename T>
 std::optional<T> optional_field(const pqxx::row & row, const char * column);
-std::vector<TimedText> parse_timed_text_history(const pqxx::row & row);
-std::vector<TimedFact> parse_timed_fact_history(const pqxx::row & row);
+TimedText parse_timed_text(const pqxx::row & row);
+TimedFact parse_timed_fact(const pqxx::row & row);
 std::vector<Defmodule> load_defmodules(pqxx::connection & conn, Tick restore_tick);
-std::vector<Deftemplate> load_deftemplates(pqxx::connection & conn, Tick restore_tick);
-std::vector<Defglobal> load_defglobals(pqxx::connection & conn);
-std::vector<Deffunction> load_deffunctions(pqxx::connection & conn);
-std::vector<Deffacts> load_deffacts(pqxx::connection & conn);
-std::vector<Defrule> load_defrules(pqxx::connection & conn);
-std::vector<Fact> load_facts(pqxx::connection & conn);
+std::vector<Deftemplate> load_deftemplates(
+  pqxx::connection & conn, const std::string & defmodule, Tick restore_tick);
+std::vector<Defglobal> load_defglobals(
+  pqxx::connection & conn, Tick restore_tick, bool skip_external_addresses);
+std::vector<Deffunction> load_deffunctions(
+  pqxx::connection & conn, const std::string & defmodule, Tick restore_tick);
+std::vector<Defrule> load_defrules(
+  pqxx::connection & conn, const std::string & defmodule, Tick restore_tick);
+std::vector<Deffacts> load_deffacts(
+  pqxx::connection & conn, const std::string & defmodule, Tick restore_tick);
+std::vector<Fact> load_facts(
+  pqxx::connection & conn, Tick restore_tick, bool skip_external_addresses);
 
 bool rule_firing_exists_before_tick(
   pqxx::connection & conn, const std::string & defmodule, const std::string & name,
@@ -187,7 +194,8 @@ long long get_end_tick_for_run(pqxx::connection & db, long long run_index);
 long long resolve_restore_tick(pqxx::connection & db, long long restore_tick_index);
 long long resolve_restore_time(
   pqxx::connection & db, const std::string & restore_time, const rclcpp::Logger & logger);
-std::optional<TimedText> latest_timed_text_at_tick(
-  const std::vector<TimedText> & values, Tick restore_tick);
 
+std::vector<std::string> get_module_defglobal_names(
+  pqxx::connection & conn, const std::string & defmodule, Tick restore_tick,
+  bool skip_external_addresses);
 }  // namespace cx
