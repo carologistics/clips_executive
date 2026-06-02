@@ -52,13 +52,14 @@ public:
   void assert_deffacts(
     clips::Environment * env, pqxx::connection & conn, const RegexConfig & config,
     const std::string & defmodule, Tick restore_tick);
-  void prepare_defglobals(
-    clips::Environment * env, pqxx::connection & conn, const RegexConfig & config,
-    const std::string & defmodule, Tick restore_tick);
   void assert_defglobals(
     clips::Environment * env, pqxx::connection & conn, const RegexConfig & config,
+    std::vector<Defglobal> fact_pointing_defglobals, clips::Fact * tmp_fact,
+    const std::string & defmodule, Tick restore_tick);
+  void update_defglobals(
+    clips::Environment * env, std::vector<Defglobal> defglobals, const RegexConfig & config,
     std::unordered_map<long long, clips::Fact *> id_to_fact_ptr,
-    std::vector<clips::Fact *> created_nullptr_facts, Tick restore_tick);
+    std::vector<clips::Fact *> created_nullptr_facts);
   void assert_facts(
     clips::Environment * env, pqxx::connection & conn, const RegexConfig & config,
     std::unordered_map<long long, clips::Fact *> id_to_fact_ptr,

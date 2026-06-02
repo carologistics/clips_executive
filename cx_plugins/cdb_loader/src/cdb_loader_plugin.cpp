@@ -13,11 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// TODO CHECK IF ARRAYS IN THE TYPES IS BETTER THAN A TABLE REFERENCING THE THE FACT!?
 // TODO DEFFACTS MANUAL
 // TODO PLUGIN CHECK
-// TODO EXTERNAL ADDRESS AS VALUE
 // TODO Check weather the db exists porperly
+// TODO SALIENCE OVERRIDE
 
 #include <pqxx/pqxx>
 
@@ -143,35 +142,22 @@ void CDBLoaderPlugin::assert_deffacts(
     clips::Build(env, deffact.value.value.c_str());
   }
 }
-void CDBLoaderPlugin::prepare_defglobals(
-  clips::Environment * env, pqxx::connection & conn, const RegexConfig & config,
-  const std::string & defmodule, Tick restore_tick)
-{
-  std::vector<std::string> defglobals =
-    get_module_defglobal_names(conn, defmodule, restore_tick, config.skip_external_address_values);
-  filter_in_place(
-    defglobals, config.defglobal_rules,
-    [](const std::string & value) -> const std::string & { return value; });
-  for (std::string defglobal : defglobals) {
-    RCLCPP_DEBUG(*logger_, "PREPARING DEFGLOBAL %s in %s", defglobal.c_str(), defmodule.c_str());
-    clips::Build(env, std::format("(defglobal {} ?*{}* = nil)", defmodule, defglobal).c_str());
-  }
-}
 
 void CDBLoaderPlugin::assert_defglobals(
   clips::Environment * env, pqxx::connection & conn, const RegexConfig & config,
-  std::unordered_map<long long, clips::Fact *> id_to_fact_ptr,
-  std::vector<clips::Fact *> created_nullptr_facts, Tick restore_tick)
+  std::vector<Defglobal> fact_pointing_defglobals, clips::Fact * tmp_fact,
+  const std::string & defmodule, Tick restore_tick)
 {
   std::vector<Defglobal> defglobals =
-    load_defglobals(conn, restore_tick, config.skip_external_address_values);
+    load_defglobals(conn, defmodule, restore_tick, config.skip_external_address_values);
   filter_in_place(
     defglobals, config.defglobal_rules,
     [](const Defglobal & value) -> const std::string & { return value.name; });
   for (Defglobal defglobal : defglobals) {
     RCLCPP_DEBUG(
-      *logger_, "UPDATING DEFGLOBAL %s in %s to value from tick %lli: %s", defglobal.name.c_str(),
+      *logger_, "ASSERTING DEFGLOBAL %s in %s to value from tick %lli: %s", defglobal.name.c_str(),
       defglobal.defmodule.c_str(), defglobal.value.tick, defglobal.value.value.dump().c_str());
+    clips::Build(env, std::format("(defglobal {} ?*{}* = nil)", defmodule, defglobal.name).c_str());
     clips::Defglobal * global =
       clips::FindDefglobal(env, std::format("{}::{}", defglobal.defmodule, defglobal.name).c_str());
     switch (defglobal.value.value["type"].get<SlotType>()) {
@@ -207,6 +193,33 @@ void CDBLoaderPlugin::assert_defglobals(
         clips::DefglobalSetFloat(global, defglobal.value.value["value"].get<double>());
         break;
       case SlotType::FactAddress:
+        clips::DefglobalSetFact(global, tmp_fact);
+        fact_pointing_defglobals.push_back(defglobal);
+        break;
+      case SlotType::Multifield: {
+        bool contains_fact = false;
+        clips::Multifield * multifield =
+          json_to_multifield(env, defglobal.value.value["value"], tmp_fact, config, contains_fact);
+        if (contains_fact) {
+          fact_pointing_defglobals.push_back(defglobal);
+        }
+        clips::DefglobalSetMultifield(global, multifield);
+        break;
+      }
+    }
+  }
+}
+
+void CDBLoaderPlugin::update_defglobals(
+  clips::Environment * env, std::vector<Defglobal> defglobals, const RegexConfig & config,
+  std::unordered_map<long long, clips::Fact *> id_to_fact_ptr,
+  std::vector<clips::Fact *> created_nullptr_facts)
+{
+  for (Defglobal defglobal : defglobals) {
+    clips::Defglobal * global =
+      clips::FindDefglobal(env, std::format("{}::{}", defglobal.defmodule, defglobal.name).c_str());
+    switch (defglobal.value.value["type"].get<SlotType>()) {
+      case SlotType::FactAddress: {
         if (id_to_fact_ptr.contains(defglobal.value.value["value"].get<long long>())) {
           clips::DefglobalSetFact(
             global, id_to_fact_ptr[defglobal.value.value["value"].get<long long>()]);
@@ -223,12 +236,15 @@ void CDBLoaderPlugin::assert_defglobals(
           clips::DefglobalSetFact(global, null_fact);
         }
         break;
+      }
       case SlotType::Multifield: {
         clips::Multifield * multifield = json_to_multifield(
           env, defglobal.value.value["value"], id_to_fact_ptr, created_nullptr_facts, config);
         clips::DefglobalSetMultifield(global, multifield);
         break;
       }
+      default:
+        break;
     }
   }
 }
@@ -410,6 +426,9 @@ bool CDBLoaderPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
     defmodules, config.module_rules,
     [](const Defmodule & value) -> const std::string & { return value.name; });
 
+  clips::Fact * tmp_fact = clips::AssertString(env.get(), "(cdb-restored)");
+
+  std::vector<Defglobal> fact_pointing_defglobal;
   std::unordered_map<long long, clips::Fact *> id_to_fact_ptr;
   std::vector<clips::Fact *> created_nullptr_facts;
   for (const Defmodule & defmodule : defmodules) {
@@ -418,7 +437,8 @@ bool CDBLoaderPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
       assert_deftemplates(env.get(), db, config, defmodule.name, restore_tick);
     }
     if (!config.skip_defglobals) {
-      prepare_defglobals(env.get(), db, config, defmodule.name, restore_tick);
+      assert_defglobals(
+        env.get(), db, config, fact_pointing_defglobal, tmp_fact, defmodule.name, restore_tick);
     }
     if (!config.skip_deffunctions) {
       assert_deffunctions(env.get(), db, config, defmodule.name, restore_tick);
@@ -436,7 +456,8 @@ bool CDBLoaderPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
   }
 
   if (!config.skip_defglobals) {
-    assert_defglobals(env.get(), db, config, id_to_fact_ptr, created_nullptr_facts, restore_tick);
+    update_defglobals(
+      env.get(), fact_pointing_defglobal, config, id_to_fact_ptr, created_nullptr_facts);
   }
 
   clips::Defmodule * theModule;
@@ -496,7 +517,6 @@ bool CDBLoaderPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
     }
   }
 
-  clips::AssertString(env.get(), "(cdb-restored)");
   for (clips::Fact * f : created_nullptr_facts) {
     clips::Retract(f);
   }
