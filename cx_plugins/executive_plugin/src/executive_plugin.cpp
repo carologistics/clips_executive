@@ -60,9 +60,13 @@ void ExecutivePlugin::initialize()
     node, plugin_name_ + ".assert_time", rclcpp::ParameterValue(true));
   cx::cx_utils::declare_parameter_if_not_declared(
     node, plugin_name_ + ".refresh_rate", rclcpp::ParameterValue(10));
+  cx::cx_utils::declare_parameter_if_not_declared(
+    node, plugin_name_ + ".maximum_rules_fied", rclcpp::ParameterValue(1000000));
+
   node->get_parameter(plugin_name_ + ".publish_on_refresh", publish_on_refresh_);
   node->get_parameter(plugin_name_ + ".assert_time", assert_time_);
   node->get_parameter(plugin_name_ + ".refresh_rate", refresh_rate_);
+  node->get_parameter(plugin_name_ + ".maxiumum_rules_fired", maxium_rules_fired_);
   if (publish_on_refresh_) {
     clips_agenda_refresh_pub_ = node->create_publisher<std_msgs::msg::Empty>(
       "clips_executive/refresh_agenda", rclcpp::QoS(10));
@@ -85,7 +89,12 @@ void ExecutivePlugin::initialize()
       }
 
       clips::RefreshAllAgendas(env.get());
-      clips::Run(env.get(), -1);
+      int rules_fired = clips::Run(env.get(), maxium_rules_fired_);
+      if (rules_fired == maxium_rules_fired_) {
+        RCLCPP_WARN(
+          *logger_, "Run of env %s was interrupted because the maximum rules fired of %i was hit!",
+          context->env_name_.c_str(), maxium_rules_fired_);
+      }
     }
     if (publish_on_refresh_) {
       clips_agenda_refresh_pub_->publish(std_msgs::msg::Empty());

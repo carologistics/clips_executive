@@ -57,6 +57,8 @@ private:
 
   std::vector<std::shared_ptr<clips::Environment>> managed_envs;
   std::mutex envs_mutex_;
+
+  int maxium_rules_fired_;
 };
 }  // namespace cx
 
