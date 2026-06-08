@@ -24,37 +24,36 @@ find_package(rosidl_typesupport_introspection_cpp REQUIRED)
 find_package(rcutils REQUIRED)
 find_package(ICU REQUIRED COMPONENTS uc i18n)
 find_package(action_msgs REQUIRED)
+find_package(rosidl_typesupport_interface REQUIRED)
 
-include(CheckCXXSourceCompiles)
-include(CheckIncludeFileCXX)
 
-set(CMAKE_REQUIRED_LIBRARIES
-  rclcpp::rclcpp;rclcpp_action::rclcpp_action
-)
-set(CMAKE_REQUIRED_INCLUDES
-  ${rclcpp_action_INCLUDE_DIRS};${rclcpp_INCLUDE_DIRS}
-)
+# Extract ROS distro from ament_cmake version or environment
+if(DEFINED ENV{ROS_DISTRO})
+  set(ROS_DISTRO $ENV{ROS_DISTRO})
+else()
+  message(FATAL_ERROR "ROS_DISTRO environment variable not set")
+endif()
 
-check_include_file_cxx(rclcpp/create_generic_service.hpp HAVE_GENERIC_SERVICE)
-# workaround as create_generic_client missing include
-# also, rclcpp misses typesupport helper on jazzy atm
-check_cxx_source_compiles("
-  #include <rclcpp/node_interfaces/node_waitables_interface.hpp>
-  #include <rclcpp_action/create_generic_client.hpp>
-  #include <rclcpp/typesupport_helpers.hpp>
+if(DEFINED ENV{ROS_DISTRO})
+  set(ROS_DISTRO $ENV{ROS_DISTRO})
+else()
+  message(FATAL_ERROR "ROS_DISTRO environment variable not set")
+endif()
 
-  int main() {
-  const rosidl_action_type_support_t *(*fn)(
-    const std::string &,
-    const std::string &,
-    rcpputils::SharedLibrary &
-  ) = &rclcpp::get_action_typesupport_handle;
+# HAVE_GENERIC_CLIENT: jazzy and above
+if(ROS_DISTRO STRGREATER_EQUAL "jazzy")
+  set(HAVE_GENERIC_CLIENT TRUE)
+endif()
 
-  (void)fn;
-    return 0;
-  }
-" HAVE_GENERIC_ACTION_CLIENT)
-check_include_file_cxx(rclcpp/create_generic_client.hpp HAVE_GENERIC_CLIENT)
+# HAVE_GENERIC_SERVICE: kilted and above
+if(ROS_DISTRO STRGREATER_EQUAL "jazzy")
+  set(HAVE_GENERIC_SERVICE TRUE)
+endif()
+
+# HAVE_GENERIC_ACTION_CLIENT: kilted and above
+if(ROS_DISTRO STRGREATER_EQUAL "kilted")
+  set(HAVE_GENERIC_ACTION_CLIENT TRUE)
+endif()
 
 add_library(${PROJECT_NAME} SHARED
   src/ros_msgs_plugin.cpp
