@@ -21,6 +21,8 @@
     <member refid="classcx_1_1ConfigPlugin_1a90ecabcfa93cf85465b70c5bf7c92a2d" kind="function"><name>getScalarType</name></member>
     <member refid="classcx_1_1ConfigPlugin_1a8652f7c03aca9b9c68a17a992a5a4edd" kind="function"><name>iterateThroughYamlRecuresively</name></member>
     <member refid="classcx_1_1ConfigPlugin_1a74135f6a1a9f1f793196cc529c993f3d" kind="function"><name>sequenceIterator</name></member>
+    <member refid="classcx_1_1ConfigPlugin_1a29a557406619320a4432855834b3fab9" kind="function"><name>emitScalar</name></member>
+    <member refid="classcx_1_1ConfigPlugin_1a7e4411813807fc965293abb5bf609e13" kind="function"><name>splitPath</name></member>
   </compound>
   <compound refid="namespacecx" kind="namespace"><name>cx</name>
   </compound>

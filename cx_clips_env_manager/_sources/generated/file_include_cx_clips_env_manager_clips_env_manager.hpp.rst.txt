@@ -44,6 +44,8 @@ Includes
 
 - ``cx_msgs/srv/list_clips_envs.hpp``
 
+- ``cx_utils/clips_env_context.hpp``
+
 - ``lifecycle_msgs/msg/state.hpp``
 
 - ``lifecycle_msgs/msg/transition.hpp``
@@ -65,6 +67,8 @@ Includes
 - ``spdlog/spdlog.h``
 
 - ``string``
+
+- ``unordered_map``
 
 
 

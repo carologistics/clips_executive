@@ -56,6 +56,10 @@ Program Listing for File clips_env_context.hpp
    class CLIPSEnvContext
    {
    public:
+     CLIPSEnvContext(const std::string & env_name, bool log_to_file, bool stdout_to_debug)
+     : env_name_(env_name), logger_(env_name.c_str(), log_to_file, stdout_to_debug)
+     {
+     }
      std::string env_name_;
      std::mutex env_mtx_;
      CLIPSLogger logger_;

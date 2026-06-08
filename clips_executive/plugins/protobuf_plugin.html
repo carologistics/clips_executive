@@ -113,7 +113,7 @@
 <p>This plugin enables communication via protobuf through <a class="reference external" href="https://carologistics.github.io/clips_executive/protobuf_comm">protobuf_comm</a>, a C++ library to handle communication via Protocol Buffers (<a class="reference external" href="https://protobuf.dev/">protobuf</a>) using a simple framing protocol.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This Plugin was ported from the fawkes and thus is subject to the GPLv2+ license.</p>
+<p>This Plugin relies on protobuf_comm and thus is subject to the GPLv2+ license.</p>
 </div>
 <section id="configuration">
 <h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
@@ -339,12 +339,17 @@ However, this requires to build a shared library from proto files and then link 
 </section>
 <section id="id1">
 <h3>Configuration<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<p>The configuration creates two environments, each handling a protobuf peer.</p>
 <p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/params/plugin_examples/protobuf.yaml">cx_bringup/params/plugin_examples/protobuf.yaml</a>.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">clips_manager</span><span class="p">:</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">/**</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_protobuf&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">    </span><span class="nt">cx_protobuf</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;executive&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;protobuf&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;files&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_protobuf_peer1&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;cx_protobuf_peer2&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">cx_protobuf_peer1</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;executive&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;protobuf&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;files_peer1&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">log_clips_to_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">watch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facts&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;rules&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">cx_protobuf_peer2</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;executive&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;protobuf&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;files_peer2&quot;</span><span class="p p-Indicator">]</span>
 <span class="w">      </span><span class="nt">log_clips_to_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">      </span><span class="nt">watch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facts&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;rules&quot;</span><span class="p p-Indicator">]</span>
 
@@ -353,42 +358,61 @@ However, this requires to build a shared library from proto files and then link 
 <span class="w">      </span><span class="nt">publish_on_refresh</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">      </span><span class="nt">assert_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">      </span><span class="nt">refresh_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+
 <span class="w">    </span><span class="nt">protobuf</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::ProtobufPlugin&quot;</span>
+<span class="w">      </span><span class="c1"># When specifying relative paths, look at the share directories of the listed packages to resolve them.</span>
+<span class="w">      </span><span class="c1"># Attempts to resolve the relative paths in order of the listed packages</span>
+<span class="w">      </span><span class="c1"># Defaults to an empty list</span>
 <span class="w">      </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_bringup&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="c1"># Specify directories to look for protobuf messages.</span>
+<span class="w">      </span><span class="c1"># Supports absolute paths or relative paths using the share directories specified above.</span>
+<span class="w">      </span><span class="c1"># Defaults to an empty list</span>
 <span class="w">      </span><span class="nt">proto_paths</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;proto/cx_bringup&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">    </span><span class="nt">files</span><span class="p">:</span>
+
+<span class="w">    </span><span class="nt">files_peer1</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::FileLoadPlugin&quot;</span>
 <span class="w">      </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_bringup&quot;</span><span class="p p-Indicator">]</span>
 <span class="w">      </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span>
-<span class="w">        </span><span class="s">&quot;clips/plugin_examples/protobuf.clp&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="s">&quot;clips/plugin_examples/protobuf-peer1.clp&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">    </span><span class="nt">files_peer2</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::FileLoadPlugin&quot;</span>
+<span class="w">      </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_bringup&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="c1"># same as peer1, just overriding the peer creation</span>
+<span class="w">      </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span>
+<span class="w">        </span><span class="s">&quot;clips/plugin_examples/protobuf-peer1.clp&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">        </span><span class="s">&quot;clips/plugin_examples/protobuf-peer2.clp&quot;</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 </section>
 <section id="code">
 <h3>Code<a class="headerlink" href="#code" title="Link to this heading"></a></h3>
-<p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/protobuf.clp">cx_bringup/clips/plugin_examples/protobuf.clp</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/protobuf-peer1.clp">cx_bringup/clips/plugin_examples/protobuf-peer1.clp</a>.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">protobuf-init-example-peer</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">executive-finalize</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">peer</span><span class="w"> </span><span class="nv">?any-peer-id</span><span class="p">))</span>
 <span class="w">  </span><span class="nv">=&gt;</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?peer-1</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-peer-create-local</span><span class="w"> </span><span class="nv">127.0.0.1</span><span class="w"> </span><span class="mi">4444</span><span class="w"> </span><span class="mi">4445</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?peer-2</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-peer-create-local</span><span class="w"> </span><span class="nv">127.0.0.1</span><span class="w"> </span><span class="mi">4445</span><span class="w"> </span><span class="mi">4444</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">peer</span><span class="w"> </span><span class="nv">?peer-1</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">peer</span><span class="w"> </span><span class="nv">?peer-2</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">peer</span><span class="w"> </span><span class="nv">?peer-1</span><span class="w"> </span><span class="mi">4444</span><span class="w"> </span><span class="mi">4445</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;127.0.0.1 4444 4445&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">started</span><span class="w"> </span><span class="p">(</span><span class="nv">now</span><span class="p">)))</span>
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">peer-send-msg</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">peer</span><span class="w"> </span><span class="nv">?peer-id</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">protobuf-msg</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">protobuf-send-msg</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">peer</span><span class="w"> </span><span class="nv">?peer-id</span><span class="w"> </span><span class="nv">?source</span><span class="w"> </span><span class="nv">?target</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">started</span><span class="w"> </span><span class="nv">?start</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">time</span><span class="w"> </span><span class="nv">?now&amp;:</span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="nv">?now</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="nv">?start</span><span class="w"> </span><span class="mi">1</span><span class="p">)))</span>
 <span class="w">  </span><span class="nv">=&gt;</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-create</span><span class="w"> </span><span class="s">&quot;SearchRequest&quot;</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">pb-set-field</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="s">&quot;query&quot;</span><span class="w"> </span><span class="s">&quot;hello&quot;</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">pb-set-field</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="s">&quot;page_number&quot;</span><span class="w"> </span><span class="nv">?peer-id</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">pb-set-field</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="s">&quot;results_per_page&quot;</span><span class="w"> </span><span class="nv">?peer-id</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">pb-set-field</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="s">&quot;page_number&quot;</span><span class="w"> </span><span class="nv">?source</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">pb-set-field</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="s">&quot;results_per_page&quot;</span><span class="w"> </span><span class="nv">?target</span><span class="p">)</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">pb-broadcast</span><span class="w"> </span><span class="nv">?peer-id</span><span class="w"> </span><span class="nv">?msg</span><span class="p">)</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">pb-destroy</span><span class="w"> </span><span class="nv">?msg</span><span class="p">)</span>
 <span class="p">)</span>
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">protobuf-msg-read</span>
+
+<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">protobuf-read-msg</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">protobuf-msg</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">?type</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">comp-id</span><span class="w"> </span><span class="nv">?comp-id</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">msg-type</span><span class="w"> </span><span class="nv">?msg-type</span><span class="p">)</span>
 <span class="w">    </span><span class="p">(</span><span class="nv">rcvd-via</span><span class="w"> </span><span class="nv">?via</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">rcvd-from</span><span class="w"> </span><span class="nv">?address</span><span class="w"> </span><span class="nv">?port</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">rcvd-at</span><span class="w"> </span><span class="nv">?rcvd-at</span><span class="p">)</span>
 <span class="w">    </span><span class="p">(</span><span class="nv">client-type</span><span class="w"> </span><span class="nv">?c-type</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">client-id</span><span class="w"> </span><span class="nv">?c-id</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">ptr</span><span class="w"> </span><span class="nv">?ptr</span><span class="p">))</span>
@@ -403,10 +427,22 @@ However, this requires to build a shared library from proto files and then link 
 
 <span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">protobuf-close-peer</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">executive-finalize</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">?f</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">peer</span><span class="w"> </span><span class="nv">?any-peer-id</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">?f</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">peer</span><span class="w"> </span><span class="nv">?any-peer-id</span><span class="w"> </span><span class="nv">$?</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">=&gt;</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">pb-peer-destroy</span><span class="w"> </span><span class="nv">?any-peer-id</span><span class="p">)</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?f</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/protobuf-peer2.clp">cx_bringup/clips/plugin_examples/protobuf-peer2.clp</a>.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">protobuf-init-example-peer</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">executive-finalize</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">peer</span><span class="w"> </span><span class="nv">?any-peer-id</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?peer-2</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-peer-create-local</span><span class="w"> </span><span class="nv">127.0.0.1</span><span class="w"> </span><span class="mi">4445</span><span class="w"> </span><span class="mi">4444</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">peer</span><span class="w"> </span><span class="nv">?peer-2</span><span class="w"> </span><span class="mi">4445</span><span class="w"> </span><span class="mi">4444</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;127.0.0.1 4445 4444&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">started</span><span class="w"> </span><span class="p">(</span><span class="nv">now</span><span class="p">)))</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -418,7 +454,7 @@ However, this requires to build a shared library from proto files and then link 
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>cx_bringup<span class="w"> </span>cx_launch.py<span class="w"> </span>manager_config:<span class="o">=</span>plugin_examples/protobuf_linked.yaml
 </pre></div>
 </div>
-<p>It creates a server on port <code class="docutils literal notranslate"><span class="pre">4446</span></code> and a client that sends messages (using the same <a class="reference internal" href="#proto-msg-example"><span class="std std-ref">message definitions</span></a> as in the first example).</p>
+<p>It creates a server on port <code class="docutils literal notranslate"><span class="pre">4446</span></code> and a client (in a separate CLIPS environment) that sends messages (using the same <a class="reference internal" href="#proto-msg-example"><span class="std std-ref">message definitions</span></a> as in the first example).</p>
 <p>This time the messages are not registered directly through the config, but rather through linking them directly to the loaded plugin.
 Therefore, a linked plugin is generated:</p>
 <div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">cx_generate_linked_protobuf_plugin_from_proto</span><span class="p">(</span><span class="s2">&quot;BringupProtobufPlugin&quot;</span><span class="w"> </span><span class="s">proto/cx_bringup/SearchRequest.proto</span><span class="p">)</span>
@@ -427,11 +463,15 @@ Therefore, a linked plugin is generated:</p>
 <section id="id2">
 <h3>Configuration<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
 <p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/params/plugin_examples/protobuf_linked.yaml">cx_bringup/params/plugin_examples/protobuf_linked.yaml</a>.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">clips_manager</span><span class="p">:</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">/**</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_protobuf&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">    </span><span class="nt">cx_protobuf</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;executive&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;protobuf&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;files&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_protobuf_client&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;cx_protobuf_server&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">cx_protobuf_client</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;executive&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;protobuf&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;files_client&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">log_clips_to_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">watch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facts&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;rules&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">cx_protobuf_server</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;executive&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;protobuf&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;files_server&quot;</span><span class="p p-Indicator">]</span>
 <span class="w">      </span><span class="nt">log_clips_to_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">      </span><span class="nt">watch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facts&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;rules&quot;</span><span class="p p-Indicator">]</span>
 
@@ -440,20 +480,44 @@ Therefore, a linked plugin is generated:</p>
 <span class="w">      </span><span class="nt">publish_on_refresh</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">      </span><span class="nt">assert_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">      </span><span class="nt">refresh_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+
 <span class="w">    </span><span class="nt">protobuf</span><span class="p">:</span>
+<span class="w">      </span><span class="c1"># Uses the plugin generated from cmake</span>
 <span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::BringupProtobufPlugin&quot;</span>
-<span class="w">    </span><span class="nt">files</span><span class="p">:</span>
+<span class="w">      </span><span class="c1"># While it additionally acts like the base plugin, including all</span>
+<span class="w">      </span><span class="c1"># configuration that can be found in the protobuf example, it actually</span>
+<span class="w">      </span><span class="c1"># does not need to specify any other parameter if it registers the types</span>
+<span class="w">      </span><span class="c1"># at runtime.</span>
+
+<span class="w">    </span><span class="nt">files_client</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::FileLoadPlugin&quot;</span>
 <span class="w">      </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_bringup&quot;</span><span class="p p-Indicator">]</span>
 <span class="w">      </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span>
-<span class="w">        </span><span class="s">&quot;clips/plugin_examples/protobuf-linked.clp&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="s">&quot;clips/plugin_examples/protobuf-linked-client.clp&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">    </span><span class="nt">files_server</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::FileLoadPlugin&quot;</span>
+<span class="w">      </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_bringup&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span>
+<span class="w">        </span><span class="s">&quot;clips/plugin_examples/protobuf-linked-server.clp&quot;</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 </section>
 <section id="id3">
 <h3>Code<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
-<p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/protobuf-linked.clp">cx_bringup/clips/plugin_examples/protobuf-linked.clp</a>.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">peer-send-msg</span>
+<p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/protobuf-linked-client.clp">cx_bringup/clips/plugin_examples/protobuf-linked-client.clp</a>.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">protobuf-init-example-client</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">executive-finalize</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">client</span><span class="w"> </span><span class="nv">?any-c-id</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-connect</span><span class="w"> </span><span class="nv">127.0.0.1</span><span class="w"> </span><span class="mi">4446</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;Connect to server: &quot;</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">client</span><span class="w"> </span><span class="nv">?res</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?success</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-register-type</span><span class="w"> </span><span class="s">&quot;SearchRequest&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;Register Type: &quot;</span><span class="w"> </span><span class="nv">?success</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">peer-send-msg</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">client</span><span class="w"> </span><span class="nv">?c-id</span><span class="p">)</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">protobuf-client-connected</span><span class="w"> </span><span class="nv">?c-id</span><span class="p">)</span>
 <span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">protobuf-msg</span><span class="p">))</span>
@@ -464,6 +528,24 @@ Therefore, a linked plugin is generated:</p>
 <span class="w">  </span><span class="p">(</span><span class="nv">pb-set-field</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="s">&quot;results_per_page&quot;</span><span class="w"> </span><span class="nv">?c-id</span><span class="p">)</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">pb-send</span><span class="w"> </span><span class="nv">?c-id</span><span class="w"> </span><span class="nv">?msg</span><span class="p">)</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">pb-destroy</span><span class="w"> </span><span class="nv">?msg</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">protobuf-close</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">executive-finalize</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">?f</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">client</span><span class="w"> </span><span class="nv">?any-client</span><span class="p">)</span>
+<span class="w">  </span><span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">pb-disconnect</span><span class="w"> </span><span class="nv">?any-client</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?f</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/protobuf-linked-server.clp">cx_bringup/clips/plugin_examples/protobuf-linked-server.clp</a>.</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">protobuf-init-example-server</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">executive-finalize</span><span class="p">))</span>
+<span class="w">  </span><span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">pb-server-enable</span><span class="w"> </span><span class="mi">4446</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?success</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-register-type</span><span class="w"> </span><span class="s">&quot;SearchRequest&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;Register Type: &quot;</span><span class="w"> </span><span class="nv">?success</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
 <span class="p">)</span>
 
 <span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">protobuf-msg-read</span>
@@ -481,11 +563,8 @@ Therefore, a linked plugin is generated:</p>
 
 <span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">protobuf-close</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">executive-finalize</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">?f</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">client</span><span class="w"> </span><span class="nv">?any-client</span><span class="p">)</span>
 <span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">pb-disconnect</span><span class="w"> </span><span class="nv">?any-client</span><span class="p">)</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">pb-server-disable</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?f</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>

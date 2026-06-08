@@ -8,7 +8,7 @@ Base class wrapping gym-functions for reinforcement learning to interface with C
 .. toctree::
    :maxdepth: 2
 
-   Python API <modules>
+
 
 
 

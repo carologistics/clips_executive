@@ -134,6 +134,11 @@
 <h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; Load all config values from a file (absolute path) given a prefix and store them into (confval) facts.</span>
 <span class="c1">; The prefix can be used to restrict the loaded values to a prefix</span>
+<span class="c1">; Use / for nesting, e.g., foo/bar for only retrieving values under bar in this example:</span>
+<span class="c1">;  foo:</span>
+<span class="c1">;    bar:</span>
+<span class="c1">;      ...</span>
+<span class="c1">; For / inside of keys, wrap the whole key by single quotes &#39;, e.g., &#39;/foo&#39;/bar if the key is &quot;/foo&quot; instead of &quot;foo&quot;.</span>
 <span class="p">(</span><span class="nv">config-load</span><span class="w"> </span><span class="nv">?file</span><span class="w"> </span><span class="nv">?prefix</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -177,11 +182,16 @@
 <span class="w">  </span><span class="nv">=&gt;</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?share-dir</span><span class="w"> </span><span class="p">(</span><span class="nv">ament-index-get-package-share-directory</span><span class="w"> </span><span class="s">&quot;cx_bringup&quot;</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?file</span><span class="w"> </span><span class="p">(</span><span class="nv">str-cat</span><span class="w"> </span><span class="nv">?share-dir</span><span class="w"> </span><span class="s">&quot;/params/plugin_examples/config.yaml&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;Loading yaml file: &quot;</span><span class="w"> </span><span class="nv">?file</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">config-load</span><span class="w"> </span><span class="nv">?file</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">delayed-do-for-all-facts</span><span class="w"> </span><span class="p">((</span><span class="nv">?cv</span><span class="w"> </span><span class="nv">confval</span><span class="p">))</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">ppfact</span><span class="w"> </span><span class="nv">?cv</span><span class="w"> </span><span class="nv">blue</span><span class="p">)</span>
-<span class="w">  </span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;Loading from file &quot;</span><span class="w"> </span><span class="nv">?file</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">  </span><span class="c1">; test loading of sequence</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot; 1. Prefix leading to environments (sequence): &quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">config-load</span><span class="w"> </span><span class="nv">?file</span><span class="w"> </span><span class="s">&quot;&#39;/**&#39;/ros__parameters/environments&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="c1">; test loading of map</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot; 2. Prefix leading to environment config (map):&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">config-load</span><span class="w"> </span><span class="nv">?file</span><span class="w"> </span><span class="s">&quot;&#39;/**&#39;/ros__parameters/cx_config/&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="c1">; test loading of value</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot; 3. Prefix leading to config plugin string (scalar):&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">config-load</span><span class="w"> </span><span class="nv">?file</span><span class="w"> </span><span class="s">&quot;&#39;/**&#39;/ros__parameters/config/plugin&quot;</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
