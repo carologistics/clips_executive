@@ -39,6 +39,10 @@ void capture_handler(
   const rcutils_log_location_t *, int severity, const char * name, rcutils_time_point_value_t,
   const char * format, va_list * args)
 {
+  // Only capture messages from our test logger
+  if (!name || std::string(name).rfind("test_clips", 0) != 0) {
+    return;
+  }
   char buf[1024];
   vsnprintf(buf, sizeof(buf), format, *args);
   g_captured.push_back({severity, name ? name : "", buf});
@@ -51,20 +55,21 @@ protected:
   static void SetUpTestSuite()
   {
     rclcpp::init(0, nullptr);
-    rcutils_logging_set_output_handler(capture_handler);
     // make sure all severity levels are enabled so nothing gets filtered
     rcutils_logging_set_default_logger_level(RCUTILS_LOG_SEVERITY_DEBUG);
   }
 
-  static void TearDownTestSuite()
-  {
-    rcutils_logging_set_output_handler(rcutils_logging_console_output_handler);
-    rclcpp::shutdown();
-  }
+  static void TearDownTestSuite() { rclcpp::shutdown(); }
 
   void SetUp() override
   {
+    rcutils_logging_set_output_handler(capture_handler);
     logger_ = std::make_unique<cx::CLIPSLogger>("test_clips", false, false);
+    g_captured.clear();
+  }
+  void TearDown() override
+  {
+    rcutils_logging_set_output_handler(rcutils_logging_console_output_handler);
     g_captured.clear();
   }
   std::unique_ptr<cx::CLIPSLogger> logger_;
