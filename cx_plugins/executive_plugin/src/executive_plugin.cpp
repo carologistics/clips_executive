@@ -17,7 +17,11 @@
 
 #include <string>
 
+#if defined(USE_GET_PACKAGE_SHARE_PATH)
+#include "ament_index_cpp/get_package_share_path.hpp"
+#else
 #include "ament_index_cpp/get_package_share_directory.hpp"
+#endif
 #include "cx_utils/clips_env_context.hpp"
 #include "cx_utils/param_utils.hpp"
 
@@ -52,7 +56,11 @@ void ExecutivePlugin::initialize()
   if (!node) {
     return;
   }
+#if defined(USE_GET_PACKAGE_SHARE_PATH)
+  plugin_path_ = ament_index_cpp::get_package_share_path("cx_executive_plugin").string();
+#else
   plugin_path_ = ament_index_cpp::get_package_share_directory("cx_executive_plugin");
+#endif
 
   cx::cx_utils::declare_parameter_if_not_declared(
     node, plugin_name_ + ".publish_on_refresh", rclcpp::ParameterValue(false));
