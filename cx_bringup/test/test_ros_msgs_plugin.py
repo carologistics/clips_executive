@@ -86,7 +86,18 @@ class TestRosMsgsPluginOutput(unittest.TestCase):
 
         msg = String()
         msg.data = text
+
+        # Wait for subscriber to connect before publishing
+        deadline = time.time() + timeout
+        while time.time() < deadline:
+            if self.pub.get_subscription_count() > 0:
+                break
+            rclpy.spin_once(self.node, timeout_sec=0.1)
+        else:
+            self.fail(f'No subscribers connected to publisher after {timeout}s')
+
         self.pub.publish(msg)
+
         deadline = time.time() + timeout
         while time.time() < deadline:
             rclpy.spin_once(self.node, timeout_sec=0.1)

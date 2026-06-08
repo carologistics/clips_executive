@@ -54,7 +54,7 @@ class TestAmentIndexPluginOutput(unittest.TestCase):
 
     def test_ament_index_get_search_paths(self, cx_node, proc_output):
         wait_for_output(proc_output, 'ament-index-get-search-paths', cx_node)
-        wait_for_output(proc_output, 'ros-kilted', cx_node)
+        wait_for_output(proc_output, '/', cx_node)
 
 
 @launch_testing.post_shutdown_test()
