@@ -18,7 +18,11 @@
 #include <string>
 
 #include "ament_index_cpp/get_package_prefix.hpp"
+#if defined(USE_AMENT_INDEX_CPP_PATH_API)
+#include "ament_index_cpp/get_package_share_path.hpp"
+#else
 #include "ament_index_cpp/get_package_share_directory.hpp"
+#endif
 #include "ament_index_cpp/get_packages_with_prefixes.hpp"
 #include "ament_index_cpp/get_resource.hpp"
 #include "ament_index_cpp/get_resources.hpp"
@@ -57,8 +61,9 @@ bool AmentIndexPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
       using namespace clips;  // NOLINT
       clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &package_name);
       try {
-        std::string prefix =
-          ament_index_cpp::get_package_prefix(package_name.lexemeValue->contents);
+        std::filesystem::path prefix_path;
+        ament_index_cpp::get_package_prefix(package_name.lexemeValue->contents, prefix_path);
+        std::string prefix = prefix_path.string();
         out->lexemeValue = clips::CreateString(env, prefix.c_str());
       } catch (const std::exception & e) {
         RCLCPP_ERROR(*instance->logger_, "ament-index-get-package-prefix: %s", e.what());
@@ -77,8 +82,13 @@ bool AmentIndexPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
       using namespace clips;  // NOLINT
       clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &package_name);
       try {
+#if defined(USE_AMENT_INDEX_CPP_PATH_API)
+        std::string share_dir =
+          ament_index_cpp::get_package_share_path(package_name.lexemeValue->contents).string();
+#else
         std::string share_dir =
           ament_index_cpp::get_package_share_directory(package_name.lexemeValue->contents);
+#endif
         out->lexemeValue = clips::CreateString(env, share_dir.c_str());
       } catch (const std::exception & e) {
         RCLCPP_ERROR(*instance->logger_, "ament-index-get-package-share-directory: %s", e.what());
@@ -120,16 +130,26 @@ bool AmentIndexPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
       using namespace clips;  // NOLINT
       clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &resource_type);
       clips::UDFNthArgument(udfc, 2, LEXEME_BITS, &resource_name);
-      std::string content;
-      std::string path;
       try {
+#if defined(USE_AMENT_INDEX_CPP_PATH_API)
+        auto [path, content] = ament_index_cpp::get_resource(
+          resource_type.lexemeValue->contents, resource_name.lexemeValue->contents);
+        if (path != std::nullopt) {
+          out->multifieldValue = clips::StringToMultifield(
+            env, cx::format("\"{}\" \"{}\"", content, path.value().string()).c_str());
+        }
+#else
+        std::string content;
+        std::string path_str;
         if (ament_index_cpp::get_resource(
               resource_type.lexemeValue->contents, resource_name.lexemeValue->contents, content,
-              &path)) {
+              &path_str)) {
           out->multifieldValue =
-            clips::StringToMultifield(env, cx::format("\"{}\" \"{}\"", content, path).c_str());
+            clips::StringToMultifield(env, cx::format("\"{}\" \"{}\"", content, path_str).c_str());
           return;
         }
+#endif
+        return;
       } catch (std::exception & e) {
         RCLCPP_ERROR(*instance->logger_, "ament-index-get-resource: %s", e.what());
         out->lexemeValue = clips::CreateBoolean(env, false);
@@ -148,11 +168,20 @@ bool AmentIndexPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
       using namespace clips;  // NOLINT
       clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &resource_type);
       try {
+#if defined(USE_AMENT_INDEX_CPP_PATH_API)
+        auto resources =
+          ament_index_cpp::get_resources_by_name(resource_type.lexemeValue->contents);
+#else
         auto resources = ament_index_cpp::get_resources(resource_type.lexemeValue->contents);
+#endif
         clips::MultifieldBuilder * mb = clips::CreateMultifieldBuilder(env, resources.size() * 2);
         for (const auto & [package, prefix] : resources) {
           clips::MBAppendString(mb, package.c_str());
+#if defined(USE_AMENT_INDEX_CPP_PATH_API)
+          clips::MBAppendString(mb, prefix.string().c_str());
+#else
           clips::MBAppendString(mb, prefix.c_str());
+#endif
         }
         out->multifieldValue = clips::MBCreate(mb);
         clips::MBDispose(mb);
@@ -168,10 +197,19 @@ bool AmentIndexPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
   clips::AddUDF(
     env.get(), fun_name.c_str(), "m", 0, 0, NULL,
     [](clips::Environment * env, clips::UDFContext * /*udfc*/, clips::UDFValue * out) {
+#if defined(USE_AMENT_INDEX_CPP_PATH_API)
+      auto paths = ament_index_cpp::get_searcheable_paths();
+#else
       auto paths = ament_index_cpp::get_search_paths();
+#endif
       clips::MultifieldBuilder * mb = clips::CreateMultifieldBuilder(env, paths.size());
       for (const auto & path : paths) {
         clips::MBAppendString(mb, path.c_str());
+#if defined(USE_AMENT_INDEX_CPP_PATH_API)
+        clips::MBAppendString(mb, path.string().c_str());
+#else
+        clips::MBAppendString(mb, path.c_str());
+#endif
       }
       out->multifieldValue = clips::MBCreate(mb);
       clips::MBDispose(mb);
@@ -181,7 +219,7 @@ bool AmentIndexPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
   fun_name = "ament-index-has-resource";
   function_names_.emplace(fun_name);
   clips::AddUDF(
-    env.get(), fun_name.c_str(), "b", 2, 2, ";sy;sy",
+    env.get(), fun_name.c_str(), "bs", 2, 2, ";sy;sy",
     [](clips::Environment * env, clips::UDFContext * udfc, clips::UDFValue * out) {
       auto instance = static_cast<AmentIndexPlugin *>(udfc->context);
       clips::UDFValue resource_type, resource_name;
@@ -189,9 +227,24 @@ bool AmentIndexPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
       clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &resource_type);
       clips::UDFNthArgument(udfc, 2, LEXEME_BITS, &resource_name);
       try {
-        bool exists = ament_index_cpp::has_resource(
+#if defined(USE_AMENT_INDEX_CPP_PATH_API)
+        std::optional<std::filesystem::path> exists = ament_index_cpp::is_resource_available(
           resource_type.lexemeValue->contents, resource_name.lexemeValue->contents);
-        out->lexemeValue = clips::CreateBoolean(env, exists);
+        if (exists != std::nullopt) {
+          out->lexemeValue = clips::CreateString(env, exists.value().string().c_str());
+        } else {
+          out->lexemeValue = clips::CreateBoolean(env, false);
+        }
+#else
+        std::string output_path;
+        bool exists = ament_index_cpp::has_resource(
+          resource_type.lexemeValue->contents, resource_name.lexemeValue->contents, &output_path);
+        if (exists) {
+          out->lexemeValue = clips::CreateString(env, output_path.c_str());
+        } else {
+          out->lexemeValue = clips::CreateBoolean(env, false);
+        }
+#endif
       } catch (std::exception & e) {
         RCLCPP_ERROR(*instance->logger_, "ament-index-has-resource: %s", e.what());
         out->lexemeValue = clips::CreateBoolean(env, false);

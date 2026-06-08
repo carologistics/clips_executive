@@ -29,6 +29,18 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 )
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD ${CMAKE_CXX_STANDARD})
 
+get_target_property(AMENT_INDEX_CPP_INCLUDES ament_index_cpp::ament_index_cpp INTERFACE_INCLUDE_DIRECTORIES)
+set(CMAKE_REQUIRED_INCLUDES ${AMENT_INDEX_CPP_INCLUDES})
+include(CheckIncludeFileCXX)
+check_include_file_cxx("ament_index_cpp/get_package_share_path.hpp" HAVE_GET_PACKAGE_SHARE_PATH REQUIRED_LIBARIES ament_index_cpp::ament_index_cpp)
+
+if(HAVE_GET_PACKAGE_SHARE_PATH)
+  message(STATUS "get_package_share_path is supported, using path API")
+  target_compile_definitions(${PROJECT_NAME} PUBLIC USE_AMENT_INDEX_CPP_PATH_API=1)
+else()
+  message(STATUS "get_package_share_path is not supported, using legacy API")
+endif()
+
 target_include_directories(${PROJECT_NAME}
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
