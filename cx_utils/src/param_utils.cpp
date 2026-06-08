@@ -17,7 +17,11 @@
 
 #include <filesystem>
 
+#if defined(USE_GET_PACKAGE_SHARE_PATH)
+#include "ament_index_cpp/get_package_share_path.hpp"
+#else
 #include "ament_index_cpp/get_package_share_directory.hpp"
+#endif
 
 namespace cx
 {
@@ -40,7 +44,11 @@ void resolve_files(
       // Otherwise check in the respective share directories
       for (const auto & package : share_dirs) {
         try {
+#if defined(USE_GET_PACKAGE_SHARE_PATH)
+          std::string dir_path = ament_index_cpp::get_package_share_path(package).string();
+#else
           std::string dir_path = ament_index_cpp::get_package_share_directory(package);
+#endif
           std::filesystem::path share_dir_path(dir_path);
           std::filesystem::path potential_path = share_dir_path / file_path;
           if (std::filesystem::exists(potential_path)) {
