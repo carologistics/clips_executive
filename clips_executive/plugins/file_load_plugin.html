@@ -110,6 +110,13 @@
 <p>cx::FileLoadPlugin</p>
 </div>
 <p>This plugin provides the ability to load files into CLIPS using <code class="docutils literal notranslate"><span class="pre">batch*</span></code> and <code class="docutils literal notranslate"><span class="pre">load*</span></code> through configuration values.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The plugin always sets the current module to <code class="docutils literal notranslate"><span class="pre">MAIN</span></code> before loading a file.
+This ensures predictable behavior when loaded files define their own modules.
+Since defining a <code class="docutils literal notranslate"><span class="pre">defmodule</span></code> in CLIPS automatically switches the current module,
+subsequent file loads could otherwise operate in an unexpected module context.</p>
+</div>
 <section id="configuration">
 <h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
 <dl class="field-list">

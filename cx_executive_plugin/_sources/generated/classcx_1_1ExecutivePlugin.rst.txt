@@ -6,6 +6,16 @@ Class ExecutivePlugin
 - Defined in :ref:`file_include_cx_executive_plugin_executive_plugin.hpp`
 
 
+Nested Relationships
+--------------------
+
+
+Nested Types
+************
+
+- :ref:`exhale_struct_structcx_1_1ExecutivePlugin_1_1ManagedEnv`
+
+
 Inheritance Relationships
 -------------------------
 

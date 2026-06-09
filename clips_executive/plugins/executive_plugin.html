@@ -109,7 +109,7 @@
 <p class="admonition-title">Plugin Class</p>
 <p>cx::ExecutivePlugin</p>
 </div>
-<p>This plugin provides continuous execution of CLIPS environments.
+<p>This plugin provides continuous and ad-hoc execution of CLIPS environments.
 Additionally, it enables reasoning about the current ROS and system time.</p>
 <section id="configuration">
 <h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
@@ -166,11 +166,51 @@ Mainly useful for debug purposes to measure the actual refresh rate.</p>
 </dd>
 </dl>
 </dd>
+<dt class="field-even"><cite>autostart</cite><span class="colon">:</span></dt>
+<dd class="field-even"><table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Type</p></td>
+<td><p>Default</p></td>
+</tr>
+<tr class="row-even"><td><p>bool</p></td>
+<td><p>true</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="simple">
+<dt>Description</dt><dd><p>Whether to start periodic execution when loading the plugin.</p>
+</dd>
+</dl>
+</dd>
 </dl>
 </section>
 <section id="features">
 <h2>Features<a class="headerlink" href="#features" title="Link to this heading"></a></h2>
-<p>With the set <a class="reference internal" href="#refresh-rate"><span class="std std-ref">refresh_rate</span></a> the executive plugin refreshes all agendas and then runs the loaded CLIPS environments.</p>
+<p>The executive plugin periodically runs all managed CLIPS environments at the configured <a class="reference internal" href="#refresh-rate"><span class="std std-ref">refresh_rate</span></a>.
+Each tick performs the following steps:</p>
+<ol class="arabic simple">
+<li><p>Optionally asserts the current time as <code class="docutils literal notranslate"><span class="pre">(time</span> <span class="pre">(now))</span></code> into the environment.</p></li>
+<li><p>Refreshes all agendas.</p></li>
+<li><p>If a <a class="reference internal" href="../getting_started/configuration.html#focus-stack"><span class="std std-ref">focus_stack</span></a> is configured for an environment, iterates through the stack in order, running each module’s agenda (respecting a possibly set <a class="reference internal" href="../getting_started/configuration.html#rule-limit"><span class="std std-ref">rule_limit</span></a>) before moving to the next.
+Otherwise, runs the <code class="docutils literal notranslate"><span class="pre">MAIN</span></code> module’s agenda.</p></li>
+<li><p>Repeats steps 2-3 until no rules fire, ensuring cross-module interactions are fully resolved.</p></li>
+<li><p>Optionally publishes the total number of rules fired on the <span class="xref std std-ref">refresh_agenda_topic</span> topic.</p></li>
+</ol>
+<p>Execution can be paused and resumed at any time via the <span class="xref std std-ref">pause_service</span> and <span class="xref std std-ref">resume_service</span> services,
+or a single tick can be triggered manually via the <span class="xref std std-ref">tick_once_service</span> service, regardless of the current pause state.</p>
+<p>CLIPS commands can be sent directly to a managed environment via dedicated <code class="docutils literal notranslate"><span class="pre">eval</span></code> and <code class="docutils literal notranslate"><span class="pre">build</span></code> services.
+<code class="docutils literal notranslate"><span class="pre">eval</span></code> evaluates an expression using CLIPS <code class="docutils literal notranslate"><span class="pre">Eval</span></code>, while <code class="docutils literal notranslate"><span class="pre">build</span></code> defines a new construct using CLIPS <code class="docutils literal notranslate"><span class="pre">Build</span></code>.
+If no environment is specified, the command is executed in the first managed environment.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When using a focus stack, the current module is reset to <code class="docutils literal notranslate"><span class="pre">MAIN</span></code> after each module’s agenda is run.
+This ensures that time assertion and other framework operations always operate in a predictable context.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">Eval</span></code> is intended for invoking arbirary commands (e.g. <code class="docutils literal notranslate"><span class="pre">(assert</span> <span class="pre">(foo))</span></code>, <code class="docutils literal notranslate"><span class="pre">(facts)</span></code>),
+while <code class="docutils literal notranslate"><span class="pre">Build</span></code> is intended for defining constructs (e.g. <code class="docutils literal notranslate"><span class="pre">(defrule</span> <span class="pre">...)</span></code>, <code class="docutils literal notranslate"><span class="pre">(deftemplate</span> <span class="pre">...)</span></code>).</p>
+</div>
 <section id="facts">
 <h3>Facts<a class="headerlink" href="#facts" title="Link to this heading"></a></h3>
 <p>If <a class="reference internal" href="#assert-time"><span class="std std-ref">assert_time</span></a> is set to <code class="docutils literal notranslate"><span class="pre">true</span></code>, it asserts the ordered fact <cite>time</cite> with the current ROS time as float.</p>
@@ -186,29 +226,9 @@ Mainly useful for debug purposes to measure the actual refresh rate.</p>
 </pre></div>
 </div>
 </section>
-<section id="rules">
-<h3>Rules<a class="headerlink" href="#rules" title="Link to this heading"></a></h3>
-<p>If <a class="reference internal" href="#assert-time"><span class="std std-ref">assert_time</span></a> is set to <code class="docutils literal notranslate"><span class="pre">true</span></code>, it defines a rule to clean up the time fact at the end of agenda execution.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defglobal</span>
-<span class="w">  </span><span class="nv">?*PRIORITY-TIME-RETRACT*</span><span class="w">    </span><span class="nb">=</span><span class="w"> </span><span class="mi">-10000</span>
-<span class="p">)</span>
-
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">time-retract</span>
-<span class="w">  </span><span class="p">(</span><span class="k">declare</span><span class="w"> </span><span class="p">(</span><span class="nv">salience</span><span class="w"> </span><span class="nv">?*PRIORITY-TIME-RETRACT*</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">?f</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nb">time</span><span class="w"> </span><span class="nv">$?</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?f</span><span class="p">)</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</section>
 <section id="other">
 <h3>Other<a class="headerlink" href="#other" title="Link to this heading"></a></h3>
-<p>Lastly, the <code class="docutils literal notranslate"><span class="pre">time</span></code> facts and  <code class="docutils literal notranslate"><span class="pre">time-retract</span></code> rule are unwatched.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">unwatch</span><span class="w"> </span><span class="nv">facts</span><span class="w"> </span><span class="nb">time</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">unwatch</span><span class="w"> </span><span class="nv">rules</span><span class="w"> </span><span class="nv">time-retract</span><span class="p">)</span>
-</pre></div>
-</div>
+<p>Lastly, the <code class="docutils literal notranslate"><span class="pre">time</span></code> fact is unwatched after the first assertion.</p>
 </section>
 </section>
 <section id="usage-example">
@@ -218,6 +238,25 @@ Mainly useful for debug purposes to measure the actual refresh rate.</p>
 </pre></div>
 </div>
 <p>It prints the current ROS and system time in each iteration and compares the time at the start of the iteration with the time at the time the rule is fired.</p>
+<p>The executive can be stopped by calling the <code class="docutils literal notranslate"><span class="pre">pause</span></code> service:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>service<span class="w"> </span>call<span class="w"> </span>/executive/pause<span class="w"> </span>std_srvs/srv/Trigger<span class="w"> </span><span class="o">{}</span>
+</pre></div>
+</div>
+<p>Individual ticks (a run of the inference engine until termination) can be invoked via the <code class="docutils literal notranslate"><span class="pre">tick_once</span></code> service:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>service<span class="w"> </span>call<span class="w"> </span>/executive/tick_once<span class="w"> </span>std_srvs/srv/Trigger<span class="w"> </span><span class="o">{}</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">eval</span></code> and <code class="docutils literal notranslate"><span class="pre">build</span></code> functions allow for ad-hoc interaction with an environment:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>service<span class="w"> </span>call<span class="w"> </span>/executive/build<span class="w"> </span>cx_msgs/srv/ClipsCommand<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s1">&#39;{env_name: &quot;cx_executive&quot;, command: &quot;(deftemplate example (slot message (type STRING)))&quot;}&#39;</span>
+ros2<span class="w"> </span>service<span class="w"> </span>call<span class="w"> </span>/executive/eval<span class="w"> </span>cx_msgs/srv/ClipsCommand<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s1">&#39;{env_name: &quot;cx_executive&quot;, command: &quot;(assert (example (message \&quot;hello\&quot;)))&quot;}&#39;</span>
+</pre></div>
+</div>
+<p>Finally, the <code class="docutils literal notranslate"><span class="pre">resume</span></code> service is used in order to resume automatic execution:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>service<span class="w"> </span>call<span class="w"> </span>/executive/resume<span class="w"> </span>std_srvs/srv/Trigger<span class="w"> </span><span class="o">{}</span>
+</pre></div>
+</div>
 <section id="id1">
 <h3>Configuration<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
 <p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/params/plugin_examples/executive.yaml">cx_bringup/params/plugin_examples/executive.yaml</a>.</p>

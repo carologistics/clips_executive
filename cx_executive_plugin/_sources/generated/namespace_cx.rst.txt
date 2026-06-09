@@ -17,4 +17,6 @@ Classes
 -------
 
 
+- :ref:`exhale_struct_structcx_1_1ExecutivePlugin_1_1ManagedEnv`
+
 - :ref:`exhale_class_classcx_1_1ExecutivePlugin`

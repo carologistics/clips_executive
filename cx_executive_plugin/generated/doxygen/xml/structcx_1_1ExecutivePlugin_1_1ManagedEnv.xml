@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="structcx_1_1ExecutivePlugin_1_1ManagedEnv" kind="struct" language="C++" prot="private">
+    <compoundname>cx::ExecutivePlugin::ManagedEnv</compoundname>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structcx_1_1ExecutivePlugin_1_1ManagedEnv_1a0740241594d801be57f877dc2dd25d12" prot="public" static="no" mutable="no">
+        <type>std::shared_ptr&lt; clips::Environment &gt;</type>
+        <definition>std::shared_ptr&lt;clips::Environment&gt; cx::ExecutivePlugin::ManagedEnv::env</definition>
+        <argsstring></argsstring>
+        <name>env</name>
+        <qualifiedname>cx::ExecutivePlugin::ManagedEnv::env</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="48" column="21" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="48" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1ExecutivePlugin_1_1ManagedEnv_1a111e6a151eaf780e668dc745df163ef9" prot="public" static="no" mutable="no">
+        <type>std::vector&lt; std::string &gt;</type>
+        <definition>std::vector&lt;std::string&gt; cx::ExecutivePlugin::ManagedEnv::focus_stack</definition>
+        <argsstring></argsstring>
+        <name>focus_stack</name>
+        <qualifiedname>cx::ExecutivePlugin::ManagedEnv::focus_stack</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="49" column="17" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="49" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1ExecutivePlugin_1_1ManagedEnv_1ae943864480667563184bca2817ea0cd6" prot="public" static="no" mutable="no">
+        <type>int64_t</type>
+        <definition>int64_t cx::ExecutivePlugin::ManagedEnv::rule_limit</definition>
+        <argsstring></argsstring>
+        <name>rule_limit</name>
+        <qualifiedname>cx::ExecutivePlugin::ManagedEnv::rule_limit</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_executive_plugin/executive_plugin.hpp" line="50" column="13" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="50" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/cx_executive_plugin/executive_plugin.hpp" line="46" column="3" bodyfile="include/cx_executive_plugin/executive_plugin.hpp" bodystart="47" bodyend="51"/>
+    <listofallmembers>
+      <member refid="structcx_1_1ExecutivePlugin_1_1ManagedEnv_1a0740241594d801be57f877dc2dd25d12" prot="public" virt="non-virtual"><scope>cx::ExecutivePlugin::ManagedEnv</scope><name>env</name></member>
+      <member refid="structcx_1_1ExecutivePlugin_1_1ManagedEnv_1a111e6a151eaf780e668dc745df163ef9" prot="public" virt="non-virtual"><scope>cx::ExecutivePlugin::ManagedEnv</scope><name>focus_stack</name></member>
+      <member refid="structcx_1_1ExecutivePlugin_1_1ManagedEnv_1ae943864480667563184bca2817ea0cd6" prot="public" virt="non-virtual"><scope>cx::ExecutivePlugin::ManagedEnv</scope><name>rule_limit</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>
