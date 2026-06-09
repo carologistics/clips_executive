@@ -64,7 +64,7 @@ void ExecutivePlugin::initialize()
   bool autostart = false;
   node->get_parameter(plugin_name_ + ".autostart", autostart);
 
-  paused_ = not autostart;
+  paused_ = !autostart;
   node->get_parameter(plugin_name_ + ".publish_on_refresh", publish_on_refresh_);
   node->get_parameter(plugin_name_ + ".assert_time", assert_time_);
   node->get_parameter(plugin_name_ + ".refresh_rate", refresh_rate_);
@@ -78,7 +78,7 @@ void ExecutivePlugin::initialize()
     *logger_, "Publishing rate set to: %ldns",
     std::chrono::duration_cast<std::chrono::nanoseconds>(publish_rate_).count());
 
-  if (not paused_) {
+  if (!paused_) {
     agenda_refresh_timer_ = node->create_wall_timer(publish_rate_, [this]() { run_tick(); });
   }
 }
