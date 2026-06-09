@@ -44,11 +44,6 @@ install(
 )
 
 install(
-  DIRECTORY clips/
-  DESTINATION share/${PROJECT_NAME}/clips/${PROJECT_NAME}
-)
-
-install(
   FILES config_plugin.xml
   DESTINATION share/${PROJECT_NAME}
 )

@@ -19,7 +19,6 @@
 #include <string>
 
 #include "ament_index_cpp/get_package_prefix.hpp"
-#include "ament_index_cpp/get_package_share_directory.hpp"
 #include "cx_utils/format.hpp"
 #include "yaml-cpp/yaml.h"
 
@@ -38,17 +37,17 @@ bool ConfigPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
 {
   RCLCPP_DEBUG(*logger_, "Initialising context");
 
-  std::string clips_path = ament_index_cpp::get_package_share_directory("cx_config_plugin") +
-                           "/clips/cx_config_plugin/ff-config.clp";
+  clips::Build(
+    env.get(),
+    R"(
+(deftemplate confval
+  (slot path (type STRING))
+  (slot type (type SYMBOL) (allowed-values FLOAT UINT INT BOOL STRING))
+  (slot value)
+  (slot is-list (type SYMBOL) (allowed-values TRUE FALSE) (default FALSE))
+  (multislot list-value)
+    ))");
 
-  if (!clips::BatchStar(env.get(), clips_path.c_str())) {
-    RCLCPP_ERROR(
-      *logger_,
-      "Failed to initialize CLIPS environment, "
-      "batch file '%s' failed!, aborting...",
-      clips_path.c_str());
-    return false;
-  }
   clips::AddUDF(
     env.get(), "config-load", "v", 2, 2, ";sy;sy",
     [](clips::Environment * env, clips::UDFContext * udfc, clips::UDFValue * /*out*/) {
