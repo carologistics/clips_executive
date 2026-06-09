@@ -7,8 +7,9 @@ find_package(rosidl_default_generators REQUIRED)
 find_package(builtin_interfaces REQUIRED)
 
 set(SERVICES
-  "srv/DestroyClipsEnv.srv"
+  "srv/ClipsCommand.srv"
   "srv/CreateClipsEnv.srv"
+  "srv/DestroyClipsEnv.srv"
   "srv/ListClipsEnvs.srv"
   "srv/LoadClipsPlugin.srv"
   "srv/ListClipsPlugins.srv"

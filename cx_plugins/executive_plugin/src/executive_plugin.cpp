@@ -53,18 +53,23 @@ void ExecutivePlugin::initialize()
   }
 
   cx::cx_utils::declare_parameter_if_not_declared(
+    node, plugin_name_ + ".autostart", rclcpp::ParameterValue(true));
+  cx::cx_utils::declare_parameter_if_not_declared(
     node, plugin_name_ + ".publish_on_refresh", rclcpp::ParameterValue(false));
   cx::cx_utils::declare_parameter_if_not_declared(
     node, plugin_name_ + ".assert_time", rclcpp::ParameterValue(true));
   cx::cx_utils::declare_parameter_if_not_declared(
     node, plugin_name_ + ".refresh_rate", rclcpp::ParameterValue(10));
+
+  bool autostart = false;
+  node->get_parameter(plugin_name_ + ".autostart", autostart);
+
+  paused_ = not autostart;
   node->get_parameter(plugin_name_ + ".publish_on_refresh", publish_on_refresh_);
   node->get_parameter(plugin_name_ + ".assert_time", assert_time_);
   node->get_parameter(plugin_name_ + ".refresh_rate", refresh_rate_);
-  if (publish_on_refresh_) {
-    clips_agenda_refresh_pub_ = node->create_publisher<std_msgs::msg::Int64>(
-      "clips_executive/refresh_agenda", rclcpp::QoS(10));
-  }
+
+  setup_ros_interfaces();
   double rate = 1.0 / refresh_rate_;
   // Sets the time between each clips agenda refresh in ns
   publish_rate_ = std::chrono::duration_cast<std::chrono::steady_clock::duration>(
@@ -73,67 +78,228 @@ void ExecutivePlugin::initialize()
     *logger_, "Publishing rate set to: %ldns",
     std::chrono::duration_cast<std::chrono::nanoseconds>(publish_rate_).count());
 
-  agenda_refresh_timer_ = node->create_wall_timer(publish_rate_, [this]() {
-    std::scoped_lock<std::mutex> set_guard(envs_mutex_);
-    int64_t total_fired_all_envs = 0;
+  if (not paused_) {
+    agenda_refresh_timer_ = node->create_wall_timer(publish_rate_, [this]() { run_tick(); });
+  }
+}
 
-    for (ManagedEnv & managed : managed_envs_) {
-      auto context = CLIPSEnvContext::get_context(managed.env);
-      std::scoped_lock<std::mutex> env_guard(context->env_mtx_);
-      const auto & valid_stack = managed.focus_stack;
-      clips::Fact * time_fact;
-      if (assert_time_) {
+void ExecutivePlugin::run_tick()
+{
+  std::scoped_lock<std::mutex> set_guard(envs_mutex_);
+  int64_t total_fired_all_envs = 0;
+
+  for (ManagedEnv & managed : managed_envs_) {
+    auto context = CLIPSEnvContext::get_context(managed.env);
+    std::scoped_lock<std::mutex> env_guard(context->env_mtx_);
+    const auto & valid_stack = managed.focus_stack;
+    clips::Fact * time_fact;
+    if (assert_time_) {
+      clips::SetCurrentModule(managed.env.get(), clips::FindDefmodule(managed.env.get(), "MAIN"));
+      time_fact = clips::AssertString(managed.env.get(), "(time (now))");
+      clips::RetainFact(time_fact);
+    }
+
+    int64_t total_fired_this_env = 0;
+    int64_t fired_this_iteration = 0;
+
+    do {
+      fired_this_iteration = 0;
+      clips::RefreshAllAgendas(managed.env.get());
+
+      if (valid_stack.empty()) {
         clips::SetCurrentModule(managed.env.get(), clips::FindDefmodule(managed.env.get(), "MAIN"));
-        time_fact = clips::AssertString(managed.env.get(), "(time (now))");
-        clips::RetainFact(time_fact);
+        fired_this_iteration += clips::Run(managed.env.get(), managed.rule_limit);
+      } else {
+        for (const auto & module_name : valid_stack) {
+          auto mod = clips::FindDefmodule(managed.env.get(), module_name.c_str());
+          clips::Focus(mod);
+          fired_this_iteration += clips::Run(managed.env.get(), -1);
+        }
+        clips::SetCurrentModule(managed.env.get(), clips::FindDefmodule(managed.env.get(), "MAIN"));
       }
 
-      int64_t total_fired_this_env = 0;
-      int64_t fired_this_iteration = 0;
+      if (assert_time_) {
+        ReleaseFact(time_fact);
+        Retract(time_fact);
+      }
 
-      do {
-        fired_this_iteration = 0;
-        clips::RefreshAllAgendas(managed.env.get());
+      total_fired_this_env += fired_this_iteration;
+      if (managed.rule_limit > 0 && total_fired_this_env >= managed.rule_limit) {
+        RCLCPP_ERROR(
+          *logger_, "Env '%s': Rule fire limit of %ld was reached.", context->env_name_.c_str(),
+          managed.rule_limit);
+        break;
+      }
+    } while (fired_this_iteration > 0);
 
-        if (valid_stack.empty()) {
-          clips::SetCurrentModule(
-            managed.env.get(), clips::FindDefmodule(managed.env.get(), "MAIN"));
-          fired_this_iteration += clips::Run(managed.env.get(), managed.rule_limit);
-        } else {
-          for (const auto & module_name : valid_stack) {
-            auto mod = clips::FindDefmodule(managed.env.get(), module_name.c_str());
-            clips::Focus(mod);
-            fired_this_iteration += clips::Run(managed.env.get(), -1);
-          }
-          clips::SetCurrentModule(
-            managed.env.get(), clips::FindDefmodule(managed.env.get(), "MAIN"));
-        }
+    total_fired_all_envs += total_fired_this_env;
 
-        if (assert_time_) {
-          ReleaseFact(time_fact);
-          Retract(time_fact);
-        }
+    clips::SetCurrentModule(managed.env.get(), clips::FindDefmodule(managed.env.get(), "MAIN"));
+  }
 
-        total_fired_this_env += fired_this_iteration;
-        if (managed.rule_limit > 0 && total_fired_this_env >= managed.rule_limit) {
-          RCLCPP_ERROR(
-            *logger_, "Env '%s': Rule fire limit of %ld was reached.", context->env_name_.c_str(),
-            managed.rule_limit);
-          break;
-        }
-      } while (fired_this_iteration > 0);
+  if (publish_on_refresh_) {
+    std_msgs::msg::Int64 msg;
+    msg.data = total_fired_all_envs;
+    clips_agenda_refresh_pub_->publish(msg);
+  }
+}
 
-      total_fired_all_envs += total_fired_this_env;
+void ExecutivePlugin::setup_ros_interfaces()
+{
+  auto node = get_node();
 
-      clips::SetCurrentModule(managed.env.get(), clips::FindDefmodule(managed.env.get(), "MAIN"));
+  if (publish_on_refresh_) {
+    clips_agenda_refresh_pub_ = node->create_publisher<std_msgs::msg::Int64>(
+      plugin_name_ + "/refresh_agenda", rclcpp::QoS(10));
+  }
+  pause_service_ = node->create_service<std_srvs::srv::Trigger>(
+    plugin_name_ + "/pause", [this](
+                               const std_srvs::srv::Trigger::Request::SharedPtr,
+                               std_srvs::srv::Trigger::Response::SharedPtr response) {
+      if (paused_) {
+        response->success = false;
+        response->message = plugin_name_ + " already paused.";
+      } else {
+        paused_ = true;
+        agenda_refresh_timer_->cancel();
+        response->success = true;
+        response->message = plugin_name_ + " paused.";
+        RCLCPP_INFO(*logger_, (plugin_name_ + " paused.").c_str());
+      }
+    });
+
+  resume_service_ = node->create_service<std_srvs::srv::Trigger>(
+    plugin_name_ + "/resume", [this](
+                                const std_srvs::srv::Trigger::Request::SharedPtr,
+                                std_srvs::srv::Trigger::Response::SharedPtr response) {
+      if (!paused_) {
+        response->success = false;
+        response->message = plugin_name_ + " already running.";
+      } else {
+        paused_ = false;
+        agenda_refresh_timer_ =
+          get_node()->create_wall_timer(publish_rate_, [this]() { run_tick(); });
+        response->success = true;
+        response->message = plugin_name_ + " resumed.";
+        RCLCPP_INFO(*logger_, (plugin_name_ + " resumed.").c_str());
+      }
+    });
+
+  tick_once_service_ = node->create_service<std_srvs::srv::Trigger>(
+    plugin_name_ + "/tick_once", [this](
+                                   const std_srvs::srv::Trigger::Request::SharedPtr,
+                                   std_srvs::srv::Trigger::Response::SharedPtr response) {
+      run_tick();
+      response->success = true;
+      response->message = "Tick executed.";
+    });
+
+  eval_service_ = node->create_service<cx_msgs::srv::ClipsCommand>(
+    plugin_name_ + "/eval", [this](
+                              const cx_msgs::srv::ClipsCommand::Request::SharedPtr request,
+                              cx_msgs::srv::ClipsCommand::Response::SharedPtr response) {
+      *response = handle_clips_command(false, request);
+    });
+
+  build_service_ = node->create_service<cx_msgs::srv::ClipsCommand>(
+    plugin_name_ + "/build", [this](
+                               const cx_msgs::srv::ClipsCommand::Request::SharedPtr request,
+                               cx_msgs::srv::ClipsCommand::Response::SharedPtr response) {
+      *response = handle_clips_command(true, request);
+    });
+}
+
+cx_msgs::srv::ClipsCommand::Response ExecutivePlugin::handle_clips_command(
+  bool use_build, const cx_msgs::srv::ClipsCommand::Request::SharedPtr request)
+{
+  cx_msgs::srv::ClipsCommand::Response response;
+  std::shared_ptr<clips::Environment> env;
+  {
+    std::scoped_lock<std::mutex> set_guard(envs_mutex_);
+
+    if (managed_envs_.empty()) {
+      response.success = false;
+      response.message = "No environments available.";
+      return response;
     }
 
-    if (publish_on_refresh_) {
-      std_msgs::msg::Int64 msg;
-      msg.data = total_fired_all_envs;
-      clips_agenda_refresh_pub_->publish(msg);
+    auto it = request->env_name.empty()
+                ? managed_envs_.begin()
+                : std::find_if(managed_envs_.begin(), managed_envs_.end(), [&](ManagedEnv & m) {
+                    return CLIPSEnvContext::get_context(m.env)->env_name_ == request->env_name;
+                  });
+
+    if (it == managed_envs_.end()) {
+      response.success = false;
+      response.message = "Environment '" + request->env_name + "' not found.";
+      return response;
+    } else {
+      env = it->env;
     }
-  });
+  }
+
+  auto context = CLIPSEnvContext::get_context(env);
+  std::scoped_lock<std::mutex> env_guard(context->env_mtx_);
+  if (use_build) {
+    return build_on_env(env, request->command);
+  } else {
+    return eval_on_env(env, request->command);
+  }
+}
+
+cx_msgs::srv::ClipsCommand::Response ExecutivePlugin::eval_on_env(
+  std::shared_ptr<clips::Environment> env, const std::string & command)
+{
+  cx_msgs::srv::ClipsCommand::Response response;
+  clips::CLIPSValue result;
+  clips::EvalError err = clips::Eval(env.get(), command.c_str(), &result);
+  switch (err) {
+    case clips::EvalError::EE_NO_ERROR:
+      response.success = true;
+      break;
+    case clips::EvalError::EE_PARSING_ERROR:
+      response.success = false;
+      response.message = "Eval failed: syntax error while parsing the expression.";
+      break;
+    case clips::EvalError::EE_PROCESSING_ERROR:
+      response.success = false;
+      response.message = "Eval failed: error occurred while executing the parsed expression.";
+      break;
+    default:
+      response.success = false;
+      response.message = "Eval failed: unknown error.";
+      break;
+  }
+  return response;
+}
+
+cx_msgs::srv::ClipsCommand::Response ExecutivePlugin::build_on_env(
+  std::shared_ptr<clips::Environment> env, const std::string & command)
+{
+  cx_msgs::srv::ClipsCommand::Response response;
+  clips::BuildError err = clips::Build(env.get(), command.c_str());
+  switch (err) {
+    case clips::BuildError::BE_NO_ERROR:
+      response.success = true;
+      break;
+    case clips::BuildError::BE_PARSING_ERROR:
+      response.success = false;
+      response.message = "Build failed: syntax error while parsing the construct.";
+      break;
+    case clips::BuildError::BE_CONSTRUCT_NOT_FOUND_ERROR:
+      response.success = false;
+      response.message = "Build failed: construct name not recognized.";
+      break;
+    case clips::BuildError::BE_COULD_NOT_BUILD_ERROR:
+      response.success = false;
+      response.message = "Build failed: construct could not be added to the environment.";
+      break;
+    default:
+      response.success = false;
+      response.message = "Build failed: unknown error.";
+      break;
+  }
+  return response;
 }
 
 std::shared_ptr<rclcpp_lifecycle::LifecycleNode> ExecutivePlugin::get_node()

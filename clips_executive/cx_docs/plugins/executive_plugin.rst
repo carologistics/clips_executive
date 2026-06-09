@@ -9,7 +9,7 @@ Source code on :source-master:`GitHub <cx_plugins/executive_plugin>`.
 
   cx::ExecutivePlugin
 
-This plugin provides continuous execution of CLIPS environments.
+This plugin provides continuous and ad-hoc execution of CLIPS environments.
 Additionally, it enables reasoning about the current ROS and system time.
 
 Configuration
@@ -54,11 +54,46 @@ Configuration
   Description
     Whether the latest ROS time as fact into the CLIPS environment on each iteration.
 
+:`autostart`:
+
+  ============ =======
+  Type         Default
+  ------------ -------
+  bool         true
+  ============ =======
+
+  Description
+    Whether to start periodic execution when loading the plugin.
 
 Features
 ********
 
-With the set :ref:`refresh_rate` the executive plugin refreshes all agendas and then runs the loaded CLIPS environments.
+The executive plugin periodically runs all managed CLIPS environments at the configured :ref:`refresh_rate`.
+Each tick performs the following steps:
+
+1. Optionally asserts the current time as ``(time (now))`` into the environment.
+2. Refreshes all agendas.
+3. If a :ref:`focus_stack <focus_stack>` is configured for an environment, iterates through the stack in order, running each module's agenda (respecting a possibly set :ref:`rule_limit <rule_limit>`) before moving to the next.
+   Otherwise, runs the ``MAIN`` module's agenda.
+4. Repeats steps 2-3 until no rules fire, ensuring cross-module interactions are fully resolved.
+5. Optionally publishes the total number of rules fired on the :ref:`refresh_agenda_topic` topic.
+
+Execution can be paused and resumed at any time via the :ref:`pause_service` and :ref:`resume_service` services,
+or a single tick can be triggered manually via the :ref:`tick_once_service` service, regardless of the current pause state.
+
+CLIPS commands can be sent directly to a managed environment via dedicated ``eval`` and ``build`` services.
+``eval`` evaluates an expression using CLIPS ``Eval``, while ``build`` defines a new construct using CLIPS ``Build``.
+If no environment is specified, the command is executed in the first managed environment.
+
+.. note::
+
+  When using a focus stack, the current module is reset to ``MAIN`` after each module's agenda is run.
+  This ensures that time assertion and other framework operations always operate in a predictable context.
+
+.. note::
+
+  ``Eval`` is intended for invoking arbirary commands (e.g. ``(assert (foo))``, ``(facts)``),
+  while ``Build`` is intended for defining constructs (e.g. ``(defrule ...)``, ``(deftemplate ...)``).
 
 Facts
 ~~~~~
@@ -80,33 +115,10 @@ This plugin adds deffunctions to retrieve the current time.
   (bind ?sys-time (now-systime)) ; returns a FLOAT of system time
 
 
-Rules
-~~~~~
-
-If :ref:`assert_time` is set to ``true``, it defines a rule to clean up the time fact at the end of agenda execution.
-
-.. code-block:: lisp
-
-  (defglobal
-    ?*PRIORITY-TIME-RETRACT*    = -10000
-  )
-
-  (defrule time-retract
-    (declare (salience ?*PRIORITY-TIME-RETRACT*))
-    ?f <- (time $?)
-    =>
-    (retract ?f)
-  )
-
 Other
 ~~~~~
 
-Lastly, the ``time`` facts and  ``time-retract`` rule are unwatched.
-
-.. code-block:: lisp
-
-  (unwatch facts time)
-  (unwatch rules time-retract)
+Lastly, the ``time`` fact is unwatched after the first assertion.
 
 
 Usage Example
@@ -119,6 +131,35 @@ A minimal working example is provided by the :docsite:`cx_bringup` package. Run 
     ros2 launch cx_bringup cx_launch.py manager_config:=plugin_examples/executive.yaml
 
 It prints the current ROS and system time in each iteration and compares the time at the start of the iteration with the time at the time the rule is fired.
+
+The executive can be stopped by calling the ``pause`` service:
+
+.. code-block:: bash
+
+    ros2 service call /executive/pause std_srvs/srv/Trigger {}
+
+Individual ticks (a run of the inference engine until termination) can be invoked via the ``tick_once`` service:
+
+.. code-block:: bash
+
+    ros2 service call /executive/tick_once std_srvs/srv/Trigger {}
+
+The ``eval`` and ``build`` functions allow for ad-hoc interaction with an environment:
+
+.. code-block:: bash
+
+    ros2 service call /executive/build cx_msgs/srv/ClipsCommand \
+      '{env_name: "cx_executive", command: "(deftemplate example (slot message (type STRING)))"}'
+    ros2 service call /executive/eval cx_msgs/srv/ClipsCommand \
+      '{env_name: "cx_executive", command: "(assert (example (message \"hello\")))"}'
+
+Finally, the ``resume`` service is used in order to resume automatic execution:
+
+.. code-block:: bash
+
+    ros2 service call /executive/resume std_srvs/srv/Trigger {}
+
+
 
 Configuration
 ~~~~~~~~~~~~~
