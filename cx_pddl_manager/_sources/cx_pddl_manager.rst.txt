@@ -1,0 +1,19 @@
+cx\_pddl\_manager package
+=========================
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   cx_pddl_manager.managed_problem
+   cx_pddl_manager.pddl_manager
+
+Module contents
+---------------
+
+.. automodule:: cx_pddl_manager
+   :members:
+   :undoc-members:
+   :show-inheritance:

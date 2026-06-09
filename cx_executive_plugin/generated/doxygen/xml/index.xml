@@ -6,16 +6,10 @@
     <member refid="classcx_1_1ExecutivePlugin_1ab71bf309cf37db4dede7409cd951dbd0" kind="variable"><name>publish_on_refresh_</name></member>
     <member refid="classcx_1_1ExecutivePlugin_1a18257588998f3734d386edf8b3b786b4" kind="variable"><name>plugin_path_</name></member>
     <member refid="classcx_1_1ExecutivePlugin_1a0690d9a7dbb520fe4cf35e4786c9c6c9" kind="variable"><name>agenda_refresh_timer_</name></member>
-    <member refid="classcx_1_1ExecutivePlugin_1a91560b94bf042f94f5b38799e7a81d48" kind="variable"><name>clips_agenda_refresh_pub_</name></member>
-    <member refid="classcx_1_1ExecutivePlugin_1a695a33d69a3911c38cb2e7c01533a4c3" kind="variable"><name>pause_service_</name></member>
-    <member refid="classcx_1_1ExecutivePlugin_1ad448fc3a8fee0cca97e2085629ffbfc1" kind="variable"><name>resume_service_</name></member>
-    <member refid="classcx_1_1ExecutivePlugin_1a0fd85ce5198dca3a207fa8c2412f234e" kind="variable"><name>tick_once_service_</name></member>
-    <member refid="classcx_1_1ExecutivePlugin_1a68b5be7c63d5eb1d6ecb92b0d8a2838c" kind="variable"><name>eval_service_</name></member>
-    <member refid="classcx_1_1ExecutivePlugin_1a74bd71f8ad587487694ddc8f363bada8" kind="variable"><name>build_service_</name></member>
-    <member refid="classcx_1_1ExecutivePlugin_1a9729b95023608f735c73a0c8475b7976" kind="variable"><name>paused_</name></member>
+    <member refid="classcx_1_1ExecutivePlugin_1a93c9e12fdfe8ff047d16430cedbce58a" kind="variable"><name>clips_agenda_refresh_pub_</name></member>
     <member refid="classcx_1_1ExecutivePlugin_1a90bcf01585ac247ea2dad0528f21bdf1" kind="variable"><name>publish_rate_</name></member>
     <member refid="classcx_1_1ExecutivePlugin_1a8f8400444d958aee6b58f82069f3875c" kind="variable"><name>logger_</name></member>
-    <member refid="classcx_1_1ExecutivePlugin_1a248d9ef139bc98e5c72562f8b0f5d150" kind="variable"><name>managed_envs_</name></member>
+    <member refid="classcx_1_1ExecutivePlugin_1aa74acd07450f023f7c588f7225786feb" kind="variable"><name>managed_envs</name></member>
     <member refid="classcx_1_1ExecutivePlugin_1a469ff11c8f0923b65d8aee55c2394542" kind="variable"><name>envs_mutex_</name></member>
     <member refid="classcx_1_1ExecutivePlugin_1acb40de58ad887327a054a1818c46d0f9" kind="function"><name>ExecutivePlugin</name></member>
     <member refid="classcx_1_1ExecutivePlugin_1ae35c4e0ed6a6a27b3b38df4ec23abc3d" kind="function"><name>~ExecutivePlugin</name></member>
@@ -24,16 +18,6 @@
     <member refid="classcx_1_1ExecutivePlugin_1a0bc70e96725fdc585aed292ad140bb73" kind="function"><name>clips_env_init</name></member>
     <member refid="classcx_1_1ExecutivePlugin_1ae999953f3ae358b120edb66b5d291fb9" kind="function"><name>clips_env_destroyed</name></member>
     <member refid="classcx_1_1ExecutivePlugin_1ab5dfb1b989dc4b9bcb5e865b1f7fcfd9" kind="function"><name>get_node</name></member>
-    <member refid="classcx_1_1ExecutivePlugin_1a4e5f4c34cae55184d1c7f2e393af2bbd" kind="function"><name>setup_ros_interfaces</name></member>
-    <member refid="classcx_1_1ExecutivePlugin_1a8f429f98866090ff07b3ccba66a7aeba" kind="function"><name>run_tick</name></member>
-    <member refid="classcx_1_1ExecutivePlugin_1a22f459e4aac597b753cd3ed7e8363f21" kind="function"><name>handle_clips_command</name></member>
-    <member refid="classcx_1_1ExecutivePlugin_1a0c287256630cf7b036bb160f4410bf2e" kind="function"><name>build_on_env</name></member>
-    <member refid="classcx_1_1ExecutivePlugin_1aad88d8e86d3c5048f6f15dd2febd0cc0" kind="function"><name>eval_on_env</name></member>
-  </compound>
-  <compound refid="structcx_1_1ExecutivePlugin_1_1ManagedEnv" kind="struct"><name>cx::ExecutivePlugin::ManagedEnv</name>
-    <member refid="structcx_1_1ExecutivePlugin_1_1ManagedEnv_1a0740241594d801be57f877dc2dd25d12" kind="variable"><name>env</name></member>
-    <member refid="structcx_1_1ExecutivePlugin_1_1ManagedEnv_1a111e6a151eaf780e668dc745df163ef9" kind="variable"><name>focus_stack</name></member>
-    <member refid="structcx_1_1ExecutivePlugin_1_1ManagedEnv_1ae943864480667563184bca2817ea0cd6" kind="variable"><name>rule_limit</name></member>
   </compound>
   <compound refid="namespacecx" kind="namespace"><name>cx</name>
   </compound>

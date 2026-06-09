@@ -145,13 +145,12 @@
           <declname>files_out</declname>
         </param>
         <briefdescription>
-<para>Fetch absolute paths of files and make sure they exist. </para>
         </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_utils/param_utils.hpp" line="108" column="6" declfile="include/cx_utils/param_utils.hpp" declline="108" declcolumn="6"/>
+        <location file="include/cx_utils/param_utils.hpp" line="99" column="6" declfile="include/cx_utils/param_utils.hpp" declline="99" declcolumn="6"/>
       </memberdef>
     </sectiondef>
     <briefdescription>

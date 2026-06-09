@@ -156,7 +156,6 @@
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;memory&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;utility&gt;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span>
 
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;cx_plugin/clips_plugin.hpp&quot;</span>
 
@@ -223,9 +222,6 @@
 
 <span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">sequenceIterator</span><span class="p">(</span>
 <span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">YAML</span><span class="o">::</span><span class="n">Node</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">input_node</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">cfg_prefix</span><span class="p">,</span><span class="w"> </span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">env</span><span class="p">);</span>
-<span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">emitScalar</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">YAML</span><span class="o">::</span><span class="n">Node</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">node</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">path</span><span class="p">,</span><span class="w"> </span><span class="n">clips</span><span class="o">::</span><span class="n">Environment</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">env</span><span class="p">);</span>
-
-<span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">splitPath</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">input</span><span class="p">);</span>
 
 <span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">rclcpp</span><span class="o">::</span><span class="n">Logger</span><span class="o">&gt;</span><span class="w"> </span><span class="n">logger_</span><span class="p">;</span>
 <span class="p">};</span>

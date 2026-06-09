@@ -1,0 +1,7 @@
+cx\_rl\_multi\_robot\_mppo.cx\_rl\_mppo\_node module
+====================================================
+
+.. automodule:: cx_rl_multi_robot_mppo.cx_rl_mppo_node
+   :members:
+   :undoc-members:
+   :show-inheritance:

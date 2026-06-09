@@ -32,7 +32,7 @@ Includes
 
 - ``rclcpp/rclcpp.hpp``
 
-- ``string``
+- ``string`` (:ref:`file_include_cx_utils_string_utils.hpp`)
 
 - ``vector``
 
