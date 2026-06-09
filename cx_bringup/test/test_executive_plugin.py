@@ -23,6 +23,7 @@ from cx_bringup_test_utils import (
     wait_for_plugin_created,
     wait_for_rule_fire,
 )
+from cx_msgs.srv import ClipsCommand
 import launch_testing
 import launch_testing.markers
 import pytest
@@ -30,14 +31,13 @@ import rclpy
 from rclpy.node import Node
 from std_srvs.srv import Trigger
 
-from cx_msgs.srv import ClipsCommand
-
 generate_test_description = pytest.mark.launch_test(
     launch_testing.markers.keep_alive(make_generate_test_description('executive.yaml'))
 )
 
 
 class TestExecutivePluginOutput(unittest.TestCase):
+
     def test_node_activated(self, cx_node, proc_output):
         """Verify the manager node was activated."""
         wait_for_activated(proc_output, cx_node)
@@ -68,6 +68,7 @@ class TestExecutivePluginOutput(unittest.TestCase):
 
 
 class TestExecutivePluginServices(unittest.TestCase):
+
     @classmethod
     def setUpClass(cls):
         rclpy.init()
@@ -82,31 +83,31 @@ class TestExecutivePluginServices(unittest.TestCase):
         client = self.node.create_client(Trigger, service_name)
         self.assertTrue(
             client.wait_for_service(timeout_sec=timeout_sec),
-            f"Service {service_name} not available",
+            f'Service {service_name} not available',
         )
         future = client.call_async(Trigger.Request())
         rclpy.spin_until_future_complete(self.node, future, timeout_sec=timeout_sec)
-        self.assertTrue(future.done(), f"Service call to {service_name} timed out")
+        self.assertTrue(future.done(), f'Service call to {service_name} timed out')
         return future.result()
 
     def _call_clips_command(self, service_name, env_name, command, timeout_sec=5.0):
         client = self.node.create_client(ClipsCommand, service_name)
         self.assertTrue(
             client.wait_for_service(timeout_sec=timeout_sec),
-            f"Service {service_name} not available",
+            f'Service {service_name} not available',
         )
         request = ClipsCommand.Request()
         request.env_name = env_name
         request.command = command
         future = client.call_async(request)
         rclpy.spin_until_future_complete(self.node, future, timeout_sec=timeout_sec)
-        self.assertTrue(future.done(), f"Service call to {service_name} timed out")
+        self.assertTrue(future.done(), f'Service call to {service_name} timed out')
         return future.result()
 
     def test_pause_service(self):
         """Verify the pause service stops the executive."""
         result = self._call_trigger('/executive/pause')
-        self.assertTrue(result.success, f"Pause failed: {result.message}")
+        self.assertTrue(result.success, f'Pause failed: {result.message}')
 
     def test_pause_twice_fails(self):
         """Verify pausing an already paused executive returns failure."""
@@ -118,7 +119,7 @@ class TestExecutivePluginServices(unittest.TestCase):
         """Verify tick_once fires at least one rule while paused."""
         self._call_trigger('/executive/pause')
         result = self._call_trigger('/executive/tick_once')
-        self.assertTrue(result.success, f"tick_once failed: {result.message}")
+        self.assertTrue(result.success, f'tick_once failed: {result.message}')
 
     def test_build_service(self):
         """Verify a deftemplate can be built into the environment."""
@@ -127,7 +128,7 @@ class TestExecutivePluginServices(unittest.TestCase):
             'cx_executive',
             '(deftemplate example (slot message (type STRING)))',
         )
-        self.assertTrue(result.success, f"Build failed: {result.message}")
+        self.assertTrue(result.success, f'Build failed: {result.message}')
 
     def test_eval_service(self):
         """Verify a fact can be asserted via eval."""
@@ -140,7 +141,7 @@ class TestExecutivePluginServices(unittest.TestCase):
         result = self._call_clips_command(
             '/executive/eval', 'cx_executive', '(assert (example (message "hello")))'
         )
-        self.assertTrue(result.success, f"Eval failed: {result.message}")
+        self.assertTrue(result.success, f'Eval failed: {result.message}')
 
     def test_build_invalid_construct_fails(self):
         """Verify that a malformed construct returns a failure."""
@@ -165,7 +166,7 @@ class TestExecutivePluginServices(unittest.TestCase):
         """Verify the resume service restarts the executive after a pause."""
         self._call_trigger('/executive/pause')
         result = self._call_trigger('/executive/resume')
-        self.assertTrue(result.success, f"Resume failed: {result.message}")
+        self.assertTrue(result.success, f'Resume failed: {result.message}')
 
     def test_resume_without_pause_fails(self):
         """Verify resuming a non-paused executive returns failure."""
@@ -175,5 +176,6 @@ class TestExecutivePluginServices(unittest.TestCase):
 
 @launch_testing.post_shutdown_test()
 class TestExecutivePluginShutdown(make_shutdown_test_class()):
+
     def test_no_errors_or_warnings(self, cx_node, proc_output):
         pass
