@@ -21,7 +21,7 @@
 #include <vector>
 
 #include "cx_plugin/clips_plugin.hpp"
-#include "std_msgs/msg/empty.hpp"
+#include "std_msgs/msg/int64.hpp"
 
 namespace cx
 {
@@ -41,6 +41,12 @@ public:
   std::shared_ptr<rclcpp_lifecycle::LifecycleNode> get_node();
 
 private:
+  struct ManagedEnv
+  {
+    std::shared_ptr<clips::Environment> env;
+    std::vector<std::string> focus_stack;
+    int64_t rule_limit;
+  };
   int refresh_rate_;
   bool assert_time_;
   bool publish_on_refresh_;
@@ -49,13 +55,13 @@ private:
 
   rclcpp::TimerBase::SharedPtr agenda_refresh_timer_;
 
-  rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::Empty>::SharedPtr clips_agenda_refresh_pub_;
+  rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::Int64>::SharedPtr clips_agenda_refresh_pub_;
 
   std::chrono::nanoseconds publish_rate_;
 
   std::unique_ptr<rclcpp::Logger> logger_;
 
-  std::vector<std::shared_ptr<clips::Environment>> managed_envs;
+  std::vector<ManagedEnv> managed_envs_;
   std::mutex envs_mutex_;
 };
 }  // namespace cx

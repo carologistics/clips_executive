@@ -44,7 +44,7 @@ void ExecutivePlugin::finalize()
   agenda_refresh_timer_->cancel();
   {
     std::scoped_lock<std::mutex> set_guard(envs_mutex_);
-    managed_envs.clear();
+    managed_envs_.clear();
   }
   clips_agenda_refresh_pub_.reset();
 }
@@ -72,7 +72,7 @@ void ExecutivePlugin::initialize()
   node->get_parameter(plugin_name_ + ".assert_time", assert_time_);
   node->get_parameter(plugin_name_ + ".refresh_rate", refresh_rate_);
   if (publish_on_refresh_) {
-    clips_agenda_refresh_pub_ = node->create_publisher<std_msgs::msg::Empty>(
+    clips_agenda_refresh_pub_ = node->create_publisher<std_msgs::msg::Int64>(
       "clips_executive/refresh_agenda", rclcpp::QoS(10));
   }
   double rate = 1.0 / refresh_rate_;
@@ -82,21 +82,60 @@ void ExecutivePlugin::initialize()
   RCLCPP_DEBUG(
     *logger_, "Publishing rate set to: %ldns",
     std::chrono::duration_cast<std::chrono::nanoseconds>(publish_rate_).count());
+
   agenda_refresh_timer_ = node->create_wall_timer(publish_rate_, [this]() {
     std::scoped_lock<std::mutex> set_guard(envs_mutex_);
-    for (auto & env : managed_envs) {
-      auto context = CLIPSEnvContext::get_context(env);
+    int64_t total_fired_all_envs = 0;
+
+    for (ManagedEnv & managed : managed_envs_) {
+      auto context = CLIPSEnvContext::get_context(managed.env);
       std::scoped_lock<std::mutex> env_guard(context->env_mtx_);
+      const auto & valid_stack = managed.focus_stack;
 
       if (assert_time_) {
-        clips::AssertString(env.get(), "(time (now))");
+        clips::SetCurrentModule(managed.env.get(), clips::FindDefmodule(managed.env.get(), "MAIN"));
+        clips::AssertString(managed.env.get(), "(time (now))");
       }
 
-      clips::RefreshAllAgendas(env.get());
-      clips::Run(env.get(), -1);
+      int64_t total_fired_this_env = 0;
+      int64_t fired_this_iteration = 0;
+
+      do {
+        fired_this_iteration = 0;
+        clips::RefreshAllAgendas(managed.env.get());
+
+        if (valid_stack.empty()) {
+          clips::SetCurrentModule(
+            managed.env.get(), clips::FindDefmodule(managed.env.get(), "MAIN"));
+          fired_this_iteration += clips::Run(managed.env.get(), managed.rule_limit);
+        } else {
+          for (const auto & module_name : valid_stack) {
+            auto mod = clips::FindDefmodule(managed.env.get(), module_name.c_str());
+            clips::Focus(mod);
+            fired_this_iteration += clips::Run(managed.env.get(), -1);
+            clips::SetCurrentModule(
+              managed.env.get(), clips::FindDefmodule(managed.env.get(), "MAIN"));
+          }
+        }
+
+        total_fired_this_env += fired_this_iteration;
+        if (managed.rule_limit > 0 && total_fired_this_env >= managed.rule_limit) {
+          RCLCPP_ERROR(
+            *logger_, "Env '%s': Rule fire limit of %ld was reached.", context->env_name_.c_str(),
+            managed.rule_limit);
+          break;
+        }
+      } while (fired_this_iteration > 0);
+
+      total_fired_all_envs += total_fired_this_env;
+
+      clips::SetCurrentModule(managed.env.get(), clips::FindDefmodule(managed.env.get(), "MAIN"));
     }
+
     if (publish_on_refresh_) {
-      clips_agenda_refresh_pub_->publish(std_msgs::msg::Empty());
+      std_msgs::msg::Int64 msg;
+      msg.data = total_fired_all_envs;
+      clips_agenda_refresh_pub_->publish(msg);
     }
   });
 }
@@ -142,9 +181,36 @@ bool ExecutivePlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
       }
     }
   }
+  auto node = parent_.lock();
+  if (!node) {
+    return false;
+  }
+  auto context = CLIPSEnvContext::get_context(env);
+  std::string env_param_prefix = context->env_name_;
+  cx::cx_utils::declare_parameter_if_not_declared(
+    node, env_param_prefix + ".focus_stack",
+    rclcpp::ParameterValue(std::vector<std::string>{"MAIN"}));
+  std::vector<std::string> focus_stack_param;
+  node->get_parameter(env_param_prefix + ".focus_stack", focus_stack_param);
+  cx::cx_utils::declare_parameter_if_not_declared(
+    node, env_param_prefix + ".rule_limit", rclcpp::ParameterValue(-1));
+  int64_t rule_limit;
+  node->get_parameter(env_param_prefix + ".rule_limit", rule_limit);
+
+  // validate focus stack for this env
+  std::vector<std::string> valid_stack;
+  for (const auto & module_name : focus_stack_param) {
+    if (clips::FindDefmodule(env.get(), module_name.c_str()) != nullptr) {
+      valid_stack.push_back(module_name);
+    } else {
+      RCLCPP_ERROR(
+        *logger_, "Focus stack entry '%s' is not a valid module, removing from stack.",
+        module_name.c_str());
+    }
+  }
   {
     std::scoped_lock envs_guard(envs_mutex_);
-    managed_envs.push_back(env);
+    managed_envs_.push_back({env, valid_stack, rule_limit});
   }
   return true;
 }
@@ -167,11 +233,11 @@ bool ExecutivePlugin::clips_env_destroyed(std::shared_ptr<clips::Environment> & 
 
   {
     std::scoped_lock envs_guard(envs_mutex_);
-    managed_envs.erase(
+    managed_envs_.erase(
       std::remove_if(
-        managed_envs.begin(), managed_envs.end(),
-        [&env](std::shared_ptr<clips::Environment> & obj) { return obj.get() == env.get(); }),
-      managed_envs.end());
+        managed_envs_.begin(), managed_envs_.end(),
+        [&env](const ManagedEnv & m) { return m.env.get() == env.get(); }),
+      managed_envs_.end());
   }
 
   return true;
