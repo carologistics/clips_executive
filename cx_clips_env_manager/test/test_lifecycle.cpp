@@ -28,17 +28,19 @@ protected:
     options.append_parameter_override("autostart_node", false);
 
     node_ = std::make_shared<cx::CLIPSEnvManager>(options);
+    executor_.add_node(node_->get_node_base_interface());
   }
 
   void TearDown() override { node_.reset(); }
 
   void spin_some()
   {
-    rclcpp::spin_some(node_->get_node_base_interface());
+    executor_.spin_some();
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
   }
 
   std::shared_ptr<cx::CLIPSEnvManager> node_;
+  rclcpp::executors::SingleThreadedExecutor executor_;
 };
 
 TEST_F(CLIPSEnvManagerLifecycleTest, lifecycle_happy_path)
