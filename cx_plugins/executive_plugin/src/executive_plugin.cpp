@@ -17,11 +17,6 @@
 
 #include <string>
 
-#if defined(USE_GET_PACKAGE_SHARE_PATH)
-#include "ament_index_cpp/get_package_share_path.hpp"
-#else
-#include "ament_index_cpp/get_package_share_directory.hpp"
-#endif
 #include "cx_utils/clips_env_context.hpp"
 #include "cx_utils/param_utils.hpp"
 
@@ -56,11 +51,6 @@ void ExecutivePlugin::initialize()
   if (!node) {
     return;
   }
-#if defined(USE_GET_PACKAGE_SHARE_PATH)
-  plugin_path_ = ament_index_cpp::get_package_share_path("cx_executive_plugin").string();
-#else
-  plugin_path_ = ament_index_cpp::get_package_share_directory("cx_executive_plugin");
-#endif
 
   cx::cx_utils::declare_parameter_if_not_declared(
     node, plugin_name_ + ".publish_on_refresh", rclcpp::ParameterValue(false));
@@ -91,10 +81,11 @@ void ExecutivePlugin::initialize()
       auto context = CLIPSEnvContext::get_context(managed.env);
       std::scoped_lock<std::mutex> env_guard(context->env_mtx_);
       const auto & valid_stack = managed.focus_stack;
-
+      clips::Fact * time_fact;
       if (assert_time_) {
         clips::SetCurrentModule(managed.env.get(), clips::FindDefmodule(managed.env.get(), "MAIN"));
-        clips::AssertString(managed.env.get(), "(time (now))");
+        time_fact = clips::AssertString(managed.env.get(), "(time (now))");
+        clips::RetainFact(time_fact);
       }
 
       int64_t total_fired_this_env = 0;
@@ -113,9 +104,14 @@ void ExecutivePlugin::initialize()
             auto mod = clips::FindDefmodule(managed.env.get(), module_name.c_str());
             clips::Focus(mod);
             fired_this_iteration += clips::Run(managed.env.get(), -1);
-            clips::SetCurrentModule(
-              managed.env.get(), clips::FindDefmodule(managed.env.get(), "MAIN"));
           }
+          clips::SetCurrentModule(
+            managed.env.get(), clips::FindDefmodule(managed.env.get(), "MAIN"));
+        }
+
+        if (assert_time_) {
+          ReleaseFact(time_fact);
+          Retract(time_fact);
         }
 
         total_fired_this_env += fired_this_iteration;
@@ -169,21 +165,16 @@ bool ExecutivePlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
         out->floatValue = clips::CreateFloat(env, now.time_since_epoch().count());
       },
       "clips_now_systime", NULL);
-    std::vector<std::string> files{plugin_path_ + "/clips/cx_executive_plugin/time.clp"};
-    for (const auto & f : files) {
-      if (!clips::BatchStar(env.get(), f.c_str())) {
-        RCLCPP_ERROR(
-          *logger_,
-          "Failed to initialize CLIPS environment, "
-          "batch file '%s' failed!, aborting...",
-          f.c_str());
-        return false;
-      }
-    }
   }
   auto node = parent_.lock();
   if (!node) {
     return false;
+  }
+
+  if (assert_time_) {
+    clips::Fact * time_fact = clips::AssertString(env.get(), "(time (now))");
+    clips::Eval(env.get(), "(unwatch facts time)", nullptr);
+    clips::Retract(time_fact);
   }
   auto context = CLIPSEnvContext::get_context(env);
   std::string env_param_prefix = context->env_name_;
