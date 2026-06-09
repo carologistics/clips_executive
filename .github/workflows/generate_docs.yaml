@@ -18,7 +18,7 @@ jobs:
       - name: Setup ROS 2
         uses: ros-tooling/setup-ros@v0.7
         with:
-          distribution: jazzy
+          distribution: lyrical
 
       - name: Install rosdoc2
         run: sudo apt-get update && sudo apt-get install -y python3-rosdoc2
