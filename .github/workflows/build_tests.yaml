@@ -10,7 +10,7 @@ jobs:
   pre-commit:
     runs-on: ubuntu-24.04
     container:
-      image: quay.io/carologistics/clips_executive_base_image:lyrical
+      image: quay.io/carologistics/clips_executive_base_image:kilted
       options: --user 1001 --workdir /ros_ws
     steps:
       - name: Checkout repository
@@ -40,7 +40,7 @@ jobs:
     needs: pre-commit
     strategy:
       matrix:
-        ros_distro: [jazzy, kilted, lyrical, rolling]
+        ros_distro: [jazzy, kilted, rolling]
     container:
       image: quay.io/carologistics/clips_executive_base_image:${{ matrix.ros_distro }}
       options: --user 1001 --workdir /ros_ws

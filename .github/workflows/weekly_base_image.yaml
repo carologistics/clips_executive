@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ros_distro: [jazzy, humble, rolling, kilted, lyrical]
+        ros_distro: [jazzy, rolling, kilted]
 
     env:
       QUAY_REPO: quay.io/carologistics/clips_executive_base_image
