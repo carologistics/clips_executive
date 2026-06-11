@@ -29,9 +29,11 @@
 #include "bond/msg/constants.hpp"
 #include "bondcpp/bond.hpp"
 #include "cx_clips_env_manager/clips_plugin_manager.hpp"
+#include "cx_msgs/msg/log.hpp"
 #include "cx_msgs/srv/create_clips_env.hpp"
 #include "cx_msgs/srv/destroy_clips_env.hpp"
 #include "cx_msgs/srv/list_clips_envs.hpp"
+#include "cx_msgs/srv/set_topic_logging.hpp"
 #include "cx_utils/clips_env_context.hpp"
 #include "lifecycle_msgs/msg/state.hpp"
 #include "lifecycle_msgs/msg/transition.hpp"
@@ -75,6 +77,11 @@ public:
     const std::shared_ptr<cx_msgs::srv::DestroyClipsEnv::Request> request,
     const std::shared_ptr<cx_msgs::srv::DestroyClipsEnv::Response> response);
 
+  void set_topic_logging_callback(
+    const std::shared_ptr<rmw_request_id_t> request_header,
+    const std::shared_ptr<cx_msgs::srv::SetTopicLogging::Request> request,
+    const std::shared_ptr<cx_msgs::srv::SetTopicLogging::Response> response);
+
   void run_cleanups();
   void destroy_bond();
 
@@ -86,6 +93,8 @@ private:
   rclcpp::Service<cx_msgs::srv::ListClipsEnvs>::SharedPtr list_envs_service_;
   rclcpp::Service<cx_msgs::srv::CreateClipsEnv>::SharedPtr create_env_service_;
   rclcpp::Service<cx_msgs::srv::DestroyClipsEnv>::SharedPtr destroy_env_service_;
+  rclcpp::Service<cx_msgs::srv::SetTopicLogging>::SharedPtr set_topic_logging_service_;
+  rclcpp::Publisher<cx_msgs::msg::Log>::SharedPtr logging_pub_;
 
 private:
   void create_bond();

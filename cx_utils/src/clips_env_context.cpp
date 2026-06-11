@@ -151,8 +151,18 @@ void CLIPSLogger::log(const char * logical_name, const char * str)
     // File logging (plain text)
     // ------------------------
     clips_logger_->info("{}", line);
+    if (topic_logging_enabled_ && publish_fn_) {
+      publish_fn_(logical_name, line);
+    }
   }
 }
+
+void CLIPSLogger::set_topic_publisher(PublishFn fn) { publish_fn_ = std::move(fn); }
+
+void CLIPSLogger::set_topic_logging(bool enabled) { topic_logging_enabled_ = enabled; }
+
+bool CLIPSLogger::get_topic_logging() { return topic_logging_enabled_; }
+
 CLIPSEnvContext * CLIPSEnvContext::get_context(clips::Environment * env)
 {
   using clips::environmentData;

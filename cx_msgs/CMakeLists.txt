@@ -5,6 +5,9 @@ project(cx_msgs)
 find_package(ament_cmake REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 find_package(builtin_interfaces REQUIRED)
+set(MESSAGES
+  "msg/Log.msg"
+)
 
 set(SERVICES
   "srv/ClipsCommand.srv"
@@ -13,6 +16,7 @@ set(SERVICES
   "srv/ListClipsEnvs.srv"
   "srv/LoadClipsPlugin.srv"
   "srv/ListClipsPlugins.srv"
+  "srv/SetTopicLogging.srv"
   "srv/UnloadClipsPlugin.srv"
 )
 
@@ -20,6 +24,7 @@ set(SERVICES
 
 # )
 rosidl_generate_interfaces(${PROJECT_NAME}
+  ${MESSAGES}
   ${SERVICES}
 
   # ${actions}

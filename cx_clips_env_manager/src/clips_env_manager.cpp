@@ -132,6 +132,12 @@ CallbackReturn CLIPSEnvManager::on_configure(const rclcpp_lifecycle::State &)
     std::string(get_name()) + "/destroy_env",
     std::bind(&CLIPSEnvManager::destroy_env_callback, this, _1, _2, _3));
 
+  logging_pub_ = create_publisher<cx_msgs::msg::Log>(std::string(get_name()) + "/clips_log", 10);
+
+  set_topic_logging_service_ = create_service<cx_msgs::srv::SetTopicLogging>(
+    std::string(get_name()) + "/set_topic_logging",
+    std::bind(&CLIPSEnvManager::set_topic_logging_callback, this, _1, _2, _3));
+
   auto node = shared_from_this();
   std::vector<std::string> config_envs;
   cx::cx_utils::declare_parameter_if_not_declared(
@@ -282,6 +288,33 @@ void CLIPSEnvManager::destroy_env_callback(
   }
 }
 
+void CLIPSEnvManager::set_topic_logging_callback(
+  const std::shared_ptr<rmw_request_id_t> request_header,
+  const std::shared_ptr<cx_msgs::srv::SetTopicLogging::Request> request,
+  const std::shared_ptr<cx_msgs::srv::SetTopicLogging::Response> response)
+{
+  (void)request_header;  // the request header is not used in this callback
+  const std::string & env_name = request->env_name;
+  bool env_exists = false;
+  {
+    std::scoped_lock lock(*map_mtx_.get());
+    env_exists = (envs_->find(env_name) != envs_->end());
+  }
+  if (env_exists) {
+    std::shared_ptr<clips::Environment> env;
+    {
+      std::scoped_lock lock(*map_mtx_.get());
+      env = envs_->at(env_name);
+    }
+    {
+      auto context = CLIPSEnvContext::get_context(env);
+      std::scoped_lock env_lock(context->env_mtx_);
+      context->logger_.set_topic_logging(request->enabled);
+    }
+  }
+  response->success = true;
+}
+
 // --------------- ALL PRIVATE FUNCTION HELPERS ---------------
 
 bool CLIPSEnvManager::delete_env(const std::string & env_name)
@@ -375,6 +408,8 @@ std::shared_ptr<clips::Environment> CLIPSEnvManager::new_env(const std::string &
   cx::cx_utils::declare_parameter_if_not_declared(
     this, env_name + ".log_clips_to_file", rclcpp::ParameterValue(true));
   cx::cx_utils::declare_parameter_if_not_declared(
+    this, env_name + ".log_clips_to_topic", rclcpp::ParameterValue(false));
+  cx::cx_utils::declare_parameter_if_not_declared(
     this, env_name + ".watch", rclcpp::ParameterValue(std::vector<std::string>{}));
   cx::cx_utils::declare_parameter_if_not_declared(
     this, env_name + ".redirect_stdout_to_debug", rclcpp::ParameterValue(false));
@@ -386,6 +421,8 @@ std::shared_ptr<clips::Environment> CLIPSEnvManager::new_env(const std::string &
   }
   bool log_to_file = false;
   get_parameter(env_name + ".log_clips_to_file", log_to_file);
+  bool log_to_topic = false;
+  get_parameter(env_name + ".log_clips_to_topic", log_to_topic);
   bool stdout_to_debug = false;
   get_parameter(env_name + ".redirect_stdout_to_debug", stdout_to_debug);
 
@@ -395,6 +432,17 @@ std::shared_ptr<clips::Environment> CLIPSEnvManager::new_env(const std::string &
     static_cast<CLIPSEnvContext **>(GetEnvironmentData(env, USER_ENVIRONMENT_DATA));
   *context_ptr = contexts_[env_name].get();
   CLIPSEnvContext * context = *context_ptr;
+
+  context->logger_.set_topic_logging(log_to_topic);
+
+  context->logger_.set_topic_publisher(
+    [this, env_name](const std::string & logical_name, const std::string & line) {
+      cx_msgs::msg::Log msg;
+      msg.env_name = env_name;
+      msg.logical_name = logical_name;
+      msg.line = line;
+      logging_pub_->publish(msg);
+    });
 
   clips::AddRouter(
     env, ROUTER_NAME, /*router priority*/

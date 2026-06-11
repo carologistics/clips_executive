@@ -148,14 +148,16 @@ void ExecutivePlugin::setup_ros_interfaces()
 {
   auto node = get_node();
 
+  std::string interface_prefix = std::string(node->get_name()) + "/" + plugin_name_;
+
   if (publish_on_refresh_) {
     clips_agenda_refresh_pub_ = node->create_publisher<std_msgs::msg::Int64>(
-      plugin_name_ + "/refresh_agenda", rclcpp::QoS(10));
+      interface_prefix + "/refresh_agenda", rclcpp::QoS(10));
   }
   pause_service_ = node->create_service<std_srvs::srv::Trigger>(
-    plugin_name_ + "/pause", [this](
-                               const std_srvs::srv::Trigger::Request::SharedPtr,
-                               std_srvs::srv::Trigger::Response::SharedPtr response) {
+    interface_prefix + "/pause", [this](
+                                   const std_srvs::srv::Trigger::Request::SharedPtr,
+                                   std_srvs::srv::Trigger::Response::SharedPtr response) {
       if (paused_) {
         response->success = false;
         response->message = plugin_name_ + " already paused.";
@@ -169,9 +171,9 @@ void ExecutivePlugin::setup_ros_interfaces()
     });
 
   resume_service_ = node->create_service<std_srvs::srv::Trigger>(
-    plugin_name_ + "/resume", [this](
-                                const std_srvs::srv::Trigger::Request::SharedPtr,
-                                std_srvs::srv::Trigger::Response::SharedPtr response) {
+    interface_prefix + "/resume", [this](
+                                    const std_srvs::srv::Trigger::Request::SharedPtr,
+                                    std_srvs::srv::Trigger::Response::SharedPtr response) {
       if (!paused_) {
         response->success = false;
         response->message = plugin_name_ + " already running.";
@@ -186,25 +188,25 @@ void ExecutivePlugin::setup_ros_interfaces()
     });
 
   tick_once_service_ = node->create_service<std_srvs::srv::Trigger>(
-    plugin_name_ + "/tick_once", [this](
-                                   const std_srvs::srv::Trigger::Request::SharedPtr,
-                                   std_srvs::srv::Trigger::Response::SharedPtr response) {
+    interface_prefix + "/tick_once", [this](
+                                       const std_srvs::srv::Trigger::Request::SharedPtr,
+                                       std_srvs::srv::Trigger::Response::SharedPtr response) {
       run_tick();
       response->success = true;
       response->message = "Tick executed.";
     });
 
   eval_service_ = node->create_service<cx_msgs::srv::ClipsCommand>(
-    plugin_name_ + "/eval", [this](
-                              const cx_msgs::srv::ClipsCommand::Request::SharedPtr request,
-                              cx_msgs::srv::ClipsCommand::Response::SharedPtr response) {
+    interface_prefix + "/eval", [this](
+                                  const cx_msgs::srv::ClipsCommand::Request::SharedPtr request,
+                                  cx_msgs::srv::ClipsCommand::Response::SharedPtr response) {
       *response = handle_clips_command(false, request);
     });
 
   build_service_ = node->create_service<cx_msgs::srv::ClipsCommand>(
-    plugin_name_ + "/build", [this](
-                               const cx_msgs::srv::ClipsCommand::Request::SharedPtr request,
-                               cx_msgs::srv::ClipsCommand::Response::SharedPtr response) {
+    interface_prefix + "/build", [this](
+                                   const cx_msgs::srv::ClipsCommand::Request::SharedPtr request,
+                                   cx_msgs::srv::ClipsCommand::Response::SharedPtr response) {
       *response = handle_clips_command(true, request);
     });
 }
@@ -240,11 +242,24 @@ cx_msgs::srv::ClipsCommand::Response ExecutivePlugin::handle_clips_command(
 
   auto context = CLIPSEnvContext::get_context(env);
   std::scoped_lock<std::mutex> env_guard(context->env_mtx_);
-  if (use_build) {
-    return build_on_env(env, request->command);
-  } else {
-    return eval_on_env(env, request->command);
+  // Enable topic logging for the duration of this command if not already enabled
+  bool was_topic_logging = context->logger_.get_topic_logging();
+
+  if (!was_topic_logging) {
+    context->logger_.set_topic_logging(true);
   }
+  if (use_build) {
+    response = build_on_env(env, request->command);
+  } else {
+    response = eval_on_env(env, request->command);
+  }
+
+  // Restore previous state
+  if (!was_topic_logging) {
+    context->logger_.set_topic_logging(false);
+  }
+
+  return response;
 }
 
 cx_msgs::srv::ClipsCommand::Response ExecutivePlugin::eval_on_env(
