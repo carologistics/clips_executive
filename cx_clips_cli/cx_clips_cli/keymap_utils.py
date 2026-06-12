@@ -15,6 +15,7 @@
 
 
 from cx_clips_cli.float_item import FloatItem
+from prompt_toolkit.application import get_app
 
 DEFAULT_KEY_MAP = {
     'append': [['a']],
@@ -90,9 +91,10 @@ def _parse_keymap_file(path: str) -> dict:
                 if chords:
                     overrides[action] = chords
     except FileNotFoundError:
-        log.warning(f"Keymap override file not found: {path}")
+        app = get_app()
+        app._cli.set_status(False, f'Keymap override file not found: {path}')
     except Exception as e:
-        log.warning(f"Failed to load keymap overrides from {path}: {e}")
+        app._cli.set_status(False, f'Failed to load keymap overrides from {path}: {e}')
     return overrides
 
     return DEFAULT_KEY_MAP

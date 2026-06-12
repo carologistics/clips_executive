@@ -15,6 +15,7 @@
 
 import os
 
+from prompt_toolkit.application import get_app
 from prompt_toolkit.styles import Style, merge_styles
 from prompt_toolkit.styles.pygments import style_from_pygments_cls
 from pygments.styles import get_style_by_name
@@ -91,9 +92,11 @@ def _load_style_overrides(path: str, dark: bool) -> dict:
                     key, _, value = line.partition('=')
                     overrides[key.strip()] = value.strip()
     except FileNotFoundError:
-        log.warning(f"Style override file not found: {path}")
+        app = get_app()
+        app._cli.set_status(False, f'Style override file not found: {path}')
     except Exception as e:
-        log.warning(f"Failed to load style overrides from {path}: {e}")
+        app = get_app()
+        app._cli.set_status(False, f'Failed to load style overrides from {path}: {e}')
     return overrides
 
 
@@ -106,7 +109,10 @@ def make_style(dark: bool, pygments_style: str = '', overrides_path: str = '') -
     try:
         base = style_from_pygments_cls(get_style_by_name(base_name))
     except Exception:
-        log.warning(f"Unknown pygments style '{base_name}', falling back to default")
+        app = get_app()
+        app._cli.set_status(
+            False, f'Unknown pygments style "{base_name}", falling back to default'
+        )
         base = style_from_pygments_cls(get_style_by_name('github-dark' if dark else 'friendly'))
 
     # 2. Built-in defaults for custom keys

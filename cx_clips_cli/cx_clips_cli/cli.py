@@ -77,20 +77,21 @@ def get_help_text(key_map):
     return f"""
 Command Line Interface (CLI) for the ROS CX.
 
-The CLI has three areas: the log window (top), the CLI prompt (middle), and the status bar (bottom).
-Operates vi-style.
-  The CLI prompt uses vi-style modal editing with two modes.
+The CLI has three areas: the log window (top), the CLI prompt (middle), and the
+status bar (bottom). It uses vi-style modal editing with two modes.
   INSERT mode: the prompt is active, type and submit CLIPS expressions.
     Press ESC to switch to NORMAL mode.
   NORMAL mode: use shortcuts from the command palette.
     Press i to return to INSERT mode.
-    Press {_format('command_palette')} to open the command palette with all available shortcuts.
+    Press {_format('command_palette')} to open the command menu.
 
 Log window
   Displays CLIPS output related to expressions sent via CLI.
   Filters other CLIPS output from the ROS CX unless disabled (see command palette).
   Automatically scrolls to newest lines unless disabled (see command palette).
-  While focused (status ON LOG): {_format('log_search_fwd')} and {_format('log_search_bwd')} search forward and backward, {_format('log_next_match')} and {_format('log_prev_match')} cycle through matches.
+  While focused (status ON LOG): {_format('log_search_fwd')} and {_format('log_search_bwd')}
+  search forward and backward, {_format('log_next_match')} and {_format('log_prev_match')} cycle
+  through matches.
   Contents of the log window can be saved to a file (see command palette).
 
 CLI prompt
@@ -102,7 +103,7 @@ CLI prompt
 async def open_command_palette(
     cli, app, active_floats, input_window, log_area, key_map, command_palette
 ):
-    """Creates a float selector menu for the available commands."""
+    """Create a float selector menu for the available commands."""
     items = [FloatItem(a.label, a.hint, a.keys) for a in make_command_palette(key_map)]
 
     def on_select(item: FloatItem):
@@ -127,7 +128,7 @@ async def open_command_palette(
 
 
 async def select_env(cli, app, active_floats, input_window, key_map):
-    """Creates a float selector menu for the active environments."""
+    """Create a float selector menu for the active environments."""
     ok, envs, err = cli.list_envs()
     if not ok or not envs:
         cli.set_status(False, err or 'no environments available')
@@ -138,7 +139,7 @@ async def select_env(cli, app, active_floats, input_window, key_map):
 
     def on_select(item: FloatItem):
         cli.env_name = item.label
-        cli.set_status(True, f"switched to '{item.label}'")
+        cli.set_status(True, f'switched to "{item.label}"')
         app.invalidate()
 
     await open_selection_float(
@@ -167,7 +168,9 @@ class ClipsHistoryCompleter(Completer):
             if entry.startswith(text) and entry != text:
                 if entry not in seen:
                     seen.add(entry)
-                    yield Completion(entry[len(text) :], start_position=0, display=entry)
+                    yield Completion(
+                        entry[len(text) :], start_position=0, display=entry  # noqa E203
+                    )
 
 
 def _log_color_for_logical_name(logical_name: str) -> str:
@@ -246,8 +249,7 @@ class ClipsCLI:
         self.pending_action: str | None = None
 
         # Log streaming state
-        self.filter_enabled = True  # whether we print received log msgs
-        self.ros_logging_enabled = False  # whether the CLIPS engine sends logs at all
+        self.filter_enabled = True  # whether to limit CX output to typed commands
         self._log_sub = None  # ROS subscription handle
         self._log_lock = threading.Lock()  # guards console writes from the sub thread
 
@@ -274,7 +276,7 @@ class ClipsCLI:
             history_file.parent.mkdir(parents=True, exist_ok=True)
             return FileHistory(str(history_file))
         except Exception as e:
-            log.warning(f"Could not open history file, falling back to in-memory: {e}")
+            self.set_status(False, f'Could not open history file, falling back to in-memory: {e}')
             return InMemoryHistory()
 
     def _get_ros_log_dir(self) -> Path:
@@ -343,13 +345,13 @@ class ClipsCLI:
     # ------------------------------------------------------------------
 
     def _format_timestamp(self) -> str:
-        """Format timestamp in the format: YYYY-MM-DD-HH-MM-SS"""
+        """Format timestamp in the format: YYYY-MM-DD-HH-MM-SS."""
         return datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
 
     def _create_latest_symlink(self, log_file_ts: Path, log_file: Path) -> bool:
         """Create a symlink to _latest.log pointing to the current log file."""
         try:
-            latest_link = log_file.parent / f"{log_file.stem}_latest.log"
+            latest_link = log_file.parent / f'{log_file.stem}_latest.log'
 
             # Remove existing symlink if it exists
             if latest_link.exists() or latest_link.is_symlink():
@@ -359,7 +361,7 @@ class ClipsCLI:
             latest_link.symlink_to(log_file_ts.name)
             return True
         except Exception as e:
-            log.error(f"Failed to create symlink: {e}")
+            self.set_status(False, f'Failed to create symlink: {e}')
             return False
 
     def _write_to_log_file(self, prefix: str, line: str):
@@ -372,11 +374,12 @@ class ClipsCLI:
                 self._log_file_handle.write(f'{prefix}{line}\n')
                 self._log_file_handle.flush()
         except Exception as e:
-            log.error(f"Failed to write to log file: {e}")
+            self.set_status(False, f'Failed to write to log file: {e}')
 
     def start_log_stream(self, file_path: str | Path | None = None) -> tuple[bool, str]:
         """
         Start continuous streaming of logs to a file in ROS log directory.
+
         If file_path is None, generates a timestamp-based filename.
         Creates a symlink to _latest.log for easy access.
         Returns (success, message).
@@ -387,12 +390,12 @@ class ClipsCLI:
         timestamp = self._format_timestamp()
         if file_path is None:
             # Generate filename with timestamp in ROS log directory
-            f"_{self.env_name}" if self.env_name else ''
-            file_path = self._log_dir / f"cx_clips_cli_{timestamp}.log"
-            file_path_no_ts = self._log_dir / f"cx_clips_cli.log"
+            f'_{self.env_name}' if self.env_name else ''
+            file_path = self._log_dir / f'cx_clips_cli_{timestamp}.log'
+            file_path_no_ts = self._log_dir / 'cx_clips_cli.log'
         else:
-            file_path = Path(file_path, f"cx_clips_cli_{timestamp}.log")
-            file_path_no_ts = Path(file_path, f"cx_clips_cli.log")
+            file_path = Path(file_path, f'cx_clips_cli_{timestamp}.log')
+            file_path_no_ts = Path(file_path, 'cx_clips_cli.log')
             # If relative path, put it in the log directory
             if not file_path.is_absolute():
                 file_path = self._log_dir / file_path
@@ -413,9 +416,9 @@ class ClipsCLI:
             # Create symlink to _latest.log
             self._create_latest_symlink(file_path, file_path_no_ts)
 
-            return True, f"Log streaming started: {file_path}"
+            return True, f'Log streaming started: {file_path}'
         except Exception as e:
-            return False, f"Failed to open log file: {e}"
+            return False, f'Failed to open log file: {e}'
 
     def stop_log_stream(self) -> tuple[bool, str]:
         """Stop continuous streaming to file. Returns (success, message)."""
@@ -428,13 +431,14 @@ class ClipsCLI:
 
             self._continuous_streaming = False
             file_path = self._log_file_path
-            return True, f"Log streaming stopped: {file_path}"
+            return True, f'Log streaming stopped: {file_path}'
         except Exception as e:
-            return False, f"Failed to close log file: {e}"
+            return False, f'Failed to close log file: {e}'
 
     def save_log_buffer(self, file_path: str | Path | None = None) -> tuple[bool, str]:
         """
         Save the current log buffer to a file in ROS log directory.
+
         If file_path is None, generates a timestamp-based filename.
         Creates a symlink to _latest.log for easy access.
         Returns (success, message).
@@ -445,12 +449,12 @@ class ClipsCLI:
         if file_path is None:
             # Generate filename with timestamp in ROS log directory
             timestamp = self._format_timestamp()
-            f"_{self.env_name}" if self.env_name else ''
-            file_path = self._log_dir / f"cx_clips_cli_snapshot_{timestamp}.log"
-            file_path_no_ts = self._log_dir / f"cx_clips_cli_snapshot.log"
+            f'_{self.env_name}' if self.env_name else ''
+            file_path = self._log_dir / f'cx_clips_cli_snapshot_{timestamp}.log'
+            file_path_no_ts = self._log_dir / 'cx_clips_cli_snapshot.log'
         else:
             file_path = Path(file_path)
-            file_path_no_ts = Path(file_path, f"cx_clips_cli_snapshot.log")
+            file_path_no_ts = Path(file_path, 'cx_clips_cli_snapshot.log')
             # If relative path, put it in the log directory
             if not file_path.is_absolute():
                 file_path = self._log_dir / file_path
@@ -466,9 +470,9 @@ class ClipsCLI:
             # Create symlink to _latest.log
             self._create_latest_symlink(file_path, file_path_no_ts)
 
-            return True, f"Log saved to: {file_path}"
+            return True, f'Log saved to: {file_path}'
         except Exception as e:
-            return False, f"Failed to save log file: {e}"
+            return False, f'Failed to save log file: {e}'
 
     def toggle_log_stream(self, file_path: str | Path | None = None) -> str:
         """Toggle continuous log streaming on/off."""
@@ -537,8 +541,6 @@ class ClipsCLI:
         future = self.set_logging_client.call_async(req)
         self._spin_until_complete(future)
         result = future.result()
-        if result.success:
-            self.ros_logging_enabled = enabled
         return result.success, ''
 
     def send(self, text: str) -> tuple[bool, str]:
@@ -557,7 +559,7 @@ class ClipsCLI:
         if self.set_logging_client.wait_for_service(timeout_sec=1.0):
             ok, msg = self.set_ros_logging(True)
             if not ok:
-                return f"ROS log filter toggle failed: {msg}"
+                return f'ROS log filter toggle failed: {msg}'
         else:
             return 'ROS log filter toggle failed: service not reachable'
         self.filter_enabled = False
@@ -569,7 +571,7 @@ class ClipsCLI:
         if self.set_logging_client.wait_for_service(timeout_sec=1.0):
             ok, msg = self.set_ros_logging(False)
             if not ok:
-                return f"ROS log filter toggle failed: {msg}"
+                return f'ROS log filter toggle failed: {msg}'
         else:
             return 'ROS log filter toggle failed: service not reachable'
         self.filter_enabled = True
@@ -695,7 +697,7 @@ class ClipsCLI:
 
 def make_bindings(
     cli: ClipsCLI,
-    log_area: 'FormatedTextArea',
+    log_area: FormattedTextArea,
     input_window,
     search_input_window,
     active_floats,
@@ -975,10 +977,10 @@ def main():
             match_count = len(log_area.search_matches)
             if match_count > 0:
                 current_match = log_area.search_index + 1
-                cli.set_status(True, f"Match {current_match}/{match_count}")
+                cli.set_status(True, f'Match {current_match}/{match_count}')
             event.app.layout.focus(log_area.window)
         else:
-            cli.set_status(False, f"No matches for '{query}'")
+            cli.set_status(False, f'No matches for "{query}"')
         event.app.invalidate()
 
     search_kb = KeyBindings()
@@ -1059,6 +1061,7 @@ def main():
     app._search_input_window = search_input_window
     app._search_direction = 'forward'
     app.vi_state.input_mode = InputMode.NAVIGATION
+    app._cli = cli
 
     # Periodically invalidate when log is dirty
     async def refresh_log():

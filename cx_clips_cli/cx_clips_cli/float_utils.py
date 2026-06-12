@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Callable
+
 from cx_clips_cli.float_item import FloatItem
 from cx_clips_cli.keymap_utils import bind_custom_key
 from prompt_toolkit.application import Application

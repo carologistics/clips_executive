@@ -52,6 +52,7 @@ from prompt_toolkit.layout.processors import HighlightSelectionProcessor, Proces
 class FormatTextProcessor(Processor):
     """
     Custom processor to represent formatted text.
+
     Makes use of :py:class:`FormattedBufferControl`.
     """
 
@@ -60,10 +61,10 @@ class FormatTextProcessor(Processor):
         lineno = transformation_input.lineno
         max_lineno = len(formatted_lines) - 1
         if lineno > max_lineno:
-            log.warning(
-                'Index error when parsing document. max_lineno=%s lineno=%s',
-                max_lineno,
-                lineno,
+            app = get_app()
+            app.set_status(
+                False,
+                f'Index error when parsing document. max_lineno={max_lineno} lineno={lineno}',
             )
             lineno = max_lineno
         line = formatted_lines[lineno]
@@ -83,6 +84,7 @@ class FormattedBufferControl(BufferControl):
     def mouse_handler(self, mouse_event):
         """
         Handle formatted text handlers.
+
         Taken from ``FormattedTextControl.mouse_handler``.
         """
         response = super().mouse_handler(mouse_event)
@@ -124,7 +126,7 @@ class FormattedTextArea:
         dont_extend_width=False,
         read_only=True,
         initial_position=0,
-        key_map=dict(),
+        key_map={},
     ):
         self.key_map = key_map
         self.read_only = read_only
