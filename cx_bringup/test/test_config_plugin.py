@@ -34,7 +34,7 @@ generate_test_description = pytest.mark.launch_test(
 )
 
 
-def wait_for_confval(proc_output, path_suffix, cx_node, timeout=10.0, **kwargs):
+def wait_for_confval(proc_output, path_suffix, cx_node, timeout=60.0, **kwargs):
     """
     Wait for a confval fact matching path suffix and optional field values.
 

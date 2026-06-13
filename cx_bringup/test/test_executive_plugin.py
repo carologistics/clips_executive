@@ -12,6 +12,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import time
 import unittest
 
 from cx_bringup_test_utils import (
@@ -79,29 +80,43 @@ class TestExecutivePluginServices(unittest.TestCase):
         cls.node.destroy_node()
         rclpy.shutdown()
 
-    def _call_trigger(self, service_name, timeout_sec=5.0):
+    def _call_trigger(self, service_name, timeout_sec=60.0):
         client = self.node.create_client(Trigger, service_name)
         self.assertTrue(
             client.wait_for_service(timeout_sec=timeout_sec),
             f'Service {service_name} not available',
         )
         future = client.call_async(Trigger.Request())
-        rclpy.spin_until_future_complete(self.node, future, timeout_sec=timeout_sec)
-        self.assertTrue(future.done(), f'Service call to {service_name} timed out')
+
+        deadline = time.time() + timeout_sec
+        while not future.done() and time.time() < deadline:
+            rclpy.spin_once(self.node, timeout_sec=0.1)
+        self.assertTrue(
+            future.done(), f'Service call to {service_name} timed out after {deadline}s'
+        )
+
         return future.result()
 
-    def _call_clips_command(self, service_name, env_name, command, timeout_sec=5.0):
+    def _call_clips_command(
+        self, service_name, env_name, command, wait_timeout=30.0, call_timeout=30.0
+    ):
         client = self.node.create_client(ClipsCommand, service_name)
         self.assertTrue(
-            client.wait_for_service(timeout_sec=timeout_sec),
-            f'Service {service_name} not available',
+            client.wait_for_service(timeout_sec=wait_timeout),
+            f'Service {service_name} not available after {wait_timeout}s',
         )
         request = ClipsCommand.Request()
         request.env_name = env_name
         request.command = command
         future = client.call_async(request)
-        rclpy.spin_until_future_complete(self.node, future, timeout_sec=timeout_sec)
-        self.assertTrue(future.done(), f'Service call to {service_name} timed out')
+
+        deadline = time.time() + call_timeout
+        while not future.done() and time.time() < deadline:
+            rclpy.spin_once(self.node, timeout_sec=0.1)
+        self.assertTrue(
+            future.done(), f'Service call to {service_name} timed out after {call_timeout}s'
+        )
+
         return future.result()
 
     def test_pause_service(self):

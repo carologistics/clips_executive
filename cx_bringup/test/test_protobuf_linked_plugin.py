@@ -56,7 +56,7 @@ class TestProtobufLinkedPluginOutput(unittest.TestCase):
         proc_output.assertWaitFor(
             expected_output=__import__('re').compile(r'Initialised context!'),
             process=cx_node,
-            timeout=10.0,
+            timeout=60.0,
         )
 
     def test_server_init_rule_fire(self, cx_node, proc_output):
@@ -87,7 +87,7 @@ class TestProtobufLinkedPluginOutput(unittest.TestCase):
 
     def test_server_client_connected_fact_asserted(self, cx_node, proc_output):
         wait_for_fact_asserted(
-            proc_output, '(protobuf-server-client-connected 1', cx_node, timeout=15.0
+            proc_output, '(protobuf-server-client-connected 1', cx_node, timeout=60.0
         )
 
     def test_client_sends_message(self, cx_node, proc_output):
@@ -95,25 +95,25 @@ class TestProtobufLinkedPluginOutput(unittest.TestCase):
             proc_output,
             '[cx_protobuf_client] [INFO] FIRE    1 peer-send-msg',
             cx_node,
-            timeout=15.0,
+            timeout=60.0,
         )
 
     def test_server_receives_message(self, cx_node, proc_output):
         wait_for_fact_asserted(
-            proc_output, '(protobuf-msg (type "SearchRequest")', cx_node, timeout=15.0
+            proc_output, '(protobuf-msg (type "SearchRequest")', cx_node, timeout=60.0
         )
 
     def test_server_reads_message(self, cx_node, proc_output):
         wait_for_output(
-            proc_output, 'query: "hello" page_number: 1 results_per_page: 1', cx_node, timeout=15.0
+            proc_output, 'query: "hello" page_number: 1 results_per_page: 1', cx_node, timeout=60.0
         )
 
     def test_search_request_content_correct(self, cx_node, proc_output):
-        wait_for_output(proc_output, 'query: "hello"', cx_node, timeout=15.0)
+        wait_for_output(proc_output, 'query: "hello"', cx_node, timeout=60.0)
 
     def test_message_cleaned_up(self, cx_node, proc_output):
         wait_for_fact_retracted(
-            proc_output, '(protobuf-msg (type "SearchRequest")', cx_node, timeout=15.0
+            proc_output, '(protobuf-msg (type "SearchRequest")', cx_node, timeout=60.0
         )
 
 

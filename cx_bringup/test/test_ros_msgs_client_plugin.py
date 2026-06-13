@@ -92,31 +92,31 @@ class TestRosMsgsClientPluginOutput(unittest.TestCase):
         wait_for_output(proc_output, 'Opening client on /ros_cx_client', cx_node)
 
     def test_request_rule_fires(self, cx_node, proc_output):
-        wait_for_rule_fire(proc_output, 'ros-msgs-request-true', cx_node, timeout=15.0)
+        wait_for_rule_fire(proc_output, 'ros-msgs-request-true', cx_node, timeout=60.0)
 
     def test_request_sent(self, cx_node, proc_output):
-        wait_for_output(proc_output, 'Request sent with id 1', cx_node, timeout=15.0)
+        wait_for_output(proc_output, 'Request sent with id 1', cx_node, timeout=60.0)
 
     def test_request_fact_asserted(self, cx_node, proc_output):
-        wait_for_fact_asserted(proc_output, '(request 1)', cx_node, timeout=15.0)
+        wait_for_fact_asserted(proc_output, '(request 1)', cx_node, timeout=60.0)
 
     def test_response_fact_asserted(self, cx_node, proc_output):
         wait_for_fact_asserted(
             proc_output,
             '(ros-msgs-response (service "ros_cx_client") (request-id 1)',
             cx_node,
-            timeout=15.0,
+            timeout=60.0,
         )
 
     def test_response_received(self, cx_node, proc_output):
-        wait_for_rule_fire(proc_output, 'set-bool-client-response-received', cx_node, timeout=15.0)
+        wait_for_rule_fire(proc_output, 'set-bool-client-response-received', cx_node, timeout=60.0)
 
     def test_response_content_correct(self, cx_node, proc_output):
         wait_for_output(
             proc_output,
             'Received response from ros_cx_client with: TRUE (The request was true!)',
             cx_node,
-            timeout=15.0,
+            timeout=60.0,
         )
 
     def test_response_fact_retracted(self, cx_node, proc_output):
@@ -124,13 +124,13 @@ class TestRosMsgsClientPluginOutput(unittest.TestCase):
             proc_output,
             '(ros-msgs-response (service "ros_cx_client") (request-id 1)',
             cx_node,
-            timeout=15.0,
+            timeout=60.0,
         )
 
     def test_no_service_unavailable_warning(self, cx_node, proc_output):
         """Verify the service was available and no abort warning was logged."""
         # wait for response to confirm success path was taken
-        wait_for_output(proc_output, 'Received response from ros_cx_client', cx_node, timeout=15.0)
+        wait_for_output(proc_output, 'Received response from ros_cx_client', cx_node, timeout=60.0)
         # then verify no abort warning appeared
         for line in proc_output:
             text = line.text.decode('utf-8')

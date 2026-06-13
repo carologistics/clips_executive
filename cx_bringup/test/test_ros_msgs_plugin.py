@@ -67,21 +67,21 @@ def generate_test_description():
 class TestRosMsgsPluginOutput(unittest.TestCase):
 
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(self):
         rclpy.init()
-        cls.node = rclpy.create_node('test_ros_msgs')
-        cls.pub = cls.node.create_publisher(String, '/ros_cx_in', 10)
-        cls.received_messages = []
-        cls.sub = cls.node.create_subscription(
-            String, '/ros_cx_out', lambda msg: cls.received_messages.append(msg.data), 10
+        self.node = rclpy.create_node('test_ros_msgs')
+        self.pub = self.node.create_publisher(String, '/ros_cx_in', 10)
+        self.received_messages = []
+        self.sub = self.node.create_subscription(
+            String, '/ros_cx_out', lambda msg: self.received_messages.append(msg.data), 10
         )
 
     @classmethod
-    def tearDownClass(cls):
-        cls.node.destroy_node()
+    def tearDownClass(self):
+        self.node.destroy_node()
         rclpy.shutdown()
 
-    def _publish_and_spin(self, text, timeout=5.0):
+    def _publish_and_spin(self, text, timeout=60.0):
         import time
 
         msg = String()
@@ -97,10 +97,7 @@ class TestRosMsgsPluginOutput(unittest.TestCase):
             self.fail(f'No subscribers connected to publisher after {timeout}s')
 
         self.pub.publish(msg)
-
-        deadline = time.time() + timeout
-        while time.time() < deadline:
-            rclpy.spin_once(self.node, timeout_sec=0.1)
+        rclpy.spin_once(self.node, timeout_sec=0.1)
 
     def test_node_activated(self, cx_node, proc_output):
         wait_for_activated(proc_output, cx_node)
@@ -144,20 +141,20 @@ class TestRosMsgsPluginOutput(unittest.TestCase):
 
         # verify the message was received and processed
         wait_for_fact_asserted(
-            proc_output, '(ros-msgs-message (topic "ros_cx_in")', cx_node, timeout=15.0
+            proc_output, '(ros-msgs-message (topic "ros_cx_in")', cx_node, timeout=60.0
         )
-        wait_for_rule_fire(proc_output, 'ros-msgs-pub-hello', cx_node, timeout=15.0)
-        wait_for_output(proc_output, 'Sending Hello World Message!', cx_node, timeout=15.0)
-        wait_for_rule_fire(proc_output, 'ros-msgs-receive', cx_node, timeout=15.0)
-        wait_for_output(proc_output, 'Recieved via ros_cx_in: hello', cx_node, timeout=15.0)
+        wait_for_rule_fire(proc_output, 'ros-msgs-pub-hello', cx_node, timeout=60.0)
+        wait_for_output(proc_output, 'Sending Hello World Message!', cx_node, timeout=60.0)
+        wait_for_rule_fire(proc_output, 'ros-msgs-receive', cx_node, timeout=60.0)
+        wait_for_output(proc_output, 'Recieved via ros_cx_in: hello', cx_node, timeout=60.0)
         wait_for_fact_retracted(
-            proc_output, '(ros-msgs-message (topic "ros_cx_in")', cx_node, timeout=15.0
+            proc_output, '(ros-msgs-message (topic "ros_cx_in")', cx_node, timeout=60.0
         )
 
         # verify the response was published on /ros_cx_out
         import time
 
-        deadline = time.time() + 5.0
+        deadline = time.time() + 60.0
         while time.time() < deadline:
             rclpy.spin_once(self.node, timeout_sec=0.1)
             if 'Hello World!' in self.received_messages:

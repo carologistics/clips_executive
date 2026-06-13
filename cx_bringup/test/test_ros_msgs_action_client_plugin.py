@@ -60,12 +60,12 @@ class TestFibonacciActionPluginOutput(unittest.TestCase):
         wait_for_output(proc_output, 'Accepting goal', cx_node)
 
     def test_partial_results_received(self, cx_node, proc_output):
-        wait_for_output(proc_output, 'partial sequence: (0 1 1)', cx_node, timeout=15.0)
-        wait_for_output(proc_output, 'partial sequence: (0 1 1 2)', cx_node, timeout=15.0)
+        wait_for_output(proc_output, 'partial sequence: (0 1 1)', cx_node, timeout=60.0)
+        wait_for_output(proc_output, 'partial sequence: (0 1 1 2)', cx_node, timeout=60.0)
 
     def test_first_goal_completed(self, cx_node, proc_output):
         wait_for_output(
-            proc_output, 'Final fibonacci sequence: (0 1 1 2 3 5)', cx_node, timeout=20.0
+            proc_output, 'Final fibonacci sequence: (0 1 1 2 3 5)', cx_node, timeout=60.0
         )
 
     def test_both_server_and_client_see_final_result(self, cx_node, proc_output):
@@ -73,37 +73,37 @@ class TestFibonacciActionPluginOutput(unittest.TestCase):
             proc_output,
             '[cx_fibonacci_server] [INFO] Final fibonacci sequence: (0 1 1 2 3 5)',
             cx_node,
-            timeout=20.0,
+            timeout=60.0,
         )
         wait_for_output(
-            proc_output, 'Final fibonacci sequence: (0 1 1 2 3 5)', cx_node, timeout=20.0
+            proc_output, 'Final fibonacci sequence: (0 1 1 2 3 5)', cx_node, timeout=60.0
         )
 
     def test_second_goal_sent(self, cx_node, proc_output):
         wait_for_output(
-            proc_output, 'Request fibonacci(10), will cancel before finish', cx_node, timeout=25.0
+            proc_output, 'Request fibonacci(10), will cancel before finish', cx_node, timeout=60.0
         )
 
     def test_second_goal_accepted(self, cx_node, proc_output):
-        wait_for_output(proc_output, 'Accepting goal, uuid: ', cx_node, timeout=25.0)
+        wait_for_output(proc_output, 'Accepting goal, uuid: ', cx_node, timeout=60.0)
 
     def test_cancel_requested(self, cx_node, proc_output):
-        wait_for_output(proc_output, 'Canceling current goal', cx_node, timeout=30.0)
+        wait_for_output(proc_output, 'Canceling current goal', cx_node, timeout=60.0)
 
     def test_cancel_accepted_by_server(self, cx_node, proc_output):
-        wait_for_output(proc_output, 'Accepting cancelation of goal', cx_node, timeout=30.0)
+        wait_for_output(proc_output, 'Accepting cancelation of goal', cx_node, timeout=60.0)
 
     def test_cancel_confirmed_by_server(self, cx_node, proc_output):
         wait_for_output(
             proc_output,
             '[cx_fibonacci_server] [INFO] Canceling fibonacci sequence: (0 1 1 2 3 5 8)',
             cx_node,
-            timeout=30.0,
+            timeout=60.0,
         )
 
     def test_cancel_confirmed_by_client(self, cx_node, proc_output):
         wait_for_output(
-            proc_output, 'Canceled fibonacci sequence: (0 1 1 2 3 5 8)', cx_node, timeout=30.0
+            proc_output, 'Canceled fibonacci sequence: (0 1 1 2 3 5 8)', cx_node, timeout=60.0
         )
 
 

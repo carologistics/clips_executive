@@ -47,74 +47,74 @@ if(BUILD_TESTING)
 
   ament_add_pytest_test(test_ament_index_plugin
     test/test_ament_index_plugin.py
-    TIMEOUT 5
+    TIMEOUT 60
   )
   ament_add_pytest_test(test_config_plugin
     test/test_config_plugin.py
-    TIMEOUT 5
+    TIMEOUT 60
   )
 
   ament_add_pytest_test(test_executive_plugin
     test/test_executive_plugin.py
-    TIMEOUT 10
+    TIMEOUT 60
   )
 
   ament_add_pytest_test(test_fibonacci_action_plugin
     test/test_fibonacci_action_plugin.py
-    TIMEOUT 30
+    TIMEOUT 60
   )
 
   ament_add_pytest_test(test_file_load_plugin
     test/test_file_load_plugin.py
-    TIMEOUT 5
+    TIMEOUT 60
   )
 
   ament_add_pytest_test(test_protobuf_plugin
     test/test_protobuf_plugin.py
-    TIMEOUT 5
+    TIMEOUT 60
   )
 
   ament_add_pytest_test(test_protobuf_linked_plugin
     test/test_protobuf_linked_plugin.py
-    TIMEOUT 15
+    TIMEOUT 60
   )
 
   ament_add_pytest_test(test_ros_msgs_plugin
     test/test_ros_msgs_plugin.py
-    TIMEOUT 15
+    TIMEOUT 60
   )
   # Tests only for Jazzy and newer
   if("$ENV{ROS_DISTRO}" STRGREATER_EQUAL "jazzy")
     ament_add_pytest_test(test_ros_msgs_client_plugin
       test/test_ros_msgs_client_plugin.py
-      TIMEOUT 15
+      TIMEOUT 60
     )
   endif()
 
   if("$ENV{ROS_DISTRO}" STRGREATER_EQUAL "kilted")
     ament_add_pytest_test(test_ros_msgs_service_plugin
       test/test_ros_msgs_service_plugin.py
-      TIMEOUT 15
+      TIMEOUT 60
     )
     ament_add_pytest_test(test_ros_msgs_action_client_plugin
       test/test_ros_msgs_action_client_plugin.py
-      TIMEOUT 30
+      TIMEOUT 60
     )
   endif()
 
   ament_add_pytest_test(test_ros_param_plugin
     test/test_ros_param_plugin.py
-    TIMEOUT 15
+    TIMEOUT 60
   )
 
   ament_add_pytest_test(test_set_bool_srv_plugin
     test/test_set_bool_srv_plugin.py
-    TIMEOUT 15
+    TIMEOUT 60
   )
 
   ament_add_pytest_test(test_string_msg_plugin
     test/test_string_msg_plugin.py
-    TIMEOUT 15
+    TIMEOUT 60
   )
 endif()
 

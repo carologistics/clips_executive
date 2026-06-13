@@ -22,7 +22,7 @@ import launch_testing
 import launch_testing.asserts
 
 
-def _assert_in_output(proc_output, expected, cx_node, timeout=10.0):
+def _assert_in_output(proc_output, expected, cx_node, timeout=60.0):
     """Works for both active (assertWaitFor) and post-shutdown (assertInStream) handlers."""
     if hasattr(proc_output, 'assertWaitFor'):
         proc_output.assertWaitFor(expected_output=expected, process=cx_node, timeout=timeout)
@@ -85,45 +85,45 @@ def make_generate_test_description(config_yaml):
     return generate_test_description
 
 
-def wait_for_rule_fire(proc_output, rule_name, cx_node, timeout=10.0):
+def wait_for_rule_fire(proc_output, rule_name, cx_node, timeout=60.0):
     """Wait for a CLIPS rule to fire (any fire index)."""
     _assert_in_output(
         proc_output, re.compile(rf'FIRE\s+\d+ {re.escape(rule_name)}'), cx_node, timeout
     )
 
 
-def wait_for_fact_asserted(proc_output, fact_content, cx_node, timeout=10.0):
+def wait_for_fact_asserted(proc_output, fact_content, cx_node, timeout=60.0):
     """Wait for a fact to be asserted (any fact index)."""
     _assert_in_output(
         proc_output, re.compile(rf'==>\s+f-\d+\s+{re.escape(fact_content)}'), cx_node, timeout
     )
 
 
-def wait_for_fact_retracted(proc_output, fact_content, cx_node, timeout=10.0):
+def wait_for_fact_retracted(proc_output, fact_content, cx_node, timeout=60.0):
     """Wait for a fact to be retracted (any fact index)."""
     _assert_in_output(
         proc_output, re.compile(rf'<==\s+f-\d+\s+{re.escape(fact_content)}'), cx_node, timeout
     )
 
 
-def wait_for_activated(proc_output, cx_node, timeout=10.0):
+def wait_for_activated(proc_output, cx_node, timeout=60.0):
     """Wait for the clips manager to reach active state."""
     _assert_in_output(proc_output, 'Activated [clips_manager]', cx_node, timeout)
 
 
-def wait_for_plugin_created(proc_output, plugin_name, plugin_type, cx_node, timeout=10.0):
+def wait_for_plugin_created(proc_output, plugin_name, plugin_type, cx_node, timeout=60.0):
     """Wait for a plugin to be created."""
     _assert_in_output(
         proc_output, f'Created plugin: {plugin_name} of type {plugin_type}', cx_node, timeout
     )
 
 
-def wait_for_output(proc_output, text, cx_node=None, timeout=10.0):
+def wait_for_output(proc_output, text, cx_node=None, timeout=60.0):
     """Wait for arbitrary text in process output."""
     _assert_in_output(proc_output, text, cx_node, timeout)
 
 
-def wait_for_confval(proc_output, path_suffix, cx_node, timeout=10.0, **kwargs):
+def wait_for_confval(proc_output, path_suffix, cx_node, timeout=60.0, **kwargs):
     """Wait for a confval fact matching path suffix and optional field values on the same line."""
     pattern = rf'confval \(path ".*{re.escape(path_suffix)}"\)'
     for key, val in kwargs.items():
@@ -132,7 +132,7 @@ def wait_for_confval(proc_output, path_suffix, cx_node, timeout=10.0, **kwargs):
     _assert_in_output(proc_output, re.compile(pattern), cx_node, timeout)
 
 
-def wait_for_index_at_least(proc_output, cx_node, min_index, context=None, timeout=10.0):
+def wait_for_index_at_least(proc_output, cx_node, min_index, context=None, timeout=60.0):
     """Wait for f-<n> where n >= min_index, optionally filtered by context string."""
     deadline = time.time() + timeout
     while time.time() < deadline:

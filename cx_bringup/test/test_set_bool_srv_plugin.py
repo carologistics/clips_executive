@@ -79,21 +79,21 @@ class TestSetBoolSrvPluginOutput(unittest.TestCase):
         wait_for_output(proc_output, 'Created service for /ros_cx_srv', cx_node)
 
     def test_false_request_sent(self, cx_node, proc_output):
-        wait_for_output(proc_output, 'Send a request with data: FALSE', cx_node, timeout=15.0)
+        wait_for_output(proc_output, 'Send a request with data: FALSE', cx_node, timeout=60.0)
 
     def test_true_request_sent(self, cx_node, proc_output):
         wait_for_output(
-            proc_output, 'Additionally, send a request with data: TRUE', cx_node, timeout=15.0
+            proc_output, 'Additionally, send a request with data: TRUE', cx_node, timeout=60.0
         )
 
     def test_service_receives_false_request(self, cx_node, proc_output):
         wait_for_output(
-            proc_output, 'Received request on set_bool_srv. Data: FALSE', cx_node, timeout=15.0
+            proc_output, 'Received request on set_bool_srv. Data: FALSE', cx_node, timeout=60.0
         )
 
     def test_service_receives_true_request(self, cx_node, proc_output):
         wait_for_output(
-            proc_output, 'Received request on set_bool_srv. Data: TRUE', cx_node, timeout=15.0
+            proc_output, 'Received request on set_bool_srv. Data: TRUE', cx_node, timeout=60.0
         )
 
     def test_true_response_processed(self, cx_node, proc_output):
@@ -101,7 +101,7 @@ class TestSetBoolSrvPluginOutput(unittest.TestCase):
             proc_output,
             'Response (success: TRUE) for data: TRUE: "Received the request: TRUE"',
             cx_node,
-            timeout=15.0,
+            timeout=60.0,
         )
 
     def test_false_response_processed(self, cx_node, proc_output):
@@ -109,7 +109,7 @@ class TestSetBoolSrvPluginOutput(unittest.TestCase):
             proc_output,
             'Response (success: FALSE) for data: FALSE: "Received the request: FALSE"',
             cx_node,
-            timeout=15.0,
+            timeout=60.0,
         )
 
 

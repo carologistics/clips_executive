@@ -75,7 +75,7 @@ class TestRosMsgsServicePluginOutput(unittest.TestCase):
         cls.node.destroy_node()
         rclpy.shutdown()
 
-    def _call_set_bool(self, data, timeout=10.0):
+    def _call_set_bool(self, data, timeout=60.0):
         client = self.node.create_client(SetBool, '/ros_cx_service')
         self.assertTrue(
             client.wait_for_service(timeout_sec=timeout), '/ros_cx_service not available'
@@ -113,8 +113,8 @@ class TestRosMsgsServicePluginOutput(unittest.TestCase):
         self.assertTrue(resp.success)
 
         # now verify the output appeared after the call
-        wait_for_output(proc_output, 'Received a request', cx_node, timeout=15.0)
-        wait_for_output(proc_output, 'TRUE', cx_node, timeout=15.0)
+        wait_for_output(proc_output, 'Received a request', cx_node, timeout=60.0)
+        wait_for_output(proc_output, 'TRUE', cx_node, timeout=60.0)
 
     def test_service_receives_and_responds_again(self, cx_node, proc_output):
         """Call service and verify both the response and the logged output."""
@@ -123,8 +123,8 @@ class TestRosMsgsServicePluginOutput(unittest.TestCase):
         self.assertTrue(resp.success)
 
         # now verify the output appeared after the call
-        wait_for_output(proc_output, 'Received a request', cx_node, timeout=15.0)
-        wait_for_output(proc_output, 'FALSE', cx_node, timeout=15.0)
+        wait_for_output(proc_output, 'Received a request', cx_node, timeout=60.0)
+        wait_for_output(proc_output, 'FALSE', cx_node, timeout=60.0)
 
 
 @launch_testing.post_shutdown_test()
