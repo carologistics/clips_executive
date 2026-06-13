@@ -61,9 +61,14 @@ bool AmentIndexPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
       using namespace clips;  // NOLINT
       clips::UDFNthArgument(udfc, 1, LEXEME_BITS, &package_name);
       try {
+#if defined(USE_AMENT_INDEX_CPP_PATH_API)
         std::filesystem::path prefix_path;
         ament_index_cpp::get_package_prefix(package_name.lexemeValue->contents, prefix_path);
         std::string prefix = prefix_path.string();
+#else
+        std::string prefix =
+          ament_index_cpp::get_package_prefix(package_name.lexemeValue->contents);
+#endif
         out->lexemeValue = clips::CreateString(env, prefix.c_str());
       } catch (const std::exception & e) {
         RCLCPP_ERROR(*instance->logger_, "ament-index-get-package-prefix: %s", e.what());
