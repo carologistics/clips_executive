@@ -106,25 +106,25 @@ class TestExecutivePluginServices(unittest.TestCase):
 
     def test_pause_service(self):
         """Verify the pause service stops the executive."""
-        result = self._call_trigger('/executive/pause')
+        result = self._call_trigger('/clips_manager/executive/pause')
         self.assertTrue(result.success, f'Pause failed: {result.message}')
 
     def test_pause_twice_fails(self):
         """Verify pausing an already paused executive returns failure."""
-        self._call_trigger('/executive/pause')
-        result = self._call_trigger('/executive/pause')
+        self._call_trigger('/clips_manager/executive/pause')
+        result = self._call_trigger('/clips_manager/executive/pause')
         self.assertFalse(result.success, 'Expected failure when pausing already paused executive')
 
     def test_tick_once_while_paused(self):
         """Verify tick_once fires at least one rule while paused."""
-        self._call_trigger('/executive/pause')
-        result = self._call_trigger('/executive/tick_once')
+        self._call_trigger('/clips_manager/executive/pause')
+        result = self._call_trigger('/clips_manager/executive/tick_once')
         self.assertTrue(result.success, f'tick_once failed: {result.message}')
 
     def test_build_service(self):
         """Verify a deftemplate can be built into the environment."""
         result = self._call_clips_command(
-            '/executive/build',
+            '/clips_manager/executive/build',
             'cx_executive',
             '(deftemplate example (slot message (type STRING)))',
         )
@@ -134,43 +134,45 @@ class TestExecutivePluginServices(unittest.TestCase):
         """Verify a fact can be asserted via eval."""
         # ensure the template exists first
         self._call_clips_command(
-            '/executive/build',
+            '/clips_manager/executive/build',
             'cx_executive',
             '(deftemplate example (slot message (type STRING)))',
         )
         result = self._call_clips_command(
-            '/executive/eval', 'cx_executive', '(assert (example (message "hello")))'
+            '/clips_manager/executive/eval', 'cx_executive', '(assert (example (message "hello")))'
         )
         self.assertTrue(result.success, f'Eval failed: {result.message}')
 
     def test_build_invalid_construct_fails(self):
         """Verify that a malformed construct returns a failure."""
         result = self._call_clips_command(
-            '/executive/build', 'cx_executive', '(deftemplate (slot message))'
+            '/clips_manager/executive/build', 'cx_executive', '(deftemplate (slot message))'
         )  # missing template name
         self.assertFalse(result.success, 'Expected failure for malformed construct')
 
     def test_eval_invalid_expression_fails(self):
         """Verify that a malformed expression returns a failure."""
         result = self._call_clips_command(
-            '/executive/eval', 'cx_executive', '(assert ('
+            '/clips_manager/executive/eval', 'cx_executive', '(assert ('
         )  # malformed
         self.assertFalse(result.success, 'Expected failure for malformed expression')
 
     def test_unknown_env_fails(self):
         """Verify that specifying a nonexistent environment returns a failure."""
-        result = self._call_clips_command('/executive/eval', 'nonexistent_env', '(assert (foo))')
+        result = self._call_clips_command(
+            '/clips_manager/executive/eval', 'nonexistent_env', '(assert (foo))'
+        )
         self.assertFalse(result.success, 'Expected failure for unknown environment')
 
     def test_resume_service(self):
         """Verify the resume service restarts the executive after a pause."""
-        self._call_trigger('/executive/pause')
-        result = self._call_trigger('/executive/resume')
+        self._call_trigger('/clips_manager/executive/pause')
+        result = self._call_trigger('/clips_manager/executive/resume')
         self.assertTrue(result.success, f'Resume failed: {result.message}')
 
     def test_resume_without_pause_fails(self):
         """Verify resuming a non-paused executive returns failure."""
-        result = self._call_trigger('/executive/resume')
+        result = self._call_trigger('/clips_manager/executive/resume')
         self.assertFalse(result.success, 'Expected failure when resuming non-paused executive')
 
 
