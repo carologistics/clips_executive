@@ -24,6 +24,6 @@ RUN find . -name "*.repos" -exec vcs import --recursive --input {} src \;
 
 RUN rosdep update && \
     . /opt/ros/${ROS_DISTRO}/setup.sh && \
-    rosdep install --from-paths src --ignore-src --skip-keys "python3-unified-planning-pip python3-sb3-contrib-pip" -r -y
+    rosdep install --from-paths src/workdir --ignore-src --skip-keys "python3-unified-planning-pip python3-sb3-contrib-pip" -r -y
 
 RUN rm -rfd src
