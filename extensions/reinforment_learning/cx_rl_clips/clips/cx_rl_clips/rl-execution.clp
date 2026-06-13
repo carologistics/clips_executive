@@ -57,7 +57,7 @@
     (modify ?a (assigned-to ?longest-waiting-robot))
   )
   (retract ?longest-waiting)
-  (assert (rl-robot (node ?node) (name ?robot) (waiting TRUE)))
+  (assert (rl-robot (node ?node) (name ?longest-waiting-robot) (waiting TRUE)))
 )
 
 (defrule cx-rl-action-select-training
