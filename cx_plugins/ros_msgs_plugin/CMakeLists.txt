@@ -34,12 +34,6 @@ else()
   message(FATAL_ERROR "ROS_DISTRO environment variable not set")
 endif()
 
-if(DEFINED ENV{ROS_DISTRO})
-  set(ROS_DISTRO $ENV{ROS_DISTRO})
-else()
-  message(FATAL_ERROR "ROS_DISTRO environment variable not set")
-endif()
-
 # HAVE_GENERIC_CLIENT: jazzy and above
 if(ROS_DISTRO STRGREATER_EQUAL "jazzy")
   set(HAVE_GENERIC_CLIENT TRUE)
@@ -87,22 +81,26 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD ${CMAKE_CXX_STANDARD})
 
+if(ROS_DISTRO STREQUAL "humble")
+  target_compile_definitions(${PROJECT_NAME} PRIVATE HUMBLE)
+endif()
+
 if(HAVE_GENERIC_ACTION_CLIENT)
   target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_GENERIC_ACTION_CLIENT)
 else()
-  message(WARNING "Skipping support for action clients, missing support in rclcpp_action")
+  message(WARNING "Skipping support for action clients, requires kilted or later")
 endif()
 
 if(HAVE_GENERIC_SERVICE)
   target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_GENERIC_SERVICE)
 else()
-  message(WARNING "Skipping support for service providers, missing support in rclcpp")
+  message(WARNING "Skipping support for service providers, requires kilted or later")
 endif()
 
 if(HAVE_GENERIC_CLIENT)
   target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_GENERIC_CLIENT)
 else()
-  message(WARNING "Skipping support for service clients, missing support in rclcpp")
+  message(WARNING "Skipping support for service clients, requires jazzy or later")
 endif()
 
 install(
