@@ -345,7 +345,7 @@ File :source-master:`cx_bringup/clips/plugin_examples/ros-msgs.clp`.
     =>
     (printout yellow "Sending Hello World Message!" crlf)
     (bind ?msg (ros-msgs-create-message "std_msgs/msg/String"))
-    (ros-msgs-set-field ?msg "data" "Hello world!")
+    (ros-msgs-set-field ?msg "data" "Hello World!")
     (ros-msgs-publish ?msg ?topic)
     (ros-msgs-destroy-message ?msg)
   )
@@ -416,20 +416,21 @@ File :source-master:`cx_bringup/params/plugin_examples/ros_msgs_client.yaml`.
 
 .. code-block:: yaml
 
-  clips_manager:
+  /**:
     ros__parameters:
       environments: ["cx_ros_msgs_client"]
-
       cx_ros_msgs_client:
         plugins: ["executive", "ros_msgs", "files"]
+        log_clips_to_file: true
         watch: ["facts", "rules"]
 
       executive:
         plugin: "cx::ExecutivePlugin"
-
+        publish_on_refresh: false
+        assert_time: true
+        refresh_rate: 10
       ros_msgs:
         plugin: "cx::RosMsgsPlugin"
-
       files:
         plugin: "cx::FileLoadPlugin"
         pkg_share_dirs: ["cx_bringup"]
@@ -440,7 +441,7 @@ File :source-master:`cx_bringup/params/plugin_examples/ros_msgs_client.yaml`.
 Code
 ~~~~
 
-File :source-master:`cx_bringup/clips/plugin_examples/ros-msgs.clp`.
+File :source-master:`cx_bringup/clips/plugin_examples/ros-msgs-client.clp`.
 
 .. code-block:: lisp
 
@@ -503,6 +504,7 @@ File :source-master:`cx_bringup/clips/plugin_examples/ros-msgs.clp`.
     (retract ?msg-f)
   )
 
+
 Usage Example 3: Service Provider
 *********************************
 
@@ -532,7 +534,6 @@ File :source-master:`cx_bringup/params/plugin_examples/ros_msgs_service.yaml`.
   /**:
     ros__parameters:
       environments: ["cx_ros_msgs_service"]
-
       cx_ros_msgs_service:
         plugins: ["executive", "ros_msgs", "files"]
         log_clips_to_file: true
@@ -540,11 +541,11 @@ File :source-master:`cx_bringup/params/plugin_examples/ros_msgs_service.yaml`.
 
       executive:
         plugin: "cx::ExecutivePlugin"
+        publish_on_refresh: false
         assert_time: true
-
+        refresh_rate: 10
       ros_msgs:
         plugin: "cx::RosMsgsPlugin"
-
       files:
         plugin: "cx::FileLoadPlugin"
         pkg_share_dirs: ["cx_bringup"]
@@ -559,31 +560,33 @@ File :source-master:`cx_bringup/clips/plugin_examples/ros-msgs-service.clp`.
 
 .. code-block:: lisp
 
-  (defrule ros-msgs-service-init
-  " Create a service /ros_cx_service"
-    (not (ros-msgs-service (service "ros_cx_service")))
-    (not (executive-finalize))
+  (defrule set-bool-service-init
+  " Create a simple service using the generated bindings. "
+    (not (std-srvs-set-bool-service (name "set_bool_srv")))
   =>
-    (ros-msgs-create-service "ros_cx_service" "std_srvs/srv/SetBool")
-    (printout green "Opening service on /ros_cx_service" crlf)
-    (printout green "Call it via 'ros2 service call /ros_cx_service std_srvs/srv/SetBool \"{data: true}\""' crlf)
+    (std-srvs-set-bool-create-service "set_bool_srv")
+    (printout info "Created service for /ros_cx_srv" crlf)
   )
 
-  (deffunction ros_cx_service-service-callback (?name ?request ?response)
-    (printout green "Received a request" crlf)
-    (bind ?data (ros-msgs-get-field ?request "data"))
-    (printout yellow ?data crlf)
-    (ros-msgs-set-field ?response "success" TRUE)
-    (ros-msgs-set-field ?response "message" (str-cat "Received " ?data))
+  ; this function needs to be defined in order to respond to messages
+  (deffunction std-srvs-set-bool-service-callback (?service-name ?request ?response)
+    (bind ?req-data (std-srvs-set-bool-request-get-field ?request "data"))
+    (printout green "Received request on " ?service-name ". Data: " ?req-data crlf)
+    (if ?req-data then
+      (std-srvs-set-bool-response-set-field ?response "success" TRUE)
+      (std-srvs-set-bool-response-set-field ?response "message" (str-cat "Received the request: " ?req-data))
+      (assert (send-request))
+     else
+      (std-srvs-set-bool-response-set-field ?response "success" FALSE)
+      (std-srvs-set-bool-response-set-field ?response "message" (str-cat "Received the request: " ?req-data))
+    )
   )
 
-  (defrule ros-msgs-service-finalize
-  " Delete the service on executive finalize. "
+  (defrule set-bool-srv-cleanup
     (executive-finalize)
-    (ros-msgs-service (service ?service))
-  =>
-    (printout info "Destroying service" crlf)
-    (ros-msgs-destroy-service ?service)
+    (std-srvs-set-bool-service (name ?service))
+    =>
+    (std-srvs-set-bool-destroy-service ?service)
   )
 
 Usage Example 4: Action Client

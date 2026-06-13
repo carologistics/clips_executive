@@ -7,7 +7,7 @@
   <title>YAML Configuration Plugin &mdash; clips_executive 0.1.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=86f27845" />
-      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=8f9e6779" />
       <link rel="stylesheet" type="text/css" href="../_static/custom_figure.css" />
 
   
@@ -17,13 +17,13 @@
         <script src="../_static/documentation_options.js?v=360bc84d"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
-        <script src="../_static/copybutton.js?v=f281be69"></script>
+        <script src="../_static/clipboard.min.js?v=66b4909c"></script>
+        <script src="../_static/copybutton.js?v=71494f10"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="File Load Plugin" href="file_load_plugin.html" />
-    <link rel="prev" title="Continuous Execution Plugin" href="executive_plugin.html" /> 
+    <link rel="prev" title="Executive Plugin" href="executive_plugin.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -54,7 +54,7 @@
 <li class="toctree-l2"><a class="reference internal" href="index.html#plugin-interface">Plugin Interface</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html#available-plugins">Available Plugins</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="cx_ament_index.html">Ament Index Plugin</a></li>
-<li class="toctree-l3"><a class="reference internal" href="executive_plugin.html">Continuous Execution Plugin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="executive_plugin.html">Executive Plugin</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">YAML Configuration Plugin</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#configuration">Configuration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#features">Features</a></li>
@@ -71,6 +71,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../plugin_generator/index.html">ROS Interface Plugin Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli/index.html">Command Line Interface (CLI)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../extensions/index.html">Extensions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../standards.html">Standard Documents</a></li>
@@ -134,6 +135,11 @@
 <h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; Load all config values from a file (absolute path) given a prefix and store them into (confval) facts.</span>
 <span class="c1">; The prefix can be used to restrict the loaded values to a prefix</span>
+<span class="c1">; Use / for nesting, e.g., foo/bar for only retrieving values under bar in this example:</span>
+<span class="c1">;  foo:</span>
+<span class="c1">;    bar:</span>
+<span class="c1">;      ...</span>
+<span class="c1">; For / inside of keys, wrap the whole key by single quotes &#39;, e.g., &#39;/foo&#39;/bar if the key is &quot;/foo&quot; instead of &quot;foo&quot;.</span>
 <span class="p">(</span><span class="nv">config-load</span><span class="w"> </span><span class="nv">?file</span><span class="w"> </span><span class="nv">?prefix</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -177,11 +183,16 @@
 <span class="w">  </span><span class="nv">=&gt;</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?share-dir</span><span class="w"> </span><span class="p">(</span><span class="nv">ament-index-get-package-share-directory</span><span class="w"> </span><span class="s">&quot;cx_bringup&quot;</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?file</span><span class="w"> </span><span class="p">(</span><span class="nv">str-cat</span><span class="w"> </span><span class="nv">?share-dir</span><span class="w"> </span><span class="s">&quot;/params/plugin_examples/config.yaml&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;Loading yaml file: &quot;</span><span class="w"> </span><span class="nv">?file</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">config-load</span><span class="w"> </span><span class="nv">?file</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">delayed-do-for-all-facts</span><span class="w"> </span><span class="p">((</span><span class="nv">?cv</span><span class="w"> </span><span class="nv">confval</span><span class="p">))</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">ppfact</span><span class="w"> </span><span class="nv">?cv</span><span class="w"> </span><span class="nv">blue</span><span class="p">)</span>
-<span class="w">  </span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;Loading from file &quot;</span><span class="w"> </span><span class="nv">?file</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">  </span><span class="c1">; test loading of sequence</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot; 1. Prefix leading to environments (sequence): &quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">config-load</span><span class="w"> </span><span class="nv">?file</span><span class="w"> </span><span class="s">&quot;&#39;/**&#39;/ros__parameters/environments&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="c1">; test loading of map</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot; 2. Prefix leading to environment config (map):&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">config-load</span><span class="w"> </span><span class="nv">?file</span><span class="w"> </span><span class="s">&quot;&#39;/**&#39;/ros__parameters/cx_config/&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="c1">; test loading of value</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot; 3. Prefix leading to config plugin string (scalar):&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">config-load</span><span class="w"> </span><span class="nv">?file</span><span class="w"> </span><span class="s">&quot;&#39;/**&#39;/ros__parameters/config/plugin&quot;</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -193,7 +204,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="executive_plugin.html" class="btn btn-neutral float-left" title="Continuous Execution Plugin" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="executive_plugin.html" class="btn btn-neutral float-left" title="Executive Plugin" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="file_load_plugin.html" class="btn btn-neutral float-right" title="File Load Plugin" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

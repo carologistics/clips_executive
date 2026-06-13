@@ -40,6 +40,8 @@ Includes
 
 - ``utility``
 
+- ``vector``
+
 - ``yaml-cpp/yaml.h``
 
 

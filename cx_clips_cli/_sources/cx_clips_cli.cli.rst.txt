@@ -1,0 +1,7 @@
+cx\_clips\_cli.cli module
+=========================
+
+.. automodule:: cx_clips_cli.cli
+   :members:
+   :undoc-members:
+   :show-inheritance:

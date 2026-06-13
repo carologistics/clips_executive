@@ -7,11 +7,14 @@
     <member refid="classcx_1_1CLIPSEnvManager_1abe6da72ea161aaced61d55090a636c95" kind="variable"><name>list_envs_service_</name></member>
     <member refid="classcx_1_1CLIPSEnvManager_1a70307c2cf54d1a5d37a60681dc9bb7ee" kind="variable"><name>create_env_service_</name></member>
     <member refid="classcx_1_1CLIPSEnvManager_1a58b19af7491458b96bacad28759cbadc" kind="variable"><name>destroy_env_service_</name></member>
+    <member refid="classcx_1_1CLIPSEnvManager_1ab0904470f0d82538a3c023ec7173f476" kind="variable"><name>set_topic_logging_service_</name></member>
+    <member refid="classcx_1_1CLIPSEnvManager_1a3b28e64562dca6107b3602c31f4a9aa0" kind="variable"><name>logging_pub_</name></member>
     <member refid="classcx_1_1CLIPSEnvManager_1abd10ad0d97eb9f86af36472dc99752cc" kind="variable"><name>plugin_manager_</name></member>
     <member refid="classcx_1_1CLIPSEnvManager_1aff0fecc3081fe81b076dfc127a44c35a" kind="variable"><name>envs_</name></member>
     <member refid="classcx_1_1CLIPSEnvManager_1a25b79bda2aa97629f30389879e24898d" kind="variable"><name>map_mtx_</name></member>
+    <member refid="classcx_1_1CLIPSEnvManager_1aa0c8b12105b2412b871a09f3fbf78e8b" kind="variable"><name>contexts_</name></member>
     <member refid="classcx_1_1CLIPSEnvManager_1abc25b1134c52125229479854e3b2180c" kind="variable"><name>bond_</name></member>
-    <member refid="classcx_1_1CLIPSEnvManager_1a549c26b7a1ca2ad6b3b5123fbce7eeb4" kind="variable"><name>bond_heartbeat_period</name></member>
+    <member refid="classcx_1_1CLIPSEnvManager_1ad9b7c2e33b32ae5ed7a8741b8f293e4e" kind="variable"><name>bond_heartbeat_period_</name></member>
     <member refid="classcx_1_1CLIPSEnvManager_1ab9df32715bd23f0163731e81c8fac226" kind="variable"><name>autostart_timer_</name></member>
     <member refid="classcx_1_1CLIPSEnvManager_1a452ff37a418de100df227fbba0972488" kind="variable"><name>rcl_preshutdown_cb_handle_</name></member>
     <member refid="classcx_1_1CLIPSEnvManager_1ae9fda0b00546734dae34696c3a3d6b50" kind="function"><name>CLIPSEnvManager</name></member>
@@ -24,13 +27,14 @@
     <member refid="classcx_1_1CLIPSEnvManager_1ae9fc66dbd61c0813ee48cae2c4b8da6e" kind="function"><name>list_envs_callback</name></member>
     <member refid="classcx_1_1CLIPSEnvManager_1a370e4a10ea2c9c73fe906dc7743c0683" kind="function"><name>create_env_callback</name></member>
     <member refid="classcx_1_1CLIPSEnvManager_1a64b1bf75f60c37ea7e4d0baf130a67cf" kind="function"><name>destroy_env_callback</name></member>
+    <member refid="classcx_1_1CLIPSEnvManager_1a78eb7526d1d048443ed6309430bfdab5" kind="function"><name>set_topic_logging_callback</name></member>
+    <member refid="classcx_1_1CLIPSEnvManager_1a899ea203c8e8c95b88d491daead373d5" kind="function"><name>run_cleanups</name></member>
+    <member refid="classcx_1_1CLIPSEnvManager_1a6023bbebaa7ea3b232e141bf4cdeaeda" kind="function"><name>destroy_bond</name></member>
     <member refid="classcx_1_1CLIPSEnvManager_1ad103f8aa8d15aaf56075c7ecdb21602f" kind="function"><name>new_env</name></member>
     <member refid="classcx_1_1CLIPSEnvManager_1aa0f323f3d81a4672dc4790b8998f6c84" kind="function"><name>delete_env</name></member>
     <member refid="classcx_1_1CLIPSEnvManager_1a57da58050635cd37c7768c274e312fc4" kind="function"><name>create_bond</name></member>
-    <member refid="classcx_1_1CLIPSEnvManager_1a6023bbebaa7ea3b232e141bf4cdeaeda" kind="function"><name>destroy_bond</name></member>
     <member refid="classcx_1_1CLIPSEnvManager_1a7c9c335a53491baa0b2b8938512af606" kind="function"><name>autostart</name></member>
     <member refid="classcx_1_1CLIPSEnvManager_1a8d44f9bbad1e3d7d66693f10788b8003" kind="function"><name>register_rcl_preshutdown_callback</name></member>
-    <member refid="classcx_1_1CLIPSEnvManager_1a899ea203c8e8c95b88d491daead373d5" kind="function"><name>run_cleanups</name></member>
     <member refid="classcx_1_1CLIPSEnvManager_1a511390c99047a2ddceabc87abd061c75" kind="function"><name>on_rcl_preshutdown</name></member>
   </compound>
   <compound refid="classcx_1_1ClipsPluginManager" kind="class"><name>cx::ClipsPluginManager</name>

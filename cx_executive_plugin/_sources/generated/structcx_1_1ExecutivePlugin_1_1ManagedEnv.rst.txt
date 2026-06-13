@@ -1,0 +1,23 @@
+.. _exhale_struct_structcx_1_1ExecutivePlugin_1_1ManagedEnv:
+
+Struct ExecutivePlugin::ManagedEnv
+==================================
+
+- Defined in :ref:`file_include_cx_executive_plugin_executive_plugin.hpp`
+
+
+Nested Relationships
+--------------------
+
+This struct is a nested type of :ref:`exhale_class_classcx_1_1ExecutivePlugin`.
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: cx::ExecutivePlugin::ManagedEnv
+   :project: cx_executive_plugin Doxygen Project
+   :members:
+   :protected-members:
+   :undoc-members:

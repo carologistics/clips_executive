@@ -1,0 +1,7 @@
+cx\_clips\_cli.float\_item module
+=================================
+
+.. automodule:: cx_clips_cli.float_item
+   :members:
+   :undoc-members:
+   :show-inheritance:

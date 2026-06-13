@@ -1,0 +1,7 @@
+cx\_clips\_cli.keymap\_utils module
+===================================
+
+.. automodule:: cx_clips_cli.keymap_utils
+   :members:
+   :undoc-members:
+   :show-inheritance:

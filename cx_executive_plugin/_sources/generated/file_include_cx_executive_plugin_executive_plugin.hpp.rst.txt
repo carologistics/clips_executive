@@ -30,11 +30,15 @@ Includes
 --------
 
 
+- ``cx_msgs/srv/clips_command.hpp``
+
 - ``cx_plugin/clips_plugin.hpp``
 
 - ``memory``
 
-- ``std_msgs/msg/empty.hpp``
+- ``std_msgs/msg/int64.hpp``
+
+- ``std_srvs/srv/trigger.hpp``
 
 - ``string``
 
@@ -55,6 +59,8 @@ Namespaces
 Classes
 -------
 
+
+- :ref:`exhale_struct_structcx_1_1ExecutivePlugin_1_1ManagedEnv`
 
 - :ref:`exhale_class_classcx_1_1ExecutivePlugin`
 

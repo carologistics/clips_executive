@@ -7,7 +7,7 @@
   <title>File Load Plugin &mdash; clips_executive 0.1.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=86f27845" />
-      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=8f9e6779" />
       <link rel="stylesheet" type="text/css" href="../_static/custom_figure.css" />
 
   
@@ -17,8 +17,8 @@
         <script src="../_static/documentation_options.js?v=360bc84d"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
-        <script src="../_static/copybutton.js?v=f281be69"></script>
+        <script src="../_static/clipboard.min.js?v=66b4909c"></script>
+        <script src="../_static/copybutton.js?v=71494f10"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -54,7 +54,7 @@
 <li class="toctree-l2"><a class="reference internal" href="index.html#plugin-interface">Plugin Interface</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html#available-plugins">Available Plugins</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="cx_ament_index.html">Ament Index Plugin</a></li>
-<li class="toctree-l3"><a class="reference internal" href="executive_plugin.html">Continuous Execution Plugin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="executive_plugin.html">Executive Plugin</a></li>
 <li class="toctree-l3"><a class="reference internal" href="config_plugin.html">YAML Configuration Plugin</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">File Load Plugin</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#configuration">Configuration</a></li>
@@ -71,6 +71,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../plugin_generator/index.html">ROS Interface Plugin Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli/index.html">Command Line Interface (CLI)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../extensions/index.html">Extensions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../standards.html">Standard Documents</a></li>
@@ -110,6 +111,13 @@
 <p>cx::FileLoadPlugin</p>
 </div>
 <p>This plugin provides the ability to load files into CLIPS using <code class="docutils literal notranslate"><span class="pre">batch*</span></code> and <code class="docutils literal notranslate"><span class="pre">load*</span></code> through configuration values.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The plugin always sets the current module to <code class="docutils literal notranslate"><span class="pre">MAIN</span></code> before loading a file.
+This ensures predictable behavior when loaded files define their own modules.
+Since defining a <code class="docutils literal notranslate"><span class="pre">defmodule</span></code> in CLIPS automatically switches the current module,
+subsequent file loads could otherwise operate in an unexpected module context.</p>
+</div>
 <section id="configuration">
 <h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
 <dl class="field-list">

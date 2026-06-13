@@ -7,7 +7,7 @@
   <title>Installation &mdash; clips_executive 0.1.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=86f27845" />
-      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=8f9e6779" />
       <link rel="stylesheet" type="text/css" href="../_static/custom_figure.css" />
 
   
@@ -17,8 +17,8 @@
         <script src="../_static/documentation_options.js?v=360bc84d"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
-        <script src="../_static/copybutton.js?v=f281be69"></script>
+        <script src="../_static/clipboard.min.js?v=66b4909c"></script>
+        <script src="../_static/copybutton.js?v=71494f10"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -63,6 +63,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../plugins/index.html">CLIPS Plugins</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../plugin_generator/index.html">ROS Interface Plugin Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli/index.html">Command Line Interface (CLI)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../extensions/index.html">Extensions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../standards.html">Standard Documents</a></li>
@@ -109,7 +110,7 @@
 </div>
 </section>
 <section id="installation-from-source">
-<h2>Installation from Source<a class="headerlink" href="#installation-from-source" title="Link to this heading"></a></h2>
+<span id="source-installation"></span><h2>Installation from Source<a class="headerlink" href="#installation-from-source" title="Link to this heading"></a></h2>
 <p>The following steps will setup a workspace for the project. Adjust target locations as needed.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Workspace setup</span>
 mkdir<span class="w"> </span>-p<span class="w"> </span>~/ros2/clips_executive_ws/src
@@ -123,7 +124,7 @@ git<span class="w"> </span>clone<span class="w"> </span>https://github.com/carol
 <p>Lastly, build and source the workspace:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Building and sourcing</span>
 <span class="nb">cd</span><span class="w"> </span>~/ros2/clips_executive_ws/
-colcon<span class="w"> </span>build<span class="w"> </span>--symlink-install<span class="w"> </span>--cmake-args<span class="w"> </span>-DCMAKE_BUILD_TYPE<span class="o">=</span>Debug<span class="w"> </span>-DBUILD_TESTING<span class="o">=</span>OFF
+colcon<span class="w"> </span>build<span class="w"> </span>--symlink-install
 <span class="nb">source</span><span class="w"> </span>~/ros2/clips_executive_ws/install/setup.bash
 </pre></div>
 </div>

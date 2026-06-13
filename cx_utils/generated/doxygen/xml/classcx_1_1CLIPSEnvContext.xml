@@ -15,7 +15,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_utils/clips_env_context.hpp" line="47" column="15" bodyfile="include/cx_utils/clips_env_context.hpp" bodystart="47" bodyend="-1"/>
+        <location file="include/cx_utils/clips_env_context.hpp" line="61" column="15" bodyfile="include/cx_utils/clips_env_context.hpp" bodystart="61" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1CLIPSEnvContext_1a062a2781d611ba4c980121f287da4b85" prot="public" static="no" mutable="no">
         <type>std::mutex</type>
@@ -29,7 +29,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_utils/clips_env_context.hpp" line="48" column="14" bodyfile="include/cx_utils/clips_env_context.hpp" bodystart="48" bodyend="-1"/>
+        <location file="include/cx_utils/clips_env_context.hpp" line="62" column="14" bodyfile="include/cx_utils/clips_env_context.hpp" bodystart="62" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1CLIPSEnvContext_1a5f879804216e90ec49fbda6e5b6c3e48" prot="public" static="no" mutable="no">
         <type><ref refid="classcx_1_1CLIPSLogger" kindref="compound">CLIPSLogger</ref></type>
@@ -43,7 +43,35 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_utils/clips_env_context.hpp" line="49" column="15" bodyfile="include/cx_utils/clips_env_context.hpp" bodystart="49" bodyend="-1"/>
+        <location file="include/cx_utils/clips_env_context.hpp" line="63" column="15" bodyfile="include/cx_utils/clips_env_context.hpp" bodystart="63" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-func">
+      <memberdef kind="function" id="classcx_1_1CLIPSEnvContext_1a209a2b89a0b35b81e5c0e0388b32c781" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>cx::CLIPSEnvContext::CLIPSEnvContext</definition>
+        <argsstring>(const std::string &amp;env_name, bool log_to_file, bool stdout_to_debug)</argsstring>
+        <name>CLIPSEnvContext</name>
+        <qualifiedname>cx::CLIPSEnvContext::CLIPSEnvContext</qualifiedname>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>env_name</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>log_to_file</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>stdout_to_debug</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_utils/clips_env_context.hpp" line="57" column="3" bodyfile="include/cx_utils/clips_env_context.hpp" bodystart="57" bodyend="60"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="public-static-func">
@@ -63,7 +91,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_utils/clips_env_context.hpp" line="51" column="27"/>
+        <location file="include/cx_utils/clips_env_context.hpp" line="65" column="27"/>
       </memberdef>
       <memberdef kind="function" id="classcx_1_1CLIPSEnvContext_1adc8a28f3406289ea8e8019804f49d2ca" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classcx_1_1CLIPSEnvContext" kindref="compound">CLIPSEnvContext</ref> *</type>
@@ -81,7 +109,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_utils/clips_env_context.hpp" line="52" column="27"/>
+        <location file="include/cx_utils/clips_env_context.hpp" line="66" column="27"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
@@ -93,22 +121,17 @@
         <label>cx::CLIPSEnvContext</label>
         <link refid="classcx_1_1CLIPSEnvContext"/>
         <childnode refid="2" relation="usage">
-          <edgelabel>env_name_</edgelabel>
-        </childnode>
-        <childnode refid="3" relation="usage">
           <edgelabel>logger_</edgelabel>
         </childnode>
       </node>
-      <node id="3">
+      <node id="2">
         <label>cx::CLIPSLogger</label>
         <link refid="classcx_1_1CLIPSLogger"/>
       </node>
-      <node id="2">
-        <label>string</label>
-      </node>
     </collaborationgraph>
-    <location file="include/cx_utils/clips_env_context.hpp" line="44" column="1" bodyfile="include/cx_utils/clips_env_context.hpp" bodystart="45" bodyend="53"/>
+    <location file="include/cx_utils/clips_env_context.hpp" line="54" column="1" bodyfile="include/cx_utils/clips_env_context.hpp" bodystart="55" bodyend="67"/>
     <listofallmembers>
+      <member refid="classcx_1_1CLIPSEnvContext_1a209a2b89a0b35b81e5c0e0388b32c781" prot="public" virt="non-virtual"><scope>cx::CLIPSEnvContext</scope><name>CLIPSEnvContext</name></member>
       <member refid="classcx_1_1CLIPSEnvContext_1a062a2781d611ba4c980121f287da4b85" prot="public" virt="non-virtual"><scope>cx::CLIPSEnvContext</scope><name>env_mtx_</name></member>
       <member refid="classcx_1_1CLIPSEnvContext_1ad1c67e36e0f50a0612a6a8b27f091999" prot="public" virt="non-virtual"><scope>cx::CLIPSEnvContext</scope><name>env_name_</name></member>
       <member refid="classcx_1_1CLIPSEnvContext_1a641c2466c193ef0d61c8b9837b67f912" prot="public" virt="non-virtual"><scope>cx::CLIPSEnvContext</scope><name>get_context</name></member>

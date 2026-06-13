@@ -7,7 +7,7 @@
   <title>Generated ROS Message Plugin &mdash; clips_executive 0.1.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=86f27845" />
-      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=8f9e6779" />
       <link rel="stylesheet" type="text/css" href="../_static/custom_figure.css" />
 
   
@@ -17,8 +17,8 @@
         <script src="../_static/documentation_options.js?v=360bc84d"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
-        <script src="../_static/copybutton.js?v=f281be69"></script>
+        <script src="../_static/clipboard.min.js?v=66b4909c"></script>
+        <script src="../_static/copybutton.js?v=71494f10"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -71,6 +71,7 @@
 <li class="toctree-l2"><a class="reference internal" href="gen_action.html">Generated ROS Action Plugin</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../cli/index.html">Command Line Interface (CLI)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../extensions/index.html">Extensions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../standards.html">Standard Documents</a></li>
@@ -208,11 +209,28 @@ Additionally, it creates a publisher on <code class="docutils literal notranslat
 <p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/string-msg.clp">cx_bringup/clips/plugin_examples/string-msg.clp</a>.</p>
 <div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">string-pub-sub-init</span>
 <span class="s">&quot; Create a simple publisher and subscriber using the generated bindings. &quot;</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">executive-finalize</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">std-msgs-string-subscription</span><span class="w"> </span><span class="p">(</span><span class="nv">topic</span><span class="w"> </span><span class="s">&quot;ros_cx_in&quot;</span><span class="p">)))</span>
 <span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">std-msgs-string-publisher</span><span class="w"> </span><span class="p">(</span><span class="nv">topic</span><span class="w"> </span><span class="s">&quot;ros_cx_out&quot;</span><span class="p">)))</span>
 <span class="nv">=&gt;</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;------------------ &quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">bold</span><span class="w">  </span><span class="s">&quot;string msg example&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot; ------------------&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;| &quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">blue</span><span class="w">  </span><span class="s">&quot;Creates a subscription to /ros_cx_in and a publisher&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot; |&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;| &quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w">  </span><span class="nv">blue</span><span class="w"> </span><span class="s">&quot;on /ros_cx_out. Whenever a message on /ros_cx_in is &quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot; |&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;| &quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w">  </span><span class="nv">blue</span><span class="w"> </span><span class="s">&quot;received, a response is published on /ros_cx_out    &quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot; |&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;| &quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w">  </span><span class="nv">blue</span><span class="w"> </span><span class="s">&quot;with content \&quot;Hello World!\&quot;.                        &quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot; |&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;--------------------------------------------------------&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">std-msgs-string-create-publisher</span><span class="w"> </span><span class="s">&quot;ros_cx_out&quot;</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">info</span><span class="w"> </span><span class="s">&quot;Created publisher for /ros_cx_out&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">info</span><span class="w"> </span><span class="s">&quot;Publishing on /ros_cx_out&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">std-msgs-string-create-subscription</span><span class="w"> </span><span class="s">&quot;ros_cx_in&quot;</span><span class="p">)</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">info</span><span class="w"> </span><span class="s">&quot;Listening for String messages on /ros_cx_in&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
 <span class="p">)</span>
@@ -225,15 +243,15 @@ Additionally, it creates a publisher on <code class="docutils literal notranslat
 <span class="w">  </span><span class="nv">=&gt;</span>
 <span class="w">  </span><span class="c1">; fetch the content of the message and print it</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?recv</span><span class="w"> </span><span class="p">(</span><span class="nv">std-msgs-string-get-field</span><span class="w"> </span><span class="nv">?inc-msg</span><span class="w"> </span><span class="s">&quot;data&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">blue</span><span class="w"> </span><span class="s">&quot;Recieved via &quot;</span><span class="w"> </span><span class="nv">?sub</span><span class="w"> </span><span class="s">&quot; :&quot;</span><span class="w"> </span><span class="nv">?recv</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">blue</span><span class="w"> </span><span class="s">&quot;Recieved via &quot;</span><span class="w"> </span><span class="nv">?sub</span><span class="w"> </span><span class="s">&quot;: &quot;</span><span class="w"> </span><span class="nv">?recv</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
 <span class="w">  </span><span class="c1">; make sure to actually destroy the message to free heap-allocated memory for it, once the message is processed and can be removed</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">std-msgs-string-destroy-message</span><span class="w"> </span><span class="nv">?inc-msg</span><span class="p">)</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?msg-f</span><span class="p">)</span>
 
 <span class="w">  </span><span class="c1">; example of how to create and send a new message</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;Sending Hello World Message in response!&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">yellow</span><span class="w"> </span><span class="s">&quot;Sending Hello World Message!&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="p">(</span><span class="nv">std-msgs-string-create-message</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">std-msgs-string-set-field</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="s">&quot;data&quot;</span><span class="w"> </span><span class="s">&quot;Hello world!&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">std-msgs-string-set-field</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="s">&quot;data&quot;</span><span class="w"> </span><span class="s">&quot;Hello World!&quot;</span><span class="p">)</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">std-msgs-string-publish</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="nv">?pub</span><span class="p">)</span>
 <span class="w">  </span><span class="c1">; destroy the msg after usage to free up the memory</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">std-msgs-string-destroy-message</span><span class="w"> </span><span class="nv">?msg</span><span class="p">)</span>
@@ -245,19 +263,9 @@ Additionally, it creates a publisher on <code class="docutils literal notranslat
 <span class="w">  </span><span class="p">(</span><span class="nv">std-msgs-string-subscription</span><span class="w"> </span><span class="p">(</span><span class="nv">topic</span><span class="w"> </span><span class="nv">?sub</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">std-msgs-string-publisher</span><span class="w"> </span><span class="p">(</span><span class="nv">topic</span><span class="w"> </span><span class="nv">?pub</span><span class="p">))</span>
 <span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">debug</span><span class="w"> </span><span class="s">&quot;Destroying subscription &quot;</span><span class="w"> </span><span class="nv">?sub</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">debug</span><span class="w"> </span><span class="s">&quot;Destroying publisher &quot;</span><span class="w"> </span><span class="nv">?pub</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">info</span><span class="w"> </span><span class="s">&quot;Destroying publishers and subscriptions &quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">std-msgs-string-destroy-subscription</span><span class="w"> </span><span class="nv">?sub</span><span class="p">)</span>
 <span class="w">  </span><span class="p">(</span><span class="nv">std-msgs-string-destroy-publisher</span><span class="w"> </span><span class="nv">?pub</span><span class="p">)</span>
-<span class="p">)</span>
-
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">ros-msgs-message-cleanup</span>
-<span class="s">&quot; Delete any incoming msg on executive finalize. &quot;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">executive-finalize</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">?msg-f</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">std-msgs-string-message</span><span class="w"> </span><span class="p">(</span><span class="nv">msg-ptr</span><span class="w"> </span><span class="nv">?ptr</span><span class="p">))</span>
-<span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">std-msgs-string-destroy-message</span><span class="w"> </span><span class="nv">?ptr</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?msg-f</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>

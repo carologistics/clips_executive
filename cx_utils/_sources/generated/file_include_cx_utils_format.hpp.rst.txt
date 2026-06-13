@@ -30,7 +30,7 @@ Includes
 --------
 
 
-- ``string`` (:ref:`file_include_cx_utils_string_utils.hpp`)
+- ``string``
 
 - ``utility``
 

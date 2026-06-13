@@ -4,25 +4,28 @@
     <member refid="classcx_1_1CLIPSEnvContext_1ad1c67e36e0f50a0612a6a8b27f091999" kind="variable"><name>env_name_</name></member>
     <member refid="classcx_1_1CLIPSEnvContext_1a062a2781d611ba4c980121f287da4b85" kind="variable"><name>env_mtx_</name></member>
     <member refid="classcx_1_1CLIPSEnvContext_1a5f879804216e90ec49fbda6e5b6c3e48" kind="variable"><name>logger_</name></member>
+    <member refid="classcx_1_1CLIPSEnvContext_1a209a2b89a0b35b81e5c0e0388b32c781" kind="function"><name>CLIPSEnvContext</name></member>
     <member refid="classcx_1_1CLIPSEnvContext_1a641c2466c193ef0d61c8b9837b67f912" kind="function"><name>get_context</name></member>
     <member refid="classcx_1_1CLIPSEnvContext_1adc8a28f3406289ea8e8019804f49d2ca" kind="function"><name>get_context</name></member>
   </compound>
   <compound refid="classcx_1_1CLIPSLogger" kind="class"><name>cx::CLIPSLogger</name>
+    <member refid="classcx_1_1CLIPSLogger_1a34da291d2d3d0a0baadc05fc8c2e3c29" kind="typedef"><name>PublishFn</name></member>
     <member refid="classcx_1_1CLIPSLogger_1aa248c97461aba811624fb955a10771f4" kind="variable"><name>component_</name></member>
     <member refid="classcx_1_1CLIPSLogger_1add4edaa6795383a52bcc45981ff48a1a" kind="variable"><name>logger_</name></member>
     <member refid="classcx_1_1CLIPSLogger_1a8d156bef0419ec4ff9ffc2ddecf6beaa" kind="variable"><name>stdout_to_debug_</name></member>
     <member refid="classcx_1_1CLIPSLogger_1a342f77147b946f1d95c6ca54b1736e85" kind="variable"><name>clips_logger_</name></member>
     <member refid="classcx_1_1CLIPSLogger_1a069b128a5ed5b9ee9251730ff3064c1d" kind="variable"><name>buffer_</name></member>
     <member refid="classcx_1_1CLIPSLogger_1a9d2a91440fbbfa918ec73703eda84770" kind="variable"><name>terminal_buffer_</name></member>
+    <member refid="classcx_1_1CLIPSLogger_1a3129c79bf72ea3a7554c39bde9d3c8fd" kind="variable"><name>publish_fn_</name></member>
+    <member refid="classcx_1_1CLIPSLogger_1aa654ea7179f0661ba77c1a661400ae06" kind="variable"><name>topic_logging_enabled_</name></member>
     <member refid="classcx_1_1CLIPSLogger_1a820920ac2ee52d84c19fd7f3fe46d0c0" kind="function"><name>CLIPSLogger</name></member>
     <member refid="classcx_1_1CLIPSLogger_1af10d0d05436c9c20fe4bd339fee161e4" kind="function"><name>~CLIPSLogger</name></member>
     <member refid="classcx_1_1CLIPSLogger_1ab0ecbf1459675aac82e4c8a8dda38fc9" kind="function"><name>log</name></member>
+    <member refid="classcx_1_1CLIPSLogger_1aea0cc4e67a809de7a8905ddf4a433c9d" kind="function"><name>set_topic_publisher</name></member>
+    <member refid="classcx_1_1CLIPSLogger_1aea58a91156c728c52d56ec1ec35f929c" kind="function"><name>set_topic_logging</name></member>
+    <member refid="classcx_1_1CLIPSLogger_1a96fa55684bd13871fb12c7c2d756e81e" kind="function"><name>get_topic_logging</name></member>
   </compound>
   <compound refid="namespacecx" kind="namespace"><name>cx</name>
-    <member refid="string__utils_8hpp_1acbb48e2352e3fd2b0daec29318a59372" kind="variable"><name>chars</name></member>
-    <member refid="string__utils_8hpp_1ab55bf494ff071923012e9f7982c967d6" kind="variable"><name>rd</name></member>
-    <member refid="string__utils_8hpp_1a1810683f407b6fadb41a3b8f1df0fd8a" kind="function"><name>generator</name></member>
-    <member refid="string__utils_8hpp_1a59c4b9715ff132a1ac5adcde1c341ff6" kind="function"><name>generate_rnd_string</name></member>
   </compound>
   <compound refid="namespacecx_1_1cx__utils" kind="namespace"><name>cx::cx_utils</name>
     <member refid="param__utils_8hpp_1a4283b7b92aee51add4e373d310ce452c" kind="function"><name>declare_parameter_if_not_declared</name></member>
@@ -35,8 +38,6 @@
   <compound refid="format_8hpp" kind="file"><name>format.hpp</name>
   </compound>
   <compound refid="param__utils_8hpp" kind="file"><name>param_utils.hpp</name>
-  </compound>
-  <compound refid="string__utils_8hpp" kind="file"><name>string_utils.hpp</name>
   </compound>
   <compound refid="dir_71f5e3537c54355c141b3bc69d2dca5c" kind="dir"><name>include/cx_utils</name>
   </compound>

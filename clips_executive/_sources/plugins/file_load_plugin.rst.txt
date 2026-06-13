@@ -11,6 +11,13 @@ Source code on :source-master:`GitHub <cx_plugins/file_load_plugin>`.
 
 This plugin provides the ability to load files into CLIPS using ``batch*`` and ``load*`` through configuration values.
 
+.. note::
+
+  The plugin always sets the current module to ``MAIN`` before loading a file.
+  This ensures predictable behavior when loaded files define their own modules.
+  Since defining a ``defmodule`` in CLIPS automatically switches the current module,
+  subsequent file loads could otherwise operate in an unexpected module context.
+
 Configuration
 *************
 

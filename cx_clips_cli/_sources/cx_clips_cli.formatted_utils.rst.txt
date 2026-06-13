@@ -1,0 +1,7 @@
+cx\_clips\_cli.formatted\_utils module
+======================================
+
+.. automodule:: cx_clips_cli.formatted_utils
+   :members:
+   :undoc-members:
+   :show-inheritance:

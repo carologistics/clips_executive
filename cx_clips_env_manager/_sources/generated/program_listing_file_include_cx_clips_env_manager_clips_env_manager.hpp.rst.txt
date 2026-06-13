@@ -36,13 +36,17 @@ Program Listing for File clips_env_manager.hpp
    #include <memory>
    #include <set>
    #include <string>
+   #include <unordered_map>
    
    #include "bond/msg/constants.hpp"
    #include "bondcpp/bond.hpp"
    #include "cx_clips_env_manager/clips_plugin_manager.hpp"
+   #include "cx_msgs/msg/log.hpp"
    #include "cx_msgs/srv/create_clips_env.hpp"
    #include "cx_msgs/srv/destroy_clips_env.hpp"
    #include "cx_msgs/srv/list_clips_envs.hpp"
+   #include "cx_msgs/srv/set_topic_logging.hpp"
+   #include "cx_utils/clips_env_context.hpp"
    #include "lifecycle_msgs/msg/state.hpp"
    #include "lifecycle_msgs/msg/transition.hpp"
    #include "rclcpp/clock.hpp"
@@ -63,8 +67,6 @@ Program Listing for File clips_env_manager.hpp
      explicit CLIPSEnvManager(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
      ~CLIPSEnvManager();
      using CallbackReturn = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
-     // using EnvsMap = std::unordered_map<std::string,
-     // cx::LockSharedPtr<clips::Environment>>;
    
      CallbackReturn on_configure(const rclcpp_lifecycle::State & state);
      CallbackReturn on_activate(const rclcpp_lifecycle::State & state);
@@ -72,11 +74,6 @@ Program Listing for File clips_env_manager.hpp
      CallbackReturn on_shutdown(const rclcpp_lifecycle::State & state);
      CallbackReturn on_error(const rclcpp_lifecycle::State & state);
    
-     // std::map<std::string, LockSharedPtr<clips::Environment>>
-     // getEnvironments() const;
-   
-     // LockSharedPtr<clips::Environment>
-     // getEnvironmentByName(const std::string &env_name);
      void list_envs_callback(
        const std::shared_ptr<rmw_request_id_t> request_header,
        const std::shared_ptr<cx_msgs::srv::ListClipsEnvs::Request> request,
@@ -92,27 +89,29 @@ Program Listing for File clips_env_manager.hpp
        const std::shared_ptr<cx_msgs::srv::DestroyClipsEnv::Request> request,
        const std::shared_ptr<cx_msgs::srv::DestroyClipsEnv::Response> response);
    
+     void set_topic_logging_callback(
+       const std::shared_ptr<rmw_request_id_t> request_header,
+       const std::shared_ptr<cx_msgs::srv::SetTopicLogging::Request> request,
+       const std::shared_ptr<cx_msgs::srv::SetTopicLogging::Response> response);
+   
+     void run_cleanups();
+     void destroy_bond();
+   
    private:
      std::shared_ptr<clips::Environment> new_env(const std::string & env_name);
    
      bool delete_env(const std::string & env_name);
-     // void assert_plugins(LockSharedPtr<clips::Environment> &clips,
-     //                     bool immediate_assert);
-     // void add_functions(const std::string &env_name);
-     // bool guarded_load(LockSharedPtr<clips::Environment> &env, const std::string
-     // &filename);
-   
      // ROS2 SERVICES
      rclcpp::Service<cx_msgs::srv::ListClipsEnvs>::SharedPtr list_envs_service_;
      rclcpp::Service<cx_msgs::srv::CreateClipsEnv>::SharedPtr create_env_service_;
      rclcpp::Service<cx_msgs::srv::DestroyClipsEnv>::SharedPtr destroy_env_service_;
+     rclcpp::Service<cx_msgs::srv::SetTopicLogging>::SharedPtr set_topic_logging_service_;
+     rclcpp::Publisher<cx_msgs::msg::Log>::SharedPtr logging_pub_;
    
    private:
      void create_bond();
-     void destroy_bond();
      void autostart();
      void register_rcl_preshutdown_callback();
-     void run_cleanups();
      void on_rcl_preshutdown();
    
      ClipsPluginManager plugin_manager_;
@@ -120,9 +119,12 @@ Program Listing for File clips_env_manager.hpp
      std::shared_ptr<EnvsMap> envs_;
      std::shared_ptr<std::mutex> map_mtx_;
    
+     // env_name -> context
+     std::unordered_map<std::string, std::unique_ptr<CLIPSEnvContext>> contexts_;
+   
      // Connection to tell that server is still up
      std::unique_ptr<bond::Bond> bond_{nullptr};
-     double bond_heartbeat_period;
+     double bond_heartbeat_period_;
      rclcpp::TimerBase::SharedPtr autostart_timer_;
      std::unique_ptr<rclcpp::PreShutdownCallbackHandle> rcl_preshutdown_cb_handle_{nullptr};
    };

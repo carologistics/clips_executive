@@ -38,11 +38,17 @@ Includes
 
 - ``cx_clips_env_manager/clips_plugin_manager.hpp`` (:ref:`file_include_cx_clips_env_manager_clips_plugin_manager.hpp`)
 
+- ``cx_msgs/msg/log.hpp``
+
 - ``cx_msgs/srv/create_clips_env.hpp``
 
 - ``cx_msgs/srv/destroy_clips_env.hpp``
 
 - ``cx_msgs/srv/list_clips_envs.hpp``
+
+- ``cx_msgs/srv/set_topic_logging.hpp``
+
+- ``cx_utils/clips_env_context.hpp``
 
 - ``lifecycle_msgs/msg/state.hpp``
 
@@ -65,6 +71,8 @@ Includes
 - ``spdlog/spdlog.h``
 
 - ``string``
+
+- ``unordered_map``
 
 
 

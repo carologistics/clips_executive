@@ -1,0 +1,23 @@
+cx\_clips\_cli package
+======================
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   cx_clips_cli.cli
+   cx_clips_cli.float_item
+   cx_clips_cli.float_utils
+   cx_clips_cli.formatted_utils
+   cx_clips_cli.keymap_utils
+   cx_clips_cli.style_utils
+
+Module contents
+---------------
+
+.. automodule:: cx_clips_cli
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -7,7 +7,7 @@
   <title>Writing a Plugin for TF Monitoring &mdash; clips_executive 0.1.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=86f27845" />
-      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=8f9e6779" />
       <link rel="stylesheet" type="text/css" href="../_static/custom_figure.css" />
 
   
@@ -17,8 +17,8 @@
         <script src="../_static/documentation_options.js?v=360bc84d"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-        <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
-        <script src="../_static/copybutton.js?v=f281be69"></script>
+        <script src="../_static/clipboard.min.js?v=66b4909c"></script>
+        <script src="../_static/copybutton.js?v=71494f10"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -52,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../getting_started/index.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../plugins/index.html">CLIPS Plugins</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../plugin_generator/index.html">ROS Interface Plugin Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli/index.html">Command Line Interface (CLI)</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorials</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="hello_world.html">Hello World</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ros_monitoring.html">Continuous Monitoring</a></li>
@@ -135,9 +136,9 @@ This allows users to customize CLIPS to their needs.</p>
 <section id="prerequisites">
 <h2><a class="toc-backref" href="#id2" role="doc-backlink">Prerequisites</a><a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h2>
 <p>This tutorial extends the <code class="docutils literal notranslate"><span class="pre">cx_tutorial_agents</span></code> package created in the <a class="reference internal" href="hello_world.html"><span class="doc">previous tutorial</span></a>.
-Additionally, it requires the <a class="reference external" href="https://docs.ros.org/en/humble/p/turtlesim">turtlesim</a> package, which provides a minimal simulation environment to interact with and the <a class="reference external" href="https://docs.ros.org/en/humble/p/turtle_tf2_py">turtle_tf2_py</a> package to obtain transforms from the simulation.</p>
-<p>The introductory tutorial for <a class="reference external" href="https://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Pluginlib.html">pluginlib</a> is a helpful resource to get a general understanding of <code class="docutils literal notranslate"><span class="pre">pluginlib</span></code> plugins, as those are not discussed in detail here.</p>
-<p>Similarly, the introduction to <a class="reference external" href="https://docs.ros.org/en/humble/Tutorials/Intermediate/Tf2/Writing-A-Tf2-Listener-Cpp.html">tf2 listeners</a>  explains the basics for observing transforms via <code class="docutils literal notranslate"><span class="pre">tf2</span></code>, which is utilized in this tutorial.</p>
+Additionally, it requires the <a class="reference external" href="https://docs.ros.org/en/jazzy/p/turtlesim">turtlesim</a> package, which provides a minimal simulation environment to interact with and the <a class="reference external" href="https://docs.ros.org/en/jazzy/p/turtle_tf2_py">turtle_tf2_py</a> package to obtain transforms from the simulation.</p>
+<p>The introductory tutorial for <a class="reference external" href="https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Pluginlib.html">pluginlib</a> is a helpful resource to get a general understanding of <code class="docutils literal notranslate"><span class="pre">pluginlib</span></code> plugins, as those are not discussed in detail here.</p>
+<p>Similarly, the introduction to <a class="reference external" href="https://docs.ros.org/en/jazzy/Tutorials/Intermediate/Tf2/Writing-A-Tf2-Listener-Cpp.html">tf2 listeners</a>  explains the basics for observing transforms via <code class="docutils literal notranslate"><span class="pre">tf2</span></code>, which is utilized in this tutorial.</p>
 </section>
 <section id="tf-monitoring-plugin">
 <h2><a class="toc-backref" href="#id3" role="doc-backlink">TF Monitoring Plugin</a><a class="headerlink" href="#tf-monitoring-plugin" title="Link to this heading"></a></h2>
@@ -153,7 +154,7 @@ Additionally, it requires the <a class="reference external" href="https://docs.r
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Throughout this this tutorial, the CLIPS C(++) API is used extensively.
-When working with the API you should familiarize yourself with the <a class="reference external" href="https://docs.ros.org/en/humble/p/clips_vendor">clips_vendor</a> package and the namespaced CLIPS target it provides, as well as the <a class="reference external" href="https://clipsrules.net/documentation/v641/apg641.pdf">Advanced Programming Guide (PDF)</a>, which is the reference manual for all public interfaces of CLIPS.</p>
+When working with the API you should familiarize yourself with the <a class="reference external" href="https://docs.ros.org/en/jazzy/p/clips_vendor">clips_vendor</a> package and the namespaced CLIPS target it provides, as well as the <a class="reference external" href="https://clipsrules.net/documentation/v641/apg641.pdf">Advanced Programming Guide (PDF)</a>, which is the reference manual for all public interfaces of CLIPS.</p>
 </div>
 <section id="obtaining-the-files">
 <h3><a class="toc-backref" href="#id4" role="doc-backlink">1 Obtaining the Files</a><a class="headerlink" href="#obtaining-the-files" title="Link to this heading"></a></h3>
@@ -173,7 +174,7 @@ wget<span class="w"> </span>-O<span class="w"> </span>tf2_tracked_pose.clp<span 
 <section id="plugin-package-setup">
 <h3><a class="toc-backref" href="#id5" role="doc-backlink">2 Plugin Package Setup</a><a class="headerlink" href="#plugin-package-setup" title="Link to this heading"></a></h3>
 <p>The plugin resides in it’s own ROS package, hence it has an appropriate <code class="docutils literal notranslate"><span class="pre">package.xml</span></code> and <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>. Additionally, each plugin comes with a plugin description that needs to be properly exported. See the
-<a class="reference external" href="https://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Pluginlib.html">beginner tutorial on pluginlib</a> for a general introduction to <code class="docutils literal notranslate"><span class="pre">pluginlib</span></code> plugins.</p>
+<a class="reference external" href="https://docs.ros.org/en/jazzy/Tutorials/Beginner-Client-Libraries/Pluginlib.html">beginner tutorial on pluginlib</a> for a general introduction to <code class="docutils literal notranslate"><span class="pre">pluginlib</span></code> plugins.</p>
 <p>Each plugin of the ROS2 CLIPS-Executive uses  the <code class="docutils literal notranslate"><span class="pre">cx::ClipsPlugin</span></code> as base class, provided by the <code class="docutils literal notranslate"><span class="pre">cx_plugin</span></code> package. The plugin for this tutorial is defined as a class <code class="docutils literal notranslate"><span class="pre">cx::Tf2PoseTrackerPlugin</span></code> and resides in the <code class="docutils literal notranslate"><span class="pre">cx_tf2_pose_tracker_plugin</span></code> package. The description file is shown below:</p>
 <div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;class_libraries&gt;</span>
 <span class="w">  </span><span class="nt">&lt;library</span><span class="w"> </span><span class="na">path=</span><span class="s">&quot;cx_tf2_pose_tracker_plugin&quot;</span><span class="nt">&gt;</span>
@@ -193,7 +194,7 @@ wget<span class="w"> </span>-O<span class="w"> </span>tf2_tracked_pose.clp<span 
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>Also, the plugin needs to link against the namespaced CLIPS target provided by the <a class="reference external" href="https://docs.ros.org/en/humble/p/clips_vendor">clips_vendor</a> package, which is used throughout the ROS2 CLIPS-Executive to interface with CLIPS.</p>
+<p>Also, the plugin needs to link against the namespaced CLIPS target provided by the <a class="reference external" href="https://docs.ros.org/en/jazzy/p/clips_vendor">clips_vendor</a> package, which is used throughout the ROS2 CLIPS-Executive to interface with CLIPS.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This target wraps the original CLIPS code with a namespace <code class="docutils literal notranslate"><span class="pre">clips::</span></code>, hence the CLIPS features documented in the <a class="reference external" href="https://clipsrules.net/documentation/v641/apg641.pdf">Advanced Programming Guide (PDF)</a> require the namespace prefix.</p>
@@ -214,8 +215,8 @@ wget<span class="w"> </span>-O<span class="w"> </span>tf2_tracked_pose.clp<span 
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;cx_plugin/clips_plugin.hpp&quot;</span>
 
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;geometry_msgs/msg/transform_stamped.hpp&gt;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;tf2_ros/buffer.h&gt;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;tf2_ros/transform_listener.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;tf2_ros/buffer.hpp&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;tf2_ros/transform_listener.hpp&gt;</span>
 
 <span class="k">namespace</span><span class="w"> </span><span class="nn">cx</span><span class="w"> </span><span class="p">{</span>
 
@@ -491,7 +492,7 @@ The corresponding <code class="docutils literal notranslate"><span class="pre">A
 <span class="n">clips</span><span class="o">::</span><span class="n">UDFNthArgument</span><span class="p">(</span><span class="n">udfc</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="n">NUMBER_BITS</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">freq</span><span class="p">);</span>
 </pre></div>
 </div>
-<p>However, this snippet also showcases an unfortunate drawback when using a namespaced version of the CLIPS library, which is also mentioned in the known issues of the <a class="reference external" href="https://docs.ros.org/en/humble/p/clips_vendor">clips_vendor</a> package: The <code class="docutils literal notranslate"><span class="pre">LEXEME_BITS</span></code> and <code class="docutils literal notranslate"><span class="pre">NUMBER_BITS</span></code> statements are macros that extend to a disjunction of enum types, which are not properly namespaced.
+<p>However, this snippet also showcases an unfortunate drawback when using a namespaced version of the CLIPS library, which is also mentioned in the known issues of the <a class="reference external" href="https://docs.ros.org/en/jazzy/p/clips_vendor">clips_vendor</a> package: The <code class="docutils literal notranslate"><span class="pre">LEXEME_BITS</span></code> and <code class="docutils literal notranslate"><span class="pre">NUMBER_BITS</span></code> statements are macros that extend to a disjunction of enum types, which are not properly namespaced.
 Hence, the <code class="docutils literal notranslate"><span class="pre">using</span> <span class="pre">namespace</span> <span class="pre">clips;</span></code> directive is necessary here to properly use the macros.</p>
 <p>Lastly, the helper function <code class="docutils literal notranslate"><span class="pre">start_periodic_lookup</span></code> is called using the context.
 The CLIPS arguments are converted to their native C++ types, before they are passed at arguments to the helper function.
@@ -636,7 +637,7 @@ The CLIPS arguments are converted to their native C++ types, before they are pas
 <h4>7.1 Guarding the CLIPS Environment from Concurrent Access<a class="headerlink" href="#guarding-the-clips-environment-from-concurrent-access" title="Link to this heading"></a></h4>
 <p>This asynchronous task showcases the need for guarding the CLIPS environment from concurrent access.</p>
 <p>While the UDF function body itself is guarded already, the callback of the created ROS timer is not.
-Since the ROS2 CLIPS-Executive itself is ran via a <a class="reference external" href="https://docs.ros.org/en/humble//Concepts/Intermediate/About-Executors.html">MultiThreadedExecutor</a>, ROS callbacks are typically executed in parallel.</p>
+Since the ROS2 CLIPS-Executive itself is ran via a <a class="reference external" href="https://docs.ros.org/en/jazzy//Concepts/Intermediate/About-Executors.html">MultiThreadedExecutor</a>, ROS callbacks are typically executed in parallel.</p>
 <p>In order to obtain the required mutex, the environment context is retrieved. Then a scoped lock protects the remainder of this scope.</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// safely access CLIPS environment</span>
 <span class="k">auto</span><span class="w"> </span><span class="n">context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CLIPSEnvContext</span><span class="o">::</span><span class="n">get_context</span><span class="p">(</span><span class="n">env</span><span class="p">);</span>

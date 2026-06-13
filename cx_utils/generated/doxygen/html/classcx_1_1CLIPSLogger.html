@@ -75,12 +75,19 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classcx_1_1CLIPSLogger-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">cx::CLIPSLogger Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a34da291d2d3d0a0baadc05fc8c2e3c29" id="r_a34da291d2d3d0a0baadc05fc8c2e3c29"><td class="memItemLeft" align="right" valign="top"><a id="a34da291d2d3d0a0baadc05fc8c2e3c29" name="a34da291d2d3d0a0baadc05fc8c2e3c29"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>PublishFn</b> = std::function&lt; void(const std::string &amp;, const std::string &amp;)&gt;</td></tr>
+<tr class="separator:a34da291d2d3d0a0baadc05fc8c2e3c29"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a820920ac2ee52d84c19fd7f3fe46d0c0" id="r_a820920ac2ee52d84c19fd7f3fe46d0c0"><td class="memItemLeft" align="right" valign="top"><a id="a820920ac2ee52d84c19fd7f3fe46d0c0" name="a820920ac2ee52d84c19fd7f3fe46d0c0"></a>
@@ -89,6 +96,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab0ecbf1459675aac82e4c8a8dda38fc9" id="r_ab0ecbf1459675aac82e4c8a8dda38fc9"><td class="memItemLeft" align="right" valign="top"><a id="ab0ecbf1459675aac82e4c8a8dda38fc9" name="ab0ecbf1459675aac82e4c8a8dda38fc9"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>log</b> (const char *logical_name, const char *str)</td></tr>
 <tr class="separator:ab0ecbf1459675aac82e4c8a8dda38fc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea0cc4e67a809de7a8905ddf4a433c9d" id="r_aea0cc4e67a809de7a8905ddf4a433c9d"><td class="memItemLeft" align="right" valign="top"><a id="aea0cc4e67a809de7a8905ddf4a433c9d" name="aea0cc4e67a809de7a8905ddf4a433c9d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>set_topic_publisher</b> (PublishFn fn)</td></tr>
+<tr class="separator:aea0cc4e67a809de7a8905ddf4a433c9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea58a91156c728c52d56ec1ec35f929c" id="r_aea58a91156c728c52d56ec1ec35f929c"><td class="memItemLeft" align="right" valign="top"><a id="aea58a91156c728c52d56ec1ec35f929c" name="aea58a91156c728c52d56ec1ec35f929c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>set_topic_logging</b> (bool enabled)</td></tr>
+<tr class="separator:aea58a91156c728c52d56ec1ec35f929c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96fa55684bd13871fb12c7c2d756e81e" id="r_a96fa55684bd13871fb12c7c2d756e81e"><td class="memItemLeft" align="right" valign="top"><a id="a96fa55684bd13871fb12c7c2d756e81e" name="a96fa55684bd13871fb12c7c2d756e81e"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>get_topic_logging</b> ()</td></tr>
+<tr class="separator:a96fa55684bd13871fb12c7c2d756e81e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>include/cx_utils/<a class="el" href="clips__env__context_8hpp_source.html">clips_env_context.hpp</a></li>

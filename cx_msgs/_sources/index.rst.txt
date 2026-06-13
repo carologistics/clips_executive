@@ -10,7 +10,7 @@ ROS interfaces for ROS2 CLIPS-Executive
 
 
 
-
+   Message Definitions <interfaces/message_definitions>
    Service Definitions <interfaces/service_definitions>
 
    Standard Documents <standards>

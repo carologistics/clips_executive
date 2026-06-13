@@ -1,0 +1,8 @@
+Log
+===
+This is a ROS message definition.
+
+**Source**
+
+.. literalinclude:: ../../../../../../cx_msgs/msg/Log.msg
+
