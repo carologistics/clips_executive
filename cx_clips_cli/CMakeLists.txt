@@ -12,6 +12,16 @@ install(PROGRAMS
   RENAME cli
 )
 
+if(BUILD_TESTING)
+  find_package(ament_cmake_pytest REQUIRED)
+
+  ament_add_pytest_test(
+    test_clips_cli          # test target name (ctest label)
+    test/test_clips_cli.py  # path to your test file
+    TIMEOUT 60
+  )
+endif()
+
 #install(DIRECTORY
 #  launch
 #  params
