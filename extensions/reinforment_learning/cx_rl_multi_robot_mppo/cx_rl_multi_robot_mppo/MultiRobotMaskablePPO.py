@@ -354,6 +354,7 @@ class MultiRobotMaskablePPO(MaskablePPO):
             return
         self._update_info_buffer(infos)
         self.n_current_steps += 1
+        self.num_timesteps += env.num_envs
 
         if isinstance(self.action_space, spaces.Discrete):
             # Reshape in case of discrete action
