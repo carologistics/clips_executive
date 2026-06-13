@@ -54,6 +54,7 @@
     (rl-observation (name clear) (params block4))
     (rl-observable-action (name stack) (param-names r b1 b2) (param-types robot block block))
     (rl-observable-action (name pickup) (param-names r b) (param-types robot block))
+    (rl-observable-action (name unstack) (param-names r b1 b2) (param-types robot block block))
     (rl-predefined-action (name pickup) (params robot1 block1))
     (rl-predefined-action (name pickup) (params robot1 block2))
     (rl-predefined-action (name pickup) (params robot1 block3))
@@ -103,6 +104,17 @@
   (assert (rl-action (id ?id) (name pickup) (params ?robot ?some-block)))
 )
 
+(defrule rl-blocksworld-provide-action-unstack
+  (rl-current-action-space (state PENDING))
+  (rl-robot (name ?robot) (waiting TRUE))
+  (rl-observation (name can-hold) (params ?robot))
+  (rl-observation (name on) (params ?top-block ?bottom-block))
+  (rl-observation (name clear) (params ?top-block))
+=>
+  (bind ?id (sym-cat "unstack" (gensym*)))
+  (assert (rl-action (id ?id) (name unstack) (params ?robot ?top-block ?bottom-block)))
+)
+
 (defrule rl-blocksworld-actions-generation-done
   (declare (salience -2))
   ?action-space <- (rl-current-action-space (state PENDING))
@@ -149,6 +161,28 @@
          (eq ?target:params (create$ ?block)))
     (printout red "useless action pickup "?target:params crlf)
     (bind ?reward -100)
+  )
+  (modify ?action (is-finished TRUE) (reward ?reward))
+)
+
+(defrule action-selected-action-done-unstack
+  (rl-robot (name ?robot))
+  ?obs1 <- (rl-observation (name can-hold) (params ?robot))
+  ?obs2 <- (rl-observation (name on) (params ?top-block ?bottom-block))
+  ?action <- (rl-action (name unstack) (params ?robot ?top-block ?bottom-block) (is-selected TRUE) (is-finished FALSE))
+=>
+  (retract ?obs1 ?obs2)
+  (assert (rl-observation (name holding) (params ?robot ?top-block)))
+  (assert (rl-observation (name clear) (params ?bottom-block)))
+  (bind ?reward 0)
+  (do-for-fact ((?target rl-observation))
+    (and (eq ?target:name target-on)
+         (eq ?target:params (create$ ?top-block ?bottom-block)))
+    (printout red "regression unstack " ?top-block " from " ?bottom-block crlf)
+    (bind ?reward -50)
+  )
+  (if (eq ?reward 0) then
+    (printout green "useful unstack " ?top-block " from " ?bottom-block crlf)
   )
   (modify ?action (is-finished TRUE) (reward ?reward))
 )
