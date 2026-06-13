@@ -352,6 +352,8 @@ class MultiRobotMaskablePPO(MaskablePPO):
             return
         if infos[0].get('outcome') == 'RESET':
             return
+        if infos[0].get('outcome') == 'NO-ACTION-FOR-ROBOT' and not dones[0]:
+            return
         self._update_info_buffer(infos)
         self.n_current_steps += 1
         self.num_timesteps += env.num_envs
