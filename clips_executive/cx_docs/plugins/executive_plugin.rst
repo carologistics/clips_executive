@@ -1,7 +1,7 @@
 .. _usage_executive_plugin:
 
-Continuous Execution Plugin
-###########################
+Executive Plugin
+################
 
 Source code on :source-master:`GitHub <cx_plugins/executive_plugin>`.
 
