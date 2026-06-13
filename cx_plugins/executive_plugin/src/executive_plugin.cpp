@@ -92,7 +92,7 @@ void ExecutivePlugin::run_tick()
     auto context = CLIPSEnvContext::get_context(managed.env);
     std::scoped_lock<std::mutex> env_guard(context->env_mtx_);
     const auto & valid_stack = managed.focus_stack;
-    clips::Fact * time_fact;
+    clips::Fact * time_fact = nullptr;
     if (assert_time_) {
       clips::SetCurrentModule(managed.env.get(), clips::FindDefmodule(managed.env.get(), "MAIN"));
       time_fact = clips::AssertString(managed.env.get(), "(time (now))");
@@ -366,7 +366,7 @@ bool ExecutivePlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
   node->get_parameter(env_param_prefix + ".focus_stack", focus_stack_param);
   cx::cx_utils::declare_parameter_if_not_declared(
     node, env_param_prefix + ".rule_limit", rclcpp::ParameterValue(-1));
-  int64_t rule_limit;
+  int64_t rule_limit = 0;
   node->get_parameter(env_param_prefix + ".rule_limit", rule_limit);
 
   // validate focus stack for this env
