@@ -117,9 +117,6 @@ class CXRLBaseNode(LifecycleNode):
             self.get_logger().error(f'Failed to activate: {e}')
             return TransitionCallbackReturn.FAILURE
 
-        self.create_bond()
-        return TransitionCallbackReturn.SUCCESS
-
     def on_deactivate(self, state):
         visited = set()
         env = self.env

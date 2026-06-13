@@ -1164,33 +1164,6 @@ class CXRLGym(Env):
             entities[name] = params
         return entities
 
-        entities = {}
-        param_counter = 0
-
-        for i in range(len(names)):
-            name = names[i]
-            number_params = param_counts[i]
-
-            params = {}
-            args = []
-
-            param_range = param_counter + number_params
-
-            while param_counter < param_range:
-                param_name = param_names[param_counter]
-                param_type = param_types[param_counter]
-
-                params[param_name] = param_type
-                args.append(param_name)
-
-                param_counter += 1
-
-            entities[name] = params
-
-            self.get_id(name, args)
-
-        return entities
-
     def get_observation_encoding_fron_ids(self, obs_facts) -> npt.NDArray[np.float32]:
         """
         Convert a set of observation ids into a binary state vector.
