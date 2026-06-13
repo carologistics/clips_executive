@@ -39,7 +39,7 @@ void Tf2PoseTrackerPlugin::initialize()
   // fetch plugin parameter
   cx::cx_utils::declare_parameter_if_not_declared(
     node, plugin_name_ + ".spin_thread", rclcpp::ParameterValue(true));
-  bool tf_spin_thread;
+  bool tf_spin_thread = false;
   node->get_parameter(plugin_name_ + ".spin_thread", tf_spin_thread);
 
   // setup transform listener
