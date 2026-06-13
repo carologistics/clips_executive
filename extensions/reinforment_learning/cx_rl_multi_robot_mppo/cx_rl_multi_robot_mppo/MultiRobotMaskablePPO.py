@@ -153,6 +153,7 @@ class MultiRobotMaskablePPO(MaskablePPO):
         self.no_callback = False
         self.rollouts_gathered = False
         self.shutdown = False
+        self._step_lock = threading.Lock()
 
     def _setup_model(self) -> None:
         self._setup_lr_schedule()
@@ -329,59 +330,59 @@ class MultiRobotMaskablePPO(MaskablePPO):
         rollout_buffer: RolloutBuffer,
         use_masking: bool = True,
     ):
-        current_thread = threading.get_ident()
-        with th.no_grad():
-            # Convert to pytorch tensor or to TensorDict
-            obs_tensor = obs_as_tensor(self._last_obs, self.device)
+        with self._step_lock:
+            with th.no_grad():
+                # Convert to pytorch tensor or to TensorDict
+                obs_tensor = obs_as_tensor(self._last_obs, self.device)
 
-            if use_masking:
-                action_masks = get_action_masks(env)
-                if np.sum(action_masks) == 0:
-                    action_masks[0, :] = 0
-                    action_masks[0, 0] = 1
-                actions, values, log_probs = self.policy(obs_tensor, action_masks=action_masks)
-                actions = actions.cpu().numpy()
-            else:
-                actions, values, log_probs = self.policy(obs_tensor)
-                actions = actions.cpu().numpy()
-        new_obs, rewards, dones, infos = env.step(actions)
+                if use_masking:
+                    action_masks = get_action_masks(env)
+                    if np.sum(action_masks) == 0:
+                        action_masks[0, :] = 0
+                        action_masks[0, 0] = 1
+                    actions, values, log_probs = self.policy(obs_tensor, action_masks=action_masks)
+                    actions = actions.cpu().numpy()
+                else:
+                    actions, values, log_probs = self.policy(obs_tensor)
+                    actions = actions.cpu().numpy()
+            new_obs, rewards, dones, infos = env.step(actions)
 
-        callback.update_locals(locals())
-        if not callback.on_step():
-            self.no_callback = True
-            return
-        if infos[0].get('outcome') == 'RESET':
-            return
-        if infos[0].get('outcome') == 'NO-ACTION-FOR-ROBOT' and not dones[0]:
-            return
-        self._update_info_buffer(infos)
-        self.n_current_steps += 1
-        self.num_timesteps += env.num_envs
+            callback.update_locals(locals())
+            if not callback.on_step():
+                self.no_callback = True
+                return
+            if infos[0].get('outcome') == 'RESET':
+                return
+            if infos[0].get('outcome') == 'NO-ACTION-FOR-ROBOT' and not dones[0]:
+                return
+            self._update_info_buffer(infos)
+            self.n_current_steps += 1
+            self.num_timesteps += env.num_envs
 
-        if isinstance(self.action_space, spaces.Discrete):
-            # Reshape in case of discrete action
-            actions = actions.reshape(-1, 1)
+            if isinstance(self.action_space, spaces.Discrete):
+                # Reshape in case of discrete action
+                actions = actions.reshape(-1, 1)
 
-        for idx, done in enumerate(dones):
-            if (
-                done
-                and infos[idx].get('terminal_observation') is not None
-                and infos[idx].get('TimeLimit.truncated', False)
-            ):
-                terminal_obs = self.policy.obs_to_tensor(infos[idx]['terminal_observation'])[0]
-                with th.no_grad():
-                    terminal_value = self.policy.predict_values(terminal_obs)[0]
-                rewards[idx] += self.gamma * terminal_value
+            for idx, done in enumerate(dones):
+                if (
+                    done
+                    and infos[idx].get('terminal_observation') is not None
+                    and infos[idx].get('TimeLimit.truncated', False)
+                ):
+                    terminal_obs = self.policy.obs_to_tensor(infos[idx]['terminal_observation'])[0]
+                    with th.no_grad():
+                        terminal_value = self.policy.predict_values(terminal_obs)[0]
+                    rewards[idx] += self.gamma * terminal_value
 
-        if not self.rollouts_gathered:
-            rollout_buffer.add(
-                self._last_obs,
-                actions,
-                rewards,
-                self._last_episode_starts,
-                values,
-                log_probs,
-                action_masks=action_masks,
-            )
-        self._last_obs = new_obs
-        self._last_episode_starts = dones
+            if not self.rollouts_gathered:
+                rollout_buffer.add(
+                    self._last_obs,
+                    actions,
+                    rewards,
+                    self._last_episode_starts,
+                    values,
+                    log_probs,
+                    action_masks=action_masks,
+                )
+            self._last_obs = new_obs
+            self._last_episode_starts = dones
