@@ -44,7 +44,7 @@ class CXRLBaseNode(LifecycleNode):
             namespace='',
             parameters=[
                 ('storage_dir', '/tmp'),
-                ('env.entrypoint', 'cx_rl_gym.cx_rl_gym.CXRLGym'),
+                ('env.entrypoint', 'cx_rl_gym.cx_rl_gym:CXRLGym'),
                 ('rl_mode', 'TRAINING'),
             ],
         )
