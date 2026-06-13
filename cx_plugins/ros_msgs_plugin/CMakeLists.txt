@@ -46,7 +46,7 @@ if(ROS_DISTRO STRGREATER_EQUAL "jazzy")
 endif()
 
 # HAVE_GENERIC_SERVICE: kilted and above
-if(ROS_DISTRO STRGREATER_EQUAL "jazzy")
+if(ROS_DISTRO STRGREATER_EQUAL "kilted")
   set(HAVE_GENERIC_SERVICE TRUE)
 endif()
 
