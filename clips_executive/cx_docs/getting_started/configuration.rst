@@ -113,6 +113,34 @@ Given an environment `env`, these are the configuration options:
   Description
     If set to true, all CLIPS output that logs to the ``clips::STDOUT="stdout"`` router is logged in ROS via ``RCLCPP_DEBUG`` instead of ``RCLCPP_INFO``. This is useful when the (often rather verbose) default CLIPS output should be captured in the log file but should not spam the main terminal. CLIPS programs that use other routers (such as ``info`` or ``t``) to print output still appear using ``RCLCPP_INFO``.
 
+.. _focus_stack:
+
+:env.focus_stack:
+
+  ============== =======
+  Type           Default
+  -------------- -------
+  string vector  []
+  ============== =======
+
+  Description
+    If specified, marks the order in which modules should be processed when running the inference engine.
+    This is only relevant in combination with the executive plugin, which is responsible for handling runs.
+
+.. _rule_limit:
+
+:env.rule_limit:
+
+  ============== =======
+  Type           Default
+  -------------- -------
+  int            -1
+  ============== =======
+
+  Description
+    If specified, sets an upper limit on the amount of rules that can fire on a single run of the inference engine.
+    This is only relevant in combination with the executive plugin, which is responsible for handling runs.
+
 
 Plugin Parameters
 +++++++++++++++++

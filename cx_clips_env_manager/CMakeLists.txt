@@ -103,6 +103,24 @@ install(TARGETS
   RUNTIME DESTINATION lib/${PROJECT_NAME}
 )
 
+if(BUILD_TESTING)
+  find_package(ament_cmake_gtest REQUIRED)
+  ament_add_gtest(${PROJECT_NAME}_lifecycle_test test/test_lifecycle.cpp)
+  target_include_directories(${PROJECT_NAME}_lifecycle_test PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+  )
+  target_link_libraries(${PROJECT_NAME}_lifecycle_test ${PROJECT_NAME})
+
+  ament_add_gtest(${PROJECT_NAME}_environments_test test/test_environments.cpp)
+  target_include_directories(${PROJECT_NAME}_environments_test PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+  )
+
+  target_link_libraries(${PROJECT_NAME}_environments_test ${PROJECT_NAME})
+endif()
+
 # -----------------------------
 # Exports
 # -----------------------------

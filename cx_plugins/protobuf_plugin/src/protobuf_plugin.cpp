@@ -27,7 +27,11 @@
 #include <memory>
 #include <string>
 
+#if defined(USE_GET_PACKAGE_SHARE_PATH)
+#include "ament_index_cpp/get_package_share_path.hpp"
+#else
 #include "ament_index_cpp/get_package_share_directory.hpp"
+#endif
 #include "cx_plugin/clips_plugin.hpp"
 #include "cx_protobuf_plugin/communicator.hpp"
 #include "cx_utils/clips_env_context.hpp"
@@ -44,7 +48,11 @@ ProtobufPlugin::~ProtobufPlugin() {}
 
 void ProtobufPlugin::initialize()
 {
+#if defined(USE_GET_PACKAGE_SHARE_PATH)
+  plugin_path_ = ament_index_cpp::get_package_share_path("cx_protobuf_plugin").string();
+#else
   plugin_path_ = ament_index_cpp::get_package_share_directory("cx_protobuf_plugin");
+#endif
   auto node = parent_.lock();
   if (node) {
     std::vector<std::string> package_share_dirs, input_proto_paths;

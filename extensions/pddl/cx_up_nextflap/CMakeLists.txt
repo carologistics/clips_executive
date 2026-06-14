@@ -6,13 +6,18 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(ament_cmake REQUIRED)
-find_package(pybind11_vendor REQUIRED)
-find_package(pybind11 REQUIRED)
+# Get Python information
+find_package(Python3 COMPONENTS Interpreter Development)
+if("$ENV{ROS_DISTRO}" STRGREATER_EQUAL "lyrical")
+  find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
+  find_package(pybind11 REQUIRED)
+else()
+  find_package(pybind11_vendor REQUIRED)
+  find_package(pybind11 REQUIRED)
+endif()
 find_package(cx_z3_vendor REQUIRED)
 find_package(Z3 REQUIRED)
 
-# Get Python information
-find_package(Python3 COMPONENTS Interpreter Development)
 
 # Define source files
 set(SOURCES

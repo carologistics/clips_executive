@@ -15,6 +15,8 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
+find_package(cx_msgs REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(cx_plugin REQUIRED)
 find_package(cx_utils REQUIRED)
@@ -25,6 +27,8 @@ add_library(${PROJECT_NAME} SHARED src/executive_plugin.cpp)
 target_link_libraries(${PROJECT_NAME} PUBLIC
   rclcpp::rclcpp
   ${std_msgs_TARGETS}
+  ${std_srvs_TARGETS}
+  ${cx_msgs_TARGETS}
   pluginlib::pluginlib
   cx_plugin::cx_plugin
   cx_utils::cx_utils
@@ -50,11 +54,6 @@ install(
   DESTINATION share/${PROJECT_NAME}
 )
 
-install(
-  DIRECTORY clips/
-  DESTINATION share/${PROJECT_NAME}/clips/${PROJECT_NAME}
-)
-
 install(TARGETS
   ${PROJECT_NAME}
   EXPORT export_${PROJECT_NAME}
@@ -68,6 +67,8 @@ ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
 ament_export_dependencies(
   rclcpp
   std_msgs
+  std_srvs
+  cx_msgs
   pluginlib
   cx_plugin
   cx_utils

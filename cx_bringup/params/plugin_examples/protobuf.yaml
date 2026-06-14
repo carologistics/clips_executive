@@ -1,8 +1,12 @@
 /**:
   ros__parameters:
-    environments: ["cx_protobuf"]
-    cx_protobuf:
-      plugins: ["executive", "protobuf", "files"]
+    environments: ["cx_protobuf_peer1", "cx_protobuf_peer2"]
+    cx_protobuf_peer1:
+      plugins: ["executive", "protobuf", "files_peer1"]
+      log_clips_to_file: true
+      watch: ["facts", "rules"]
+    cx_protobuf_peer2:
+      plugins: ["executive", "protobuf", "files_peer2"]
       log_clips_to_file: true
       watch: ["facts", "rules"]
 
@@ -22,8 +26,16 @@
       # Defaults to an empty list
       proto_paths: ["proto/cx_bringup"]
 
-    files:
+    files_peer1:
       plugin: "cx::FileLoadPlugin"
       pkg_share_dirs: ["cx_bringup"]
       load: [
-        "clips/plugin_examples/protobuf.clp"]
+        "clips/plugin_examples/protobuf-peer1.clp"]
+
+    files_peer2:
+      plugin: "cx::FileLoadPlugin"
+      pkg_share_dirs: ["cx_bringup"]
+      # same as peer1, just overriding the peer creation
+      load: [
+        "clips/plugin_examples/protobuf-peer1.clp",
+        "clips/plugin_examples/protobuf-peer2.clp"]

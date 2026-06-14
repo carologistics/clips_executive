@@ -29,6 +29,15 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 )
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD ${CMAKE_CXX_STANDARD})
 
+set(ROS_DISTRO $ENV{ROS_DISTRO})
+# Necessary as get_package_prefix is not ported in latest jazzy and kilted release
+if(ROS_DISTRO STRGREATER_EQUAL "lyrical")
+  message(STATUS "Path API is supported, using path API")
+  target_compile_definitions(${PROJECT_NAME} PUBLIC USE_AMENT_INDEX_CPP_PATH_API=1)
+else()
+  message(STATUS "Path API is not supported, using legacy API")
+endif()
+
 target_include_directories(${PROJECT_NAME}
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

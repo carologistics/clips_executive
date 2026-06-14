@@ -75,6 +75,7 @@ ClipsProtobufCommunicator::ClipsProtobufCommunicator(
 : clips_(env), clips_mutex_(env_mutex), next_client_id_(0), parent_(parent)
 {
   message_register_ = std::make_unique<protobuf_comm::MessageRegister>(proto_path);
+  logger_ = std::make_unique<rclcpp::Logger>(rclcpp::get_logger("ClipsProtobufCommunicator"));
   setup_clips();
 }
 
@@ -1536,11 +1537,12 @@ void ClipsProtobufCommunicator::handle_server_client_fail(
   RevServerClientMap::iterator c;
   if ((c = rev_server_clients_.find(client)) != rev_server_clients_.end()) {
     std::lock_guard<std::mutex> lock(clips_mutex_);
+
     clips::AssertString(
       clips_, cx::format(
                 "(protobuf-server-receive-failed (comp-id {}) (msg-type {}) "
                 "(rcvd-via STREAM) (client-id {}) (message \"{}\") "
-                "(rcvd-from (\"{}\" {})))",
+                "(rcvd-from \"{}\" {}))",
                 component_id, msg_type, c->second, msg.c_str(),
                 client_endpoints_[c->second].first.c_str(), client_endpoints_[c->second].second)
                 .c_str());

@@ -49,6 +49,7 @@ All new code is released under Apache 2.0 license, while some optional modules t
    getting_started/index.rst
    plugins/index.rst
    plugin_generator/index.rst
+   cli/index.rst
    tutorials/index.rst
    extensions/index.rst
 

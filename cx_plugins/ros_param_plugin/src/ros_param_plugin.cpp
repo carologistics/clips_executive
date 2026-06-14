@@ -73,7 +73,7 @@ clips::UDFValue RosParamPlugin::get_ros_param(
   switch (default_value.header->type) {
     case INTEGER_TYPE: {
       int64_t default_int = default_value.integerValue->contents;
-      int64_t result;
+      int64_t result = 0;
       cx_utils::declare_parameter_if_not_declared(
         node, param_name, rclcpp::ParameterValue(default_int));
       node->get_parameter(param_name, result);
@@ -82,7 +82,7 @@ clips::UDFValue RosParamPlugin::get_ros_param(
     }
     case FLOAT_TYPE: {
       double default_double = default_value.floatValue->contents;
-      double result;
+      double result = 0.0;
       cx_utils::declare_parameter_if_not_declared(
         node, param_name, rclcpp::ParameterValue(default_double));
       node->get_parameter(param_name, result);
@@ -96,7 +96,7 @@ clips::UDFValue RosParamPlugin::get_ros_param(
       // Handle boolean as TRUE/FALSE symbol
       if (def == "TRUE" || def == "FALSE") {
         bool default_bool = (def == "TRUE");
-        bool result;
+        bool result = false;
         cx_utils::declare_parameter_if_not_declared(
           node, param_name, rclcpp::ParameterValue(default_bool));
         node->get_parameter(param_name, result);

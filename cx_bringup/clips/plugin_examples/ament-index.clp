@@ -50,6 +50,9 @@
 (printout info "(ament-index-get-package-share-directory \"rclcpp\")" crlf)
 (printout green "    " (ament-index-get-package-share-directory "rclcpp") crlf)
 
+(printout info "(ament-index-has-resource \"vendor_packages\" \"clips_vendor\")" crlf)
+(printout green "    " (ament-index-has-resource "vendor_packages" "clips_vendor") crlf)
+
 (printout info "(ament-index-get-resource \"vendor_packages\" \"clips_vendor\")" crlf)
 (print-pairs (ament-index-get-resource "vendor_packages" "clips_vendor") "Content" "Path")
 

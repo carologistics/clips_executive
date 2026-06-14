@@ -31,6 +31,13 @@ public:
   explicit CLIPSLogger(const char * component, bool log_to_file, bool stdout_to_debug);
   ~CLIPSLogger();
   void log(const char * logical_name, const char * str);
+  using PublishFn = std::function<void(const std::string &, const std::string &)>;
+
+  void set_topic_publisher(PublishFn fn);
+
+  void set_topic_logging(bool enabled);
+
+  bool get_topic_logging();
 
 private:
   char * component_;
@@ -39,11 +46,18 @@ private:
   std::shared_ptr<spdlog::logger> clips_logger_;
   std::string buffer_;
   std::string terminal_buffer_;
+
+  PublishFn publish_fn_ = nullptr;
+  bool topic_logging_enabled_ = false;
 };
 
 class CLIPSEnvContext
 {
 public:
+  CLIPSEnvContext(const std::string & env_name, bool log_to_file, bool stdout_to_debug)
+  : env_name_(env_name), logger_(env_name.c_str(), log_to_file, stdout_to_debug)
+  {
+  }
   std::string env_name_;
   std::mutex env_mtx_;
   CLIPSLogger logger_;

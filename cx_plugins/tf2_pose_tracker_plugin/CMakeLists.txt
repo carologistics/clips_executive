@@ -20,7 +20,18 @@ find_package(clips REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(geometry_msgs REQUIRED)
 
+# Extract ROS distro from ament_cmake version or environment
+if(DEFINED ENV{ROS_DISTRO})
+  set(ROS_DISTRO $ENV{ROS_DISTRO})
+else()
+  message(FATAL_ERROR "ROS_DISTRO environment variable not set")
+endif()
+
 add_library(${PROJECT_NAME} SHARED src/tf2_pose_tracker_plugin.cpp)
+
+if(ROS_DISTRO STREQUAL "humble")
+  target_compile_definitions(${PROJECT_NAME} PRIVATE HUMBLE)
+endif()
 
 pluginlib_export_plugin_description_file(cx_plugin tf2_pose_tracker_plugin.xml)
 

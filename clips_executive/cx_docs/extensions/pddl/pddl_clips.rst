@@ -663,6 +663,7 @@ Consists of individual `pddl-action` facts with matching plan id.
     (slot goal-ptr (type EXTERNAL-ADDRESS))
     (slot plan-type (type SYMBOL) (allowed-values CLASSICAL TEMPORAL) (default CLASSICAL))
     (slot goal-handle (type EXTERNAL-ADDRESS))
+    (slot output-dir (type STRING))
     (slot type (type SYMBOL) (allowed-values TEMPORAL CLASSICAL))
     (slot state (type SYMBOL) (allowed-values PENDING WAITING PLANNING REQUEST-CANCELING CANCELING CANCELED SUCCESS FAILURE) (default PENDING))
     (slot plan-start (type FLOAT) (default 0.0))

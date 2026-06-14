@@ -40,7 +40,7 @@ Functions
 
   (bind ?ret (ament-index-has-resource ?res-type ?res-name))
   ; example args: "vendor_packages" "clips_vendor"
-  ; example ret:  TRUE
+  ; example ret:  FALSE or a path like "/opt/ros/kited"
 
   (bind ?ret (ament-index-get-resource ?res-type ?res-name))
   ; example args: "vendor_packages" "clips_vendor"

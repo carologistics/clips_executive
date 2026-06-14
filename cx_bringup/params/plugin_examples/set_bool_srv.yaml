@@ -1,8 +1,13 @@
 /**:
   ros__parameters:
-    environments: ["cx_set_bool_srvs"]
-    cx_set_bool_srvs:
-      plugins: ["executive", "set_bool", "files"]
+    environments: ["cx_set_bool_srv", "cx_set_bool_client"]
+    cx_set_bool_srv:
+      plugins: ["executive", "set_bool", "files_srv"]
+      log_clips_to_file: true
+      watch: ["facts", "rules"]
+
+    cx_set_bool_client:
+      plugins: ["executive", "set_bool", "files_client"]
       log_clips_to_file: true
       watch: ["facts", "rules"]
 
@@ -11,10 +16,18 @@
       publish_on_refresh: false
       assert_time: true
       refresh_rate: 10
+
     set_bool:
       plugin: "cx::CXStdSrvsSetBoolPlugin"
-    files:
+
+    files_srv:
       plugin: "cx::FileLoadPlugin"
       pkg_share_dirs: ["cx_bringup"]
       load: [
         "clips/plugin_examples/set-bool-srv.clp"]
+
+    files_client:
+      plugin: "cx::FileLoadPlugin"
+      pkg_share_dirs: ["cx_bringup"]
+      load: [
+        "clips/plugin_examples/set-bool-client.clp"]
