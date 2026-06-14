@@ -136,25 +136,25 @@
 <h2>Features<a class="headerlink" href="#features" title="Link to this heading"></a></h2>
 <section id="facts">
 <h3>Facts<a class="headerlink" href="#facts" title="Link to this heading"></a></h3>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; Asserted and modified by the periodic lookup started with tf2-start-periodic-lookup.</span>
-<span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">tf2-tracked-pose</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">parent</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">child</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">stamp</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">FLOAT</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">translation</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">FLOAT</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">cardinality</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">rotation</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">FLOAT</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">cardinality</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">4</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">timer</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">EXTERNAL-ADDRESS</span><span class="p">))</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="c1">; Asserted and modified by the periodic lookup started with tf2-start-periodic-lookup.</span>
+<span class="p">(</span><span class="kd">deftemplate</span> tf2-tracked-pose
+  <span class="p">(</span><span class="kr">slot</span> parent <span class="p">(</span><span class="kr">type</span> STRING))
+  <span class="p">(</span><span class="kr">slot</span> child <span class="p">(</span><span class="kr">type</span> STRING))
+  <span class="p">(</span><span class="kr">slot</span> stamp <span class="p">(</span><span class="kr">type</span> FLOAT))
+  <span class="p">(</span>multislot translation <span class="p">(</span><span class="kr">type</span> FLOAT) <span class="p">(</span><span class="kr">cardinality</span> <span class="mi">3</span> <span class="mi">3</span><span class="p">))</span>
+  <span class="p">(</span>multislot rotation <span class="p">(</span><span class="kr">type</span> FLOAT) <span class="p">(</span><span class="kr">cardinality</span> <span class="mi">4</span> <span class="mi">4</span><span class="p">))</span>
+  <span class="p">(</span><span class="kr">slot</span> timer <span class="p">(</span><span class="kr">type</span> EXTERNAL-ADDRESS))
 <span class="p">)</span>
 </pre></div>
 </div>
 </section>
 <section id="functions">
 <h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; Start a ROS timer to periodically lookup the pose of ?child-frame relative to ?parent-frame.</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="c1">; Start a ROS timer to periodically lookup the pose of ?child-frame relative to ?parent-frame.</span>
 <span class="c1">; Returns TRUE if timer was created successfully, FALSE otherwise.</span>
-<span class="p">(</span><span class="nv">tf2-start-periodic-lookup</span><span class="w"> </span><span class="nv">?parent-frame</span><span class="w"> </span><span class="nv">?child-frame</span><span class="w"> </span><span class="nv">?frequency-hz</span><span class="p">)</span><span class="w">   </span><span class="c1">; example-args: &quot;map&quot; &quot;base_link&quot; 2.0</span>
+<span class="p">(</span>tf2-start-periodic-lookup <span class="nv">?parent-frame</span> <span class="nv">?child-frame</span> <span class="nv">?frequency-hz</span><span class="p">)</span>   <span class="c1">; example-args: &quot;map&quot; &quot;base_link&quot; 2.0</span>
 <span class="c1">; Stop a started ROS timer using the timer of the associated tf2-tracked-pose fact.</span>
-<span class="p">(</span><span class="nv">tf2-stop-periodic-lookup</span><span class="w"> </span><span class="nv">?timer-ptr</span><span class="p">)</span><span class="w"> </span><span class="c1">; example args: &lt;Pointer-C-0x7f1550001d20&gt;</span>
+<span class="p">(</span>tf2-stop-periodic-lookup <span class="nv">?timer-ptr</span><span class="p">)</span> <span class="c1">; example args: &lt;Pointer-C-0x7f1550001d20&gt;</span>
 </pre></div>
 </div>
 </section>
@@ -206,29 +206,29 @@ It requires the <a class="reference external" href="https://docs.ros.org/en/jazz
 <section id="code">
 <h3>Code<a class="headerlink" href="#code" title="Link to this heading"></a></h3>
 <p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_tutorial_agents/clips/tf2_tracked_pose.clp">cx_tutorial_agents/clips/tf2_tracked_pose.clp</a>.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">counter</span><span class="w"> </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">iteration</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">)))</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">deftemplate</span> counter <span class="p">(</span><span class="kr">slot</span> iteration <span class="p">(</span><span class="kr">type</span> INTEGER)))
 
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">tf2-tracked-pose-open</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">tf2-start-periodic-lookup</span><span class="w"> </span><span class="s">&quot;world&quot;</span><span class="w"> </span><span class="s">&quot;turtle1&quot;</span><span class="w"> </span><span class="mf">0.2</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">counter</span><span class="w"> </span><span class="p">(</span><span class="nv">iteration</span><span class="w"> </span><span class="mi">0</span><span class="p">)))</span>
+<span class="p">(</span><span class="kd">defrule</span> tf2-tracked-pose-open
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>tf2-start-periodic-lookup <span class="s">&quot;world&quot;</span> <span class="s">&quot;turtle1&quot;</span> <span class="mf">0.2</span><span class="p">)</span>
+  <span class="p">(</span><span class="k k-Name k-Name-Function">assert</span> <span class="p">(</span>counter <span class="p">(</span>iteration <span class="mi">0</span><span class="p">)))</span>
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">tf2-tracked-pose-print</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">tf2-tracked-pose</span><span class="w"> </span><span class="p">(</span><span class="nv">translation</span><span class="w"> </span><span class="nv">$?trans</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">rotation</span><span class="w"> </span><span class="nv">$?rot</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;pos at &quot;</span><span class="w"> </span><span class="nv">?trans</span><span class="w"> </span><span class="s">&quot; with rot &quot;</span><span class="w"> </span><span class="nv">?rot</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">do-for-fact</span><span class="w"> </span><span class="p">((</span><span class="nv">?c</span><span class="w"> </span><span class="nv">counter</span><span class="p">))</span><span class="w"> </span><span class="nv">TRUE</span><span class="w"> </span><span class="p">(</span><span class="nv">modify</span><span class="w"> </span><span class="nv">?c</span><span class="w"> </span><span class="p">(</span><span class="nv">iteration</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="nv">?c:iteration</span><span class="p">))))</span>
+<span class="p">(</span><span class="kd">defrule</span> tf2-tracked-pose-print
+  <span class="p">(</span>tf2-tracked-pose <span class="p">(</span>translation <span class="nv">$?trans</span><span class="p">)</span> <span class="p">(</span>rotation <span class="nv">$?rot</span><span class="p">))</span>
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>printout green <span class="s">&quot;pos at &quot;</span> <span class="nv">?trans</span> <span class="s">&quot; with rot &quot;</span> <span class="nv">?rot</span> crlf)
+  <span class="p">(</span>do-for-fact <span class="p">((</span><span class="nv">?c</span> counter)) TRUE <span class="p">(</span><span class="k k-Name k-Name-Function">modify</span> <span class="nv">?c</span> <span class="p">(</span>iteration <span class="p">(</span>+ <span class="mi">1</span> <span class="nv">?c</span>:iteration))))
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">tf2-tracked-pose-stop</span>
-<span class="w">  </span><span class="nv">?pose</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">tf2-tracked-pose</span><span class="w"> </span><span class="p">(</span><span class="nv">timer</span><span class="w"> </span><span class="nv">?t</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">?count</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">counter</span><span class="w"> </span><span class="p">(</span><span class="nv">iteration</span><span class="w"> </span><span class="mi">5</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">blue</span><span class="w"> </span><span class="s">&quot;Stopping timer &quot;</span><span class="w"> </span><span class="nv">?t</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">tf2-stop-periodic-lookup</span><span class="w"> </span><span class="nv">?t</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?pose</span><span class="w"> </span><span class="nv">?count</span><span class="p">)</span>
+<span class="p">(</span><span class="kd">defrule</span> tf2-tracked-pose-stop
+  <span class="nv">?pose</span> &lt;- <span class="p">(</span>tf2-tracked-pose <span class="p">(</span>timer <span class="nv">?t</span><span class="p">))</span>
+  <span class="nv">?count</span> &lt;- <span class="p">(</span>counter <span class="p">(</span>iteration <span class="mi">5</span><span class="p">))</span>
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>printout blue <span class="s">&quot;Stopping timer &quot;</span> <span class="nv">?t</span> crlf)
+  <span class="p">(</span>tf2-stop-periodic-lookup <span class="nv">?t</span><span class="p">)</span>
+  <span class="p">(</span><span class="k k-Name k-Name-Function">retract</span> <span class="nv">?pose</span> <span class="nv">?count</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>

@@ -1,15 +1,15 @@
 Pitfalls and Considerations
-###########################
+===========================
 
 Below are some lessons learned when developingthe core plugins of the |CX|. They might be a useful read for some.
 
 Injected functions should not be blocking
-*****************************************
+-----------------------------------------
 
 In order to ensure running a responsive CLIPS application, make sure the injected functions are executing fast. Long-lasting operations should rather be dispatched by a function and then asynchronously handled once they finish. This allows the inference engine to continue operating while heavy computations or time-consuming sub-routines are processed.
 
 Keep your locking scopes as tight as possible
-*********************************************
+---------------------------------------------
 
 When writing complex plugins with asynchronous operations, be sure to scope your guarded regions well.
 
@@ -22,7 +22,7 @@ Consider this example from **cx_ros_msgs_plugin** which allows interactions with
 
 A bad implementation using a scoped lock for the entire scope of the callback and the entire scope of **ros-msgs-get-field** could cause a deadlock if the ros-msgs-get-field function is called on the left-hand side of a rule, e.g., like this:
 
-.. code-block:: lisp
+.. code-block:: clips
 
     (defrule deadlock-example
       (ros-msgs-subscription (topic ?sub))
@@ -33,7 +33,7 @@ A bad implementation using a scoped lock for the entire scope of the callback an
 The assertion of the fact in the callback triggers the conditional check in the rule which therefore tries to lock `map_mtx_` blocked by the callback function itself. Hence, make sure to keep the scopes of any mutex as tight as possible!
 
 Be aware of hidden locks
-************************
+------------------------
 
 It can be tricky to interface between ROS callbacks and CLIPS environments, especially if locks are guarding said callbacks that are not visible to the end user.
 As CLIPS environment access must also guarded by locks (as access is not thread-safe), this can easily create deadlocks in situations, where other functions can be called from clips that also try to acquire the lock held by a callback.

@@ -1,5 +1,5 @@
 PDDL Domain and Problem File Example
-####################################
+====================================
 
 This is how a PDDL domain file looks like:
 

@@ -1,7 +1,7 @@
 .. _usage_ros_msgs_plugin:
 
 Generic ROS Msg Plugin
-######################
+======================
 
 Source code on :source-master:`GitHub <cx_plugins/ros_msgs_plugin>`.
 
@@ -19,17 +19,17 @@ This plugin provides the ability to interface with ROS topics of any type using 
    The features of this plugin vary, depending on the ROS version it is compiled with.
 
 Configuration
-*************
+-------------
 
 This plugin has no specific configuration options.
 
 Features
-********
+--------
 
 Facts
-~~~~~
+^^^^^
 
-.. code-block:: lisp
+.. code-block:: clips
 
   ; Asserted by the create-subscription function.
   ; Retracted by the destroy-subscription function.
@@ -54,7 +54,7 @@ Facts
 
 Supported since Jazzy:
 
-.. code-block:: lisp
+.. code-block:: clips
 
   ; Asserted by the ros-msgs-create-client function.
   ; Retracted by the respective ros-msgs-destroy-client function.
@@ -74,7 +74,7 @@ Supported since Jazzy:
 
 Supported since Kilted:
 
-.. code-block:: lisp
+.. code-block:: clips
 
   ; Asserted by the ros-msgs-create-service function.
   ; Retracted by the respective ros-msgs-destroy-service function.
@@ -121,9 +121,9 @@ Supported since Kilted:
 
 
 Functions
-~~~~~~~~~
+^^^^^^^^^
 
-.. code-block:: lisp
+.. code-block:: clips
 
   ; Create and destroy publishers, subscribers
   (ros-msgs-create-publisher ?topic-name ?msg-type)    ; example args: "/cx_string_out" "std_msgs/msg/String"
@@ -157,7 +157,7 @@ Functions
 
 Supported since Jazzy:
 
-.. code-block:: lisp
+.. code-block:: clips
 
   ; Create and destroy service clients.
   (ros-msgs-create-client ?service-name ?service-type) ; example args: "/ros_cx_client" "std_srvs/srv/SetBool"
@@ -177,7 +177,7 @@ Supported since Jazzy:
 
 Supported since Kilted:
 
-.. code-block:: lisp
+.. code-block:: clips
 
   ; Create and destroy service providers.
   ; In order to answer service requests, define a function with the following signature:
@@ -238,7 +238,7 @@ Supported since Kilted:
 
 
 Message Lifetimes
-~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^
 
 Since clips stores objects via void pointers, dynamic object lifetime management via `std::shared_ptr` does not work directly from within CLIPS.
 Instead, object lifetimes need to be managed more explicitly through the usage of `create` and `destroy` functions.
@@ -252,7 +252,7 @@ When creating a new message via **ros-msgs-create-message**, new memory is alloc
 When using **ros-msgs-set-field** to set a nested message, dynamic memory from the sub-message is moved to the parent message, hence the nested message loses all dynamically allocated data (e.g., unbound arrays, strings).
 See the example below:
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (bind ?new-msg (ros-msgs-create-message "geometry_msgs/msg/Twist"))
   (bind ?sub-msg (ros-msgs-create-message "geometry_msgs/msg/Vector3"))
@@ -263,7 +263,7 @@ See the example below:
 
 In particular, obtaining a nested message from one message ``?source`` and setting it as a member to another message ``?sink`` will cause ``?source`` to lose all dynamic data within it's sub-message, as the sub-message obtained is actually pointing to memory within ``?source``:
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (bind ?source (ros-msgs-create-message "geometry_msgs/msg/Twist"))
   (bind ?sub-msg (ros-msgs-create-message "geometry_msgs/msg/Vector3"))
@@ -276,12 +276,12 @@ In particular, obtaining a nested message from one message ``?source`` and setti
   ; as they are moved to ?sink.
 
 Action Lifetime
-~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^
 
 When dealing with actions, always make sure to keep the relevant goal handles alive for the entire duration of the associated action. Do not attempt to preemptively delete it. The same goes for goal requests.
 
 Usage Example 1: Publishers and Subscribers
-*******************************************
+-------------------------------------------
 
 A minimal working example is provided by the :docsite:`cx_bringup` package. Run it via:
 
@@ -293,7 +293,7 @@ It creates a ``std_msgs/msg/String`` subscription on topic ``/ros_cx_in`` and pr
 Additionally, it creates a publisher on ``/ros_cx_out`` that publishes ``Hello World`` whenever something is received over the ``/ros_cx_in`` topic.
 
 Configuration
-~~~~~~~~~~~~~
+^^^^^^^^^^^^^
 
 File :source-master:`cx_bringup/params/plugin_examples/ros_msgs.yaml`.
 
@@ -321,11 +321,11 @@ File :source-master:`cx_bringup/params/plugin_examples/ros_msgs.yaml`.
 
 
 Code
-~~~~
+^^^^
 
 File :source-master:`cx_bringup/clips/plugin_examples/ros-msgs.clp`.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule ros-msgs-pub-init
   " Create publisher for ros_cx_out."
@@ -391,7 +391,7 @@ File :source-master:`cx_bringup/clips/plugin_examples/ros-msgs.clp`.
   )
 
 Usage Example 2: Service Client
-*******************************
+-------------------------------
 
 This example requires ROS jazzy or later.
 
@@ -410,7 +410,7 @@ In order to launch a simple service to send the request to, run the following co
     ros2 run cx_bringup test_service.py
 
 Configuration
-~~~~~~~~~~~~~
+^^^^^^^^^^^^^
 
 File :source-master:`cx_bringup/params/plugin_examples/ros_msgs_client.yaml`.
 
@@ -439,11 +439,11 @@ File :source-master:`cx_bringup/params/plugin_examples/ros_msgs_client.yaml`.
 
 
 Code
-~~~~
+^^^^
 
 File :source-master:`cx_bringup/clips/plugin_examples/ros-msgs-client.clp`.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule ros-msgs-client-init
   " Create publisher for ros_cx_out."
@@ -506,7 +506,7 @@ File :source-master:`cx_bringup/clips/plugin_examples/ros-msgs-client.clp`.
 
 
 Usage Example 3: Service Provider
-*********************************
+---------------------------------
 
 This example requires ROS kilted or later.
 
@@ -525,7 +525,7 @@ In order to launch a simple client to send the request, run the following comman
     ros2 service call /ros_cx_service std_srvs/srv/SetBool "{data: true}"
 
 Configuration
-~~~~~~~~~~~~~
+^^^^^^^^^^^^^
 
 File :source-master:`cx_bringup/params/plugin_examples/ros_msgs_service.yaml`.
 
@@ -554,11 +554,11 @@ File :source-master:`cx_bringup/params/plugin_examples/ros_msgs_service.yaml`.
 
 
 Code
-~~~~
+^^^^
 
 File :source-master:`cx_bringup/clips/plugin_examples/ros-msgs-service.clp`.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule set-bool-service-init
   " Create a simple service using the generated bindings. "
@@ -590,7 +590,7 @@ File :source-master:`cx_bringup/clips/plugin_examples/ros-msgs-service.clp`.
   )
 
 Usage Example 4: Action Client
-******************************
+------------------------------
 
 This example requires ROS kilted or later.
 
@@ -605,7 +605,7 @@ The launch file starts two CLIPS environments:
  - The second environment acts as an action client. It first requests a Fibonacci sequence of order 5. After the goal completes, it sends a second request for a sequence of order 10. The second goal is canceled after the sixth element has been computed.
 
 Configuration
-~~~~~~~~~~~~~
+^^^^^^^^^^^^^
 
 File :source-master:`cx_bringup/params/plugin_examples/ros_msgs_action_client.yaml`.
 
@@ -652,11 +652,11 @@ File :source-master:`cx_bringup/params/plugin_examples/ros_msgs_action_client.ya
 
 
 Code
-~~~~
+^^^^
 
 File :source-master:`cx_bringup/clips/plugin_examples/ros-msgs-action-client.clp`.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule ros-msgs-action-client-init
   " Create a client for fibonacci example action server."

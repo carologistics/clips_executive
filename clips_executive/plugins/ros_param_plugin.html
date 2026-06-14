@@ -121,7 +121,7 @@
 <section id="functions">
 <h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
 <p>This plugin adds a custom functions as listed below.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">?bind</span><span class="w"> </span><span class="nv">?val</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-param-get-value</span><span class="w"> </span><span class="nv">?param-name</span><span class="w"> </span><span class="nv">?default-value</span><span class="p">))</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">?bind</span> <span class="nv">?val</span> <span class="p">(</span>ros-param-get-value <span class="nv">?param-name</span> <span class="nv">?default-value</span><span class="p">))</span>
 <span class="c1">; example args: &quot;environments&quot; (create$ not-found)</span>
 <span class="c1">; example ret:  (&quot;cx_ros_param&quot;)</span>
 </pre></div>
@@ -160,14 +160,14 @@
 <section id="code">
 <h3>Code<a class="headerlink" href="#code" title="Link to this heading"></a></h3>
 <p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/ros-param.clp">cx_bringup/clips/plugin_examples/ros-param.clp</a>.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">info</span><span class="w"> </span><span class="s">&quot;(ros-param-get-value \&quot;environments\&quot; (create$ not-found))&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;    &quot;</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-param-get-value</span><span class="w"> </span><span class="s">&quot;environments&quot;</span><span class="w"> </span><span class="p">(</span><span class="nv">create$</span><span class="w"> </span><span class="nv">not-found</span><span class="p">))</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>printout info <span class="s">&quot;(ros-param-get-value \&quot;</span>environments\&quot; <span class="p">(</span>create$ not-found))&quot; crlf)
+<span class="p">(</span>printout green <span class="s">&quot;    &quot;</span> <span class="p">(</span>ros-param-get-value <span class="s">&quot;environments&quot;</span> <span class="p">(</span>create$ not-found)) crlf)
 
-<span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">info</span><span class="w"> </span><span class="s">&quot;(ros-param-get-value \&quot;cx_ros_param.log_clips_to_file\&quot; FALSE)&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;    &quot;</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-param-get-value</span><span class="w"> </span><span class="s">&quot;cx_ros_param.log_clips_to_file&quot;</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">)</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="p">(</span>printout info <span class="s">&quot;(ros-param-get-value \&quot;</span>cx_ros_param.log_clips_to_file\&quot; FALSE)&quot; crlf)
+<span class="p">(</span>printout green <span class="s">&quot;    &quot;</span> <span class="p">(</span>ros-param-get-value <span class="s">&quot;cx_ros_param.log_clips_to_file&quot;</span> FALSE) crlf)
 
-<span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">info</span><span class="w"> </span><span class="s">&quot;(ros-param-get-value \&quot;bond_heartbeat_period\&quot; 5.5)&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;    &quot;</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-param-get-value</span><span class="w"> </span><span class="s">&quot;bond_heartbeat_period&quot;</span><span class="w"> </span><span class="mf">5.5</span><span class="p">)</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="p">(</span>printout info <span class="s">&quot;(ros-param-get-value \&quot;</span>bond_heartbeat_period\&quot; <span class="mf">5.5</span><span class="p">)</span><span class="s">&quot; crlf)</span>
+<span class="s">(printout green &quot;</span>    <span class="s">&quot; (ros-param-get-value &quot;</span>bond_heartbeat_period&quot; <span class="mf">5.5</span><span class="p">)</span> crlf)
 </pre></div>
 </div>
 </section>

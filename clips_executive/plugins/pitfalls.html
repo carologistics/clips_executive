@@ -117,11 +117,11 @@
 <li><p>The <strong>ros-msgs-get-field</strong> UDF allows to retrieve fields of messages. As fields may contain messages, this again might need to store meta-data, hence it also needs to lock <cite>map_mtx_</cite>.</p></li>
 </ol>
 <p>A bad implementation using a scoped lock for the entire scope of the callback and the entire scope of <strong>ros-msgs-get-field</strong> could cause a deadlock if the ros-msgs-get-field function is called on the left-hand side of a rule, e.g., like this:</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">deadlock-example</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-subscription</span><span class="w"> </span><span class="p">(</span><span class="nv">topic</span><span class="w"> </span><span class="nv">?sub</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">?msg-f</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-message</span><span class="w"> </span><span class="p">(</span><span class="nv">topic</span><span class="w"> </span><span class="nv">?sub</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">msg-ptr</span><span class="w"> </span><span class="nv">?inc-msg</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">test</span><span class="w"> </span><span class="p">(</span><span class="nb">and</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-get-field</span><span class="w"> </span><span class="nv">?inc-msg</span><span class="w"> </span><span class="s">&quot;velocity&quot;</span><span class="p">))))</span>
-<span class="o">...</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">defrule</span> deadlock-example
+  <span class="p">(</span>ros-msgs-subscription <span class="p">(</span>topic <span class="nv">?sub</span><span class="p">))</span>
+  <span class="nv">?msg-f</span> &lt;- <span class="p">(</span>ros-msgs-message <span class="p">(</span>topic <span class="nv">?sub</span><span class="p">)</span> <span class="p">(</span>msg-ptr <span class="nv">?inc-msg</span><span class="p">))</span>
+  <span class="p">(</span>test <span class="p">(</span>and <span class="p">(</span>= <span class="mi">0</span> <span class="p">(</span>ros-msgs-get-field <span class="nv">?inc-msg</span> <span class="s">&quot;velocity&quot;</span><span class="p">))))</span>
+...
 </pre></div>
 </div>
 <p>The assertion of the fact in the callback triggers the conditional check in the rule which therefore tries to lock <cite>map_mtx_</cite> blocked by the callback function itself. Hence, make sure to keep the scopes of any mutex as tight as possible!</p>

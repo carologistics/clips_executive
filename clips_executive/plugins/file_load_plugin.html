@@ -230,31 +230,31 @@ E.g., when using batch, a missing closing parenthesis <code class="docutils lite
 <section id="code">
 <h3>Code<a class="headerlink" href="#code" title="Link to this heading"></a></h3>
 <p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/file-load.clp">cx_bringup/clips/plugin_examples/file-load.clp</a>.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">hello-world</span>
-<span class="w">   </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">hello</span><span class="p">))</span>
-<span class="w">   </span><span class="nv">=&gt;</span>
-<span class="w">   </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;Hello world&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">   </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">hello</span><span class="p">))</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">defrule</span> hello-world
+   <span class="p">(</span>not <span class="p">(</span>hello))
+   <span class="nt">=&gt;</span>
+   <span class="p">(</span>printout green <span class="s">&quot;Hello world&quot;</span> crlf)
+   <span class="p">(</span><span class="k k-Name k-Name-Function">assert</span> <span class="p">(</span>hello))
 <span class="p">)</span>
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">goodbye-world</span>
-<span class="w">   </span><span class="p">(</span><span class="nv">executive-finalize</span><span class="p">)</span>
-<span class="w">   </span><span class="nv">=&gt;</span>
-<span class="w">   </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">blue</span><span class="w"> </span><span class="s">&quot;Goodbye world&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="p">(</span><span class="kd">defrule</span> goodbye-world
+   <span class="p">(</span>executive-finalize)
+   <span class="nt">=&gt;</span>
+   <span class="p">(</span>printout blue <span class="s">&quot;Goodbye world&quot;</span> crlf)
 <span class="p">)</span>
 </pre></div>
 </div>
 <p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/file-load-batch.clp">cx_bringup/clips/plugin_examples/file-load-batch.clp</a>.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">yellow</span><span class="w"> </span><span class="s">&quot;batch&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>printout yellow <span class="s">&quot;batch&quot;</span> crlf)
 </pre></div>
 </div>
 <p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/file-load-cleanup-batch.clp">cx_bringup/clips/plugin_examples/file-load-cleanup-batch.clp</a>.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; file-load-cleanup-batch.clp</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="c1">; file-load-cleanup-batch.clp</span>
 
-<span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">yellow</span><span class="w"> </span><span class="s">&quot;cleanup batch&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">undefrule</span><span class="w"> </span><span class="nv">hello-world</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">undefrule</span><span class="w"> </span><span class="nv">goodbye-world</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">do-for-all-facts</span><span class="w"> </span><span class="p">((</span><span class="nv">?h</span><span class="w"> </span><span class="nv">hello</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?h</span><span class="p">)</span>
+<span class="p">(</span>printout yellow <span class="s">&quot;cleanup batch&quot;</span> crlf)
+<span class="p">(</span>undefrule hello-world)
+<span class="p">(</span>undefrule goodbye-world)
+<span class="p">(</span>do-for-all-facts <span class="p">((</span><span class="nv">?h</span> hello))
+  <span class="p">(</span><span class="k k-Name k-Name-Function">retract</span> <span class="nv">?h</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>

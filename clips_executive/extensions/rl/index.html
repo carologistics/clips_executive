@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CX Reinforcement Learning &mdash; clips_executive 0.1.3 documentation</title>
+  <title>Reinforcement Learning Integration for CLIPS &mdash; clips_executive 0.1.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=86f27845" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=8f9e6779" />
@@ -21,7 +21,9 @@
         <script src="../../_static/copybutton.js?v=71494f10"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Usage" href="usage.html" />
+    <link rel="prev" title="Extensions" href="../index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -46,13 +48,28 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../getting_started/index.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../plugins/index.html">CLIPS Plugins</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../plugin_generator/index.html">ROS Interface Plugin Generator</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../cli/index.html">Command Line Interface (CLI)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../index.html">Extensions</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Extensions</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Reinforcement Learning Integration for CLIPS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#background-reinforcement-learning">Background: Reinforcement Learning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#content">Content</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cx_rl_gym.html">CXRLGym - ROS 2 Reinforcement Learning Environment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="multi_robot_mppo.html">CXRLMaskablePPONode: RL Model Multi-Robot Applications</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rl_clips.html">Reinforcement Learning CLIPS Interfaces</a></li>
+<li class="toctree-l4"><a class="reference internal" href="blocksworld_tutorial.html">Tutorial: Building an RL Agent for Blocksworld</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../standards.html">Standard Documents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../__readme_include.html">README</a></li>
 </ul>
@@ -71,7 +88,8 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">CX Reinforcement Learning</li>
+          <li class="breadcrumb-item"><a href="../index.html">Extensions</a></li>
+      <li class="breadcrumb-item active">Reinforcement Learning Integration for CLIPS</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/extensions/rl/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -81,19 +99,101 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="cx-reinforcement-learning">
-<span id="usage-cx-rl"></span><h1>CX Reinforcement Learning<a class="headerlink" href="#cx-reinforcement-learning" title="Link to this heading"></a></h1>
-<p>Source code on .</p>
-<p>Reinforcement Learning can be utilized to create a policy for the selection of actions in the ROS2 CLIPS-Executive. For that, the <a class="reference external" href="https://carologistics.github.io/clips_executive/usage_rl_interfaces_plugin">usage_rl_interfaces_plugin</a> creates several ROS2 interfaces to extract information and select actions from and in the CLIPS environment.</p>
-<p>The <strong>cx_reinforcement_learning</strong> package features the <cite>CXRLGym</cite> class utilizing the genereated interfaces to provide most basic functions according to the <a class="reference external" href="https://gymnasium.farama.org/index.html">Gymnasium</a> API standard for reinforcement learning.</p>
-<div class="toctree-wrapper compound">
+  <section id="reinforcement-learning-integration-for-clips">
+<h1>Reinforcement Learning Integration for CLIPS<a class="headerlink" href="#reinforcement-learning-integration-for-clips" title="Link to this heading"></a></h1>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>This extension targets ROS kilted or later. While technically possible to use with earlier versions of ROS, the provided example and supporting CLIPS code require kilted or later.</p>
 </div>
+<p>This extension provides an implementation for using Reinforcement Learning (RL) alongside CLIPS.</p>
+<p>If you need one of the following features, you may find this useful:</p>
+<ul class="simple">
+<li><p>Adaptive decision-making through trial and error in dynamic environments</p></li>
+<li><p>Integration of RL-based policies with CLIPS rules and reasoning</p></li>
+<li><p>A modular interface between symbolic reasoning (CLIPS) and sub-symbolic learning (RL)</p></li>
+<li><p>Seamless experimentation with Gymnasium-compatible environments in ROS</p></li>
+</ul>
+<section id="background-reinforcement-learning">
+<h2>Background: Reinforcement Learning<a class="headerlink" href="#background-reinforcement-learning" title="Link to this heading"></a></h2>
+<p>Reinforcement Learning (RL) is a paradigm of machine learning in which an agent learns to make decisions by interacting with its environment.
+The agent observes the current state, takes actions, and receives rewards that guide its behavior over time.</p>
+<p>An RL setup typically consists of:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>an <em>environment</em>, which defines the state space, action space, and transition dynamics,</p></li>
+<li><p>an <em>agent</em>, which selects actions based on its current policy,</p></li>
+<li><p>and a <em>reward function</em>, which provides feedback on the desirability of each action outcome.</p></li>
+</ul>
+</div></blockquote>
+<p>Through repeated interaction, the agent refines its policy to maximize cumulative reward.</p>
+</section>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>The Reinforcement Learning (RL) integration is provided through a <strong>ROS 2 node</strong> that manages both a Gym environment and a corresponding RL model.</p>
+<ul class="simple">
+<li><p>The <strong>Gym environment</strong> is implemented via the <strong>CXRLGym</strong> class. It sets up the environment, training routines, and execution workflows using ROS interfaces, allowing seamless information exchange with the ROS2 CLIPS-Executive framework via ROS.</p></li>
+<li><p>The <strong>RL model</strong>, <strong>MultiRobotMaskablePPO</strong>, implements a multi-robot <strong>Maskable Proximal Policy Optimization (MPPO)</strong> algorithm. This model supports environments with multiple robots acting asynchronously and allows for masking of unavailable actions, improving training efficiency in complex robotic tasks.</p></li>
+</ul>
+<p>A <strong>node skeleton</strong>, <strong>CXRLBaseNode</strong>, is provided to simplify node development. It implements a <strong>ROS 2 lifecycle node</strong> with optional <strong>bond capabilities</strong>, and manages both the Gym environment (<cite>CXRLGym</cite>) and the RL model.</p>
+<p><strong>CXRLBaseNode</strong> can be extended to easily integrate other RL models, allowing developers to reuse the lifecycle and environment management infrastructure without re-implementing boilerplate code.</p>
+<p>The <strong>cx_rl_mppo_node</strong> is a ready-to-use node that extends <cite>CXRLBaseNode</cite> and comes preconfigured to use the <strong>CXRLGym</strong> environment and the <strong>MultiRobotMaskablePPO</strong> model.</p>
+<p>To reduce manual ROS overhead, the <strong>cx_rl_clips</strong> package provides a <strong>CLIPS-based interface</strong> for interacting with the PDDL Manager node. This allows users to interact with the <cite>CXRLGym</cite> manager by asserting and monitoring <strong>CLIPS facts</strong>, without requiring direct ROS communication (e.g., publishing messages or waiting for service feedback).</p>
+<p>This architecture enables users to:</p>
+<ul class="simple">
+<li><p><strong>Train RL agents</strong> within ROS 2 environments.</p></li>
+<li><p><strong>Combine symbolic reasoning and learning-based control</strong> by integrating CLIPS with the Gym-based RL node.</p></li>
+<li><p><strong>Easily extend to other RL models</strong> by leveraging the <cite>CXRLBaseNode</cite> skeleton.</p></li>
+<li><p><strong>Evaluate trained models</strong> directly on real or simulated robots, with minimal boilerplate.</p></li>
+</ul>
+</section>
+<section id="content">
+<h2>Content<a class="headerlink" href="#content" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#starting-the-cx-rl-node">Starting the CX RL Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cx_rl_gym.html">CXRLGym - ROS 2 Reinforcement Learning Environment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cx_rl_gym.html#ros-interfaces">ROS Interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cx_rl_gym.html#cxrlbasenode">CXRLBaseNode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cx_rl_gym.html#rl-modes">RL Modes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cx_rl_gym.html#inferfaces">Inferfaces</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="multi_robot_mppo.html">CXRLMaskablePPONode: RL Model Multi-Robot Applications</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="multi_robot_mppo.html#multirobotmaskableppo">MultiRobotMaskablePPO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multi_robot_mppo.html#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multi_robot_mppo.html#interfaces">Interfaces</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rl_clips.html">Reinforcement Learning CLIPS Interfaces</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rl_clips.html#using-the-cx-with-cx-rl-clips">Using the ROS2 CLIPS-Executive with cx_rl_clips</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rl_clips.html#implementing-rl-workflows-in-clips">Implementing RL Workflows in CLIPS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rl_clips.html#provided-deftemplates">Provided Deftemplates</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="blocksworld_tutorial.html">Tutorial: Building an RL Agent for Blocksworld</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="blocksworld_tutorial.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blocksworld_tutorial.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blocksworld_tutorial.html#package-structure">Package Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blocksworld_tutorial.html#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="blocksworld_tutorial.html#defining-environment-logic">Defining Environment Logic</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
 </section>
 
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="Extensions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="usage.html" class="btn btn-neutral float-right" title="Usage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

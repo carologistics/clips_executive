@@ -1,10 +1,10 @@
 Configuration
-#############
+=============
 
 The |CX| node configuration is depending on the environments and plugins it manages.
 
 Example
-+++++++
+-------
 
 .. code-block:: yaml
 
@@ -21,7 +21,7 @@ Example
       # ...
 
 Node Parameters
-+++++++++++++++
+---------------
 
 :autostart_node:
 
@@ -61,7 +61,7 @@ Node Parameters
 
 
 Environment Parameters
-++++++++++++++++++++++
+----------------------
 
 Given an environment `env`, these are the configuration options:
 
@@ -143,7 +143,8 @@ Given an environment `env`, these are the configuration options:
 
 
 Plugin Parameters
-+++++++++++++++++
+-----------------
+
 Given a plugin `p` (as specified in an environments plugin list), each needs to specify the type of the plugin:
 
 

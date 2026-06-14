@@ -1,5 +1,5 @@
 Dynamic Setup via Services
-##########################
+==========================
 
 The |CX| provides the following services to dynamically manage environments and plugins after startup (given a namespace `ns` and node name `node`):
 

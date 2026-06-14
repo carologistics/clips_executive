@@ -187,128 +187,128 @@ However, this requires to build a shared library from proto files and then link 
 </section>
 <section id="facts">
 <h3>Facts<a class="headerlink" href="#facts" title="Link to this heading"></a></h3>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; Asserted whenever a message is received</span>
-<span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">protobuf-msg</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span><span class="w">            </span><span class="c1">; (package + &quot;.&quot; +) message-name</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">comp-id</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">msg-type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">rcvd-via</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">STREAM</span><span class="w"> </span><span class="nv">BROADCAST</span><span class="p">)</span>
-<span class="w">  </span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">rcvd-from</span><span class="w">                 </span><span class="c1">; address and port</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">cardinality</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
-<span class="w">  </span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">rcvd-at</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">FLOAT</span><span class="p">))</span><span class="w">          </span><span class="c1">; ros timestamp in seconds</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">client-type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">SERVER</span><span class="w"> </span><span class="nv">CLIENT</span><span class="w"> </span><span class="nv">PEER</span><span class="p">)</span>
-<span class="w">  </span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">client-id</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">ptr</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">EXTERNAL-ADDRESS</span><span class="p">))</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="c1">; Asserted whenever a message is received</span>
+<span class="p">(</span><span class="kd">deftemplate</span> protobuf-msg
+  <span class="p">(</span><span class="kr">slot</span> <span class="kr">type</span> <span class="p">(</span><span class="kr">type</span> STRING))            <span class="c1">; (package + &quot;.&quot; +) message-name</span>
+  <span class="p">(</span><span class="kr">slot</span> comp-id <span class="p">(</span><span class="kr">type</span> INTEGER))
+  <span class="p">(</span><span class="kr">slot</span> msg-type <span class="p">(</span><span class="kr">type</span> INTEGER))
+  <span class="p">(</span><span class="kr">slot</span> rcvd-via <span class="p">(</span><span class="kr">type</span> SYMBOL)
+    <span class="p">(</span><span class="kr">allowed-values</span> STREAM BROADCAST)
+  <span class="p">)</span>
+  <span class="p">(</span>multislot rcvd-from                 <span class="c1">; address and port</span>
+    <span class="p">(</span><span class="kr">cardinality</span> <span class="mi">2</span> <span class="mi">2</span><span class="p">)</span>
+  <span class="p">)</span>
+  <span class="p">(</span><span class="kr">slot</span> rcvd-at <span class="p">(</span><span class="kr">type</span> FLOAT))          <span class="c1">; ros timestamp in seconds</span>
+  <span class="p">(</span><span class="kr">slot</span> client-type <span class="p">(</span><span class="kr">type</span> SYMBOL)
+    <span class="p">(</span><span class="kr">allowed-values</span> SERVER CLIENT PEER)
+  <span class="p">)</span>
+  <span class="p">(</span><span class="kr">slot</span> client-id <span class="p">(</span><span class="kr">type</span> INTEGER))
+  <span class="p">(</span><span class="kr">slot</span> ptr <span class="p">(</span><span class="kr">type</span> EXTERNAL-ADDRESS))
 <span class="p">)</span>
 
 <span class="c1">; Asserted whenever a message handled by a  client could not be processed</span>
-<span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">protobuf-receive-failed</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">comp-id</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">msg-type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">rcvd-via</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">STREAM</span><span class="w"> </span><span class="nv">BROADCAST</span><span class="p">)</span>
-<span class="w">  </span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">rcvd-from</span><span class="w"> </span><span class="p">(</span><span class="nv">cardinality</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">client-id</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">message</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
+<span class="p">(</span><span class="kd">deftemplate</span> protobuf-receive-failed
+  <span class="p">(</span><span class="kr">slot</span> comp-id <span class="p">(</span><span class="kr">type</span> INTEGER))
+  <span class="p">(</span><span class="kr">slot</span> msg-type <span class="p">(</span><span class="kr">type</span> INTEGER))
+  <span class="p">(</span><span class="kr">slot</span> rcvd-via <span class="p">(</span><span class="kr">type</span> SYMBOL)
+    <span class="p">(</span><span class="kr">allowed-values</span> STREAM BROADCAST)
+  <span class="p">)</span>
+  <span class="p">(</span>multislot rcvd-from <span class="p">(</span><span class="kr">cardinality</span> <span class="mi">2</span> <span class="mi">2</span><span class="p">))</span>
+  <span class="p">(</span><span class="kr">slot</span> client-id <span class="p">(</span><span class="kr">type</span> INTEGER))
+  <span class="p">(</span><span class="kr">slot</span> message <span class="p">(</span><span class="kr">type</span> STRING))
 <span class="p">)</span>
 
 <span class="c1">; Asserted whenever a message handled by a server could not be processed</span>
-<span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">protobuf-server-receive-failed</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">comp-id</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">msg-type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">rcvd-via</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">STREAM</span><span class="w"> </span><span class="nv">BROADCAST</span><span class="p">)</span>
-<span class="w">  </span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">rcvd-from</span><span class="w"> </span><span class="p">(</span><span class="nv">cardinality</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">client-id</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">message</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
+<span class="p">(</span><span class="kd">deftemplate</span> protobuf-server-receive-failed
+  <span class="p">(</span><span class="kr">slot</span> comp-id <span class="p">(</span><span class="kr">type</span> INTEGER))
+  <span class="p">(</span><span class="kr">slot</span> msg-type <span class="p">(</span><span class="kr">type</span> INTEGER))
+  <span class="p">(</span><span class="kr">slot</span> rcvd-via <span class="p">(</span><span class="kr">type</span> SYMBOL)
+    <span class="p">(</span><span class="kr">allowed-values</span> STREAM BROADCAST)
+  <span class="p">)</span>
+  <span class="p">(</span>multislot rcvd-from <span class="p">(</span><span class="kr">cardinality</span> <span class="mi">2</span> <span class="mi">2</span><span class="p">))</span>
+  <span class="p">(</span><span class="kr">slot</span> client-id <span class="p">(</span><span class="kr">type</span> INTEGER))
+  <span class="p">(</span><span class="kr">slot</span> message <span class="p">(</span><span class="kr">type</span> STRING))
 <span class="p">)</span>
 
 <span class="c1">; asynchronously asserted once a client is created via pb-connect</span>
-<span class="p">(</span><span class="nv">protobuf-client-connected</span><span class="w"> </span><span class="nv">?client-id</span><span class="p">)</span>
+<span class="p">(</span>protobuf-client-connected <span class="nv">?client-id</span><span class="p">)</span>
 <span class="c1">; asynchronously asserted once a client is disconnected via pb-disconnect</span>
-<span class="p">(</span><span class="nv">protobuf-client-disconnected</span><span class="w"> </span><span class="nv">?client-id</span><span class="p">)</span>
+<span class="p">(</span>protobuf-client-disconnected <span class="nv">?client-id</span><span class="p">)</span>
 <span class="c1">; asynchronously asserted once a server is created via pb-server-enable</span>
-<span class="p">(</span><span class="nv">protobuf-server-client-connected</span><span class="w"> </span><span class="nv">?client-id</span><span class="w"> </span><span class="nv">?endpoint</span><span class="w"> </span><span class="nv">?port</span><span class="p">)</span>
+<span class="p">(</span>protobuf-server-client-connected <span class="nv">?client-id</span> <span class="nv">?endpoint</span> <span class="nv">?port</span><span class="p">)</span>
 <span class="c1">; asynchronously asserted once a server is created via pb-server-disable</span>
-<span class="p">(</span><span class="nv">protobuf-server-client-connected</span><span class="w"> </span><span class="nv">?client-id</span><span class="p">)</span>
+<span class="p">(</span>protobuf-server-client-connected <span class="nv">?client-id</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
 <section id="functions">
 <h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; functions for processing messages:</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-field-names</span><span class="w"> </span><span class="nv">?msg</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-field-type</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="nv">?field-name</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-has-field</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="nv">?field-name</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-field-label</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="nv">?field-name</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-field-value</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="nv">?field-name</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-field-list</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="nv">?field-name</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-field-is-list</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="nv">?field-name</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-create</span><span class="w"> </span><span class="nv">?full-name</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">pb-set-field</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="nv">?field-name</span><span class="w"> </span><span class="nv">?value</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">pb-add-list</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="nv">?field-name</span><span class="w"> </span><span class="nv">?list</span><span class="p">)</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="c1">; functions for processing messages:</span>
+<span class="p">(</span>bind <span class="nv">?res</span> <span class="p">(</span>pb-field-names <span class="nv">?msg</span><span class="p">))</span>
+<span class="p">(</span>bind <span class="nv">?res</span> <span class="p">(</span>pb-field-type <span class="nv">?msg</span> <span class="nv">?field-name</span><span class="p">))</span>
+<span class="p">(</span>bind <span class="nv">?res</span> <span class="p">(</span>pb-has-field <span class="nv">?msg</span> <span class="nv">?field-name</span><span class="p">))</span>
+<span class="p">(</span>bind <span class="nv">?res</span> <span class="p">(</span>pb-field-label <span class="nv">?msg</span> <span class="nv">?field-name</span><span class="p">))</span>
+<span class="p">(</span>bind <span class="nv">?res</span> <span class="p">(</span>pb-field-value <span class="nv">?msg</span> <span class="nv">?field-name</span><span class="p">))</span>
+<span class="p">(</span>bind <span class="nv">?res</span> <span class="p">(</span>pb-field-list <span class="nv">?msg</span> <span class="nv">?field-name</span><span class="p">))</span>
+<span class="p">(</span>bind <span class="nv">?res</span> <span class="p">(</span>pb-field-is-list <span class="nv">?msg</span> <span class="nv">?field-name</span><span class="p">))</span>
+<span class="p">(</span>bind <span class="nv">?res</span> <span class="p">(</span>pb-create <span class="nv">?full-name</span><span class="p">))</span>
+<span class="p">(</span>pb-set-field <span class="nv">?msg</span> <span class="nv">?field-name</span> <span class="nv">?value</span><span class="p">)</span>
+<span class="p">(</span>pb-add-list <span class="nv">?msg</span> <span class="nv">?field-name</span> <span class="nv">?list</span><span class="p">)</span>
 <span class="c1">;</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-tostring</span><span class="w"> </span><span class="nv">?msg</span><span class="p">))</span>
+<span class="p">(</span>bind <span class="nv">?res</span> <span class="p">(</span>pb-tostring <span class="nv">?msg</span><span class="p">))</span>
 
 <span class="c1">; functions for using a stream server or clients</span>
-<span class="p">(</span><span class="nv">pb-server-enable</span><span class="w"> </span><span class="nv">?port</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">pb-server-disable</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">pb-send</span><span class="w"> </span><span class="nv">?client-id</span><span class="w"> </span><span class="nv">?msg</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-connect</span><span class="w"> </span><span class="nv">?host</span><span class="w"> </span><span class="nv">?port</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">pb-disconnect</span><span class="w"> </span><span class="nv">?client-id</span><span class="p">)</span>
+<span class="p">(</span>pb-server-enable <span class="nv">?port</span><span class="p">)</span>
+<span class="p">(</span>pb-server-disable)
+<span class="p">(</span>pb-send <span class="nv">?client-id</span> <span class="nv">?msg</span><span class="p">)</span>
+<span class="p">(</span>bind <span class="nv">?res</span> <span class="p">(</span>pb-connect <span class="nv">?host</span> <span class="nv">?port</span><span class="p">))</span>
+<span class="p">(</span>pb-disconnect <span class="nv">?client-id</span><span class="p">)</span>
 
 <span class="c1">; functions for using broadcast peers</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-peer-create</span><span class="w"> </span><span class="nv">?address</span><span class="w"> </span><span class="nv">?port</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-peer-create-local</span><span class="w"> </span><span class="nv">?address</span><span class="w"> </span><span class="nv">?send-port</span><span class="w"> </span><span class="nv">?recv-port</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-peer-create-crypto</span><span class="w"> </span><span class="nv">?address</span><span class="w"> </span><span class="nv">?port</span><span class="w"> </span><span class="nv">?crypto</span><span class="w"> </span><span class="nv">?cypher</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-peer-create-local-crypto</span><span class="w"> </span><span class="nv">?address</span><span class="w"> </span><span class="nv">?send-port</span><span class="w"> </span><span class="nv">?recv-port</span><span class="w"> </span><span class="nv">?crypto</span><span class="w"> </span><span class="nv">?cypher</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">pb-peer-destroy</span><span class="w"> </span><span class="nv">?peer-id</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">pb-peer-setup-crypto</span><span class="w"> </span><span class="nv">?peer-id</span><span class="w"> </span><span class="nv">?key</span><span class="w"> </span><span class="nv">?cypher</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">pb-broadcast</span><span class="w"> </span><span class="nv">?peer-id</span><span class="w"> </span><span class="nv">?msg</span><span class="p">)</span>
+<span class="p">(</span>bind <span class="nv">?res</span> <span class="p">(</span>pb-peer-create <span class="nv">?address</span> <span class="nv">?port</span><span class="p">))</span>
+<span class="p">(</span>bind <span class="nv">?res</span> <span class="p">(</span>pb-peer-create-local <span class="nv">?address</span> <span class="nv">?send-port</span> <span class="nv">?recv-port</span><span class="p">))</span>
+<span class="p">(</span>bind <span class="nv">?res</span> <span class="p">(</span>pb-peer-create-crypto <span class="nv">?address</span> <span class="nv">?port</span> <span class="nv">?crypto</span> <span class="nv">?cypher</span><span class="p">))</span>
+<span class="p">(</span>bind <span class="nv">?res</span> <span class="p">(</span>pb-peer-create-local-crypto <span class="nv">?address</span> <span class="nv">?send-port</span> <span class="nv">?recv-port</span> <span class="nv">?crypto</span> <span class="nv">?cypher</span><span class="p">))</span>
+<span class="p">(</span>pb-peer-destroy <span class="nv">?peer-id</span><span class="p">)</span>
+<span class="p">(</span>pb-peer-setup-crypto <span class="nv">?peer-id</span> <span class="nv">?key</span> <span class="nv">?cypher</span><span class="p">)</span>
+<span class="p">(</span>pb-broadcast <span class="nv">?peer-id</span> <span class="nv">?msg</span><span class="p">)</span>
 
 <span class="c1">; In order to use types from a linked library, they need to be registered via this function first.</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-register-type</span><span class="w"> </span><span class="nv">?full-name</span><span class="p">))</span><span class="w">    </span><span class="c1">; returns TRUE if successful, FALSE otherwise</span>
+<span class="p">(</span>bind <span class="nv">?res</span> <span class="p">(</span>pb-register-type <span class="nv">?full-name</span><span class="p">))</span>    <span class="c1">; returns TRUE if successful, FALSE otherwise</span>
 </pre></div>
 </div>
 </section>
 <section id="rules">
 <h3>Rules<a class="headerlink" href="#rules" title="Link to this heading"></a></h3>
 <p>Per default the Plugin ensures that all asserted facts are cleaned up with lowest possible salience.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defglobal</span>
-<span class="w">  </span><span class="nv">?*PRIORITY-PROTOBUF-RETRACT*</span><span class="w">    </span><span class="nb">=</span><span class="w"> </span><span class="mi">-10000</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>defglobal
+  ?*PRIORITY-PROTOBUF-RETRACT*    = -10000
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">protobuf-cleanup-receive-failed</span>
-<span class="w">  </span><span class="p">(</span><span class="k">declare</span><span class="w"> </span><span class="p">(</span><span class="nv">salience</span><span class="w"> </span><span class="nv">?*PRIORITY-PROTOBUF-RETRACT*</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">?f</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">protobuf-receive-failed</span><span class="w"> </span><span class="p">(</span><span class="nv">comp-id</span><span class="w"> </span><span class="nv">?cid</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">msg-type</span><span class="w"> </span><span class="nv">?mt</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">rcvd-from</span><span class="w"> </span><span class="nv">?host</span><span class="w"> </span><span class="nv">?port</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">message</span><span class="w"> </span><span class="nv">?msg</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?f</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="s">&quot;Protobuf rcv fail for &quot;</span><span class="w"> </span><span class="nv">?cid</span><span class="w"> </span><span class="s">&quot;:&quot;</span><span class="w"> </span><span class="nv">?mt</span><span class="w"> </span><span class="s">&quot; from &quot;</span><span class="w"> </span><span class="nv">?host</span><span class="w"> </span><span class="s">&quot;:&quot;</span><span class="w"> </span><span class="nv">?port</span><span class="w"> </span><span class="s">&quot;: &quot;</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="p">(</span><span class="kd">defrule</span> protobuf-cleanup-receive-failed
+  <span class="p">(</span>declare <span class="p">(</span>salience ?*PRIORITY-PROTOBUF-RETRACT*))
+  <span class="nv">?f</span> &lt;- <span class="p">(</span>protobuf-receive-failed <span class="p">(</span>comp-id <span class="nv">?cid</span><span class="p">)</span> <span class="p">(</span>msg-type <span class="nv">?mt</span><span class="p">)</span>
+    <span class="p">(</span>rcvd-from <span class="nv">?host</span> <span class="nv">?port</span><span class="p">)</span> <span class="p">(</span>message <span class="nv">?msg</span><span class="p">))</span>
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span><span class="k k-Name k-Name-Function">retract</span> <span class="nv">?f</span><span class="p">)</span>
+  <span class="p">(</span>printout t <span class="s">&quot;Protobuf rcv fail for &quot;</span> <span class="nv">?cid</span> <span class="s">&quot;:&quot;</span> <span class="nv">?mt</span> <span class="s">&quot; from &quot;</span> <span class="nv">?host</span> <span class="s">&quot;:&quot;</span> <span class="nv">?port</span> <span class="s">&quot;: &quot;</span> <span class="nv">?msg</span> crlf)
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">protobuf-cleanup-server-receive-failed</span>
-<span class="w">  </span><span class="p">(</span><span class="k">declare</span><span class="w"> </span><span class="p">(</span><span class="nv">salience</span><span class="w"> </span><span class="nv">?*PRIORITY-PROTOBUF-RETRACT*</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">?f</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">protobuf-server-receive-failed</span><span class="w"> </span><span class="p">(</span><span class="nv">comp-id</span><span class="w"> </span><span class="nv">?cid</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">msg-type</span><span class="w"> </span><span class="nv">?mt</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">rcvd-from</span><span class="w"> </span><span class="nv">?host</span><span class="w"> </span><span class="nv">?port</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">message</span><span class="w"> </span><span class="nv">?msg</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?f</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="s">&quot;Protobuf server rcv fail for &quot;</span><span class="w"> </span><span class="nv">?cid</span><span class="w"> </span><span class="s">&quot;:&quot;</span><span class="w"> </span><span class="nv">?mt</span><span class="w"> </span><span class="s">&quot; from &quot;</span><span class="w"> </span><span class="nv">?host</span><span class="w"> </span><span class="s">&quot;:&quot;</span><span class="w"> </span><span class="nv">?port</span><span class="w"> </span><span class="s">&quot;: &quot;</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="p">(</span><span class="kd">defrule</span> protobuf-cleanup-server-receive-failed
+  <span class="p">(</span>declare <span class="p">(</span>salience ?*PRIORITY-PROTOBUF-RETRACT*))
+  <span class="nv">?f</span> &lt;- <span class="p">(</span>protobuf-server-receive-failed <span class="p">(</span>comp-id <span class="nv">?cid</span><span class="p">)</span> <span class="p">(</span>msg-type <span class="nv">?mt</span><span class="p">)</span>
+    <span class="p">(</span>rcvd-from <span class="nv">?host</span> <span class="nv">?port</span><span class="p">)</span> <span class="p">(</span>message <span class="nv">?msg</span><span class="p">))</span>
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span><span class="k k-Name k-Name-Function">retract</span> <span class="nv">?f</span><span class="p">)</span>
+  <span class="p">(</span>printout t <span class="s">&quot;Protobuf server rcv fail for &quot;</span> <span class="nv">?cid</span> <span class="s">&quot;:&quot;</span> <span class="nv">?mt</span> <span class="s">&quot; from &quot;</span> <span class="nv">?host</span> <span class="s">&quot;:&quot;</span> <span class="nv">?port</span> <span class="s">&quot;: &quot;</span> <span class="nv">?msg</span> crlf)
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">protobuf-cleanup-message</span>
-<span class="w">  </span><span class="p">(</span><span class="k">declare</span><span class="w"> </span><span class="p">(</span><span class="nv">salience</span><span class="w"> </span><span class="nv">?*PRIORITY-PROTOBUF-RETRACT*</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">?pf</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">protobuf-msg</span><span class="w"> </span><span class="p">(</span><span class="nv">ptr</span><span class="w"> </span><span class="nv">?p</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">pb-destroy</span><span class="w"> </span><span class="nv">?p</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?pf</span><span class="p">)</span>
+<span class="p">(</span><span class="kd">defrule</span> protobuf-cleanup-message
+  <span class="p">(</span>declare <span class="p">(</span>salience ?*PRIORITY-PROTOBUF-RETRACT*))
+  <span class="nv">?pf</span> &lt;- <span class="p">(</span>protobuf-msg <span class="p">(</span>ptr <span class="nv">?p</span><span class="p">))</span>
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>pb-destroy <span class="nv">?p</span><span class="p">)</span>
+  <span class="p">(</span><span class="k k-Name k-Name-Function">retract</span> <span class="nv">?pf</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -390,60 +390,60 @@ However, this requires to build a shared library from proto files and then link 
 <section id="code">
 <h3>Code<a class="headerlink" href="#code" title="Link to this heading"></a></h3>
 <p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/protobuf-peer1.clp">cx_bringup/clips/plugin_examples/protobuf-peer1.clp</a>.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">protobuf-init-example-peer</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">executive-finalize</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">peer</span><span class="w"> </span><span class="nv">?any-peer-id</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?peer-1</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-peer-create-local</span><span class="w"> </span><span class="nv">127.0.0.1</span><span class="w"> </span><span class="mi">4444</span><span class="w"> </span><span class="mi">4445</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">peer</span><span class="w"> </span><span class="nv">?peer-1</span><span class="w"> </span><span class="mi">4444</span><span class="w"> </span><span class="mi">4445</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;127.0.0.1 4444 4445&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">started</span><span class="w"> </span><span class="p">(</span><span class="nv">now</span><span class="p">)))</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">defrule</span> protobuf-init-example-peer
+  <span class="p">(</span>not <span class="p">(</span>executive-finalize))
+  <span class="p">(</span>not <span class="p">(</span>peer <span class="nv">?any-peer-id</span><span class="p">))</span>
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>bind <span class="nv">?peer-1</span> <span class="p">(</span>pb-peer-create-local <span class="mf">127.0</span>.0.1 <span class="mi">4444</span> <span class="mi">4445</span><span class="p">))</span>
+  <span class="p">(</span><span class="k k-Name k-Name-Function">assert</span> <span class="p">(</span>peer <span class="nv">?peer-1</span> <span class="mi">4444</span> <span class="mi">4445</span><span class="p">))</span>
+  <span class="p">(</span>printout green <span class="s">&quot;127.0.0.1 4444 4445&quot;</span> crlf)
+  <span class="p">(</span><span class="k k-Name k-Name-Function">assert</span> <span class="p">(</span>started <span class="p">(</span>now)))
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">protobuf-send-msg</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">peer</span><span class="w"> </span><span class="nv">?peer-id</span><span class="w"> </span><span class="nv">?source</span><span class="w"> </span><span class="nv">?target</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">started</span><span class="w"> </span><span class="nv">?start</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">time</span><span class="w"> </span><span class="nv">?now&amp;:</span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="nv">?now</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="nv">?start</span><span class="w"> </span><span class="mi">1</span><span class="p">)))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-create</span><span class="w"> </span><span class="s">&quot;SearchRequest&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">pb-set-field</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="s">&quot;query&quot;</span><span class="w"> </span><span class="s">&quot;hello&quot;</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">pb-set-field</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="s">&quot;page_number&quot;</span><span class="w"> </span><span class="nv">?source</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">pb-set-field</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="s">&quot;results_per_page&quot;</span><span class="w"> </span><span class="nv">?target</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">pb-broadcast</span><span class="w"> </span><span class="nv">?peer-id</span><span class="w"> </span><span class="nv">?msg</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">pb-destroy</span><span class="w"> </span><span class="nv">?msg</span><span class="p">)</span>
+<span class="p">(</span><span class="kd">defrule</span> protobuf-send-msg
+  <span class="p">(</span>peer <span class="nv">?peer-id</span> <span class="nv">?source</span> <span class="nv">?target</span><span class="p">)</span>
+  <span class="p">(</span>started <span class="nv">?start</span><span class="p">)</span>
+  <span class="p">(</span>time <span class="nv">?now</span>&amp;:(&gt; <span class="nv">?now</span> <span class="p">(</span>+ <span class="nv">?start</span> <span class="mi">1</span><span class="p">)))</span>
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>bind <span class="nv">?msg</span> <span class="p">(</span>pb-create <span class="s">&quot;SearchRequest&quot;</span><span class="p">))</span>
+  <span class="p">(</span>pb-set-field <span class="nv">?msg</span> <span class="s">&quot;query&quot;</span> <span class="s">&quot;hello&quot;</span><span class="p">)</span>
+  <span class="p">(</span>pb-set-field <span class="nv">?msg</span> <span class="s">&quot;page_number&quot;</span> <span class="nv">?source</span><span class="p">)</span>
+  <span class="p">(</span>pb-set-field <span class="nv">?msg</span> <span class="s">&quot;results_per_page&quot;</span> <span class="nv">?target</span><span class="p">)</span>
+  <span class="p">(</span>pb-broadcast <span class="nv">?peer-id</span> <span class="nv">?msg</span><span class="p">)</span>
+  <span class="p">(</span>pb-destroy <span class="nv">?msg</span><span class="p">)</span>
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">protobuf-read-msg</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">protobuf-msg</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">?type</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">comp-id</span><span class="w"> </span><span class="nv">?comp-id</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">msg-type</span><span class="w"> </span><span class="nv">?msg-type</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">rcvd-via</span><span class="w"> </span><span class="nv">?via</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">rcvd-from</span><span class="w"> </span><span class="nv">?address</span><span class="w"> </span><span class="nv">?port</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">rcvd-at</span><span class="w"> </span><span class="nv">?rcvd-at</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">client-type</span><span class="w"> </span><span class="nv">?c-type</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">client-id</span><span class="w"> </span><span class="nv">?c-id</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">ptr</span><span class="w"> </span><span class="nv">?ptr</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">blue</span><span class="w"> </span><span class="nv">?c-id</span><span class="w"> </span><span class="s">&quot;(&quot;</span><span class="nv">?c-type</span><span class="s">&quot;) received&quot;</span><span class="w"> </span><span class="nv">?type</span>
-<span class="w">    </span><span class="s">&quot; (&quot;</span><span class="w"> </span><span class="nv">?comp-id</span><span class="w"> </span><span class="s">&quot; &quot;</span><span class="w"> </span><span class="nv">?msg-type</span><span class="w"> </span><span class="s">&quot;) from &quot;</span><span class="w"> </span><span class="nv">?address</span><span class="w"> </span><span class="s">&quot;:&quot;</span><span class="w"> </span><span class="nv">?port</span><span class="w"> </span><span class="s">&quot;</span>
-<span class="s">    &quot;</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="p">(</span><span class="nv">now</span><span class="p">)</span><span class="w">  </span><span class="nv">?rcvd-at</span><span class="p">)</span><span class="w"> </span><span class="s">&quot;s ago&quot;</span><span class="w"> </span><span class="nv">crlf</span>
-<span class="w">  </span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?var</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-tostring</span><span class="w"> </span><span class="nv">?ptr</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">yellow</span><span class="w"> </span><span class="nv">?var</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="p">(</span><span class="kd">defrule</span> protobuf-read-msg
+  <span class="p">(</span>protobuf-msg <span class="p">(</span><span class="kr">type</span> <span class="nv">?type</span><span class="p">)</span> <span class="p">(</span>comp-id <span class="nv">?comp-id</span><span class="p">)</span> <span class="p">(</span>msg-type <span class="nv">?msg-type</span><span class="p">)</span>
+    <span class="p">(</span>rcvd-via <span class="nv">?via</span><span class="p">)</span> <span class="p">(</span>rcvd-from <span class="nv">?address</span> <span class="nv">?port</span><span class="p">)</span> <span class="p">(</span>rcvd-at <span class="nv">?rcvd-at</span><span class="p">)</span>
+    <span class="p">(</span>client-type <span class="nv">?c-type</span><span class="p">)</span> <span class="p">(</span>client-id <span class="nv">?c-id</span><span class="p">)</span> <span class="p">(</span>ptr <span class="nv">?ptr</span><span class="p">))</span>
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>printout blue <span class="nv">?c-id</span> <span class="s">&quot;(&quot;</span><span class="nv">?c-type</span><span class="s">&quot;) received&quot;</span> <span class="nv">?type</span>
+    <span class="s">&quot; (&quot;</span> <span class="nv">?comp-id</span> <span class="s">&quot; &quot;</span> <span class="nv">?msg-type</span> <span class="s">&quot;) from &quot;</span> <span class="nv">?address</span> <span class="s">&quot;:&quot;</span> <span class="nv">?port</span> <span class="s">&quot;</span>
+<span class="s">    &quot;</span> <span class="p">(</span>- <span class="p">(</span>now)  <span class="nv">?rcvd-at</span><span class="p">)</span> <span class="s">&quot;s ago&quot;</span> crlf
+  <span class="p">)</span>
+  <span class="p">(</span>bind <span class="nv">?var</span> <span class="p">(</span>pb-tostring <span class="nv">?ptr</span><span class="p">))</span>
+  <span class="p">(</span>printout yellow <span class="nv">?var</span> crlf)
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">protobuf-close-peer</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">executive-finalize</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">?f</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">peer</span><span class="w"> </span><span class="nv">?any-peer-id</span><span class="w"> </span><span class="nv">$?</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">pb-peer-destroy</span><span class="w"> </span><span class="nv">?any-peer-id</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?f</span><span class="p">)</span>
+<span class="p">(</span><span class="kd">defrule</span> protobuf-close-peer
+  <span class="p">(</span>executive-finalize)
+  <span class="nv">?f</span> &lt;- <span class="p">(</span>peer <span class="nv">?any-peer-id</span> <span class="nv">$?</span><span class="p">)</span>
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>pb-peer-destroy <span class="nv">?any-peer-id</span><span class="p">)</span>
+  <span class="p">(</span><span class="k k-Name k-Name-Function">retract</span> <span class="nv">?f</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 <p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/protobuf-peer2.clp">cx_bringup/clips/plugin_examples/protobuf-peer2.clp</a>.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">protobuf-init-example-peer</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">executive-finalize</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">peer</span><span class="w"> </span><span class="nv">?any-peer-id</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?peer-2</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-peer-create-local</span><span class="w"> </span><span class="nv">127.0.0.1</span><span class="w"> </span><span class="mi">4445</span><span class="w"> </span><span class="mi">4444</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">peer</span><span class="w"> </span><span class="nv">?peer-2</span><span class="w"> </span><span class="mi">4445</span><span class="w"> </span><span class="mi">4444</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;127.0.0.1 4445 4444&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">started</span><span class="w"> </span><span class="p">(</span><span class="nv">now</span><span class="p">)))</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">defrule</span> protobuf-init-example-peer
+  <span class="p">(</span>not <span class="p">(</span>executive-finalize))
+  <span class="p">(</span>not <span class="p">(</span>peer <span class="nv">?any-peer-id</span><span class="p">))</span>
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>bind <span class="nv">?peer-2</span> <span class="p">(</span>pb-peer-create-local <span class="mf">127.0</span>.0.1 <span class="mi">4445</span> <span class="mi">4444</span><span class="p">))</span>
+  <span class="p">(</span><span class="k k-Name k-Name-Function">assert</span> <span class="p">(</span>peer <span class="nv">?peer-2</span> <span class="mi">4445</span> <span class="mi">4444</span><span class="p">))</span>
+  <span class="p">(</span>printout green <span class="s">&quot;127.0.0.1 4445 4444&quot;</span> crlf)
+  <span class="p">(</span><span class="k k-Name k-Name-Function">assert</span> <span class="p">(</span>started <span class="p">(</span>now)))
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -507,65 +507,65 @@ Therefore, a linked plugin is generated:</p>
 <section id="id3">
 <h3>Code<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
 <p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/protobuf-linked-client.clp">cx_bringup/clips/plugin_examples/protobuf-linked-client.clp</a>.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">protobuf-init-example-client</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">executive-finalize</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">client</span><span class="w"> </span><span class="nv">?any-c-id</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-connect</span><span class="w"> </span><span class="nv">127.0.0.1</span><span class="w"> </span><span class="mi">4446</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;Connect to server: &quot;</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">client</span><span class="w"> </span><span class="nv">?res</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?success</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-register-type</span><span class="w"> </span><span class="s">&quot;SearchRequest&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;Register Type: &quot;</span><span class="w"> </span><span class="nv">?success</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">defrule</span> protobuf-init-example-client
+  <span class="p">(</span>not <span class="p">(</span>executive-finalize))
+  <span class="p">(</span>not <span class="p">(</span>client <span class="nv">?any-c-id</span><span class="p">))</span>
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>bind <span class="nv">?res</span> <span class="p">(</span>pb-connect <span class="mf">127.0</span>.0.1 <span class="mi">4446</span><span class="p">))</span>
+  <span class="p">(</span>printout green <span class="s">&quot;Connect to server: &quot;</span> <span class="nv">?res</span> crlf)
+  <span class="p">(</span><span class="k k-Name k-Name-Function">assert</span> <span class="p">(</span>client <span class="nv">?res</span><span class="p">))</span>
+  <span class="p">(</span>bind <span class="nv">?success</span> <span class="p">(</span>pb-register-type <span class="s">&quot;SearchRequest&quot;</span><span class="p">))</span>
+  <span class="p">(</span>printout green <span class="s">&quot;Register Type: &quot;</span> <span class="nv">?success</span> crlf)
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">peer-send-msg</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">client</span><span class="w"> </span><span class="nv">?c-id</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">protobuf-client-connected</span><span class="w"> </span><span class="nv">?c-id</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">protobuf-msg</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-create</span><span class="w"> </span><span class="s">&quot;SearchRequest&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">pb-set-field</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="s">&quot;query&quot;</span><span class="w"> </span><span class="s">&quot;hello&quot;</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">pb-set-field</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="s">&quot;page_number&quot;</span><span class="w"> </span><span class="nv">?c-id</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">pb-set-field</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="s">&quot;results_per_page&quot;</span><span class="w"> </span><span class="nv">?c-id</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">pb-send</span><span class="w"> </span><span class="nv">?c-id</span><span class="w"> </span><span class="nv">?msg</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">pb-destroy</span><span class="w"> </span><span class="nv">?msg</span><span class="p">)</span>
+<span class="p">(</span><span class="kd">defrule</span> peer-send-msg
+  <span class="p">(</span>client <span class="nv">?c-id</span><span class="p">)</span>
+  <span class="p">(</span>protobuf-client-connected <span class="nv">?c-id</span><span class="p">)</span>
+  <span class="p">(</span>not <span class="p">(</span>protobuf-msg))
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>bind <span class="nv">?msg</span> <span class="p">(</span>pb-create <span class="s">&quot;SearchRequest&quot;</span><span class="p">))</span>
+  <span class="p">(</span>pb-set-field <span class="nv">?msg</span> <span class="s">&quot;query&quot;</span> <span class="s">&quot;hello&quot;</span><span class="p">)</span>
+  <span class="p">(</span>pb-set-field <span class="nv">?msg</span> <span class="s">&quot;page_number&quot;</span> <span class="nv">?c-id</span><span class="p">)</span>
+  <span class="p">(</span>pb-set-field <span class="nv">?msg</span> <span class="s">&quot;results_per_page&quot;</span> <span class="nv">?c-id</span><span class="p">)</span>
+  <span class="p">(</span>pb-send <span class="nv">?c-id</span> <span class="nv">?msg</span><span class="p">)</span>
+  <span class="p">(</span>pb-destroy <span class="nv">?msg</span><span class="p">)</span>
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">protobuf-close</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">executive-finalize</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">?f</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">client</span><span class="w"> </span><span class="nv">?any-client</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">pb-disconnect</span><span class="w"> </span><span class="nv">?any-client</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?f</span><span class="p">)</span>
+<span class="p">(</span><span class="kd">defrule</span> protobuf-close
+  <span class="p">(</span>executive-finalize)
+  <span class="nv">?f</span> &lt;- <span class="p">(</span>client <span class="nv">?any-client</span><span class="p">)</span>
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>pb-disconnect <span class="nv">?any-client</span><span class="p">)</span>
+  <span class="p">(</span><span class="k k-Name k-Name-Function">retract</span> <span class="nv">?f</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 <p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/protobuf-linked-server.clp">cx_bringup/clips/plugin_examples/protobuf-linked-server.clp</a>.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">protobuf-init-example-server</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">executive-finalize</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">pb-server-enable</span><span class="w"> </span><span class="mi">4446</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?success</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-register-type</span><span class="w"> </span><span class="s">&quot;SearchRequest&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;Register Type: &quot;</span><span class="w"> </span><span class="nv">?success</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">defrule</span> protobuf-init-example-server
+  <span class="p">(</span>not <span class="p">(</span>executive-finalize))
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>pb-server-enable <span class="mi">4446</span><span class="p">)</span>
+  <span class="p">(</span>bind <span class="nv">?success</span> <span class="p">(</span>pb-register-type <span class="s">&quot;SearchRequest&quot;</span><span class="p">))</span>
+  <span class="p">(</span>printout green <span class="s">&quot;Register Type: &quot;</span> <span class="nv">?success</span> crlf)
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">protobuf-msg-read</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">protobuf-msg</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">?type</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">comp-id</span><span class="w"> </span><span class="nv">?comp-id</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">msg-type</span><span class="w"> </span><span class="nv">?msg-type</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">rcvd-via</span><span class="w"> </span><span class="nv">?via</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">rcvd-from</span><span class="w"> </span><span class="nv">?address</span><span class="w"> </span><span class="nv">?port</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">rcvd-at</span><span class="w"> </span><span class="nv">?rcvd-at</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">client-type</span><span class="w"> </span><span class="nv">?c-type</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">client-id</span><span class="w"> </span><span class="nv">?c-id</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">ptr</span><span class="w"> </span><span class="nv">?ptr</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">blue</span><span class="w"> </span><span class="nv">?c-id</span><span class="w"> </span><span class="s">&quot;(&quot;</span><span class="nv">?c-type</span><span class="s">&quot;) received&quot;</span><span class="w"> </span><span class="nv">?type</span>
-<span class="w">    </span><span class="s">&quot; (&quot;</span><span class="w"> </span><span class="nv">?comp-id</span><span class="w"> </span><span class="s">&quot; &quot;</span><span class="w"> </span><span class="nv">?msg-type</span><span class="w"> </span><span class="s">&quot;) from &quot;</span><span class="w"> </span><span class="nv">?address</span><span class="w"> </span><span class="s">&quot;:&quot;</span><span class="w"> </span><span class="nv">?port</span><span class="w"> </span><span class="s">&quot;</span>
-<span class="s">    &quot;</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="p">(</span><span class="nv">now</span><span class="p">)</span><span class="w">  </span><span class="nv">?rcvd-at</span><span class="p">)</span><span class="w"> </span><span class="s">&quot;s ago&quot;</span><span class="w"> </span><span class="nv">crlf</span>
-<span class="w">  </span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?var</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-tostring</span><span class="w"> </span><span class="nv">?ptr</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">yellow</span><span class="w"> </span><span class="nv">?var</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="p">(</span><span class="kd">defrule</span> protobuf-msg-read
+  <span class="p">(</span>protobuf-msg <span class="p">(</span><span class="kr">type</span> <span class="nv">?type</span><span class="p">)</span> <span class="p">(</span>comp-id <span class="nv">?comp-id</span><span class="p">)</span> <span class="p">(</span>msg-type <span class="nv">?msg-type</span><span class="p">)</span>
+    <span class="p">(</span>rcvd-via <span class="nv">?via</span><span class="p">)</span> <span class="p">(</span>rcvd-from <span class="nv">?address</span> <span class="nv">?port</span><span class="p">)</span> <span class="p">(</span>rcvd-at <span class="nv">?rcvd-at</span><span class="p">)</span>
+    <span class="p">(</span>client-type <span class="nv">?c-type</span><span class="p">)</span> <span class="p">(</span>client-id <span class="nv">?c-id</span><span class="p">)</span> <span class="p">(</span>ptr <span class="nv">?ptr</span><span class="p">))</span>
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>printout blue <span class="nv">?c-id</span> <span class="s">&quot;(&quot;</span><span class="nv">?c-type</span><span class="s">&quot;) received&quot;</span> <span class="nv">?type</span>
+    <span class="s">&quot; (&quot;</span> <span class="nv">?comp-id</span> <span class="s">&quot; &quot;</span> <span class="nv">?msg-type</span> <span class="s">&quot;) from &quot;</span> <span class="nv">?address</span> <span class="s">&quot;:&quot;</span> <span class="nv">?port</span> <span class="s">&quot;</span>
+<span class="s">    &quot;</span> <span class="p">(</span>- <span class="p">(</span>now)  <span class="nv">?rcvd-at</span><span class="p">)</span> <span class="s">&quot;s ago&quot;</span> crlf
+  <span class="p">)</span>
+  <span class="p">(</span>bind <span class="nv">?var</span> <span class="p">(</span>pb-tostring <span class="nv">?ptr</span><span class="p">))</span>
+  <span class="p">(</span>printout yellow <span class="nv">?var</span> crlf)
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">protobuf-close</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">executive-finalize</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">pb-server-disable</span><span class="p">)</span>
+<span class="p">(</span><span class="kd">defrule</span> protobuf-close
+  <span class="p">(</span>executive-finalize)
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>pb-server-disable)
 <span class="p">)</span>
 </pre></div>
 </div>

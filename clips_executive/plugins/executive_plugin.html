@@ -132,8 +132,10 @@ This is done sequentially for the registered environments.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even"><cite>publish_on_refresh</cite><span class="colon">:</span></dt>
-<dd class="field-even"><table class="docutils align-default">
+</dl>
+<dl class="field-list" id="publish-on-refresh">
+<dt class="field-odd"><cite>publish_on_refresh</cite><span class="colon">:</span></dt>
+<dd class="field-odd"><table class="docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Default</p></td>
@@ -195,10 +197,10 @@ Each tick performs the following steps:</p>
 <li><p>If a <a class="reference internal" href="../getting_started/configuration.html#focus-stack"><span class="std std-ref">focus_stack</span></a> is configured for an environment, iterates through the stack in order, running each module’s agenda (respecting a possibly set <a class="reference internal" href="../getting_started/configuration.html#rule-limit"><span class="std std-ref">rule_limit</span></a>) before moving to the next.
 Otherwise, runs the <code class="docutils literal notranslate"><span class="pre">MAIN</span></code> module’s agenda.</p></li>
 <li><p>Repeats steps 2-3 until no rules fire, ensuring cross-module interactions are fully resolved.</p></li>
-<li><p>Optionally publishes the total number of rules fired on the <span class="xref std std-ref">refresh_agenda_topic</span> topic.</p></li>
+<li><p>Optionally publishes the total number of rules fired on a topic.</p></li>
 </ol>
-<p>Execution can be paused and resumed at any time via the <span class="xref std std-ref">pause_service</span> and <span class="xref std std-ref">resume_service</span> services,
-or a single tick can be triggered manually via the <span class="xref std std-ref">tick_once_service</span> service, regardless of the current pause state.</p>
+<p>Execution can be paused and resumed at any time via services,
+or a single tick can be triggered manually, regardless of the current pause state.</p>
 <p>CLIPS commands can be sent directly to a managed environment via dedicated <code class="docutils literal notranslate"><span class="pre">eval</span></code> and <code class="docutils literal notranslate"><span class="pre">build</span></code> services.
 <code class="docutils literal notranslate"><span class="pre">eval</span></code> evaluates an expression using CLIPS <code class="docutils literal notranslate"><span class="pre">Eval</span></code>, while <code class="docutils literal notranslate"><span class="pre">build</span></code> defines a new construct using CLIPS <code class="docutils literal notranslate"><span class="pre">Build</span></code>.
 If no environment is specified, the command is executed in the first managed environment.</p>
@@ -212,18 +214,30 @@ This ensures that time assertion and other framework operations always operate i
 <p><code class="docutils literal notranslate"><span class="pre">Eval</span></code> is intended for invoking arbirary commands (e.g. <code class="docutils literal notranslate"><span class="pre">(assert</span> <span class="pre">(foo))</span></code>, <code class="docutils literal notranslate"><span class="pre">(facts)</span></code>),
 while <code class="docutils literal notranslate"><span class="pre">Build</span></code> is intended for defining constructs (e.g. <code class="docutils literal notranslate"><span class="pre">(defrule</span> <span class="pre">...)</span></code>, <code class="docutils literal notranslate"><span class="pre">(deftemplate</span> <span class="pre">...)</span></code>).</p>
 </div>
+<section id="ros-interfaces">
+<h3>ROS Interfaces<a class="headerlink" href="#ros-interfaces" title="Link to this heading"></a></h3>
+<p>All interaces are prefixed by tha name of the CX node, followed by the name of the executive plugin, e.g., <code class="docutils literal notranslate"><span class="pre">clips_manager/executive</span></code>.</p>
+<ul class="simple">
+<li><p><em>/ns/node/plugin/refresh_agenda</em>: Topic where a mesage is published after each tick, indicating the number of rules that fired (requires <a class="reference internal" href="#publish-on-refresh"><span class="std std-ref">publish_on_refresh</span></a>).</p></li>
+<li><p><em>/ns/node/plugin/pause</em>: Service for stopping periodic ticks according to the configured <a class="reference internal" href="#refresh-rate"><span class="std std-ref">refresh_rate</span></a>.</p></li>
+<li><p><em>/ns/node/plugin/resume</em>: Service that for starting the periodic ticks.</p></li>
+<li><p><em>/ns/node/plugin/tick_once</em>: Serivce for ticking once.</p></li>
+<li><p><em>/ns/node/plugin/eval</em>: Service for processing a string as an <code class="docutils literal notranslate"><span class="pre">eval</span></code> command in a given environment.</p></li>
+<li><p><em>/ns/node/plugin/build</em>: Service for processing a string as an <code class="docutils literal notranslate"><span class="pre">build</span></code> command in a given environment.</p></li>
+</ul>
+</section>
 <section id="facts">
 <h3>Facts<a class="headerlink" href="#facts" title="Link to this heading"></a></h3>
 <p>If <a class="reference internal" href="#assert-time"><span class="std std-ref">assert_time</span></a> is set to <code class="docutils literal notranslate"><span class="pre">true</span></code>, it asserts the ordered fact <cite>time</cite> with the current ROS time as float.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nb">time</span><span class="w"> </span><span class="nv">?ros-time-float</span><span class="p">)</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>time <span class="nv">?ros-time-float</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
 <section id="functions">
 <h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
 <p>This plugin adds deffunctions to retrieve the current time.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?ros-time</span><span class="w"> </span><span class="p">(</span><span class="nv">now</span><span class="p">))</span><span class="w">         </span><span class="c1">; returns a FLOAT holding get_clock()-&gt;now().seconds()</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?sys-time</span><span class="w"> </span><span class="p">(</span><span class="nv">now-systime</span><span class="p">))</span><span class="w"> </span><span class="c1">; returns a FLOAT of system time</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>bind <span class="nv">?ros-time</span> <span class="p">(</span>now))         <span class="c1">; returns a FLOAT holding get_clock()-&gt;now().seconds()</span>
+<span class="p">(</span>bind <span class="nv">?sys-time</span> <span class="p">(</span>now-systime)) <span class="c1">; returns a FLOAT of system time</span>
 </pre></div>
 </div>
 </section>
@@ -285,12 +299,12 @@ ros2<span class="w"> </span>service<span class="w"> </span>call<span class="w"> 
 <section id="code">
 <h3>Code<a class="headerlink" href="#code" title="Link to this heading"></a></h3>
 <p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/executive.clp">cx_bringup/clips/plugin_examples/executive.clp</a>.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">print-time</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">time</span><span class="w"> </span><span class="nv">?now</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">info</span><span class="w"> </span><span class="s">&quot;time between agenda refresh and rule fire: &quot;</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="p">(</span><span class="nv">now</span><span class="p">)</span><span class="w"> </span><span class="nv">?now</span><span class="p">)</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">info</span><span class="w"> </span><span class="s">&quot;ROS time: &quot;</span><span class="w"> </span><span class="p">(</span><span class="nv">now</span><span class="p">)</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">info</span><span class="w"> </span><span class="s">&quot;sys time: &quot;</span><span class="w"> </span><span class="p">(</span><span class="nv">now-systime</span><span class="p">)</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">defrule</span> print-time
+  <span class="p">(</span>time <span class="nv">?now</span><span class="p">)</span>
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>printout info <span class="s">&quot;time between agenda refresh and rule fire: &quot;</span> <span class="p">(</span>- <span class="p">(</span>now) <span class="nv">?now</span><span class="p">)</span> crlf)
+  <span class="p">(</span>printout info <span class="s">&quot;ROS time: &quot;</span> <span class="p">(</span>now) crlf)
+  <span class="p">(</span>printout info <span class="s">&quot;sys time: &quot;</span> <span class="p">(</span>now-systime) crlf)
 <span class="p">)</span>
 </pre></div>
 </div>

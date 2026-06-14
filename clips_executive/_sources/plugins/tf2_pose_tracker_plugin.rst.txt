@@ -1,7 +1,7 @@
 .. _usage_tf2_pose_tracker_plugin:
 
 TF2 Pose Tracker Plugin
-#######################
+=======================
 
 Source code on :source-master:`GitHub <cx_plugins/tf2_pose_tracker-plugin>`.
 
@@ -12,7 +12,7 @@ Source code on :source-master:`GitHub <cx_plugins/tf2_pose_tracker-plugin>`.
 This plugin provides the ability to perform periodic lookups on the transform tree of a ROS system, updating the fact-base accordingly.
 
 Configuration
-*************
+-------------
 
 :`spin_thread`:
 
@@ -27,12 +27,12 @@ Configuration
 
 
 Features
-********
+--------
 
 Facts
-~~~~~
+^^^^^
 
-.. code-block:: lisp
+.. code-block:: clips
 
     ; Asserted and modified by the periodic lookup started with tf2-start-periodic-lookup.
     (deftemplate tf2-tracked-pose
@@ -45,9 +45,9 @@ Facts
     )
 
 Functions
-~~~~~~~~~
+^^^^^^^^^
 
-.. code-block:: lisp
+.. code-block:: clips
 
     ; Start a ROS timer to periodically lookup the pose of ?child-frame relative to ?parent-frame.
     ; Returns TRUE if timer was created successfully, FALSE otherwise.
@@ -56,7 +56,7 @@ Functions
     (tf2-stop-periodic-lookup ?timer-ptr) ; example args: <Pointer-C-0x7f1550001d20>
 
 Usage Example
-*************
+-------------
 
 This plugin is discussed in more depth in the :docsite:`Writing a Plugin for TF Monitoring Tutorial <plugins/writing_a_plugin.rst>`
 
@@ -84,7 +84,7 @@ Optionally, open a third terminal to control the turtle:
     ros2 run turtlesim turtle_teleop_key
 
 Configuration
-~~~~~~~~~~~~~
+^^^^^^^^^^^^^
 
 File :source-master:`cx_tutorial_agents/params/tf2_tracked_pose.yaml`.
 
@@ -113,11 +113,11 @@ File :source-master:`cx_tutorial_agents/params/tf2_tracked_pose.yaml`.
 
 
 Code
-~~~~
+^^^^
 
 File :source-master:`cx_tutorial_agents/clips/tf2_tracked_pose.clp`.
 
-.. code-block:: lisp
+.. code-block:: clips
 
     (deftemplate counter (slot iteration (type INTEGER)))
 

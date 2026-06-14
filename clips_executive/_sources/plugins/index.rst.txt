@@ -19,7 +19,7 @@ See also the tutorial on :ref:`Writing a Plugin <writing_a_plugin>` to learn how
 The |CX| provides several plugins out-of-the-box that are described here.
 
 Plugin Interface
-++++++++++++++++
+----------------
 
 .. toctree::
    :maxdepth: 2
@@ -30,7 +30,7 @@ Plugin Interface
 
 
 Available Plugins
-+++++++++++++++++
+-----------------
 
 .. toctree::
    :maxdepth: 2

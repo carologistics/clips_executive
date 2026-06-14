@@ -58,7 +58,11 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">YAML Configuration Plugin</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#configuration">Configuration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#features">Features</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#facts">Facts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#functions">Functions</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#usage-example">Usage Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#code">Code</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="file_load_plugin.html">File Load Plugin</a></li>
@@ -118,32 +122,32 @@
 <section id="features">
 <h2>Features<a class="headerlink" href="#features" title="Link to this heading"></a></h2>
 <p>This plugin adds deftemplates and custom functions as listed below.</p>
+</section>
 <section id="facts">
-<h3>Facts<a class="headerlink" href="#facts" title="Link to this heading"></a></h3>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; Asserted by the config-load function for each configuration value in the parsed yaml file.</span>
-<span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">confval</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">path</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">FLOAT</span><span class="w"> </span><span class="nv">UINT</span><span class="w"> </span><span class="nv">INT</span><span class="w"> </span><span class="nv">BOOL</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">value</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">is-list</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">TRUE</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">list-value</span><span class="p">)</span>
+<h2>Facts<a class="headerlink" href="#facts" title="Link to this heading"></a></h2>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="c1">; Asserted by the config-load function for each configuration value in the parsed yaml file.</span>
+<span class="p">(</span><span class="kd">deftemplate</span> confval
+  <span class="p">(</span><span class="kr">slot</span> path <span class="p">(</span><span class="kr">type</span> STRING))
+  <span class="p">(</span><span class="kr">slot</span> <span class="kr">type</span> <span class="p">(</span><span class="kr">type</span> SYMBOL) <span class="p">(</span><span class="kr">allowed-values</span> FLOAT UINT INT BOOL STRING))
+  <span class="p">(</span><span class="kr">slot</span> value)
+  <span class="p">(</span><span class="kr">slot</span> is-list <span class="p">(</span><span class="kr">type</span> SYMBOL) <span class="p">(</span><span class="kr">allowed-values</span> TRUE FALSE) <span class="p">(</span>default FALSE))
+  <span class="p">(</span>multislot list-value)
 <span class="p">)</span>
 </pre></div>
 </div>
 </section>
 <section id="functions">
-<h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; Load all config values from a file (absolute path) given a prefix and store them into (confval) facts.</span>
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="c1">; Load all config values from a file (absolute path) given a prefix and store them into (confval) facts.</span>
 <span class="c1">; The prefix can be used to restrict the loaded values to a prefix</span>
 <span class="c1">; Use / for nesting, e.g., foo/bar for only retrieving values under bar in this example:</span>
 <span class="c1">;  foo:</span>
 <span class="c1">;    bar:</span>
 <span class="c1">;      ...</span>
 <span class="c1">; For / inside of keys, wrap the whole key by single quotes &#39;, e.g., &#39;/foo&#39;/bar if the key is &quot;/foo&quot; instead of &quot;foo&quot;.</span>
-<span class="p">(</span><span class="nv">config-load</span><span class="w"> </span><span class="nv">?file</span><span class="w"> </span><span class="nv">?prefix</span><span class="p">)</span>
+<span class="p">(</span>config-load <span class="nv">?file</span> <span class="nv">?prefix</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
 </section>
 <section id="usage-example">
 <h2>Usage Example<a class="headerlink" href="#usage-example" title="Link to this heading"></a></h2>
@@ -152,8 +156,9 @@
 </pre></div>
 </div>
 <p>It loads the used environment manager configuration file into CLIPS and prints the corresponding facts.</p>
+</section>
 <section id="id1">
-<h3>Configuration<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<h2>Configuration<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
 <p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/params/plugin_examples/config.yaml">cx_bringup/params/plugin_examples/config.yaml</a>.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">clips_manager</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
@@ -176,27 +181,26 @@
 </div>
 </section>
 <section id="code">
-<h3>Code<a class="headerlink" href="#code" title="Link to this heading"></a></h3>
+<h2>Code<a class="headerlink" href="#code" title="Link to this heading"></a></h2>
 <p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/config.clp">cx_bringup/clips/plugin_examples/config.clp</a>.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">load-bringup-config</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">confval</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?share-dir</span><span class="w"> </span><span class="p">(</span><span class="nv">ament-index-get-package-share-directory</span><span class="w"> </span><span class="s">&quot;cx_bringup&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?file</span><span class="w"> </span><span class="p">(</span><span class="nv">str-cat</span><span class="w"> </span><span class="nv">?share-dir</span><span class="w"> </span><span class="s">&quot;/params/plugin_examples/config.yaml&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;Loading from file &quot;</span><span class="w"> </span><span class="nv">?file</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="c1">; test loading of sequence</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot; 1. Prefix leading to environments (sequence): &quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">config-load</span><span class="w"> </span><span class="nv">?file</span><span class="w"> </span><span class="s">&quot;&#39;/**&#39;/ros__parameters/environments&quot;</span><span class="p">)</span>
-<span class="w">  </span><span class="c1">; test loading of map</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot; 2. Prefix leading to environment config (map):&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">config-load</span><span class="w"> </span><span class="nv">?file</span><span class="w"> </span><span class="s">&quot;&#39;/**&#39;/ros__parameters/cx_config/&quot;</span><span class="p">)</span>
-<span class="w">  </span><span class="c1">; test loading of value</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot; 3. Prefix leading to config plugin string (scalar):&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">config-load</span><span class="w"> </span><span class="nv">?file</span><span class="w"> </span><span class="s">&quot;&#39;/**&#39;/ros__parameters/config/plugin&quot;</span><span class="p">)</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">defrule</span> load-bringup-config
+  <span class="p">(</span>not <span class="p">(</span>confval))
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>bind <span class="nv">?share-dir</span> <span class="p">(</span>ament-index-get-package-share-directory <span class="s">&quot;cx_bringup&quot;</span><span class="p">))</span>
+  <span class="p">(</span>bind <span class="nv">?file</span> <span class="p">(</span>str-cat <span class="nv">?share-dir</span> <span class="s">&quot;/params/plugin_examples/config.yaml&quot;</span><span class="p">))</span>
+  <span class="p">(</span>printout green <span class="s">&quot;Loading from file &quot;</span> <span class="nv">?file</span> crlf)
+  <span class="c1">; test loading of sequence</span>
+  <span class="p">(</span>printout green <span class="s">&quot; 1. Prefix leading to environments (sequence): &quot;</span> crlf)
+  <span class="p">(</span>config-load <span class="nv">?file</span> <span class="s">&quot;&#39;/**&#39;/ros__parameters/environments&quot;</span><span class="p">)</span>
+  <span class="c1">; test loading of map</span>
+  <span class="p">(</span>printout green <span class="s">&quot; 2. Prefix leading to environment config (map):&quot;</span> crlf)
+  <span class="p">(</span>config-load <span class="nv">?file</span> <span class="s">&quot;&#39;/**&#39;/ros__parameters/cx_config/&quot;</span><span class="p">)</span>
+  <span class="c1">; test loading of value</span>
+  <span class="p">(</span>printout green <span class="s">&quot; 3. Prefix leading to config plugin string (scalar):&quot;</span> crlf)
+  <span class="p">(</span>config-load <span class="nv">?file</span> <span class="s">&quot;&#39;/**&#39;/ros__parameters/config/plugin&quot;</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
 </section>
 </section>
 

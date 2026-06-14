@@ -129,104 +129,104 @@
 <h2>Features<a class="headerlink" href="#features" title="Link to this heading"></a></h2>
 <section id="facts">
 <h3>Facts<a class="headerlink" href="#facts" title="Link to this heading"></a></h3>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; Asserted by the respective create-client function.</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="c1">; Asserted by the respective create-client function.</span>
 <span class="c1">; Retracted by the respective destroy-client function.</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-client</span><span class="w"> </span><span class="p">(</span><span class="nv">server</span><span class="w"> </span><span class="nv">?server-name-string</span><span class="p">))</span>
+<span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-client <span class="p">(</span>server <span class="nv">?server-name-string</span><span class="p">))</span>
 
 <span class="c1">; Asserted by the respective create-server function.</span>
 <span class="c1">; Retracted by the respective destroy-server function.</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-server</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">?server-name-string</span><span class="p">))</span>
+<span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-server <span class="p">(</span>name <span class="nv">?server-name-string</span><span class="p">))</span>
 
 <span class="c1">; Asserted by the goal response callback of a client.</span>
 <span class="c1">; Process the response and then destroy feedback.</span>
 <span class="c1">; The client-goal-handle should persist until the processing of the request is fully done.</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-goal-response</span><span class="w"> </span><span class="p">(</span><span class="nv">server</span><span class="w"> </span><span class="nv">?server-name-string</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">client-goal-handle-ptr</span><span class="w"> </span><span class="nv">?cgh-ptr</span><span class="p">))</span>
+<span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-goal-response <span class="p">(</span>server <span class="nv">?server-name-string</span><span class="p">)</span> <span class="p">(</span>client-goal-handle-ptr <span class="nv">?cgh-ptr</span><span class="p">))</span>
 
 <span class="c1">; Asserted by the goal feedback callback of a client.</span>
 <span class="c1">; Process the response and then destroy feedback (it is read-only, do not modify it).</span>
 <span class="c1">; The client-goal-handle should persist (and not be destroyed) until the processing of the goal is fully done and the action is terminated.</span>
 <span class="c1">; In particular, the client goal handle pointer here will match the one from the goal-response fact.</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-goal-feedback</span><span class="w"> </span><span class="p">(</span><span class="nv">server</span><span class="w"> </span><span class="nv">?server-name-string</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">client-goal-handle-ptr</span><span class="w"> </span><span class="nv">?cgh-ptr</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">feedback-ptr</span><span class="w"> </span><span class="nv">?f-ptr</span><span class="p">))</span>
+<span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-goal-feedback <span class="p">(</span>server <span class="nv">?server-name-string</span><span class="p">)</span> <span class="p">(</span>client-goal-handle-ptr <span class="nv">?cgh-ptr</span><span class="p">)</span> <span class="p">(</span>feedback-ptr <span class="nv">?f-ptr</span><span class="p">))</span>
 
 <span class="c1">; Asserted by the goal result callback of a client.</span>
 <span class="c1">; Process the result and then destroy the result pointer before retracting this fact.</span>
 <span class="c1">; &quot;code&quot; is either UNKNOWN SUCCEEDED CANCELED or ABORTED.</span>
 <span class="c1">; &quot;goal-id&quot; is the string representation of a uuid according to rclcpp_action::to_string().</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-wrapped-result</span><span class="w"> </span><span class="p">(</span><span class="nv">server</span><span class="w"> </span><span class="nv">?server-name-string</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">goal-id</span><span class="w"> </span><span class="nv">?uuid-str</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">code</span><span class="w"> </span><span class="nv">?code-symbol</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">result-ptr</span><span class="w"> </span><span class="nv">?f-ptr</span><span class="p">))</span>
+<span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-wrapped-result <span class="p">(</span>server <span class="nv">?server-name-string</span><span class="p">)</span> <span class="p">(</span>goal-id <span class="nv">?uuid-str</span><span class="p">)</span> <span class="p">(</span>code <span class="nv">?code-symbol</span><span class="p">)</span> <span class="p">(</span>result-ptr <span class="nv">?f-ptr</span><span class="p">))</span>
 
 <span class="c1">; Asserted by the goal result callback of a server.</span>
 <span class="c1">; Process the server goal handle to retrieve important information such as the goal sent by the client.</span>
 <span class="c1">; The server-goal-handle should persist (and not be destroyed) until the processing of the action is fully done and the action is terminated.</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-accepted-goal</span><span class="w"> </span><span class="p">(</span><span class="nv">server</span><span class="w"> </span><span class="nv">?server-name-string</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">server-goal-handle-ptr</span><span class="w"> </span><span class="nv">?f-ptr</span><span class="p">))</span>
+<span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-accepted-goal <span class="p">(</span>server <span class="nv">?server-name-string</span><span class="p">)</span> <span class="p">(</span>server-goal-handle-ptr <span class="nv">?f-ptr</span><span class="p">))</span>
 
 <span class="c1">; Asserted by the cancel callback of the client.</span>
 <span class="c1">; The return code is one of ERROR_NONE, ERROR_REJECTED, ERROR_UNKNOWN_GOAL_ID, ERROR_GOAL_TERMINATED.</span>
 <span class="c1">; The num-goals slot indicates the amount of goals canceling.</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-cancel-goal-response</span><span class="w"> </span><span class="p">(</span><span class="nv">server</span><span class="w"> </span><span class="nv">?server-name-string</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">return-code</span><span class="w"> </span><span class="nv">?code-symbol</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">num-goals</span><span class="w"> </span><span class="nv">?n-int</span><span class="p">))</span>
+<span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-cancel-goal-response <span class="p">(</span>server <span class="nv">?server-name-string</span><span class="p">)</span> <span class="p">(</span>return-code <span class="nv">?code-symbol</span><span class="p">)</span> <span class="p">(</span>num-goals <span class="nv">?n-int</span><span class="p">))</span>
 <span class="c1">; Asserted by the cancel callback of the client.</span>
 <span class="c1">; Provides information about which goals are actually canceling.</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-cancel-goal-entry</span><span class="w"> </span><span class="p">(</span><span class="nv">server</span><span class="w"> </span><span class="nv">?server-name-string</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">goal-id</span><span class="w"> </span><span class="nv">?uuid-string</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">stamp</span><span class="w"> </span><span class="nv">?stamp-float</span><span class="p">))</span>
+<span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-cancel-goal-entry <span class="p">(</span>server <span class="nv">?server-name-string</span><span class="p">)</span> <span class="p">(</span>goal-id <span class="nv">?uuid-string</span><span class="p">)</span> <span class="p">(</span>stamp <span class="nv">?stamp-float</span><span class="p">))</span>
 </pre></div>
 </div>
 </section>
 <section id="functions">
 <h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; Create and destroy clients and servers.</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="c1">; Create and destroy clients and servers.</span>
 <span class="c1">; After creating a server, user-defined function is called whenever a goal request arrives.</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-create-server</span><span class="w"> </span><span class="nv">?server-name</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-destroy-server</span><span class="w"> </span><span class="nv">?server-name</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-create-client</span><span class="w"> </span><span class="nv">?server-name</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-destroy-client</span><span class="w"> </span><span class="nv">?server-name</span><span class="p">)</span>
+<span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-create-server <span class="nv">?server-name</span><span class="p">)</span>
+<span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-destroy-server <span class="nv">?server-name</span><span class="p">)</span>
+<span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-create-client <span class="nv">?server-name</span><span class="p">)</span>
+<span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-destroy-client <span class="nv">?server-name</span><span class="p">)</span>
 
 <span class="c1">; Send a goal to an action server</span>
 <span class="c1">; Requires the client to be created first using create-client.</span>
 <span class="c1">; Callbacks will assert goal-response feedback and wrapped-result facts.</span>
 <span class="c1">; Do not destroy the ?msg-ptr immediately, keep it until the goal is fully processed.</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-send-goal</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="nv">?server-name</span><span class="p">)</span>
+<span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-send-goal <span class="nv">?msg-ptr</span> <span class="nv">?server-name</span><span class="p">)</span>
 
 <span class="c1">; Cancel goals</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-client-cancel-goal</span><span class="w"> </span><span class="nv">?server-name</span><span class="w"> </span><span class="nv">?goal-handle-ptr</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-client-cancel-all-goals</span><span class="w"> </span><span class="nv">?server-name</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-client-cancel-goals-before</span><span class="w"> </span><span class="nv">?server-name</span><span class="w"> </span><span class="nv">?stamp-sec-float</span><span class="p">)</span>
+<span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-client-cancel-goal <span class="nv">?server-name</span> <span class="nv">?goal-handle-ptr</span><span class="p">)</span>
+<span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-client-cancel-all-goals <span class="nv">?server-name</span><span class="p">)</span>
+<span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-client-cancel-goals-before <span class="nv">?server-name</span> <span class="nv">?stamp-sec-float</span><span class="p">)</span>
 
 <span class="c1">; Creating, destroying and processing of goals</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-goal-create</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-goal-destroy</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-goal-set-field</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="nv">?field-name</span><span class="w"> </span><span class="nv">?field-value</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-goal-get-field</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="nv">?field-name</span><span class="p">)</span>
+<span class="p">(</span>bind <span class="nv">?msg-ptr</span> <span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-goal-create))
+<span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-goal-destroy <span class="nv">?msg-ptr</span><span class="p">)</span>
+<span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-goal-set-field <span class="nv">?msg-ptr</span> <span class="nv">?field-name</span> <span class="nv">?field-value</span><span class="p">)</span>
+<span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-goal-get-field <span class="nv">?msg-ptr</span> <span class="nv">?field-name</span><span class="p">)</span>
 
 <span class="c1">; Creating, destroying and processing of feedback</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-feedback-create</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-feedback-destroy</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-feedback-set-field</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="nv">?field-name</span><span class="w"> </span><span class="nv">?field-value</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-feedback-get-field</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="nv">?field-name</span><span class="p">)</span>
+<span class="p">(</span>bind <span class="nv">?msg-ptr</span> <span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-feedback-create))
+<span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-feedback-destroy <span class="nv">?msg-ptr</span><span class="p">)</span>
+<span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-feedback-set-field <span class="nv">?msg-ptr</span> <span class="nv">?field-name</span> <span class="nv">?field-value</span><span class="p">)</span>
+<span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-feedback-get-field <span class="nv">?msg-ptr</span> <span class="nv">?field-name</span><span class="p">)</span>
 
 <span class="c1">; Creating, destroying and processing of results</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-result-create</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-result-destroy</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-result-set-field</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="nv">?field-name</span><span class="w"> </span><span class="nv">?field-value</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-result-get-field</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="nv">?field-name</span><span class="p">)</span>
+<span class="p">(</span>bind <span class="nv">?msg-ptr</span> <span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-result-create))
+<span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-result-destroy <span class="nv">?msg-ptr</span><span class="p">)</span>
+<span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-result-set-field <span class="nv">?msg-ptr</span> <span class="nv">?field-name</span> <span class="nv">?field-value</span><span class="p">)</span>
+<span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-result-get-field <span class="nv">?msg-ptr</span> <span class="nv">?field-name</span><span class="p">)</span>
 
 <span class="c1">; Destroy server goal handle pointer.</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-server-goal-handle-destroy</span><span class="w"> </span><span class="nv">?handle-ptr</span><span class="p">)</span>
+<span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-server-goal-handle-destroy <span class="nv">?handle-ptr</span><span class="p">)</span>
 <span class="c1">; server goal handle members (see rclcpp_action documentation)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-server-goal-handle-abort</span><span class="w"> </span><span class="nv">?handle-ptr</span><span class="w"> </span><span class="nv">?result-ptr</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-server-goal-handle-succeed</span><span class="w"> </span><span class="nv">?handle-ptr</span><span class="w"> </span><span class="nv">?result-ptr</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-server-goal-handle-canceled</span><span class="w"> </span><span class="nv">?handle-ptr</span><span class="w"> </span><span class="nv">?result-ptr</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?goal-ptr</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-server-goal-handle-get-goal</span><span class="w"> </span><span class="nv">?handle-ptr</span><span class="p">))</span>
+<span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-server-goal-handle-abort <span class="nv">?handle-ptr</span> <span class="nv">?result-ptr</span><span class="p">)</span>
+<span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-server-goal-handle-succeed <span class="nv">?handle-ptr</span> <span class="nv">?result-ptr</span><span class="p">)</span>
+<span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-server-goal-handle-canceled <span class="nv">?handle-ptr</span> <span class="nv">?result-ptr</span><span class="p">)</span>
+<span class="p">(</span>bind <span class="nv">?goal-ptr</span> <span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-server-goal-handle-get-goal <span class="nv">?handle-ptr</span><span class="p">))</span>
 <span class="c1">; the goal id is returned as string representation via rclcpp_action::to_string()</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?uuid-str</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-server-goal-handle-get-goal-id</span><span class="w"> </span><span class="nv">?handle-ptr</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?bool-sym</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-server-goal-handle-is-canceling</span><span class="w"> </span><span class="nv">?handle-ptr</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?bool-sym</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-server-goal-handle-is-active</span><span class="w"> </span><span class="nv">?handle-ptr</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?bool-sym</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-server-goal-handle-is-executing</span><span class="w"> </span><span class="nv">?handle-ptr</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-server-goal-handle-execute</span><span class="w"> </span><span class="nv">?handle-ptr</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-server-goal-handle-publish-feedback</span><span class="w"> </span><span class="nv">?handle-ptr</span><span class="w"> </span><span class="nv">?feedback-ptr</span><span class="p">)</span>
+<span class="p">(</span>bind <span class="nv">?uuid-str</span> <span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-server-goal-handle-get-goal-id <span class="nv">?handle-ptr</span><span class="p">))</span>
+<span class="p">(</span>bind <span class="nv">?bool-sym</span> <span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-server-goal-handle-is-canceling <span class="nv">?handle-ptr</span><span class="p">))</span>
+<span class="p">(</span>bind <span class="nv">?bool-sym</span> <span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-server-goal-handle-is-active <span class="nv">?handle-ptr</span><span class="p">))</span>
+<span class="p">(</span>bind <span class="nv">?bool-sym</span> <span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-server-goal-handle-is-executing <span class="nv">?handle-ptr</span><span class="p">))</span>
+<span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-server-goal-handle-execute <span class="nv">?handle-ptr</span><span class="p">)</span>
+<span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-server-goal-handle-publish-feedback <span class="nv">?handle-ptr</span> <span class="nv">?feedback-ptr</span><span class="p">)</span>
 
 <span class="c1">; Destroy client goal handle pointer.</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-client-goal-handle-destroy</span><span class="w"> </span><span class="nv">?handle-ptr</span><span class="p">)</span>
+<span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-client-goal-handle-destroy <span class="nv">?handle-ptr</span><span class="p">)</span>
 <span class="c1">; client goal handle members (see rclcpp_action documentation)</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?bool-sym</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-client-goal-handle-is-feedback-aware</span><span class="w"> </span><span class="nv">?handle-ptr</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?bool-sym</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-client-goal-handle-is-result-aware</span><span class="w"> </span><span class="nv">?handle-ptr</span><span class="p">))</span>
+<span class="p">(</span>bind <span class="nv">?bool-sym</span> <span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-client-goal-handle-is-feedback-aware <span class="nv">?handle-ptr</span><span class="p">))</span>
+<span class="p">(</span>bind <span class="nv">?bool-sym</span> <span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-client-goal-handle-is-result-aware <span class="nv">?handle-ptr</span><span class="p">))</span>
 <span class="c1">; return codes:</span>
 <span class="c1">; 0 = STATUS_UNKNOWN</span>
 <span class="c1">; 1 = STATUS_ACCEPTED</span>
@@ -235,23 +235,23 @@
 <span class="c1">; 4 = STATUS_SUCCEEDED</span>
 <span class="c1">; 5 = STATUS_CANCELED</span>
 <span class="c1">; 6 = STATUS_ABORTED</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?status-int</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-client-goal-handle-get-status</span><span class="w"> </span><span class="nv">?handle-ptr</span><span class="p">))</span>
+<span class="p">(</span>bind <span class="nv">?status-int</span> <span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-client-goal-handle-get-status <span class="nv">?handle-ptr</span><span class="p">))</span>
 <span class="c1">; the goal id is returned as string representation via rclcpp_action::to_string()</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?uuid-str</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-client-goal-handle-get-goal-id</span><span class="w"> </span><span class="nv">?handle-ptr</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?time-seconds-float</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-client-goal-handle-get-goal-stamp</span><span class="w"> </span><span class="nv">?handle-ptr</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-client-goal-handle-stop-callbacks</span><span class="w"> </span><span class="nv">?server-name</span><span class="w"> </span><span class="nv">?handle-ptr</span><span class="p">)</span>
+<span class="p">(</span>bind <span class="nv">?uuid-str</span> <span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-client-goal-handle-get-goal-id <span class="nv">?handle-ptr</span><span class="p">))</span>
+<span class="p">(</span>bind <span class="nv">?time-seconds-float</span> <span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-client-goal-handle-get-goal-stamp <span class="nv">?handle-ptr</span><span class="p">))</span>
+<span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-client-goal-handle-stop-callbacks <span class="nv">?server-name</span> <span class="nv">?handle-ptr</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
 <section id="functions-defined-by-user">
 <h3>Functions Defined by User<a class="headerlink" href="#functions-defined-by-user" title="Link to this heading"></a></h3>
 <p>The following functions are called at the appropriate places if they are defined by the user.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; Gets called for each server receiving a goal, needs to return one of these integers:</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="c1">; Gets called for each server receiving a goal, needs to return one of these integers:</span>
 <span class="c1">; (return 1) ; REJECT</span>
 <span class="c1">; (return 2) ; ACCEPT_AND_EXECUTE</span>
 <span class="c1">; (return 3) ; ACCEPT_AND_DEFER</span>
 <span class="c1">; If the function does not exist, every goal is automatically accepted (ACCEPT_AND_EXECUTE)</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?response-int</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-handle-goal-callback</span><span class="w"> </span><span class="nv">?server-name-str</span><span class="w"> </span><span class="nv">?goal-ptr</span><span class="w"> </span><span class="nv">?uuid-str</span><span class="p">))</span>
+<span class="p">(</span>bind <span class="nv">?response-int</span> <span class="p">(</span>&lt;package-kebab&gt;-&lt;action-kebab&gt;-handle-goal-callback <span class="nv">?server-name-str</span> <span class="nv">?goal-ptr</span> <span class="nv">?uuid-str</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>; Gets called for each server receiving a cancellation request, needs to return one of these integers:
@@ -319,251 +319,251 @@
 <section id="code">
 <h3>Code<a class="headerlink" href="#code" title="Link to this heading"></a></h3>
 <p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/fibonacci-action-server.clp">cx_bringup/clips/plugin_examples/fibonacci-action-server.clp</a>.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">fibonacci</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">uuid</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">order</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">progress</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nc">sequence</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">result</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">canceled</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">FALSE</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">last-computed</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">FLOAT</span><span class="p">))</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">deftemplate</span> fibonacci
+  <span class="p">(</span><span class="kr">slot</span> uuid <span class="p">(</span><span class="kr">type</span> STRING))
+  <span class="p">(</span><span class="kr">slot</span> order <span class="p">(</span><span class="kr">type</span> INTEGER))
+  <span class="p">(</span><span class="kr">slot</span> progress <span class="p">(</span><span class="kr">type</span> INTEGER))
+  <span class="p">(</span>multislot sequence <span class="p">(</span><span class="kr">type</span> INTEGER))
+  <span class="p">(</span><span class="kr">slot</span> result <span class="p">(</span><span class="kr">type</span> INTEGER))
+  <span class="p">(</span><span class="kr">slot</span> canceled <span class="p">(</span><span class="kr">type</span> SYMBOL) <span class="p">(</span><span class="kr">allowed-values</span> FALSE TRUE))
+  <span class="p">(</span><span class="kr">slot</span> last-computed <span class="p">(</span><span class="kr">type</span> FLOAT))
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">deffunction</span><span class="w"> </span><span class="nv">example-interfaces-fibonacci-handle-goal-callback</span><span class="w"> </span><span class="p">(</span><span class="nv">?server</span><span class="w"> </span><span class="nv">?goal</span><span class="w"> </span><span class="nv">?uuid</span><span class="p">)</span>
+<span class="p">(</span>deffunction example-interfaces-fibonacci-handle-goal-callback <span class="p">(</span><span class="nv">?server</span> <span class="nv">?goal</span> <span class="nv">?uuid</span><span class="p">)</span>
 <span class="s">&quot; Overrides default callback, printing a message before accepting. &quot;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">blue</span><span class="w"> </span><span class="s">&quot;Accepting goal, uuid: &quot;</span><span class="w"> </span><span class="nv">?uuid</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="c1">; (return 1) ; REJECT</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">return</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="c1">; ACCEPT_AND_EXECUTE</span>
-<span class="w">  </span><span class="c1">; (return 3) ; ACCEPT_AND_DEFER</span>
+  <span class="p">(</span>printout blue <span class="s">&quot;Accepting goal, uuid: &quot;</span> <span class="nv">?uuid</span> crlf)
+  <span class="c1">; (return 1) ; REJECT</span>
+  <span class="p">(</span>return <span class="mi">2</span><span class="p">)</span> <span class="c1">; ACCEPT_AND_EXECUTE</span>
+  <span class="c1">; (return 3) ; ACCEPT_AND_DEFER</span>
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">deffunction</span><span class="w"> </span><span class="nv">example-interfaces-fibonacci-cancel-goal-callback</span><span class="w"> </span><span class="p">(</span><span class="nv">?server</span><span class="w"> </span><span class="nv">?goal</span><span class="w"> </span><span class="nv">?goal-handle</span><span class="p">)</span>
+<span class="p">(</span>deffunction example-interfaces-fibonacci-cancel-goal-callback <span class="p">(</span><span class="nv">?server</span> <span class="nv">?goal</span> <span class="nv">?goal-handle</span><span class="p">)</span>
 <span class="s">&quot; Overrides default callback, marking the associated fibonacci fact for cancelation. &quot;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">do-for-fact</span><span class="w"> </span><span class="p">((</span><span class="nv">?f</span><span class="w"> </span><span class="nv">fibonacci</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">eq</span><span class="w"> </span><span class="nv">?f:uuid</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-server-goal-handle-get-goal-id</span><span class="w"> </span><span class="nv">?goal-handle</span><span class="p">))</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">blue</span><span class="w"> </span><span class="s">&quot;Accepting cancelation of goal with uuid &quot;</span><span class="w"> </span><span class="nv">?f:uuid</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">modify</span><span class="w"> </span><span class="nv">?f</span><span class="w"> </span><span class="p">(</span><span class="nv">canceled</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">))</span>
-<span class="w">    </span><span class="p">(</span><span class="nb">return</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="c1">; ACCEPT</span>
-<span class="w">  </span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">return</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="c1">; REJECT</span>
+  <span class="p">(</span>do-for-fact <span class="p">((</span><span class="nv">?f</span> fibonacci)) <span class="p">(</span>eq <span class="nv">?f</span>:uuid <span class="p">(</span>example-interfaces-fibonacci-server-goal-handle-get-goal-id <span class="nv">?goal-handle</span><span class="p">))</span>
+    <span class="p">(</span>printout blue <span class="s">&quot;Accepting cancelation of goal with uuid &quot;</span> <span class="nv">?f</span>:uuid crlf)
+    <span class="p">(</span><span class="k k-Name k-Name-Function">modify</span> <span class="nv">?f</span> <span class="p">(</span>canceled TRUE))
+    <span class="p">(</span>return <span class="mi">2</span><span class="p">)</span> <span class="c1">; ACCEPT</span>
+  <span class="p">)</span>
+  <span class="p">(</span>return <span class="mi">1</span><span class="p">)</span> <span class="c1">; REJECT</span>
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">fibonacci-action-server-init</span>
+<span class="p">(</span><span class="kd">defrule</span> fibonacci-action-server-init
 <span class="s">&quot; Create a simple server using the generated bindings. &quot;</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-server</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="s">&quot;ros_cx_fibonacci&quot;</span><span class="p">)))</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">executive-finalize</span><span class="p">))</span>
-<span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-create-server</span><span class="w"> </span><span class="s">&quot;ros_cx_fibonacci&quot;</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">blue</span><span class="w"> </span><span class="s">&quot;Created server for /ros_cx_fibonacci&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+  <span class="p">(</span>not <span class="p">(</span>example-interfaces-fibonacci-server <span class="p">(</span>name <span class="s">&quot;ros_cx_fibonacci&quot;</span><span class="p">)))</span>
+  <span class="p">(</span>not <span class="p">(</span>executive-finalize))
+<span class="nt">=&gt;</span>
+  <span class="p">(</span>example-interfaces-fibonacci-create-server <span class="s">&quot;ros_cx_fibonacci&quot;</span><span class="p">)</span>
+  <span class="p">(</span>printout blue <span class="s">&quot;Created server for /ros_cx_fibonacci&quot;</span> crlf)
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">fibonacci-goal-accepted-start-compute</span>
+<span class="p">(</span><span class="kd">defrule</span> fibonacci-goal-accepted-start-compute
 <span class="s">&quot; Create an initial fibonacci fact for an accepted goal. &quot;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-accepted-goal</span><span class="w"> </span><span class="p">(</span><span class="nv">server</span><span class="w"> </span><span class="nv">?server</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">server-goal-handle-ptr</span><span class="w"> </span><span class="nv">?ptr</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">fibonacci</span><span class="w"> </span><span class="p">(</span><span class="nv">uuid</span><span class="w"> </span><span class="nv">?uuid&amp;:</span><span class="p">(</span><span class="nb">eq</span><span class="w"> </span><span class="nv">?uuid</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-server-goal-handle-get-goal-id</span><span class="w"> </span><span class="nv">?ptr</span><span class="p">)))))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-server-goal-handle-is-canceling</span><span class="w"> </span><span class="nv">?ptr</span><span class="p">))</span><span class="w"> </span><span class="nv">then</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?goal</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-server-goal-handle-get-goal</span><span class="w"> </span><span class="nv">?ptr</span><span class="p">))</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?order</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-goal-get-field</span><span class="w"> </span><span class="nv">?goal</span><span class="w"> </span><span class="s">&quot;order&quot;</span><span class="p">))</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?uuid</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-server-goal-handle-get-goal-id</span><span class="w"> </span><span class="nv">?ptr</span><span class="p">))</span>
-<span class="w">    </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">fibonacci</span><span class="w"> </span><span class="p">(</span><span class="nv">uuid</span><span class="w"> </span><span class="nv">?uuid</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">order</span><span class="w"> </span><span class="nv">?order</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">progress</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">result</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nc">sequence</span><span class="w"> </span><span class="p">(</span><span class="nv">create$</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nv">last-computed</span><span class="w"> </span><span class="p">(</span><span class="nv">now</span><span class="p">))))</span>
-<span class="w">   </span><span class="nv">else</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nb">error</span><span class="w"> </span><span class="s">&quot;Somehow the goal is canceling already&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">)</span>
-<span class="w">  </span><span class="c1">; do not destroy the server goal handle here, only do it once the goal is fully processed and finished</span>
-<span class="w">  </span><span class="c1">; (example-interfaces-fibonacci-server-goal-handle-destroy ?ptr)</span>
+  <span class="p">(</span>example-interfaces-fibonacci-accepted-goal <span class="p">(</span>server <span class="nv">?server</span><span class="p">)</span> <span class="p">(</span>server-goal-handle-ptr <span class="nv">?ptr</span><span class="p">))</span>
+  <span class="p">(</span>not <span class="p">(</span>fibonacci <span class="p">(</span>uuid <span class="nv">?uuid</span>&amp;:(eq <span class="nv">?uuid</span> <span class="p">(</span>example-interfaces-fibonacci-server-goal-handle-get-goal-id <span class="nv">?ptr</span><span class="p">)))))</span>
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>if <span class="p">(</span>not <span class="p">(</span>example-interfaces-fibonacci-server-goal-handle-is-canceling <span class="nv">?ptr</span><span class="p">))</span> then
+    <span class="p">(</span>bind <span class="nv">?goal</span> <span class="p">(</span>example-interfaces-fibonacci-server-goal-handle-get-goal <span class="nv">?ptr</span><span class="p">))</span>
+    <span class="p">(</span>bind <span class="nv">?order</span> <span class="p">(</span>example-interfaces-fibonacci-goal-get-field <span class="nv">?goal</span> <span class="s">&quot;order&quot;</span><span class="p">))</span>
+    <span class="p">(</span>bind <span class="nv">?uuid</span> <span class="p">(</span>example-interfaces-fibonacci-server-goal-handle-get-goal-id <span class="nv">?ptr</span><span class="p">))</span>
+    <span class="p">(</span><span class="k k-Name k-Name-Function">assert</span> <span class="p">(</span>fibonacci <span class="p">(</span>uuid <span class="nv">?uuid</span><span class="p">)</span> <span class="p">(</span>order <span class="nv">?order</span><span class="p">)</span> <span class="p">(</span>progress <span class="mi">2</span><span class="p">)</span> <span class="p">(</span>result <span class="mi">0</span><span class="p">)</span> <span class="p">(</span>sequence <span class="p">(</span>create$ <span class="mi">0</span> <span class="mi">1</span><span class="p">))</span> <span class="p">(</span>last-computed <span class="p">(</span>now))))
+   else
+    <span class="p">(</span>printout error <span class="s">&quot;Somehow the goal is canceling already&quot;</span> crlf)
+  <span class="p">)</span>
+  <span class="c1">; do not destroy the server goal handle here, only do it once the goal is fully processed and finished</span>
+  <span class="c1">; (example-interfaces-fibonacci-server-goal-handle-destroy ?ptr)</span>
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">fibonacci-compute-next</span>
+<span class="p">(</span><span class="kd">defrule</span> fibonacci-compute-next
 <span class="s">&quot; Compute the next number in the sequence and send out feedback accordingly. &quot;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-accepted-goal</span><span class="w"> </span><span class="p">(</span><span class="nv">server</span><span class="w"> </span><span class="nv">?server</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">server-goal-handle-ptr</span><span class="w"> </span><span class="nv">?ptr</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">?f</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">fibonacci</span><span class="w"> </span><span class="p">(</span><span class="nv">order</span><span class="w"> </span><span class="nv">?order</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">progress</span><span class="w"> </span><span class="nv">?remaining&amp;:</span><span class="p">(</span><span class="nb">&gt;=</span><span class="w"> </span><span class="nv">?order</span><span class="w"> </span><span class="nv">?remaining</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">last-computed</span><span class="w"> </span><span class="nv">?computed</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">result</span><span class="w"> </span><span class="nv">?old-res</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nc">sequence</span><span class="w"> </span><span class="nv">$?seq</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">uuid</span><span class="w"> </span><span class="nv">?uuid</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">canceled</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">time</span><span class="w"> </span><span class="nv">?now&amp;:</span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="nv">?now</span><span class="w"> </span><span class="nv">?computed</span><span class="p">)</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">test</span><span class="w"> </span><span class="p">(</span><span class="nb">eq</span><span class="w"> </span><span class="nv">?uuid</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-server-goal-handle-get-goal-id</span><span class="w"> </span><span class="nv">?ptr</span><span class="p">)))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?step</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="nv">?remaining</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="nv">nth$</span><span class="w"> </span><span class="nv">?remaining</span><span class="w"> </span><span class="nv">?seq</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">nth$</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="nv">?remaining</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="nv">?seq</span><span class="p">)))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">blue</span><span class="w"> </span><span class="s">&quot;Computing partial result fibonacci(&quot;</span><span class="w"> </span><span class="nv">?remaining</span><span class="w"> </span><span class="s">&quot;) = &quot;</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?seq</span><span class="w"> </span><span class="p">(</span><span class="nv">create$</span><span class="w"> </span><span class="nv">?seq</span><span class="w"> </span><span class="nv">?res</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">modify</span><span class="w"> </span><span class="nv">?f</span><span class="w"> </span><span class="p">(</span><span class="nv">progress</span><span class="w"> </span><span class="nv">?step</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">result</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="nv">?old-res</span><span class="w"> </span><span class="nv">?res</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nc">sequence</span><span class="w"> </span><span class="nv">?seq</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?feedback</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-feedback-create</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-feedback-set-field</span><span class="w"> </span><span class="nv">?feedback</span><span class="w"> </span><span class="s">&quot;sequence&quot;</span><span class="w"> </span><span class="nv">?seq</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-server-goal-handle-publish-feedback</span><span class="w"> </span><span class="nv">?ptr</span><span class="w"> </span><span class="nv">?feedback</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-feedback-destroy</span><span class="w"> </span><span class="nv">?feedback</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">modify</span><span class="w"> </span><span class="nv">?f</span><span class="w"> </span><span class="p">(</span><span class="nv">last-computed</span><span class="w"> </span><span class="nv">?now</span><span class="p">))</span>
+  <span class="p">(</span>example-interfaces-fibonacci-accepted-goal <span class="p">(</span>server <span class="nv">?server</span><span class="p">)</span> <span class="p">(</span>server-goal-handle-ptr <span class="nv">?ptr</span><span class="p">))</span>
+  <span class="nv">?f</span> &lt;- <span class="p">(</span>fibonacci <span class="p">(</span>order <span class="nv">?order</span><span class="p">)</span> <span class="p">(</span>progress <span class="nv">?remaining</span>&amp;:(&gt;= <span class="nv">?order</span> <span class="nv">?remaining</span><span class="p">))</span>
+  <span class="p">(</span>last-computed <span class="nv">?computed</span><span class="p">)</span> <span class="p">(</span>result <span class="nv">?old-res</span><span class="p">)</span> <span class="p">(</span>sequence <span class="nv">$?seq</span><span class="p">)</span> <span class="p">(</span>uuid <span class="nv">?uuid</span><span class="p">)</span> <span class="p">(</span>canceled FALSE))
+  <span class="p">(</span>time <span class="nv">?now</span>&amp;:(&gt; <span class="p">(</span>- <span class="nv">?now</span> <span class="nv">?computed</span><span class="p">)</span> <span class="mi">1</span><span class="p">))</span>
+  <span class="p">(</span>test <span class="p">(</span>eq <span class="nv">?uuid</span> <span class="p">(</span>example-interfaces-fibonacci-server-goal-handle-get-goal-id <span class="nv">?ptr</span><span class="p">)))</span>
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>bind <span class="nv">?step</span> <span class="p">(</span>+ <span class="nv">?remaining</span> <span class="mi">1</span><span class="p">))</span>
+  <span class="p">(</span>bind <span class="nv">?res</span> <span class="p">(</span>+ <span class="p">(</span>nth$ <span class="nv">?remaining</span> <span class="nv">?seq</span><span class="p">)</span> <span class="p">(</span>nth$ <span class="p">(</span>- <span class="nv">?remaining</span> <span class="mi">1</span><span class="p">)</span> <span class="nv">?seq</span><span class="p">)))</span>
+  <span class="p">(</span>printout blue <span class="s">&quot;Computing partial result fibonacci(&quot;</span> <span class="nv">?remaining</span> <span class="s">&quot;) = &quot;</span> <span class="nv">?res</span> crlf)
+  <span class="p">(</span>bind <span class="nv">?seq</span> <span class="p">(</span>create$ <span class="nv">?seq</span> <span class="nv">?res</span><span class="p">))</span>
+  <span class="p">(</span><span class="k k-Name k-Name-Function">modify</span> <span class="nv">?f</span> <span class="p">(</span>progress <span class="nv">?step</span><span class="p">)</span> <span class="p">(</span>result <span class="p">(</span>+ <span class="nv">?old-res</span> <span class="nv">?res</span><span class="p">))</span> <span class="p">(</span>sequence <span class="nv">?seq</span><span class="p">))</span>
+  <span class="p">(</span>bind <span class="nv">?feedback</span> <span class="p">(</span>example-interfaces-fibonacci-feedback-create))
+  <span class="p">(</span>example-interfaces-fibonacci-feedback-set-field <span class="nv">?feedback</span> <span class="s">&quot;sequence&quot;</span> <span class="nv">?seq</span><span class="p">)</span>
+  <span class="p">(</span>example-interfaces-fibonacci-server-goal-handle-publish-feedback <span class="nv">?ptr</span> <span class="nv">?feedback</span><span class="p">)</span>
+  <span class="p">(</span>example-interfaces-fibonacci-feedback-destroy <span class="nv">?feedback</span><span class="p">)</span>
+  <span class="p">(</span><span class="k k-Name k-Name-Function">modify</span> <span class="nv">?f</span> <span class="p">(</span>last-computed <span class="nv">?now</span><span class="p">))</span>
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">fibonacci-compute-done</span>
+<span class="p">(</span><span class="kd">defrule</span> fibonacci-compute-done
 <span class="s">&quot; Send the final goal result once the computation is finished. &quot;</span>
-<span class="w">  </span><span class="nv">?ag</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-accepted-goal</span><span class="w"> </span><span class="p">(</span><span class="nv">server</span><span class="w"> </span><span class="nv">?server</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">server-goal-handle-ptr</span><span class="w"> </span><span class="nv">?ptr</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">?f</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">fibonacci</span><span class="w"> </span><span class="p">(</span><span class="nv">order</span><span class="w"> </span><span class="nv">?order</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">progress</span><span class="w"> </span><span class="nv">?remaining&amp;:</span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="nv">?order</span><span class="w"> </span><span class="nv">?remaining</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nv">result</span><span class="w"> </span><span class="nv">?old-res</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nc">sequence</span><span class="w"> </span><span class="nv">$?seq</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">uuid</span><span class="w"> </span><span class="nv">?uuid&amp;:</span><span class="p">(</span><span class="nb">eq</span><span class="w"> </span><span class="nv">?uuid</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-server-goal-handle-get-goal-id</span><span class="w"> </span><span class="nv">?ptr</span><span class="p">))))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">blue</span><span class="w"> </span><span class="s">&quot;Final fibonacci sequence: &quot;</span><span class="w"> </span><span class="nv">?seq</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?result</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-result-create</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-result-set-field</span><span class="w"> </span><span class="nv">?result</span><span class="w"> </span><span class="s">&quot;sequence&quot;</span><span class="w"> </span><span class="nv">?seq</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-server-goal-handle-succeed</span><span class="w"> </span><span class="nv">?ptr</span><span class="w"> </span><span class="nv">?result</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-result-destroy</span><span class="w"> </span><span class="nv">?result</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-server-goal-handle-destroy</span><span class="w"> </span><span class="nv">?ptr</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?f</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?ag</span><span class="p">)</span>
+  <span class="nv">?ag</span> &lt;- <span class="p">(</span>example-interfaces-fibonacci-accepted-goal <span class="p">(</span>server <span class="nv">?server</span><span class="p">)</span> <span class="p">(</span>server-goal-handle-ptr <span class="nv">?ptr</span><span class="p">))</span>
+  <span class="nv">?f</span> &lt;- <span class="p">(</span>fibonacci <span class="p">(</span>order <span class="nv">?order</span><span class="p">)</span> <span class="p">(</span>progress <span class="nv">?remaining</span>&amp;:(&lt; <span class="nv">?order</span> <span class="nv">?remaining</span><span class="p">))</span> <span class="p">(</span>result <span class="nv">?old-res</span><span class="p">)</span> <span class="p">(</span>sequence <span class="nv">$?seq</span><span class="p">)</span> <span class="p">(</span>uuid <span class="nv">?uuid</span>&amp;:(eq <span class="nv">?uuid</span> <span class="p">(</span>example-interfaces-fibonacci-server-goal-handle-get-goal-id <span class="nv">?ptr</span><span class="p">))))</span>
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>printout blue <span class="s">&quot;Final fibonacci sequence: &quot;</span> <span class="nv">?seq</span> crlf)
+  <span class="p">(</span>bind <span class="nv">?result</span> <span class="p">(</span>example-interfaces-fibonacci-result-create))
+  <span class="p">(</span>example-interfaces-fibonacci-result-set-field <span class="nv">?result</span> <span class="s">&quot;sequence&quot;</span> <span class="nv">?seq</span><span class="p">)</span>
+  <span class="p">(</span>example-interfaces-fibonacci-server-goal-handle-succeed <span class="nv">?ptr</span> <span class="nv">?result</span><span class="p">)</span>
+  <span class="p">(</span>example-interfaces-fibonacci-result-destroy <span class="nv">?result</span><span class="p">)</span>
+  <span class="p">(</span>example-interfaces-fibonacci-server-goal-handle-destroy <span class="nv">?ptr</span><span class="p">)</span>
+  <span class="p">(</span><span class="k k-Name k-Name-Function">retract</span> <span class="nv">?f</span><span class="p">)</span>
+  <span class="p">(</span><span class="k k-Name k-Name-Function">retract</span> <span class="nv">?ag</span><span class="p">)</span>
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">fibonacci-compute-canceled</span>
+<span class="p">(</span><span class="kd">defrule</span> fibonacci-compute-canceled
 <span class="s">&quot; Stop computation and send the partial result in case the goal is canceled. &quot;</span>
-<span class="w">  </span><span class="nv">?ag</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-accepted-goal</span><span class="w"> </span><span class="p">(</span><span class="nv">server</span><span class="w"> </span><span class="nv">?server</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">server-goal-handle-ptr</span><span class="w"> </span><span class="nv">?ptr</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">?f</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">fibonacci</span><span class="w"> </span><span class="p">(</span><span class="nc">sequence</span><span class="w"> </span><span class="nv">$?seq</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">canceled</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">uuid</span><span class="w"> </span><span class="nv">?uuid&amp;:</span><span class="p">(</span><span class="nb">eq</span><span class="w"> </span><span class="nv">?uuid</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-server-goal-handle-get-goal-id</span><span class="w"> </span><span class="nv">?ptr</span><span class="p">))))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">blue</span><span class="w"> </span><span class="s">&quot;Canceling fibonacci sequence: &quot;</span><span class="w"> </span><span class="nv">?seq</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?result</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-result-create</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-result-set-field</span><span class="w"> </span><span class="nv">?result</span><span class="w"> </span><span class="s">&quot;sequence&quot;</span><span class="w"> </span><span class="nv">?seq</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-server-goal-handle-canceled</span><span class="w"> </span><span class="nv">?ptr</span><span class="w"> </span><span class="nv">?result</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-result-destroy</span><span class="w"> </span><span class="nv">?result</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-server-goal-handle-destroy</span><span class="w"> </span><span class="nv">?ptr</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?f</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?ag</span><span class="p">)</span>
+  <span class="nv">?ag</span> &lt;- <span class="p">(</span>example-interfaces-fibonacci-accepted-goal <span class="p">(</span>server <span class="nv">?server</span><span class="p">)</span> <span class="p">(</span>server-goal-handle-ptr <span class="nv">?ptr</span><span class="p">))</span>
+  <span class="nv">?f</span> &lt;- <span class="p">(</span>fibonacci <span class="p">(</span>sequence <span class="nv">$?seq</span><span class="p">)</span> <span class="p">(</span>canceled TRUE) <span class="p">(</span>uuid <span class="nv">?uuid</span>&amp;:(eq <span class="nv">?uuid</span> <span class="p">(</span>example-interfaces-fibonacci-server-goal-handle-get-goal-id <span class="nv">?ptr</span><span class="p">))))</span>
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>printout blue <span class="s">&quot;Canceling fibonacci sequence: &quot;</span> <span class="nv">?seq</span> crlf)
+  <span class="p">(</span>bind <span class="nv">?result</span> <span class="p">(</span>example-interfaces-fibonacci-result-create))
+  <span class="p">(</span>example-interfaces-fibonacci-result-set-field <span class="nv">?result</span> <span class="s">&quot;sequence&quot;</span> <span class="nv">?seq</span><span class="p">)</span>
+  <span class="p">(</span>example-interfaces-fibonacci-server-goal-handle-canceled <span class="nv">?ptr</span> <span class="nv">?result</span><span class="p">)</span>
+  <span class="p">(</span>example-interfaces-fibonacci-result-destroy <span class="nv">?result</span><span class="p">)</span>
+  <span class="p">(</span>example-interfaces-fibonacci-server-goal-handle-destroy <span class="nv">?ptr</span><span class="p">)</span>
+  <span class="p">(</span><span class="k k-Name k-Name-Function">retract</span> <span class="nv">?f</span><span class="p">)</span>
+  <span class="p">(</span><span class="k k-Name k-Name-Function">retract</span> <span class="nv">?ag</span><span class="p">)</span>
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">fibonacci-server-cleanup</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">executive-finalize</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-server</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">?server</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-destroy-server</span><span class="w"> </span><span class="nv">?server</span><span class="p">)</span>
+<span class="p">(</span><span class="kd">defrule</span> fibonacci-server-cleanup
+  <span class="p">(</span>executive-finalize)
+  <span class="p">(</span>example-interfaces-fibonacci-server <span class="p">(</span>name <span class="nv">?server</span><span class="p">))</span>
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>example-interfaces-fibonacci-destroy-server <span class="nv">?server</span><span class="p">)</span>
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">fibonacci-goal-response-cleanup</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">executive-finalize</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">?f</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-goal-response</span><span class="w"> </span><span class="p">(</span><span class="nv">client-goal-handle-ptr</span><span class="w"> </span><span class="nv">?p</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-client-goal-handle-destroy</span><span class="w"> </span><span class="nv">?p</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?f</span><span class="p">)</span>
+<span class="p">(</span><span class="kd">defrule</span> fibonacci-goal-response-cleanup
+  <span class="p">(</span>executive-finalize)
+  <span class="nv">?f</span> &lt;- <span class="p">(</span>example-interfaces-fibonacci-goal-response <span class="p">(</span>client-goal-handle-ptr <span class="nv">?p</span><span class="p">))</span>
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>example-interfaces-fibonacci-client-goal-handle-destroy <span class="nv">?p</span><span class="p">)</span>
+  <span class="p">(</span><span class="k k-Name k-Name-Function">retract</span> <span class="nv">?f</span><span class="p">)</span>
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">fibonacci-accepted-goal-cleanup</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">executive-finalize</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">?f</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-accepted-goal</span><span class="w"> </span><span class="p">(</span><span class="nv">server-goal-handle-ptr</span><span class="w"> </span><span class="nv">?p</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-server-goal-handle-destroy</span><span class="w"> </span><span class="nv">?p</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?f</span><span class="p">)</span>
+<span class="p">(</span><span class="kd">defrule</span> fibonacci-accepted-goal-cleanup
+  <span class="p">(</span>executive-finalize)
+  <span class="nv">?f</span> &lt;- <span class="p">(</span>example-interfaces-fibonacci-accepted-goal <span class="p">(</span>server-goal-handle-ptr <span class="nv">?p</span><span class="p">))</span>
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>example-interfaces-fibonacci-server-goal-handle-destroy <span class="nv">?p</span><span class="p">)</span>
+  <span class="p">(</span><span class="k k-Name k-Name-Function">retract</span> <span class="nv">?f</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 <p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/fibonacci-action-client.clp">cx_bringup/clips/plugin_examples/fibonacci-action-client.clp</a>.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">fibonacci-action-client-init</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">defrule</span> fibonacci-action-client-init
 <span class="s">&quot; Create a simple client using the generated bindings. &quot;</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-client</span><span class="w"> </span><span class="p">(</span><span class="nv">server</span><span class="w"> </span><span class="s">&quot;ros_cx_fibonacci&quot;</span><span class="p">)))</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">executive-finalize</span><span class="p">))</span>
-<span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-create-client</span><span class="w"> </span><span class="s">&quot;ros_cx_fibonacci&quot;</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;Created client for /ros_cx_fibonacci&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+  <span class="p">(</span>not <span class="p">(</span>example-interfaces-fibonacci-client <span class="p">(</span>server <span class="s">&quot;ros_cx_fibonacci&quot;</span><span class="p">)))</span>
+  <span class="p">(</span>not <span class="p">(</span>executive-finalize))
+<span class="nt">=&gt;</span>
+  <span class="p">(</span>example-interfaces-fibonacci-create-client <span class="s">&quot;ros_cx_fibonacci&quot;</span><span class="p">)</span>
+  <span class="p">(</span>printout green <span class="s">&quot;Created client for /ros_cx_fibonacci&quot;</span> crlf)
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">fibonacci-client-send-goal</span>
+<span class="p">(</span><span class="kd">defrule</span> fibonacci-client-send-goal
 <span class="s">&quot; Request computation of the fibonacci sequence of order 5. &quot;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-client</span><span class="w"> </span><span class="p">(</span><span class="nv">server</span><span class="w"> </span><span class="nv">?server</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">send-request</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">send-request</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?goal</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-goal-create</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">fibonacci-goal</span><span class="w"> </span><span class="nv">?goal</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-goal-set-field</span><span class="w"> </span><span class="nv">?goal</span><span class="w"> </span><span class="s">&quot;order&quot;</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-send-goal</span><span class="w"> </span><span class="nv">?goal</span><span class="w"> </span><span class="nv">?server</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;Sending goal fibonacci(5)&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+  <span class="p">(</span>example-interfaces-fibonacci-client <span class="p">(</span>server <span class="nv">?server</span><span class="p">))</span>
+  <span class="p">(</span>not <span class="p">(</span>send-request))
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span><span class="k k-Name k-Name-Function">assert</span> <span class="p">(</span>send-request))
+  <span class="p">(</span>bind <span class="nv">?goal</span> <span class="p">(</span>example-interfaces-fibonacci-goal-create))
+  <span class="p">(</span><span class="k k-Name k-Name-Function">assert</span> <span class="p">(</span>fibonacci-goal <span class="nv">?goal</span><span class="p">))</span>
+  <span class="p">(</span>example-interfaces-fibonacci-goal-set-field <span class="nv">?goal</span> <span class="s">&quot;order&quot;</span> <span class="mi">5</span><span class="p">)</span>
+  <span class="p">(</span>example-interfaces-fibonacci-send-goal <span class="nv">?goal</span> <span class="nv">?server</span><span class="p">)</span>
+  <span class="p">(</span>printout green <span class="s">&quot;Sending goal fibonacci(5)&quot;</span> crlf)
 
-<span class="w">  </span><span class="c1">; do not destroy the goal here, only do it once the goal is fully processed and finished</span>
-<span class="w">  </span><span class="c1">; (example-interfaces-fibonacci-goal-destroy ?goal)</span>
+  <span class="c1">; do not destroy the goal here, only do it once the goal is fully processed and finished</span>
+  <span class="c1">; (example-interfaces-fibonacci-goal-destroy ?goal)</span>
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">fibonacci-client-get-feedback</span>
+<span class="p">(</span><span class="kd">defrule</span> fibonacci-client-get-feedback
 <span class="s">&quot; Print any partial compuation result received so far and perpare cancelation once the received sequence is of length 7. &quot;</span>
-<span class="w">  </span><span class="p">(</span><span class="k">declare</span><span class="w"> </span><span class="p">(</span><span class="nv">salience</span><span class="w"> </span><span class="mi">100</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">?f</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-goal-feedback</span><span class="w"> </span><span class="p">(</span><span class="nv">server</span><span class="w"> </span><span class="nv">?server</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">client-goal-handle-ptr</span><span class="w"> </span><span class="nv">?ghp</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">feedback-ptr</span><span class="w"> </span><span class="nv">?fp</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?g-id</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-client-goal-handle-get-goal-id</span><span class="w"> </span><span class="nv">?ghp</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?g-stamp</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-client-goal-handle-get-goal-stamp</span><span class="w"> </span><span class="nv">?ghp</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?g-status</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-client-goal-handle-get-status</span><span class="w"> </span><span class="nv">?ghp</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?g-is-f-aware</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-client-goal-handle-is-feedback-aware</span><span class="w"> </span><span class="nv">?ghp</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?g-is-r-aware</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-client-goal-handle-is-result-aware</span><span class="w"> </span><span class="nv">?ghp</span><span class="p">))</span>
-<span class="w">  </span><span class="c1">; the stamp seems to be broken (looks like a rclcpp_action issue)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">debug</span><span class="w"> </span><span class="s">&quot;[&quot;</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="p">(</span><span class="nv">now</span><span class="p">)</span><span class="w"> </span><span class="nv">?g-stamp</span><span class="p">)</span><span class="w"> </span><span class="s">&quot;] &quot;</span><span class="w"> </span><span class="nv">?g-status</span><span class="w"> </span><span class="s">&quot; &quot;</span><span class="w"> </span><span class="nv">?g-id</span><span class="w"> </span><span class="s">&quot; f &quot;</span><span class="w"> </span><span class="nv">?g-is-f-aware</span><span class="w"> </span><span class="s">&quot; r &quot;</span><span class="w"> </span><span class="nv">?g-is-r-aware</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?part-seq</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-feedback-get-field</span><span class="w"> </span><span class="nv">?fp</span><span class="w"> </span><span class="s">&quot;sequence&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;partial sequence: &quot;</span><span class="w"> </span><span class="nv">?part-seq</span><span class="w">   </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="p">(</span><span class="nv">length$</span><span class="w"> </span><span class="nv">?part-seq</span><span class="p">)</span><span class="w"> </span><span class="mi">7</span><span class="p">)</span><span class="w"> </span><span class="nv">then</span>
-<span class="w">     </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">cancel-goal</span><span class="p">))</span>
-<span class="w">  </span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-feedback-destroy</span><span class="w"> </span><span class="nv">?fp</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?f</span><span class="p">)</span>
+  <span class="p">(</span>declare <span class="p">(</span>salience <span class="mi">100</span><span class="p">))</span>
+  <span class="nv">?f</span> &lt;- <span class="p">(</span>example-interfaces-fibonacci-goal-feedback <span class="p">(</span>server <span class="nv">?server</span><span class="p">)</span> <span class="p">(</span>client-goal-handle-ptr <span class="nv">?ghp</span><span class="p">)</span> <span class="p">(</span>feedback-ptr <span class="nv">?fp</span><span class="p">))</span>
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>bind <span class="nv">?g-id</span> <span class="p">(</span>example-interfaces-fibonacci-client-goal-handle-get-goal-id <span class="nv">?ghp</span><span class="p">))</span>
+  <span class="p">(</span>bind <span class="nv">?g-stamp</span> <span class="p">(</span>example-interfaces-fibonacci-client-goal-handle-get-goal-stamp <span class="nv">?ghp</span><span class="p">))</span>
+  <span class="p">(</span>bind <span class="nv">?g-status</span> <span class="p">(</span>example-interfaces-fibonacci-client-goal-handle-get-status <span class="nv">?ghp</span><span class="p">))</span>
+  <span class="p">(</span>bind <span class="nv">?g-is-f-aware</span> <span class="p">(</span>example-interfaces-fibonacci-client-goal-handle-is-feedback-aware <span class="nv">?ghp</span><span class="p">))</span>
+  <span class="p">(</span>bind <span class="nv">?g-is-r-aware</span> <span class="p">(</span>example-interfaces-fibonacci-client-goal-handle-is-result-aware <span class="nv">?ghp</span><span class="p">))</span>
+  <span class="c1">; the stamp seems to be broken (looks like a rclcpp_action issue)</span>
+  <span class="p">(</span>printout debug <span class="s">&quot;[&quot;</span> <span class="p">(</span>- <span class="p">(</span>now) <span class="nv">?g-stamp</span><span class="p">)</span> <span class="s">&quot;] &quot;</span> <span class="nv">?g-status</span> <span class="s">&quot; &quot;</span> <span class="nv">?g-id</span> <span class="s">&quot; f &quot;</span> <span class="nv">?g-is-f-aware</span> <span class="s">&quot; r &quot;</span> <span class="nv">?g-is-r-aware</span> crlf)
+  <span class="p">(</span>bind <span class="nv">?part-seq</span> <span class="p">(</span>example-interfaces-fibonacci-feedback-get-field <span class="nv">?fp</span> <span class="s">&quot;sequence&quot;</span><span class="p">))</span>
+  <span class="p">(</span>printout green <span class="s">&quot;partial sequence: &quot;</span> <span class="nv">?part-seq</span>   crlf)
+  <span class="p">(</span>if <span class="p">(</span>= <span class="p">(</span>length$ <span class="nv">?part-seq</span><span class="p">)</span> <span class="mi">7</span><span class="p">)</span> then
+     <span class="p">(</span><span class="k k-Name k-Name-Function">assert</span> <span class="p">(</span>cancel-goal))
+  <span class="p">)</span>
+  <span class="p">(</span>example-interfaces-fibonacci-feedback-destroy <span class="nv">?fp</span><span class="p">)</span>
+  <span class="p">(</span><span class="k k-Name k-Name-Function">retract</span> <span class="nv">?f</span><span class="p">)</span>
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">fibonacci-client-cleanup-after-wrapped-result</span>
+<span class="p">(</span><span class="kd">defrule</span> fibonacci-client-cleanup-after-wrapped-result
 <span class="s">&quot; Process result of finished compuatation, printing the final sequence. &quot;</span>
-<span class="w">  </span><span class="p">(</span><span class="k">declare</span><span class="w"> </span><span class="p">(</span><span class="nv">salience</span><span class="w"> </span><span class="mi">10</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">?f</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-goal-response</span><span class="w"> </span><span class="p">(</span><span class="nv">server</span><span class="w"> </span><span class="nv">?server</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">client-goal-handle-ptr</span><span class="w"> </span><span class="nv">?ghp</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">?g</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-wrapped-result</span><span class="w"> </span><span class="p">(</span><span class="nv">server</span><span class="w"> </span><span class="nv">?server</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">goal-id</span><span class="w"> </span><span class="nv">?uuid</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">code</span><span class="w"> </span><span class="nv">?code</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">result-ptr</span><span class="w"> </span><span class="nv">?rp</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">test</span><span class="w"> </span><span class="p">(</span><span class="nb">eq</span><span class="w"> </span><span class="nv">?uuid</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-client-goal-handle-get-goal-id</span><span class="w"> </span><span class="nv">?ghp</span><span class="p">)))</span>
-<span class="w">  </span><span class="nv">?request-goal</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">fibonacci-goal</span><span class="w"> </span><span class="nv">?goal</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">time</span><span class="w"> </span><span class="nv">?now</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?g-status</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-client-goal-handle-get-status</span><span class="w"> </span><span class="nv">?ghp</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="nv">?g-status</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="nv">then</span><span class="w"> </span><span class="c1">; status is final in one way or another</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?seq</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-result-get-field</span><span class="w"> </span><span class="nv">?rp</span><span class="w"> </span><span class="s">&quot;sequence&quot;</span><span class="p">))</span>
-<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="nv">?g-status</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="nv">then</span>
-<span class="w">      </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;Final fibonacci sequence: &quot;</span><span class="w"> </span><span class="nv">?seq</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">    </span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="nv">?g-status</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="nv">then</span>
-<span class="w">      </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;Canceled fibonacci sequence: &quot;</span><span class="w"> </span><span class="nv">?seq</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">    </span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-result-destroy</span><span class="w"> </span><span class="nv">?rp</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?g</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?g-id</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-client-goal-handle-get-goal-id</span><span class="w"> </span><span class="nv">?ghp</span><span class="p">))</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?g-stamp</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-client-goal-handle-get-goal-stamp</span><span class="w"> </span><span class="nv">?ghp</span><span class="p">))</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?g-is-f-aware</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-client-goal-handle-is-feedback-aware</span><span class="w"> </span><span class="nv">?ghp</span><span class="p">))</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?g-is-r-aware</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-client-goal-handle-is-result-aware</span><span class="w"> </span><span class="nv">?ghp</span><span class="p">))</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">debug</span><span class="w"> </span><span class="s">&quot;Final goal response [&quot;</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="p">(</span><span class="nv">now</span><span class="p">)</span><span class="w"> </span><span class="nv">?g-stamp</span><span class="p">)</span><span class="w"> </span><span class="s">&quot;] &quot;</span><span class="w"> </span><span class="nv">?uuid</span><span class="w"> </span><span class="s">&quot; &quot;</span><span class="w"> </span><span class="nv">?g-status</span><span class="w"> </span><span class="s">&quot; &quot;</span><span class="w"> </span><span class="nv">?g-id</span><span class="w"> </span><span class="s">&quot; f &quot;</span><span class="w"> </span><span class="nv">?g-is-f-aware</span><span class="w"> </span><span class="s">&quot; r &quot;</span><span class="w"> </span><span class="nv">?g-is-r-aware</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-client-goal-handle-destroy</span><span class="w"> </span><span class="nv">?ghp</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?f</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-goal-destroy</span><span class="w"> </span><span class="nv">?goal</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?request-goal</span><span class="p">)</span>
-<span class="w">  </span><span class="p">)</span>
+  <span class="p">(</span>declare <span class="p">(</span>salience <span class="mi">10</span><span class="p">))</span>
+  <span class="nv">?f</span> &lt;- <span class="p">(</span>example-interfaces-fibonacci-goal-response <span class="p">(</span>server <span class="nv">?server</span><span class="p">)</span> <span class="p">(</span>client-goal-handle-ptr <span class="nv">?ghp</span><span class="p">))</span>
+  <span class="nv">?g</span> &lt;- <span class="p">(</span>example-interfaces-fibonacci-wrapped-result <span class="p">(</span>server <span class="nv">?server</span><span class="p">)</span> <span class="p">(</span>goal-id <span class="nv">?uuid</span><span class="p">)</span> <span class="p">(</span>code <span class="nv">?code</span><span class="p">)</span> <span class="p">(</span>result-ptr <span class="nv">?rp</span><span class="p">))</span>
+  <span class="p">(</span>test <span class="p">(</span>eq <span class="nv">?uuid</span> <span class="p">(</span>example-interfaces-fibonacci-client-goal-handle-get-goal-id <span class="nv">?ghp</span><span class="p">)))</span>
+  <span class="nv">?request-goal</span> &lt;- <span class="p">(</span>fibonacci-goal <span class="nv">?goal</span><span class="p">)</span>
+  <span class="p">(</span>time <span class="nv">?now</span><span class="p">)</span>
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>bind <span class="nv">?g-status</span> <span class="p">(</span>example-interfaces-fibonacci-client-goal-handle-get-status <span class="nv">?ghp</span><span class="p">))</span>
+  <span class="p">(</span>if <span class="p">(</span>&gt; <span class="nv">?g-status</span> <span class="mi">3</span><span class="p">)</span> then <span class="c1">; status is final in one way or another</span>
+    <span class="p">(</span>bind <span class="nv">?seq</span> <span class="p">(</span>example-interfaces-fibonacci-result-get-field <span class="nv">?rp</span> <span class="s">&quot;sequence&quot;</span><span class="p">))</span>
+    <span class="p">(</span>if <span class="p">(</span>= <span class="nv">?g-status</span> <span class="mi">4</span><span class="p">)</span> then
+      <span class="p">(</span>printout green <span class="s">&quot;Final fibonacci sequence: &quot;</span> <span class="nv">?seq</span> crlf)
+    <span class="p">)</span>
+    <span class="p">(</span>if <span class="p">(</span>= <span class="nv">?g-status</span> <span class="mi">5</span><span class="p">)</span> then
+      <span class="p">(</span>printout green <span class="s">&quot;Canceled fibonacci sequence: &quot;</span> <span class="nv">?seq</span> crlf)
+    <span class="p">)</span>
+    <span class="p">(</span>example-interfaces-fibonacci-result-destroy <span class="nv">?rp</span><span class="p">)</span>
+    <span class="p">(</span><span class="k k-Name k-Name-Function">retract</span> <span class="nv">?g</span><span class="p">)</span>
+    <span class="p">(</span>bind <span class="nv">?g-id</span> <span class="p">(</span>example-interfaces-fibonacci-client-goal-handle-get-goal-id <span class="nv">?ghp</span><span class="p">))</span>
+    <span class="p">(</span>bind <span class="nv">?g-stamp</span> <span class="p">(</span>example-interfaces-fibonacci-client-goal-handle-get-goal-stamp <span class="nv">?ghp</span><span class="p">))</span>
+    <span class="p">(</span>bind <span class="nv">?g-is-f-aware</span> <span class="p">(</span>example-interfaces-fibonacci-client-goal-handle-is-feedback-aware <span class="nv">?ghp</span><span class="p">))</span>
+    <span class="p">(</span>bind <span class="nv">?g-is-r-aware</span> <span class="p">(</span>example-interfaces-fibonacci-client-goal-handle-is-result-aware <span class="nv">?ghp</span><span class="p">))</span>
+    <span class="p">(</span>printout debug <span class="s">&quot;Final goal response [&quot;</span> <span class="p">(</span>- <span class="p">(</span>now) <span class="nv">?g-stamp</span><span class="p">)</span> <span class="s">&quot;] &quot;</span> <span class="nv">?uuid</span> <span class="s">&quot; &quot;</span> <span class="nv">?g-status</span> <span class="s">&quot; &quot;</span> <span class="nv">?g-id</span> <span class="s">&quot; f &quot;</span> <span class="nv">?g-is-f-aware</span> <span class="s">&quot; r &quot;</span> <span class="nv">?g-is-r-aware</span> crlf)
+    <span class="p">(</span>example-interfaces-fibonacci-client-goal-handle-destroy <span class="nv">?ghp</span><span class="p">)</span>
+    <span class="p">(</span><span class="k k-Name k-Name-Function">retract</span> <span class="nv">?f</span><span class="p">)</span>
+    <span class="p">(</span>example-interfaces-fibonacci-goal-destroy <span class="nv">?goal</span><span class="p">)</span>
+    <span class="p">(</span><span class="k k-Name k-Name-Function">retract</span> <span class="nv">?request-goal</span><span class="p">)</span>
+  <span class="p">)</span>
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">fibonacci-client-send-goal-that-cancels-later</span>
+<span class="p">(</span><span class="kd">defrule</span> fibonacci-client-send-goal-that-cancels-later
 <span class="s">&quot; Send out a second goal for the fibonacci sequence of order 10 once the previous goal is completed. &quot;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-client</span><span class="w"> </span><span class="p">(</span><span class="nv">server</span><span class="w"> </span><span class="nv">?server</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">send-request</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">fibonacci-goal</span><span class="w"> </span><span class="nv">?</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">send-request-again</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;Request fibonacci(10), will cancel before finish&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">send-request-again</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?goal</span><span class="w"> </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-goal-create</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">fibonacci-goal</span><span class="w"> </span><span class="nv">?goal</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-goal-set-field</span><span class="w"> </span><span class="nv">?goal</span><span class="w"> </span><span class="s">&quot;order&quot;</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-send-goal</span><span class="w"> </span><span class="nv">?goal</span><span class="w"> </span><span class="nv">?server</span><span class="p">)</span>
+  <span class="p">(</span>example-interfaces-fibonacci-client <span class="p">(</span>server <span class="nv">?server</span><span class="p">))</span>
+  <span class="p">(</span>send-request)
+  <span class="p">(</span>not <span class="p">(</span>fibonacci-goal ?))
+  <span class="p">(</span>not <span class="p">(</span>send-request-again))
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>printout green <span class="s">&quot;Request fibonacci(10), will cancel before finish&quot;</span> crlf)
+  <span class="p">(</span><span class="k k-Name k-Name-Function">assert</span> <span class="p">(</span>send-request-again))
+  <span class="p">(</span>bind <span class="nv">?goal</span> <span class="p">(</span>example-interfaces-fibonacci-goal-create))
+  <span class="p">(</span><span class="k k-Name k-Name-Function">assert</span> <span class="p">(</span>fibonacci-goal <span class="nv">?goal</span><span class="p">))</span>
+  <span class="p">(</span>example-interfaces-fibonacci-goal-set-field <span class="nv">?goal</span> <span class="s">&quot;order&quot;</span> <span class="mi">10</span><span class="p">)</span>
+  <span class="p">(</span>example-interfaces-fibonacci-send-goal <span class="nv">?goal</span> <span class="nv">?server</span><span class="p">)</span>
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">fibonacci-request-cancel</span>
+<span class="p">(</span><span class="kd">defrule</span> fibonacci-request-cancel
 <span class="s">&quot; Send out a cancel request after the partial feedback provides a sequence of length 7. &quot;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">cancel-goal</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-client</span><span class="w"> </span><span class="p">(</span><span class="nv">server</span><span class="w"> </span><span class="nv">?server</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-goal-response</span><span class="w"> </span><span class="p">(</span><span class="nv">server</span><span class="w"> </span><span class="nv">?server</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">client-goal-handle-ptr</span><span class="w"> </span><span class="nv">?ghp</span><span class="p">))</span>
-<span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-client-cancel-goal</span><span class="w"> </span><span class="nv">?server</span><span class="w"> </span><span class="nv">?ghp</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;Canceling current goal&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+  <span class="p">(</span>cancel-goal)
+  <span class="p">(</span>example-interfaces-fibonacci-client <span class="p">(</span>server <span class="nv">?server</span><span class="p">))</span>
+  <span class="p">(</span>example-interfaces-fibonacci-goal-response <span class="p">(</span>server <span class="nv">?server</span><span class="p">)</span> <span class="p">(</span>client-goal-handle-ptr <span class="nv">?ghp</span><span class="p">))</span>
+<span class="nt">=&gt;</span>
+  <span class="p">(</span>example-interfaces-fibonacci-client-cancel-goal <span class="nv">?server</span> <span class="nv">?ghp</span><span class="p">)</span>
+  <span class="p">(</span>printout green <span class="s">&quot;Canceling current goal&quot;</span> crlf)
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">fibonacci-client-cleanup</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">executive-finalize</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-client</span><span class="w"> </span><span class="p">(</span><span class="nv">server</span><span class="w"> </span><span class="nv">?client</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-destroy-client</span><span class="w"> </span><span class="nv">?client</span><span class="p">)</span>
+<span class="p">(</span><span class="kd">defrule</span> fibonacci-client-cleanup
+  <span class="p">(</span>executive-finalize)
+  <span class="p">(</span>example-interfaces-fibonacci-client <span class="p">(</span>server <span class="nv">?client</span><span class="p">))</span>
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>example-interfaces-fibonacci-destroy-client <span class="nv">?client</span><span class="p">)</span>
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">fibonacci-accepted-goal-cleanup</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">executive-finalize</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">?f</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">fibonacci-goal</span><span class="w"> </span><span class="nv">?p</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">example-interfaces-fibonacci-goal-destroy</span><span class="w"> </span><span class="nv">?p</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?f</span><span class="p">)</span>
+<span class="p">(</span><span class="kd">defrule</span> fibonacci-accepted-goal-cleanup
+  <span class="p">(</span>executive-finalize)
+  <span class="nv">?f</span> &lt;- <span class="p">(</span>fibonacci-goal <span class="nv">?p</span><span class="p">)</span>
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>example-interfaces-fibonacci-goal-destroy <span class="nv">?p</span><span class="p">)</span>
+  <span class="p">(</span><span class="k k-Name k-Name-Function">retract</span> <span class="nv">?f</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>

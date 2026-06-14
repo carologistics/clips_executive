@@ -1,7 +1,7 @@
 .. _usage_executive_plugin:
 
 Executive Plugin
-################
+================
 
 Source code on :source-master:`GitHub <cx_plugins/executive_plugin>`.
 
@@ -13,7 +13,7 @@ This plugin provides continuous and ad-hoc execution of CLIPS environments.
 Additionally, it enables reasoning about the current ROS and system time.
 
 Configuration
-*************
+-------------
 
 .. _refresh_rate:
 
@@ -28,6 +28,8 @@ Configuration
   Description
     Target rate (in Hz) with which agendas are refreshed and run is called.
     This is done sequentially for the registered environments.
+
+.. _publish_on_refresh:
 
 :`publish_on_refresh`:
 
@@ -66,7 +68,7 @@ Configuration
     Whether to start periodic execution when loading the plugin.
 
 Features
-********
+--------
 
 The executive plugin periodically runs all managed CLIPS environments at the configured :ref:`refresh_rate`.
 Each tick performs the following steps:
@@ -76,10 +78,10 @@ Each tick performs the following steps:
 3. If a :ref:`focus_stack <focus_stack>` is configured for an environment, iterates through the stack in order, running each module's agenda (respecting a possibly set :ref:`rule_limit <rule_limit>`) before moving to the next.
    Otherwise, runs the ``MAIN`` module's agenda.
 4. Repeats steps 2-3 until no rules fire, ensuring cross-module interactions are fully resolved.
-5. Optionally publishes the total number of rules fired on the :ref:`refresh_agenda_topic` topic.
+5. Optionally publishes the total number of rules fired on a topic.
 
-Execution can be paused and resumed at any time via the :ref:`pause_service` and :ref:`resume_service` services,
-or a single tick can be triggered manually via the :ref:`tick_once_service` service, regardless of the current pause state.
+Execution can be paused and resumed at any time via services,
+or a single tick can be triggered manually, regardless of the current pause state.
 
 CLIPS commands can be sent directly to a managed environment via dedicated ``eval`` and ``build`` services.
 ``eval`` evaluates an expression using CLIPS ``Eval``, while ``build`` defines a new construct using CLIPS ``Build``.
@@ -95,34 +97,48 @@ If no environment is specified, the command is executed in the first managed env
   ``Eval`` is intended for invoking arbirary commands (e.g. ``(assert (foo))``, ``(facts)``),
   while ``Build`` is intended for defining constructs (e.g. ``(defrule ...)``, ``(deftemplate ...)``).
 
+ROS Interfaces
+^^^^^^^^^^^^^^
+
+All interaces are prefixed by tha name of the CX node, followed by the name of the executive plugin, e.g., ``clips_manager/executive``.
+
+- */ns/node/plugin/refresh_agenda*: Topic where a mesage is published after each tick, indicating the number of rules that fired (requires :ref:`publish_on_refresh`).
+- */ns/node/plugin/pause*: Service for stopping periodic ticks according to the configured :ref:`refresh_rate`.
+- */ns/node/plugin/resume*: Service that for starting the periodic ticks.
+- */ns/node/plugin/tick_once*: Serivce for ticking once.
+- */ns/node/plugin/eval*: Service for processing a string as an ``eval`` command in a given environment.
+- */ns/node/plugin/build*: Service for processing a string as an ``build`` command in a given environment.
+
+
+
 Facts
-~~~~~
+^^^^^
 
 If :ref:`assert_time` is set to ``true``, it asserts the ordered fact `time` with the current ROS time as float.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (time ?ros-time-float)
 
 Functions
-~~~~~~~~~
+^^^^^^^^^
 
 This plugin adds deffunctions to retrieve the current time.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (bind ?ros-time (now))         ; returns a FLOAT holding get_clock()->now().seconds()
   (bind ?sys-time (now-systime)) ; returns a FLOAT of system time
 
 
 Other
-~~~~~
+^^^^^
 
 Lastly, the ``time`` fact is unwatched after the first assertion.
 
 
 Usage Example
-*************
+-------------
 
 A minimal working example is provided by the :docsite:`cx_bringup` package. Run it via:
 
@@ -162,7 +178,7 @@ Finally, the ``resume`` service is used in order to resume automatic execution:
 
 
 Configuration
-~~~~~~~~~~~~~
+^^^^^^^^^^^^^
 
 File :source-master:`cx_bringup/params/plugin_examples/executive.yaml`.
 
@@ -188,11 +204,11 @@ File :source-master:`cx_bringup/params/plugin_examples/executive.yaml`.
           "clips/plugin_examples/executive.clp"]
 
 Code
-~~~~
+^^^^
 
 File :source-master:`cx_bringup/clips/plugin_examples/executive.clp`.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule print-time
     (time ?now)

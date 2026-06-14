@@ -1,7 +1,7 @@
 .. _usage_protobuf_plugin:
 
 Protobuf Plugin
-###############
+===============
 
 Source code on :source-master:`GitHub <cx_plugins/protobuf_plugin>`.
 
@@ -16,7 +16,7 @@ This plugin enables communication via protobuf through :docsite:`protobuf_comm`,
   This Plugin relies on protobuf_comm and thus is subject to the GPLv2+ license.
 
 Configuration
-*************
+-------------
 
 :`pkg_share_dirs`:
 
@@ -43,7 +43,7 @@ Configuration
 
 
 Features
-********
+--------
 
 The utilized :docsite:`protobuf_comm` library (de)-serializes proto using a framing protocol that other communication endpoints therefore need to adhere to, as well.
 Refer to it's documentation to get details on the layout of the frame headers.
@@ -64,7 +64,7 @@ An example message is depicted below:
 Messages can be exchanged either via establishing TCP Client-Server connections or via UDP broadcast peers.
 
 Registering Messages
-~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^
 
 Messages need to be registered before they can be used.
 The easiest way is to utilize the configuration options to specify directories that host proto definitions (``.proto`` files).
@@ -83,9 +83,9 @@ In order to accomplish this, this plugin offers two cmake macros:
   cx_generate_linked_protobuf_plugin_from_lib(NEW_PLUGIN_NAME SHARED_LIBRARY_TARGET)
 
 Facts
-~~~~~
+^^^^^
 
-.. code-block:: lisp
+.. code-block:: clips
 
   ; Asserted whenever a message is received
   (deftemplate protobuf-msg
@@ -140,9 +140,9 @@ Facts
   (protobuf-server-client-connected ?client-id)
 
 Functions
-~~~~~~~~~
+^^^^^^^^^
 
-.. code-block:: lisp
+.. code-block:: clips
 
   ; functions for processing messages:
   (bind ?res (pb-field-names ?msg))
@@ -178,11 +178,11 @@ Functions
   (bind ?res (pb-register-type ?full-name))    ; returns TRUE if successful, FALSE otherwise
 
 Rules
-~~~~~
+^^^^^
 
 Per default the Plugin ensures that all asserted facts are cleaned up with lowest possible salience.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defglobal
     ?*PRIORITY-PROTOBUF-RETRACT*    = -10000
@@ -215,7 +215,7 @@ Per default the Plugin ensures that all asserted facts are cleaned up with lowes
   )
 
 Usage Example: Register Message via Configuration
-*************************************************
+-------------------------------------------------
 
 A minimal working example is provided by the :docsite:`cx_bringup` package.
 
@@ -228,7 +228,7 @@ It registers a proto file using the configuration options and then creates two U
 .. _proto msg example:
 
 Message
-~~~~~~~
+^^^^^^^
 
 File :source-master:`cx_bringup/proto/cx_bringup/SearchRequest.proto`.
 
@@ -247,7 +247,7 @@ File :source-master:`cx_bringup/proto/cx_bringup/SearchRequest.proto`.
   }
 
 Configuration
-~~~~~~~~~~~~~
+^^^^^^^^^^^^^
 
 The configuration creates two environments, each handling a protobuf peer.
 
@@ -301,11 +301,11 @@ File :source-master:`cx_bringup/params/plugin_examples/protobuf.yaml`.
 
 
 Code
-~~~~
+^^^^
 
 File :source-master:`cx_bringup/clips/plugin_examples/protobuf-peer1.clp`.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule protobuf-init-example-peer
     (not (executive-finalize))
@@ -353,7 +353,7 @@ File :source-master:`cx_bringup/clips/plugin_examples/protobuf-peer1.clp`.
 
 File :source-master:`cx_bringup/clips/plugin_examples/protobuf-peer2.clp`.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule protobuf-init-example-peer
     (not (executive-finalize))
@@ -366,7 +366,7 @@ File :source-master:`cx_bringup/clips/plugin_examples/protobuf-peer2.clp`.
   )
 
 Usage Example: Register Message via Linked Plugin
-*************************************************
+-------------------------------------------------
 
 A minimal working example is provided by the :docsite:`cx_bringup` package.
 
@@ -384,7 +384,7 @@ Therefore, a linked plugin is generated:
   cx_generate_linked_protobuf_plugin_from_proto("BringupProtobufPlugin" proto/cx_bringup/SearchRequest.proto)
 
 Configuration
-~~~~~~~~~~~~~
+^^^^^^^^^^^^^
 
 File :source-master:`cx_bringup/params/plugin_examples/protobuf_linked.yaml`.
 
@@ -430,11 +430,11 @@ File :source-master:`cx_bringup/params/plugin_examples/protobuf_linked.yaml`.
 
 
 Code
-~~~~
+^^^^
 
 File :source-master:`cx_bringup/clips/plugin_examples/protobuf-linked-client.clp`.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule protobuf-init-example-client
     (not (executive-finalize))
@@ -470,7 +470,7 @@ File :source-master:`cx_bringup/clips/plugin_examples/protobuf-linked-client.clp
 
 File :source-master:`cx_bringup/clips/plugin_examples/protobuf-linked-server.clp`.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule protobuf-init-example-server
     (not (executive-finalize))

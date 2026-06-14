@@ -1,7 +1,7 @@
 .. _usage_config_plugin:
 
 YAML Configuration Plugin
-#########################
+=========================
 
 Source code on :source-master:`GitHub <cx_plugins/config_plugin>`.
 
@@ -12,19 +12,19 @@ Source code on :source-master:`GitHub <cx_plugins/config_plugin>`.
 This plugin provides the ability to parse YAML files into CLIPS facts.
 
 Configuration
-*************
+^^^^^^^^^^^^^
 
 This plugin has no specific configuration.
 
 Features
-********
+^^^^^^^^
 
 This plugin adds deftemplates and custom functions as listed below.
 
 Facts
-~~~~~
+^^^^^
 
-.. code-block:: lisp
+.. code-block:: clips
 
   ; Asserted by the config-load function for each configuration value in the parsed yaml file.
   (deftemplate confval
@@ -36,9 +36,9 @@ Facts
   )
 
 Functions
-~~~~~~~~~
+^^^^^^^^^
 
-.. code-block:: lisp
+.. code-block:: clips
 
   ; Load all config values from a file (absolute path) given a prefix and store them into (confval) facts.
   ; The prefix can be used to restrict the loaded values to a prefix
@@ -50,7 +50,7 @@ Functions
   (config-load ?file ?prefix)
 
 Usage Example
-*************
+^^^^^^^^^^^^^
 
 A minimal working example is provided by the :docsite:`cx_bringup` package. Run it via:
 
@@ -61,7 +61,7 @@ A minimal working example is provided by the :docsite:`cx_bringup` package. Run 
 It loads the used environment manager configuration file into CLIPS and prints the corresponding facts.
 
 Configuration
-~~~~~~~~~~~~~
+^^^^^^^^^^^^^
 
 File :source-master:`cx_bringup/params/plugin_examples/config.yaml`.
 
@@ -86,11 +86,11 @@ File :source-master:`cx_bringup/params/plugin_examples/config.yaml`.
           "clips/plugin_examples/config.clp"]
 
 Code
-~~~~
+^^^^
 
 File :source-master:`cx_bringup/clips/plugin_examples/config.clp`.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule load-bringup-config
     (not (confval))

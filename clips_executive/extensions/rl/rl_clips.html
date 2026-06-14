@@ -55,11 +55,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../../cli/index.html">Command Line Interface (CLI)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">Extensions</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../PDDL.html">PDDL Integration for CLIPS</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="../reinforcement_learning.html">Reinforcement Learning Integration for CLIPS</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="../reinforcement_learning.html#background-reinforcement-learning">Background: Reinforcement Learning</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../reinforcement_learning.html#overview">Overview</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="../reinforcement_learning.html#content">Content</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Reinforcement Learning Integration for CLIPS</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="index.html#background-reinforcement-learning">Background: Reinforcement Learning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#overview">Overview</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html#content">Content</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="usage.html">Usage</a></li>
 <li class="toctree-l4"><a class="reference internal" href="cx_rl_gym.html">CXRLGym - ROS 2 Reinforcement Learning Environment</a></li>
 <li class="toctree-l4"><a class="reference internal" href="multi_robot_mppo.html">CXRLMaskablePPONode: RL Model Multi-Robot Applications</a></li>
@@ -90,7 +89,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">Extensions</a></li>
-          <li class="breadcrumb-item"><a href="../reinforcement_learning.html">Reinforcement Learning Integration for CLIPS</a></li>
+          <li class="breadcrumb-item"><a href="index.html">Reinforcement Learning Integration for CLIPS</a></li>
       <li class="breadcrumb-item active">Reinforcement Learning CLIPS Interfaces</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/extensions/rl/rl_clips.rst.txt" rel="nofollow"> View page source</a>
@@ -102,7 +101,7 @@
            <div itemprop="articleBody">
              
   <section id="reinforcement-learning-clips-interfaces">
-<h1>Reinforcement Learning CLIPS Interfaces<a class="headerlink" href="#reinforcement-learning-clips-interfaces" title="Link to this heading"></a></h1>
+<span id="rl-clips"></span><h1>Reinforcement Learning CLIPS Interfaces<a class="headerlink" href="#reinforcement-learning-clips-interfaces" title="Link to this heading"></a></h1>
 <p>To facilitate the development of CLIPS-based RL agents, this extension provides CLIPS logic to abstract away the ROS interactions and to provide a symbolic representation of the RL workflow as provided by the environments derived from the <code class="docutils literal notranslate"><span class="pre">CXRLGym</span></code> class.
 In the following, the CLIPS interface is described as provided by the <code class="docutils literal notranslate"><span class="pre">cx_rl_clips</span></code> package.</p>
 <div class="admonition important">
@@ -240,19 +239,19 @@ to customize logging behavior, reward shaping, and node identification within CL
 of the predefined rules and interfaces.</p>
 <p>The following global variables may be overridden <strong>after</strong> loading the <code class="docutils literal notranslate"><span class="pre">cx_rl.clp</span></code>
 file by asserting a new <code class="docutils literal notranslate"><span class="pre">defglobal</span></code> definition:</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defglobal</span>
-<span class="w">  </span><span class="nv">?*CX-RL-LOG-LEVEL*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="nv">debug</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>defglobal
+  ?*CX-RL-LOG-LEVEL* = debug
 
-<span class="w">  </span><span class="nv">?*CX-RL-REWARD-EPISODE-SUCCESS*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="mi">0</span>
-<span class="w">  </span><span class="nv">?*CX-RL-REWARD-EPISODE-FAILURE*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="mi">0</span>
+  ?*CX-RL-REWARD-EPISODE-SUCCESS* = <span class="mi">0</span>
+  ?*CX-RL-REWARD-EPISODE-FAILURE* = <span class="mi">0</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 <p>To customize the ROS node name of the RL node, the following global variable must be
 defined <strong>before</strong> loading the <code class="docutils literal notranslate"><span class="pre">cx_rl.clp</span></code> file. If not specified, it defaults to
 <code class="docutils literal notranslate"><span class="pre">&quot;/cx_rl_node&quot;</span></code>.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defglobal</span>
-<span class="w">  </span><span class="nv">?*CX-RL-NODE-NAME*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>defglobal
+  ?*CX-RL-NODE-NAME* = <span class="s">&quot;/cx_rl_node&quot;</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -264,28 +263,32 @@ individual observations can be added using <a class="reference internal" href="#
 Parameterized observations can be added using r:ref:<cite>rl-observable-predicate</cite> facts, defining parameters and their types, along with <a class="reference internal" href="#rl-observable-type"><span class="std std-ref">rl-observable-type</span></a> facts describing the possible objects of a given type.
 Similarly, the action space is defined using <a class="reference internal" href="#rl-predefined-action"><span class="std std-ref">rl-predefined-action</span></a> and <cite>rl-observable-action</cite> facts, along with the observable types.</p>
 <p>The below snippet would describe an observation space containing <cite>on(block1#block2), clear(block1), clear(block2), clear(block3), clear(block4)</cite> and an action space containing <cite>pickup(robot1#block1)</cite>:</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nb">assert</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">rl-predefined-observable</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block1</span><span class="w"> </span><span class="nv">block2</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">rl-observable-predicate</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-names</span><span class="w"> </span><span class="nv">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">param-types</span><span class="w"> </span><span class="k">block</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">rl-observable-type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="k">block</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">objects</span><span class="w"> </span><span class="nv">block1</span><span class="w"> </span><span class="nv">block2</span><span class="w"> </span><span class="nv">block3</span><span class="w"> </span><span class="nv">block4</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">rl-predefined-action</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">pickup</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">robot1</span><span class="w"> </span><span class="nv">block1</span><span class="p">))</span>
-<span class="w"> </span><span class="p">)</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="k k-Name k-Name-Function">assert</span>
+  <span class="p">(</span>rl-predefined-observable <span class="p">(</span>name on) <span class="p">(</span>params block1 block2))
+  <span class="p">(</span>rl-observable-predicate <span class="p">(</span>name clear) <span class="p">(</span>param-names a) <span class="p">(</span>param-types block))
+  <span class="p">(</span>rl-observable-type <span class="p">(</span><span class="kr">type</span> block) <span class="p">(</span>objects block1 block2 block3 block4))
+  <span class="p">(</span>rl-predefined-action <span class="p">(</span>name pickup) <span class="p">(</span>params robot1 block1))
+ <span class="p">)</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The resulting internal string representations of the actions and opservation is constructed from the name and the parameters by encapsulating parameters with braces <cite>()</cite>. and separating individual parameters by <cite>#</cite>.</p>
 </div>
 <p>Aside from the action and observation space, the initial state needs to be defined.
 This is handled through facts of type <a class="reference internal" href="#rl-observation"><span class="std std-ref">rl-observation</span></a>.</p>
 <p>The below example registers <cite>clear(block1)</cite> and <cite>on-table(block1)</cite> as current observation.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nb">assert</span>
-<span class="w"> </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">clear</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block1</span><span class="p">))</span>
-<span class="w"> </span><span class="p">(</span><span class="nv">rl-observation</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">on-table</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">params</span><span class="w"> </span><span class="nv">block1</span><span class="p">))</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="k k-Name k-Name-Function">assert</span>
+ <span class="p">(</span>rl-observation <span class="p">(</span>name clear) <span class="p">(</span>params block1))
+ <span class="p">(</span>rl-observation <span class="p">(</span>name on-table) <span class="p">(</span>params block1))
 <span class="p">)</span>
 </pre></div>
 </div>
 <p>Once the observation space, action space, and initial observations are available, the RL environment is ready to be initialized.</p>
 <p>Training or execution is started by asserting a <a class="reference internal" href="#cx-rl-node"><span class="std std-ref">cx-rl-node</span></a> fact. This assertion triggers a backup of the current fact base that can be used for resetting the environment (as detailed in <a class="reference internal" href="#cx-rl-clips-step2"><span class="std std-ref">Step 2</span></a>).
 The fact must only be asserted if it does not already exist, as it will persist and be updated across environment resets.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">any-factp</span><span class="w"> </span><span class="p">((</span><span class="nv">?node</span><span class="w"> </span><span class="nv">cx-rl-node</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">eq</span><span class="w"> </span><span class="nv">?node:name</span><span class="w"> </span><span class="nv">?*CX-RL-NODE-NAME*</span><span class="p">)))</span><span class="w"> </span><span class="nv">then</span>
-<span class="w"> </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">cx-rl-node</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">?*CX-RL-NODE-NAME*</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">mode</span><span class="w"> </span><span class="nv">UNSET</span><span class="p">)))</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>if <span class="p">(</span>not <span class="p">(</span>any-factp <span class="p">((</span><span class="nv">?node</span> cx-rl-node)) <span class="p">(</span>eq <span class="nv">?node</span>:name ?*CX-RL-NODE-NAME*))) then
+ <span class="p">(</span><span class="k k-Name k-Name-Function">assert</span> <span class="p">(</span>cx-rl-node <span class="p">(</span>name ?*CX-RL-NODE-NAME*) <span class="p">(</span>mode UNSET)))
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -320,16 +323,16 @@ Finalizes the reset procedure and hands control back to the training loop.</p></
 <p>When no customization of the reset procedure is required, it is sufficient to
 define rules that advance the reset state through the user-defined stages
 without performing additional actions:</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">reset-to-load-facts</span>
-<span class="w">  </span><span class="nv">?reset</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-reset-env</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">USER-CLEANUP</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">modify</span><span class="w"> </span><span class="nv">?reset</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">LOAD-FACTS</span><span class="p">))</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">defrule</span> reset-to-load-facts
+  <span class="nv">?reset</span> &lt;- <span class="p">(</span>rl-reset-env <span class="p">(</span>state USER-CLEANUP))
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span><span class="k k-Name k-Name-Function">modify</span> <span class="nv">?reset</span> <span class="p">(</span>state LOAD-FACTS))
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">reset-to-done</span>
-<span class="w">  </span><span class="nv">?reset</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">rl-reset-env</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">USER-INIT</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">modify</span><span class="w"> </span><span class="nv">?reset</span><span class="w"> </span><span class="p">(</span><span class="nv">state</span><span class="w"> </span><span class="nv">DONE</span><span class="p">))</span>
+<span class="p">(</span><span class="kd">defrule</span> reset-to-done
+  <span class="nv">?reset</span> &lt;- <span class="p">(</span>rl-reset-env <span class="p">(</span>state USER-INIT))
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span><span class="k k-Name k-Name-Function">modify</span> <span class="nv">?reset</span> <span class="p">(</span>state DONE))
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -409,11 +412,11 @@ Providing or overriding automatically managed fields may lead to unintended beha
 <p>Represents a request to reset the RL environment.
 This fact is asserted by the environment and processed to coordinate cleanup, initialization, and reset transitions.
 Users are responsible to transition the <code class="docutils literal notranslate"><span class="pre">state</span></code> slot from <cite>USER-CLEANUP</cite> to <cite>LOAD-FACTS</cite> and from <cite>USER-INIT</cite> to <cite>DONE</cite>.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-reset-env</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">node</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">state</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">ABORT-RUNNING-ACTIONS</span><span class="w"> </span><span class="nv">USER-CLEANUP</span><span class="w"> </span><span class="nv">LOAD-FACTS</span><span class="w"> </span><span class="nv">USER-INIT</span><span class="w"> </span><span class="nv">DONE</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">uuid</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">deftemplate</span> rl-reset-env
+  <span class="p">(</span><span class="kr">slot</span> node <span class="p">(</span><span class="kr">type</span> STRING) <span class="p">(</span>default <span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="kr">slot</span> state <span class="p">(</span><span class="kr">type</span> SYMBOL)
+    <span class="p">(</span><span class="kr">allowed-values</span> ABORT-RUNNING-ACTIONS USER-CLEANUP LOAD-FACTS USER-INIT DONE))
+  <span class="p">(</span><span class="kr">slot</span> uuid <span class="p">(</span><span class="kr">type</span> STRING))
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -426,15 +429,15 @@ progress.</p>
 <p>This fact is asserted once by the user during initialization and updated automatically
 via status queries.
 Users should assert this fact and specify the slot <code class="docutils literal notranslate"><span class="pre">name</span></code> according to the global variable <cite>*?CX-RL-NODE-NAME*</cite> used for loading <code class="docutils literal notranslate"><span class="pre">cx_rl_clips</span></code>.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">cx-rl-node</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">ros-comm-init</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">TRUE</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">fact-reset-file</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">mode</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">UNSET</span><span class="w"> </span><span class="nv">TRAINING</span><span class="w"> </span><span class="nv">EXECUTION</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">episode</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nb">step</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">total-steps</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">model-loaded</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">TRUE</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">))</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">deftemplate</span> cx-rl-node
+  <span class="p">(</span><span class="kr">slot</span> name <span class="p">(</span><span class="kr">type</span> STRING) <span class="p">(</span>default <span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="kr">slot</span> ros-comm-init <span class="p">(</span><span class="kr">type</span> SYMBOL) <span class="p">(</span><span class="kr">allowed-values</span> TRUE FALSE) <span class="p">(</span>default FALSE))
+  <span class="p">(</span><span class="kr">slot</span> fact-reset-file <span class="p">(</span><span class="kr">type</span> STRING) <span class="p">(</span>default <span class="s">&quot;&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="kr">slot</span> mode <span class="p">(</span><span class="kr">type</span> SYMBOL) <span class="p">(</span><span class="kr">allowed-values</span> UNSET TRAINING EXECUTION))
+  <span class="p">(</span><span class="kr">slot</span> episode <span class="p">(</span><span class="kr">type</span> INTEGER))
+  <span class="p">(</span><span class="kr">slot</span> step <span class="p">(</span><span class="kr">type</span> INTEGER))
+  <span class="p">(</span><span class="kr">slot</span> total-steps <span class="p">(</span><span class="kr">type</span> INTEGER))
+  <span class="p">(</span><span class="kr">slot</span> model-loaded <span class="p">(</span><span class="kr">type</span> SYMBOL) <span class="p">(</span><span class="kr">allowed-values</span> TRUE FALSE) <span class="p">(</span>default FALSE))
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -445,9 +448,9 @@ Users should assert this fact and specify the slot <code class="docutils literal
 Asserting this fact causes the corresponding <a class="reference internal" href="#cx-rl-node"><span class="std std-ref">cx-rl-node</span></a> fact to be updated.
 The system initially requests updates in order to monitor the startup process.
 Users may assert this fact (and set the slot <code class="docutils literal notranslate"><span class="pre">node</span></code>) request updates to observe training progression.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-get-status</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">node</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">request-id</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span><span class="w"> </span><span class="c1">; internal</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">deftemplate</span> rl-get-status
+  <span class="p">(</span><span class="kr">slot</span> node <span class="p">(</span><span class="kr">type</span> STRING) <span class="p">(</span>default <span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="kr">slot</span> request-id <span class="p">(</span><span class="kr">type</span> INTEGER)) <span class="c1">; internal</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -456,8 +459,8 @@ Users may assert this fact (and set the slot <code class="docutils literal notra
 <span id="id4"></span><h3>rl-end-training<a class="headerlink" href="#rl-end-training" title="Link to this heading"></a></h3>
 <p>Signals that training has completed. This fact is asserted by the environmnent
 and notifies users about the end of training.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-end-training</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">node</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">deftemplate</span> rl-end-training
+  <span class="p">(</span><span class="kr">slot</span> node <span class="p">(</span><span class="kr">type</span> STRING) <span class="p">(</span>default <span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -466,11 +469,11 @@ and notifies users about the end of training.</p>
 <span id="id5"></span><h3>rl-episode-end<a class="headerlink" href="#rl-episode-end" title="Link to this heading"></a></h3>
 <p>Marks the end of an episode during training.
 Users can assert this to indicate indicate success or failure of the current episode and trigger environment resets.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-episode-end</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">node</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">success</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">TRUE</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">))</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">deftemplate</span> rl-episode-end
+  <span class="p">(</span><span class="kr">slot</span> node <span class="p">(</span><span class="kr">type</span> STRING) <span class="p">(</span>default <span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="kr">slot</span> success <span class="p">(</span><span class="kr">type</span> SYMBOL)
+    <span class="p">(</span><span class="kr">allowed-values</span> TRUE FALSE)
+    <span class="p">(</span>default TRUE))
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -479,10 +482,10 @@ Users can assert this to indicate indicate success or failure of the current epi
 <span id="id6"></span><h3>rl-observable-type<a class="headerlink" href="#rl-observable-type" title="Link to this heading"></a></h3>
 <p>Defines a symbolic type and its corresponding objects.
 These definitions are provided by the user and used to construct grounded observation and action spaces.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-observable-type</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">node</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">objects</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="p">(</span><span class="nv">create$</span><span class="p">)))</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">deftemplate</span> rl-observable-type
+  <span class="p">(</span><span class="kr">slot</span> node <span class="p">(</span><span class="kr">type</span> STRING) <span class="p">(</span>default <span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="kr">slot</span> <span class="kr">type</span> <span class="p">(</span><span class="kr">type</span> SYMBOL))
+  <span class="p">(</span>multislot objects <span class="p">(</span><span class="kr">type</span> SYMBOL) <span class="p">(</span>default <span class="p">(</span>create$)))
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -493,11 +496,11 @@ These definitions are provided by the user and used to construct grounded observ
 All valid groundings are generated using the objects defined via
 <a class="reference internal" href="#rl-observable-type"><span class="std std-ref">rl-observable-type</span></a> for spanning the observation space.
 Users are responsible for asserting facts of this type.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-observable-predicate</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">node</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">param-names</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">param-types</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">deftemplate</span> rl-observable-predicate
+  <span class="p">(</span><span class="kr">slot</span> node <span class="p">(</span><span class="kr">type</span> STRING) <span class="p">(</span>default <span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="kr">slot</span> name <span class="p">(</span><span class="kr">type</span> SYMBOL))
+  <span class="p">(</span>multislot param-names <span class="p">(</span><span class="kr">type</span> SYMBOL))
+  <span class="p">(</span>multislot param-types <span class="p">(</span><span class="kr">type</span> SYMBOL))
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -507,10 +510,10 @@ Users are responsible for asserting facts of this type.</p>
 <p>Defines a grounded observable directly.
 Used to add individual observations into the observation space.
 Users are responsible for asserting facts of this type.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-predefined-observable</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">node</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">params</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">deftemplate</span> rl-predefined-observable
+  <span class="p">(</span><span class="kr">slot</span> node <span class="p">(</span><span class="kr">type</span> STRING) <span class="p">(</span>default <span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="kr">slot</span> name <span class="p">(</span><span class="kr">type</span> SYMBOL))
+  <span class="p">(</span>multislot params <span class="p">(</span><span class="kr">type</span> SYMBOL))
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -520,10 +523,10 @@ Users are responsible for asserting facts of this type.</p>
 <p>Defines a grounded action directly.
 Used to add individual actions into the action space.
 Users are responsible for asserting facts of this type.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-predefined-action</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">node</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">params</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">deftemplate</span> rl-predefined-action
+  <span class="p">(</span><span class="kr">slot</span> node <span class="p">(</span><span class="kr">type</span> STRING) <span class="p">(</span>default <span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="kr">slot</span> name <span class="p">(</span><span class="kr">type</span> SYMBOL))
+  <span class="p">(</span>multislot params <span class="p">(</span><span class="kr">type</span> SYMBOL))
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -533,11 +536,11 @@ Users are responsible for asserting facts of this type.</p>
 <p>Defines a parameterized symbolic action.
 All valid groundings are generated based on the defined parameter types and objects.
 Users are responsible for asserting facts of this type.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-observable-action</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">node</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">param-names</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">param-types</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">deftemplate</span> rl-observable-action
+  <span class="p">(</span><span class="kr">slot</span> node <span class="p">(</span><span class="kr">type</span> STRING) <span class="p">(</span>default <span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="kr">slot</span> name <span class="p">(</span><span class="kr">type</span> SYMBOL))
+  <span class="p">(</span>multislot param-names <span class="p">(</span><span class="kr">type</span> SYMBOL))
+  <span class="p">(</span>multislot param-types <span class="p">(</span><span class="kr">type</span> SYMBOL))
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -547,10 +550,10 @@ Users are responsible for asserting facts of this type.</p>
 <p>Represents a currently active observation.
 The set of all asserted <code class="docutils literal notranslate"><span class="pre">rl-observation</span></code> facts defines the current environment state.
 Users are responsible for asserting facts of this type.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-observation</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">node</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">params</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">deftemplate</span> rl-observation
+  <span class="p">(</span><span class="kr">slot</span> node <span class="p">(</span><span class="kr">type</span> STRING) <span class="p">(</span>default <span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="kr">slot</span> name <span class="p">(</span><span class="kr">type</span> SYMBOL))
+  <span class="p">(</span>multislot params <span class="p">(</span><span class="kr">type</span> SYMBOL))
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -561,10 +564,10 @@ Users are responsible for asserting facts of this type.</p>
 A corresponding fact must be asserted for each robot whose actions are to be controlled by RL.
 The <code class="docutils literal notranslate"><span class="pre">waiting</span></code> slot is managed automatically by the RL interface, indicating
 that a robot is idling and ready for getting a new action assigned.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-robot</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">node</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">waiting</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">TRUE</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">))</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">deftemplate</span> rl-robot
+  <span class="p">(</span><span class="kr">slot</span> node <span class="p">(</span><span class="kr">type</span> STRING) <span class="p">(</span>default <span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="kr">slot</span> name <span class="p">(</span><span class="kr">type</span> SYMBOL))
+  <span class="p">(</span><span class="kr">slot</span> waiting <span class="p">(</span><span class="kr">type</span> SYMBOL) <span class="p">(</span><span class="kr">allowed-values</span> TRUE FALSE) <span class="p">(</span>default TRUE))
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -574,9 +577,9 @@ that a robot is idling and ready for getting a new action assigned.</p>
 <p>Asserted automatically to indicate the generation phase of the current action space.
 Facts of this type are created with the slot <code class="docutils literal notranslate"><span class="pre">state</span></code> set to <cite>PENDING</cite>, signaling that the user must assert <a class="reference internal" href="#rl-action"><span class="std std-ref">rl-action</span></a> facts before advancing the <code class="docutils literal notranslate"><span class="pre">state</span></code> to <cite>DONE</cite>.
 Once the state is set to <code class="docutils literal notranslate"><span class="pre">DONE</span></code>, action selection proceeds automatically.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-current-action-space</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">node</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">state</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">PENDING</span><span class="w"> </span><span class="nv">DONE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">PENDING</span><span class="p">))</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">deftemplate</span> rl-current-action-space
+  <span class="p">(</span><span class="kr">slot</span> node <span class="p">(</span><span class="kr">type</span> STRING) <span class="p">(</span>default <span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="kr">slot</span> state <span class="p">(</span><span class="kr">type</span> SYMBOL) <span class="p">(</span><span class="kr">allowed-values</span> PENDING DONE) <span class="p">(</span>default PENDING))
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -595,15 +598,15 @@ which <a class="reference internal" href="#rl-robot"><span class="std std-ref">r
 its execution. Upon completion, the user must update the slots
 <code class="docutils literal notranslate"><span class="pre">is-finished</span></code> and <code class="docutils literal notranslate"><span class="pre">reward</span></code> to signal termination and provide the
 reward obtained from the execution.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-action</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">node</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">id</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">name</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">params</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">is-finished</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">TRUE</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">reward</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">is-selected</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">TRUE</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">assigned-to</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="no">nil</span><span class="p">))</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">deftemplate</span> rl-action
+  <span class="p">(</span><span class="kr">slot</span> node <span class="p">(</span><span class="kr">type</span> STRING) <span class="p">(</span>default <span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="kr">slot</span> id <span class="p">(</span><span class="kr">type</span> SYMBOL))
+  <span class="p">(</span><span class="kr">slot</span> name <span class="p">(</span><span class="kr">type</span> SYMBOL))
+  <span class="p">(</span>multislot params <span class="p">(</span><span class="kr">type</span> SYMBOL))
+  <span class="p">(</span><span class="kr">slot</span> is-finished <span class="p">(</span><span class="kr">type</span> SYMBOL) <span class="p">(</span><span class="kr">allowed-values</span> TRUE FALSE) <span class="p">(</span>default FALSE))
+  <span class="p">(</span><span class="kr">slot</span> reward <span class="p">(</span><span class="kr">type</span> INTEGER) <span class="p">(</span>default <span class="mi">0</span><span class="p">))</span>
+  <span class="p">(</span><span class="kr">slot</span> is-selected <span class="p">(</span><span class="kr">type</span> SYMBOL) <span class="p">(</span><span class="kr">allowed-values</span> TRUE FALSE) <span class="p">(</span>default FALSE))
+  <span class="p">(</span><span class="kr">slot</span> assigned-to <span class="p">(</span><span class="kr">type</span> SYMBOL) <span class="p">(</span>default nil))
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -612,13 +615,13 @@ reward obtained from the execution.</p>
 <span id="id15"></span><h3>rl-ros-action-meta-get-free-robot<a class="headerlink" href="#rl-ros-action-meta-get-free-robot" title="Link to this heading"></a></h3>
 <p>Represents internal metadata associated with the <code class="docutils literal notranslate"><span class="pre">get_free_robot</span></code> ROS action.
 Facts of this type are asserted and managed automatically by the framework.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-ros-action-meta-get-free-robot</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">uuid</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">node</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">robot</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">last-search</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">FLOAT</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">found</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">TRUE</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">abort-action</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">FALSE</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">))</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">deftemplate</span> rl-ros-action-meta-get-free-robot
+  <span class="p">(</span><span class="kr">slot</span> uuid <span class="p">(</span><span class="kr">type</span> STRING))
+  <span class="p">(</span><span class="kr">slot</span> node <span class="p">(</span><span class="kr">type</span> STRING) <span class="p">(</span>default <span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="kr">slot</span> robot <span class="p">(</span><span class="kr">type</span> STRING))
+  <span class="p">(</span><span class="kr">slot</span> last-search <span class="p">(</span><span class="kr">type</span> FLOAT))
+  <span class="p">(</span><span class="kr">slot</span> found <span class="p">(</span><span class="kr">type</span> SYMBOL) <span class="p">(</span><span class="kr">allowed-values</span> TRUE FALSE))
+  <span class="p">(</span><span class="kr">slot</span> abort-action <span class="p">(</span><span class="kr">type</span> SYMBOL) <span class="p">(</span><span class="kr">allowed-values</span> FALSE TRUE) <span class="p">(</span>default FALSE))
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -627,11 +630,11 @@ Facts of this type are asserted and managed automatically by the framework.</p>
 <span id="id16"></span><h3>rl-ros-action-meta-action-selection<a class="headerlink" href="#rl-ros-action-meta-action-selection" title="Link to this heading"></a></h3>
 <p>Internal metadata for the <code class="docutils literal notranslate"><span class="pre">action_selection</span></code> ROS action.
 Facts of this type are asserted and managed automatically by the framework.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-ros-action-meta-action-selection</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">uuid</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">node</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">action-id</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">abort-action</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">FALSE</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">))</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">deftemplate</span> rl-ros-action-meta-action-selection
+  <span class="p">(</span><span class="kr">slot</span> uuid <span class="p">(</span><span class="kr">type</span> STRING))
+  <span class="p">(</span><span class="kr">slot</span> node <span class="p">(</span><span class="kr">type</span> STRING) <span class="p">(</span>default <span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="kr">slot</span> action-id <span class="p">(</span><span class="kr">type</span> SYMBOL))
+  <span class="p">(</span><span class="kr">slot</span> abort-action <span class="p">(</span><span class="kr">type</span> SYMBOL) <span class="p">(</span><span class="kr">allowed-values</span> FALSE TRUE) <span class="p">(</span>default FALSE))
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -640,11 +643,11 @@ Facts of this type are asserted and managed automatically by the framework.</p>
 <span id="id17"></span><h3>rl-action-request-meta<a class="headerlink" href="#rl-action-request-meta" title="Link to this heading"></a></h3>
 <p>Internal request tracking for ROS service calls.
 Facts of this type are asserted and managed automatically by the framework.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">rl-action-request-meta</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">node</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">service</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">request-id</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">action-id</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">))</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">deftemplate</span> rl-action-request-meta
+  <span class="p">(</span><span class="kr">slot</span> node <span class="p">(</span><span class="kr">type</span> STRING) <span class="p">(</span>default <span class="s">&quot;/cx_rl_node&quot;</span><span class="p">))</span>
+  <span class="p">(</span><span class="kr">slot</span> service <span class="p">(</span><span class="kr">type</span> STRING))
+  <span class="p">(</span><span class="kr">slot</span> request-id <span class="p">(</span><span class="kr">type</span> INTEGER))
+  <span class="p">(</span><span class="kr">slot</span> action-id <span class="p">(</span><span class="kr">type</span> SYMBOL))
 <span class="p">)</span>
 </pre></div>
 </div>

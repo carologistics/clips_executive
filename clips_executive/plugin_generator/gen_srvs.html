@@ -129,49 +129,49 @@
 <h2>Features<a class="headerlink" href="#features" title="Link to this heading"></a></h2>
 <section id="facts">
 <h3>Facts<a class="headerlink" href="#facts" title="Link to this heading"></a></h3>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; Asserted by the respective create-client function.</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="c1">; Asserted by the respective create-client function.</span>
 <span class="c1">; Retracted by the respective destroy-client function.</span>
-<span class="p">(</span><span class="nv">&lt;pkg-kebab&gt;-&lt;srv-kebab&gt;-client</span><span class="w"> </span><span class="p">(</span><span class="nv">service</span><span class="w"> </span><span class="nv">?service-name-string</span><span class="p">))</span>
+<span class="p">(</span>&lt;pkg-kebab&gt;-&lt;srv-kebab&gt;-client <span class="p">(</span>service <span class="nv">?service-name-string</span><span class="p">))</span>
 
 <span class="c1">; Asserted by the respective create-service function.</span>
 <span class="c1">; Retracted by the respective destroy-service function.</span>
-<span class="p">(</span><span class="nv">&lt;pkg-kebab&gt;-&lt;srv-kebab&gt;-service</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">?service-name-string</span><span class="p">))</span>
+<span class="p">(</span>&lt;pkg-kebab&gt;-&lt;srv-kebab&gt;-service <span class="p">(</span>name <span class="nv">?service-name-string</span><span class="p">))</span>
 
 <span class="c1">; Asserted by the callback of a client once a response arrives.</span>
 <span class="c1">; Process the response and then call response-destroy before retracting!</span>
-<span class="p">(</span><span class="nv">&lt;pkg-kebab&gt;-&lt;srv-kebab&gt;-response</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">service</span><span class="w"> </span><span class="nv">?service-name-string</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">msg-ptr</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">request-id</span><span class="w"> </span><span class="nv">?request-id-int</span><span class="p">)</span>
+<span class="p">(</span>&lt;pkg-kebab&gt;-&lt;srv-kebab&gt;-response
+  <span class="p">(</span>service <span class="nv">?service-name-string</span><span class="p">)</span>
+  <span class="p">(</span>msg-ptr <span class="nv">?msg-ptr</span><span class="p">)</span>
+  <span class="p">(</span>request-id <span class="nv">?request-id-int</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </section>
 <section id="functions">
 <h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; Create and destroy clients and services.</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="c1">; Create and destroy clients and services.</span>
 <span class="c1">; After creating a service, a user-defined function is called whenever a request arrives</span>
-<span class="p">(</span><span class="nv">&lt;pkg-kebab&gt;-&lt;srv-kebab&gt;-create-service</span><span class="w"> </span><span class="nv">?service-name</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;pkg-kebab&gt;-&lt;srv-kebab&gt;-destroy-service</span><span class="w"> </span><span class="nv">?service-name</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;pkg-kebab&gt;-&lt;srv-kebab&gt;-create-client</span><span class="w"> </span><span class="nv">?service-name</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;pkg-kebab&gt;-&lt;srv-kebab&gt;-destroy-client</span><span class="w"> </span><span class="nv">?service-name</span><span class="p">)</span>
+<span class="p">(</span>&lt;pkg-kebab&gt;-&lt;srv-kebab&gt;-create-service <span class="nv">?service-name</span><span class="p">)</span>
+<span class="p">(</span>&lt;pkg-kebab&gt;-&lt;srv-kebab&gt;-destroy-service <span class="nv">?service-name</span><span class="p">)</span>
+<span class="p">(</span>&lt;pkg-kebab&gt;-&lt;srv-kebab&gt;-create-client <span class="nv">?service-name</span><span class="p">)</span>
+<span class="p">(</span>&lt;pkg-kebab&gt;-&lt;srv-kebab&gt;-destroy-client <span class="nv">?service-name</span><span class="p">)</span>
 
 <span class="c1">; Send a request to a service provider</span>
 <span class="c1">; Requires the client to be created first using create-client.</span>
 <span class="c1">; Callback will assert a response fact once received.</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?request-id-int</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;pkg-kebab&gt;-&lt;srv-kebab&gt;-send-request</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="nv">?topic-name</span><span class="p">))</span>
+<span class="p">(</span>bind <span class="nv">?request-id-int</span> <span class="p">(</span>&lt;pkg-kebab&gt;-&lt;srv-kebab&gt;-send-request <span class="nv">?msg-ptr</span> <span class="nv">?topic-name</span><span class="p">))</span>
 
 <span class="c1">; Creating, destroying and processing of requests</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;pkg-kebab&gt;-&lt;srv-kebab&gt;-request-create</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">&lt;pkg-kebab&gt;-&lt;srv-kebab&gt;-request-destroy</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;pkg-kebab&gt;-&lt;srv-kebab&gt;-request-set-field</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="nv">?field-name</span><span class="w"> </span><span class="nv">?field-value</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;pkg-kebab&gt;-&lt;srv-kebab&gt;-request-get-field</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="nv">?field-name</span><span class="p">)</span>
+<span class="p">(</span>bind <span class="nv">?msg-ptr</span> <span class="p">(</span>&lt;pkg-kebab&gt;-&lt;srv-kebab&gt;-request-create))
+<span class="p">(</span>&lt;pkg-kebab&gt;-&lt;srv-kebab&gt;-request-destroy <span class="nv">?msg-ptr</span><span class="p">)</span>
+<span class="p">(</span>&lt;pkg-kebab&gt;-&lt;srv-kebab&gt;-request-set-field <span class="nv">?msg-ptr</span> <span class="nv">?field-name</span> <span class="nv">?field-value</span><span class="p">)</span>
+<span class="p">(</span>&lt;pkg-kebab&gt;-&lt;srv-kebab&gt;-request-get-field <span class="nv">?msg-ptr</span> <span class="nv">?field-name</span><span class="p">)</span>
 
 <span class="c1">; Creating, destroying and processing of responses</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;pkg-kebab&gt;-&lt;srv-kebab&gt;-response-create</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">&lt;pkg-kebab&gt;-&lt;srv-kebab&gt;-response-destroy</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;pkg-kebab&gt;-&lt;srv-kebab&gt;-response-set-field</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="nv">?field-name</span><span class="w"> </span><span class="nv">?field-value</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;pkg-kebab&gt;-&lt;srv-kebab&gt;-response-get-field</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="nv">?field-name</span><span class="p">)</span>
+<span class="p">(</span>bind <span class="nv">?msg-ptr</span> <span class="p">(</span>&lt;pkg-kebab&gt;-&lt;srv-kebab&gt;-response-create))
+<span class="p">(</span>&lt;pkg-kebab&gt;-&lt;srv-kebab&gt;-response-destroy <span class="nv">?msg-ptr</span><span class="p">)</span>
+<span class="p">(</span>&lt;pkg-kebab&gt;-&lt;srv-kebab&gt;-response-set-field <span class="nv">?msg-ptr</span> <span class="nv">?field-name</span> <span class="nv">?field-value</span><span class="p">)</span>
+<span class="p">(</span>&lt;pkg-kebab&gt;-&lt;srv-kebab&gt;-response-get-field <span class="nv">?msg-ptr</span> <span class="nv">?field-name</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -179,10 +179,10 @@
 <h3>Functions Defined by User<a class="headerlink" href="#functions-defined-by-user" title="Link to this heading"></a></h3>
 <p>The following function is called in the callback of each generated service (if it is defined).</p>
 <p>Hence, in order to respond to callbacks just define the function and populate it with your callback logic.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; Define this to react to service calls.</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="c1">; Define this to react to service calls.</span>
 <span class="c1">; Read the request and populate the response using appropriate functions above.</span>
 <span class="c1">; Do not destroy request or response within this function, they are cleaned up upon exiting the function.</span>
-<span class="p">(</span><span class="nv">&lt;pkg-kebab&gt;-&lt;srv-kebab&gt;-service-callback</span><span class="w"> </span><span class="nv">?service-name</span><span class="w"> </span><span class="nv">?const-request-ptr</span><span class="w"> </span><span class="nv">?response-ptr</span><span class="p">)</span>
+<span class="p">(</span>&lt;pkg-kebab&gt;-&lt;srv-kebab&gt;-service-callback <span class="nv">?service-name</span> <span class="nv">?const-request-ptr</span> <span class="nv">?response-ptr</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -238,96 +238,96 @@ The server response with a message containing the requested data field.</p>
 <section id="code">
 <h3>Code<a class="headerlink" href="#code" title="Link to this heading"></a></h3>
 <p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/set-bool-client.clp">cx_bringup/clips/plugin_examples/set-bool-client.clp</a>.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">set-bool-client-init</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">defrule</span> set-bool-client-init
 <span class="s">&quot; Create a simple client using the generated bindings. &quot;</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">std-srvs-set-bool-client</span><span class="w"> </span><span class="p">(</span><span class="nv">service</span><span class="w"> </span><span class="s">&quot;set_bool_srv&quot;</span><span class="p">)))</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">executive-finalize</span><span class="p">))</span>
-<span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">std-srvs-set-bool-create-client</span><span class="w"> </span><span class="s">&quot;set_bool_srv&quot;</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">info</span><span class="w"> </span><span class="s">&quot;Created client for /set_bool&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">started</span><span class="w"> </span><span class="p">(</span><span class="nv">now</span><span class="p">)))</span>
+  <span class="p">(</span>not <span class="p">(</span>std-srvs-set-bool-client <span class="p">(</span>service <span class="s">&quot;set_bool_srv&quot;</span><span class="p">)))</span>
+  <span class="p">(</span>not <span class="p">(</span>executive-finalize))
+<span class="nt">=&gt;</span>
+  <span class="p">(</span>std-srvs-set-bool-create-client <span class="s">&quot;set_bool_srv&quot;</span><span class="p">)</span>
+  <span class="p">(</span>printout info <span class="s">&quot;Created client for /set_bool&quot;</span> crlf)
+  <span class="p">(</span><span class="k k-Name k-Name-Function">assert</span> <span class="p">(</span>started <span class="p">(</span>now)))
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">set-bool-client-send-out-request-false</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">std-srvs-set-bool-client</span><span class="w"> </span><span class="p">(</span><span class="nv">service</span><span class="w"> </span><span class="nv">?service</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">send-request</span><span class="w"> </span><span class="nv">FALSE</span><span class="w"> </span><span class="nv">?</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">started</span><span class="w"> </span><span class="nv">?start-time</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">time</span><span class="w"> </span><span class="nv">?curr-time&amp;:</span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="nv">?curr-time</span><span class="w"> </span><span class="nv">?start-time</span><span class="p">)</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="c1">;example usage of sending a request</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">info</span><span class="w"> </span><span class="s">&quot;Send a request with data: FALSE&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?new-req</span><span class="w"> </span><span class="p">(</span><span class="nv">std-srvs-set-bool-request-create</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">std-srvs-set-bool-request-set-field</span><span class="w"> </span><span class="nv">?new-req</span><span class="w"> </span><span class="s">&quot;data&quot;</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?id</span><span class="w"> </span><span class="p">(</span><span class="nv">std-srvs-set-bool-send-request</span><span class="w"> </span><span class="nv">?new-req</span><span class="w"> </span><span class="nv">?service</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">std-srvs-set-bool-request-destroy</span><span class="w"> </span><span class="nv">?new-req</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="nv">?id</span><span class="w"> </span><span class="nv">then</span>
-<span class="w">    </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">send-request</span><span class="w"> </span><span class="nv">FALSE</span><span class="w"> </span><span class="nv">?id</span><span class="p">))</span>
-<span class="w">  </span><span class="p">)</span>
+<span class="p">(</span><span class="kd">defrule</span> set-bool-client-send-out-request-false
+  <span class="p">(</span>std-srvs-set-bool-client <span class="p">(</span>service <span class="nv">?service</span><span class="p">))</span>
+  <span class="p">(</span>not <span class="p">(</span>send-request FALSE ?))
+  <span class="p">(</span>started <span class="nv">?start-time</span><span class="p">)</span>
+  <span class="p">(</span>time <span class="nv">?curr-time</span>&amp;:(&gt; <span class="p">(</span>- <span class="nv">?curr-time</span> <span class="nv">?start-time</span><span class="p">)</span> <span class="mi">1</span><span class="p">))</span>
+  <span class="nt">=&gt;</span>
+  <span class="c1">;example usage of sending a request</span>
+  <span class="p">(</span>printout info <span class="s">&quot;Send a request with data: FALSE&quot;</span> crlf)
+  <span class="p">(</span>bind <span class="nv">?new-req</span> <span class="p">(</span>std-srvs-set-bool-request-create))
+  <span class="p">(</span>std-srvs-set-bool-request-set-field <span class="nv">?new-req</span> <span class="s">&quot;data&quot;</span> FALSE)
+  <span class="p">(</span>bind <span class="nv">?id</span> <span class="p">(</span>std-srvs-set-bool-send-request <span class="nv">?new-req</span> <span class="nv">?service</span><span class="p">))</span>
+  <span class="p">(</span>std-srvs-set-bool-request-destroy <span class="nv">?new-req</span><span class="p">)</span>
+  <span class="p">(</span>if <span class="nv">?id</span> then
+    <span class="p">(</span><span class="k k-Name k-Name-Function">assert</span> <span class="p">(</span>send-request FALSE <span class="nv">?id</span><span class="p">))</span>
+  <span class="p">)</span>
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">set-bool-client-send-out-request-true</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">std-srvs-set-bool-client</span><span class="w"> </span><span class="p">(</span><span class="nv">service</span><span class="w"> </span><span class="nv">?service</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">?sr</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">send-request</span><span class="w"> </span><span class="nv">FALSE</span><span class="w"> </span><span class="nv">?</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">send-request</span><span class="w"> </span><span class="nv">TRUE</span><span class="w"> </span><span class="nv">?</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">time</span><span class="w"> </span><span class="nv">?</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="c1">;example usage of sending a request</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">info</span><span class="w"> </span><span class="s">&quot;Additionally, send a request with data: TRUE&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?new-req</span><span class="w"> </span><span class="p">(</span><span class="nv">std-srvs-set-bool-request-create</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">std-srvs-set-bool-request-set-field</span><span class="w"> </span><span class="nv">?new-req</span><span class="w"> </span><span class="s">&quot;data&quot;</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?id</span><span class="w"> </span><span class="p">(</span><span class="nv">std-srvs-set-bool-send-request</span><span class="w"> </span><span class="nv">?new-req</span><span class="w"> </span><span class="nv">?service</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">std-srvs-set-bool-request-destroy</span><span class="w"> </span><span class="nv">?new-req</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="nv">?id</span><span class="w"> </span><span class="nv">then</span>
-<span class="w">    </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">send-request</span><span class="w"> </span><span class="nv">TRUE</span><span class="w"> </span><span class="nv">?id</span><span class="p">))</span>
-<span class="w">  </span><span class="p">)</span>
+<span class="p">(</span><span class="kd">defrule</span> set-bool-client-send-out-request-true
+  <span class="p">(</span>std-srvs-set-bool-client <span class="p">(</span>service <span class="nv">?service</span><span class="p">))</span>
+  <span class="nv">?sr</span> &lt;- <span class="p">(</span>send-request FALSE ?)
+  <span class="p">(</span>not <span class="p">(</span>send-request TRUE ?))
+  <span class="p">(</span>time ?)
+  <span class="nt">=&gt;</span>
+  <span class="c1">;example usage of sending a request</span>
+  <span class="p">(</span>printout info <span class="s">&quot;Additionally, send a request with data: TRUE&quot;</span> crlf)
+  <span class="p">(</span>bind <span class="nv">?new-req</span> <span class="p">(</span>std-srvs-set-bool-request-create))
+  <span class="p">(</span>std-srvs-set-bool-request-set-field <span class="nv">?new-req</span> <span class="s">&quot;data&quot;</span> TRUE)
+  <span class="p">(</span>bind <span class="nv">?id</span> <span class="p">(</span>std-srvs-set-bool-send-request <span class="nv">?new-req</span> <span class="nv">?service</span><span class="p">))</span>
+  <span class="p">(</span>std-srvs-set-bool-request-destroy <span class="nv">?new-req</span><span class="p">)</span>
+  <span class="p">(</span>if <span class="nv">?id</span> then
+    <span class="p">(</span><span class="k k-Name k-Name-Function">assert</span> <span class="p">(</span>send-request TRUE <span class="nv">?id</span><span class="p">))</span>
+  <span class="p">)</span>
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">set-bool-client-process-response</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">std-srvs-set-bool-response</span><span class="w"> </span><span class="p">(</span><span class="nv">service</span><span class="w"> </span><span class="nv">?serivce</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">msg-ptr</span><span class="w"> </span><span class="nv">?msg</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">request-id</span><span class="w"> </span><span class="nv">?id</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">send-request</span><span class="w"> </span><span class="nv">?val</span><span class="w"> </span><span class="nv">?id</span><span class="p">)</span>
-<span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?success</span><span class="w"> </span><span class="p">(</span><span class="nv">std-srvs-set-bool-response-get-field</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="s">&quot;success&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?message</span><span class="w"> </span><span class="p">(</span><span class="nv">std-srvs-set-bool-response-get-field</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="s">&quot;message&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">blue</span><span class="w"> </span><span class="s">&quot;Response (success: &quot;</span><span class="w"> </span><span class="nv">?success</span><span class="s">&quot;) for data: &quot;</span><span class="w"> </span><span class="nv">?val</span><span class="w"> </span><span class="s">&quot;: \&quot;&quot;</span><span class="w"> </span><span class="nv">?message</span><span class="w"> </span><span class="s">&quot;\&quot;&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">std-srvs-set-bool-response-destroy</span><span class="w"> </span><span class="nv">?msg</span><span class="p">)</span>
+<span class="p">(</span><span class="kd">defrule</span> set-bool-client-process-response
+  <span class="p">(</span>std-srvs-set-bool-response <span class="p">(</span>service <span class="nv">?serivce</span><span class="p">)</span> <span class="p">(</span>msg-ptr <span class="nv">?msg</span><span class="p">)</span> <span class="p">(</span>request-id <span class="nv">?id</span><span class="p">))</span>
+  <span class="p">(</span>send-request <span class="nv">?val</span> <span class="nv">?id</span><span class="p">)</span>
+<span class="nt">=&gt;</span>
+  <span class="p">(</span>bind <span class="nv">?success</span> <span class="p">(</span>std-srvs-set-bool-response-get-field <span class="nv">?msg</span> <span class="s">&quot;success&quot;</span><span class="p">))</span>
+  <span class="p">(</span>bind <span class="nv">?message</span> <span class="p">(</span>std-srvs-set-bool-response-get-field <span class="nv">?msg</span> <span class="s">&quot;message&quot;</span><span class="p">))</span>
+  <span class="p">(</span>printout blue <span class="s">&quot;Response (success: &quot;</span> <span class="nv">?success</span><span class="s">&quot;) for data: &quot;</span> <span class="nv">?val</span> <span class="s">&quot;: \&quot;&quot; ?message &quot;</span>\&quot;&quot; crlf)
+  <span class="p">(</span>std-srvs-set-bool-response-destroy <span class="nv">?msg</span><span class="p">)</span>
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">set-bool-client-cleanup</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">executive-finalize</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">std-srvs-set-bool-client</span><span class="w"> </span><span class="p">(</span><span class="nv">service</span><span class="w"> </span><span class="nv">?service</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">std-srvs-set-bool-destroy-client</span><span class="w"> </span><span class="nv">?service</span><span class="p">)</span>
+<span class="p">(</span><span class="kd">defrule</span> set-bool-client-cleanup
+  <span class="p">(</span>executive-finalize)
+  <span class="p">(</span>std-srvs-set-bool-client <span class="p">(</span>service <span class="nv">?service</span><span class="p">))</span>
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>std-srvs-set-bool-destroy-client <span class="nv">?service</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 <p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/set-bool-srv.clp">cx_bringup/clips/plugin_examples/set-bool-srv.clp</a>.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">set-bool-service-init</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">defrule</span> set-bool-service-init
 <span class="s">&quot; Create a simple service using the generated bindings. &quot;</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">std-srvs-set-bool-service</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="s">&quot;set_bool_srv&quot;</span><span class="p">)))</span>
-<span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">std-srvs-set-bool-create-service</span><span class="w"> </span><span class="s">&quot;set_bool_srv&quot;</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">info</span><span class="w"> </span><span class="s">&quot;Created service for /ros_cx_srv&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+  <span class="p">(</span>not <span class="p">(</span>std-srvs-set-bool-service <span class="p">(</span>name <span class="s">&quot;set_bool_srv&quot;</span><span class="p">)))</span>
+<span class="nt">=&gt;</span>
+  <span class="p">(</span>std-srvs-set-bool-create-service <span class="s">&quot;set_bool_srv&quot;</span><span class="p">)</span>
+  <span class="p">(</span>printout info <span class="s">&quot;Created service for /ros_cx_srv&quot;</span> crlf)
 <span class="p">)</span>
 
 <span class="c1">; this function needs to be defined in order to respond to messages</span>
-<span class="p">(</span><span class="nv">deffunction</span><span class="w"> </span><span class="nv">std-srvs-set-bool-service-callback</span><span class="w"> </span><span class="p">(</span><span class="nv">?service-name</span><span class="w"> </span><span class="nv">?request</span><span class="w"> </span><span class="nv">?response</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?req-data</span><span class="w"> </span><span class="p">(</span><span class="nv">std-srvs-set-bool-request-get-field</span><span class="w"> </span><span class="nv">?request</span><span class="w"> </span><span class="s">&quot;data&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;Received request on &quot;</span><span class="w"> </span><span class="nv">?service-name</span><span class="w"> </span><span class="s">&quot;. Data: &quot;</span><span class="w"> </span><span class="nv">?req-data</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="nv">?req-data</span><span class="w"> </span><span class="nv">then</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">std-srvs-set-bool-response-set-field</span><span class="w"> </span><span class="nv">?response</span><span class="w"> </span><span class="s">&quot;success&quot;</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">std-srvs-set-bool-response-set-field</span><span class="w"> </span><span class="nv">?response</span><span class="w"> </span><span class="s">&quot;message&quot;</span><span class="w"> </span><span class="p">(</span><span class="nv">str-cat</span><span class="w"> </span><span class="s">&quot;Received the request: &quot;</span><span class="w"> </span><span class="nv">?req-data</span><span class="p">))</span>
-<span class="w">    </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">send-request</span><span class="p">))</span>
-<span class="w">   </span><span class="nv">else</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">std-srvs-set-bool-response-set-field</span><span class="w"> </span><span class="nv">?response</span><span class="w"> </span><span class="s">&quot;success&quot;</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">std-srvs-set-bool-response-set-field</span><span class="w"> </span><span class="nv">?response</span><span class="w"> </span><span class="s">&quot;message&quot;</span><span class="w"> </span><span class="p">(</span><span class="nv">str-cat</span><span class="w"> </span><span class="s">&quot;Received the request: &quot;</span><span class="w"> </span><span class="nv">?req-data</span><span class="p">))</span>
-<span class="w">  </span><span class="p">)</span>
+<span class="p">(</span>deffunction std-srvs-set-bool-service-callback <span class="p">(</span><span class="nv">?service-name</span> <span class="nv">?request</span> <span class="nv">?response</span><span class="p">)</span>
+  <span class="p">(</span>bind <span class="nv">?req-data</span> <span class="p">(</span>std-srvs-set-bool-request-get-field <span class="nv">?request</span> <span class="s">&quot;data&quot;</span><span class="p">))</span>
+  <span class="p">(</span>printout green <span class="s">&quot;Received request on &quot;</span> <span class="nv">?service-name</span> <span class="s">&quot;. Data: &quot;</span> <span class="nv">?req-data</span> crlf)
+  <span class="p">(</span>if <span class="nv">?req-data</span> then
+    <span class="p">(</span>std-srvs-set-bool-response-set-field <span class="nv">?response</span> <span class="s">&quot;success&quot;</span> TRUE)
+    <span class="p">(</span>std-srvs-set-bool-response-set-field <span class="nv">?response</span> <span class="s">&quot;message&quot;</span> <span class="p">(</span>str-cat <span class="s">&quot;Received the request: &quot;</span> <span class="nv">?req-data</span><span class="p">))</span>
+    <span class="p">(</span><span class="k k-Name k-Name-Function">assert</span> <span class="p">(</span>send-request))
+   else
+    <span class="p">(</span>std-srvs-set-bool-response-set-field <span class="nv">?response</span> <span class="s">&quot;success&quot;</span> FALSE)
+    <span class="p">(</span>std-srvs-set-bool-response-set-field <span class="nv">?response</span> <span class="s">&quot;message&quot;</span> <span class="p">(</span>str-cat <span class="s">&quot;Received the request: &quot;</span> <span class="nv">?req-data</span><span class="p">))</span>
+  <span class="p">)</span>
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">set-bool-srv-cleanup</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">executive-finalize</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">std-srvs-set-bool-service</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">?service</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">std-srvs-set-bool-destroy-service</span><span class="w"> </span><span class="nv">?service</span><span class="p">)</span>
+<span class="p">(</span><span class="kd">defrule</span> set-bool-srv-cleanup
+  <span class="p">(</span>executive-finalize)
+  <span class="p">(</span>std-srvs-set-bool-service <span class="p">(</span>name <span class="nv">?service</span><span class="p">))</span>
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>std-srvs-set-bool-destroy-service <span class="nv">?service</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>

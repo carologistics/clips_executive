@@ -105,7 +105,7 @@
            <div itemprop="articleBody">
              
   <section id="continuous-monitoring">
-<h1>Continuous Monitoring<a class="headerlink" href="#continuous-monitoring" title="Link to this heading"></a></h1>
+<span id="continuous-monitoring-tutorial"></span><h1>Continuous Monitoring<a class="headerlink" href="#continuous-monitoring" title="Link to this heading"></a></h1>
 <p><strong>Goal:</strong> Monitor the pose of a turtle from turtlesim using CLIPS</p>
 <p><strong>Tutorial level:</strong> Beginner</p>
 <p><strong>Time:</strong> 20 minutes</p>
@@ -228,59 +228,59 @@ The former calls the CLIPS inference engine with a fixed frequency, the latter p
 <section id="monitoring-the-turtle">
 <h3><a class="toc-backref" href="#id7" role="doc-backlink">3 Monitoring the Turtle</a><a class="headerlink" href="#monitoring-the-turtle" title="Link to this heading"></a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">turtlesim_monitor.clp</span></code> file provides a set of rules to listen to the <code class="docutils literal notranslate"><span class="pre">Pose</span></code> topic of <code class="docutils literal notranslate"><span class="pre">turtle1</span></code> and to detect if the pose leaves a defined safe area.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defglobal</span>
-<span class="w">  </span><span class="nv">?*TURTLE-POSE-TOPIC*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="s">&quot;turtle1/pose&quot;</span>
-<span class="w">  </span><span class="nv">?*TURTLE-POSE-TYPE*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="s">&quot;turtlesim/msg/Pose&quot;</span>
-<span class="w">  </span><span class="nv">?*SAFE-AREA-LOWER-BOUND*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="mf">1.0</span>
-<span class="w">  </span><span class="nv">?*SAFE-AREA-UPPER-BOUND*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="mf">10.0</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>defglobal
+  ?*TURTLE-POSE-TOPIC* = <span class="s">&quot;turtle1/pose&quot;</span>
+  ?*TURTLE-POSE-TYPE* = <span class="s">&quot;turtlesim/msg/Pose&quot;</span>
+  ?*SAFE-AREA-LOWER-BOUND* = <span class="mf">1.0</span>
+  ?*SAFE-AREA-UPPER-BOUND* = <span class="mf">10.0</span>
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">turtle-pose-topic-create-subscription</span>
+<span class="p">(</span><span class="kd">defrule</span> turtle-pose-topic-create-subscription
 <span class="s">&quot; Create subscription to monitor the pose.&quot;</span>
-<span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">unwatch</span><span class="w"> </span><span class="nv">facts</span><span class="w"> </span><span class="nv">ros-msgs-message</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">unwatch</span><span class="w"> </span><span class="nv">rules</span><span class="w"> </span><span class="nv">turtle-pose-receive</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-create-subscription</span><span class="w"> </span><span class="nv">?*TURTLE-POSE-TOPIC*</span><span class="w"> </span><span class="nv">?*TURTLE-POSE-TYPE*</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">info</span><span class="w"> </span><span class="s">&quot;Listening to &quot;</span><span class="w"> </span><span class="nv">?*TURTLE-POSE-TOPIC*</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="nt">=&gt;</span>
+  <span class="p">(</span>unwatch facts ros-msgs-message)
+  <span class="p">(</span>unwatch rules turtle-pose-receive)
+  <span class="p">(</span>ros-msgs-create-subscription ?*TURTLE-POSE-TOPIC* ?*TURTLE-POSE-TYPE*)
+  <span class="p">(</span>printout info <span class="s">&quot;Listening to &quot;</span> ?*TURTLE-POSE-TOPIC* crlf)
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">turtle-pose-receive</span>
+<span class="p">(</span><span class="kd">defrule</span> turtle-pose-receive
 <span class="s">&quot; React to incoming messages andcheck for critical pose. &quot;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-subscription</span><span class="w"> </span><span class="p">(</span><span class="nv">topic</span><span class="w"> </span><span class="nv">?t&amp;:</span><span class="p">(</span><span class="nb">eq</span><span class="w"> </span><span class="nv">?t</span><span class="w"> </span><span class="nv">?*TURTLE-POSE-TOPIC*</span><span class="p">)))</span>
-<span class="w">  </span><span class="nv">?msg-f</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-message</span><span class="w"> </span><span class="p">(</span><span class="nv">topic</span><span class="w"> </span><span class="nv">?t</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">msg-ptr</span><span class="w"> </span><span class="nv">?inc-msg</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?x</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-get-field</span><span class="w"> </span><span class="nv">?inc-msg</span><span class="w"> </span><span class="s">&quot;x&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?y</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-get-field</span><span class="w"> </span><span class="nv">?inc-msg</span><span class="w"> </span><span class="s">&quot;y&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">or</span>
-<span class="w">    </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="nv">?x</span><span class="w"> </span><span class="nv">?*SAFE-AREA-LOWER-BOUND*</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="nv">?y</span><span class="w"> </span><span class="nv">?*SAFE-AREA-LOWER-BOUND*</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="nv">?x</span><span class="w"> </span><span class="nv">?*SAFE-AREA-UPPER-BOUND*</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="nv">?y</span><span class="w"> </span><span class="nv">?*SAFE-AREA-UPPER-BOUND*</span><span class="p">)</span>
-<span class="w">  </span><span class="p">)</span>
-<span class="w">  </span><span class="nv">then</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">yellow</span><span class="w"> </span><span class="s">&quot;turtle out of bounds&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">turtle-out-of-bounds</span><span class="p">))</span>
-<span class="w">  </span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-destroy-message</span><span class="w"> </span><span class="nv">?inc-msg</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?msg-f</span><span class="p">)</span>
+  <span class="p">(</span>ros-msgs-subscription <span class="p">(</span>topic <span class="nv">?t</span>&amp;:(eq <span class="nv">?t</span> ?*TURTLE-POSE-TOPIC*)))
+  <span class="nv">?msg-f</span> &lt;- <span class="p">(</span>ros-msgs-message <span class="p">(</span>topic <span class="nv">?t</span><span class="p">)</span> <span class="p">(</span>msg-ptr <span class="nv">?inc-msg</span><span class="p">))</span>
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>bind <span class="nv">?x</span> <span class="p">(</span>ros-msgs-get-field <span class="nv">?inc-msg</span> <span class="s">&quot;x&quot;</span><span class="p">))</span>
+  <span class="p">(</span>bind <span class="nv">?y</span> <span class="p">(</span>ros-msgs-get-field <span class="nv">?inc-msg</span> <span class="s">&quot;y&quot;</span><span class="p">))</span>
+  <span class="p">(</span>if <span class="p">(</span>or
+    <span class="p">(</span>&lt; <span class="nv">?x</span> ?*SAFE-AREA-LOWER-BOUND*)
+    <span class="p">(</span>&lt; <span class="nv">?y</span> ?*SAFE-AREA-LOWER-BOUND*)
+    <span class="p">(</span>&gt; <span class="nv">?x</span> ?*SAFE-AREA-UPPER-BOUND*)
+    <span class="p">(</span>&gt; <span class="nv">?y</span> ?*SAFE-AREA-UPPER-BOUND*)
+  <span class="p">)</span>
+  then
+    <span class="p">(</span>printout yellow <span class="s">&quot;turtle out of bounds&quot;</span> crlf)
+    <span class="p">(</span><span class="k k-Name k-Name-Function">assert</span> <span class="p">(</span>turtle-out-of-bounds))
+  <span class="p">)</span>
+  <span class="p">(</span>ros-msgs-destroy-message <span class="nv">?inc-msg</span><span class="p">)</span>
+  <span class="p">(</span><span class="k k-Name k-Name-Function">retract</span> <span class="nv">?msg-f</span><span class="p">)</span>
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">turtle-pose-destroy-subscription</span>
+<span class="p">(</span><span class="kd">defrule</span> turtle-pose-destroy-subscription
 <span class="s">&quot; Delete the subscription on executive finalize. &quot;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">executive-finalize</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-subscription</span><span class="w"> </span><span class="p">(</span><span class="nv">topic</span><span class="w"> </span><span class="nv">?t&amp;:</span><span class="p">(</span><span class="nb">eq</span><span class="w"> </span><span class="nv">?t</span><span class="w"> </span><span class="nv">?*TURTLE-POSE-TOPIC*</span><span class="p">)))</span>
-<span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">info</span><span class="w"> </span><span class="s">&quot;Destroying subscription for &quot;</span><span class="w"> </span><span class="nv">?*TURTLE-POSE-TOPIC*</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-destroy-subscription</span><span class="w"> </span><span class="nv">?*TURTLE-POSE-TOPIC*</span><span class="p">)</span>
+  <span class="p">(</span>executive-finalize)
+  <span class="p">(</span>ros-msgs-subscription <span class="p">(</span>topic <span class="nv">?t</span>&amp;:(eq <span class="nv">?t</span> ?*TURTLE-POSE-TOPIC*)))
+<span class="nt">=&gt;</span>
+  <span class="p">(</span>printout info <span class="s">&quot;Destroying subscription for &quot;</span> ?*TURTLE-POSE-TOPIC* crlf)
+  <span class="p">(</span>ros-msgs-destroy-subscription ?*TURTLE-POSE-TOPIC*)
 <span class="p">)</span>
 </pre></div>
 </div>
 <p>First, some global variables are defined for convenience:</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defglobal</span>
-<span class="w">  </span><span class="nv">?*TURTLE-POSE-TOPIC*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="s">&quot;turtle1/pose&quot;</span>
-<span class="w">  </span><span class="nv">?*TURTLE-POSE-TYPE*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="s">&quot;turtlesim/msg/Pose&quot;</span>
-<span class="w">  </span><span class="nv">?*SAFE-AREA-LOWER-BOUND*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="mf">1.0</span>
-<span class="w">  </span><span class="nv">?*SAFE-AREA-UPPER-BOUND*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="mf">10.0</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>defglobal
+  ?*TURTLE-POSE-TOPIC* = <span class="s">&quot;turtle1/pose&quot;</span>
+  ?*TURTLE-POSE-TYPE* = <span class="s">&quot;turtlesim/msg/Pose&quot;</span>
+  ?*SAFE-AREA-LOWER-BOUND* = <span class="mf">1.0</span>
+  ?*SAFE-AREA-UPPER-BOUND* = <span class="mf">10.0</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -293,47 +293,47 @@ The former calls the CLIPS inference engine with a fixed frequency, the latter p
 <p>Refer to the <a class="reference external" href="https://carologistics.github.io/clips_executive/clips_executive/plugins/ros_msgs_plugin">RosMsgsPlugin documentation</a> for more information and a complete list of provided features.</p>
 <p>Then, a rule called <code class="docutils literal notranslate"><span class="pre">turtle-pose-topic-create-subscription</span></code> is defined, which creates the subsciption to the <code class="docutils literal notranslate"><span class="pre">turtle1/pose</span></code> pose using the ROS communication plugin. It has no condition, hence can be executed right away.
 Before the subscription is established, it unwatches the <code class="docutils literal notranslate"><span class="pre">ros-msgs-message</span></code> template and <code class="docutils literal notranslate"><span class="pre">turtle-pose-receive</span></code> rule, which processes the message facts. This greatly reduces the amount of log output as data is published with high frequency on this topic.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">turtle-pose-topic-create-subscription</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">defrule</span> turtle-pose-topic-create-subscription
 <span class="s">&quot; Create subscription to monitor the pose.&quot;</span>
-<span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">unwatch</span><span class="w"> </span><span class="nv">facts</span><span class="w"> </span><span class="nv">ros-msgs-message</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">unwatch</span><span class="w"> </span><span class="nv">rules</span><span class="w"> </span><span class="nv">turtle-pose-receive</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-create-subscription</span><span class="w"> </span><span class="nv">?*TURTLE-POSE-TOPIC*</span><span class="w"> </span><span class="nv">?*TURTLE-POSE-TYPE*</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">info</span><span class="w"> </span><span class="s">&quot;Listening to &quot;</span><span class="w"> </span><span class="nv">?*TURTLE-POSE-TOPIC*</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="nt">=&gt;</span>
+  <span class="p">(</span>unwatch facts ros-msgs-message)
+  <span class="p">(</span>unwatch rules turtle-pose-receive)
+  <span class="p">(</span>ros-msgs-create-subscription ?*TURTLE-POSE-TOPIC* ?*TURTLE-POSE-TYPE*)
+  <span class="p">(</span>printout info <span class="s">&quot;Listening to &quot;</span> ?*TURTLE-POSE-TOPIC* crlf)
 <span class="p">)</span>
 </pre></div>
 </div>
 <p>The next rule <code class="docutils literal notranslate"><span class="pre">turtle-pose-receive</span></code> processes each incoming message from the pose topic and if the received (x,y) coordinate is outside of the safe area, it asserts a fact <code class="docutils literal notranslate"><span class="pre">(turtle-out-of-bounds)</span></code>. This will be the trigger for another set of rules to teleport the turtle back to the center of the safe area.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">turtle-pose-receive</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">defrule</span> turtle-pose-receive
 <span class="s">&quot; React to incoming messages andcheck for critical pose. &quot;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-subscription</span><span class="w"> </span><span class="p">(</span><span class="nv">topic</span><span class="w"> </span><span class="nv">?t&amp;:</span><span class="p">(</span><span class="nb">eq</span><span class="w"> </span><span class="nv">?t</span><span class="w"> </span><span class="nv">?*TURTLE-POSE-TOPIC*</span><span class="p">)))</span>
-<span class="w">  </span><span class="nv">?msg-f</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-message</span><span class="w"> </span><span class="p">(</span><span class="nv">topic</span><span class="w"> </span><span class="nv">?t</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">msg-ptr</span><span class="w"> </span><span class="nv">?inc-msg</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?x</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-get-field</span><span class="w"> </span><span class="nv">?inc-msg</span><span class="w"> </span><span class="s">&quot;x&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?y</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-get-field</span><span class="w"> </span><span class="nv">?inc-msg</span><span class="w"> </span><span class="s">&quot;y&quot;</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">or</span>
-<span class="w">    </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="nv">?x</span><span class="w"> </span><span class="nv">?*SAFE-AREA-LOWER-BOUND*</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="nv">?y</span><span class="w"> </span><span class="nv">?*SAFE-AREA-LOWER-BOUND*</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="nv">?x</span><span class="w"> </span><span class="nv">?*SAFE-AREA-UPPER-BOUND*</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="nv">?y</span><span class="w"> </span><span class="nv">?*SAFE-AREA-UPPER-BOUND*</span><span class="p">)</span>
-<span class="w">  </span><span class="p">)</span>
-<span class="w">  </span><span class="nv">then</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">yellow</span><span class="w"> </span><span class="s">&quot;turtle out of bounds&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">turtle-out-of-bounds</span><span class="p">))</span>
-<span class="w">  </span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-destroy-message</span><span class="w"> </span><span class="nv">?inc-msg</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?msg-f</span><span class="p">)</span>
+  <span class="p">(</span>ros-msgs-subscription <span class="p">(</span>topic <span class="nv">?t</span>&amp;:(eq <span class="nv">?t</span> ?*TURTLE-POSE-TOPIC*)))
+  <span class="nv">?msg-f</span> &lt;- <span class="p">(</span>ros-msgs-message <span class="p">(</span>topic <span class="nv">?t</span><span class="p">)</span> <span class="p">(</span>msg-ptr <span class="nv">?inc-msg</span><span class="p">))</span>
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>bind <span class="nv">?x</span> <span class="p">(</span>ros-msgs-get-field <span class="nv">?inc-msg</span> <span class="s">&quot;x&quot;</span><span class="p">))</span>
+  <span class="p">(</span>bind <span class="nv">?y</span> <span class="p">(</span>ros-msgs-get-field <span class="nv">?inc-msg</span> <span class="s">&quot;y&quot;</span><span class="p">))</span>
+  <span class="p">(</span>if <span class="p">(</span>or
+    <span class="p">(</span>&lt; <span class="nv">?x</span> ?*SAFE-AREA-LOWER-BOUND*)
+    <span class="p">(</span>&lt; <span class="nv">?y</span> ?*SAFE-AREA-LOWER-BOUND*)
+    <span class="p">(</span>&gt; <span class="nv">?x</span> ?*SAFE-AREA-UPPER-BOUND*)
+    <span class="p">(</span>&gt; <span class="nv">?y</span> ?*SAFE-AREA-UPPER-BOUND*)
+  <span class="p">)</span>
+  then
+    <span class="p">(</span>printout yellow <span class="s">&quot;turtle out of bounds&quot;</span> crlf)
+    <span class="p">(</span><span class="k k-Name k-Name-Function">assert</span> <span class="p">(</span>turtle-out-of-bounds))
+  <span class="p">)</span>
+  <span class="p">(</span>ros-msgs-destroy-message <span class="nv">?inc-msg</span><span class="p">)</span>
+  <span class="p">(</span><span class="k k-Name k-Name-Function">retract</span> <span class="nv">?msg-f</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 <p>Lastly, the rule <code class="docutils literal notranslate"><span class="pre">turtle-pose-destroy-subscription</span></code> closes the subscription when the ROS2 CLIPS-Executive stops the environment.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">turtle-pose-destroy-subscription</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">defrule</span> turtle-pose-destroy-subscription
 <span class="s">&quot; Delete the subscription on executive finalize. &quot;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">executive-finalize</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-subscription</span><span class="w"> </span><span class="p">(</span><span class="nv">topic</span><span class="w"> </span><span class="nv">?t&amp;:</span><span class="p">(</span><span class="nb">eq</span><span class="w"> </span><span class="nv">?t</span><span class="w"> </span><span class="nv">?*TURTLE-POSE-TOPIC*</span><span class="p">)))</span>
-<span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">info</span><span class="w"> </span><span class="s">&quot;Destroying subscription for &quot;</span><span class="w"> </span><span class="nv">?*TURTLE-POSE-TOPIC*</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-destroy-subscription</span><span class="w"> </span><span class="nv">?*TURTLE-POSE-TOPIC*</span><span class="p">)</span>
+  <span class="p">(</span>executive-finalize)
+  <span class="p">(</span>ros-msgs-subscription <span class="p">(</span>topic <span class="nv">?t</span>&amp;:(eq <span class="nv">?t</span> ?*TURTLE-POSE-TOPIC*)))
+<span class="nt">=&gt;</span>
+  <span class="p">(</span>printout info <span class="s">&quot;Destroying subscription for &quot;</span> ?*TURTLE-POSE-TOPIC* crlf)
+  <span class="p">(</span>ros-msgs-destroy-subscription ?*TURTLE-POSE-TOPIC*)
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -341,78 +341,78 @@ Before the subscription is established, it unwatches the <code class="docutils l
 <section id="teleporting-the-turtle">
 <h3><a class="toc-backref" href="#id8" role="doc-backlink">4 Teleporting the Turtle</a><a class="headerlink" href="#teleporting-the-turtle" title="Link to this heading"></a></h3>
 <p>The file <code class="docutils literal notranslate"><span class="pre">turtlesim_teleport.clp</span></code> contains a set of rule that will teleport the turtle back to the center of the canvas, whenever it leaves the safe area, as indicated by the <code class="docutils literal notranslate"><span class="pre">(turtle-out-of-bounds)</span></code> fact.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defglobal</span>
-<span class="w">  </span><span class="nv">?*TURTLE-SERVICE*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="s">&quot;turtle1/teleport_absolute&quot;</span>
-<span class="w">  </span><span class="nv">?*TURTLE-TELEPORT-TYPE*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="s">&quot;turtlesim/srv/TeleportAbsolute&quot;</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>defglobal
+  ?*TURTLE-SERVICE* = <span class="s">&quot;turtle1/teleport_absolute&quot;</span>
+  ?*TURTLE-TELEPORT-TYPE* = <span class="s">&quot;turtlesim/srv/TeleportAbsolute&quot;</span>
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">turtle-teleport-client-init</span>
+<span class="p">(</span><span class="kd">defrule</span> turtle-teleport-client-init
 <span class="s">&quot; Create publisher for ros_cx_out.&quot;</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-client</span><span class="w"> </span><span class="p">(</span><span class="nv">service</span><span class="w"> </span><span class="nv">?s&amp;:</span><span class="p">(</span><span class="nb">eq</span><span class="w"> </span><span class="nv">?s</span><span class="w"> </span><span class="nv">?*TURTLE-SERVICE*</span><span class="p">))))</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">executive-finalize</span><span class="p">))</span>
-<span class="nv">=&gt;</span>
-<span class="w">  </span><span class="c1">; create the client</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-create-client</span><span class="w"> </span><span class="nv">?*TURTLE-SERVICE*</span><span class="w"> </span><span class="nv">?*TURTLE-TELEPORT-TYPE*</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;Opening client for &quot;</span><span class="w"> </span><span class="nv">?*TURTLE-SERVICE*</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+  <span class="p">(</span>not <span class="p">(</span>ros-msgs-client <span class="p">(</span>service <span class="nv">?s</span>&amp;:(eq <span class="nv">?s</span> ?*TURTLE-SERVICE*))))
+  <span class="p">(</span>not <span class="p">(</span>executive-finalize))
+<span class="nt">=&gt;</span>
+  <span class="c1">; create the client</span>
+  <span class="p">(</span>ros-msgs-create-client ?*TURTLE-SERVICE* ?*TURTLE-TELEPORT-TYPE*)
+  <span class="p">(</span>printout green <span class="s">&quot;Opening client for &quot;</span> ?*TURTLE-SERVICE* crlf)
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">turtle-teleport-request-teleport-mid</span>
+<span class="p">(</span><span class="kd">defrule</span> turtle-teleport-request-teleport-mid
 <span class="s">&quot; Attempt to request the service. &quot;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-client</span><span class="w"> </span><span class="p">(</span><span class="nv">service</span><span class="w"> </span><span class="nv">?service&amp;:</span><span class="p">(</span><span class="nb">eq</span><span class="w"> </span><span class="nv">?service</span><span class="w"> </span><span class="nv">?*TURTLE-SERVICE*</span><span class="p">)))</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">request</span><span class="w"> </span><span class="nv">?any-id</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">turtle-out-of-bounds</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">time</span><span class="w"> </span><span class="nv">?any-time</span><span class="p">)</span><span class="w"> </span><span class="c1">; used to continuously attempt to request the service until success</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?new-req</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-create-request</span><span class="w"> </span><span class="nv">?*TURTLE-TELEPORT-TYPE*</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-set-field</span><span class="w"> </span><span class="nv">?new-req</span><span class="w"> </span><span class="s">&quot;x&quot;</span><span class="w"> </span><span class="mf">5.5</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-set-field</span><span class="w"> </span><span class="nv">?new-req</span><span class="w"> </span><span class="s">&quot;y&quot;</span><span class="w"> </span><span class="mf">5.5</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?id</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-async-send-request</span><span class="w"> </span><span class="nv">?new-req</span><span class="w"> </span><span class="nv">?service</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="nv">?id</span><span class="w"> </span><span class="nv">then</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">yellow</span><span class="w"> </span><span class="s">&quot;Request sent with id &quot;</span><span class="w"> </span><span class="nv">?id</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">request</span><span class="w"> </span><span class="nv">?id</span><span class="p">))</span>
-<span class="w">   </span><span class="nv">else</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">red</span><span class="w"> </span><span class="s">&quot;Sending of request failed, is the service running?&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">red</span><span class="w"> </span><span class="s">&quot;Start it using \&quot;ros2 run turtlesim turtlesim_node\&quot;&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-destroy-message</span><span class="w"> </span><span class="nv">?new-req</span><span class="p">)</span>
+  <span class="p">(</span>ros-msgs-client <span class="p">(</span>service <span class="nv">?service</span>&amp;:(eq <span class="nv">?service</span> ?*TURTLE-SERVICE*)))
+  <span class="p">(</span>not <span class="p">(</span>request <span class="nv">?any-id</span><span class="p">))</span>
+  <span class="p">(</span>turtle-out-of-bounds)
+  <span class="p">(</span>time <span class="nv">?any-time</span><span class="p">)</span> <span class="c1">; used to continuously attempt to request the service until success</span>
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>bind <span class="nv">?new-req</span> <span class="p">(</span>ros-msgs-create-request ?*TURTLE-TELEPORT-TYPE*))
+  <span class="p">(</span>ros-msgs-set-field <span class="nv">?new-req</span> <span class="s">&quot;x&quot;</span> <span class="mf">5.5</span><span class="p">)</span>
+  <span class="p">(</span>ros-msgs-set-field <span class="nv">?new-req</span> <span class="s">&quot;y&quot;</span> <span class="mf">5.5</span><span class="p">)</span>
+  <span class="p">(</span>bind <span class="nv">?id</span> <span class="p">(</span>ros-msgs-async-send-request <span class="nv">?new-req</span> <span class="nv">?service</span><span class="p">))</span>
+  <span class="p">(</span>if <span class="nv">?id</span> then
+    <span class="p">(</span>printout yellow <span class="s">&quot;Request sent with id &quot;</span> <span class="nv">?id</span> crlf)
+    <span class="p">(</span><span class="k k-Name k-Name-Function">assert</span> <span class="p">(</span>request <span class="nv">?id</span><span class="p">))</span>
+   else
+    <span class="p">(</span>printout red <span class="s">&quot;Sending of request failed, is the service running?&quot;</span> crlf)
+    <span class="p">(</span>printout red <span class="s">&quot;Start it using \&quot;</span>ros2 run turtlesim turtlesim_node\&quot;&quot; crlf)
+  <span class="p">)</span>
+  <span class="p">(</span>ros-msgs-destroy-message <span class="nv">?new-req</span><span class="p">)</span>
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">turtle-teleport-done</span>
+<span class="p">(</span><span class="kd">defrule</span> turtle-teleport-done
 <span class="s">&quot; Got response, delete it without reading, it is empty.&quot;</span>
-<span class="w">  </span><span class="nv">?msg-fact</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-response</span><span class="w"> </span><span class="p">(</span><span class="nv">service</span><span class="w"> </span><span class="nv">?service</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">msg-ptr</span><span class="w"> </span><span class="nv">?ptr</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">request-id</span><span class="w"> </span><span class="nv">?id</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">?request-fact</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">request</span><span class="w"> </span><span class="nv">?id</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">?out-of-bounds-fact</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">turtle-out-of-bounds</span><span class="p">)</span>
-<span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">yellow</span><span class="w"> </span><span class="s">&quot;Turtle teleport done (request id &quot;</span><span class="w"> </span><span class="nv">?id</span><span class="s">&quot;)&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-destroy-message</span><span class="w"> </span><span class="nv">?ptr</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?msg-fact</span><span class="w"> </span><span class="nv">?request-fact</span><span class="w"> </span><span class="nv">?out-of-bounds-fact</span><span class="p">)</span>
+  <span class="nv">?msg-fact</span> &lt;- <span class="p">(</span>ros-msgs-response <span class="p">(</span>service <span class="nv">?service</span><span class="p">)</span> <span class="p">(</span>msg-ptr <span class="nv">?ptr</span><span class="p">)</span> <span class="p">(</span>request-id <span class="nv">?id</span><span class="p">))</span>
+  <span class="nv">?request-fact</span> &lt;- <span class="p">(</span>request <span class="nv">?id</span><span class="p">)</span>
+  <span class="nv">?out-of-bounds-fact</span> &lt;- <span class="p">(</span>turtle-out-of-bounds)
+<span class="nt">=&gt;</span>
+  <span class="p">(</span>printout yellow <span class="s">&quot;Turtle teleport done (request id &quot;</span> <span class="nv">?id</span><span class="s">&quot;)&quot;</span> crlf)
+  <span class="p">(</span>ros-msgs-destroy-message <span class="nv">?ptr</span><span class="p">)</span>
+  <span class="p">(</span><span class="k k-Name k-Name-Function">retract</span> <span class="nv">?msg-fact</span> <span class="nv">?request-fact</span> <span class="nv">?out-of-bounds-fact</span><span class="p">)</span>
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">turtle-teleport-client-finalize</span>
+<span class="p">(</span><span class="kd">defrule</span> turtle-teleport-client-finalize
 <span class="s">&quot; Delete the client on executive finalize. &quot;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">executive-finalize</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-client</span><span class="w"> </span><span class="p">(</span><span class="nv">service</span><span class="w"> </span><span class="nv">?service</span><span class="p">))</span>
-<span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">info</span><span class="w"> </span><span class="s">&quot;Destroying client&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-destroy-client</span><span class="w"> </span><span class="nv">?service</span><span class="p">)</span>
+  <span class="p">(</span>executive-finalize)
+  <span class="p">(</span>ros-msgs-client <span class="p">(</span>service <span class="nv">?service</span><span class="p">))</span>
+<span class="nt">=&gt;</span>
+  <span class="p">(</span>printout info <span class="s">&quot;Destroying client&quot;</span> crlf)
+  <span class="p">(</span>ros-msgs-destroy-client <span class="nv">?service</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 <p>Again, the file begins with some global constants for convenience.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defglobal</span>
-<span class="w">  </span><span class="nv">?*TURTLE-SERVICE*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="s">&quot;turtle1/teleport_absolute&quot;</span>
-<span class="w">  </span><span class="nv">?*TURTLE-TELEPORT-TYPE*</span><span class="w"> </span><span class="nb">=</span><span class="w"> </span><span class="s">&quot;turtlesim/srv/TeleportAbsolute&quot;</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>defglobal
+  ?*TURTLE-SERVICE* = <span class="s">&quot;turtle1/teleport_absolute&quot;</span>
+  ?*TURTLE-TELEPORT-TYPE* = <span class="s">&quot;turtlesim/srv/TeleportAbsolute&quot;</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 <p>Similar to handling subscriptions and messages, the <code class="docutils literal notranslate"><span class="pre">RosMsgsPlugin</span></code> also supports the creation of ROS service clients to send service requests.
 The <code class="docutils literal notranslate"><span class="pre">turtle-teleport-client-init</span></code> rule simply ensures a client to the <code class="docutils literal notranslate"><span class="pre">turtle1/teleport_absolute</span></code> service is created.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">turtle-teleport-client-init</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">defrule</span> turtle-teleport-client-init
 <span class="s">&quot; Create publisher for ros_cx_out.&quot;</span>
-<span class="nv">=&gt;</span>
-<span class="w">  </span><span class="c1">; create the client</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-create-client</span><span class="w"> </span><span class="nv">?*TURTLE-SERVICE*</span><span class="w"> </span><span class="nv">?*TURTLE-TELEPORT-TYPE*</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;Opening client for &quot;</span><span class="w"> </span><span class="nv">?*TURTLE-SERVICE*</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="nt">=&gt;</span>
+  <span class="c1">; create the client</span>
+  <span class="p">(</span>ros-msgs-create-client ?*TURTLE-SERVICE* ?*TURTLE-TELEPORT-TYPE*)
+  <span class="p">(</span>printout green <span class="s">&quot;Opening client for &quot;</span> ?*TURTLE-SERVICE* crlf)
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -421,49 +421,49 @@ Additionally, it is conditioned on the current time, a fact updated by the <code
 This allows the rule to fire at each iteration if needed (e.g., if the service is not reachable).
 The rule effect takes care of creating and sending the request.
 If the request is successfully sent, it asserts a request fact (including the request ID assigned to it), indicating that the request is now processed asynchronously and preventing the rule to fire again.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">turtle-teleport-request-teleport-mid</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">defrule</span> turtle-teleport-request-teleport-mid
 <span class="s">&quot; Attempt to request the service. &quot;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-client</span><span class="w"> </span><span class="p">(</span><span class="nv">service</span><span class="w"> </span><span class="nv">?service&amp;:</span><span class="p">(</span><span class="nb">eq</span><span class="w"> </span><span class="nv">?service</span><span class="w"> </span><span class="nv">?*TURTLE-SERVICE*</span><span class="p">)))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">turtle-out-of-bounds</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nv">request</span><span class="w"> </span><span class="nv">?any-id</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">time</span><span class="w"> </span><span class="nv">?any-time</span><span class="p">)</span><span class="w"> </span><span class="c1">; used to continuously attempt to request the service until success</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?new-req</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-create-request</span><span class="w"> </span><span class="nv">?*TURTLE-TELEPORT-TYPE*</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-set-field</span><span class="w"> </span><span class="nv">?new-req</span><span class="w"> </span><span class="s">&quot;x&quot;</span><span class="w"> </span><span class="mf">5.5</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-set-field</span><span class="w"> </span><span class="nv">?new-req</span><span class="w"> </span><span class="s">&quot;y&quot;</span><span class="w"> </span><span class="mf">5.5</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?id</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-async-send-request</span><span class="w"> </span><span class="nv">?new-req</span><span class="w"> </span><span class="nv">?service</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="nv">?id</span><span class="w"> </span><span class="nv">then</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">yellow</span><span class="w"> </span><span class="s">&quot;Request sent with id &quot;</span><span class="w"> </span><span class="nv">?id</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nb">assert</span><span class="w"> </span><span class="p">(</span><span class="nv">request</span><span class="w"> </span><span class="nv">?id</span><span class="p">))</span>
-<span class="w">   </span><span class="nv">else</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">red</span><span class="w"> </span><span class="s">&quot;Sending of request failed, is the service running?&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">red</span><span class="w"> </span><span class="s">&quot;Start it using \&quot;ros2 run turtlesim turtlesim_node\&quot;&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-destroy-message</span><span class="w"> </span><span class="nv">?new-req</span><span class="p">)</span>
+  <span class="p">(</span>ros-msgs-client <span class="p">(</span>service <span class="nv">?service</span>&amp;:(eq <span class="nv">?service</span> ?*TURTLE-SERVICE*)))
+  <span class="p">(</span>turtle-out-of-bounds)
+  <span class="p">(</span>not <span class="p">(</span>request <span class="nv">?any-id</span><span class="p">))</span>
+  <span class="p">(</span>time <span class="nv">?any-time</span><span class="p">)</span> <span class="c1">; used to continuously attempt to request the service until success</span>
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>bind <span class="nv">?new-req</span> <span class="p">(</span>ros-msgs-create-request ?*TURTLE-TELEPORT-TYPE*))
+  <span class="p">(</span>ros-msgs-set-field <span class="nv">?new-req</span> <span class="s">&quot;x&quot;</span> <span class="mf">5.5</span><span class="p">)</span>
+  <span class="p">(</span>ros-msgs-set-field <span class="nv">?new-req</span> <span class="s">&quot;y&quot;</span> <span class="mf">5.5</span><span class="p">)</span>
+  <span class="p">(</span>bind <span class="nv">?id</span> <span class="p">(</span>ros-msgs-async-send-request <span class="nv">?new-req</span> <span class="nv">?service</span><span class="p">))</span>
+  <span class="p">(</span>if <span class="nv">?id</span> then
+    <span class="p">(</span>printout yellow <span class="s">&quot;Request sent with id &quot;</span> <span class="nv">?id</span> crlf)
+    <span class="p">(</span><span class="k k-Name k-Name-Function">assert</span> <span class="p">(</span>request <span class="nv">?id</span><span class="p">))</span>
+   else
+    <span class="p">(</span>printout red <span class="s">&quot;Sending of request failed, is the service running?&quot;</span> crlf)
+    <span class="p">(</span>printout red <span class="s">&quot;Start it using \&quot;</span>ros2 run turtlesim turtlesim_node\&quot;&quot; crlf)
+  <span class="p">)</span>
+  <span class="p">(</span>ros-msgs-destroy-message <span class="nv">?new-req</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 <p>The rule <code class="docutils literal notranslate"><span class="pre">turtle-teleport-done</span></code> processes the response of the service request. The <code class="docutils literal notranslate"><span class="pre">TeleportAbsolute</span></code> service does not provide an explicit response, hence the rule simply cleans it up, along with the facts indicating the turtle being out of bounds <code class="docutils literal notranslate"><span class="pre">(turtle-out-of-bounds)</span></code> and that the request awaited an answer <code class="docutils literal notranslate"><span class="pre">(request</span> <span class="pre">?id)</span></code>.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">turtle-teleport-done</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">defrule</span> turtle-teleport-done
 <span class="s">&quot; Got response, delete it without reading, it is empty.&quot;</span>
-<span class="w">  </span><span class="nv">?msg-fact</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-response</span><span class="w"> </span><span class="p">(</span><span class="nv">service</span><span class="w"> </span><span class="nv">?service</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">msg-ptr</span><span class="w"> </span><span class="nv">?ptr</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">request-id</span><span class="w"> </span><span class="nv">?id</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">?request-fact</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">request</span><span class="w"> </span><span class="nv">?id</span><span class="p">)</span>
-<span class="w">  </span><span class="nv">?out-of-bounds-fact</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">turtle-out-of-bounds</span><span class="p">)</span>
-<span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">yellow</span><span class="w"> </span><span class="s">&quot;Turtle teleport done (request id &quot;</span><span class="w"> </span><span class="nv">?id</span><span class="s">&quot;)&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-destroy-message</span><span class="w"> </span><span class="nv">?ptr</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?msg-fact</span><span class="w"> </span><span class="nv">?request-fact</span><span class="w"> </span><span class="nv">?out-of-bounds-fact</span><span class="p">)</span>
+  <span class="nv">?msg-fact</span> &lt;- <span class="p">(</span>ros-msgs-response <span class="p">(</span>service <span class="nv">?service</span><span class="p">)</span> <span class="p">(</span>msg-ptr <span class="nv">?ptr</span><span class="p">)</span> <span class="p">(</span>request-id <span class="nv">?id</span><span class="p">))</span>
+  <span class="nv">?request-fact</span> &lt;- <span class="p">(</span>request <span class="nv">?id</span><span class="p">)</span>
+  <span class="nv">?out-of-bounds-fact</span> &lt;- <span class="p">(</span>turtle-out-of-bounds)
+<span class="nt">=&gt;</span>
+  <span class="p">(</span>printout yellow <span class="s">&quot;Turtle teleport done (request id &quot;</span> <span class="nv">?id</span><span class="s">&quot;)&quot;</span> crlf)
+  <span class="p">(</span>ros-msgs-destroy-message <span class="nv">?ptr</span><span class="p">)</span>
+  <span class="p">(</span><span class="k k-Name k-Name-Function">retract</span> <span class="nv">?msg-fact</span> <span class="nv">?request-fact</span> <span class="nv">?out-of-bounds-fact</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 <p>Lastly, the rule <code class="docutils literal notranslate"><span class="pre">turtle-teleport-client-finalize</span></code> takes care of removing the client on shutdown of the environment.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">turtle-teleport-client-finalize</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">defrule</span> turtle-teleport-client-finalize
 <span class="s">&quot; Delete the client on executive finalize. &quot;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">executive-finalize</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-client</span><span class="w"> </span><span class="p">(</span><span class="nv">service</span><span class="w"> </span><span class="nv">?service</span><span class="p">))</span>
-<span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">info</span><span class="w"> </span><span class="s">&quot;Destroying client&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">ros-msgs-destroy-client</span><span class="w"> </span><span class="nv">?service</span><span class="p">)</span>
+  <span class="p">(</span>executive-finalize)
+  <span class="p">(</span>ros-msgs-client <span class="p">(</span>service <span class="nv">?service</span><span class="p">))</span>
+<span class="nt">=&gt;</span>
+  <span class="p">(</span>printout info <span class="s">&quot;Destroying client&quot;</span> crlf)
+  <span class="p">(</span>ros-msgs-destroy-client <span class="nv">?service</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>

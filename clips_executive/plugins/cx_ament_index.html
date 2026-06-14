@@ -120,30 +120,30 @@
 <p>Note that all functions listed below catch potential exceptions thrown by <cite>ament_index_cpp</cite> and return <cite>FALSE</cite> in that case.</p>
 <section id="functions">
 <h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?ret</span><span class="w"> </span><span class="p">(</span><span class="nv">ament-index-get-package-prefix</span><span class="w"> </span><span class="nv">?package-name</span><span class="p">))</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>bind <span class="nv">?ret</span> <span class="p">(</span>ament-index-get-package-prefix <span class="nv">?package-name</span><span class="p">))</span>
 <span class="c1">; example args: &quot;cx_bringup&quot;</span>
 <span class="c1">; example ret:  &quot;/opt/ros/&lt;ros-distro&gt;</span>
 
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?ret</span><span class="w"> </span><span class="p">(</span><span class="nv">ament-index-get-package-share-directory</span><span class="w"> </span><span class="nv">?package-name</span><span class="p">))</span>
+<span class="p">(</span>bind <span class="nv">?ret</span> <span class="p">(</span>ament-index-get-package-share-directory <span class="nv">?package-name</span><span class="p">))</span>
 <span class="c1">; example args: &quot;cx_bringup&quot;</span>
 <span class="c1">; example ret:  &quot;/opt/ros/&lt;ros-distro&gt;/share/cx_bringup&quot;</span>
 
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?ret</span><span class="w"> </span><span class="p">(</span><span class="nv">ament-index-get-packages-with-prefixes</span><span class="p">))</span>
+<span class="p">(</span>bind <span class="nv">?ret</span> <span class="p">(</span>ament-index-get-packages-with-prefixes))
 <span class="c1">; example ret:  (&quot;rclcpp&quot; &quot;/opt/ros/&lt;ros-distro&gt;&quot; &quot;cx_bringup&quot; &quot;/opt/ros/&lt;ros-distro&gt;&quot; ...)</span>
 
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?ret</span><span class="w"> </span><span class="p">(</span><span class="nv">ament-index-has-resource</span><span class="w"> </span><span class="nv">?res-type</span><span class="w"> </span><span class="nv">?res-name</span><span class="p">))</span>
+<span class="p">(</span>bind <span class="nv">?ret</span> <span class="p">(</span>ament-index-has-resource <span class="nv">?res-type</span> <span class="nv">?res-name</span><span class="p">))</span>
 <span class="c1">; example args: &quot;vendor_packages&quot; &quot;clips_vendor&quot;</span>
 <span class="c1">; example ret:  FALSE or a path like &quot;/opt/ros/kited&quot;</span>
 
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?ret</span><span class="w"> </span><span class="p">(</span><span class="nv">ament-index-get-resource</span><span class="w"> </span><span class="nv">?res-type</span><span class="w"> </span><span class="nv">?res-name</span><span class="p">))</span>
+<span class="p">(</span>bind <span class="nv">?ret</span> <span class="p">(</span>ament-index-get-resource <span class="nv">?res-type</span> <span class="nv">?res-name</span><span class="p">))</span>
 <span class="c1">; example args: &quot;vendor_packages&quot; &quot;clips_vendor&quot;</span>
 <span class="c1">; example ret: (&quot;opt/clips_vendor&quot; &quot;/opt/ros/&lt;ros-distro&gt;&quot;)</span>
 
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?ret</span><span class="w"> </span><span class="p">(</span><span class="nv">ament-index-get-resources</span><span class="w"> </span><span class="nv">?res-type</span><span class="p">))</span>
+<span class="p">(</span>bind <span class="nv">?ret</span> <span class="p">(</span>ament-index-get-resources <span class="nv">?res-type</span><span class="p">))</span>
 <span class="c1">; example args: &quot;vendor_packages&quot;</span>
 <span class="c1">; example ret: (&quot;clips_vendor&quot; &quot;/opt/ros/&lt;ros-distro&gt;&quot; &quot;&lt;other-vendor&gt;&quot; &quot;&lt;path-to-other-vendor&quot;&gt; ...)</span>
 
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?prefix</span><span class="w"> </span><span class="p">(</span><span class="nv">ament-index-get-search-paths</span><span class="p">))</span>
+<span class="p">(</span>bind <span class="nv">?prefix</span> <span class="p">(</span>ament-index-get-search-paths))
 <span class="c1">; example ret: (&quot;/opt/ros/&lt;ros-distro&gt;&quot; &quot;&lt;path-to-other-prefix&gt;&quot; ...)</span>
 </pre></div>
 </div>
@@ -180,51 +180,51 @@
 <section id="code">
 <h3>Code<a class="headerlink" href="#code" title="Link to this heading"></a></h3>
 <p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/ament-index.clp">cx_bringup/clips/plugin_examples/ament-index.clp</a>.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">deffunction</span><span class="w"> </span><span class="nv">print-pairs</span><span class="w"> </span><span class="p">(</span><span class="nv">?pairs</span><span class="w"> </span><span class="nv">?key-str</span><span class="w"> </span><span class="nv">?value-str</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?length</span><span class="w"> </span><span class="p">(</span><span class="nv">length$</span><span class="w"> </span><span class="nv">?pairs</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?index</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>deffunction print-pairs <span class="p">(</span><span class="nv">?pairs</span> <span class="nv">?key-str</span> <span class="nv">?value-str</span><span class="p">)</span>
+  <span class="p">(</span>bind <span class="nv">?length</span> <span class="p">(</span>length$ <span class="nv">?pairs</span><span class="p">))</span>
+  <span class="p">(</span>bind <span class="nv">?index</span> <span class="mi">1</span><span class="p">)</span>
 
-<span class="w">  </span><span class="p">(</span><span class="nv">while</span><span class="w"> </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="nv">?index</span><span class="w"> </span><span class="p">(</span><span class="nb">min</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="nv">?length</span><span class="p">))</span>
-<span class="w">     </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?key</span><span class="w"> </span><span class="p">(</span><span class="nv">nth$</span><span class="w"> </span><span class="nv">?index</span><span class="w"> </span><span class="nv">?pairs</span><span class="p">))</span>
-<span class="w">     </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?value</span><span class="w"> </span><span class="p">(</span><span class="nv">nth$</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="nv">?index</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="nv">?pairs</span><span class="p">))</span>
-<span class="w">     </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;    &quot;</span><span class="w"> </span><span class="nv">?key-str</span><span class="w"> </span><span class="s">&quot;: &quot;</span><span class="w"> </span><span class="nv">?key</span><span class="w"> </span><span class="s">&quot; &quot;</span><span class="nv">?value-str</span><span class="w"> </span><span class="s">&quot;: &quot;</span><span class="w"> </span><span class="nv">?value</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">     </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?index</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="nv">?index</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span>
-<span class="w">  </span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="nv">?length</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="nv">then</span>
-<span class="w">   </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;    &quot;</span><span class="w"> </span><span class="s">&quot; ... &quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">)</span>
+  <span class="p">(</span>while <span class="p">(</span>&lt; <span class="nv">?index</span> <span class="p">(</span>min <span class="mi">10</span> <span class="nv">?length</span><span class="p">))</span>
+     <span class="p">(</span>bind <span class="nv">?key</span> <span class="p">(</span>nth$ <span class="nv">?index</span> <span class="nv">?pairs</span><span class="p">))</span>
+     <span class="p">(</span>bind <span class="nv">?value</span> <span class="p">(</span>nth$ <span class="p">(</span>+ <span class="nv">?index</span> <span class="mi">1</span><span class="p">)</span> <span class="nv">?pairs</span><span class="p">))</span>
+     <span class="p">(</span>printout green <span class="s">&quot;    &quot;</span> <span class="nv">?key-str</span> <span class="s">&quot;: &quot;</span> <span class="nv">?key</span> <span class="s">&quot; &quot;</span><span class="nv">?value-str</span> <span class="s">&quot;: &quot;</span> <span class="nv">?value</span> crlf)
+     <span class="p">(</span>bind <span class="nv">?index</span> <span class="p">(</span>+ <span class="nv">?index</span> <span class="mi">2</span><span class="p">))</span>
+  <span class="p">)</span>
+  <span class="p">(</span>if <span class="p">(</span>&gt; <span class="nv">?length</span> <span class="mi">10</span><span class="p">)</span> then
+   <span class="p">(</span>printout green <span class="s">&quot;    &quot;</span> <span class="s">&quot; ... &quot;</span> crlf)
+  <span class="p">)</span>
 <span class="p">)</span>
-<span class="p">(</span><span class="nv">deffunction</span><span class="w"> </span><span class="nv">print-in-lines</span><span class="w"> </span><span class="p">(</span><span class="nv">?multi</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?length</span><span class="w"> </span><span class="p">(</span><span class="nv">length$</span><span class="w"> </span><span class="nv">?multi</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?index</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="p">(</span>deffunction print-in-lines <span class="p">(</span><span class="nv">?multi</span><span class="p">)</span>
+  <span class="p">(</span>bind <span class="nv">?length</span> <span class="p">(</span>length$ <span class="nv">?multi</span><span class="p">))</span>
+  <span class="p">(</span>bind <span class="nv">?index</span> <span class="mi">1</span><span class="p">)</span>
 
-<span class="w">  </span><span class="p">(</span><span class="nv">while</span><span class="w"> </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="nv">?index</span><span class="w"> </span><span class="p">(</span><span class="nb">min</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="nv">?length</span><span class="p">))</span>
-<span class="w">     </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?key</span><span class="w"> </span><span class="p">(</span><span class="nv">nth$</span><span class="w"> </span><span class="nv">?index</span><span class="w"> </span><span class="nv">?multi</span><span class="p">))</span>
-<span class="w">     </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;    &quot;</span><span class="w"> </span><span class="nv">?key</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">     </span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?index</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="nv">?index</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
-<span class="w">  </span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="nv">?length</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="nv">then</span>
-<span class="w">   </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;    &quot;</span><span class="w"> </span><span class="s">&quot; ... &quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="w">  </span><span class="p">)</span>
+  <span class="p">(</span>while <span class="p">(</span>&lt; <span class="nv">?index</span> <span class="p">(</span>min <span class="mi">5</span> <span class="nv">?length</span><span class="p">))</span>
+     <span class="p">(</span>bind <span class="nv">?key</span> <span class="p">(</span>nth$ <span class="nv">?index</span> <span class="nv">?multi</span><span class="p">))</span>
+     <span class="p">(</span>printout green <span class="s">&quot;    &quot;</span> <span class="nv">?key</span> crlf)
+     <span class="p">(</span>bind <span class="nv">?index</span> <span class="p">(</span>+ <span class="nv">?index</span> <span class="mi">1</span><span class="p">))</span>
+  <span class="p">)</span>
+  <span class="p">(</span>if <span class="p">(</span>&gt; <span class="nv">?length</span> <span class="mi">5</span><span class="p">)</span> then
+   <span class="p">(</span>printout green <span class="s">&quot;    &quot;</span> <span class="s">&quot; ... &quot;</span> crlf)
+  <span class="p">)</span>
 <span class="p">)</span>
 
-<span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">info</span><span class="w"> </span><span class="s">&quot;(ament-index-get-package-prefix \&quot;cx_bringup\&quot;)&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;    &quot;</span><span class="w"> </span><span class="p">(</span><span class="nv">ament-index-get-package-prefix</span><span class="w"> </span><span class="s">&quot;cx_bringup&quot;</span><span class="p">)</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="p">(</span>printout info <span class="s">&quot;(ament-index-get-package-prefix \&quot;</span>cx_bringup\&quot;)&quot; crlf)
+<span class="p">(</span>printout green <span class="s">&quot;    &quot;</span> <span class="p">(</span>ament-index-get-package-prefix <span class="s">&quot;cx_bringup&quot;</span><span class="p">)</span> crlf)
 
-<span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">info</span><span class="w"> </span><span class="s">&quot;(ament-index-get-packages-with-prefixes)&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">print-pairs</span><span class="w"> </span><span class="p">(</span><span class="nv">ament-index-get-packages-with-prefixes</span><span class="p">)</span><span class="w"> </span><span class="s">&quot;Package&quot;</span><span class="w"> </span><span class="s">&quot;Prefix&quot;</span><span class="p">)</span>
+<span class="p">(</span>printout info <span class="s">&quot;(ament-index-get-packages-with-prefixes)&quot;</span> crlf)
+<span class="p">(</span>print-pairs <span class="p">(</span>ament-index-get-packages-with-prefixes) <span class="s">&quot;Package&quot;</span> <span class="s">&quot;Prefix&quot;</span><span class="p">)</span>
 
-<span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">info</span><span class="w"> </span><span class="s">&quot;(ament-index-get-package-share-directory \&quot;rclcpp\&quot;)&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">green</span><span class="w"> </span><span class="s">&quot;    &quot;</span><span class="w"> </span><span class="p">(</span><span class="nv">ament-index-get-package-share-directory</span><span class="w"> </span><span class="s">&quot;rclcpp&quot;</span><span class="p">)</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
+<span class="p">(</span>printout info <span class="s">&quot;(ament-index-get-package-share-directory \&quot;</span>rclcpp\&quot;)&quot; crlf)
+<span class="p">(</span>printout green <span class="s">&quot;    &quot;</span> <span class="p">(</span>ament-index-get-package-share-directory <span class="s">&quot;rclcpp&quot;</span><span class="p">)</span> crlf)
 
-<span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">info</span><span class="w"> </span><span class="s">&quot;(ament-index-get-resource \&quot;vendor_packages\&quot; \&quot;clips_vendor\&quot;)&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">print-pairs</span><span class="w"> </span><span class="p">(</span><span class="nv">ament-index-get-resource</span><span class="w"> </span><span class="s">&quot;vendor_packages&quot;</span><span class="w"> </span><span class="s">&quot;clips_vendor&quot;</span><span class="p">)</span><span class="w"> </span><span class="s">&quot;Content&quot;</span><span class="w"> </span><span class="s">&quot;Path&quot;</span><span class="p">)</span>
+<span class="p">(</span>printout info <span class="s">&quot;(ament-index-get-resource \&quot;</span>vendor_packages\&quot; \&quot;clips_vendor\&quot;)&quot; crlf)
+<span class="p">(</span>print-pairs <span class="p">(</span>ament-index-get-resource <span class="s">&quot;vendor_packages&quot;</span> <span class="s">&quot;clips_vendor&quot;</span><span class="p">)</span> <span class="s">&quot;Content&quot;</span> <span class="s">&quot;Path&quot;</span><span class="p">)</span>
 
-<span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">info</span><span class="w"> </span><span class="s">&quot;(ament-index-get-resources \&quot;vendor_packages\&quot;)&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">print-pairs</span><span class="w"> </span><span class="p">(</span><span class="nv">ament-index-get-resources</span><span class="w"> </span><span class="s">&quot;vendor_packages&quot;</span><span class="p">)</span><span class="w"> </span><span class="s">&quot;Package&quot;</span><span class="w"> </span><span class="s">&quot;Prefix&quot;</span><span class="p">)</span>
+<span class="p">(</span>printout info <span class="s">&quot;(ament-index-get-resources \&quot;</span>vendor_packages\&quot;)&quot; crlf)
+<span class="p">(</span>print-pairs <span class="p">(</span>ament-index-get-resources <span class="s">&quot;vendor_packages&quot;</span><span class="p">)</span> <span class="s">&quot;Package&quot;</span> <span class="s">&quot;Prefix&quot;</span><span class="p">)</span>
 
-<span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="nv">info</span><span class="w"> </span><span class="s">&quot;(ament-index-get-search-paths)&quot;</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">print-in-lines</span><span class="w"> </span><span class="p">(</span><span class="nv">ament-index-get-search-paths</span><span class="p">))</span>
+<span class="p">(</span>printout info <span class="s">&quot;(ament-index-get-search-paths)&quot;</span> crlf)
+<span class="p">(</span>print-in-lines <span class="p">(</span>ament-index-get-search-paths))
 </pre></div>
 </div>
 </section>
