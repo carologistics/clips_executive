@@ -32,7 +32,7 @@ The process includes:
 Prerequisites
 -------------
 
-This tutorial assumes completion of the :doc:`Continuous Monitoring <continuous_monitoring>` tutorial and a workspace containing the
+This tutorial assumes completion of the :ref:`Continuous Monitoring <continuous_monitoring_tutorial>` tutorial and a workspace containing the
 ``cx_tutorial_agents`` and ``cx_pddl_bringup`` packages.
 
 Additionally, you need to have the PDDL Manager available.
@@ -147,7 +147,7 @@ The following components are important:
 
 The first rule in ``raw_agent.clp`` creates clients for all required services provided by the PDDL Manager.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule pddl-init
       (not (pddl-services-loaded))
@@ -175,7 +175,7 @@ The first rule in ``raw_agent.clp`` creates clients for all required services pr
 
 Once all clients are available, an additional rule creates the client for the planning action:
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule pddl-init-plan-client
       (not (pddl-planning-client-created))
@@ -191,7 +191,7 @@ Once all clients are available, an additional rule creates the client for the pl
 
 Once all services are available, the rule ``pddl-add-instance`` sends a request to load a PDDL domain and problem:
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule pddl-add-instance
       (ros-msgs-client (service ?service&:(eq ?service (str-cat "/pddl_manager" "/add_pddl_instance"))) (type ?type))
@@ -222,7 +222,7 @@ After successfully uploading the PDDL instance, CLIPS retrieves the current flue
 
 The rule ``pddl-get-fluents`` requests the fluents:
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule pddl-get-fluents
       (ros-msgs-client (service ?s&:(eq ?s (str-cat "/pddl_manager" "/get_fluents"))) (type ?type))
@@ -242,7 +242,7 @@ The rule ``pddl-get-fluents`` requests the fluents:
 Once fluents are available, CLIPS sets new goals using ``pddl-set-goal``.
 Here, two goals are created — ``(on a b)`` and ``(on b c)``.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule pddl-set-goal
       (pddl-fluents-requested)
@@ -267,7 +267,7 @@ Here, two goals are created — ``(on a b)`` and ``(on b c)``.
 
 After setting up the goal, CLIPS triggers the planning action:
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule pddl-plan
       (cx-pddl-msgs-plan-temporal-client (server ?server&:(eq ?server "/pddl_manager/temp_plan")))
@@ -284,7 +284,7 @@ After setting up the goal, CLIPS triggers the planning action:
 
 Upon receiving the result, the rule ``pddl-plan-result`` prints out the actions of the generated plan.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule pddl-plan-result
       ?wr-f <- (cx-pddl-msgs-plan-temporal-wrapped-result (server "/pddl_manager/temp_plan") (code SUCCEEDED) (result-ptr ?res-ptr))

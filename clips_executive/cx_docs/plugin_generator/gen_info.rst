@@ -1,5 +1,5 @@
 Plugin Generation
-#################
+=================
 
 The ``cx_ros_comm_gen`` package provides cmake functions to generate bindings for ROS messages, services and actions via the following macros:
 
@@ -37,17 +37,17 @@ Note that upon invoking these functions the following dependencies will be used,
   find_package(rclcpp_action REQUIRED) # only if action bindings are generated
 
 Pitfalls and Limitations
-************************
+------------------------
 
 Nested Messages
-~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^
 
 It is quite common to have nested messages in ROS.
 Just creating the binding to the top-level message does not give access to the functions required to create or read the message fields that are of a different message type.
 In that case it is necessary to also generate bindings for the nested messages.
 
 Object Lifetimes and CLIPS
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Since clips stores objects via void pointers, dynamic object lifetime management via `std::shared_ptr` does not work directly from within CLIPS.
 Instead, object lifetimes need to be managed more explicitly through the usage of `create` and `destroy` functions.

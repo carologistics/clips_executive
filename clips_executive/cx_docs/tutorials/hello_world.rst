@@ -1,5 +1,5 @@
 Hello World
-###########
+===========
 
 **Goal:** Setup a new package storing a simple CLIPS program.
 
@@ -91,7 +91,7 @@ Navigate to the ``clips`` directory and download the example CLIPS file using th
 
 This adds the file ``hello_world.clp``, containing a simple rule that prints out `hello world` when it is fired:
 
-.. code-block:: lisp
+.. code-block:: clips
 
     (defrule hello-world
     =>

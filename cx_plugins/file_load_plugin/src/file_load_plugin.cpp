@@ -67,8 +67,10 @@ void FileLoadPlugin::initialize()
 bool FileLoadPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
 {
   auto context = CLIPSEnvContext::get_context(env.get());
+  clips::Defmodule * main_module = clips::FindDefmodule(env.get(), "MAIN");
   RCLCPP_INFO(*logger_, "Initializing plugin for environment %s", context->env_name_.c_str());
   for (const auto & f : init_files_) {
+    clips::SetCurrentModule(env.get(), main_module);
     if (clips::EE_NO_ERROR != clips::Eval(env.get(), cx::format("(load* {})", f).c_str(), NULL)) {
       clips::Writeln(env.get(), cx::format("Failed to load file {}", f).c_str());
       RCLCPP_ERROR(*logger_, "Failed to load file '%s' failed!, aborting...", f.c_str());
@@ -76,6 +78,7 @@ bool FileLoadPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
     }
   }
   for (const auto & f : init_batch_files_) {
+    clips::SetCurrentModule(env.get(), main_module);
     if (!clips::BatchStar(env.get(), f.c_str())) {
       clips::Writeln(env.get(), cx::format("Failed to initialize bach file {}", f).c_str());
       RCLCPP_ERROR(

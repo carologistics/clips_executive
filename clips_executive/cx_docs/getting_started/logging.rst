@@ -1,5 +1,5 @@
 Logging and Routing
-###################
+===================
 
 The CLIPS Environment manager provides a custom CLIPS logger that logs CLIPS output to ROS and also saves CLIPS output of each environment to files if configured so.
 The log files are stored at the ROS logging directory ( typically ``~/.ros/log/``, see also the :rostut:`ROS logging tutorial <Tutorials/Demos/Logging-and-logger-configuration.html#logging-directory-configuration>`) and are named using the name of the environment followed by a timestamp.

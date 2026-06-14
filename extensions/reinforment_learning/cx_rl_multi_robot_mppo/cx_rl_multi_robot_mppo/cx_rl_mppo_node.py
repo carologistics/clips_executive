@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # Copyright (c) 2026 Carologistics
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -132,3 +133,7 @@ def main(args=None):
             executor.spin()
     except (KeyboardInterrupt, ExternalShutdownException):
         pass
+
+
+if __name__ == '__main__':
+    main()

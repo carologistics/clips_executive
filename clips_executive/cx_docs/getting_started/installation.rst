@@ -1,9 +1,10 @@
 Installation
-############
+============
+
 This document assumes you have a basic ROS 2 installation. If not, refer to the official `ROS documentation`_.
 
 Binary Installation
-+++++++++++++++++++
+-------------------
 
 The easiest way to install the |CX| is via your package manager:
 
@@ -15,9 +16,10 @@ The easiest way to install the |CX| is via your package manager:
 
    sudo apt intall ros-<ros2-distro>-clips-executive
 
+.. _source_installation:
 
 Installation from Source
-+++++++++++++++++++++++++
+------------------------
 
 The following steps will setup a workspace for the project. Adjust target locations as needed.
 
@@ -41,5 +43,5 @@ Lastly, build and source the workspace:
 
     # Building and sourcing
     cd ~/ros2/clips_executive_ws/
-    colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=OFF
+    colcon build --symlink-install
     source ~/ros2/clips_executive_ws/install/setup.bash

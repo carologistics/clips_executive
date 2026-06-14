@@ -1,8 +1,12 @@
 /**:
   ros__parameters:
-    environments: ["cx_protobuf"]
-    cx_protobuf:
-      plugins: ["executive", "protobuf", "files"]
+    environments: ["cx_protobuf_client", "cx_protobuf_server"]
+    cx_protobuf_client:
+      plugins: ["executive", "protobuf", "files_client"]
+      log_clips_to_file: true
+      watch: ["facts", "rules"]
+    cx_protobuf_server:
+      plugins: ["executive", "protobuf", "files_server"]
       log_clips_to_file: true
       watch: ["facts", "rules"]
 
@@ -11,16 +15,23 @@
       publish_on_refresh: false
       assert_time: true
       refresh_rate: 1
+
     protobuf:
       # Uses the plugin generated from cmake
       plugin: "cx::BringupProtobufPlugin"
       # While it additionally acts like the base plugin, including all
       # configuration that can be found in the protobuf example, it actually
-      # does not need to sepcify any other parameter if it registers the types
+      # does not need to specify any other parameter if it registers the types
       # at runtime.
 
-    files:
+    files_client:
       plugin: "cx::FileLoadPlugin"
       pkg_share_dirs: ["cx_bringup"]
       load: [
-        "clips/plugin_examples/protobuf-linked.clp"]
+        "clips/plugin_examples/protobuf-linked-client.clp"]
+
+    files_server:
+      plugin: "cx::FileLoadPlugin"
+      pkg_share_dirs: ["cx_bringup"]
+      load: [
+        "clips/plugin_examples/protobuf-linked-server.clp"]

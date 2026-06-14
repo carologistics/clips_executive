@@ -217,12 +217,6 @@ void ClipsPluginManager::list_plugin_cb(
 {
   (void)request_header;  // ignoring request id
   std::string env_name = request->env_name;
-  if (env_name == "") {
-    response->success = true;
-    std::vector<std::string> plugins;
-    response->plugins = plugins;
-    return;
-  }
   std::scoped_lock lock(*map_mtx_);
   if (envs_->contains(env_name)) {
     response->success = true;

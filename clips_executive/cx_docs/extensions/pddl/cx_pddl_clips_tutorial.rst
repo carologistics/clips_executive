@@ -1,4 +1,4 @@
-.. _structured_pddl_agent:
+.. _cx_pddl_clips_tutorial:
 
 Tutorial: cx_pddl_clips Agent
 =============================
@@ -153,7 +153,7 @@ Further, it extends the ``pddl-plan`` template  by a ``plan-start`` slot to
 mark the execution start of the plan.
 The extended templates are defined in the file ``cx_pddl_bringup/deftemplate-overrides.clp``.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate pddl-action
     (slot instance (type SYMBOL))
@@ -196,8 +196,7 @@ Agent Code Logic
 
 The file ``clips/cx_pddl_bringup/cx-pddl-clips-agent.clp`` contains the custom logic for the tutorial agent:
 
-.. code-block:: lisp
-
+.. code-block:: clips
 
   (defrule cx-pddl-clips-agent-pddl-init
   =>
@@ -289,7 +288,7 @@ Initializing the PDDL Manager
 
 The rule ``cx-pddl-clips-agent-pddl-init`` initializes the setup of the PDDL manager.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule cx-pddl-clips-agent-pddl-init
   =>
@@ -304,7 +303,7 @@ Uploading the PDDL Instance
 Once initialized, the rule ``cx-pddl-clips-agent-pddl-add-instance`` sets up the
 domain and problem to be planned for, defines the goal fluents and triggers plan generation.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule cx-pddl-clips-agent-pddl-add-instance
   " Setup PDDL instance with an active goal to plan for "
@@ -339,7 +338,7 @@ Here, a mockup execution and monitoring loop is provided that takes care of sequ
 
 1. selecting an action with lowest planned start time
 
-  .. code-block:: lisp
+  .. code-block:: clips
 
     (defrule cx-pddl-clips-agent-select-action
     " Start executing the first action of the resulting plan "
@@ -354,7 +353,7 @@ Here, a mockup execution and monitoring loop is provided that takes care of sequ
 
 2. checking the condition of the selected action
 
-  .. code-block:: lisp
+  .. code-block:: clips
 
     (defrule cx-pddl-clips-agent-check-action
     " Before executing an action check the condition to make sure it is feasible "
@@ -367,7 +366,7 @@ Here, a mockup execution and monitoring loop is provided that takes care of sequ
 
 3. given a satisfied condition, the action is executed by means of waiting the planned duration of the action.
 
-  .. code-block:: lisp
+  .. code-block:: clips
 
     (defrule cx-pddl-clips-agent-executable-action
     " Condition is satisfied, go ahead with execution "
@@ -380,7 +379,7 @@ Here, a mockup execution and monitoring loop is provided that takes care of sequ
 
 4. Once the planned duration elapsed, the action effect is applied
 
-  .. code-block:: lisp
+  .. code-block:: clips
 
     (defrule cx-pddl-clips-agent-execution-done
     " After the duration has elapsed, the action is done "
@@ -400,7 +399,7 @@ Finalizing Execution
 
 Once all actions have completed, CLIPS prints a timing summary.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule cx-pddl-clips-agent-print-exec-times
   " Once everything is done, print out planned vs actual times "
@@ -581,7 +580,7 @@ You should see the CLIPS output showing initialization, goal setup, planning,
 and the full action execution process with timing data.
 
 
-.. code-block:: bash:
+.. code-block:: bash
    :emphasize-lines: 2,3
 
    [cx_node-2] [clips_manager] [INFO] Activated [clips_manager]...

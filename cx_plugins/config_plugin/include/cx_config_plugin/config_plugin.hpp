@@ -22,6 +22,7 @@
 #include <memory>
 #include <string>
 #include <utility>
+#include <vector>
 
 #include "cx_plugin/clips_plugin.hpp"
 
@@ -88,6 +89,9 @@ private:
 
   void sequenceIterator(
     const YAML::Node & input_node, std::string & cfg_prefix, clips::Environment * env);
+  void emitScalar(const YAML::Node & node, const std::string & path, clips::Environment * env);
+
+  std::vector<std::string> splitPath(const std::string & input);
 
   std::unique_ptr<rclcpp::Logger> logger_;
 };

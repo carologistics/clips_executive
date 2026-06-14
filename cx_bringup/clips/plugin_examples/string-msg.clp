@@ -17,6 +17,7 @@
 
 (defrule string-pub-sub-init
 " Create a simple publisher and subscriber using the generated bindings. "
+  (not (executive-finalize))
   (not (std-msgs-string-subscription (topic "ros_cx_in")))
   (not (std-msgs-string-publisher (topic "ros_cx_out")))
 =>
@@ -37,7 +38,7 @@
   (printout green " |" crlf)
   (printout green "--------------------------------------------------------" crlf)
   (std-msgs-string-create-publisher "ros_cx_out")
-  (printout info "Created publisher for /ros_cx_out" crlf)
+  (printout info "Publishing on /ros_cx_out" crlf)
   (std-msgs-string-create-subscription "ros_cx_in")
   (printout info "Listening for String messages on /ros_cx_in" crlf)
 )
@@ -50,15 +51,15 @@
   =>
   ; fetch the content of the message and print it
   (bind ?recv (std-msgs-string-get-field ?inc-msg "data"))
-  (printout blue "Recieved via " ?sub " :" ?recv crlf)
+  (printout blue "Recieved via " ?sub ": " ?recv crlf)
   ; make sure to actually destroy the message to free heap-allocated memory for it, once the message is processed and can be removed
   (std-msgs-string-destroy-message ?inc-msg)
   (retract ?msg-f)
 
   ; example of how to create and send a new message
-  (printout green "Sending Hello World Message in response!" crlf)
+  (printout yellow "Sending Hello World Message!" crlf)
   (bind ?msg (std-msgs-string-create-message))
-  (std-msgs-string-set-field ?msg "data" "Hello world!")
+  (std-msgs-string-set-field ?msg "data" "Hello World!")
   (std-msgs-string-publish ?msg ?pub)
   ; destroy the msg after usage to free up the memory
   (std-msgs-string-destroy-message ?msg)
@@ -71,8 +72,7 @@
   (std-msgs-string-subscription (topic ?sub))
   (std-msgs-string-publisher (topic ?pub))
 =>
-  (printout debug "Destroying subscription " ?sub crlf)
-  (printout debug "Destroying publisher " ?pub crlf)
+  (printout info "Destroying publishers and subscriptions " crlf)
   (std-msgs-string-destroy-subscription ?sub)
   (std-msgs-string-destroy-publisher ?pub)
 )

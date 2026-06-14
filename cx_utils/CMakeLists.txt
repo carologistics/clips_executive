@@ -87,6 +87,18 @@ else()
   endif()
 endif()
 
+get_target_property(AMENT_INDEX_CPP_INCLUDES ament_index_cpp::ament_index_cpp INTERFACE_INCLUDE_DIRECTORIES)
+set(CMAKE_REQUIRED_INCLUDES ${AMENT_INDEX_CPP_INCLUDES})
+include(CheckIncludeFileCXX)
+check_include_file_cxx("ament_index_cpp/get_package_share_path.hpp" HAVE_GET_PACKAGE_SHARE_PATH REQUIRED_LIBARIES ament_index_cpp::ament_index_cpp)
+
+if(HAVE_GET_PACKAGE_SHARE_PATH)
+  message(STATUS "get_package_share_path is supported")
+  target_compile_definitions(${PROJECT_NAME} PUBLIC USE_GET_PACKAGE_SHARE_PATH=1)
+else()
+  message(STATUS "get_package_share_path is not supported, using get_package_share_directory instead")
+endif()
+
 # -----------------------------
 # Install rules
 # -----------------------------
@@ -104,8 +116,27 @@ install(TARGETS
 )
 
 if(BUILD_TESTING)
-  find_package(ament_lint_auto REQUIRED)
-  ament_lint_auto_find_test_dependencies()
+  find_package(ament_cmake_gtest REQUIRED)
+  ament_add_gtest(${PROJECT_NAME}_resolve_files_test test/test_resolve_files.cpp)
+  target_include_directories(${PROJECT_NAME}_resolve_files_test PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+  )
+
+  target_link_libraries(${PROJECT_NAME}_resolve_files_test ${PROJECT_NAME})
+  ament_add_gtest(${PROJECT_NAME}_param_utils_test test/test_param_utils.cpp)
+  target_include_directories(${PROJECT_NAME}_param_utils_test PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+  )
+  target_link_libraries(${PROJECT_NAME}_param_utils_test ${PROJECT_NAME})
+
+  ament_add_gtest(${PROJECT_NAME}_clips_logger_test test/test_clips_logger.cpp)
+  target_include_directories(${PROJECT_NAME}_clips_logger_test PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+  )
+  target_link_libraries(${PROJECT_NAME}_clips_logger_test ${PROJECT_NAME})
 endif()
 
 # -----------------------------

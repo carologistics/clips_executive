@@ -1,9 +1,10 @@
 Usage
-#####
+=====
+
 This document assumes you have the |CX| installed and sourced in your environment.
 
 Starting the PDDL Manager
-*************************
+-------------------------
 
 Aside from the regular |CX| node, the PDDL extension additionally requires the **PDDL Manager** node (a lifecycle node with a bond timer).
 
@@ -25,7 +26,7 @@ A more practical way to to start the node is to utilize the launch file of the `
 
 
 Example
-*******
+-------
 
 The following example showcases simple interactions between CLIPS and PDDL by running an example agent:
 
@@ -34,4 +35,4 @@ The following example showcases simple interactions between CLIPS and PDDL by ru
    ros2 launch cx_pddl_bringup cx_pddl_launch.py manager_config:=pddl_agents/cx_pddl_clips_agent.yaml
 
 
-Check out the :ref:`Intefacing Guide <pddl/pddl_clips.html>` page to learn how to write your own CLIPS applications while leveraging PDDL.
+Check out the :ref:`Interfacing Guide <pddl_clips>` page to learn how to write your own CLIPS applications while leveraging PDDL.

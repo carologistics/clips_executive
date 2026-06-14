@@ -1,3 +1,205 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9299efe25..9dd57ce52 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ # Enforce some CMake policies
+-cmake_minimum_required(VERSION 3.4)
++cmake_minimum_required(VERSION 3.16...3.31)
+ 
+ set(CMAKE_USER_MAKE_RULES_OVERRIDE_CXX "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cxx_compiler_flags_overrides.cmake")
+ project(Z3 VERSION 4.12.2.0 LANGUAGES CXX)
+@@ -153,8 +153,8 @@ list(APPEND Z3_COMPONENT_CXX_DEFINES $<$<CONFIG:RelWithDebInfo>:_EXTERNAL_RELEAS
+ ################################################################################
+ # Find Python
+ ################################################################################
+-find_package(PythonInterp 3 REQUIRED)
+-message(STATUS "PYTHON_EXECUTABLE: ${PYTHON_EXECUTABLE}")
++find_package(Python3 REQUIRED COMPONENTS Interpreter)
++message(STATUS "Python3_EXECUTABLE: ${Python3_EXECUTABLE}")
+ 
+ ################################################################################
+ # Target architecture detection
+diff --git a/README-CMake.md b/README-CMake.md
+index 5845a52c3..e394ee0e4 100644
+--- a/README-CMake.md
++++ b/README-CMake.md
+@@ -277,7 +277,7 @@ The following useful options can be passed to CMake whilst configuring.
+ * ``CMAKE_INSTALL_PYTHON_PKG_DIR`` - STRING. The path to install the z3 python bindings. This can be relative (to ``CMAKE_INSTALL_PREFIX``) or absolute.
+ * ``CMAKE_INSTALL_Z3_CMAKE_PACKAGE_DIR`` - STRING. The path to install CMake package files (e.g. ``/usr/lib/cmake/z3``).
+ * ``CMAKE_INSTALL_API_BINDINGS_DOC`` - STRING. The path to install documentation for API bindings.
+-* ``PYTHON_EXECUTABLE`` - STRING. The python executable to use during the build.
++* ``Python3_EXECUTABLE`` - STRING. The python executable to use during the build.
+ * ``Z3_ENABLE_TRACING_FOR_NON_DEBUG`` - BOOL. If set to ``TRUE`` enable tracing in non-debug builds, if set to ``FALSE`` disable tracing in non-debug builds. Note in debug builds tracing is always enabled.
+ * ``Z3_BUILD_LIBZ3_SHARED`` - BOOL. If set to ``TRUE`` build libz3 as a shared library otherwise build as a static library.
+ * ``Z3_ENABLE_EXAMPLE_TARGETS`` - BOOL. If set to ``TRUE`` add the build targets for building the API examples.
+diff --git a/cmake/z3_add_component.cmake b/cmake/z3_add_component.cmake
+index aa5f8517f..962b02f68 100644
+--- a/cmake/z3_add_component.cmake
++++ b/cmake/z3_add_component.cmake
+@@ -116,7 +116,7 @@ macro(z3_add_component component_name)
+     set(_full_output_file_path "${CMAKE_CURRENT_BINARY_DIR}/${_output_file}")
+     message(STATUS "Adding rule to generate \"${_output_file}\"")
+     add_custom_command(OUTPUT "${_output_file}"
+-      COMMAND "${PYTHON_EXECUTABLE}" "${PROJECT_SOURCE_DIR}/scripts/pyg2hpp.py" "${_full_pyg_file_path}" "${CMAKE_CURRENT_BINARY_DIR}"
++      COMMAND "${Python3_EXECUTABLE}" "${PROJECT_SOURCE_DIR}/scripts/pyg2hpp.py" "${_full_pyg_file_path}" "${CMAKE_CURRENT_BINARY_DIR}"
+       MAIN_DEPENDENCY "${_full_pyg_file_path}"
+       DEPENDS "${PROJECT_SOURCE_DIR}/scripts/pyg2hpp.py"
+               ${Z3_GENERATED_FILE_EXTRA_DEPENDENCIES}
+@@ -275,7 +275,7 @@ macro(z3_add_install_tactic_rule)
+   string(REPLACE ";" "\n" _tactic_header_files "${_tactic_header_files}")
+   file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/install_tactic.deps" ${_tactic_header_files})
+   add_custom_command(OUTPUT "install_tactic.cpp"
+-    COMMAND "${PYTHON_EXECUTABLE}"
++    COMMAND "${Python3_EXECUTABLE}"
+     "${PROJECT_SOURCE_DIR}/scripts/mk_install_tactic_cpp.py"
+     "${CMAKE_CURRENT_BINARY_DIR}"
+     "${CMAKE_CURRENT_BINARY_DIR}/install_tactic.deps"
+@@ -313,7 +313,7 @@ macro(z3_add_memory_initializer_rule)
+   endforeach()
+ 
+   add_custom_command(OUTPUT "mem_initializer.cpp"
+-    COMMAND "${PYTHON_EXECUTABLE}"
++    COMMAND "${Python3_EXECUTABLE}"
+     "${PROJECT_SOURCE_DIR}/scripts/mk_mem_initializer_cpp.py"
+     "${CMAKE_CURRENT_BINARY_DIR}"
+     ${_mem_init_finalize_headers}
+@@ -349,7 +349,7 @@ macro(z3_add_gparams_register_modules_rule)
+   unset(_component_register_module_header_files)
+ 
+   add_custom_command(OUTPUT "gparams_register_modules.cpp"
+-    COMMAND "${PYTHON_EXECUTABLE}"
++    COMMAND "${Python3_EXECUTABLE}"
+     "${PROJECT_SOURCE_DIR}/scripts/mk_gparams_register_modules_cpp.py"
+     "${CMAKE_CURRENT_BINARY_DIR}"
+     ${_register_module_header_files}
+diff --git a/doc/CMakeLists.txt b/doc/CMakeLists.txt
+index 54ba73fb0..6f81edf0d 100644
+--- a/doc/CMakeLists.txt
++++ b/doc/CMakeLists.txt
+@@ -58,7 +58,7 @@ endif()
+ 
+ add_custom_target(api_docs ${ALWAYS_BUILD_DOCS_ARG}
+   COMMAND
+-  "${PYTHON_EXECUTABLE}" "${MK_API_DOC_SCRIPT}"
++  "${Python3_EXECUTABLE}" "${MK_API_DOC_SCRIPT}"
+   --build "${PROJECT_BINARY_DIR}"
+   --doxygen-executable "${DOXYGEN_EXECUTABLE}"
+   --output-dir "${DOC_DEST_DIR}"
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index e091db15f..a12571f35 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -217,7 +217,7 @@ if (MSVC)
+   set(dll_module_exports_file "${CMAKE_CURRENT_BINARY_DIR}/api_dll.def")
+   add_custom_command(OUTPUT "${dll_module_exports_file}"
+     COMMAND
+-      "${PYTHON_EXECUTABLE}"
++      "${Python3_EXECUTABLE}"
+       "${PROJECT_SOURCE_DIR}/scripts/mk_def_file.py"
+       "${dll_module_exports_file}"
+       "libz3"
+diff --git a/src/api/CMakeLists.txt b/src/api/CMakeLists.txt
+index 5cc604f15..38a09b631 100644
+--- a/src/api/CMakeLists.txt
++++ b/src/api/CMakeLists.txt
+@@ -18,7 +18,7 @@ foreach (gen_file ${generated_files})
+ endforeach()
+ 
+ add_custom_command(OUTPUT ${generated_files}
+-  COMMAND "${PYTHON_EXECUTABLE}"
++  COMMAND "${Python3_EXECUTABLE}"
+   "${PROJECT_SOURCE_DIR}/scripts/update_api.py"
+   ${Z3_FULL_PATH_API_HEADER_FILES_TO_SCAN}
+   "--api_output_dir"
+diff --git a/src/api/dotnet/CMakeLists.txt b/src/api/dotnet/CMakeLists.txt
+index fcd7b0d85..d3cb87bc7 100644
+--- a/src/api/dotnet/CMakeLists.txt
++++ b/src/api/dotnet/CMakeLists.txt
+@@ -9,7 +9,7 @@ set(VER_TWEAK "${Z3_VERSION_TWEAK}")
+ # Generate Native.cs
+ set(Z3_DOTNET_NATIVE_FILE "${CMAKE_CURRENT_BINARY_DIR}/Native.cs")
+ add_custom_command(OUTPUT "${Z3_DOTNET_NATIVE_FILE}"
+-  COMMAND "${PYTHON_EXECUTABLE}"
++  COMMAND "${Python3_EXECUTABLE}"
+     "${PROJECT_SOURCE_DIR}/scripts/update_api.py"
+     ${Z3_FULL_PATH_API_HEADER_FILES_TO_SCAN}
+     "--dotnet-output-dir"
+@@ -25,7 +25,7 @@ add_custom_command(OUTPUT "${Z3_DOTNET_NATIVE_FILE}"
+ # Generate Enumerations.cs
+ set(Z3_DOTNET_CONST_FILE "${CMAKE_CURRENT_BINARY_DIR}/Enumerations.cs")
+ add_custom_command(OUTPUT "${Z3_DOTNET_CONST_FILE}"
+-  COMMAND "${PYTHON_EXECUTABLE}"
++  COMMAND "${Python3_EXECUTABLE}"
+     "${PROJECT_SOURCE_DIR}/scripts/mk_consts_files.py"
+     ${Z3_FULL_PATH_API_HEADER_FILES_TO_SCAN}
+     "--dotnet-output-dir"
+diff --git a/src/api/java/CMakeLists.txt b/src/api/java/CMakeLists.txt
+index 4b13a25b1..c4ae59194 100644
+--- a/src/api/java/CMakeLists.txt
++++ b/src/api/java/CMakeLists.txt
+@@ -16,7 +16,7 @@ set(Z3_JAVA_PACKAGE_NAME "com.microsoft.z3")
+ set(Z3_JAVA_NATIVE_JAVA "${CMAKE_CURRENT_BINARY_DIR}/Native.java")
+ set(Z3_JAVA_NATIVE_CPP "${CMAKE_CURRENT_BINARY_DIR}/Native.cpp")
+ add_custom_command(OUTPUT "${Z3_JAVA_NATIVE_JAVA}" "${Z3_JAVA_NATIVE_CPP}"
+-  COMMAND "${PYTHON_EXECUTABLE}"
++  COMMAND "${Python3_EXECUTABLE}"
+     "${PROJECT_SOURCE_DIR}/scripts/update_api.py"
+     ${Z3_FULL_PATH_API_HEADER_FILES_TO_SCAN}
+     "--java-input-dir"
+@@ -74,7 +74,7 @@ foreach (enum_file ${Z3_JAVA_ENUMERATION_PACKAGE_FILES})
+   )
+ endforeach()
+ add_custom_command(OUTPUT ${Z3_JAVA_ENUMERATION_PACKAGE_FILES_FULL_PATH}
+-  COMMAND "${PYTHON_EXECUTABLE}"
++  COMMAND "${Python3_EXECUTABLE}"
+     "${PROJECT_SOURCE_DIR}/scripts/mk_consts_files.py"
+     ${Z3_FULL_PATH_API_HEADER_FILES_TO_SCAN}
+     "--java-output-dir"
+diff --git a/src/api/python/CMakeLists.txt b/src/api/python/CMakeLists.txt
+index f5e449ea8..5da66dfe4 100644
+--- a/src/api/python/CMakeLists.txt
++++ b/src/api/python/CMakeLists.txt
+@@ -33,7 +33,7 @@ endforeach()
+ 
+ # Generate z3core.py
+ add_custom_command(OUTPUT "${z3py_bindings_build_dest}/z3/z3core.py"
+-  COMMAND "${PYTHON_EXECUTABLE}"
++  COMMAND "${Python3_EXECUTABLE}"
+     "${PROJECT_SOURCE_DIR}/scripts/update_api.py"
+     ${Z3_FULL_PATH_API_HEADER_FILES_TO_SCAN}
+     "--z3py-output-dir"
+@@ -49,7 +49,7 @@ list(APPEND build_z3_python_bindings_target_depends "${z3py_bindings_build_dest}
+ 
+ # Generate z3consts.py
+ add_custom_command(OUTPUT "${z3py_bindings_build_dest}/z3/z3consts.py"
+-  COMMAND "${PYTHON_EXECUTABLE}"
++  COMMAND "${Python3_EXECUTABLE}"
+     "${PROJECT_SOURCE_DIR}/scripts/mk_consts_files.py"
+     ${Z3_FULL_PATH_API_HEADER_FILES_TO_SCAN}
+     "--z3py-output-dir"
+@@ -96,7 +96,7 @@ if (Z3_INSTALL_PYTHON_BINDINGS)
+   if (NOT DEFINED CMAKE_INSTALL_PYTHON_PKG_DIR)
+     message(STATUS "CMAKE_INSTALL_PYTHON_PKG_DIR not set. Trying to guess")
+     execute_process(
+-      COMMAND "${PYTHON_EXECUTABLE}" "-c"
++      COMMAND "${Python3_EXECUTABLE}" "-c"
+         "import sysconfig; print(sysconfig.get_path('purelib'))"
+       RESULT_VARIABLE exit_code
+       OUTPUT_VARIABLE CMAKE_INSTALL_PYTHON_PKG_DIR
+diff --git a/src/ast/pattern/CMakeLists.txt b/src/ast/pattern/CMakeLists.txt
+index 7393b7110..88dfd198b 100644
+--- a/src/ast/pattern/CMakeLists.txt
++++ b/src/ast/pattern/CMakeLists.txt
+@@ -7,7 +7,7 @@ if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/database.h")
+ endif()
+ 
+ add_custom_command(OUTPUT "database.h"
+-  COMMAND "${PYTHON_EXECUTABLE}"
++  COMMAND "${Python3_EXECUTABLE}"
+           "${PROJECT_SOURCE_DIR}/scripts/mk_pat_db.py"
+           "${CMAKE_CURRENT_SOURCE_DIR}/database.smt2"
+           "${CMAKE_CURRENT_BINARY_DIR}/database.h"
 diff --git a/src/ast/rewriter/elim_bounds.h b/src/ast/rewriter/elim_bounds.h
 index 99d002f98..a4a08173d 100644
 --- a/src/ast/rewriter/elim_bounds.h
@@ -73,4 +275,3 @@ index 6213b2efa..2a35af535 100644
  
  #define TAG_SHIFT        PTR_ALIGNMENT
  #define ALIGNMENT_VALUE  (1 << PTR_ALIGNMENT)
-

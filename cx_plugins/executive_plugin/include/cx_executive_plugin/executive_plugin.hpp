@@ -20,8 +20,10 @@
 #include <string>
 #include <vector>
 
+#include "cx_msgs/srv/clips_command.hpp"
 #include "cx_plugin/clips_plugin.hpp"
-#include "std_msgs/msg/empty.hpp"
+#include "std_msgs/msg/int64.hpp"
+#include "std_srvs/srv/trigger.hpp"
 
 namespace cx
 {
@@ -41,6 +43,22 @@ public:
   std::shared_ptr<rclcpp_lifecycle::LifecycleNode> get_node();
 
 private:
+  struct ManagedEnv
+  {
+    std::shared_ptr<clips::Environment> env;
+    std::vector<std::string> focus_stack;
+    int64_t rule_limit;
+  };
+
+  void setup_ros_interfaces();
+  void run_tick();
+  cx_msgs::srv::ClipsCommand::Response handle_clips_command(
+    bool use_build, const cx_msgs::srv::ClipsCommand::Request::SharedPtr request);
+  cx_msgs::srv::ClipsCommand::Response build_on_env(
+    std::shared_ptr<clips::Environment> env, const std::string & command);
+  cx_msgs::srv::ClipsCommand::Response eval_on_env(
+    std::shared_ptr<clips::Environment> env, const std::string & command);
+
   int refresh_rate_;
   bool assert_time_;
   bool publish_on_refresh_;
@@ -49,13 +67,20 @@ private:
 
   rclcpp::TimerBase::SharedPtr agenda_refresh_timer_;
 
-  rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::Empty>::SharedPtr clips_agenda_refresh_pub_;
+  rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::Int64>::SharedPtr clips_agenda_refresh_pub_;
+
+  rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr pause_service_;
+  rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr resume_service_;
+  rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr tick_once_service_;
+  rclcpp::Service<cx_msgs::srv::ClipsCommand>::SharedPtr eval_service_;
+  rclcpp::Service<cx_msgs::srv::ClipsCommand>::SharedPtr build_service_;
+  bool paused_ = false;
 
   std::chrono::nanoseconds publish_rate_;
 
   std::unique_ptr<rclcpp::Logger> logger_;
 
-  std::vector<std::shared_ptr<clips::Environment>> managed_envs;
+  std::vector<ManagedEnv> managed_envs_;
   std::mutex envs_mutex_;
 };
 }  // namespace cx

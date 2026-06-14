@@ -1,7 +1,7 @@
 .. _usage_file_load_plugin:
 
 File Load Plugin
-################
+================
 
 Source code on :source-master:`GitHub <cx_plugins/file_load_plugin>`.
 
@@ -11,8 +11,15 @@ Source code on :source-master:`GitHub <cx_plugins/file_load_plugin>`.
 
 This plugin provides the ability to load files into CLIPS using ``batch*`` and ``load*`` through configuration values.
 
+.. note::
+
+  The plugin always sets the current module to ``MAIN`` before loading a file.
+  This ensures predictable behavior when loaded files define their own modules.
+  Since defining a ``defmodule`` in CLIPS automatically switches the current module,
+  subsequent file loads could otherwise operate in an unexpected module context.
+
 Configuration
-*************
+-------------
 
 :`pkg_share_dirs`:
 
@@ -63,7 +70,7 @@ Configuration
     Supports absolute paths or relative paths using the share directories specified above.
 
 Features
-********
+--------
 
 This plugin injects the user-defined code into the CLIPS environments and has no other effects.
 
@@ -75,7 +82,7 @@ For the difference between ``load*`` and ``batch*`` please consult the CLIPS |BP
   E.g., when using batch, a missing closing parenthesis ``)``  may lead to a silent failure as CLIPS treats this as an uncompleted command and waits for another closing parenthesis to appear before actually processing the input.
 
 Usage Example
-*************
+-------------
 
 A minimal working example is provided by the :docsite:`cx_bringup` package. Run it via:
 
@@ -86,7 +93,7 @@ A minimal working example is provided by the :docsite:`cx_bringup` package. Run 
 Note, that while `file-load.clp` is loaded before `file-load-batch.clp`, the rules of `file-load.clp` will only be executed, once the CLIPS engine runs. hence, the expected output is that `batch` is printed before `Hello World`.
 
 Configuration
-~~~~~~~~~~~~~
+^^^^^^^^^^^^^
 
 File :source-master:`cx_bringup/params/plugin_examples/file_load.yaml`.
 
@@ -107,11 +114,11 @@ File :source-master:`cx_bringup/params/plugin_examples/file_load.yaml`.
         cleanup_batch: ["clips/plugin_examples/file-load-cleanup-batch.clp"]
 
 Code
-~~~~
+^^^^
 
 File :source-master:`cx_bringup/clips/plugin_examples/file-load.clp`.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule hello-world
      (not (hello))
@@ -127,13 +134,13 @@ File :source-master:`cx_bringup/clips/plugin_examples/file-load.clp`.
 
 File :source-master:`cx_bringup/clips/plugin_examples/file-load-batch.clp`.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (printout yellow "batch" crlf)
 
 File :source-master:`cx_bringup/clips/plugin_examples/file-load-cleanup-batch.clp`.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   ; file-load-cleanup-batch.clp
 

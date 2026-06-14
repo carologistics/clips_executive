@@ -41,6 +41,7 @@
   )
   (ros-msgs-destroy-message ?new-req)
 )
+
 (defrule set-bool-client-response-received
 " Get response, read it and delete."
   ?msg-fact <- (ros-msgs-response (service ?service) (msg-ptr ?ptr) (request-id ?id))

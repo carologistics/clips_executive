@@ -18,9 +18,14 @@
   =>
   (bind ?share-dir (ament-index-get-package-share-directory "cx_bringup"))
   (bind ?file (str-cat ?share-dir "/params/plugin_examples/config.yaml"))
-  (printout green "Loading yaml file: " ?file crlf)
-  (config-load ?file "/")
-  (delayed-do-for-all-facts ((?cv confval))
-    (ppfact ?cv blue)
-  )
+  (printout green "Loading from file " ?file crlf)
+  ; test loading of sequence
+  (printout green " 1. Prefix leading to environments (sequence): " crlf)
+  (config-load ?file "'/**'/ros__parameters/environments")
+  ; test loading of map
+  (printout green " 2. Prefix leading to environment config (map):" crlf)
+  (config-load ?file "'/**'/ros__parameters/cx_config/")
+  ; test loading of value
+  (printout green " 3. Prefix leading to config plugin string (scalar):" crlf)
+  (config-load ?file "'/**'/ros__parameters/config/plugin")
 )

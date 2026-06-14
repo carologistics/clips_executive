@@ -24,37 +24,30 @@ find_package(rosidl_typesupport_introspection_cpp REQUIRED)
 find_package(rcutils REQUIRED)
 find_package(ICU REQUIRED COMPONENTS uc i18n)
 find_package(action_msgs REQUIRED)
+find_package(rosidl_typesupport_interface REQUIRED)
 
-include(CheckCXXSourceCompiles)
-include(CheckIncludeFileCXX)
 
-set(CMAKE_REQUIRED_LIBRARIES
-  rclcpp::rclcpp;rclcpp_action::rclcpp_action
-)
-set(CMAKE_REQUIRED_INCLUDES
-  ${rclcpp_action_INCLUDE_DIRS};${rclcpp_INCLUDE_DIRS}
-)
+# Extract ROS distro from ament_cmake version or environment
+if(DEFINED ENV{ROS_DISTRO})
+  set(ROS_DISTRO $ENV{ROS_DISTRO})
+else()
+  message(FATAL_ERROR "ROS_DISTRO environment variable not set")
+endif()
 
-check_include_file_cxx(rclcpp/create_generic_service.hpp HAVE_GENERIC_SERVICE)
-# workaround as create_generic_client missing include
-# also, rclcpp misses typesupport helper on jazzy atm
-check_cxx_source_compiles("
-  #include <rclcpp/node_interfaces/node_waitables_interface.hpp>
-  #include <rclcpp_action/create_generic_client.hpp>
-  #include <rclcpp/typesupport_helpers.hpp>
+# HAVE_GENERIC_CLIENT: jazzy and above
+if(ROS_DISTRO STRGREATER_EQUAL "jazzy")
+  set(HAVE_GENERIC_CLIENT TRUE)
+endif()
 
-  int main() {
-  const rosidl_action_type_support_t *(*fn)(
-    const std::string &,
-    const std::string &,
-    rcpputils::SharedLibrary &
-  ) = &rclcpp::get_action_typesupport_handle;
+# HAVE_GENERIC_SERVICE: kilted and above
+if(ROS_DISTRO STRGREATER_EQUAL "kilted")
+  set(HAVE_GENERIC_SERVICE TRUE)
+endif()
 
-  (void)fn;
-    return 0;
-  }
-" HAVE_GENERIC_ACTION_CLIENT)
-check_include_file_cxx(rclcpp/create_generic_client.hpp HAVE_GENERIC_CLIENT)
+# HAVE_GENERIC_ACTION_CLIENT: kilted and above
+if(ROS_DISTRO STRGREATER_EQUAL "kilted")
+  set(HAVE_GENERIC_ACTION_CLIENT TRUE)
+endif()
 
 add_library(${PROJECT_NAME} SHARED
   src/ros_msgs_plugin.cpp
@@ -88,22 +81,26 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD ${CMAKE_CXX_STANDARD})
 
+if(ROS_DISTRO STREQUAL "humble")
+  target_compile_definitions(${PROJECT_NAME} PRIVATE HUMBLE)
+endif()
+
 if(HAVE_GENERIC_ACTION_CLIENT)
   target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_GENERIC_ACTION_CLIENT)
 else()
-  message(WARNING "Skipping support for action clients, missing support in rclcpp_action")
+  message(WARNING "Skipping support for action clients, requires kilted or later")
 endif()
 
 if(HAVE_GENERIC_SERVICE)
   target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_GENERIC_SERVICE)
 else()
-  message(WARNING "Skipping support for service providers, missing support in rclcpp")
+  message(WARNING "Skipping support for service providers, requires kilted or later")
 endif()
 
 if(HAVE_GENERIC_CLIENT)
   target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_GENERIC_CLIENT)
 else()
-  message(WARNING "Skipping support for service clients, missing support in rclcpp")
+  message(WARNING "Skipping support for service clients, requires jazzy or later")
 endif()
 
 install(

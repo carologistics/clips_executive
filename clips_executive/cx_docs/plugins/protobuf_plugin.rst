@@ -1,7 +1,7 @@
 .. _usage_protobuf_plugin:
 
 Protobuf Plugin
-###############
+===============
 
 Source code on :source-master:`GitHub <cx_plugins/protobuf_plugin>`.
 
@@ -13,10 +13,10 @@ This plugin enables communication via protobuf through :docsite:`protobuf_comm`,
 
 .. note::
 
-  This Plugin was ported from the fawkes and thus is subject to the GPLv2+ license.
+  This Plugin relies on protobuf_comm and thus is subject to the GPLv2+ license.
 
 Configuration
-*************
+-------------
 
 :`pkg_share_dirs`:
 
@@ -43,7 +43,7 @@ Configuration
 
 
 Features
-********
+--------
 
 The utilized :docsite:`protobuf_comm` library (de)-serializes proto using a framing protocol that other communication endpoints therefore need to adhere to, as well.
 Refer to it's documentation to get details on the layout of the frame headers.
@@ -64,7 +64,7 @@ An example message is depicted below:
 Messages can be exchanged either via establishing TCP Client-Server connections or via UDP broadcast peers.
 
 Registering Messages
-~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^
 
 Messages need to be registered before they can be used.
 The easiest way is to utilize the configuration options to specify directories that host proto definitions (``.proto`` files).
@@ -83,9 +83,9 @@ In order to accomplish this, this plugin offers two cmake macros:
   cx_generate_linked_protobuf_plugin_from_lib(NEW_PLUGIN_NAME SHARED_LIBRARY_TARGET)
 
 Facts
-~~~~~
+^^^^^
 
-.. code-block:: lisp
+.. code-block:: clips
 
   ; Asserted whenever a message is received
   (deftemplate protobuf-msg
@@ -140,9 +140,9 @@ Facts
   (protobuf-server-client-connected ?client-id)
 
 Functions
-~~~~~~~~~
+^^^^^^^^^
 
-.. code-block:: lisp
+.. code-block:: clips
 
   ; functions for processing messages:
   (bind ?res (pb-field-names ?msg))
@@ -178,11 +178,11 @@ Functions
   (bind ?res (pb-register-type ?full-name))    ; returns TRUE if successful, FALSE otherwise
 
 Rules
-~~~~~
+^^^^^
 
 Per default the Plugin ensures that all asserted facts are cleaned up with lowest possible salience.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defglobal
     ?*PRIORITY-PROTOBUF-RETRACT*    = -10000
@@ -215,7 +215,7 @@ Per default the Plugin ensures that all asserted facts are cleaned up with lowes
   )
 
 Usage Example: Register Message via Configuration
-*************************************************
+-------------------------------------------------
 
 A minimal working example is provided by the :docsite:`cx_bringup` package.
 
@@ -228,7 +228,7 @@ It registers a proto file using the configuration options and then creates two U
 .. _proto msg example:
 
 Message
-~~~~~~~
+^^^^^^^
 
 File :source-master:`cx_bringup/proto/cx_bringup/SearchRequest.proto`.
 
@@ -247,17 +247,23 @@ File :source-master:`cx_bringup/proto/cx_bringup/SearchRequest.proto`.
   }
 
 Configuration
-~~~~~~~~~~~~~
+^^^^^^^^^^^^^
+
+The configuration creates two environments, each handling a protobuf peer.
 
 File :source-master:`cx_bringup/params/plugin_examples/protobuf.yaml`.
 
 .. code-block:: yaml
 
-  clips_manager:
+  /**:
     ros__parameters:
-      environments: ["cx_protobuf"]
-      cx_protobuf:
-        plugins: ["executive", "protobuf", "files"]
+      environments: ["cx_protobuf_peer1", "cx_protobuf_peer2"]
+      cx_protobuf_peer1:
+        plugins: ["executive", "protobuf", "files_peer1"]
+        log_clips_to_file: true
+        watch: ["facts", "rules"]
+      cx_protobuf_peer2:
+        plugins: ["executive", "protobuf", "files_peer2"]
         log_clips_to_file: true
         watch: ["facts", "rules"]
 
@@ -266,46 +272,65 @@ File :source-master:`cx_bringup/params/plugin_examples/protobuf.yaml`.
         publish_on_refresh: false
         assert_time: true
         refresh_rate: 1
+
       protobuf:
         plugin: "cx::ProtobufPlugin"
+        # When specifying relative paths, look at the share directories of the listed packages to resolve them.
+        # Attempts to resolve the relative paths in order of the listed packages
+        # Defaults to an empty list
         pkg_share_dirs: ["cx_bringup"]
+        # Specify directories to look for protobuf messages.
+        # Supports absolute paths or relative paths using the share directories specified above.
+        # Defaults to an empty list
         proto_paths: ["proto/cx_bringup"]
-      files:
+
+      files_peer1:
         plugin: "cx::FileLoadPlugin"
         pkg_share_dirs: ["cx_bringup"]
         load: [
-          "clips/plugin_examples/protobuf.clp"]
+          "clips/plugin_examples/protobuf-peer1.clp"]
+
+      files_peer2:
+        plugin: "cx::FileLoadPlugin"
+        pkg_share_dirs: ["cx_bringup"]
+        # same as peer1, just overriding the peer creation
+        load: [
+          "clips/plugin_examples/protobuf-peer1.clp",
+          "clips/plugin_examples/protobuf-peer2.clp"]
 
 
 
 Code
-~~~~
+^^^^
 
-File :source-master:`cx_bringup/clips/plugin_examples/protobuf.clp`.
+File :source-master:`cx_bringup/clips/plugin_examples/protobuf-peer1.clp`.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule protobuf-init-example-peer
+    (not (executive-finalize))
     (not (peer ?any-peer-id))
     =>
     (bind ?peer-1 (pb-peer-create-local 127.0.0.1 4444 4445))
-    (bind ?peer-2 (pb-peer-create-local 127.0.0.1 4445 4444))
-    (assert (peer ?peer-1))
-    (assert (peer ?peer-2))
+    (assert (peer ?peer-1 4444 4445))
+    (printout green "127.0.0.1 4444 4445" crlf)
+    (assert (started (now)))
   )
 
-  (defrule peer-send-msg
-    (peer ?peer-id)
-    (not (protobuf-msg))
+  (defrule protobuf-send-msg
+    (peer ?peer-id ?source ?target)
+    (started ?start)
+    (time ?now&:(> ?now (+ ?start 1)))
     =>
     (bind ?msg (pb-create "SearchRequest"))
     (pb-set-field ?msg "query" "hello")
-    (pb-set-field ?msg "page_number" ?peer-id)
-    (pb-set-field ?msg "results_per_page" ?peer-id)
+    (pb-set-field ?msg "page_number" ?source)
+    (pb-set-field ?msg "results_per_page" ?target)
     (pb-broadcast ?peer-id ?msg)
     (pb-destroy ?msg)
   )
-  (defrule protobuf-msg-read
+
+  (defrule protobuf-read-msg
     (protobuf-msg (type ?type) (comp-id ?comp-id) (msg-type ?msg-type)
       (rcvd-via ?via) (rcvd-from ?address ?port) (rcvd-at ?rcvd-at)
       (client-type ?c-type) (client-id ?c-id) (ptr ?ptr))
@@ -320,14 +345,28 @@ File :source-master:`cx_bringup/clips/plugin_examples/protobuf.clp`.
 
   (defrule protobuf-close-peer
     (executive-finalize)
-    ?f <- (peer ?any-peer-id)
+    ?f <- (peer ?any-peer-id $?)
     =>
     (pb-peer-destroy ?any-peer-id)
     (retract ?f)
   )
 
+File :source-master:`cx_bringup/clips/plugin_examples/protobuf-peer2.clp`.
+
+.. code-block:: clips
+
+  (defrule protobuf-init-example-peer
+    (not (executive-finalize))
+    (not (peer ?any-peer-id))
+    =>
+    (bind ?peer-2 (pb-peer-create-local 127.0.0.1 4445 4444))
+    (assert (peer ?peer-2 4445 4444))
+    (printout green "127.0.0.1 4445 4444" crlf)
+    (assert (started (now)))
+  )
+
 Usage Example: Register Message via Linked Plugin
-*************************************************
+-------------------------------------------------
 
 A minimal working example is provided by the :docsite:`cx_bringup` package.
 
@@ -335,7 +374,7 @@ A minimal working example is provided by the :docsite:`cx_bringup` package.
 
     ros2 launch cx_bringup cx_launch.py manager_config:=plugin_examples/protobuf_linked.yaml
 
-It creates a server on port ``4446`` and a client that sends messages (using the same :ref:`message definitions <proto msg example>` as in the first example).
+It creates a server on port ``4446`` and a client (in a separate CLIPS environment) that sends messages (using the same :ref:`message definitions <proto msg example>` as in the first example).
 
 This time the messages are not registered directly through the config, but rather through linking them directly to the loaded plugin.
 Therefore, a linked plugin is generated:
@@ -345,17 +384,21 @@ Therefore, a linked plugin is generated:
   cx_generate_linked_protobuf_plugin_from_proto("BringupProtobufPlugin" proto/cx_bringup/SearchRequest.proto)
 
 Configuration
-~~~~~~~~~~~~~
+^^^^^^^^^^^^^
 
 File :source-master:`cx_bringup/params/plugin_examples/protobuf_linked.yaml`.
 
 .. code-block:: yaml
 
-  clips_manager:
+  /**:
     ros__parameters:
-      environments: ["cx_protobuf"]
-      cx_protobuf:
-        plugins: ["executive", "protobuf", "files"]
+      environments: ["cx_protobuf_client", "cx_protobuf_server"]
+      cx_protobuf_client:
+        plugins: ["executive", "protobuf", "files_client"]
+        log_clips_to_file: true
+        watch: ["facts", "rules"]
+      cx_protobuf_server:
+        plugins: ["executive", "protobuf", "files_server"]
         log_clips_to_file: true
         watch: ["facts", "rules"]
 
@@ -364,21 +407,45 @@ File :source-master:`cx_bringup/params/plugin_examples/protobuf_linked.yaml`.
         publish_on_refresh: false
         assert_time: true
         refresh_rate: 1
+
       protobuf:
+        # Uses the plugin generated from cmake
         plugin: "cx::BringupProtobufPlugin"
-      files:
+        # While it additionally acts like the base plugin, including all
+        # configuration that can be found in the protobuf example, it actually
+        # does not need to specify any other parameter if it registers the types
+        # at runtime.
+
+      files_client:
         plugin: "cx::FileLoadPlugin"
         pkg_share_dirs: ["cx_bringup"]
         load: [
-          "clips/plugin_examples/protobuf-linked.clp"]
+          "clips/plugin_examples/protobuf-linked-client.clp"]
+
+      files_server:
+        plugin: "cx::FileLoadPlugin"
+        pkg_share_dirs: ["cx_bringup"]
+        load: [
+          "clips/plugin_examples/protobuf-linked-server.clp"]
 
 
 Code
-~~~~
+^^^^
 
-File :source-master:`cx_bringup/clips/plugin_examples/protobuf-linked.clp`.
+File :source-master:`cx_bringup/clips/plugin_examples/protobuf-linked-client.clp`.
 
-.. code-block:: lisp
+.. code-block:: clips
+
+  (defrule protobuf-init-example-client
+    (not (executive-finalize))
+    (not (client ?any-c-id))
+    =>
+    (bind ?res (pb-connect 127.0.0.1 4446))
+    (printout green "Connect to server: " ?res crlf)
+    (assert (client ?res))
+    (bind ?success (pb-register-type "SearchRequest"))
+    (printout green "Register Type: " ?success crlf)
+  )
 
   (defrule peer-send-msg
     (client ?c-id)
@@ -391,6 +458,26 @@ File :source-master:`cx_bringup/clips/plugin_examples/protobuf-linked.clp`.
     (pb-set-field ?msg "results_per_page" ?c-id)
     (pb-send ?c-id ?msg)
     (pb-destroy ?msg)
+  )
+
+  (defrule protobuf-close
+    (executive-finalize)
+    ?f <- (client ?any-client)
+    =>
+    (pb-disconnect ?any-client)
+    (retract ?f)
+  )
+
+File :source-master:`cx_bringup/clips/plugin_examples/protobuf-linked-server.clp`.
+
+.. code-block:: clips
+
+  (defrule protobuf-init-example-server
+    (not (executive-finalize))
+    =>
+    (pb-server-enable 4446)
+    (bind ?success (pb-register-type "SearchRequest"))
+    (printout green "Register Type: " ?success crlf)
   )
 
   (defrule protobuf-msg-read
@@ -408,9 +495,6 @@ File :source-master:`cx_bringup/clips/plugin_examples/protobuf-linked.clp`.
 
   (defrule protobuf-close
     (executive-finalize)
-    ?f <- (client ?any-client)
     =>
-    (pb-disconnect ?any-client)
     (pb-server-disable)
-    (retract ?f)
   )

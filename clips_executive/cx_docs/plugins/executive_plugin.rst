@@ -1,7 +1,7 @@
 .. _usage_executive_plugin:
 
-Continuous Execution Plugin
-###########################
+Executive Plugin
+================
 
 Source code on :source-master:`GitHub <cx_plugins/executive_plugin>`.
 
@@ -9,11 +9,11 @@ Source code on :source-master:`GitHub <cx_plugins/executive_plugin>`.
 
   cx::ExecutivePlugin
 
-This plugin provides continuous execution of CLIPS environments.
+This plugin provides continuous and ad-hoc execution of CLIPS environments.
 Additionally, it enables reasoning about the current ROS and system time.
 
 Configuration
-*************
+-------------
 
 .. _refresh_rate:
 
@@ -28,6 +28,8 @@ Configuration
   Description
     Target rate (in Hz) with which agendas are refreshed and run is called.
     This is done sequentially for the registered environments.
+
+.. _publish_on_refresh:
 
 :`publish_on_refresh`:
 
@@ -54,63 +56,89 @@ Configuration
   Description
     Whether the latest ROS time as fact into the CLIPS environment on each iteration.
 
+:`autostart`:
+
+  ============ =======
+  Type         Default
+  ------------ -------
+  bool         true
+  ============ =======
+
+  Description
+    Whether to start periodic execution when loading the plugin.
 
 Features
-********
+--------
 
-With the set :ref:`refresh_rate` the executive plugin refreshes all agendas and then runs the loaded CLIPS environments.
+The executive plugin periodically runs all managed CLIPS environments at the configured :ref:`refresh_rate`.
+Each tick performs the following steps:
+
+1. Optionally asserts the current time as ``(time (now))`` into the environment.
+2. Refreshes all agendas.
+3. If a :ref:`focus_stack <focus_stack>` is configured for an environment, iterates through the stack in order, running each module's agenda (respecting a possibly set :ref:`rule_limit <rule_limit>`) before moving to the next.
+   Otherwise, runs the ``MAIN`` module's agenda.
+4. Repeats steps 2-3 until no rules fire, ensuring cross-module interactions are fully resolved.
+5. Optionally publishes the total number of rules fired on a topic.
+
+Execution can be paused and resumed at any time via services,
+or a single tick can be triggered manually, regardless of the current pause state.
+
+CLIPS commands can be sent directly to a managed environment via dedicated ``eval`` and ``build`` services.
+``eval`` evaluates an expression using CLIPS ``Eval``, while ``build`` defines a new construct using CLIPS ``Build``.
+If no environment is specified, the command is executed in the first managed environment.
+
+.. note::
+
+  When using a focus stack, the current module is reset to ``MAIN`` after each module's agenda is run.
+  This ensures that time assertion and other framework operations always operate in a predictable context.
+
+.. note::
+
+  ``Eval`` is intended for invoking arbirary commands (e.g. ``(assert (foo))``, ``(facts)``),
+  while ``Build`` is intended for defining constructs (e.g. ``(defrule ...)``, ``(deftemplate ...)``).
+
+ROS Interfaces
+^^^^^^^^^^^^^^
+
+All interaces are prefixed by tha name of the CX node, followed by the name of the executive plugin, e.g., ``clips_manager/executive``.
+
+- */ns/node/plugin/refresh_agenda*: Topic where a mesage is published after each tick, indicating the number of rules that fired (requires :ref:`publish_on_refresh`).
+- */ns/node/plugin/pause*: Service for stopping periodic ticks according to the configured :ref:`refresh_rate`.
+- */ns/node/plugin/resume*: Service that for starting the periodic ticks.
+- */ns/node/plugin/tick_once*: Serivce for ticking once.
+- */ns/node/plugin/eval*: Service for processing a string as an ``eval`` command in a given environment.
+- */ns/node/plugin/build*: Service for processing a string as an ``build`` command in a given environment.
+
+
 
 Facts
-~~~~~
+^^^^^
 
 If :ref:`assert_time` is set to ``true``, it asserts the ordered fact `time` with the current ROS time as float.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (time ?ros-time-float)
 
 Functions
-~~~~~~~~~
+^^^^^^^^^
 
 This plugin adds deffunctions to retrieve the current time.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (bind ?ros-time (now))         ; returns a FLOAT holding get_clock()->now().seconds()
   (bind ?sys-time (now-systime)) ; returns a FLOAT of system time
 
 
-Rules
-~~~~~
-
-If :ref:`assert_time` is set to ``true``, it defines a rule to clean up the time fact at the end of agenda execution.
-
-.. code-block:: lisp
-
-  (defglobal
-    ?*PRIORITY-TIME-RETRACT*    = -10000
-  )
-
-  (defrule time-retract
-    (declare (salience ?*PRIORITY-TIME-RETRACT*))
-    ?f <- (time $?)
-    =>
-    (retract ?f)
-  )
-
 Other
-~~~~~
+^^^^^
 
-Lastly, the ``time`` facts and  ``time-retract`` rule are unwatched.
-
-.. code-block:: lisp
-
-  (unwatch facts time)
-  (unwatch rules time-retract)
+Lastly, the ``time`` fact is unwatched after the first assertion.
 
 
 Usage Example
-*************
+-------------
 
 A minimal working example is provided by the :docsite:`cx_bringup` package. Run it via:
 
@@ -120,8 +148,37 @@ A minimal working example is provided by the :docsite:`cx_bringup` package. Run 
 
 It prints the current ROS and system time in each iteration and compares the time at the start of the iteration with the time at the time the rule is fired.
 
+The executive can be stopped by calling the ``pause`` service:
+
+.. code-block:: bash
+
+    ros2 service call /executive/pause std_srvs/srv/Trigger {}
+
+Individual ticks (a run of the inference engine until termination) can be invoked via the ``tick_once`` service:
+
+.. code-block:: bash
+
+    ros2 service call /executive/tick_once std_srvs/srv/Trigger {}
+
+The ``eval`` and ``build`` functions allow for ad-hoc interaction with an environment:
+
+.. code-block:: bash
+
+    ros2 service call /executive/build cx_msgs/srv/ClipsCommand \
+      '{env_name: "cx_executive", command: "(deftemplate example (slot message (type STRING)))"}'
+    ros2 service call /executive/eval cx_msgs/srv/ClipsCommand \
+      '{env_name: "cx_executive", command: "(assert (example (message \"hello\")))"}'
+
+Finally, the ``resume`` service is used in order to resume automatic execution:
+
+.. code-block:: bash
+
+    ros2 service call /executive/resume std_srvs/srv/Trigger {}
+
+
+
 Configuration
-~~~~~~~~~~~~~
+^^^^^^^^^^^^^
 
 File :source-master:`cx_bringup/params/plugin_examples/executive.yaml`.
 
@@ -147,11 +204,11 @@ File :source-master:`cx_bringup/params/plugin_examples/executive.yaml`.
           "clips/plugin_examples/executive.clp"]
 
 Code
-~~~~
+^^^^
 
 File :source-master:`cx_bringup/clips/plugin_examples/executive.clp`.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule print-time
     (time ?now)

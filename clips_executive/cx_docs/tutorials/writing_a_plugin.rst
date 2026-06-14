@@ -1,7 +1,7 @@
 .. _writing_a_plugin:
 
 Writing a Plugin for TF Monitoring
-##################################
+==================================
 
 **Goal:** Implement a CLIPS Plugin to observe transforms of a turtle from turtlesim
 
@@ -127,8 +127,8 @@ The ``Tf2PoseTrackerPlugin`` class inherits from ``ClipsPlugin`` base class prov
     #include "cx_plugin/clips_plugin.hpp"
 
     #include <geometry_msgs/msg/transform_stamped.hpp>
-    #include <tf2_ros/buffer.h>
-    #include <tf2_ros/transform_listener.h>
+    #include <tf2_ros/buffer.hpp>
+    #include <tf2_ros/transform_listener.hpp>
 
     namespace cx {
 
@@ -345,7 +345,7 @@ Here, a fact template is declared and two user-defined functions (UDFs) are prov
     }
 
 6.1 Access to Environment Context
-.................................
+"""""""""""""""""""""""""""""""""
 
 The function starts with a simple debugging statement that utilizes the plugins ROS logger to print for which environment the plugin is initialized. This requires accessing the context stored in each environment managed by the |CX|, as this is where custom data, such as the user-assigned name of each environment, is stored.
 
@@ -356,7 +356,7 @@ The function starts with a simple debugging statement that utilizes the plugins 
                    context->env_name_.c_str());
 
 6.1 CLIPS Environments and Threading
-....................................
+""""""""""""""""""""""""""""""""""""
 
 CLIPS is not thread-safe, hence interactions with CLIPS need to be guarded from concurrent access.
 
@@ -366,7 +366,7 @@ The mutex belonging to a CLIPS environment is stored on the heap inside of the e
 
 
 6.3 Constructs via Build Function
-.................................
+"""""""""""""""""""""""""""""""""
 
 The ``Build`` function is used to construct a deftemplate for the environment from a string representation. This template is used to store the information obtained from transform lookups.
 
@@ -384,7 +384,7 @@ The ``Build`` function is used to construct a deftemplate for the environment fr
 
 
 6.4 User-Defined Functions
-..........................
+""""""""""""""""""""""""""
 
 A common motivation for writing plugins is to provide more functions that can be called in CLIPS. In the following, the definition for the first function "tf2-start-periodic-lookup" is examined more closely.
 The corresponding ``AddUDF`` call needs the following arguments:
@@ -592,7 +592,7 @@ The start_periodic_lookup function is responsible for creating a ROS timer that 
 
 
 7.1 Guarding the CLIPS Environment from Concurrent Access
-.........................................................
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 This asynchronous task showcases the need for guarding the CLIPS environment from concurrent access.
 
@@ -608,7 +608,7 @@ In order to obtain the required mutex, the environment context is retrieved. The
           std::scoped_lock clips_lock{context->env_mtx_};
 
 7.2 Creating and Modifying Facts
-................................
+""""""""""""""""""""""""""""""""
 
 The next step is to either create the initial fact for the data, or to update the previously asserted one with the new information.
 

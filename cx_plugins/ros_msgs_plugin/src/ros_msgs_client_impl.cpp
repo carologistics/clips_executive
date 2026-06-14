@@ -256,5 +256,39 @@ clips::UDFValue RosMsgsPlugin::send_request(
   result.value = clips::CreateInteger(env, id);
   return result;
 }
+
+void RosMsgsPlugin::destroy_client(clips::Environment * env, const std::string & service_name)
+{
+  auto context = CLIPSEnvContext::get_context(env);
+  std::string env_name = context->env_name_;
+  map_mtx_.lock();
+  auto outer_it = clients_.find(env_name);
+  if (outer_it != clients_.end()) {
+    // Check if service_name exists in the inner map
+    auto & inner_map = outer_it->second;
+    auto inner_it = inner_map.find(service_name);
+    if (inner_it != inner_map.end()) {
+      // Remove the service_name entry from the inner map
+      RCLCPP_DEBUG(*logger_, "Destroying client for service %s", service_name.c_str());
+      inner_map.erase(inner_it);
+      map_mtx_.unlock();
+      clips::Eval(
+        env,
+        ("(do-for-all-facts ((?f ros-msgs-client)) (eq (str-cat "
+         "?f:service) (str-cat \"" +
+         service_name + "\"))  (retract ?f))")
+          .c_str(),
+        NULL);
+    } else {
+      map_mtx_.unlock();
+      RCLCPP_WARN(
+        *logger_, "Client %s not found in environment %s", service_name.c_str(), env_name.c_str());
+    }
+  } else {
+    map_mtx_.unlock();
+    RCLCPP_WARN(*logger_, "Environment %s not found", env_name.c_str());
+  }
+}
+
 }  // namespace cx
 #endif

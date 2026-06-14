@@ -79,7 +79,7 @@ private:
 {% include 'create.jinja.cpp' with context %}
 {% include 'destroy.jinja.cpp' with context %}
 
-  void send_request(clips::Environment *env, {{message_type}}::Request *msg, const std::string &service_name);
+  clips::UDFValue send_request(clips::Environment *env, {{message_type}}::Request *msg, const std::string &service_name);
 
   void create_new_client(clips::Environment *env, const std::string &service_name);
 

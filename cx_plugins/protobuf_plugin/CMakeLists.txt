@@ -52,10 +52,22 @@ target_link_libraries(clips_protobuf_comm PUBLIC
 
 set_property(TARGET clips_protobuf_comm PROPERTY CXX_STANDARD ${CMAKE_CXX_STANDARD})
 
+get_target_property(AMENT_INDEX_CPP_INCLUDES ament_index_cpp::ament_index_cpp INTERFACE_INCLUDE_DIRECTORIES)
+set(CMAKE_REQUIRED_INCLUDES ${AMENT_INDEX_CPP_INCLUDES})
+include(CheckIncludeFileCXX)
+check_include_file_cxx("ament_index_cpp/get_package_share_path.hpp" HAVE_GET_PACKAGE_SHARE_PATH REQUIRED_LIBARIES ament_index_cpp::ament_index_cpp)
+
 # ------------------------------
 # main plugin library
 # ------------------------------
 add_library(${PROJECT_NAME} SHARED src/protobuf_plugin.cpp)
+
+if(HAVE_GET_PACKAGE_SHARE_PATH)
+  message(STATUS "get_package_share_path is supported")
+  target_compile_definitions(${PROJECT_NAME} PUBLIC USE_GET_PACKAGE_SHARE_PATH=1)
+else()
+  message(STATUS "get_package_share_path is not supported, using get_package_share_directory instead")
+endif()
 
 target_include_directories(${PROJECT_NAME}
   PUBLIC

@@ -1,3 +1,5 @@
+.. _rl_clips:
+
 Reinforcement Learning CLIPS Interfaces
 #######################################
 
@@ -147,7 +149,7 @@ of the predefined rules and interfaces.
 The following global variables may be overridden **after** loading the ``cx_rl.clp``
 file by asserting a new ``defglobal`` definition:
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defglobal
     ?*CX-RL-LOG-LEVEL* = debug
@@ -160,7 +162,7 @@ To customize the ROS node name of the RL node, the following global variable mus
 defined **before** loading the ``cx_rl.clp`` file. If not specified, it defaults to
 ``"/cx_rl_node"``.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defglobal
     ?*CX-RL-NODE-NAME* = "/cx_rl_node"
@@ -177,7 +179,7 @@ Similarly, the action space is defined using :ref:`rl-predefined-action` and `rl
 
 The below snippet would describe an observation space containing `on(block1#block2), clear(block1), clear(block2), clear(block3), clear(block4)` and an action space containing `pickup(robot1#block1)`:
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (assert
     (rl-predefined-observable (name on) (params block1 block2))
@@ -186,7 +188,7 @@ The below snippet would describe an observation space containing `on(block1#bloc
     (rl-predefined-action (name pickup) (params robot1 block1))
    )
 
-.. admonition::
+.. note::
 
    The resulting internal string representations of the actions and opservation is constructed from the name and the parameters by encapsulating parameters with braces `()`. and separating individual parameters by `#`.
 
@@ -195,7 +197,7 @@ This is handled through facts of type :ref:`rl-observation`.
 
 The below example registers `clear(block1)` and `on-table(block1)` as current observation.
 
-.. code-block:: lisp
+.. code-block:: clips
 
    (assert
     (rl-observation (name clear) (params block1))
@@ -207,7 +209,7 @@ Once the observation space, action space, and initial observations are available
 Training or execution is started by asserting a :ref:`cx-rl-node` fact. This assertion triggers a backup of the current fact base that can be used for resetting the environment (as detailed in :ref:`Step 2 <cx_rl_clips_step2>`).
 The fact must only be asserted if it does not already exist, as it will persist and be updated across environment resets.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (if (not (any-factp ((?node cx-rl-node)) (eq ?node:name ?*CX-RL-NODE-NAME*))) then
    (assert (cx-rl-node (name ?*CX-RL-NODE-NAME*) (mode UNSET)))
@@ -251,7 +253,7 @@ When no customization of the reset procedure is required, it is sufficient to
 define rules that advance the reset state through the user-defined stages
 without performing additional actions:
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule reset-to-load-facts
     ?reset <- (rl-reset-env (state USER-CLEANUP))
@@ -362,7 +364,7 @@ Represents a request to reset the RL environment.
 This fact is asserted by the environment and processed to coordinate cleanup, initialization, and reset transitions.
 Users are responsible to transition the ``state`` slot from `USER-CLEANUP` to `LOAD-FACTS` and from `USER-INIT` to `DONE`.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate rl-reset-env
     (slot node (type STRING) (default "/cx_rl_node"))
@@ -386,7 +388,7 @@ via status queries.
 Users should assert this fact and specify the slot ``name`` according to the global variable `*?CX-RL-NODE-NAME*` used for loading ``cx_rl_clips``.
 
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate cx-rl-node
     (slot name (type STRING) (default "/cx_rl_node"))
@@ -410,7 +412,7 @@ Asserting this fact causes the corresponding :ref:`cx-rl-node` fact to be update
 The system initially requests updates in order to monitor the startup process.
 Users may assert this fact (and set the slot ``node``) request updates to observe training progression.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate rl-get-status
     (slot node (type STRING) (default "/cx_rl_node"))
@@ -426,7 +428,7 @@ rl-end-training
 Signals that training has completed. This fact is asserted by the environmnent
 and notifies users about the end of training.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate rl-end-training
     (slot node (type STRING) (default "/cx_rl_node"))
@@ -442,7 +444,7 @@ Marks the end of an episode during training.
 Users can assert this to indicate indicate success or failure of the current episode and trigger environment resets.
 
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate rl-episode-end
     (slot node (type STRING) (default "/cx_rl_node"))
@@ -460,7 +462,7 @@ rl-observable-type
 Defines a symbolic type and its corresponding objects.
 These definitions are provided by the user and used to construct grounded observation and action spaces.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate rl-observable-type
     (slot node (type STRING) (default "/cx_rl_node"))
@@ -479,7 +481,7 @@ All valid groundings are generated using the objects defined via
 :ref:`rl-observable-type` for spanning the observation space.
 Users are responsible for asserting facts of this type.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate rl-observable-predicate
     (slot node (type STRING) (default "/cx_rl_node"))
@@ -498,7 +500,7 @@ Defines a grounded observable directly.
 Used to add individual observations into the observation space.
 Users are responsible for asserting facts of this type.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate rl-predefined-observable
     (slot node (type STRING) (default "/cx_rl_node"))
@@ -516,7 +518,7 @@ Defines a grounded action directly.
 Used to add individual actions into the action space.
 Users are responsible for asserting facts of this type.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate rl-predefined-action
     (slot node (type STRING) (default "/cx_rl_node"))
@@ -534,7 +536,7 @@ Defines a parameterized symbolic action.
 All valid groundings are generated based on the defined parameter types and objects.
 Users are responsible for asserting facts of this type.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate rl-observable-action
     (slot node (type STRING) (default "/cx_rl_node"))
@@ -553,7 +555,7 @@ Represents a currently active observation.
 The set of all asserted ``rl-observation`` facts defines the current environment state.
 Users are responsible for asserting facts of this type.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate rl-observation
     (slot node (type STRING) (default "/cx_rl_node"))
@@ -571,7 +573,7 @@ A corresponding fact must be asserted for each robot whose actions are to be con
 The ``waiting`` slot is managed automatically by the RL interface, indicating
 that a robot is idling and ready for getting a new action assigned.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate rl-robot
     (slot node (type STRING) (default "/cx_rl_node"))
@@ -588,7 +590,7 @@ Asserted automatically to indicate the generation phase of the current action sp
 Facts of this type are created with the slot ``state`` set to `PENDING`, signaling that the user must assert :ref:`rl-action` facts before advancing the ``state`` to `DONE`.
 Once the state is set to ``DONE``, action selection proceeds automatically.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate rl-current-action-space
     (slot node (type STRING) (default "/cx_rl_node"))
@@ -617,7 +619,7 @@ its execution. Upon completion, the user must update the slots
 reward obtained from the execution.
 
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate rl-action
     (slot node (type STRING) (default "/cx_rl_node"))
@@ -639,7 +641,7 @@ rl-ros-action-meta-get-free-robot
 Represents internal metadata associated with the ``get_free_robot`` ROS action.
 Facts of this type are asserted and managed automatically by the framework.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate rl-ros-action-meta-get-free-robot
     (slot uuid (type STRING))
@@ -659,7 +661,7 @@ rl-ros-action-meta-action-selection
 Internal metadata for the ``action_selection`` ROS action.
 Facts of this type are asserted and managed automatically by the framework.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate rl-ros-action-meta-action-selection
     (slot uuid (type STRING))
@@ -677,7 +679,7 @@ rl-action-request-meta
 Internal request tracking for ROS service calls.
 Facts of this type are asserted and managed automatically by the framework.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate rl-action-request-meta
     (slot node (type STRING) (default "/cx_rl_node"))

@@ -1,9 +1,10 @@
 Usage
-#####
+=====
+
 This document assumes you have the |CX| installed and sourced in your environment.
 
 ROS Node
-++++++++
+--------
 
 The |CX| mainly provides a ROS `lifecycle`_ node (:docsite:`Package <cx_clips_env_manager>`, :source-master:`Github <cx_clips_env_manager>`) that manages a CLIPS instance and has the following responsibilities:
 
@@ -21,7 +22,7 @@ Additionally, the node also supports the usage of :rosdoc:`bond` for advanced sy
 
 
 CLIPS Environments
-++++++++++++++++++
+------------------
 
 Each CLIPS environment created and managed by the |CX| is a **standard, isolated CLIPS environment**.
 The environments are only extended in a minimal and well-defined way to support integration
@@ -45,7 +46,7 @@ No additional functions, facts, or rules are introduced implicitly, and all high
 is provided through explicitly loaded plugins.
 
 Starting the |CX|
-+++++++++++++++++
+-----------------
 
 To just launch a standalone node, just run the following command:
 
@@ -64,7 +65,7 @@ A more practical way to to start the node is to utilize the launch file of the `
   Use the `--show-args` option to learn about all parameters that the launch file provides.
 
 Example
-+++++++
+-------
 
 The following example showcases simple interactions between CLIPS and ROS via a topic:
 

@@ -41,4 +41,4 @@ The following example showcases how an RL agent can be trained and utilzied with
   Use the `--show-args` option to learn about all parameters that the launch file provides.
 
 
-Check out the :ref:`Intefacing Guide <reinforcement_learning/rl_clips.html>` page to learn how to write your own CLIPS applications while leveraging reinforcement learning.
+Check out the :ref:`Intefacing Guide <rl_clips>` page to learn how to write your own CLIPS applications while leveraging reinforcement learning.

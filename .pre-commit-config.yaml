@@ -159,7 +159,7 @@ repos:
       # -------------------------------
       - id: ament_flake8
         name: ament_flake8
-        entry: ament_flake8
+        entry: ament_flake8 --config=".flake8"
         language: system
         types: [python]
         exclude: .cmakelint.py

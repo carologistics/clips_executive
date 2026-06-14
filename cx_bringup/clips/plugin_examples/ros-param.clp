@@ -22,8 +22,8 @@
 (printout info "(ros-param-get-value \"bond_heartbeat_period\" 5.5)" crlf)
 (printout green "    " (ros-param-get-value "bond_heartbeat_period" 5.5) crlf)
 
-(printout info "(ros-param-get-value \"does_not_exist\" (create$ 1 2 3)" crlf)
+(printout info "(ros-param-get-value \"does_not_exist\" (create$ 1 2 3))" crlf)
 (printout green "    " (ros-param-get-value "does_not_exist" (create$ 1 2 3)) crlf)
 
-(printout info "(ros-param-get-value \"unused_param\" \"\"" crlf)
+(printout info "(ros-param-get-value \"unused_param\" \"\")" crlf)
 (printout green "    " (ros-param-get-value "unused_param" "") crlf)

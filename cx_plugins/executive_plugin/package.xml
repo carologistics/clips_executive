@@ -16,7 +16,9 @@
   <depend>cx_plugin</depend>
   <depend>cx_utils</depend>
   <depend>clips_vendor</depend>
+  <depend>cx_msgs</depend>
   <depend>std_msgs</depend>
+  <depend>std_srvs</depend>
 
   <export>
     <build_type>ament_cmake</build_type>

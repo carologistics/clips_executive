@@ -883,8 +883,13 @@ void RosMsgsPlugin::subscribe_to_topic(
         libs_[topic_type] = rclcpp::get_typesupport_library(topic_type, "rosidl_typesupport_cpp");
       }
       if (!type_support_cache_.contains(topic_type)) {
+#ifdef HUMBLE
+        type_support_cache_[topic_type] =
+          rclcpp::get_typesupport_handle(topic_type, "rosidl_typesupport_cpp", *libs_[topic_type]);
+#else
         type_support_cache_[topic_type] = rclcpp::get_message_typesupport_handle(
           topic_type, "rosidl_typesupport_cpp", *libs_[topic_type]);
+#endif
       }
 
       subscriptions_[env_name][topic_name] = node->create_generic_subscription(
@@ -935,8 +940,13 @@ std::shared_ptr<RosMsgsPlugin::MessageInfo> RosMsgsPlugin::create_deserialized_m
   if (!libs_.contains(msg_type)) {
     RCLCPP_DEBUG(*logger_, "Create new message information on message creation");
     libs_[msg_type] = rclcpp::get_typesupport_library(msg_type, "rosidl_typesupport_cpp");
+#ifdef HUMBLE
+    type_support_cache_[msg_type] =
+      rclcpp::get_typesupport_handle(msg_type, "rosidl_typesupport_cpp", *libs_[msg_type]);
+#else
     type_support_cache_[msg_type] =
       rclcpp::get_message_typesupport_handle(msg_type, "rosidl_typesupport_cpp", *libs_[msg_type]);
+#endif
   }
   auto * introspection_info = get_msg_members(msg_type);
   return std::make_shared<RosMsgsPlugin::MessageInfo>(introspection_info);
@@ -1138,8 +1148,13 @@ const rosidl_typesupport_introspection_cpp::MessageMembers * RosMsgsPlugin::get_
   const std::string & msg_type)
 {
   if (type_support_cache_.contains(msg_type)) {
+#ifdef HUMBLE
     auto * introspection_type_support = get_message_typesupport_handle(
       type_support_cache_[msg_type], rosidl_typesupport_introspection_cpp::typesupport_identifier);
+#else
+    auto * introspection_type_support = get_message_typesupport_handle(
+      type_support_cache_[msg_type], rosidl_typesupport_introspection_cpp::typesupport_identifier);
+#endif
     return static_cast<const rosidl_typesupport_introspection_cpp::MessageMembers *>(
       introspection_type_support->data);
   }
@@ -1175,8 +1190,13 @@ std::shared_ptr<RosMsgsPlugin::MessageInfo> RosMsgsPlugin::process_nested_msg(
       libs_[message_type] = rclcpp::get_typesupport_library(message_type, "rosidl_typesupport_cpp");
     }
     if (!type_support_cache_.contains(message_type)) {
+#ifdef HUMBLE
+      type_support_cache_[message_type] = rclcpp::get_typesupport_handle(
+        message_type, "rosidl_typesupport_cpp", *libs_[message_type]);
+#else
       type_support_cache_[message_type] = rclcpp::get_message_typesupport_handle(
         message_type, "rosidl_typesupport_cpp", *libs_[message_type]);
+#endif
     }
     return std::make_shared<MessageInfo>(nested_members, nested_msg);
   }
