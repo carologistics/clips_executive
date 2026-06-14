@@ -7,8 +7,8 @@ find_package(ament_cmake_vendor_package REQUIRED)
 ament_vendor(z3
   VCS_URL https://github.com/Z3Prover/z3.git
   VCS_TYPE git
-  VCS_VERSION z3-4.12.2  # use a tag or commit
-  PATCHES 4.12.2.patch
+  VCS_VERSION z3-4.16.0  # use a tag or commit
+  #PATCHES 4.12.2.patch
   CMAKE_ARGS
     -DZ3_BUILD_LIBZ3_SHARED=ON
     -DZ3_BUILD_LIBZ3_STATIC=OFF

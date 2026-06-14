@@ -149,9 +149,14 @@ void Z3Checker::defineConstraints(Plan *p, TStep s) {
 
   for (SASDurationCondition &d : a->duration.conditions) { // Action duration
     defineDurationConstraint(d, s);
+    // expr intDur(cont->real_val(10000, 1) * getDurationVar(s));
+    // add(10 * getPointVar(end) < 10 * getPointVar(start) + intDur + 5);
+    // add(10 * getPointVar(end) > 10 * getPointVar(start) + intDur - 5);
+    expr startReal = to_real(getPointVar(start));
+    expr endReal   = to_real(getPointVar(end));
     expr intDur(cont->real_val(10000, 1) * getDurationVar(s));
-    add(10 * getPointVar(end) < 10 * getPointVar(start) + intDur + 5);
-    add(10 * getPointVar(end) > 10 * getPointVar(start) + intDur - 5);
+    add(10 * endReal < 10 * startReal + intDur + 5);
+    add(10 * endReal > 10 * startReal + intDur - 5);
   }
 
   for (TOrdering o : p->orderings) { // Orderings
