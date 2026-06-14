@@ -22,6 +22,42 @@
 import os
 import sys
 
+from pygments.lexer import RegexLexer
+from pygments.token import Comment, Keyword, Name, Number, Operator, Punctuation, String, Text
+
+
+class CLIPSLexer(RegexLexer):
+    name = 'CLIPS'
+    aliases = ['clips']
+    filenames = ['*.clips']
+
+    tokens = {
+        'root': [
+            (r'[()]', Punctuation),
+            (r'\s+', Text),
+            (r';.*$', Comment.Single),
+            (r'"[^"]*"', String),
+            # numbers
+            (r'\b-?\d+\.\d+\b', Number.Float),
+            (r'\b-?\d+\b', Number.Integer),
+            # CLIPS variables / $ identifiers
+            (r'\?[A-Za-z0-9_-]+', Name.Variable),
+            (r'\$[?A-Za-z0-9_-]*', Name.Variable),
+            # operators
+            (r'=>', Name.Tag),
+            (r'\|', Operator),
+            (r'\$', Operator),
+            (r'[()]', Punctuation),
+            # keywords
+            (r'\b(defrule|deftemplate|deffacts)\b', Keyword.Declaration),
+            (r'\b(allowed-values|type|slot|cardinality)\b', Keyword.Reserved),
+            (r'\b(assert|modify|retract)\b', Keyword.Name.Function),
+            # fallback MUST be last
+            (r'[^\s]+', Text),
+        ],
+    }
+
+
 sys.path.insert(0, os.path.abspath('.'))
 
 project = 'clips_executive'
@@ -33,7 +69,11 @@ author = 'Tarik Viehmann'
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 ros_distro = os.getenv('ROS_DISTRO', 'humble')  # Default to 'humble' if ROS_DISTRO is not set
 
-extensions = ['sphinx.ext.extlinks', 'sphinx.ext.todo', 'sphinx_copybutton']
+extensions = [
+    'sphinx.ext.extlinks',
+    'sphinx.ext.todo',
+    'sphinx_copybutton',
+]
 local = True
 
 
@@ -48,6 +88,8 @@ html_static_path = ['_static']
 
 # Include custom CSS file
 def setup(app):
+
+    app.add_lexer('clips', CLIPSLexer)
     app.add_css_file('custom_figure.css')
 
 

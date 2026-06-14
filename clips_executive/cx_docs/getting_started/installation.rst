@@ -1,9 +1,10 @@
 Installation
-############
+============
+
 This document assumes you have a basic ROS 2 installation. If not, refer to the official `ROS documentation`_.
 
 Binary Installation
-+++++++++++++++++++
+-------------------
 
 The easiest way to install the |CX| is via your package manager:
 
@@ -18,7 +19,7 @@ The easiest way to install the |CX| is via your package manager:
 .. _source_installation:
 
 Installation from Source
-++++++++++++++++++++++++
+------------------------
 
 The following steps will setup a workspace for the project. Adjust target locations as needed.
 

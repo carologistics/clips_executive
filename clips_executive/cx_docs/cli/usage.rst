@@ -1,11 +1,11 @@
 Usage
-#####
+=====
 
 The CLI requires a running ROS CX with at least one environment, where the executive plugin is loaded.
 
 
 Starting the CLI
-++++++++++++++++
+----------------
 
 The CLI is supplied as an executable that can be directly started via ``ros2 run``. Per default it assumes a CX node called `clips_manager` and an executive plugin with name `executive`.
 
@@ -24,7 +24,7 @@ As this example fits the default parameters, the CLI can be started without addi
 The list of all available parameters is ref:'provided here <cli_ros_params>'.
 
 Navigation
-++++++++++
+----------
 
 After starting the CLI, you will see the log window printing a helpful message, a command prompt and a status bar on the bottom.
 
@@ -45,7 +45,7 @@ From here you can quit the CLI by pressing :kbd:`Space q`.
 .. _cli_ros_params:
 
 ROS Parameters
-++++++++++++++
+--------------
 
 In order to customize the CLI, simply pass ROS parameters to it as follows:
 
@@ -53,7 +53,7 @@ In order to customize the CLI, simply pass ROS parameters to it as follows:
 
     ros2 run cx_clips_cli cli --ros-args -p cx_node_name:=clips_manager -p plugin_name:=executive
 
-The following ROS parameters are available and they will be further explained :ref:`later <customization.rst>`.
+The following ROS parameters are available and they will be further explained :ref:`later <customization>`.
 
 
 .. list-table::

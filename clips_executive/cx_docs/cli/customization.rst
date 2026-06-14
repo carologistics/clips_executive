@@ -1,12 +1,14 @@
+.. _customization:
+
 Customization
-#############
+=============
 
 The CLI can be customized by overriding key bindings of the available shortcuts, as well as overriding the colors used for display.
 
 .. _cli_log_file_dir:
 
 Log File Directory
-++++++++++++++++++
+------------------
 
 The CLI may store artefacts, such as Log snapshots or file streams or the prompt history into the ROS logging directory by default (controlled by the ``ROS_LOG_DIR`` variable).
 
@@ -15,7 +17,7 @@ Either change this variable or use the ROS parameter ``log_dir`` to change the s
 .. _keymap-customization:
 
 Keymap Customization
-++++++++++++++++++++
+--------------------
 
 In order to modify the key maps used by the CLI, create a file and pass its path via the ``keymap_overrides`` ROS parameter.
 
@@ -83,7 +85,7 @@ The following file contains the default key map:
 .. _style-customization:
 
 Style Customization
-+++++++++++++++++++
+-------------------
 
 Similarly, the used color palette can be customized by supplying a path to a file via the ``style_overrides`` ROS parameter.
 

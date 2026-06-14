@@ -1,5 +1,7 @@
+.. _pddl_clips:
+
 PDDL CLIPS Interfaces
-#####################
+=====================
 
 The PDDL integration is provided in the form of the `PDDL Manager`, a ROS lifecycle node that provides ROS interfaces, which can be called through the |CX| plugins that handle ROS communication.
 
@@ -7,7 +9,7 @@ In order to reduce the manual overhead, the ``cx_pddl_clips`` package provides a
 This allows to interact with the PDDL manager by simply asserting and monitoring CLIPS facts, without the need to do direct ROS communication (e.g., populating ROS messages or waiting for service feedback).
 
 PDDL Manager
-************
+------------
 
 The PDDL Manager node has the following responsibilities:
 
@@ -21,7 +23,7 @@ The PDDL Manager node has the following responsibilities:
 
 
 PDDL Manager Services
-*********************
+---------------------
 
 The PDDL Manager exposes a wide range of ROS 2 interfaces.
 
@@ -75,7 +77,7 @@ The PDDL Manager exposes a wide range of ROS 2 interfaces.
      - :ref:`pddl-manager`
 
 CLIPS Integration
-*****************
+-----------------
 
 CLIPS needs to interact with the PDDL Manager by creating subscriptions and clients for the endpoints to then utilize the features as desired.
 In order to reduce manual overhead, predefined rules and deftemplates are available, which are described in the remainder of this document.
@@ -87,7 +89,7 @@ A comprehensive example for using this integration is given in the :ref:`Tutoria
 An example for using the interfaces directly without this additional integration can be found in the :ref:`Tutorial for using the PDDL Manager directly <raw_pddl_agent>`.
 
 Request Execution Model
-~~~~~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^^^^^
 
 The CLIPS interface allows users to assert multiple request facts concurrently
 (e.g., adding fluents, creating goal instances, or checking action conditions).
@@ -135,7 +137,7 @@ allowing CLIPS reasoning to interleave with ROS communication.
 
 THe full list of used rule saliences is depicted below:
 
-.. code-block:: lisp
+.. code-block:: clips
 
    (defglobal
     ?*PRIORITY-PDDL-INSTANCES* = -5100
@@ -167,7 +169,7 @@ this feature is used to extend the notion of PDDL actions.
 
 
 Using the |CX| with cx_pddl_clips
-*********************************
+---------------------------------
 
 The example configuration below demonstrates how to pre-load the code from the `cx_pddl_clips` package via batch loading, before loading the example code.
 In order to integrate the PDDL manager with the |CX|, the following plugins are needed:
@@ -218,12 +220,12 @@ Also, as the current configuration is compatible with ROS 2 jazzy, action client
          load: ["clips/cx_pddl_clips_agent.clp"]
 
 Example: Loading a PDDL Problem and Obtaining the initial State
-***************************************************************
+---------------------------------------------------------------
 
 The following example rule demonstrates how to initialize the connection to the external
 PDDL manager and load a PDDL problem into CLIPS.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule example-pddl-add-instance
     " Setup PDDL instance and fetch initial facts "
@@ -247,7 +249,7 @@ In order to fetch the initial fluents of the instance (as provided in the proble
 
 
 Provided Deftemplates
-*********************
+---------------------
 
 In the remainder of this document, all provided deftemplates of the `cx_pddl_clips` are described.
 
@@ -261,7 +263,7 @@ Automatically created when a plan is received.
 Can also be asserted directly, if actions are needed in different contexts (e.g., to apply effects).
 Used to track parameters, plan order, and scheduled times.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate pddl-action
     (slot instance (type SYMBOL))
@@ -283,7 +285,7 @@ Represents a condition of a PDDL action.
 Requires a :ref:`pddl-action` fact with ``id`` matching the value in slot ``action``.
 Obtains the satisfaction state and unsatisfied conditions.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate pddl-action-condition
     (slot instance (type SYMBOL))
@@ -307,7 +309,7 @@ If effectsa are also applied, corresponding :ref:`pddl-fluent-change` and ref:`p
 
    This means that the effect is not applied yet, when the field is DONE. a better approach would be to apply the effects when processing the original requrest, then DONE would properly indicate that the effects are actually arlready applied
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate pddl-action-get-effect
     (slot action (type SYMBOL))
@@ -324,7 +326,7 @@ pddl-action-names
 Retrieve the list of action names for a PDDL instance.
 This is particularly useful for defining goal filters.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate pddl-action-names
     (slot instance (type SYMBOL))
@@ -341,7 +343,7 @@ pddl-clear-goals
 Clears all goal conditions for a PDDL instance via the external manager.
 This assumes that a matching goal instance was created via :ref:`pddl-create-goal-instance` beforehand.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate pddl-clear-goals
     (slot instance (type SYMBOL))
@@ -361,7 +363,7 @@ Create a new managed goal instance for a PDDL instance via the external manager.
 
    We should probably have a pddl-goal-instance fact similar as to how we have an instance fact (or alernatively, add a goals multifield to each instance)
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate pddl-create-goal-instance
     (slot instance (type SYMBOL))
@@ -378,7 +380,7 @@ pddl-effect-fluent
 Represents a boolean effect of a PDDL action.
 Asserted when retrieving an action effect via :ref:`pddl-action-get-effect`.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate pddl-effect-fluent
     (slot instance (type SYMBOL))
@@ -400,7 +402,7 @@ Asserted when retrieving an action effect via :ref:`pddl-action-get-effect`.
 
    numeric effects are not supported fully
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate pddl-effect-numeric-fluent
     (slot instance (type SYMBOL))
@@ -420,7 +422,7 @@ pddl-fluent
 Represents a boolean fluent in a PDDL instance.
 Do not assert/retract/modify directly; use :ref:`pddl-fluent-change` to keep the external PDDL manager in sync.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate pddl-fluent
     (slot instance (type SYMBOL))
@@ -437,7 +439,7 @@ Indicates that a boolean fluent should be added or removed.
 Acts as a transient layer to synchronize with the external PDDL manager.
 This automatically updates the corresponding :ref:`pddl-fluent` fact.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate pddl-fluent-change
     (slot instance (type SYMBOL))
@@ -457,7 +459,7 @@ pddl-get-fluents
 Fetch all boolean fluents for a PDDL instance via the external manager.
 Asserts the corresponding :ref:`pddl-fluent` facts.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate pddl-get-fluents
     (slot instance (type SYMBOL))
@@ -473,7 +475,7 @@ pddl-get-numeric-fluents
 Fetch all numeric fluents for a PDDL instance via the external manager.
 Asserts the corresponding :ref:`pddl-numeric-fluent` facts.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate pddl-get-numeric-fluents
     (slot instance (type SYMBOL))
@@ -489,7 +491,7 @@ pddl-get-predicates
 Fetch all predicates for a PDDL instance via the external manager.
 Asserts the corresponding :ref:`pddl-predicate` facts.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate pddl-get-predicates
     (slot instance (type SYMBOL))
@@ -505,7 +507,7 @@ pddl-get-type-objects
 Fetch all objects of a specific type for a PDDL instance via the external manager.
 Asserts the corresponding :ref:`pddl-type-objects` fact.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate pddl-get-type-objects
     (slot instance (type SYMBOL))
@@ -525,7 +527,7 @@ Represents a positive boolean goal condition for a PDDL instance. Negative condi
 
    support negative goal fluents
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate pddl-goal-fluent
     (slot instance (type SYMBOL))
@@ -541,7 +543,7 @@ pddl-goal-numeric-fluent
 
 Represents a numeric goal condition with a specific value in a PDDL instance.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate pddl-goal-numeric-fluent
     (slot instance (type SYMBOL))
@@ -559,7 +561,7 @@ pddl-instance
 Initialize a PDDL instance with the external manager.
 Also ensures that no confliction requests are made simultaneously, by always tracking, the current operation.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate pddl-instance
     (slot name (type SYMBOL))
@@ -578,7 +580,7 @@ pddl-manager
 
 Assert a fact of this type to specify the name of the PDDL manager node.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate pddl-manager
   " Store information on the external pddl manager.
@@ -594,7 +596,7 @@ pddl-numeric-fluent
 Represents a numeric fluent in a PDDL instance.
 Use `pddl-numeric-fluent-change` to update values safely with the external PDDL manager.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate pddl-numeric-fluent
     (slot instance (type SYMBOL))
@@ -611,7 +613,7 @@ pddl-numeric-fluent-change
 Indicates that a numeric fluent should be added or removed.
 Acts as a transient layer to synchronize with the external PDDL manager.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate pddl-numeric-fluent-change
     (slot instance (type SYMBOL))
@@ -632,7 +634,7 @@ Acts as a transient layer to synchronize with the external PDDL manager.
 
 Note that this does not automatically update the :ref:`pddl-type-objects` facts.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate pddl-object-change
     (slot instance (type SYMBOL))
@@ -654,7 +656,7 @@ Represents a PDDL plan.
 
 Consists of individual `pddl-action` facts with matching plan id.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate pddl-plan
     (slot instance (type SYMBOL))
@@ -678,7 +680,7 @@ pddl-planning-filter
 A transient layer for planning filters between the general PDDL interface and domain-specific usage.
 Can filter actions, objects, or fluents by defining a whitelist.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate pddl-planning-filter
     (slot id (type SYMBOL))
@@ -695,7 +697,7 @@ pddl-predicate
 
 Represents a predicate in a PDDL instance.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate pddl-predicate
     (slot instance (type SYMBOL))
@@ -713,7 +715,7 @@ pddl-service-request-meta
 Facts of these types are used internally and should be ignored.
 
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate pddl-service-request-meta
     (slot service (type STRING))
@@ -729,7 +731,7 @@ pddl-set-goals
 Register goal conditions with the external PDDL manager.
 The goal conditions are defined using :ref:`pddl-goal-fluent` and :ref:`pddl-goal-numeric-fluent` facts with matching goal ids.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate pddl-set-goals
     (slot instance (type SYMBOL))
@@ -747,7 +749,7 @@ pddl-type-objects
 Lists all objects of a certain type in a PDDL instance.
 Created using :ref:`pddl-get-type-objects`.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deftemplate pddl-type-objects
     (slot instance (type SYMBOL))

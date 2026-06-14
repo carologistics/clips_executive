@@ -183,7 +183,7 @@ This tutorial follows along the steps defined in the :ref:`RL CLIPS interface do
 The full example code is listed below and further discussed in the remainder of this tutorial:
 
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defglobal
     ?*CX-RL-REWARD-EPISODE-SUCCESS* = 100
@@ -372,7 +372,7 @@ Blocksworld Step 0: Configuration via Global Variables
 
 Keeping the default node name untouched, the only thing to do is to define some rewards for episod failure or success.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defglobal
     ?*CX-RL-REWARD-EPISODE-SUCCESS* = 100
@@ -385,7 +385,7 @@ Blocksworld Step 1: Defining the Environment
 
 A single rule can take care of this step:
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule rl-blocksworld-initial-state
     (not (cx-rl-node))
@@ -427,7 +427,7 @@ A single rule can take care of this step:
 The rule condition ensures that this rule only fires exactly onces, as it asserts an cx-rl-node fact.
 This ensures that it is not accidentally called again after the environment resets during training.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule rl-blocksworld-initial-state
     (not (cx-rl-node))
@@ -435,7 +435,7 @@ This ensures that it is not accidentally called again after the environment rese
 
 In order to define the blocksworld environment, a few parameterized predicates are defined.
 
-.. code-block:: lisp
+.. code-block:: clips
 
       (rl-observable-type (type robot) (objects robot1))
       (rl-observable-type (type block) (objects block1 block2 block3 block4))
@@ -459,7 +459,7 @@ Intuitively, this provides the following symbolic representation of the environm
 
 Similarly, parameterized actions span the action space.
 
-.. code-block:: lisp
+.. code-block:: clips
 
       (rl-observable-action (name stack) (param-names r b1 b2) (param-types robot block block))
       (rl-observable-action (name pickup) (param-names r b) (param-types robot block))
@@ -489,7 +489,7 @@ The parameters are grounded using the objects of the associated types and therfo
 
 Aside from the general observation space, the initial observations have to be specified:
 
-.. code-block:: lisp
+.. code-block:: clips
 
       (rl-observation (name clear) (param-values block1))
       (rl-observation (name clear) (param-values block2))
@@ -513,13 +513,13 @@ Hence, in the beginning, all blocks are placed on the table.
 
 Next, the robot is initialized as acting entity, waiting to get a task assigned:
 
-.. code-block:: lisp
+.. code-block:: clips
 
       (rl-robot (name robot1) (waiting TRUE))
 
 The setup is completed by asserting the cx-rl-node fact to notify the system.
 
-.. code-block:: lisp
+.. code-block:: clips
 
      (cx-rl-node (name ?*CX-RL-NODE-NAME*) (mode UNSET))
     )
@@ -535,7 +535,7 @@ Per default it restores a backup of the fact base that is made after the ``cx-rl
 Users may define routins acting before (in state ``USER-CLEANUP``) and afterwards (in state ``USER-INIT``).
 For this example, we use the default behavior and directly transition to from ``USER-CLEANUP`` to backup restoration (state ``LOAD-FACTS``) and from ``USER-INIT`` to ``DONE``, completing the reset.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule reset-to-load-facts
     ?reset <- (rl-reset-env (state USER-CLEANUP))
@@ -568,7 +568,7 @@ for stacking the currently held block onto any block that is clear.
 This guarantees that only legally valid stacking actions are generated.
 
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule rl-blocksworld-provide-action-stack
     (rl-current-action-space (state PENDING))
@@ -588,7 +588,7 @@ Similarly, the rule ``rl-blocksworld-provide-action-pickup`` asserts an
 The action is generated only if the robot is able to hold a block and
 the target block is on the table and clear of other blocks.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule rl-blocksworld-provide-action-pickup
     (rl-current-action-space (state PENDING))
@@ -607,7 +607,7 @@ action space generation.
 Assigning it a low salience guarantees that all action-generating
 rules are triggered before this rule fires.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule rl-blocksworld-actions-generation-done
     (declare (salience -2))
@@ -631,7 +631,7 @@ additional rules are required to:
 The rule ``action-selected-action-done-stack`` handles the execution
 of a ``stack`` action.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule action-selected-action-done-stack
     (rl-robot (name ?robot))
@@ -672,7 +672,7 @@ Reward computation:
 
 Accordingly, the rule ``action-selected-action-done-pickup`` handles the execution of a ``pickup`` action.
 
-.. code-block:: lisp
+.. code-block:: clips
 
 
   (defrule action-selected-action-done-pickup
@@ -718,7 +718,7 @@ control the lifecycle of the learning process.
 The rule ``rl-blocksworld-episode-end-success`` detects when the task
 has been completed successfully to end the the current episode, causing an additional reward as specified through the global variable ``?*CX-RL-EPISODE-END-SUCCESS*``.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule rl-blocksworld-episode-end-success
     (declare (salience 1))
@@ -746,7 +746,7 @@ immediately once the goal configuration is achieved.
 The rule ``rl-blocksworld-episode-end-failure`` handles unsuccessful
 episodes during training.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule rl-blocksworld-episode-end-failure
     (declare (salience -1))
@@ -768,7 +768,7 @@ asserted, marking the episode as failed.
 The rule ``rl-blocksworld-stop-agent-on-training-end`` reacts to the
 ``rl-end-training`` fact.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (defrule rl-blocksworld-stop-agent-on-training-end
     (rl-end-training)
@@ -785,7 +785,7 @@ In ``EXECUTION`` mode, the system no longer performs learning.
 Instead, it repeatedly requests an action from the trained policy
 until no further actions are available.
 
-.. code-block::  lisp
+.. code-block:: clips
 
   (defrule rl-blocksworld-ask-for-execution
     (cx-rl-node (mode EXECUTION))

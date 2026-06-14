@@ -1,4 +1,5 @@
 .. _extensions:
+
 Extensions
 ==========
 
@@ -13,5 +14,5 @@ This section documents optional extensions that add advanced functionality to th
 .. toctree::
    :maxdepth: 2
 
-   PDDL.rst
-   reinforcement_learning.rst
+   pddl/index.rst
+   rl/index.rst

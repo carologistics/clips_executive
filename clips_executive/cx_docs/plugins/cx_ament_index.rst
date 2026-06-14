@@ -1,7 +1,7 @@
 .. _usage_ament_index_plugin:
 
 Ament Index Plugin
-##################
+==================
 
 Source code on :source-master:`GitHub <cx_plugins/ament_index_plugin>`.
 
@@ -13,19 +13,19 @@ This plugin provides CLIPS bindings for functions of :rosdoc:`ament_index_cpp`.
 
 
 Configuration
-*************
+-------------
 
 This plugin has no specific configuration options.
 
 Features
-********
+--------
 
 Note that all functions listed below catch potential exceptions thrown by `ament_index_cpp` and return `FALSE` in that case.
 
 Functions
-~~~~~~~~~
+^^^^^^^^^
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (bind ?ret (ament-index-get-package-prefix ?package-name))
   ; example args: "cx_bringup"
@@ -54,7 +54,7 @@ Functions
   ; example ret: ("/opt/ros/<ros-distro>" "<path-to-other-prefix>" ...)
 
 Usage Example
-*************
+-------------
 
 A minimal working example is provided by the :docsite:`cx_bringup` package. Run it via:
 
@@ -65,7 +65,7 @@ A minimal working example is provided by the :docsite:`cx_bringup` package. Run 
 It calls all of the provided functions once and prints their output.
 
 Configuration
-~~~~~~~~~~~~~
+^^^^^^^^^^^^^
 
 File :source-master:`cx_bringup/params/plugin_examples/ament_index.yaml`.
 
@@ -88,11 +88,11 @@ File :source-master:`cx_bringup/params/plugin_examples/ament_index.yaml`.
           "clips/plugin_examples/ament-index.clp"]
 
 Code
-~~~~
+^^^^
 
 File :source-master:`cx_bringup/clips/plugin_examples/ament-index.clp`.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (deffunction print-pairs (?pairs ?key-str ?value-str)
     (bind ?length (length$ ?pairs))

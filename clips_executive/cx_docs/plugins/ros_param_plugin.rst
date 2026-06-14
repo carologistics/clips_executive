@@ -1,7 +1,7 @@
 .. _usage_ros_param_plugin:
 
 ROS Param Plugin
-################
+================
 
 Source code on :source-master:`GitHub <cx_plugins/ros_param_plugin>`.
 
@@ -15,26 +15,26 @@ In order to retrieve params from other nodes, the :ref:`RosMsgsPlugin <usage_ros
 
 
 Configuration
-*************
+-------------
 
 This plugin has no specific configuration options.
 
 Features
-********
+--------
 
 Functions
-~~~~~~~~~
+^^^^^^^^^
 
 This plugin adds a custom functions as listed below.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (?bind ?val (ros-param-get-value ?param-name ?default-value))
   ; example args: "environments" (create$ not-found)
   ; example ret:  ("cx_ros_param")
 
 Usage Example
-*************
+-------------
 
 A minimal working example is provided by the :docsite:`cx_bringup` package. Run it via:
 
@@ -45,7 +45,7 @@ A minimal working example is provided by the :docsite:`cx_bringup` package. Run 
 It calls all of the provided function to print some parameters.
 
 Configuration
-~~~~~~~~~~~~~
+^^^^^^^^^^^^^
 
 File :source-master:`cx_bringup/params/plugin_examples/ros_param.yaml`.
 
@@ -70,11 +70,11 @@ File :source-master:`cx_bringup/params/plugin_examples/ros_param.yaml`.
 
 
 Code
-~~~~
+^^^^
 
 File :source-master:`cx_bringup/clips/plugin_examples/ros-param.clp`.
 
-.. code-block:: lisp
+.. code-block:: clips
 
   (printout info "(ros-param-get-value \"environments\" (create$ not-found))" crlf)
   (printout green "    " (ros-param-get-value "environments" (create$ not-found)) crlf)

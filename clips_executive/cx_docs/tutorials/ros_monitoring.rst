@@ -1,5 +1,7 @@
+.. _continuous_monitoring_tutorial:
+
 Continuous Monitoring
-#####################
+=====================
 
 **Goal:** Monitor the pose of a turtle from turtlesim using CLIPS
 
@@ -136,7 +138,7 @@ Lastly, the :docsite:`FileLoadPlugin <clips_executive/plugins/file_load_plugin>`
 
 The ``turtlesim_monitor.clp`` file provides a set of rules to listen to the ``Pose`` topic of ``turtle1`` and to detect if the pose leaves a defined safe area.
 
-.. code:: lisp
+.. code-block:: clips
 
   (defglobal
     ?*TURTLE-POSE-TOPIC* = "turtle1/pose"
@@ -187,7 +189,7 @@ The ``turtlesim_monitor.clp`` file provides a set of rules to listen to the ``Po
 
 First, some global variables are defined for convenience:
 
-.. code:: lisp
+.. code-block:: clips
 
   (defglobal
     ?*TURTLE-POSE-TOPIC* = "turtle1/pose"
@@ -208,7 +210,7 @@ Refer to the :docsite:`RosMsgsPlugin documentation <clips_executive/plugins/ros_
 Then, a rule called ``turtle-pose-topic-create-subscription`` is defined, which creates the subsciption to the ``turtle1/pose`` pose using the ROS communication plugin. It has no condition, hence can be executed right away.
 Before the subscription is established, it unwatches the ``ros-msgs-message`` template and ``turtle-pose-receive`` rule, which processes the message facts. This greatly reduces the amount of log output as data is published with high frequency on this topic.
 
-.. code:: lisp
+.. code-block:: clips
 
   (defrule turtle-pose-topic-create-subscription
   " Create subscription to monitor the pose."
@@ -222,7 +224,7 @@ Before the subscription is established, it unwatches the ``ros-msgs-message`` te
 
 The next rule ``turtle-pose-receive`` processes each incoming message from the pose topic and if the received (x,y) coordinate is outside of the safe area, it asserts a fact ``(turtle-out-of-bounds)``. This will be the trigger for another set of rules to teleport the turtle back to the center of the safe area.
 
-.. code:: lisp
+.. code-block:: clips
 
   (defrule turtle-pose-receive
   " React to incoming messages andcheck for critical pose. "
@@ -247,7 +249,7 @@ The next rule ``turtle-pose-receive`` processes each incoming message from the p
 
 Lastly, the rule ``turtle-pose-destroy-subscription`` closes the subscription when the |CX| stops the environment.
 
-.. code:: lisp
+.. code-block:: clips
 
   (defrule turtle-pose-destroy-subscription
   " Delete the subscription on executive finalize. "
@@ -263,7 +265,7 @@ Lastly, the rule ``turtle-pose-destroy-subscription`` closes the subscription wh
 
 The file ``turtlesim_teleport.clp`` contains a set of rule that will teleport the turtle back to the center of the canvas, whenever it leaves the safe area, as indicated by the ``(turtle-out-of-bounds)`` fact.
 
-.. code:: lisp
+.. code-block:: clips
 
     (defglobal
       ?*TURTLE-SERVICE* = "turtle1/teleport_absolute"
@@ -323,7 +325,7 @@ The file ``turtlesim_teleport.clp`` contains a set of rule that will teleport th
 
 Again, the file begins with some global constants for convenience.
 
-.. code:: lisp
+.. code-block:: clips
 
     (defglobal
       ?*TURTLE-SERVICE* = "turtle1/teleport_absolute"
@@ -333,7 +335,7 @@ Again, the file begins with some global constants for convenience.
 Similar to handling subscriptions and messages, the ``RosMsgsPlugin`` also supports the creation of ROS service clients to send service requests.
 The ``turtle-teleport-client-init`` rule simply ensures a client to the ``turtle1/teleport_absolute`` service is created.
 
-.. code:: lisp
+.. code-block:: clips
 
     (defrule turtle-teleport-client-init
     " Create publisher for ros_cx_out."
@@ -349,7 +351,7 @@ This allows the rule to fire at each iteration if needed (e.g., if the service i
 The rule effect takes care of creating and sending the request.
 If the request is successfully sent, it asserts a request fact (including the request ID assigned to it), indicating that the request is now processed asynchronously and preventing the rule to fire again.
 
-.. code:: lisp
+.. code-block:: clips
 
     (defrule turtle-teleport-request-teleport-mid
     " Attempt to request the service. "
@@ -375,7 +377,7 @@ If the request is successfully sent, it asserts a request fact (including the re
 
 The rule ``turtle-teleport-done`` processes the response of the service request. The ``TeleportAbsolute`` service does not provide an explicit response, hence the rule simply cleans it up, along with the facts indicating the turtle being out of bounds ``(turtle-out-of-bounds)`` and that the request awaited an answer ``(request ?id)``.
 
-.. code:: lisp
+.. code-block:: clips
 
     (defrule turtle-teleport-done
     " Got response, delete it without reading, it is empty."
@@ -390,7 +392,7 @@ The rule ``turtle-teleport-done`` processes the response of the service request.
 
 Lastly, the rule ``turtle-teleport-client-finalize`` takes care of removing the client on shutdown of the environment.
 
-.. code:: lisp
+.. code-block:: clips
 
     (defrule turtle-teleport-client-finalize
     " Delete the client on executive finalize. "
