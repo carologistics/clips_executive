@@ -45,9 +45,14 @@ void Tf2PoseTrackerPlugin::initialize()
   // setup transform listener
   cb_group_ = node->create_callback_group(rclcpp::CallbackGroupType::Reentrant);
   tf_buffer_ = std::make_unique<tf2_ros::Buffer>(node->get_clock());
+#ifdef HUMBLE
+  tf_listener_ = std::make_unique<tf2_ros::TransformListener>(*tf_buffer_, tf_spin_thread);
+
+#else
   tf_listener_ = std::make_unique<tf2_ros::TransformListener>(
     *tf_buffer_, node->get_node_base_interface(), node->get_node_logging_interface(),
     node->get_node_parameters_interface(), node->get_node_topics_interface(), tf_spin_thread);
+#endif
 }
 
 void Tf2PoseTrackerPlugin::finalize()
