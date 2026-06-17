@@ -81,6 +81,11 @@
   @slot name: name of the action.
   @slot params: parameters of the  action.
   @slot plan: name of the associated plan
+
+  The following slots only carry meaning in some variants of PDDL planning:
+  @slot order: holds sequential plan index or partial order/STN identifier
+  @slot predecessors: list of partial order identifiers to all predecessors
+  @slot task-id: identifier for hierarchical planning to match with pddl-method
   @slot: planned-start-time: start time of the action in the plan
   @slot: planned-duration: assumed duration of the action according to plan
 "
@@ -89,8 +94,54 @@
   (slot name (type SYMBOL))
   (multislot params (type SYMBOL) (default (create$)))
   (slot plan (type SYMBOL))
+  (slot order (type INTEGER))
+  (multislot predecessors (type INTEGER))
+  (slot task-id (type SYMBOL))
   (slot planned-start-time (type FLOAT))
   (slot planned-duration (type FLOAT))
+)
+
+(deftemplate pddl-method
+" Represents a grounded pddl method in a hddl instance.
+  @slot instance: pddl instance belonging to the action.
+  @slot plan: name of the associated plan
+  @slot name: name of the action.
+  @slot params: parameters of the action.
+  @slot task-id: decomposition identifier
+"
+  (slot instance (type SYMBOL))
+  (slot plan (type SYMBOL))
+  (slot id (type SYMBOL)) ; this should be a globally unique ID
+  (slot name (type SYMBOL))
+  (multislot params (type SYMBOL) (default (create$)))
+  (slot task-id (type SYMBOL))
+)
+
+(deftemplate pddl-stn-constraint
+" Represents a STN constraint of a STN plan.
+  These have the form: L < A - B < U, where A is the source, B the destination.
+  @slot instance: pddl instance belonging to the action.
+  @slot plan: name of the associated plan
+  @slot from: action id of the source action.
+  @slot from-role: timepoint of the source aciton (START or END).
+  @slot to: action id of the target action.
+  @slot to-role: timepoint of the target aciton (START or END).
+  @slot is-lower-bounded: If FALSE, lower-bound is actually -INF.
+  @slot is-upper-bounded: If FALSE, upper-bound is actually INF.
+  @slot lower-bound: lower bound of the constraint.
+  @slot upper-bound: upper bound of the constraint.
+"
+  (slot instance (type SYMBOL))
+  (slot plan (type SYMBOL))
+  (slot id (type SYMBOL)) ; this should be a globally unique ID
+  (slot from (type INTEGER))
+  (slot from-role (type SYMBOL) (allowed-values START END))
+  (slot to (type INTEGER))
+  (slot to-role (type SYMBOL) (allowed-values START END))
+  (slot is-lower-bounded (type SYMBOL) (allowed-values TRUE FALSE))
+  (slot is-upper-bounded (type SYMBOL) (allowed-values TRUE FALSE))
+  (slot lower-bound (type INTEGER))
+  (slot upper-bound (type INTEGER))
 )
 
 (deftemplate pddl-goal-fluent
@@ -463,10 +514,10 @@
   (slot id (type SYMBOL))
   (slot goal (type SYMBOL))
   (slot goal-ptr (type EXTERNAL-ADDRESS))
-  (slot plan-type (type SYMBOL) (allowed-values CLASSICAL TEMPORAL) (default CLASSICAL))
+  (slot plan-type (type SYMBOL) (allowed-values CLASSICAL TEMPORAL PARTIAL-ORDER HIERARCHICAL STN) (default CLASSICAL))
+  (slot action-type (type SYMBOL) (allowed-values CLASSICAL TEMPORAL STN) (default CLASSICAL))
   (slot goal-handle (type EXTERNAL-ADDRESS))
   (slot output-dir (type STRING))
-  (slot type (type SYMBOL) (allowed-values TEMPORAL CLASSICAL))
   (slot state (type SYMBOL) (allowed-values PENDING WAITING PLANNING REQUEST-CANCELING CANCELING CANCELED SUCCESS FAILURE) (default PENDING))
 )
 
