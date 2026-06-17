@@ -20,7 +20,8 @@ from dataclasses import dataclass, field
 
 @dataclass
 class Renamings:
-    """Wraps the name-mangling map produced by PDDLWriter.
+    """
+    Wraps the name-mangling map produced by PDDLWriter.
 
     unified-planning may rename actions/objects to produce valid PDDL
     identifiers.  This class provides a safe, typed way to reverse those

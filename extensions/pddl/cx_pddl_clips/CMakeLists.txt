@@ -9,7 +9,9 @@ find_package(ament_cmake REQUIRED)
 find_package(cx_ros_comm_gen REQUIRED)
 
 install (DIRECTORY clips DESTINATION share/${PROJECT_NAME})
-cx_generate_msg_bindings("cx_pddl_interfaces" "TimedPlanAction")
-cx_generate_action_bindings("cx_pddl_interfaces" "PlanTemporal")
+cx_generate_msg_bindings("cx_pddl_interfaces" "PlanAction")
+cx_generate_msg_bindings("cx_pddl_interfaces" "HierarchicalPlanMethod")
+cx_generate_msg_bindings("cx_pddl_interfaces" "StnConstraint")
+cx_generate_action_bindings("cx_pddl_interfaces" "Plan")
 
 ament_package()
