@@ -12,7 +12,9 @@ set(MSGS
     "msg/Function.msg"
     "msg/FunctionEffect.msg"
     "msg/FluentEffect.msg"
-    "msg/TimedPlanAction.msg"
+    "msg/StnConstraint.msg"
+    "msg/HierarchicalPlanMethod.msg"
+    "msg/PlanAction.msg"
     "msg/Action.msg"
     "msg/Object.msg"
     "msg/Predicate.msg")
@@ -36,11 +38,9 @@ set(SERVICES
     "srv/SetObjectFilter.srv"
     "srv/CreateGoalInstance.srv"
     "srv/AddFluents.srv")
-set(ACTIONS "action/PlanTemporal.action")
-
-# set(ACTIONS
-
-# )
+set(ACTIONS
+  "action/Plan.action"
+)
 rosidl_generate_interfaces(
   ${PROJECT_NAME}
   ${MSGS}
