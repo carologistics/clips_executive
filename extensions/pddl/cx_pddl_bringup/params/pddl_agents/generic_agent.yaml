@@ -1,11 +1,24 @@
 /**:
   ros__parameters:
     autostart_node: true
-    environments: ["cx_pddl_blocksworld_agent"]
+    pddl:
+      package_dir: "cx_pddl_bringup"
+      plan_type: "TEMPORAL"
+      # plan_type: "STN"
+      # plan_type: "PARTIAL-ORDER"
+      # plan_type: "HIERARCHICAL"
+      domain: "depots_temporal_domain.pddl"
+      problem: "depots_temporal_problem.pddl"
+      # domain: "depots_classical_domain.pddl"
+      # problem: "depots_classical_problem.pddl"
+      # domain: "robot_hierarchical_domain.hddl"
+      # problem: "robot_hierarchical_problem.hddl"
+    environments: ["cx_pddl_clips_agent"]
 
-    cx_pddl_blocksworld_agent:
+    cx_pddl_clips_agent:
       plugins: ["executive", "ros_msgs",
                 "ament_index",
+                "ros_param",
                 "plan_action",
                 "plan_action_msg",
                 "stn_constraint_msg",
@@ -18,6 +31,9 @@
 
     ament_index:
       plugin: "cx::AmentIndexPlugin"
+
+    ros_param:
+      plugin: "cx::RosParamPlugin"
 
     executive:
       plugin: "cx::ExecutivePlugin"
@@ -37,7 +53,7 @@
     files:
       plugin: "cx::FileLoadPlugin"
       pkg_share_dirs: ["cx_pddl_bringup"]
-      load: ["clips/cx_pddl_bringup/cx-pddl-clips-agent.clp"]
+      load: ["clips/cx_pddl_bringup/cx-pddl-generic-agent.clp"]
 
     plan_action:
       plugin: "cx::CXCxPddlInterfacesPlanPlugin"
