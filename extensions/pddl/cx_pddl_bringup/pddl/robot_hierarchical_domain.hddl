@@ -1,0 +1,644 @@
+(define (domain logistics-temporal)
+  (:requirements :typing :hierarchy :durative-actions)
+
+  ;; =========================
+  ;; TYPES (fixed + safe hierarchy)
+  ;; =========================
+  (:types
+    object
+    location - object
+    interactable place side step-name complexity num - object
+	belt-side shelf-side slide-side - side
+    workpiece machine - interactable
+
+    ;; machines
+    base-station cap-station ring-station storage-station delivery-station - machine
+    ; slide bs-place cs-place rs-place ss-place ds-place - place
+
+    ;; moveable entities
+    ; products are named entities (1 pddl object per physical object)
+	; tokens are unnamed entitites (1 pddl object for N pysical objects)
+    token product - workpiece
+    carrier payment - token
+    meta base ring cap - step-name
+
+  )
+
+  (:constants
+    zero one two three four five six - num
+    dummy-payment - payment
+    bs - base-station
+    cs1 cs2 - cap-station
+    rs1 rs2 - ring-station
+    ss - storage-station
+    ds - delivery-station
+    c0 c1 c2 c3 - complexity
+    input output - belt-side
+    slide - slide-side
+    shelf - shelf-side
+    base-red base-silver base-black - base
+    ring-blue ring-yellow ring-green ring-orange - ring
+    cap-grey cap-black - cap
+  )
+
+
+  ;; =========================
+  ;; PREDICATES
+  ;; =========================
+  (:predicates
+     ;; Locations of workpieces
+     (at ?wp - workpiece ?m - machine ?side - side) ; Workpiece is at a machine side
+
+     ;; Workpiece step-names
+	 (im-a-machine ?m - machine)
+	 (product-complexity ?prod - product ?com - complexity)
+	 (c0-description ?prod - product ?b - base ?c - cap)
+	 (c1-description ?prod - product ?b - base ?r1 - ring ?c - cap)
+	 (c2-description ?prod - product ?b - base ?r1 - ring ?r2 - ring ?c - cap)
+	 (c3-description ?prod - product ?b - base ?r1 - ring ?r2 - ring ?r3 - ring ?c - cap)
+	 (price  ?r - ring ?cost - num)
+
+     ;; Machine capabilities
+     (step-place ?step - step-name ?place - place) ; Machine can process a step
+     (step-machine ?step - step-name ?m - machine)
+	 (payed-for ?r - ring)
+
+     ;; Side availability
+     (free ?m - machine ?side - side)
+     (holding ?prod - workpiece)
+     (spawnable ?product - product)
+     (usable ?i - interactable) ; do not use this for tokens
+     (in ?m - machine ?place - place)
+     (out ?m - machine ?place - place)
+     ; specific version of usable to distinguish tokens at different places
+     (on-shelf ?carrier - carrier ?cs - cap-station)
+
+     ; (rs-slide ?rs - ring-station ?slide - slide)
+
+     (buffered ?cs - cap-station ?cap - cap)
+     (can-buffer ?cs - cap-station ?cap - cap)
+
+	 (payment-for-product ?pay - payment ?num - num ?prod - product)
+
+  )
+
+
+  ;; =========================
+  ;; ABSTRACT TASK
+  ;; =========================
+
+  (:task build-product
+    :parameters (?prod - product)
+  )
+
+  (:task transport
+  :parameters (?prod - workpiece ?from - place ?to - place)
+  )
+
+  (:task pay
+  :parameters (?pay1 - payment ?pay2 - payment ?r - ring)
+  )
+
+  (:task feed-cs-with-carrier
+  :parameters (?carrier - carrier ?cs - cap-station ?c - cap)
+  )
+
+  (:task dispose-carrier
+  :parameters (?carrier - carrier ?cs - cap-station ?target - ring-station)
+  )
+  (:task deliver
+  :parameters (?prod - workpiece ?ds - delivery-station)
+  )
+
+  (:task spawn-and-pickup
+  :parameters (?prod - workpiece ?bs - base-station ?b - base)
+  )
+
+  (:task spawn-and-pickup-payment
+  :parameters (?prod - payment ?bs - base-station)
+  )
+
+
+  ;; =========================
+  ;; METHOD
+  ;; =========================
+
+
+  (:method build-c1
+    :parameters (?prod - product ?bs - base-station ?b - base ?rs1 - ring-station ?r1 - ring ?cs - cap-station ?ds - delivery-station ?c - cap ?cc1 - carrier ?pay1 - payment ?pay2 - payment)
+
+    :task (build-product ?prod)
+    :precondition (and (product-complexity ?prod c1)
+                       (c1-description ?prod ?b ?r1 ?c)
+                       (step-machine ?b ?bs)
+                       (step-machine ?r1 ?rs1)
+                       (step-machine ?c ?cs)
+					   (payment-for-product ?pay1 one ?prod)
+					   (payment-for-product ?pay2 two ?prod)
+    )
+    :subtasks (and
+      (p11 (pay ?pay1 ?pay2 ?r1))
+      (p12 (payed-for-action ?r1))
+      (t0 (spawn-and-pickup ?prod ?bs ?b))
+      (t1 (transport ?prod ?bs ?rs1))
+      (r1 (rs-mount-ring ?prod ?rs1 ?r1))
+      (t2 (transport ?prod ?rs1 ?cs))
+      (c1 (cs-mount-cap ?prod ?cs ?c))
+      (t3 (deliver ?prod ?ds))
+      (bc1 (feed-cs-with-carrier ?cc1 ?cs ?c))
+      (bc2 (cs-buffer ?cc1 ?cs ?c))
+      (bc3 (dispose-carrier ?cc1 ?cs ?rs1))
+    )
+    :ordering (and
+	  ; order of payment actions
+      (< p11 p12)
+      (< p12 r1)
+      ; order of product steps
+      (< t0 t1)
+      (< t1 r1)
+      (< r1 t2)
+      (< t2 c1)
+      (< c1 t3)
+      ; order of buffer cap steps
+      (< bc1 bc2)
+      (< bc2 bc3)
+      (< bc1 t3)
+      (< bc3 c1)
+    )
+  )
+
+  (:method build-c2
+    :parameters (?prod - product ?bs - base-station ?b - base ?rs1 - ring-station ?r1 - ring ?rs2 - ring-station ?r2 - ring ?cs - cap-station ?ds - delivery-station ?c - cap ?cc1 - carrier ?pay1 - payment ?pay2 - payment ?pay3 - payment ?pay4 - payment)
+
+    :task (build-product ?prod)
+    :precondition (and (product-complexity ?prod c2)
+                       (c2-description ?prod ?b ?r1 ?r2 ?c)
+                       (step-machine ?b ?bs)
+                       (step-machine ?r1 ?rs1)
+                       (step-machine ?r2 ?rs2)
+                       (step-machine ?c ?cs)
+					   (payment-for-product ?pay1 one ?prod)
+					   (payment-for-product ?pay2 two ?prod)
+					   (payment-for-product ?pay3 three ?prod)
+					   (payment-for-product ?pay4 four ?prod)
+    )
+    :subtasks (and
+      (p11 (pay ?pay1 ?pay2 ?r1))
+      (p21 (pay ?pay3 ?pay4 ?r2))
+      (p12 (payed-for-action ?r1))
+      (p22 (payed-for-action ?r2))
+      (t0 (spawn-and-pickup ?prod ?bs ?b))
+      (t1 (transport ?prod ?bs ?rs1))
+      (r1 (rs-mount-ring ?prod ?rs1 ?r1))
+      (t2 (transport ?prod ?rs1 ?rs2))
+      (r2 (rs-mount-ring ?prod ?rs2 ?r2))
+      (t3 (transport ?prod ?rs2 ?cs))
+      (c1 (cs-mount-cap ?prod ?cs ?c))
+      (t4 (deliver ?prod ?ds))
+      (bc1 (feed-cs-with-carrier ?cc1 ?cs ?c))
+      (bc2 (cs-buffer ?cc1 ?cs ?c))
+      (bc3 (dispose-carrier ?cc1 ?cs ?rs1))
+    )
+    :ordering (and
+	  ; order of payment actions
+      (< p11 p12)
+      (< p21 p22)
+      (< p12 r1)
+      (< p22 r2)
+      ; order of product steps
+      (< t0 t1)
+      (< t1 r1)
+      (< r1 t2)
+      (< t2 r2)
+      (< r2 t3)
+      (< t3 c1)
+      (< c1 t4)
+      ; order of buffer cap steps
+      (< bc1 bc2)
+      (< bc2 bc3)
+      (< bc1 t3)
+      (< bc3 c1)
+    )
+  )
+
+  (:method build-c3
+    :parameters (?prod - product ?bs - base-station ?b - base ?rs1 - ring-station ?r1 - ring ?rs2 - ring-station ?r2 - ring ?rs3 - ring-station ?r3 - ring ?cs - cap-station ?ds - delivery-station ?c - cap ?cc1 - carrier ?pay1 - payment ?pay2 - payment ?pay3 - payment ?pay4 - payment ?pay5 - payment ?pay6 - payment)
+
+    :task (build-product ?prod)
+    :precondition (and (product-complexity ?prod c3)
+                       (c3-description ?prod ?b ?r1 ?r2 ?r3 ?c)
+                       (step-machine ?b ?bs)
+                       (step-machine ?r1 ?rs1)
+                       (step-machine ?r2 ?rs2)
+                       (step-machine ?r3 ?rs3)
+                       (step-machine ?c ?cs)
+					   (payment-for-product ?pay1 one ?prod)
+					   (payment-for-product ?pay2 two ?prod)
+					   (payment-for-product ?pay3 three ?prod)
+					   (payment-for-product ?pay4 four ?prod)
+					   (payment-for-product ?pay5 five ?prod)
+					   (payment-for-product ?pay6 six ?prod)
+    )
+    :subtasks (and
+      (p11 (pay ?pay1 ?pay2 ?r1))
+      (p21 (pay ?pay3 ?pay4 ?r2))
+      (p31 (pay ?pay5 ?pay6 ?r3))
+      (p12 (payed-for-action ?r1))
+      (p22 (payed-for-action ?r2))
+      (p32 (payed-for-action ?r3))
+      (t0 (spawn-and-pickup ?prod ?bs ?b))
+      (t1 (transport ?prod ?bs ?rs1))
+      (r1 (rs-mount-ring ?prod ?rs1 ?r1))
+      (t2 (transport ?prod ?rs1 ?rs2))
+      (r2 (rs-mount-ring ?prod ?rs2 ?r2))
+      (t3 (transport ?prod ?rs2 ?rs3))
+      (r3 (rs-mount-ring ?prod ?rs3 ?r3))
+      (t4 (transport ?prod ?rs3 ?cs))
+      (c1 (cs-mount-cap ?prod ?cs ?c))
+      (t5 (deliver ?prod ?ds))
+      (bc1 (feed-cs-with-carrier ?cc1 ?cs ?c))
+      (bc2 (cs-buffer ?cc1 ?cs ?c))
+      (bc3 (dispose-carrier ?cc1 ?cs ?rs1))
+    )
+    :ordering (and
+	  ; order of payment actions
+      (< p11 p12)
+      (< p21 p22)
+      (< p31 p32)
+      (< p12 r1)
+      (< p22 r2)
+      (< p32 r3)
+      ; order of product steps
+      (< t0 t1)
+      (< t1 r1)
+      (< r1 t2)
+      (< t2 r2)
+      (< r2 t3)
+      (< t3 r3)
+      (< r3 t4)
+      (< t4 c1)
+      (< c1 t5)
+      ; order of buffer cap steps
+      (< bc1 bc2)
+      (< bc2 bc3)
+      (< bc1 t4)
+      (< bc3 c1)
+    )
+  )
+
+
+  (:method spawn-and-pickup-product
+    :parameters (?prod - product ?bs - base-station ?b - base ?s - belt-side)
+
+    :task (spawn-and-pickup ?prod ?bs ?b)
+
+    :subtasks (and
+      (t0 (bs-dispense-product ?prod ?bs ?s ?b))
+      (t1 (move-to ?bs ?s))
+      (t2 (pickup ?prod ?bs ?s))
+    )
+    :ordering (and
+      (< t1 t2)
+      (< t0 t2)
+    )
+  )
+
+  (:method m-spawn-and-pickup-payment
+    :parameters (?pay - payment ?bs - base-station ?s - belt-side)
+
+    :task (spawn-and-pickup-payment ?pay ?bs)
+
+    :subtasks (and
+      (t0 (bs-dispense-payment ?pay ?bs ?s))
+      (t1 (move-to ?bs ?s))
+      (t2 (pickup ?pay ?bs ?s))
+    )
+    :ordering (and
+      (< t1 t2)
+      (< t0 t2)
+    )
+  )
+
+  (:method carrier-to-input
+    :parameters (?carrier - carrier ?cs - cap-station ?c - cap)
+
+    :task (feed-cs-with-carrier ?carrier ?cs ?c)
+    :precondition (and
+      (not (holding ?carrier))
+    )
+    :ordered-tasks (and
+      (move-to ?cs shelf)
+      (pickup ?carrier ?cs shelf)
+      (move-to ?cs input)
+      (place-down ?carrier ?cs input)
+    )
+  )
+  (:method carrier-to-input-holding
+    :parameters (?carrier - carrier ?cs - cap-station ?c - cap)
+
+    :task (feed-cs-with-carrier ?carrier ?cs ?c)
+    :precondition (and
+      (holding ?carrier)
+    )
+    :ordered-tasks (and
+      (move-to ?cs input)
+      (place-down ?carrier ?cs input)
+    )
+  )
+
+  (:method transport-out-to-in
+    :parameters (?prod - product ?from - machine ?to - machine)
+
+    :task (transport ?prod ?from ?to)
+    :precondition (and
+      (not (holding ?prod))
+    )
+    :ordered-tasks (and
+      (move-to ?from output)
+      (pickup ?prod ?from output)
+      (move-to ?to input)
+      (place-down ?prod ?to input)
+    )
+  )
+
+  (:method transport-to-in
+    :parameters (?prod - product ?from - machine ?to - machine)
+
+    :task (transport ?prod ?from ?to)
+    :precondition (and
+      (holding ?prod)
+    )
+    :ordered-tasks (and
+      (move-to ?to input)
+      (place-down ?prod ?to input)
+    )
+  )
+
+  (:method m-pay-twice-from-bs
+    :parameters (?pay1 - payment ?pay2 - payment ?bs - base-station ?rs - ring-station ?r - ring)
+
+    :task (pay ?pay1 ?pay2 ?r)
+    :precondition (and
+      (price ?r two)
+    )
+    :subtasks (and
+      (p11 (spawn-and-pickup-payment ?pay1 ?bs))
+	  (p12 (move-to ?rs slide))
+	  (p13 (pay-generic ?pay1 ?rs))
+      (p21 (spawn-and-pickup-payment ?pay2 ?bs))
+	  (p22 (move-to ?rs slide))
+	  (p23 (pay-generic ?pay2 ?rs))
+    )
+    :ordering (and
+      (< p11 p12)
+      (< p12 p13)
+      (< p21 p22)
+      (< p22 p23)
+    )
+  )
+
+  (:method m-pay-once-from-bs
+    :parameters (?pay1 - payment ?pay2 - payment ?bs - base-station ?rs - ring-station ?r - ring)
+
+    :task (pay ?pay1 ?pay2 ?r)
+    :precondition (and
+      (price ?r one)
+    )
+    :ordered-tasks (and
+      (spawn-and-pickup-payment ?pay1 ?bs)
+      (move-to ?rs slide)
+      (pay-generic ?pay1 ?rs)
+    )
+  )
+
+  (:method m-pay-none
+    :parameters (?pay1 - payment ?pay2 - payment ?bs - base-station ?rs - ring-station ?r - ring)
+
+    :task (pay ?pay1 ?pay2 ?r)
+    :precondition (and
+      (price ?r zero)
+    )
+    :ordered-tasks (and
+    )
+  )
+
+  (:method m-pay-from-cs
+    :parameters (?cs - cap-station ?carrier - carrier ?rs - ring-station)
+
+    :task (dispose-carrier ?carrier ?cs ?rs)
+    :ordered-tasks (and
+      (move-to ?cs output)
+      (pickup ?carrier ?cs output)
+      (move-to ?rs shelf)
+      (pay-with-token ?rs ?carrier)
+    )
+  )
+
+  (:method m-deliver-product
+    :parameters (?prod - product ?ds - delivery-station ?cs - cap-station)
+
+    :task (deliver ?prod ?ds)
+    :ordered-tasks (and
+      (move-to ?cs output)
+      (pickup ?prod ?cs output)
+      (move-to ?ds input)
+      (place-down ?prod ?ds input)
+      (ds-deliver ?prod ?ds)
+    )
+  )
+
+  ;; =========================
+  ;; DURATIVE ACTIONS
+  ;; =========================
+
+
+   (:durative-action pickup
+     :parameters (?prod - workpiece ?m - machine  ?side - side)
+     :duration (= ?duration 10)
+     :condition (and
+       (at start (at ?prod ?m ?side))
+       (at start (usable ?prod))
+     )
+     :effect (and
+       (at start (not (usable ?prod)))
+       (at end (free ?m ?side))
+       (at end (not (at ?prod ?m ?side)))
+       (at end (holding ?prod))
+     )
+   )
+
+   (:durative-action place-down
+     :parameters (?prod - workpiece ?m - machine ?side - side)
+     :duration (= ?duration 10)
+     :condition (and
+       (at start (holding ?prod))
+       (at start (free ?m ?side))
+       (over all (free ?m ?side))
+     )
+     :effect (and
+       (at end (not (free ?m ?side)))
+       (at end (not (holding ?prod)))
+       (at end (at ?prod ?m ?side))
+       (at end (usable ?prod))
+     )
+   )
+
+   (:durative-action move-to
+     :parameters (?m - machine ?side - side)
+     :duration (= ?duration 10)
+     :condition (and
+       (at start (im-a-machine ?m))
+     )
+     :effect (and
+       (at end (im-a-machine ?m))
+     )
+   )
+
+   (:durative-action pay-generic
+     :parameters (?pay - payment ?rs - ring-station)
+     :duration (= ?duration 10)
+     :condition (and
+       (at start (holding ?pay))
+     )
+     :effect (and
+       (at end (not (holding ?pay)))
+       (at end (at ?pay ?rs slide))
+     )
+   )
+
+
+   (:durative-action pay-with-token
+     :parameters (?rs - ring-station ?t - token)
+     :duration (= ?duration 5)
+     :condition (and (at start (holding ?t))
+     )
+     :effect (and
+       (at end (not (holding ?t)))
+     )
+   )
+
+   (:durative-action payed-for-action
+     :parameters (?r - ring)
+     :duration (= ?duration 5)
+     :condition (and
+     )
+     :effect (and (at end (payed-for ?r))
+     )
+   )
+
+   (:durative-action rs-mount-ring
+     :parameters (?prod - product ?rs - ring-station ?ring - ring)
+     :duration (= ?duration 10)
+     :condition (and
+       (at start (at ?prod ?rs input))
+       ;(over all (usable ?rs))
+       (at start (usable ?prod))
+       (at start (free ?rs output))
+     )
+     :effect (and
+       (at start (not (usable ?prod)))
+       (at end (usable ?prod))
+       (at end (free ?rs input))
+       (at end (not (free ?rs output)))
+       (at end (not (at ?prod ?rs input)))
+       (at end (at ?prod ?rs output))
+     )
+   )
+
+   (:durative-action cs-buffer
+     :parameters (?carrier - carrier ?cs - cap-station ?c - cap)
+     :duration (= ?duration 10)
+     :condition (and
+       (at start (at ?carrier ?cs input))
+       (at start (can-buffer ?cs ?c))
+       ;(over all (usable ?cs))
+       ;(at start (token-usable ?carrier ?in))
+       (at start (free ?cs output))
+     )
+     :effect (and
+       ;(at start (not (token-usable ?carrier ?in)))
+       (at start (not (can-buffer ?cs ?c)))
+       ;(at end (token-usable ?carrier ?out))
+       (at end (free ?cs input))
+       (at end (buffered ?cs ?c))
+       (at end (not (free ?cs output)))
+       (at end (not (at ?carrier ?cs input)))
+       (at end (at ?carrier ?cs output))
+     )
+   )
+
+   (:durative-action cs-mount-cap
+     :parameters (?prod - product ?cs - cap-station ?c - cap)
+     :duration (= ?duration 10)
+     :condition (and
+       (at start (at ?prod ?cs input))
+       (at start (buffered ?cs ?c))
+       (at start (usable ?prod))
+       (at start (free ?cs output))
+     )
+     :effect (and
+       (at start (not (usable ?prod)))
+       (at end (usable ?prod))
+       (at end (free ?cs input))
+       (at end (not (buffered ?cs ?c)))
+       (at end (can-buffer ?cs ?c))
+       (at end (not (free ?cs output)))
+       (at end (not (at ?prod ?cs input)))
+       (at end (at ?prod ?cs output))
+     )
+   )
+
+    (:durative-action bs-dispense-product
+     :parameters (?prod - product ?bs - base-station ?s - side ?b - base)
+     :duration (= ?duration 10)
+     :condition (and
+       (at start (free ?bs input))
+       (at start (usable ?bs))
+       (at start (free ?bs output))
+     )
+     :effect (and
+       (at start (not (usable ?bs)))
+       (at end (usable ?bs))
+       (at end (usable ?prod))
+       (at end (not (free ?bs ?s)))
+       (at end (at ?prod ?bs ?s))
+     )
+   )
+
+   (:durative-action bs-dispense-payment
+     :parameters (?pay - payment ?bs - base-station ?s - side)
+     :duration (= ?duration 10)
+     :condition (and
+       (at start (free ?bs input))
+       (at start (free ?bs output))
+       (at start (usable ?bs))
+     )
+     :effect (and
+       (at start (not (usable ?bs)))
+       (at end (usable ?bs))
+       (at end (not (free ?bs ?s)))
+       (at end (usable ?pay))
+       (at end (at ?pay ?bs ?s))
+     )
+   )
+
+   (:durative-action ds-deliver
+     :parameters (?prod - product ?ds - delivery-station)
+     :duration (= ?duration 10)
+     :condition (and
+       (at start (at ?prod ?ds input))
+       (at start (usable ?ds))
+       (at start (usable ?prod))
+     )
+     :effect (and
+       (at start (not (usable ?ds)))
+       (at start (not (usable ?prod)))
+       (at end (usable ?ds))
+       (at end (free ?ds input))
+       (at end (not (at ?prod ?ds input)))
+     )
+   )
+
+
+
+)
