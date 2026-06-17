@@ -1,3 +1,7 @@
 /**:
   ros__parameters:
+    autostart_node: true
     bond_heartbeat_period: 0.0
+    # Colon sepearated identifier of the library for importlib and the Class name
+    # Make sure you have the respective package installed on your system
+    planner: "up_nextflap:NextFLAPImpl"

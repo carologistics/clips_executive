@@ -33,8 +33,8 @@ def launch_with_context(context, *args, **kwargs):
     # re-issue warning as it is not colored otherwise ...
     if not os.path.isfile(config_file):
         logger = get_logger('cx_pddl_manager_launch')
-        logger.warning(f'Parameter file path is not a file: {config_file}')
-
+        logger.error(f'Parameter file path is not a file: {config_file}')
+    print(config_file)
     LaunchConfiguration('log_level')
     pddl_manager_node = LifecycleNode(
         package='cx_pddl_manager',

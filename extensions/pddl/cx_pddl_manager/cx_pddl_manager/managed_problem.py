@@ -13,262 +13,358 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import concurrent.futures as cf
-from pathlib import Path
+from __future__ import annotations
 
-from cx_pddl_interfaces.msg import TimedPlanAction
-from unified_planning.engines import PlanGenerationResultStatus
-from unified_planning.environment import get_environment
+import concurrent.futures as cf
+from dataclasses import dataclass, field
+import importlib
+import logging
+from pathlib import Path
+from typing import Any
+
+from unified_planning.environment import Environment, get_environment
 from unified_planning.io import PDDLReader, PDDLWriter
 from unified_planning.model import Problem
+from unified_planning.model.htn import HierarchicalProblem
 from unified_planning.plans.plan import PlanKind
-from up_nextflap import NextFLAPImpl
+
+from .plan_handlers import PlanMessages, dispatch_plan_result
+from .renamings import Renamings
+
+log = logging.getLogger(__name__)
 
 
-def run_planner_process(env, dom, prob):
-    env = get_environment()
-    env.credits_stream = None
-    reader = PDDLReader()
-    problem = reader.parse_problem_string(dom, prob)
-    env.factory.add_engine('nextflap', __name__, NextFLAPImpl.__name__)
-    with env.factory.OneshotPlanner(name='nextflap') as planner:
-        result = planner.solve(problem, timeout=60.0)
-        tPlan = None
-        if result.status == PlanGenerationResultStatus.SOLVED_SATISFICING:
-            if result.plan.kind == PlanKind.TIME_TRIGGERED_PLAN:
-                tPlan = result.plan.convert_to(PlanKind.TIME_TRIGGERED_PLAN, result.plan)
-                result.plan
-        else:
-            return False
+# ---------------------------------------------------------------------------
+# GoalSpec – pure data, no behaviour, no back-references
+# ---------------------------------------------------------------------------
 
-        return tPlan
+
+@dataclass
+class GoalSpec:
+    """Scoping information that restricts a base problem to a specific goal.
+
+    Filters are applied as allowlists: when a filter list is empty it means
+    "allow everything" (i.e. no restriction).
+    """
+
+    goal_fluents: list[Any] = field(default_factory=list)
+    object_filters: list[str] = field(default_factory=list)
+    fluent_filters: list[str] = field(default_factory=list)
+    action_filters: list[str] = field(default_factory=list)
+
+    # Convenience: treat an empty filter list as "no restriction"
+    def _effective(self, lst: list) -> list | None:
+        return lst if lst else None
+
+
+# ---------------------------------------------------------------------------
+# ManagedGoal – builder API that produces / mutates a GoalSpec
+# ---------------------------------------------------------------------------
 
 
 class ManagedGoal:
+    """Thin builder that accumulates goal fluents and optional filters.
 
-    def __init__(self, problem, name='base', logger=None):
-        self.problem = problem
-        self.logger = logger
+    Once the goal is fully configured, call ManagedProblem.plan() to trigger
+    planning.
+
+    Goal fluents are stored as pre-grounded FNode expressions.  Grounding
+    requires access to the base Problem, so the expression is built by
+    ManagedProblem and passed in here as an already-resolved FNode.
+    """
+
+    def __init__(self, name: str = 'base') -> None:
         self.name = name
-        self.goal_fluents = []
-        self.object_filters = []
-        self.fluent_filters = []
-        self.action_filters = []
+        self.spec = GoalSpec()
 
-    def set_goal_fluent(self, name, args, value):
-        grounded_args = []
+    # ------------------------------------------------------------------
+    # Goal fluents
+    # ------------------------------------------------------------------
 
-        for arg in args:
-            grounded_args.append(self.problem.base_problem.object(arg))
+    def add_goal_fluent(self, expr: Any) -> None:
+        """Append a pre-grounded FNode expression to the goal.
 
-        grounded_fluent = self.problem.fnode_manager.FluentExp(
-            self.problem.base_problem.fluent(name), grounded_args
+        Use ManagedProblem.add_goal_fluent() to build the expression from
+        a fluent name + args rather than constructing it manually.
+        """
+        self.spec.goal_fluents.append(expr)
+
+    def remove_goal_fluent(self, expr: Any) -> None:
+        self.spec.goal_fluents.remove(expr)
+
+    def clear_goals(self) -> None:
+        self.spec.goal_fluents.clear()
+
+    def get_goal_fluents(self) -> list[Any]:
+        return list(self.spec.goal_fluents)
+
+    # ------------------------------------------------------------------
+    # Filters
+    # ------------------------------------------------------------------
+
+    def add_object_filter(self, obj: str) -> None:
+        self.spec.object_filters.append(obj)
+
+    def remove_object_filter(self, obj: str) -> None:
+        self.spec.object_filters.remove(obj)
+
+    def add_fluent_filter(self, fluent: str) -> None:
+        self.spec.fluent_filters.append(fluent)
+
+    def remove_fluent_filter(self, fluent: str) -> None:
+        self.spec.fluent_filters.remove(fluent)
+
+    def add_action_filter(self, action: str) -> None:
+        self.spec.action_filters.append(action)
+
+    def remove_action_filter(self, action: str) -> None:
+        self.spec.action_filters.remove(action)
+
+
+# ---------------------------------------------------------------------------
+# Process-pool entry point (must be a module-level function to be picklable)
+# ---------------------------------------------------------------------------
+
+
+def _run_planner_process(
+    dom: str,
+    prob: str,
+    planner_spec: str,
+    plan_kind: PlanKind,
+    problem_name: str,
+    goal_name: str,
+    renamings_map: dict[str, str],
+) -> PlanMessages:
+    """Run the planner in a subprocess and return plan messages.
+
+    All arguments are plain Python scalars / dicts so ProcessPoolExecutor can
+    pickle and dispatch this function without any class-level state.
+    """
+    env = get_environment()
+    env.credits_stream = None
+
+    problem = PDDLReader().parse_problem_string(dom, prob)
+
+    module_name, class_name = planner_spec.split(':')
+    importlib.import_module(module_name)  # side-effect: makes the module importable
+    env.factory.add_engine('custom_planner', module_name, class_name)
+
+    r = Renamings(renamings_map)
+
+    with env.factory.OneshotPlanner(name='custom_planner') as planner:
+        result = planner.solve(problem, timeout=60.0)
+        return dispatch_plan_result(result.plan, problem_name, goal_name, plan_kind, problem, r)
+
+
+# ---------------------------------------------------------------------------
+# ManagedProblem
+# ---------------------------------------------------------------------------
+
+
+class ManagedProblem:
+    """Owns the base planning problem, a pool of goals, and the process executor."""
+
+    def __init__(
+        self,
+        problem: Problem,
+        env: Environment,
+        name: str = 'base',
+        planner_spec: str = '',
+        logger: logging.Logger | None = None,
+        max_workers: int = 4,
+    ) -> None:
+        self.base_problem = problem.clone()
+        self.name = name
+        self.planner_spec = planner_spec
+        self.logger = logger or log
+        self.env = env
+        self._fnode_mgr = env.expression_manager
+        self._executor: cf.ProcessPoolExecutor = cf.ProcessPoolExecutor(max_workers=max_workers)
+        self.goals: dict[str, ManagedGoal] = {'base': ManagedGoal(name='base')}
+
+    # ------------------------------------------------------------------
+    # Goal management
+    # ------------------------------------------------------------------
+
+    def add_goal(self, goal: str = 'base') -> ManagedGoal:
+        """Create and register a new named goal, returning it for configuration."""
+        self.goals[goal] = ManagedGoal(name=goal)
+        return self.goals[goal]
+
+    def get_goal(self, goal: str = 'base') -> ManagedGoal:
+        return self.goals[goal]
+
+    def add_goal_fluent(self, name: str, args: list[str], value: Any, goal: str = 'base') -> None:
+        """Ground a fluent and add it to the named goal.
+
+        Grounding is done here because this class owns the base Problem.
+        The resulting FNode is stored in the goal's GoalSpec.
+        """
+        grounded_args = [self.base_problem.object(a) for a in args]
+        grounded_fluent = self._fnode_mgr.FluentExp(self.base_problem.fluent(name), grounded_args)
+        expr = self._fnode_mgr.Equals(grounded_fluent, value) if value else grounded_fluent
+        self.goals[goal].add_goal_fluent(expr)
+
+    def remove_goal_fluent(
+        self, name: str, args: list[str], value: Any, goal: str = 'base'
+    ) -> None:
+        """Ground a fluent and remove it from the named goal."""
+        grounded_args = [self.base_problem.object(a) for a in args]
+        grounded_fluent = self._fnode_mgr.FluentExp(self.base_problem.fluent(name), grounded_args)
+        expr = self._fnode_mgr.Equals(grounded_fluent, value) if value else grounded_fluent
+        self.goals[goal].remove_goal_fluent(expr)
+
+    # ------------------------------------------------------------------
+    # Object / fluent / action mutation
+    # ------------------------------------------------------------------
+
+    def get_object_list(self) -> list:
+        return list(self.base_problem.all_objects)
+
+    def add_object(self, name: str, obj_type: str) -> None:
+        self.base_problem.add_object(name, self.base_problem.user_type(obj_type))
+
+    def remove_object(self, name: str) -> None:
+        object_list = [o for o in self.get_object_list() if o.name != name]
+        self.base_problem = self.filter_problem(object_filter=object_list)
+
+    def get_fluent_list(self) -> list:
+        return list(self.base_problem.fluents)
+
+    def set_fluent(self, name: str, args: list[str], value: Any) -> None:
+        grounded_args = [self.base_problem.object(a) for a in args]
+        grounded_fluent = self._fnode_mgr.FluentExp(self.base_problem.fluent(name), grounded_args)
+        self.base_problem.set_initial_value(grounded_fluent, value)
+
+    def get_action_list(self) -> list:
+        return list(self.base_problem.actions)
+
+    def add_action(self, name: str, args: list) -> None:
+        raise NotImplementedError('add_action is not implemented')
+
+    def remove_action(self, name: str) -> None:
+        actions = [a for a in self.base_problem.actions if a.name != name]
+        self.base_problem = self.filter_problem(action_filter=actions)
+
+    # ------------------------------------------------------------------
+    # Planning entry point
+    # ------------------------------------------------------------------
+
+    def plan(
+        self,
+        goal_name: str = 'base',
+        plan_kind: PlanKind = PlanKind.SEQUENTIAL_PLAN,
+        output_dir: str | None = None,
+    ) -> PlanMessages:
+        """Scope the base problem to *goal_name*, run the planner, return messages.
+
+        Args:
+            goal_name:  Key into self.goals.
+            plan_kind:  Desired output plan representation.
+            output_dir: If provided, write the PDDL domain/problem files here
+                        (useful for debugging).
+
+        Returns:
+            A list of plan-action messages whose concrete type depends on
+            *plan_kind*.  For HIERARCHICAL_PLAN, a 3-tuple is returned instead;
+            see plan_handlers.handle_hierarchical_plan for details.
+        """
+        managed_goal = self.goals[goal_name]
+        spec = managed_goal.spec
+
+        goal_problem = self.filter_problem(
+            action_filter=spec._effective(spec.action_filters),
+            object_filter=spec._effective(spec.object_filters),
+            fluent_filter=spec._effective(spec.fluent_filters),
         )
-        if value:
-            grounded_goal_expr = self.problem.fnode_manager.Equals(grounded_fluent, value)
-            self.goal_fluents.append(grounded_goal_expr)
-        else:
-            self.goal_fluents.append(grounded_fluent)
 
-    def get_goal_fluents(self):
-        return self.goal_fluents
-
-    def add_object_filter(self, obj):
-        self.object_filters.append(obj)
-
-    def add_fluent_filter(self, fluent):
-        self.fluent_filters.append(fluent)
-
-    def add_action_filter(self, action):
-        self.action_filters.append(action)
-
-    def remove_goal_fluent(self, fluent):
-        self.goal_fluents.remove(fluent)
-
-    def remove_object_filter(self, obj):
-        self.object_filters.remove(obj)
-
-    def remove_fluent_filter(self, fluent):
-        self.fluent_filters.remove(fluent)
-
-    def clear_goals(self):
-        self.goal_fluents = []
-
-    def plan_in_pool(self, output_dir):
-        action_filters = self.action_filters
-        if len(self.action_filters) == 0:
-            action_filters = None
-        object_filters = self.object_filters
-        if len(self.object_filters) == 0:
-            object_filters = None
-        fluent_filters = self.fluent_filters
-        if len(self.fluent_filters) == 0:
-            fluent_filters = None
-        goal_problem = self.problem.filter_problem(action_filters, object_filters, fluent_filters)
-        goal_problem.clear_goals()
-
-        # add the goal fluents
-        for fluent in self.goal_fluents:
-            goal_problem.add_goal(fluent)
+        if plan_kind != PlanKind.HIERARCHICAL_PLAN:
+            for fluent in spec.goal_fluents:
+                goal_problem.add_goal(fluent)
 
         writer = PDDLWriter(goal_problem)
         dom = writer.get_domain()
         prob = writer.get_problem()
+        renamings_map = {k: v.name for k, v in writer.nto_renamings.items()}
 
-        if output_dir:
-            output_path = Path(output_dir)
+        self._maybe_write_pddl(writer, goal_name, output_dir)
 
-            try:
-                # Create directory if it doesn't exist
-                output_path.mkdir(parents=True, exist_ok=True)
-                # Build file paths
-                domain_file = output_path / f'{self.problem.name}_{self.name}_domain.pddl'
-                problem_file = output_path / f'{self.problem.name}_{self.name}_problem.pddl'
+        future = self._executor.submit(
+            _run_planner_process,
+            dom,
+            prob,
+            self.planner_spec,
+            plan_kind,
+            self.name,
+            goal_name,
+            renamings_map,
+        )
+        return future.result()
 
-                # Write files
-                writer.write_domain(str(domain_file))
-                writer.write_problem(str(problem_file))
+    # ------------------------------------------------------------------
+    # Problem filtering
+    # ------------------------------------------------------------------
 
-            except Exception as e:
-                # Handle error without crashing
-                if self.logger:
-                    self.logger.error(f'Failed to write PDDL files: {e}')
+    def filter_problem(
+        self,
+        action_filter: list | None = None,
+        object_filter: list | None = None,
+        fluent_filter: list | None = None,
+    ) -> Problem:
+        """Return a clone of the base problem restricted to the given allowlists.
 
-        future = self.problem.executor.submit(run_planner_process, self.problem.env, dom, prob)
-        result = future.result()
+        Each filter is an allowlist; passing None means "keep everything".
+        HierarchicalProblem is always returned as a plain clone because the
+        HTN task network is not amenable to post-hoc filtering.
+        """
+        if isinstance(self.base_problem, HierarchicalProblem):
+            return self.base_problem.clone()
 
-        plan_actions = []
-        if result:
-            delta_threshold = 0.1
-            last_time = 0.0
-            equiv_class_idx = 0
-            # iterate over all actions in the plan to compute regions and generate response
-            for time, act, duration in result.timed_actions:
-                plan_action = TimedPlanAction()
-                plan_action.pddl_instance = self.problem.name
-                plan_action.goal_instance = self.name
-                if f'{act.action.name}' in writer.nto_renamings.keys():
-                    plan_action.name = f'{writer.get_item_named(f"{act.action.name}").name}'
-                else:
-                    plan_action.name = f'{act.action.name}'
+        target_problem = Problem(name=self.base_problem.name, environment=self.env)
 
-                plan_action.args = []
-                for arg in act.actual_parameters:
-                    if f'{arg}' in writer.nto_renamings.keys():
-                        plan_action.args.append(f'{writer.get_item_named(arg.__str__())}')
-                    else:
-                        plan_action.args.append(f'{arg}')
-                plan_action.start_time = float(time)
-                plan_action.duration = float(duration)
-                if float(time) - last_time > delta_threshold:
-                    equiv_class_idx += 1
-                    last_time = float(time)
-                plan_action.equiv_class = equiv_class_idx
-                plan_actions.append(plan_action)
-
-            return plan_actions
-        return None
-
-
-class ManagedProblem:
-
-    def __init__(self, problem, env, name='base', logger=None):
-        self.goals = {}
-        self.base_problem = problem.clone()
-        self.base_problem.clear_goals()
-        self.name = name
-        self.logger = logger
-
-        self.goals['base'] = ManagedGoal(self, logger=self.logger)
-        self.executor = cf.ProcessPoolExecutor(max_workers=4)
-
-        self.env = env
-        self.fnode_manager = self.env.expression_manager
-        self.env.factory.add_engine('nextflap', __name__, 'NextFLAPImpl')
-
-    def filter_problem(self, action_filter=None, object_filter=None, fluent_filter=None):
-        target_problem = Problem(self.base_problem.name, environment=self.env)
-
-        # add the objects based on the object filters
-        objects = self.get_object_list()
-        for obj in objects:
+        for obj in self.base_problem.all_objects:
             if object_filter is None or obj in object_filter:
                 target_problem.add_object(obj)
 
-        # add the liftd fluents based on the fluent filters
-        init_value = False
         for fluent in self.base_problem.fluents:
             if fluent_filter is None or fluent.name in fluent_filter:
-                if fluent.type.is_real_type() or fluent.type.is_int_type():
-                    init_value = 0
-                target_problem.add_fluent(fluent, default_initial_value=init_value)
+                default = 0 if (fluent.type.is_real_type() or fluent.type.is_int_type()) else False
+                target_problem.add_fluent(fluent, default_initial_value=default)
 
-        # set the initial values based on the fluent filters
         for f, val in self.base_problem.initial_values.items():
-            args = [f'{arg}' for arg in f.args]
-
+            args = [str(arg) for arg in f.args]
             if not object_filter or not any(
-                arg not in (o.name for o in object_filter) for arg in args
+                arg not in {o.name for o in object_filter} for arg in args
             ):
                 target_problem.set_initial_value(f, val)
 
-        # apply the actions based on the action filters
         for action in self.base_problem.actions:
             if action_filter is None or action.name in action_filter:
                 target_problem.add_action(action)
 
+        for g in self.base_problem.goals:
+            target_problem.add_goal(g)
+        for g in self.base_problem.timed_goals:
+            target_problem.add_timed_goal(g)
+
         return target_problem
 
-    def get_object_list(self):
-        return self.base_problem.all_objects
+    # ------------------------------------------------------------------
+    # Internal helpers
+    # ------------------------------------------------------------------
 
-    def add_object(self, name, obj_type):
-        self.base_problem.add_object(name, self.base_problem.user_type(obj_type))
-
-    def remove_object(self, name):
-        object_list = self.get_object_list()
-        for obj in object_list:
-            if obj.name == name:
-                object_list.remove(obj)
-                break
-        self.base_problem = self.filter_problem(None, object_list, None)
-
-    def get_fluent_list(self):
-        return self.base_problem.fluents
-
-    def set_fluent(self, name, args, value):
-        grounded_args = []
-        for arg in args:
-            grounded_args.append(self.base_problem.object(arg))
-        grounded_fluent = self.fnode_manager.FluentExp(
-            self.base_problem.fluent(name), grounded_args
-        )
-        self.base_problem.set_initial_value(grounded_fluent, value)
-
-    def get_action_list(self):
-        return self.base_problem.actions
-
-    def add_action(self, name, args):
-        raise NotImplementedError('add_action is not implemented')
-
-    def remove_action(self, name):
-        actions = self.base_problem.actions
-        for action in actions:
-            if action.name == name:
-                actions.remove(action)
-                break
-        self.base_problem = self.filter_problem(
-            actions, self.get_object_list(), self.get_fluent_list()
-        )
-
-    def add_goal(self, goal='base'):
-        self.goals[goal] = ManagedGoal(self, goal, logger=self.logger)
-
-    def get_goal(self, goal='base'):
-        return self.goals[goal]
-
-    def add_goal_fluent(self, name, args, value, goal):
-        self.goals[goal].set_goal_fluent(name, args, value)
-
-    def remove_goal_fluent(self, name, args, goal='base'):
-        self.goals[goal].remove_goal_fluent(name, args)
+    def _maybe_write_pddl(
+        self,
+        writer: PDDLWriter,
+        goal_name: str,
+        output_dir: str | None,
+    ) -> None:
+        if not output_dir:
+            return
+        output_path = Path(output_dir)
+        try:
+            output_path.mkdir(parents=True, exist_ok=True)
+            writer.write_domain(str(output_path / f"{self.name}_{goal_name}_domain.pddl"))
+            writer.write_problem(str(output_path / f"{self.name}_{goal_name}_problem.pddl"))
+        except Exception as exc:
+            self.logger.error(f"Failed to write PDDL files: {exc}")
