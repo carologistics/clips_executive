@@ -1,13 +1,15 @@
 /**:
   ros__parameters:
     autostart_node: true
-    environments: ["cx_pddl_clips_agent"]
+    environments: ["cx_pddl_blocksworld_agent"]
 
-    cx_pddl_clips_agent:
+    cx_pddl_blocksworld_agent:
       plugins: ["executive", "ros_msgs",
                 "ament_index",
-                "plan_temporal_action",
-                "timed_plan_action_msg",
+                "plan_action",
+                "plan_action_msg",
+                "stn_constraint_msg",
+                "hierarchical_plan_method_msg",
                 "pddl_files",
                 "files"]
       log_clips_to_file: true
@@ -37,7 +39,11 @@
       pkg_share_dirs: ["cx_pddl_bringup"]
       load: ["clips/cx_pddl_bringup/cx-pddl-clips-agent.clp"]
 
-    plan_temporal_action:
-      plugin: "cx::CXCxPddlInterfacesPlanTemporalPlugin"
-    timed_plan_action_msg:
-      plugin: "cx::CXCxPddlInterfacesTimedPlanActionPlugin"
+    plan_action:
+      plugin: "cx::CXCxPddlInterfacesPlanPlugin"
+    plan_action_msg:
+      plugin: "cx::CXCxPddlInterfacesPlanActionPlugin"
+    stn_constraint_msg:
+      plugin: "cx::CXCxPddlInterfacesStnConstraintPlugin"
+    hierarchical_plan_method_msg:
+      plugin: "cx::CXCxPddlInterfacesHierarchicalPlanMethodPlugin"

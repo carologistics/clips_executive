@@ -1,0 +1,84 @@
+; Copyright (c) 2026 Carologistics
+; SPDX-License-Identifier: Apache-2.0
+;
+; Licensed under the Apache License, Version 2.0 (the "License");
+; you may not use this file except in compliance with the License.
+; You may obtain a copy of the License at
+;
+;     http://www.apache.org/licenses/LICENSE-2.0
+;
+; Unless required by applicable law or agreed to in writing, software
+; distributed under the License is distributed on an "AS IS" BASIS,
+; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+; See the License for the specific language governing permissions and
+; limitations under the License.
+
+(define (problem depotprob1935) (:domain Depot)
+(:objects
+	depot0 - depot
+	distributor0 distributor1 - distributor
+	truck0 truck1 - truck
+	pallet0 pallet1 pallet2 - pallet
+	crate0 crate1 crate2 crate3 crate4 crate5 - crate
+	hoist0 hoist1 hoist2 - hoist)
+(:init
+	(at pallet0 depot0)
+	(clear crate1)
+	(at pallet1 distributor0)
+	(clear crate4)
+	(at pallet2 distributor1)
+	(clear crate5)
+	(at truck0 depot0)
+	(= (speed truck0) 8)
+	(at truck1 distributor0)
+	(= (speed truck1) 8)
+	(at hoist0 depot0)
+	(available hoist0)
+	(= (power hoist0) 4)
+	(at hoist1 distributor0)
+	(available hoist1)
+	(= (power hoist1) 5)
+	(at hoist2 distributor1)
+	(available hoist2)
+	(= (power hoist2) 6)
+	(at crate0 distributor0)
+	(on crate0 pallet1)
+	(= (weight crate0) 99)
+	(at crate1 depot0)
+	(on crate1 pallet0)
+	(= (weight crate1) 89)
+	(at crate2 distributor1)
+	(on crate2 pallet2)
+	(= (weight crate2) 67)
+	(at crate3 distributor0)
+	(on crate3 crate0)
+	(= (weight crate3) 81)
+	(at crate4 distributor0)
+	(on crate4 crate3)
+	(= (weight crate4) 4)
+	(at crate5 distributor1)
+	(on crate5 crate2)
+	(= (weight crate5) 50)
+	(= (distance depot0 depot0) 0)
+	(= (distance depot0 distributor0) 3)
+	(= (distance depot0 distributor1) 6)
+	(= (distance distributor0 depot0) 9)
+	(= (distance distributor0 distributor0) 0)
+	(= (distance distributor0 distributor1) 3)
+	(= (distance distributor1 depot0) 1)
+	(= (distance distributor1 distributor0) 9)
+	(= (distance distributor1 distributor1) 0)
+)
+
+(:goal (and
+		(on crate0 crate1)
+		(on crate1 pallet2)
+		(on crate2 pallet0)
+		(on crate3 crate2)
+		(on crate4 pallet1)
+		(on crate5 crate0)
+	)
+)
+
+;(:metric minimize (total-time))
+)
