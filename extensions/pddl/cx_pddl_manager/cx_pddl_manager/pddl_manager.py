@@ -18,7 +18,7 @@ import concurrent.futures as cf
 from typing import Callable
 
 from bondpy import bondpy
-from cx_pddl_interfaces.action import PlanTemporal
+from cx_pddl_interfaces.action import Plan
 from cx_pddl_interfaces.msg import Fluent as FluentMsg
 from cx_pddl_interfaces.msg import FluentEffect, Function, FunctionEffect
 from cx_pddl_interfaces.msg import Predicate as PredicateMsg
@@ -59,12 +59,33 @@ from unified_planning.model.effect import EffectKind
 from unified_planning.model.timing import TimeInterval, Timepoint, TimepointKind, Timing
 from unified_planning.model.walkers import StateEvaluator
 from unified_planning.plans import ActionInstance
+from unified_planning.plans.plan import PlanKind
 
 
 class PddlManagerLifecycleNode(LifecycleNode):
 
     def __init__(self):
         super().__init__('pddl_problem_manager')
+        self.declare_parameters(
+            namespace='',
+            parameters=[
+                ('bond_heartbeat_period', rclpy.Parameter.Type.DOUBLE),
+                ('planner', rclpy.Parameter.Type.STRING),
+                ('autostart_node', rclpy.Parameter.Type.BOOL),
+            ],
+        )
+        self.bond_heartbeat_period = self.get_parameter_or(
+            'bond_heartbeat_period',
+            rclpy.Parameter('bond_heartbeat_period', rclpy.Parameter.Type.DOUBLE, 0.0),
+        ).value
+        self.planner_spec = self.get_parameter_or(
+            'planner',
+            rclpy.Parameter('planner', rclpy.Parameter.Type.STRING, 'up_nextflap:NextFLAPImpl'),
+        ).value
+        self.autostart = self.get_parameter_or(
+            'autostart_node',
+            rclpy.Parameter('autostart', rclpy.Parameter.Type.BOOL, True),
+        ).value
         self.register_rcl_preshutdown_callback()
         self.process_pool_executor = cf.ProcessPoolExecutor(max_workers=4)
         self.add_fluents_srv = None
@@ -80,7 +101,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
         self.get_functions_srv = None
         self.set_goals_srv = None
         self.clear_goals_srv = None
-        self.plan_action_server = None
+        self.plan_action_srv = None
         self.set_action_filter_srv = None
         self.set_fluent_filter_srv = None
         self.set_object_filter_srv = None
@@ -115,9 +136,10 @@ class PddlManagerLifecycleNode(LifecycleNode):
         self.instance_update_pub = None
         self.get_logger().debug('Lifecycle node created.')
 
-        self.autostart_timer = self.create_timer(
-            0.0, self.autostart_callback, callback_group=self.srv_cb_group  # fire immediately
-        )
+        if self.autostart:
+            self.autostart_timer = self.create_timer(
+                0.0, self.autostart_callback, callback_group=self.srv_cb_group  # fire immediately
+            )
 
     def autostart_callback(self):
         self.autostart_timer.cancel()
@@ -175,10 +197,6 @@ class PddlManagerLifecycleNode(LifecycleNode):
     def on_configure(self, state: State) -> TransitionCallbackReturn:
         self.get_logger().debug('Configuring node...')
 
-        self.bond_heartbeat_period = self.get_parameter_or(
-            'bond_heartbeat_period',
-            rclpy.Parameter('bond_heartbeat_period', rclpy.Parameter.Type.DOUBLE, 0.0),
-        ).value
         # Create the service when the node enters the 'inactive' state
         self.add_pddl_instance_srv = self.create_service(
             AddPddlInstance,
@@ -294,11 +312,11 @@ class PddlManagerLifecycleNode(LifecycleNode):
             self.handle_get_type_objects,
             callback_group=self.srv_cb_group,
         )
-        self.plan_action_server = ActionServer(
+        self.plan_action_srv = ActionServer(
             self,
-            PlanTemporal,
-            f'{self.get_name()}/temp_plan',
-            self.plan_callback,
+            Plan,
+            f'{self.get_name()}/plan',
+            self.plan_cb,
             callback_group=self.action_cb_group,
         )
         self.instance_update_pub = self.create_publisher(
@@ -319,9 +337,6 @@ class PddlManagerLifecycleNode(LifecycleNode):
 
     def on_cleanup(self, state: State) -> TransitionCallbackReturn:
         self.get_logger().debug('Cleaning up resources...')
-        if self.srv:
-            self.srv.destroy()
-            self.srv = None
         self.get_logger().debug('Resources cleaned up.')
         return TransitionCallbackReturn.SUCCESS
 
@@ -579,21 +594,22 @@ class PddlManagerLifecycleNode(LifecycleNode):
                 problem_template = jinja_env.get_template(problem)
                 problem_rendered = problem_template.render()
             if name in self.managed_problems.keys():
-                self.get_logger().warn(f'Overriding problem {name}')
+                self.get_logger().warning(f'Overriding problem {name}')
 
             if problem_exists:
                 self.managed_problems[name] = ManagedProblem(
                     self.reader.parse_problem_string(domain_rendered, problem_rendered),
                     self.env,
                     name,
+                    self.planner_spec,
                     self.get_logger(),
                 )
             else:
                 self.managed_problems[name] = ManagedProblem(
                     self.reader.parse_problem_string(domain_rendered),
                     self.env,
-                    name,
-                    self.get_logger(),
+                    planner_spec=self.planner_spec,
+                    logger=self.get_logger(),
                 )
             self.get_logger().debug(f'Loading domain {domain} {problem}')
             response.success = True
@@ -929,25 +945,49 @@ class PddlManagerLifecycleNode(LifecycleNode):
             response.success = False
             return response
 
-    def plan_callback(self, goal_handle):
+    def plan_cb(self, goal_handle):
         self.get_logger().info('Start planning...')
-        response = PlanTemporal.Result()
         request = goal_handle.request
+        plan_kind_ros = request.plan_kind
+        PlanKind.SEQUENTIAL_PLAN
+        response = Plan.Result()
+        match plan_kind_ros:
+            case Plan.Goal.TIME_TRIGGERED_PLAN:
+                plan_kind_up = PlanKind.TIME_TRIGGERED_PLAN
+            case Plan.Goal.SEQUENTIAL_PLAN:
+                plan_kind_up = PlanKind.SEQUENTIAL_PLAN
+            case Plan.Goal.PARTIAL_ORDER_PLAN:
+                plan_kind_up = PlanKind.PARTIAL_ORDER_PLAN
+            case Plan.Goal.HIERARCHICAL_PLAN:
+                plan_kind_up = PlanKind.HIERARCHICAL_PLAN
+            case Plan.Goal.STN_PLAN:
+                plan_kind_up = PlanKind.STN_PLAN
+            case _:
+                raise NotImplementedError(f'PlanKind {plan_kind} is not implemented')
 
         if request.pddl_instance not in self.managed_problems.keys():
             response.success = False
             return response
 
-        result = (
-            self.managed_problems[request.pddl_instance]
-            .goals[request.goal_instance]
-            .plan_in_pool(request.output_dir)
+        result = self.managed_problems[request.pddl_instance].plan(
+            request.goal_instance, plan_kind_up, request.output_dir
         )
         response.actions = []
         if result:
             response.success = True
             self.get_logger().info('Successfully planned')
-            response.actions = result
+            match plan_kind_up:
+                case PlanKind.HIERARCHICAL_PLAN:
+                    response.actions = result[0]
+                    response.methods = result[1]
+                    response.flat_plan_kind = result[2]
+
+                case PlanKind.STN_PLAN:
+                    response.actions = result[0]
+                    response.stn_constraints = result[1]
+
+                case _:
+                    response.actions = result
         else:
             response.success = False
         goal_handle.succeed()

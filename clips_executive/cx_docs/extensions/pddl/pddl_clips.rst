@@ -8,85 +8,16 @@ The PDDL integration is provided in the form of the `PDDL Manager`, a ROS lifecy
 In order to reduce the manual overhead, the ``cx_pddl_clips`` package provides a CLIPS-based interface for interacting with the PDDL Manager node in ROS 2.
 This allows to interact with the PDDL manager by simply asserting and monitoring CLIPS facts, without the need to do direct ROS communication (e.g., populating ROS messages or waiting for service feedback).
 
-PDDL Manager
-------------
-
-The PDDL Manager node has the following responsibilities:
-
-- Manage multiple PDDL instances concurrently.
-- Load PDDL files (optionally templated via Jinja).
-- Manage fluents, objects, functions, and goals.
-- Check conditions and apply effects of actions.
-- Configure planning goals.
-- Applying planning filters to narrow down problems to a subset of actions, objects, and fluents for more detailed execution models.
-- Trigger planning a for each goal concurrently.
-
-
-PDDL Manager Services
----------------------
-
-The PDDL Manager exposes a wide range of ROS 2 interfaces.
-
-.. list-table::
-   :header-rows: 1
-   :widths: 50 50
-
-   * - Service / Topic
-     - Corresponding Deftemplate(s)
-   * - :abbr:`/add_pddl_instance (Add a new PDDL instance to the manager)`
-     - :ref:`pddl-instance`
-   * - :abbr:`/check_action_condition (Check if the preconditions of a PDDL action are satisfied)`
-     - :ref:`pddl-action-condition`
-   * - :abbr:`/get_action_effects (Retrieve the effects of a PDDL action)`
-     - :ref:`pddl-action-get-effect`
-   * - :abbr:`/get_action_names (Get the list of available action names for a PDDL instance)`
-     - :ref:`pddl-action-names`
-   * - :abbr:`/get_fluents (Fetch all current boolean fluents of a PDDL instance)`
-     - :ref:`pddl-get-fluents`
-   * - :abbr:`/add_fluents (Add multiple fluents to a PDDL instance)`
-     - :ref:`pddl-fluent-change`
-   * - :abbr:`/rm_fluents (Remove multiple fluents from a PDDL instance)`
-     - :ref:`pddl-fluent-change`
-   * - :abbr:`/add_objects (Add objects to a PDDL instance)`
-     - :ref:`pddl-object-change`
-   * - :abbr:`/rm_objects (Remove objects from a PDDL instance)`
-     - :ref:`pddl-object-change`
-   * - :abbr:`/set_functions (Set values for numeric functions in the PDDL instance)`
-     - :ref:`pddl-numeric-fluent-change`
-   * - :abbr:`/get_functions (Retrieve values of numeric functions)`
-     - :ref:`pddl-get-numeric-fluents`
-   * - :abbr:`/set_goals (Register goal conditions with the PDDL manager)`
-     - :ref:`pddl-set-goals`
-   * - :abbr:`/clear_goals (Clear all goal conditions of a PDDL instance)`
-     - :ref:`pddl-clear-goals`
-   * - :abbr:`/set_action_filter (Apply a filter to restrict planning to specific actions)`
-     - :ref:`pddl-planning-filter`
-   * - :abbr:`/set_object_filter (Apply a filter to restrict planning to specific objects)`
-     - :ref:`pddl-planning-filter`
-   * - :abbr:`/set_fluent_filter (Apply a filter to restrict planning to specific fluents)`
-     - :ref:`pddl-planning-filter`
-   * - :abbr:`/create_goal_instance (Create a new goal instance for planning)`
-     - :ref:`pddl-create-goal-instance`
-   * - :abbr:`/get_predicates (Fetch all predicates of a PDDL instance)`
-     - :ref:`pddl-get-predicates`
-   * - :abbr:`/get_type_objects (Fetch all objects of a certain type in a PDDL instance)`
-     - :ref:`pddl-get-type-objects`
-   * - :abbr:`/temp_plan (Send a temporal planning goal and retrieve the resulting plan)`
-     - :ref:`pddl-plan`, :ref:`pddl-action`
-   * - :abbr:`/instance_update (Publishes updates about instance changes in the manager)`
-     - :ref:`pddl-manager`
-
 CLIPS Integration
 -----------------
 
-CLIPS needs to interact with the PDDL Manager by creating subscriptions and clients for the endpoints to then utilize the features as desired.
+CLIPS needs to interact with the :ref:`pddl_manager` by creating subscriptions and clients for the endpoints to then utilize the features as desired.
 In order to reduce manual overhead, predefined rules and deftemplates are available, which are described in the remainder of this document.
 
 The idea is to have templates for facts that correspond to the individual endpoints of the PDDL manager.
 The workflow then is for users to simply assert a fact of a defined template to trigger the request to the PDDL manager, then using rules to observe the provided slots for the outcome.
 
 A comprehensive example for using this integration is given in the :ref:`Tutorial for using the PDDL Manager with cx_pddl_clips <cx_pddl_clips_tutorial>`
-An example for using the interfaces directly without this additional integration can be found in the :ref:`Tutorial for using the PDDL Manager directly <raw_pddl_agent>`.
 
 Request Execution Model
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -178,10 +109,13 @@ In order to integrate the PDDL manager with the |CX|, the following plugins are 
 - :ref:`cx::RosMsgsPlugin <usage_ros_msgs_plugin>`: Provides access to ROS interfaces of the PDDL manager from within CLIPS.
 - :ref:`cx::AmentIndexPlugin <usage_ament_index_plugin>`: Resolves package paths via ``ament_index``. While not required, it is very useful in order to load PDDL files.
 
-Also, as the current configuration is compatible with ROS 2 jazzy, action client introspection is not supported, hence the following plugins are needed to trigger temporal planning and obtain the resulting plan:
+Also, as the current configuration is compatible with ROS 2 jazzy, action client introspection is not supported, hence the following plugins are needed to trigger planning and obtain the resulting plan:
 
-- ``cx::CXCxPddlMsgsPlanTemporalPlugin``
-- ``cx::CXCxPddlMsgsTimedPlanActionPlugin``
+- ``cx::CXCxPddlInterfacesPlanPlugin``
+- ``cx:CXCxPddlInterfacesPlanActionPlugin``
+- ``"cx::CXCxPddlInterfacesHierarchicalPlanMethodPlugin``
+- ``cx::CXCxPddlInterfacesStnConstraintPlugin``
+- ``cx::CXCxPddlInterfacesHierarchicalPlanMethodPlugin``
 
 
 .. code-block:: yaml
@@ -189,17 +123,27 @@ Also, as the current configuration is compatible with ROS 2 jazzy, action client
    /**:
      ros__parameters:
        autostart_node: true
-       environments: ["example_agent"]
+       environments: ["cx_pddl_clips_agent"]
 
-       structured_pddl_agent:
+       cx_pddl_clips_agent:
          plugins: ["executive", "ros_msgs",
+                   "ament_index",
+                   "ros_param",
+                   "plan_action",
+                   "plan_action_msg",
+                   "stn_constraint_msg",
+                   "hierarchical_plan_method_msg",
                    "pddl_files",
                    "files"]
          log_clips_to_file: true
          watch: ["facts", "rules"]
+         redirect_stdout_to_debug: true
 
        ament_index:
          plugin: "cx::AmentIndexPlugin"
+
+       ros_param:
+         plugin: "cx::RosParamPlugin"
 
        executive:
          plugin: "cx::ExecutivePlugin"
@@ -209,15 +153,27 @@ Also, as the current configuration is compatible with ROS 2 jazzy, action client
 
        pddl_files:
          plugin: "cx::FileLoadPlugin"
-         pkg_share_dirs: ["cx_pddl_clips"]
+         pkg_share_dirs: ["cx_pddl_clips", "cx_pddl_bringup"]
          batch: [
-           "clips/cx_pddl_clips/pddl.clp"
+           "clips/cx_pddl_clips/deftemplates.clp",
+           "clips/cx_pddl_bringup/deftemplate-overrides.clp",
+           "clips/cx_pddl_clips/pddl-no-deftemplates.clp"
          ]
 
        files:
          plugin: "cx::FileLoadPlugin"
          pkg_share_dirs: ["cx_pddl_bringup"]
-         load: ["clips/cx_pddl_clips_agent.clp"]
+         load: ["clips/cx_pddl_bringup/cx-pddl-generic-agent.clp"]
+
+       plan_action:
+         plugin: "cx::CXCxPddlInterfacesPlanPlugin"
+       plan_action_msg:
+         plugin: "cx::CXCxPddlInterfacesPlanActionPlugin"
+       stn_constraint_msg:
+         plugin: "cx::CXCxPddlInterfacesStnConstraintPlugin"
+       hierarchical_plan_method_msg:
+         plugin: "cx::CXCxPddlInterfacesHierarchicalPlanMethodPlugin"
+
 
 Example: Loading a PDDL Problem and Obtaining the initial State
 ---------------------------------------------------------------
@@ -267,11 +223,13 @@ Used to track parameters, plan order, and scheduled times.
 
   (deftemplate pddl-action
     (slot instance (type SYMBOL))
-    (slot id (type SYMBOL))
-    (slot plan (type SYMBOL))
+    (slot id (type SYMBOL)) ; this should be a globally unique ID
     (slot name (type SYMBOL))
     (multislot params (type SYMBOL) (default (create$)))
-    (slot plan-order-class (type INTEGER))
+    (slot plan (type SYMBOL))
+    (slot order (type INTEGER))
+    (multislot predecessors (type INTEGER))
+    (slot task-id (type SYMBOL))
     (slot planned-start-time (type FLOAT))
     (slot planned-duration (type FLOAT))
   )
@@ -588,6 +546,25 @@ Assert a fact of this type to specify the name of the PDDL manager node.
     (slot node (type STRING) (default "/pddl_manager"))
   )
 
+.. _pddl-method:
+
+pddl-method
+^^^^^^^^^^^
+
+Represents a grounded PDDL method in a PDDL instance belonging to a hierarchical plan.
+Automatically created when a plan is received.
+
+.. code-block:: clips
+
+  (deftemplate pddl-method
+    (slot instance (type SYMBOL))
+    (slot plan (type SYMBOL))
+    (slot id (type SYMBOL)) ; this should be a globally unique ID
+    (slot name (type SYMBOL))
+    (multislot params (type SYMBOL) (default (create$)))
+    (slot task-id (type SYMBOL))
+  )
+
 .. _pddl-numeric-fluent:
 
 pddl-numeric-fluent
@@ -652,9 +629,9 @@ Note that this does not automatically update the :ref:`pddl-type-objects` facts.
 pddl-plan
 ^^^^^^^^^
 
-Represents a PDDL plan.
+Represents a PDDL plan. The chosen ``plan-type`` determines the format of the resulting plans.
 
-Consists of individual `pddl-action` facts with matching plan id.
+Plans consist of individual :ref:`pddl-action` facts with matching plan id and might additionally have :ref:`pddl-stn-constraint` (for STN plans) or :ref:`pddl-method` facts (for hierarchical plans).
 
 .. code-block:: clips
 
@@ -663,13 +640,13 @@ Consists of individual `pddl-action` facts with matching plan id.
     (slot id (type SYMBOL))
     (slot goal (type SYMBOL))
     (slot goal-ptr (type EXTERNAL-ADDRESS))
-    (slot plan-type (type SYMBOL) (allowed-values CLASSICAL TEMPORAL) (default CLASSICAL))
+    (slot plan-type (type SYMBOL) (allowed-values CLASSICAL TEMPORAL PARTIAL-ORDER HIERARCHICAL STN) (default CLASSICAL))
+    (slot action-type (type SYMBOL) (allowed-values CLASSICAL TEMPORAL STN) (default CLASSICAL))
     (slot goal-handle (type EXTERNAL-ADDRESS))
     (slot output-dir (type STRING))
-    (slot type (type SYMBOL) (allowed-values TEMPORAL CLASSICAL))
     (slot state (type SYMBOL) (allowed-values PENDING WAITING PLANNING REQUEST-CANCELING CANCELING CANCELED SUCCESS FAILURE) (default PENDING))
-    (slot plan-start (type FLOAT) (default 0.0))
   )
+
 
 
 .. _pddl-planning-filter:
@@ -739,6 +716,34 @@ The goal conditions are defined using :ref:`pddl-goal-fluent` and :ref:`pddl-goa
     (slot state (type SYMBOL) (allowed-values PENDING DONE ERROR) (default PENDING))
     (slot error (type STRING))
   )
+
+.. _pddl-stn-constraint:
+
+pddl-stn-constraint
+^^^^^^^^^^^^^^^^^^^
+
+Represents a STN constraint of a STN plan.
+Automatically created when a plan is received.
+The slots ``from`` and ``to`` correspond to the ids of a given plan action in the respective ``order`` field.
+Constraints have the form: ``lower-bound < time(to, to-role) - time(from, from-role) < upper-bound``
+
+
+.. code-block:: clips
+
+  (deftemplate pddl-stn-constraint
+    (slot instance (type SYMBOL))
+    (slot plan (type SYMBOL))
+    (slot id (type SYMBOL)) ; this should be a globally unique ID
+    (slot from (type INTEGER))
+    (slot from-role (type SYMBOL) (allowed-values START END))
+    (slot to (type INTEGER))
+    (slot to-role (type SYMBOL) (allowed-values START END))
+    (slot is-lower-bounded (type SYMBOL) (allowed-values TRUE FALSE))
+    (slot is-upper-bounded (type SYMBOL) (allowed-values TRUE FALSE))
+    (slot lower-bound (type INTEGER))
+    (slot upper-bound (type INTEGER))
+  )
+
 
 
 .. _pddl-type-objects:
