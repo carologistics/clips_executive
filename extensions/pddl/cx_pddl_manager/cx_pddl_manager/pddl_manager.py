@@ -963,7 +963,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
             case Plan.Goal.STN_PLAN:
                 plan_kind_up = PlanKind.STN_PLAN
             case _:
-                raise NotImplementedError(f'PlanKind {plan_kind} is not implemented')
+                raise NotImplementedError(f'PlanKind {plan_kind_ros} is not implemented')
 
         if request.pddl_instance not in self.managed_problems.keys():
             response.success = False

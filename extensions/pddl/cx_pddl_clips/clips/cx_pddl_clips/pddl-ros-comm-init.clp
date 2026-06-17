@@ -31,7 +31,7 @@
       )
       (bind ?index (+ ?index 2))
   )
-  (cx-pddl-interfaces-plan-temporal-create-client (str-cat ?node-name "/temp_plan"))
+  (cx-pddl-interfaces-plan-create-client (str-cat ?node-name "/plan"))
   (modify ?node-f (ros-comm-init TRUE))
 )
 
@@ -50,5 +50,5 @@
       )
       (bind ?index (+ ?index 2))
   )
-  (cx-pddl-interfaces-plan-temporal-destroy-client (str-cat ?node-name "/temp_plan"))
+  (cx-pddl-interfaces-plan-destroy-client (str-cat ?node-name "/plan"))
 )

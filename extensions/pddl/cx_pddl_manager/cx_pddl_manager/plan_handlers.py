@@ -13,20 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Pure, stateless handlers for each unified-planning PlanKind.
-
-Each handler accepts a plan result, metadata, and a Renamings instance, and
-returns the corresponding ROS message type(s).  None of these functions have
-side effects or hold state – they can be tested in isolation without any ROS
-or planning infrastructure.
-"""
-
 from __future__ import annotations
 
 from cx_pddl_interfaces.msg import HierarchicalPlanMethod, PlanAction, StnConstraint
 from unified_planning.plans import TimeTriggeredPlan
 from unified_planning.plans.plan import PlanKind
-from unified_planning.plans.stn_plan import TimepointKind
+from unified_planning.plans.stn_plan import STNPlanNode, TimepointKind
 
 from .renamings import Renamings
 
@@ -49,7 +41,8 @@ def handle_sequential_plan(
     goal_name: str,
     r: Renamings,
 ) -> list[PlanAction]:
-    """Handle PlanKind.SEQUENTIAL_PLAN.
+    """
+    Handle PlanKind.SEQUENTIAL_PLAN.
 
     unified-planning exposes this as an ordered list of ActionInstance objects
     with no timing information.
@@ -76,7 +69,8 @@ def handle_temporal_plan(
     r: Renamings,
     delta_threshold: float = 0.1,
 ) -> list[PlanAction]:
-    """Handle PlanKind.TIME_TRIGGERED_PLAN.
+    """
+    Handle PlanKind.TIME_TRIGGERED_PLAN.
 
     Actions that start within *delta_threshold* seconds of each other are
     placed in the same equivalence class (can be executed in parallel).
@@ -105,7 +99,8 @@ def handle_partial_order_plan(
     goal_name: str,
     r: Renamings,
 ) -> list[PlanAction]:
-    """Handle PlanKind.PARTIAL_ORDER_PLAN.
+    """
+    Handle PlanKind.PARTIAL_ORDER_PLAN.
 
     PartialOrderPlan exposes ordering constraints via get_adjacency_list, a
     property returning {ActionInstance: [successor, ...], ...}.  The adjacency
@@ -139,8 +134,6 @@ def handle_partial_order_plan(
             id_map[id(pred)] for pred in graph.predecessors(ai) if id(pred) in id_map
         ]
         plan_actions.append(action)
-    for a in plan_actions:
-        print(f"{a.name}({a.args}) with {a.predecessors}", flush=True)
 
     return plan_actions
 
@@ -160,7 +153,8 @@ def handle_hierarchical_plan(
     goal_name: str,
     r: Renamings,
 ) -> tuple[list[PlanAction], list[HierarchicalPlanMethod], int]:
-    """Handle PlanKind.HIERARCHICAL_PLAN.
+    """
+    Handle PlanKind.HIERARCHICAL_PLAN.
 
     HierarchicalPlan has two complementary views:
 
@@ -171,10 +165,12 @@ def handle_hierarchical_plan(
     * result.methods()    – list of (stable_id_str, MethodInstance) for every
                             abstract task / method node
 
-    Returns:
+    Returns
+    -------
         action_msgs    – primitives as PlanAction messages
         method_msgs    – abstract tasks as HierarchicalPlanMethod messages
         flat_plan_kind – FLAT_SEQUENTIAL (0) or FLAT_TEMPORAL (1)
+
     """
     flat = result.action_plan
     is_temporal = isinstance(flat, TimeTriggeredPlan)
@@ -317,7 +313,8 @@ def handle_stn_plan(
     goal_name: str,
     r: Renamings,
 ) -> tuple[list[PlanAction], list[StnConstraint]]:
-    """Handle PlanKind.STN_PLAN.
+    """
+    Handle PlanKind.STN_PLAN.
 
     unified-planning's STNPlan exposes constraints via get_constraints(), which
     returns::
@@ -332,12 +329,14 @@ def handle_stn_plan(
 
     Actions plan_start and plan_end are explicitly added to the list.
 
-    Trivial constraints (plan start before any other action, plan end after any action) are omitted in the constraint list).
+    Trivial constraints are omitted in the constraint list.
 
 
-    Returns:
+    Returns
+    -------
         action_msgs     – one PlanAction per unique ActionInstance
         constraint_msgs – one StnConstraint per directed constraint edge
+
     """
     constraints_map = result.get_constraints()
 
@@ -347,8 +346,11 @@ def handle_stn_plan(
     ordered_ais: list = []  # preserves insertion order for message building
 
     def _register(node: STNPlanNode) -> int:
-        """Return the integer action ID for *node*, registering it if new.
-        Returns -1 for GLOBAL_START / GLOBAL_END nodes."""
+        """
+        Return the integer action ID for *node*, registering it if new.
+
+        Returns -1 for GLOBAL_START / GLOBAL_END nodes.
+        """
         if node.kind == TimepointKind.GLOBAL_START:
             return -1
         if node.kind == TimepointKind.GLOBAL_END:
@@ -384,27 +386,8 @@ def handle_stn_plan(
     end_msg.action_id = -2
     action_msgs.append(end_msg)
 
-    # ── Build StnConstraint messages ───────────────────────────────────────
-    # UP semantics: lower <= Time(A) - Time(B) <= upper
-    # We expose this as: from=B, to=A with the same bounds, giving the
-    # standard STN reading: from + lower <= to <= from + upper.
-    #
-    # GLOBAL_START / GLOBAL_END nodes represent the plan's own start/end
-    # timepoint.  UP automatically inserts trivial anchor constraints of the
-    # form  0 <= Time(action) - Time(GLOBAL_START) <= None  for every action
-    # node to assert it happens after the plan starts.  These carry no
-    # planning information and are dropped.
-    #
-    # All other constraints involving GLOBAL nodes are preserved because they
-    # encode meaningful plan-level bounds, e.g.:
-    #   end(plan) - start(action_3) <= 100   →  action_3 must start within
-    #                                            100 s of the plan ending
-    #   start(action_1) - start(plan) >= 5   →  action_1 may not start until
-    #                                            at least 5 s into the plan
-
     def _is_trivial_anchor(node_a: STNPlanNode, lower, upper, node_b: STNPlanNode) -> bool:
-        """Return True for the structural  0 <= Time(action) - Time(GLOBAL_START) <= inf
-        constraints that UP inserts purely to anchor the STN."""
+        """Return True if constraint purely anchors within GLOBAL_START/END."""
         return (
             node_b.kind == TimepointKind.GLOBAL_START
             and node_a.kind in (TimepointKind.START, TimepointKind.END)
@@ -459,7 +442,8 @@ def dispatch_plan_result(
     goal_problem,
     r: Renamings,
 ) -> PlanMessages:
-    """Convert a raw plan result into the appropriate ROS message type(s).
+    """
+    Convert a raw plan result into the appropriate ROS message type(s).
 
     If the planner returned a different PlanKind than requested, an automatic
     conversion is attempted via unified-planning's convert_to().
@@ -504,7 +488,7 @@ def dispatch_plan_result(
         case PlanKind.STN_PLAN:
             return handle_stn_plan(result, problem_name, goal_name, r)
         case _:
-            raise NotImplementedError(f"Unsupported plan kind: {result.kind}")
+            raise NotImplementedError(f'Unsupported plan kind: {result.kind}')
 
 
 # ---------------------------------------------------------------------------

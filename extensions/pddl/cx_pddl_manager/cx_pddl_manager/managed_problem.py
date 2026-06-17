@@ -41,7 +41,8 @@ log = logging.getLogger(__name__)
 
 @dataclass
 class GoalSpec:
-    """Scoping information that restricts a base problem to a specific goal.
+    """
+    Scoping information that restricts a base problem to a specific goal.
 
     Filters are applied as allowlists: when a filter list is empty it means
     "allow everything" (i.e. no restriction).
@@ -63,7 +64,8 @@ class GoalSpec:
 
 
 class ManagedGoal:
-    """Thin builder that accumulates goal fluents and optional filters.
+    """
+    Thin builder that accumulates goal fluents and optional filters.
 
     Once the goal is fully configured, call ManagedProblem.plan() to trigger
     planning.
@@ -82,7 +84,8 @@ class ManagedGoal:
     # ------------------------------------------------------------------
 
     def add_goal_fluent(self, expr: Any) -> None:
-        """Append a pre-grounded FNode expression to the goal.
+        """
+        Append a pre-grounded FNode expression to the goal.
 
         Use ManagedProblem.add_goal_fluent() to build the expression from
         a fluent name + args rather than constructing it manually.
@@ -135,7 +138,8 @@ def _run_planner_process(
     goal_name: str,
     renamings_map: dict[str, str],
 ) -> PlanMessages:
-    """Run the planner in a subprocess and return plan messages.
+    """
+    Run the planner in a subprocess and return plan messages.
 
     All arguments are plain Python scalars / dicts so ProcessPoolExecutor can
     pickle and dispatch this function without any class-level state.
@@ -195,7 +199,8 @@ class ManagedProblem:
         return self.goals[goal]
 
     def add_goal_fluent(self, name: str, args: list[str], value: Any, goal: str = 'base') -> None:
-        """Ground a fluent and add it to the named goal.
+        """
+        Ground a fluent and add it to the named goal.
 
         Grounding is done here because this class owns the base Problem.
         The resulting FNode is stored in the goal's GoalSpec.
@@ -256,18 +261,22 @@ class ManagedProblem:
         plan_kind: PlanKind = PlanKind.SEQUENTIAL_PLAN,
         output_dir: str | None = None,
     ) -> PlanMessages:
-        """Scope the base problem to *goal_name*, run the planner, return messages.
+        """
+        Scope the base problem to *goal_name*, run the planner, return messages.
 
-        Args:
+        Args
+        ----
             goal_name:  Key into self.goals.
             plan_kind:  Desired output plan representation.
             output_dir: If provided, write the PDDL domain/problem files here
                         (useful for debugging).
 
-        Returns:
+        Returns
+        -------
             A list of plan-action messages whose concrete type depends on
             *plan_kind*.  For HIERARCHICAL_PLAN, a 3-tuple is returned instead;
             see plan_handlers.handle_hierarchical_plan for details.
+
         """
         managed_goal = self.goals[goal_name]
         spec = managed_goal.spec
@@ -311,7 +320,8 @@ class ManagedProblem:
         object_filter: list | None = None,
         fluent_filter: list | None = None,
     ) -> Problem:
-        """Return a clone of the base problem restricted to the given allowlists.
+        """
+        Return a clone of the base problem restricted to the given allowlists.
 
         Each filter is an allowlist; passing None means "keep everything".
         HierarchicalProblem is always returned as a plain clone because the
@@ -364,7 +374,7 @@ class ManagedProblem:
         output_path = Path(output_dir)
         try:
             output_path.mkdir(parents=True, exist_ok=True)
-            writer.write_domain(str(output_path / f"{self.name}_{goal_name}_domain.pddl"))
-            writer.write_problem(str(output_path / f"{self.name}_{goal_name}_problem.pddl"))
+            writer.write_domain(str(output_path / f'{self.name}_{goal_name}_domain.pddl'))
+            writer.write_problem(str(output_path / f'{self.name}_{goal_name}_problem.pddl'))
         except Exception as exc:
-            self.logger.error(f"Failed to write PDDL files: {exc}")
+            self.logger.error(f'Failed to write PDDL files: {exc}')
