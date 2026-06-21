@@ -13,7 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
+import datetime
+from pathlib import Path
 
 from cx_rl_gym.cx_rl_base_node import CXRLBaseNode
 
@@ -50,6 +51,7 @@ class CXRLMaskablePPONode(CXRLBaseNode):
                 ('model.n_robots', rclpy.Parameter.Type.INTEGER),
                 ('model.wait_for_all_robots', rclpy.Parameter.Type.BOOL),
                 ('training.timesteps', rclpy.Parameter.Type.INTEGER),
+                ('training.checkpoint_freq', rclpy.Parameter.Type.INTEGER),
             ],
         )
 
@@ -92,17 +94,38 @@ class CXRLMaskablePPONode(CXRLBaseNode):
         )
 
     def load_model(self) -> MultiRobotMaskablePPO:
-        agent_path = os.path.join(
-            self.save_dir, str(self.get_parameter('model_name').value) + '.zip'
-        )
-        return MultiRobotMaskablePPO.load(agent_path, env=self.env)
+        model_name = str(self.get_parameter('model_name').value)
+        agent_path = Path(self.save_dir) / f'latest_{model_name}.zip'
+        if not agent_path.exists():
+            agent_path = Path(self.save_dir) / f'{model_name}.zip'
+        return MultiRobotMaskablePPO.load(str(agent_path), env=self.env)
+
+    def _update_latest_symlink(self, target: Path, link: Path):
+        if link.is_symlink() or link.exists():
+            link.unlink()
+        link.symlink_to(target.name)
 
     def run_training(self):
+        model_name = str(self.get_parameter('model_name').value)
+        timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+        run_id = f'{model_name}_{timestamp}'
+
+        run_ckpt_dir = Path(self.checkpoint_dir) / run_id
+        run_ckpt_dir.mkdir(parents=True, exist_ok=True)
+
         callback_max_episodes = StopTrainingOnMaxEpisodes(
             max_episodes=self.get_parameter('training.max_episodes').value, verbose=1
         )
 
-        checkpoint_callback = CheckpointCallback(save_freq=200, save_path=self.checkpoint_dir)
+        checkpoint_callback = CheckpointCallback(
+            save_freq=self.get_parameter('training.checkpoint_freq').value,
+            save_path=str(run_ckpt_dir),
+            name_prefix=model_name,
+        )
+
+        self._update_latest_symlink(
+            run_ckpt_dir, Path(self.checkpoint_dir) / f'latest_{model_name}'
+        )
 
         self.model.learn(
             total_timesteps=self.get_parameter('training.timesteps').value,
@@ -110,7 +133,11 @@ class CXRLMaskablePPONode(CXRLBaseNode):
             log_interval=1,
         )
 
-        self.model.save(os.path.join(self.save_dir, str(self.get_parameter('model_name').value)))
+        final_path = Path(self.save_dir) / f'{run_id}.zip'
+        self.model.save(str(final_path.with_suffix('')))
+        self._update_latest_symlink(
+            final_path, Path(self.save_dir) / f'latest_{model_name}.zip'
+        )
 
         self.env.env.on_training_end()
         self.get_logger().info('Finished training')
