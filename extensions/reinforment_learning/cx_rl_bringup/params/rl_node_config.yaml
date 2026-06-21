@@ -8,6 +8,7 @@
       retraining: true
       max_episodes: 100
       timesteps: 3000
+      checkpoint_freq: 200
 
     env:
       entrypoint: "cx_rl_gym.cx_rl_gym:CXRLGym"
