@@ -5,9 +5,9 @@
     model_name: "cx_rl_agent"
 
     training:
-      retraining: false
+      retraining: true
       max_episodes: 100
-      timesteps: 10
+      timesteps: 3000
 
     env:
       entrypoint: "cx_rl_gym.cx_rl_gym:CXRLGym"

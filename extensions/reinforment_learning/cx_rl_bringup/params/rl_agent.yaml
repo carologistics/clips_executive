@@ -5,7 +5,6 @@ clips_manager:
       plugins: ["executive",
                 "ament_index",
                 "ros_msgs",
-                "ros_param",
                 "action_selection",
                 "get_free_robot",
                 "reset_env",

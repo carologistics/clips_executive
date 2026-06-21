@@ -155,6 +155,9 @@ class MultiRobotMaskablePPO(MaskablePPO):
         self.shutdown = False
         self._step_lock = threading.Lock()
 
+    def _excluded_save_params(self) -> list:
+        return super()._excluded_save_params() + ['_step_lock']
+
     def _setup_model(self) -> None:
         self._setup_lr_schedule()
         self.set_random_seed(self.seed)

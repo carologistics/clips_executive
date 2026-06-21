@@ -52,7 +52,7 @@
 " ?services-pre ?service-clients-pre ?action-servers-pre
 "  => \
     (printout ?*CX-RL-LOG-LEVEL* \"saved initial facts for \" ?node crlf)  \
-    (bind ?path (ros-param-get-value  \"storage_dir\" \"\")) \
+    (bind ?path \"/tmp\") \
     (if (and (neq ?path \"\") \
         (neq (sub-string (str-length ?path) (str-length ?path) ?path) \"/\")) \
         then (bind ?path (str-cat ?path "/")) \
