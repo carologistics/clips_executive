@@ -608,6 +608,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
                 self.managed_problems[name] = ManagedProblem(
                     self.reader.parse_problem_string(domain_rendered),
                     self.env,
+                    name,
                     planner_spec=self.planner_spec,
                     logger=self.get_logger(),
                 )
