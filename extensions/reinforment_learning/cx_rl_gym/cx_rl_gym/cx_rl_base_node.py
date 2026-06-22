@@ -148,7 +148,9 @@ class CXRLBaseNode(LifecycleNode):
     def set_dirs(self):
         storage_path = self.get_parameter('storage_dir').value
         self.save_dir = os.path.join(storage_path, 'cx_rl_data', 'trained_agents')
-        self.log_dir = os.path.join(storage_path, 'cx_rl_data', 'logs')
+        logs_root = os.path.join(storage_path, 'cx_rl_data', 'logs')
+        run_id = os.environ.get('CX_RL_RUN_ID')
+        self.log_dir = os.path.join(logs_root, run_id) if run_id else logs_root
         self.checkpoint_dir = os.path.join(storage_path, 'checkpoint_agents')
         os.makedirs(self.save_dir, exist_ok=True)
         os.makedirs(self.log_dir, exist_ok=True)
