@@ -1,4 +1,3 @@
-// TODO BATCH UPLOAD
 // Copyright (c) 2024-2026 Carologistics
 // SPDX-License-Identifier: Apache-2.0
 //
@@ -13,24 +12,27 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+//
+// TODO(techtasie): BATCH UPLOAD
 
-#include <pqxx/pqxx>
-#undef RANGES
 // RANGES is defined in clips_ns/clips.h, which causes issues with
 // pqxx/pqxx. It needs to be included before clips_ns/clips.h to avoid compilation errors.
 
-#include <clips_ns/clips.h>
-#include <clips_ns/modulpsr.h>
-
 #include <cstddef>
+#include <cstdint>
 #include <cstdio>
 #include <ctime>
-#include <cx_utils/clips_env_context.hpp>
-#include <cx_utils/param_utils.hpp>
 #include <memory>
-#include <nlohmann/json_fwd.hpp>
 
+#include "pqxx/pqxx"
+#undef RANGES
+
+#include "clips_ns/clips.h"
+#include "clips_ns/modulpsr.h"
 #include "cx_cdb_saver_plugin/cdb_saver_plugin.hpp"
+#include "cx_utils/clips_env_context.hpp"
+#include "cx_utils/param_utils.hpp"
+#include "nlohmann/json_fwd.hpp"
 #include "rcl_interfaces/msg/list_parameters_result.hpp"
 
 // To export as plugin
@@ -398,7 +400,7 @@ void CDBSaverPlugin::cdb_before_rule_callback(
 {
   std::string name = act->theRule->header.name->contents;
   std::string module_name = act->theRule->header.whichModule->theModule->header.name->contents;
-  std::vector<std::optional<long long>> basis;
+  std::vector<std::optional<uint64_t>> basis;
   for (int i = 0; i < act->basis->bcount; i++) {
     if (
       (get_nth_pm_match(act->basis, i) != NULL) &&
@@ -433,7 +435,7 @@ void CDBSaverPlugin::cdb_module_defined_callback(clips::Environment * env, void 
     theModule->header.name->contents, get_module_defintion(theModule), db->get_tick());
 }
 
-nlohmann::json CDBSaverPlugin::slot_value_to_json(unsigned short type, clips::CLIPSValue * value)
+nlohmann::json CDBSaverPlugin::slot_value_to_json(uint16_t type, clips::CLIPSValue * value)
 {
   nlohmann::json json;
   switch (type) {
@@ -527,7 +529,7 @@ std::string CDBSaverPlugin::clips_fact_to_json(clips::Fact * f)
         slot_json["type"] = "MULTIFIELD";
 
       } else {
-        unsigned short type = ((clips::TypeHeader *)value->value)->type;
+        uint16_t type = ((clips::TypeHeader *)value->value)->type;
         slot_json = slot_value_to_json(type, value);
       }
       slotPtr = slotPtr->next;

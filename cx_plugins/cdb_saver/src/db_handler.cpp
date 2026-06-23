@@ -20,6 +20,7 @@
 #include <stdexcept>
 #include <vector>
 
+#include "cx_cdb_saver_plugin/pqxx_compat.hpp"
 #include "cx_cdb_saver_plugin/schema_sql.hpp"
 
 namespace cx
@@ -39,7 +40,6 @@ DBHandler::DBHandler(DBHandlerConfig & config, rclcpp_lifecycle::LifecycleNode::
       "dbname=" + config.db_name + " user=" + config.username + " password=" + config.password +
       " port=" + std::to_string(config.port) + " host=" + config.hostname + " gssencmode=disable"};
     connection_ = std::make_shared<pqxx::connection>(connection_settings);
-
   } catch (const std::exception & e) {
     throw(std::runtime_error("Failed to connect to database: " + std::string(e.what())));
   }
@@ -92,15 +92,15 @@ bool DBHandler::init_db(DBHandlerConfig & config)
 }
 
 void DBHandler::assert_fact(
-  long long id, const std::string & module_name, const std::string & deftemplate,
-  const std::string & fact_json, long long tick)
+  uint64_t id, const std::string & module_name, const std::string & deftemplate,
+  const std::string & fact_json, uint64_t tick)
 {
   try {
     pqxx::work w(*connection_);
 
-    w.exec_params(
-      "SELECT assert_fact_upsert($1, $2, $3, $4, $5::jsonb);", id, module_name, deftemplate, tick,
-      fact_json);
+    cx::exec_params(
+      w, "SELECT assert_fact_upsert($1, $2, $3, $4, $5::jsonb);", id, module_name, deftemplate,
+      tick, fact_json);
 
     w.commit();
   } catch (const std::exception & e) {
@@ -108,12 +108,13 @@ void DBHandler::assert_fact(
   }
 }
 
-void DBHandler::retract_fact(long long id, long long tick)
+void DBHandler::retract_fact(uint64_t id, uint64_t tick)
 {
   try {
     pqxx::work w(*connection_);
 
-    pqxx::result result = w.exec_params(
+    pqxx::result result = cx::exec_params(
+      w,
       "UPDATE facts "
       "SET end_tick = $1 "
       "WHERE fact_id = $2 AND end_tick IS NULL",
@@ -132,13 +133,14 @@ void DBHandler::retract_fact(long long id, long long tick)
 
 void DBHandler::assert_defrule(
   const std::string & name, const std::string & module_name, const std::string & definition,
-  const int salience, long long tick)
+  const int salience, uint64_t tick)
 {
   try {
     pqxx::work w(*connection_);
 
-    w.exec_params(
-      "SELECT defrule_upsert($1, $2, $3, $4, $5);", name, module_name, tick, definition, salience);
+    cx::exec_params(
+      w, "SELECT defrule_upsert($1, $2, $3, $4, $5);", name, module_name, tick, definition,
+      salience);
 
     w.commit();
   } catch (const std::exception & e) {
@@ -147,12 +149,12 @@ void DBHandler::assert_defrule(
 }
 
 void DBHandler::retract_defrule(
-  const std::string & name, const std::string & module_name, long long tick)
+  const std::string & name, const std::string & module_name, uint64_t tick)
 {
   try {
     pqxx::work w(*connection_);
 
-    w.exec_params("SELECT defrule_retract($1, $2, $3);", name, module_name, tick);
+    cx::exec_params(w, "SELECT defrule_retract($1, $2, $3);", name, module_name, tick);
 
     w.commit();
   } catch (const std::exception & e) {
@@ -162,13 +164,13 @@ void DBHandler::retract_defrule(
 
 void DBHandler::assert_deffunction(
   const std::string & name, const std::string & module_name, const std::string & definition,
-  long long tick)
+  uint64_t tick)
 {
   try {
     pqxx::work w(*connection_);
 
-    w.exec_params(
-      "SELECT deffunction_upsert($1, $2, $3, $4);", name, module_name, tick, definition);
+    cx::exec_params(
+      w, "SELECT deffunction_upsert($1, $2, $3, $4);", name, module_name, tick, definition);
 
     w.commit();
   } catch (const std::exception & e) {
@@ -177,12 +179,12 @@ void DBHandler::assert_deffunction(
 }
 
 void DBHandler::retract_deffunction(
-  const std::string & name, const std::string & module_name, long long tick)
+  const std::string & name, const std::string & module_name, uint64_t tick)
 {
   try {
     pqxx::work w(*connection_);
 
-    w.exec_params("SELECT deffunction_retract($1, $2, $3);", name, module_name, tick);
+    cx::exec_params(w, "SELECT deffunction_retract($1, $2, $3);", name, module_name, tick);
 
     w.commit();
   } catch (const std::exception & e) {
@@ -192,12 +194,13 @@ void DBHandler::retract_deffunction(
 
 void DBHandler::assert_deffacts(
   const std::string & name, const std::string & module_name, const std::string & definition,
-  long long tick)
+  uint64_t tick)
 {
   try {
     pqxx::work w(*connection_);
 
-    w.exec_params("SELECT deffacts_upsert($1, $2, $3, $4);", name, module_name, tick, definition);
+    cx::exec_params(
+      w, "SELECT deffacts_upsert($1, $2, $3, $4);", name, module_name, tick, definition);
 
     w.commit();
   } catch (const std::exception & e) {
@@ -206,12 +209,12 @@ void DBHandler::assert_deffacts(
 }
 
 void DBHandler::retract_deffacts(
-  const std::string & name, const std::string & module_name, long long tick)
+  const std::string & name, const std::string & module_name, uint64_t tick)
 {
   try {
     pqxx::work w(*connection_);
 
-    w.exec_params("SELECT deffacts_retract($1, $2, $3);", name, module_name, tick);
+    cx::exec_params(w, "SELECT deffacts_retract($1, $2, $3);", name, module_name, tick);
 
     w.commit();
   } catch (const std::exception & e) {
@@ -221,13 +224,13 @@ void DBHandler::retract_deffacts(
 
 void DBHandler::assert_defglobal(
   const std::string & name, const std::string & module_name, const std::string & value_json,
-  long long tick)
+  uint64_t tick)
 {
   try {
     pqxx::work w(*connection_);
 
-    w.exec_params(
-      "SELECT defglobal_upsert($1, $2, $3, $4::jsonb);", name, module_name, tick, value_json);
+    cx::exec_params(
+      w, "SELECT defglobal_upsert($1, $2, $3, $4::jsonb);", name, module_name, tick, value_json);
 
     w.commit();
   } catch (const std::exception & e) {
@@ -236,12 +239,12 @@ void DBHandler::assert_defglobal(
 }
 
 void DBHandler::retract_defglobal(
-  const std::string & name, const std::string & module_name, long long tick)
+  const std::string & name, const std::string & module_name, uint64_t tick)
 {
   try {
     pqxx::work w(*connection_);
 
-    w.exec_params("SELECT defglobal_retract($1, $2, $3);", name, module_name, tick);
+    cx::exec_params(w, "SELECT defglobal_retract($1, $2, $3);", name, module_name, tick);
 
     w.commit();
   } catch (const std::exception & e) {
@@ -251,13 +254,13 @@ void DBHandler::retract_defglobal(
 
 void DBHandler::assert_deftemplate(
   const std::string & name, const std::string & module_name, const std::string & definition,
-  long long tick)
+  uint64_t tick)
 {
   try {
     pqxx::work w(*connection_);
 
-    w.exec_params(
-      "SELECT deftemplate_upsert($1, $2, $3, $4);", name, module_name, tick, definition);
+    cx::exec_params(
+      w, "SELECT deftemplate_upsert($1, $2, $3, $4);", name, module_name, tick, definition);
 
     w.commit();
   } catch (const std::exception & e) {
@@ -266,12 +269,12 @@ void DBHandler::assert_deftemplate(
 }
 
 void DBHandler::retract_deftemplate(
-  const std::string & name, const std::string & module_name, long long tick)
+  const std::string & name, const std::string & module_name, uint64_t tick)
 {
   try {
     pqxx::work w(*connection_);
 
-    w.exec_params("SELECT deftemplate_retract($1, $2, $3);", name, module_name, tick);
+    cx::exec_params(w, "SELECT deftemplate_retract($1, $2, $3);", name, module_name, tick);
 
     w.commit();
   } catch (const std::exception & e) {
@@ -281,7 +284,7 @@ void DBHandler::retract_deftemplate(
 
 void DBHandler::assert_rule_fired(
   const std::string & name, const std::string & module_name,
-  const std::vector<std::optional<long long>> & basis, long long tick)
+  const std::vector<std::optional<uint64_t>> & basis, uint64_t tick)
 {
   try {
     pqxx::work w(*connection_);
@@ -301,7 +304,8 @@ void DBHandler::assert_rule_fired(
     }
     array_str << "}";
 
-    pqxx::result result = w.exec_params(
+    pqxx::result result = cx::exec_params(
+      w,
       R"SQL(
             INSERT INTO rule_firing (rule_id, base, tick)
             SELECT rule_id, $3::bigint[], $4
@@ -323,12 +327,13 @@ void DBHandler::assert_rule_fired(
 }
 
 void DBHandler::assert_defmodule(
-  const std::string & name, const std::string & definition, long long tick)
+  const std::string & name, const std::string & definition, uint64_t tick)
 {
   try {
     pqxx::work w(*connection_);
 
-    pqxx::result result = w.exec_params(
+    pqxx::result result = cx::exec_params(
+      w,
       R"SQL(
             INSERT INTO defmodules (name, value, start_tick)
             VALUES ($1, $2, $3)
@@ -349,12 +354,12 @@ void DBHandler::assert_defmodule(
 }
 
 void DBHandler::load_plugin(
-  const std::string & plugin_name, const std::string & config_json, long long tick)
+  const std::string & plugin_name, const std::string & config_json, uint64_t tick)
 {
   try {
     pqxx::work w(*connection_);
 
-    w.exec_params("SELECT plugin_load($1, $2, $3::jsonb);", plugin_name, tick, config_json);
+    cx::exec_params(w, "SELECT plugin_load($1, $2, $3::jsonb);", plugin_name, tick, config_json);
 
     w.commit();
   } catch (const std::exception & e) {
@@ -362,12 +367,12 @@ void DBHandler::load_plugin(
   }
 }
 
-void DBHandler::unload_plugin(const std::string & plugin_name, long long tick)
+void DBHandler::unload_plugin(const std::string & plugin_name, uint64_t tick)
 {
   try {
     pqxx::work w(*connection_);
 
-    w.exec_params("SELECT plugin_unload($1, $2);", plugin_name, tick);
+    cx::exec_params(w, "SELECT plugin_unload($1, $2);", plugin_name, tick);
 
     w.commit();
   } catch (const std::exception & e) {
@@ -375,12 +380,13 @@ void DBHandler::unload_plugin(const std::string & plugin_name, long long tick)
   }
 }
 
-long long DBHandler::start_run(int64_t start_time_ns, long long start_tick)
+uint64_t DBHandler::start_run(int64_t start_time_ns, uint64_t start_tick)
 {
   try {
     pqxx::work w(*connection_);
 
-    pqxx::row row = w.exec_params1(
+    pqxx::row row = cx::exec_params1(
+      w,
       R"sql(
         INSERT INTO time_lookup (start_time, start_tick)
         VALUES (
@@ -391,22 +397,22 @@ long long DBHandler::start_run(int64_t start_time_ns, long long start_tick)
       )sql",
       start_time_ns, start_tick);
 
-    long long run_number = row[0].as<long long>();
+    uint64_t run_number = row[0].as<uint64_t>();
 
     w.commit();
     return run_number;
-
   } catch (const std::exception & e) {
     throw std::runtime_error("Failed to start run: " + std::string(e.what()));
   }
 }
 
-void DBHandler::end_run(long long run_number, int64_t end_time_ns, long long end_tick)
+void DBHandler::end_run(uint64_t run_number, int64_t end_time_ns, uint64_t end_tick)
 {
   try {
     pqxx::work w(*connection_);
 
-    pqxx::result result = w.exec_params(
+    pqxx::result result = cx::exec_params(
+      w,
       R"sql(
         UPDATE time_lookup
         SET
@@ -423,7 +429,6 @@ void DBHandler::end_run(long long run_number, int64_t end_time_ns, long long end
     }
 
     w.commit();
-
   } catch (const std::exception & e) {
     throw std::runtime_error("Failed to finish run: " + std::string(e.what()));
   }

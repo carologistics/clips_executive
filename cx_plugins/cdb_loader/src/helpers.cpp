@@ -17,6 +17,8 @@
 
 #include <regex>
 
+#include "cx_cdb_loader_plugin/pqxx_compat.hpp"
+
 namespace cx
 {
 
@@ -47,7 +49,7 @@ void append_json_to_multifield_builder(
       clips::MBAppendSymbol(mb, valueJson["value"].get<std::string>().c_str());
       break;
     case SlotType::Integer:
-      clips::MBAppendInteger(mb, valueJson["value"].get<long long>());
+      clips::MBAppendInteger(mb, valueJson["value"].get<int64_t>());
       break;
     case SlotType::Float:
       clips::MBAppendFloat(mb, valueJson["value"].get<double>());
@@ -79,7 +81,7 @@ void append_json_to_multifield_builder(
 
 clips::Multifield * json_to_multifield(
   clips::Environment * env, const nlohmann::json & json_array,
-  std::unordered_map<long long, clips::Fact *> & id_to_fact_ptr,
+  std::unordered_map<int64_t, clips::Fact *> & id_to_fact_ptr,
   std::vector<clips::Fact *> & created_nullptr_facts, const RegexConfig & config)
 {
   clips::MultifieldBuilder * mb = clips::CreateMultifieldBuilder(env, json_array.size());
@@ -96,7 +98,7 @@ clips::Multifield * json_to_multifield(
 
 void append_json_to_multifield_builder(
   clips::Environment * env, clips::MultifieldBuilder * mb, const nlohmann::json & valueJson,
-  std::unordered_map<long long, clips::Fact *> & id_to_fact_ptr,
+  std::unordered_map<int64_t, clips::Fact *> & id_to_fact_ptr,
   std::vector<clips::Fact *> & created_nullptr_facts, const RegexConfig & config)
 {
   switch (valueJson["type"].get<SlotType>()) {
@@ -107,7 +109,7 @@ void append_json_to_multifield_builder(
       clips::MBAppendSymbol(mb, valueJson["value"].get<std::string>().c_str());
       break;
     case SlotType::Integer:
-      clips::MBAppendInteger(mb, valueJson["value"].get<long long>());
+      clips::MBAppendInteger(mb, valueJson["value"].get<int64_t>());
       break;
     case SlotType::Float:
       clips::MBAppendFloat(mb, valueJson["value"].get<double>());
@@ -132,19 +134,19 @@ void append_json_to_multifield_builder(
       break;
     }
     case SlotType::FactAddress:
-      if (id_to_fact_ptr.contains(valueJson["value"].get<long long>())) {
-        clips::MBAppendFact(mb, id_to_fact_ptr[valueJson["value"].get<long long>()]);
+      if (id_to_fact_ptr.contains(valueJson["value"].get<int64_t>())) {
+        clips::MBAppendFact(mb, id_to_fact_ptr[valueJson["value"].get<int64_t>()]);
       } else {
         clips::Fact * null_fact = get_nullptr_fact(
-          env, valueJson["value"].get<long long>(), id_to_fact_ptr, created_nullptr_facts);
+          env, valueJson["value"].get<int64_t>(), id_to_fact_ptr, created_nullptr_facts);
         clips::MBAppendFact(mb, null_fact);
       }
   }
 }
 
 clips::Fact * get_nullptr_fact(
-  clips::Environment * env, long long fact_id,
-  std::unordered_map<long long, clips::Fact *> & id_to_fact_ptr,
+  clips::Environment * env, int64_t fact_id,
+  std::unordered_map<int64_t, clips::Fact *> & id_to_fact_ptr,
   std::vector<clips::Fact *> & created_nullptr_facts)
 {
   clips::Fact * null_fact = clips::AssertString(env, std::format("(nullptr-{})", fact_id).c_str());
@@ -180,7 +182,8 @@ std::vector<Defmodule> load_defmodules(pqxx::connection & conn, Tick restore_tic
 {
   pqxx::work tx{conn};
 
-  pqxx::result rows = tx.exec_params(
+  pqxx::result rows = cx::exec_params(
+    tx,
     R"sql(
       SELECT *
       FROM defmodules
@@ -209,7 +212,8 @@ std::vector<Deftemplate> load_deftemplates(
 {
   pqxx::work tx{conn};
 
-  pqxx::result rows = tx.exec_params(
+  pqxx::result rows = cx::exec_params(
+    tx,
     R"sql(
       SELECT *
       FROM deftemplates_cpp_at($1)
@@ -243,7 +247,8 @@ std::vector<Defglobal> load_defglobals(
 {
   pqxx::work tx{conn};
 
-  pqxx::result rows = tx.exec_params(
+  pqxx::result rows = cx::exec_params(
+    tx,
     R"sql(
       SELECT *
       FROM defglobals_cpp_at($1, $2)
@@ -274,7 +279,8 @@ std::vector<Deffunction> load_deffunctions(
 {
   pqxx::work tx{conn};
 
-  pqxx::result rows = tx.exec_params(
+  pqxx::result rows = cx::exec_params(
+    tx,
     R"sql(
       SELECT *
       FROM deffunctions_cpp_at($1)
@@ -305,7 +311,8 @@ std::vector<Defrule> load_defrules(
 {
   pqxx::work tx{conn};
 
-  pqxx::result rows = tx.exec_params(
+  pqxx::result rows = cx::exec_params(
+    tx,
     R"sql(
       SELECT *
       FROM defrules_cpp_at($1)
@@ -338,8 +345,9 @@ std::vector<Deffacts> load_deffacts(
 {
   pqxx::work tx{conn};
 
-  //TODO CHECK
-  pqxx::result rows = tx.exec_params(
+  // TODO(techtasie): CHECK
+  pqxx::result rows = cx::exec_params(
+    tx,
     R"sql(
       SELECT *
       FROM deffacts_cpp_at($1)
@@ -370,7 +378,8 @@ std::vector<Fact> load_facts(
 {
   pqxx::work tx{conn};
 
-  pqxx::result rows = tx.exec_params(
+  pqxx::result rows = cx::exec_params(
+    tx,
     R"sql(
       SELECT *
       FROM facts_cpp_at($1, $2)
@@ -383,7 +392,7 @@ std::vector<Fact> load_facts(
 
   for (const pqxx::row & row : rows) {
     result.push_back(Fact{
-      .fact_id = row["fact_id"].as<long long>(),
+      .fact_id = row["fact_id"].as<int64_t>(),
       .defmodule = row["module"].as<std::string>(),
       .deftemplate_name = row["deftemplate"].as<std::string>(),
       .value = parse_timed_fact(row),
@@ -398,7 +407,7 @@ std::vector<Fact> load_facts(
 
 bool rule_firing_exists_before_tick(
   pqxx::connection & conn, const std::string & defmodule, const std::string & name,
-  const std::vector<std::optional<long long>> & basis, long long before_tick)
+  const std::vector<std::optional<int64_t>> & basis, int64_t before_tick)
 {
   pqxx::work tx{conn};
 
@@ -452,10 +461,10 @@ bool rule_firing_exists_before_tick(
   return exists;
 }
 
-long long get_end_tick_for_run(pqxx::connection & db, long long run_index)
+int64_t get_end_tick_for_run(pqxx::connection & db, int64_t run_index)
 {
   const bool count_from_end = run_index < 0;
-  const long long offset = count_from_end ? (-(run_index)) : run_index;
+  const int64_t offset = count_from_end ? (-(run_index)) : run_index;
 
   const std::string query = count_from_end ? "SELECT run_number, end_tick "
                                              "FROM time_lookup "
@@ -467,7 +476,7 @@ long long get_end_tick_for_run(pqxx::connection & db, long long run_index)
                                              "LIMIT 1 OFFSET $1";
 
   pqxx::work w(db);
-  pqxx::result result = w.exec_params(query, offset);
+  pqxx::result result = cx::exec_params(w, query, offset);
   w.commit();
 
   if (result.empty()) {
@@ -482,10 +491,10 @@ long long get_end_tick_for_run(pqxx::connection & db, long long run_index)
       result[0]["run_number"].as<std::string>() + " has no end_tick.");
   }
 
-  return result[0]["end_tick"].as<long long>();
+  return result[0]["end_tick"].as<int64_t>();
 }
 
-long long resolve_restore_tick(pqxx::connection & db, long long restore_tick_index)
+int64_t resolve_restore_tick(pqxx::connection & db, int64_t restore_tick_index)
 {
   if (restore_tick_index >= 0) {
     return restore_tick_index;
@@ -499,8 +508,8 @@ long long resolve_restore_tick(pqxx::connection & db, long long restore_tick_ind
     throw std::runtime_error("Could not resolve restore_tick: cdb_max_tick() returned no value.");
   }
 
-  const long long max_tick = result[0]["max_tick"].as<long long>();
-  const long long resolved_tick = max_tick + restore_tick_index + 1;
+  const int64_t max_tick = result[0]["max_tick"].as<int64_t>();
+  const int64_t resolved_tick = max_tick + restore_tick_index + 1;
 
   if (resolved_tick < 0) {
     throw std::runtime_error(
@@ -511,7 +520,7 @@ long long resolve_restore_tick(pqxx::connection & db, long long restore_tick_ind
   return resolved_tick;
 }
 
-long long resolve_restore_time(
+int64_t resolve_restore_time(
   pqxx::connection & db, const std::string & restore_time, const rclcpp::Logger & logger)
 {
   if (restore_time.empty()) {
@@ -528,7 +537,8 @@ long long resolve_restore_time(
       throw std::runtime_error("restore_time starts with T+ but contains no interval.");
     }
 
-    result = w.exec_params(
+    result = cx::exec_params(
+      w,
       R"sql(
         WITH target_time AS (
           SELECT
@@ -561,7 +571,8 @@ long long resolve_restore_time(
         "'. It must be either an absolute timestamp in ISO 8601 format or a relative time starting "
         "with 'T+'.");
     }
-    result = w.exec_params(
+    result = cx::exec_params(
+      w,
       R"sql(
         WITH target_time AS (
           SELECT
@@ -592,15 +603,15 @@ long long resolve_restore_time(
       "': no finished run with end_time and end_tick exists.");
   }
 
-  const long long run_number = result[0]["run_number"].as<long long>();
-  const long long end_tick = result[0]["end_tick"].as<long long>();
+  const int64_t run_number = result[0]["run_number"].as<int64_t>();
+  const int64_t end_tick = result[0]["end_tick"].as<int64_t>();
   const std::string requested_time = result[0]["requested_time"].as<std::string>();
   const std::string selected_end_time = result[0]["end_time"].as<std::string>();
 
   RCLCPP_INFO(
     logger,
     "Resolved restore_time '%s' to requested timestamp '%s'. "
-    "Closest run end is run %lli at '%s', using end_tick %lli.",
+    "Closest run end is run %li at '%s', using end_tick %li.",
     restore_time.c_str(), requested_time.c_str(), run_number, selected_end_time.c_str(), end_tick);
 
   return end_tick;

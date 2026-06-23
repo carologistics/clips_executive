@@ -15,24 +15,25 @@
 
 #pragma once
 
-// clang-format off
-#include <pqxx/pqxx>
+#include <string>
+#include <unordered_map>
+#include <vector>
+
+#include "pqxx/pqxx"
 #undef RANGES
 // RANGES is defined in clips_ns/clips.h, which causes issues with
 // pqxx/pqxx. It needs to be included before clips_ns/clips.h to avoid compilation errors.
 
-#include <clips_ns/clips.h>
-// clang-format on
-
-#include <cx_cdb_loader_plugin/parser.hpp>
-#include <nlohmann/json.hpp>
-#include <rclcpp/rclcpp.hpp>
+#include "clips_ns/clips.h"
+#include "cx_cdb_loader_plugin/parser.hpp"
+#include "nlohmann/json.hpp"
+#include "rclcpp/rclcpp.hpp"
 
 namespace cx
 {
 
 using json = nlohmann::json;
-using Tick = long long;
+using Tick = int64_t;
 
 struct TimedFact
 {
@@ -48,7 +49,7 @@ struct TimedText
 
 struct TimeLookup
 {
-  long long run_number;
+  int64_t run_number;
   std::string start_time;
   std::optional<std::string> end_time;
   Tick start_tick;
@@ -57,7 +58,7 @@ struct TimeLookup
 
 struct Fact
 {
-  long long fact_id;
+  int64_t fact_id;
   std::string defmodule;
   std::string deftemplate_name;
   TimedFact value;
@@ -88,7 +89,7 @@ struct Defrule
 struct RuleFiring
 {
   int rule_id;
-  std::vector<long long> base;
+  std::vector<int64_t> base;
   Tick tick;
 };
 
@@ -164,17 +165,17 @@ void append_json_to_multifield_builder(
 
 void append_json_to_multifield_builder(
   clips::Environment * env, clips::MultifieldBuilder * mb, const nlohmann::json & valueJson,
-  std::unordered_map<long long, clips::Fact *> & id_to_fact_ptr,
+  std::unordered_map<int64_t, clips::Fact *> & id_to_fact_ptr,
   std::vector<clips::Fact *> & created_nullptr_facts, const RegexConfig & config);
 
 clips::Multifield * json_to_multifield(
   clips::Environment * env, const nlohmann::json & json,
-  std::unordered_map<long long, clips::Fact *> & id_to_fact_ptr,
+  std::unordered_map<int64_t, clips::Fact *> & id_to_fact_ptr,
   std::vector<clips::Fact *> & created_nullptr_facts, const RegexConfig & config);
 
 clips::Fact * get_nullptr_fact(
-  clips::Environment * env, long long fact_id,
-  std::unordered_map<long long, clips::Fact *> & id_to_fact_ptr,
+  clips::Environment * env, int64_t fact_id,
+  std::unordered_map<int64_t, clips::Fact *> & id_to_fact_ptr,
   std::vector<clips::Fact *> & created_nullptr_facts);
 
 template <typename T>
@@ -198,10 +199,10 @@ std::vector<Fact> load_facts(
 
 bool rule_firing_exists_before_tick(
   pqxx::connection & conn, const std::string & defmodule, const std::string & name,
-  const std::vector<std::optional<long long>> & basis, long long before_tick);
-long long get_end_tick_for_run(pqxx::connection & db, long long run_index);
-long long resolve_restore_tick(pqxx::connection & db, long long restore_tick_index);
-long long resolve_restore_time(
+  const std::vector<std::optional<int64_t>> & basis, int64_t before_tick);
+int64_t get_end_tick_for_run(pqxx::connection & db, int64_t run_index);
+int64_t resolve_restore_tick(pqxx::connection & db, int64_t restore_tick_index);
+int64_t resolve_restore_time(
   pqxx::connection & db, const std::string & restore_time, const rclcpp::Logger & logger);
 
 }  // namespace cx

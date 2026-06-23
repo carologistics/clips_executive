@@ -15,20 +15,23 @@
 
 #pragma once
 
+#include <regex>
+#include <string>
+#include <vector>
+
+#include "cx_utils/param_utils.hpp"
+#include "nlohmann/json.hpp"
+#include "pqxx/pqxx"
+#include "rclcpp/rclcpp.hpp"
+#include "rclcpp_lifecycle/lifecycle_node.hpp"
 // clang-format off
-#include <pqxx/pqxx>
 #undef RANGES
 // RANGES is defined in clips_ns/clips.h, which causes issues with
 // pqxx/pqxx. It needs to be included before clips_ns/clips.h to avoid compilation errors.
+//
+#include <clips_ns/clips.h>  // NOLINT(build/include_order)
 
-#include <clips_ns/clips.h>
 // clang-format on
-
-#include <cx_utils/param_utils.hpp>
-#include <nlohmann/json.hpp>
-#include <rclcpp/rclcpp.hpp>
-#include <rclcpp_lifecycle/lifecycle_node.hpp>
-#include <regex>
 
 namespace cx
 {

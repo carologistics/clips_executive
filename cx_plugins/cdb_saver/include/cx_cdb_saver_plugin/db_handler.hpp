@@ -15,15 +15,17 @@
 
 #pragma once
 
-#include <pqxx/pqxx>
-#undef RANGES
-// RANGES is defined in clips_ns/clips.h, which causes issues with
-// pqxx/pqxx
-
 #include <cstdint>
 #include <memory>
 #include <optional>
-#include <rclcpp_lifecycle/lifecycle_node.hpp>
+#include <string>
+#include <vector>
+
+#include "pqxx/pqxx"
+// RANGES is defined in clips_ns/clips.h, which causes issues with
+// pqxx/pqxx
+#undef RANGES
+#include "rclcpp_lifecycle/lifecycle_node.hpp"
 
 namespace cx
 {
@@ -44,60 +46,59 @@ public:
   ~DBHandler();
 
   void assert_fact(
-    long long id, const std::string & module_name, const std::string & deftemplate,
-    const std::string & fact_json, long long tick);
-  void retract_fact(long long id, long long tick);
+    uint64_t id, const std::string & module_name, const std::string & deftemplate,
+    const std::string & fact_json, uint64_t tick);
+  void retract_fact(uint64_t id, uint64_t tick);
 
   void assert_defrule(
     const std::string & name, const std::string & module_name, const std::string & definition,
-    const int salience, long long tick);
-  void retract_defrule(const std::string & name, const std::string & module_name, long long tick);
+    const int salience, uint64_t tick);
+  void retract_defrule(const std::string & name, const std::string & module_name, uint64_t tick);
 
   void assert_deffunction(
     const std::string & name, const std::string & module_name, const std::string & definition,
-    long long tick);
+    uint64_t tick);
   void retract_deffunction(
-    const std::string & name, const std::string & module_name, long long tick);
+    const std::string & name, const std::string & module_name, uint64_t tick);
 
   void assert_deffacts(
     const std::string & name, const std::string & module_name, const std::string & definition,
-    long long tick);
-  void retract_deffacts(const std::string & name, const std::string & module_name, long long tick);
+    uint64_t tick);
+  void retract_deffacts(const std::string & name, const std::string & module_name, uint64_t tick);
 
   void assert_defglobal(
     const std::string & name, const std::string & module_name, const std::string & value_json,
-    long long tick);
-  void retract_defglobal(const std::string & name, const std::string & module_name, long long tick);
+    uint64_t tick);
+  void retract_defglobal(const std::string & name, const std::string & module_name, uint64_t tick);
 
   void assert_deftemplate(
     const std::string & name, const std::string & module_name, const std::string & definition,
-    long long tick);
+    uint64_t tick);
   void retract_deftemplate(
-    const std::string & name, const std::string & module_name, long long tick);
+    const std::string & name, const std::string & module_name, uint64_t tick);
 
   void assert_rule_fired(
     const std::string & name, const std::string & module_name,
-    const std::vector<std::optional<long long>> & basis, long long tick);
+    const std::vector<std::optional<uint64_t>> & basis, uint64_t tick);
 
-  void assert_defmodule(const std::string & name, const std::string & definition, long long tick);
+  void assert_defmodule(const std::string & name, const std::string & definition, uint64_t tick);
 
-  void load_plugin(
-    const std::string & plugin_name, const std::string & config_json, long long tick);
-  void unload_plugin(const std::string & plugin_name, long long tick);
+  void load_plugin(const std::string & plugin_name, const std::string & config_json, uint64_t tick);
+  void unload_plugin(const std::string & plugin_name, uint64_t tick);
 
-  long long start_run(int64_t start_time_ns, long long start_tick);
-  void end_run(long long run_number, int64_t end_time_ns, long long end_tick);
+  uint64_t start_run(int64_t start_time_ns, uint64_t start_tick);
+  void end_run(uint64_t run_number, int64_t end_time_ns, uint64_t end_tick);
 
   bool init_db(DBHandlerConfig & config);
 
-  inline long long get_tick() { return tick_++; }
+  inline uint64_t get_tick() { return tick_++; }
 
 private:
   std::shared_ptr<pqxx::connection> connection_;
   DBHandlerConfig config_;
 
-  long long tick_;
-  long long current_run_;
+  uint64_t tick_;
+  uint64_t current_run_;
 
   rclcpp_lifecycle::LifecycleNode::WeakPtr parent_;
 };

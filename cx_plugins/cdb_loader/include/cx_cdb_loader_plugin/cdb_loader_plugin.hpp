@@ -15,14 +15,17 @@
 
 #pragma once
 
-#include <pqxx/pqxx>
+#include <memory>
+#include <string>
+#include <unordered_map>
+#include <vector>
+
+#include "nlohmann/json.hpp"
+#include "pqxx/pqxx"
 #undef RANGES
 // RANGES is defined in clips_ns/clips.h, which causes issues with
 // pqxx/pqxx. It needs to be included before clips_ns/clips.h to avoid compilation errors.
-
-#include <nlohmann/json.hpp>
-#include <unordered_map>
-
+//
 #include "cx_cdb_loader_plugin/helpers.hpp"
 #include "cx_plugin/clips_plugin.hpp"
 
@@ -58,16 +61,16 @@ public:
     const std::string & defmodule, Tick restore_tick);
   void update_defglobals(
     clips::Environment * env, std::vector<Defglobal> defglobals, const RegexConfig & config,
-    std::unordered_map<long long, clips::Fact *> id_to_fact_ptr,
+    std::unordered_map<int64_t, clips::Fact *> id_to_fact_ptr,
     std::vector<clips::Fact *> created_nullptr_facts);
   void assert_facts(
     clips::Environment * env, pqxx::connection & conn, const RegexConfig & config,
-    std::unordered_map<long long, clips::Fact *> id_to_fact_ptr,
+    std::unordered_map<int64_t, clips::Fact *> id_to_fact_ptr,
     std::vector<clips::Fact *> created_nullptr_facts, Tick restore_tick);
 
 private:
   std::unique_ptr<rclcpp::Logger> logger_;
 
-  std::unordered_map<long long, long long> fact_id_mapping_;
+  std::unordered_map<int64_t, int64_t> fact_id_mapping_;
 };
 }  // namespace cx

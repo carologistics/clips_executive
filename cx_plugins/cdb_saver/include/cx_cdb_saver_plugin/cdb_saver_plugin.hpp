@@ -15,13 +15,15 @@
 
 #pragma once
 
+#include <cstdint>
 #include <memory>
-#include <nlohmann/json.hpp>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 #include "cx_cdb_saver_plugin/db_handler.hpp"
 #include "cx_plugin/clips_plugin.hpp"
+#include "nlohmann/json.hpp"
 #include "rcl_interfaces/msg/list_parameters_result.hpp"
 
 namespace cx
@@ -68,7 +70,7 @@ public:
   void plugin_unload_callback(const std::string & env_name, const std::string & plugin_name);
 
 private:
-  static inline nlohmann::json slot_value_to_json(unsigned short type, clips::CLIPSValue * value);
+  static inline nlohmann::json slot_value_to_json(uint16_t type, clips::CLIPSValue * value);
   static inline std::vector<nlohmann::json> multifield_to_json_list(clips::Multifield * theSegment);
   inline nlohmann::json parameter_list_to_json(
     const rcl_interfaces::msg::ListParametersResult & parameters);
