@@ -29,17 +29,17 @@
   (assert
     (pddl-instance
       (name test)
-      (domain "domain.pddl")
-      (problem "problem.pddl")
+      (domain "multilevel_blocks_domain.pddl")
+      (problem "multilevel_blocks_problem.pddl")
       (directory (str-cat ?share-dir "/pddl"))
     )
     (pddl-get-fluents (instance test))
     (pddl-create-goal-instance (instance test) (goal active-goal))
-    (pddl-goal-fluent (instance test) (goal active-goal) (name on) (params d b))
-    (pddl-goal-fluent (instance test) (goal active-goal) (name on-table) (params c))
-    (pddl-goal-fluent (instance test) (goal active-goal) (name on) (params b c))
+    (pddl-goal-fluent (instance test) (goal active-goal) (name in) (params long_0 stack_l0__2_6))
+    (pddl-goal-fluent (instance test) (goal active-goal) (name in) (params long_0 stack_l1__2_6))
+    (pddl-goal-fluent (instance test) (goal active-goal) (name in) (params long_0 stack_l2__2_6))
     (pddl-set-goals (instance test) (goal active-goal))
-    (pddl-plan (id test-plan) (instance test) (goal active-goal) (plan-type TEMPORAL))
+    (pddl-plan (id test-plan) (instance test) (goal active-goal) (plan-type TEMPORAL) (output-dir "/home/skalra"))
   )
 )
 
