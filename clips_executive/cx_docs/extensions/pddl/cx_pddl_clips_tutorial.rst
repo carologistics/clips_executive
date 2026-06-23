@@ -75,50 +75,55 @@ loads the required plugins and defines which CLIPS files should be loaded.
 
 .. code-block:: yaml
 
-  /**:
-    ros__parameters:
-      autostart_node: true
-      environments: ["cx_pddl_clips_agent"]
+    /**:
+      ros__parameters:
+        autostart_node: true
+        environments: ["cx_pddl_blocksworld_agent"]
 
-      cx_pddl_clips_agent:
-        plugins: ["executive", "ros_msgs",
-                  "ament_index",
-                  "plan_temporal_action",
-                  "timed_plan_action_msg",
-                  "pddl_files",
-                  "files"]
-        log_clips_to_file: true
-        watch: ["facts", "rules"]
-        redirect_stdout_to_debug: true
+        cx_pddl_blocksworld_agent:
+          plugins: ["executive", "ros_msgs",
+                    "ament_index",
+                    "plan_action",
+                    "plan_action_msg",
+                    "stn_constraint_msg",
+                    "hierarchical_plan_method_msg",
+                    "pddl_files",
+                    "files"]
+          log_clips_to_file: true
+          watch: ["facts", "rules"]
+          redirect_stdout_to_debug: true
 
-      ament_index:
-        plugin: "cx::AmentIndexPlugin"
+        ament_index:
+          plugin: "cx::AmentIndexPlugin"
 
-      executive:
-        plugin: "cx::ExecutivePlugin"
+        executive:
+          plugin: "cx::ExecutivePlugin"
 
-      ros_msgs:
-        plugin: "cx::RosMsgsPlugin"
+        ros_msgs:
+          plugin: "cx::RosMsgsPlugin"
 
-      pddl_files:
-        plugin: "cx::FileLoadPlugin"
-        pkg_share_dirs: ["cx_pddl_clips", "cx_pddl_bringup"]
-        batch: [
-          "clips/cx_pddl_clips/deftemplates.clp",
-          "clips/cx_pddl_bringup/deftemplate-overrides.clp",
-          "clips/cx_pddl_clips/pddl-no-deftemplates.clp"
-        ]
+        pddl_files:
+          plugin: "cx::FileLoadPlugin"
+          pkg_share_dirs: ["cx_pddl_clips", "cx_pddl_bringup"]
+          batch: [
+            "clips/cx_pddl_clips/deftemplates.clp",
+            "clips/cx_pddl_bringup/deftemplate-overrides.clp",
+            "clips/cx_pddl_clips/pddl-no-deftemplates.clp"
+          ]
 
-      files:
-        plugin: "cx::FileLoadPlugin"
-        pkg_share_dirs: ["cx_pddl_bringup"]
-        load: ["clips/cx_pddl_bringup/cx_pddl_clips_agent.clp"]
+        files:
+          plugin: "cx::FileLoadPlugin"
+          pkg_share_dirs: ["cx_pddl_bringup"]
+          load: ["clips/cx_pddl_bringup/cx-pddl-clips-agent.clp"]
 
-      plan_temporal_action:
-        plugin: "cx::CXCxPddlInterfacesPlanTemporalPlugin"
-
-      timed_plan_action_msg:
-        plugin: "cx::CXCxPddlInterfacesTimedPlanActionPlugin"
+        plan_action:
+          plugin: "cx::CXCxPddlInterfacesPlanPlugin"
+        plan_action_msg:
+          plugin: "cx::CXCxPddlInterfacesPlanActionPlugin"
+        stn_constraint_msg:
+          plugin: "cx::CXCxPddlInterfacesStnConstraintPlugin"
+        hierarchical_plan_method_msg:
+          plugin: "cx::CXCxPddlInterfacesHierarchicalPlanMethodPlugin"
 
 The configuration creates a single CLIPS environment, which is augmented by several plugins:
 
@@ -137,11 +142,14 @@ The configuration creates a single CLIPS environment, which is augmented by seve
 * ``files``
   Loads the tutorial-specific CLIPS rule file implementing the agent logic.
 
-* ``plan_temporal_action``
-  Enables access to temporal planning via action servers (generic action clients are not covered by the generic ROS communication plugin in ROS Jazzy).
+* ``plan_action_action``
+  Enables access to planning via an action server (generic action clients are not covered by the generic ROS communication plugin in ROS Jazzy).
 
 * ``timed_plan_action_msg``
   Needed for the nested definition inside of the temporal plan action.
+
+* ``plan_action_msg``, ``stn_constraint_msg``. ``hierarchical_plan_method_msg``
+  Needed for the nested definition inside of the plan action.
 
 
 Defining the PDDL Action Template
@@ -161,6 +169,9 @@ The extended templates are defined in the file ``cx_pddl_bringup/deftemplate-ove
     (slot name (type SYMBOL))
     (multislot params (type SYMBOL) (default (create$)))
     (slot plan (type SYMBOL))
+    (slot order (type INTEGER))
+    (multislot predecessors (type INTEGER))
+    (slot task-id (type SYMBOL))
     (slot planned-start-time (type FLOAT))
     (slot planned-duration (type FLOAT))
     (slot actual-start-time (type FLOAT))
@@ -173,9 +184,10 @@ The extended templates are defined in the file ``cx_pddl_bringup/deftemplate-ove
     (slot id (type SYMBOL))
     (slot goal (type SYMBOL))
     (slot goal-ptr (type EXTERNAL-ADDRESS))
-    (slot plan-type (type SYMBOL) (allowed-values CLASSICAL TEMPORAL) (default CLASSICAL))
+    (slot plan-type (type SYMBOL) (allowed-values CLASSICAL TEMPORAL PARTIAL-ORDER HIERARCHICAL STN) (default CLASSICAL))
+    (slot action-type (type SYMBOL) (allowed-values CLASSICAL TEMPORAL STN))
     (slot goal-handle (type EXTERNAL-ADDRESS))
-    (slot type (type SYMBOL) (allowed-values TEMPORAL CLASSICAL))
+    (slot output-dir (type STRING))
     (slot state (type SYMBOL) (allowed-values PENDING WAITING PLANNING REQUEST-CANCELING CANCELING CANCELED SUCCESS FAILURE) (default PENDING))
     (slot plan-start (type FLOAT) (default 0.0))
   )
@@ -326,7 +338,7 @@ domain and problem to be planned for, defines the goal fluents and triggers plan
     )
   )
 
-The interface provided by ``cx_pddl_clips`` takes care of translating the asserted facts into appropriate service requests.
+The interface provided by :ref:`cx_pddl_clips <pddl_clips>` takes care of translating the asserted facts into appropriate service requests.
 It also enforces a strict ordering whenever multiple operations are requested at the same time, as in this case.
 
 

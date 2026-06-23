@@ -72,6 +72,72 @@ Node Parameters
     Colon sepearated identifier of the library for importlib and the Class name.
     Nextflap is provided alongside this extension. When choosing other planners, make sure the respective package is installed on your system.
 
+Basic Workflow
+--------------
+
+The PDDL Manager is designed around a clear separation between the *domain
+model* (what is true about the world and what actions are available) and
+*goals* (what a particular planning request wants to achieve and
+which subset of the model it operates on).
+
+PDDL Instances and Associated Goals
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The entry point for any use of the manager is the creation of an `instance`, which handles a PDDL domain, it's evolution over time and all associated planning goals.
+An instance is setup by loading a PDDL domain fila (and
+optionally a problem file) via ``/add_pddl_instance``.
+The manager parses file using Jinja2, supporting parameterized and modular domain templates.
+If an initial state is supplied (via a problem file), it becomes the current state of the domain represented by the instance. Otherwise the current state is empty.
+
+The instance further manages *goals*, which are  named planning sub-problem attached to a PDDL
+instance.
+Every PDDL instance starts with a default goal instance called
+``base`` that contains the specification supplied through the problem file (or nothing if no file is provided).
+Additional goal instances are created via
+``/create_goal_instance``.
+
+The instance can be updated continuously during execution to reflect the
+current state of the world via services:
+
+- ``/add_fluents`` and ``/rm_fluents`` assert or retract boolean predicates.
+- ``/set_functions`` updates the value of numeric fluents.
+- ``/add_objects`` and ``/rm_objects`` extend or reduce the object universe.
+
+Note that planning requests automatically operates on the
+latest world state.
+
+Planning
+^^^^^^^^
+
+A planning request is sent as a ROS 2 action goal to ``/plan``.  The
+request carries three pieces of information: the PDDL instance name, the
+goal instance name, and the desired output plan kind.
+
+Because planning runs in a subprocess, multiple goal instances,even
+across different PDDL instances, can be planned concurrently without
+blocking each other or blocking service calls that update the world state.
+
+Condition Checking and Effect Inspection
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Beyond planning, the manager exposes two services that support reactive
+execution without requiring a separate planning call.
+
+``/check_action_condition`` evaluates whether the preconditions of a named
+action (with concrete object arguments) are satisfied in the current base
+problem state.  It returns a boolean result and, on failure, the list of
+unsatisfied conditions as human-readable strings.  This is useful for an
+executor that wants to verify applicability before dispatching an action to
+the physical system.
+
+``/get_action_effects`` computes and returns the effects that a named action
+would have if applied in the current state.  Effects are returned as two
+separate lists — boolean fluent effects and numeric function effects — each
+annotated with the time point at which they take effect (``START`` or
+``END``) and, for numeric effects, the operator (``=``, ``+``, ``-``).
+This allows an executor to *predict* and *apply* effects locally without
+sending another service call to the manager after each action completes.
+
 
 PDDL Manager Interfaces
 -----------------------
