@@ -1,0 +1,781 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="namespacecx" kind="namespace" language="C++">
+    <compoundname>cx</compoundname>
+    <innerclass refid="classcx_1_1AmentIndexPlugin" prot="public">cx::AmentIndexPlugin</innerclass>
+    <innerclass refid="classcx_1_1CDBLoaderPlugin" prot="public">cx::CDBLoaderPlugin</innerclass>
+    <innerclass refid="classcx_1_1CLIPSEnvManager" prot="public">cx::CLIPSEnvManager</innerclass>
+    <innerclass refid="classcx_1_1ClipsPlugin" prot="public">cx::ClipsPlugin</innerclass>
+    <innerclass refid="classcx_1_1ClipsPluginManager" prot="public">cx::ClipsPluginManager</innerclass>
+    <innerclass refid="structcx_1_1Deffacts" prot="public">cx::Deffacts</innerclass>
+    <innerclass refid="structcx_1_1Deffunction" prot="public">cx::Deffunction</innerclass>
+    <innerclass refid="structcx_1_1Defglobal" prot="public">cx::Defglobal</innerclass>
+    <innerclass refid="structcx_1_1Defmodule" prot="public">cx::Defmodule</innerclass>
+    <innerclass refid="structcx_1_1Defrule" prot="public">cx::Defrule</innerclass>
+    <innerclass refid="structcx_1_1Deftemplate" prot="public">cx::Deftemplate</innerclass>
+    <innerclass refid="structcx_1_1Fact" prot="public">cx::Fact</innerclass>
+    <innerclass refid="structcx_1_1GenericRegexRule" prot="public">cx::GenericRegexRule</innerclass>
+    <innerclass refid="structcx_1_1Plugin" prot="public">cx::Plugin</innerclass>
+    <innerclass refid="structcx_1_1RegexConfig" prot="public">cx::RegexConfig</innerclass>
+    <innerclass refid="structcx_1_1RegexRule" prot="public">cx::RegexRule</innerclass>
+    <innerclass refid="structcx_1_1RuleFiring" prot="public">cx::RuleFiring</innerclass>
+    <innerclass refid="structcx_1_1TimedFact" prot="public">cx::TimedFact</innerclass>
+    <innerclass refid="structcx_1_1TimedText" prot="public">cx::TimedText</innerclass>
+    <innerclass refid="structcx_1_1TimeLookup" prot="public">cx::TimeLookup</innerclass>
+    <sectiondef kind="enum">
+      <memberdef kind="enum" id="helpers_8hpp_1a911397f4eda0a1286820a816d92d0afc" prot="public" static="no" strong="yes">
+        <type></type>
+        <name>SlotType</name>
+        <qualifiedname>cx::SlotType</qualifiedname>
+        <enumvalue id="helpers_8hpp_1a911397f4eda0a1286820a816d92d0afca22ae0e2b89e5e3d477f988cc36d3272b" prot="public">
+          <name>Float</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="helpers_8hpp_1a911397f4eda0a1286820a816d92d0afcaa0faef0851b4294c06f2b94bb1cb2044" prot="public">
+          <name>Integer</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="helpers_8hpp_1a911397f4eda0a1286820a816d92d0afca27118326006d3829667a400ad23d5d98" prot="public">
+          <name>String</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="helpers_8hpp_1a911397f4eda0a1286820a816d92d0afca02c86eb2792f3262c21d030a87e19793" prot="public">
+          <name>Symbol</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="helpers_8hpp_1a911397f4eda0a1286820a816d92d0afcac51d62a27a5697e40a7096b95bb30774" prot="public">
+          <name>ExternalAddress</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="helpers_8hpp_1a911397f4eda0a1286820a816d92d0afcaecefa3b389ddfda68b3e29de3fac0174" prot="public">
+          <name>Multifield</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="helpers_8hpp_1a911397f4eda0a1286820a816d92d0afca291ac89029ab21eecaeb5f0d1a2f33d7" prot="public">
+          <name>FactAddress</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="138" column="1" bodyfile="include/cx_cdb_loader_plugin/helpers.hpp" bodystart="139" bodyend="147"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="helpers_8hpp_1aa2239f55c64f5ca6615df6a96a2cc70e" prot="public" static="no">
+        <type>nlohmann::json</type>
+        <definition>using cx::json = typedef nlohmann::json</definition>
+        <argsstring></argsstring>
+        <name>json</name>
+        <qualifiedname>cx::json</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="35" column="1" bodyfile="include/cx_cdb_loader_plugin/helpers.hpp" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="helpers_8hpp_1aebe2f03a1c7ed336ffec799e093d95cf" prot="public" static="no">
+        <type>int64_t</type>
+        <definition>using cx::Tick = typedef int64_t</definition>
+        <argsstring></argsstring>
+        <name>Tick</name>
+        <qualifiedname>cx::Tick</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="36" column="1" bodyfile="include/cx_cdb_loader_plugin/helpers.hpp" bodystart="36" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="helpers_8hpp_1a6723ddd1f692e062e3916d89b3edfc3c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>NLOHMANN_JSON_SERIALIZE_ENUM(SlotType, {{SlotType::Float, &quot;FLOAT&quot;}, {SlotType::Integer, &quot;INTEGER&quot;}, {SlotType::String, &quot;STRING&quot;}, {SlotType::Symbol, &quot;SYMBOL&quot;}, {SlotType::ExternalAddress, &quot;EXTERNAL_ADDRESS&quot;}, {SlotType::Multifield, &quot;MULTIFIELD&quot;}, {SlotType::FactAddress, &quot;FACT_ADDRESS&quot;}}) clips void</type>
+        <definition>NLOHMANN_JSON_SERIALIZE_ENUM(SlotType, {{SlotType::Float, &quot;FLOAT&quot;}, {SlotType::Integer, &quot;INTEGER&quot;}, {SlotType::String, &quot;STRING&quot;}, {SlotType::Symbol, &quot;SYMBOL&quot;}, {SlotType::ExternalAddress, &quot;EXTERNAL_ADDRESS&quot;}, {SlotType::Multifield, &quot;MULTIFIELD&quot;}, {SlotType::FactAddress, &quot;FACT_ADDRESS&quot;}}) clips void cx::append_json_to_multifield_builder</definition>
+        <argsstring>(clips::Environment *env, clips::MultifieldBuilder *mb, const nlohmann::json &amp;valueJson, clips::Fact *tmp_fact, const RegexConfig &amp;config, bool &amp;contains_fact)</argsstring>
+        <name>append_json_to_multifield_builder</name>
+        <qualifiedname>cx::append_json_to_multifield_builder</qualifiedname>
+        <param>
+          <type>clips::Environment *</type>
+          <declname>env</declname>
+        </param>
+        <param>
+          <type>clips::MultifieldBuilder *</type>
+          <declname>mb</declname>
+        </param>
+        <param>
+          <type>const nlohmann::json &amp;</type>
+          <declname>valueJson</declname>
+        </param>
+        <param>
+          <type>clips::Fact *</type>
+          <declname>tmp_fact</declname>
+        </param>
+        <param>
+          <type>const <ref refid="structcx_1_1RegexConfig" kindref="compound">RegexConfig</ref> &amp;</type>
+          <declname>config</declname>
+        </param>
+        <param>
+          <type>bool &amp;</type>
+          <declname>contains_fact</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="162" column="6" declfile="include/cx_cdb_loader_plugin/helpers.hpp" declline="162" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="helpers_8hpp_1a45b919c76296ed00dd04052e3b1c822c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void cx::append_json_to_multifield_builder</definition>
+        <argsstring>(clips::Environment *env, clips::MultifieldBuilder *mb, const nlohmann::json &amp;valueJson, std::unordered_map&lt; int64_t, clips::Fact * &gt; &amp;id_to_fact_ptr, std::vector&lt; clips::Fact * &gt; &amp;created_nullptr_facts, const RegexConfig &amp;config)</argsstring>
+        <name>append_json_to_multifield_builder</name>
+        <qualifiedname>cx::append_json_to_multifield_builder</qualifiedname>
+        <param>
+          <type>clips::Environment *</type>
+          <declname>env</declname>
+        </param>
+        <param>
+          <type>clips::MultifieldBuilder *</type>
+          <declname>mb</declname>
+        </param>
+        <param>
+          <type>const nlohmann::json &amp;</type>
+          <declname>valueJson</declname>
+        </param>
+        <param>
+          <type>std::unordered_map&lt; int64_t, clips::Fact * &gt; &amp;</type>
+          <declname>id_to_fact_ptr</declname>
+        </param>
+        <param>
+          <type>std::vector&lt; clips::Fact * &gt; &amp;</type>
+          <declname>created_nullptr_facts</declname>
+        </param>
+        <param>
+          <type>const <ref refid="structcx_1_1RegexConfig" kindref="compound">RegexConfig</ref> &amp;</type>
+          <declname>config</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="166" column="6" declfile="include/cx_cdb_loader_plugin/helpers.hpp" declline="166" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="helpers_8hpp_1a27504d055b0432d500c82ff64d0ea45c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>clips::Multifield *</type>
+        <definition>clips::Multifield * cx::json_to_multifield</definition>
+        <argsstring>(clips::Environment *env, const nlohmann::json &amp;json, std::unordered_map&lt; int64_t, clips::Fact * &gt; &amp;id_to_fact_ptr, std::vector&lt; clips::Fact * &gt; &amp;created_nullptr_facts, const RegexConfig &amp;config)</argsstring>
+        <name>json_to_multifield</name>
+        <qualifiedname>cx::json_to_multifield</qualifiedname>
+        <param>
+          <type>clips::Environment *</type>
+          <declname>env</declname>
+        </param>
+        <param>
+          <type>const nlohmann::json &amp;</type>
+          <declname>json</declname>
+        </param>
+        <param>
+          <type>std::unordered_map&lt; int64_t, clips::Fact * &gt; &amp;</type>
+          <declname>id_to_fact_ptr</declname>
+        </param>
+        <param>
+          <type>std::vector&lt; clips::Fact * &gt; &amp;</type>
+          <declname>created_nullptr_facts</declname>
+        </param>
+        <param>
+          <type>const <ref refid="structcx_1_1RegexConfig" kindref="compound">RegexConfig</ref> &amp;</type>
+          <declname>config</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="171" column="20" declfile="include/cx_cdb_loader_plugin/helpers.hpp" declline="171" declcolumn="20"/>
+      </memberdef>
+      <memberdef kind="function" id="helpers_8hpp_1aece7b11f47799965cc03b7c40cf768ce" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>clips::Fact *</type>
+        <definition>clips::Fact * cx::get_nullptr_fact</definition>
+        <argsstring>(clips::Environment *env, int64_t fact_id, std::unordered_map&lt; int64_t, clips::Fact * &gt; &amp;id_to_fact_ptr, std::vector&lt; clips::Fact * &gt; &amp;created_nullptr_facts)</argsstring>
+        <name>get_nullptr_fact</name>
+        <qualifiedname>cx::get_nullptr_fact</qualifiedname>
+        <param>
+          <type>clips::Environment *</type>
+          <declname>env</declname>
+        </param>
+        <param>
+          <type>int64_t</type>
+          <declname>fact_id</declname>
+        </param>
+        <param>
+          <type>std::unordered_map&lt; int64_t, clips::Fact * &gt; &amp;</type>
+          <declname>id_to_fact_ptr</declname>
+        </param>
+        <param>
+          <type>std::vector&lt; clips::Fact * &gt; &amp;</type>
+          <declname>created_nullptr_facts</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="176" column="14" declfile="include/cx_cdb_loader_plugin/helpers.hpp" declline="176" declcolumn="14"/>
+      </memberdef>
+      <memberdef kind="function" id="helpers_8hpp_1aa18b214b3ee1984cec0cee0807c65dc2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+        </templateparamlist>
+        <type>std::optional&lt; T &gt;</type>
+        <definition>std::optional&lt; T &gt; cx::optional_field</definition>
+        <argsstring>(const pqxx::row &amp;row, const char *column)</argsstring>
+        <name>optional_field</name>
+        <qualifiedname>cx::optional_field</qualifiedname>
+        <param>
+          <type>const pqxx::row &amp;</type>
+          <declname>row</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>column</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="182" column="15" declfile="include/cx_cdb_loader_plugin/helpers.hpp" declline="182" declcolumn="15"/>
+      </memberdef>
+      <memberdef kind="function" id="helpers_8hpp_1a00a0153adc576ccdc56db5e4d866411c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="structcx_1_1TimedText" kindref="compound">TimedText</ref></type>
+        <definition>TimedText cx::parse_timed_text</definition>
+        <argsstring>(const pqxx::row &amp;row)</argsstring>
+        <name>parse_timed_text</name>
+        <qualifiedname>cx::parse_timed_text</qualifiedname>
+        <param>
+          <type>const pqxx::row &amp;</type>
+          <declname>row</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="183" column="11" declfile="include/cx_cdb_loader_plugin/helpers.hpp" declline="183" declcolumn="11"/>
+      </memberdef>
+      <memberdef kind="function" id="helpers_8hpp_1aef73532000203fc5e8e514680a12af8f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="structcx_1_1TimedFact" kindref="compound">TimedFact</ref></type>
+        <definition>TimedFact cx::parse_timed_fact</definition>
+        <argsstring>(const pqxx::row &amp;row)</argsstring>
+        <name>parse_timed_fact</name>
+        <qualifiedname>cx::parse_timed_fact</qualifiedname>
+        <param>
+          <type>const pqxx::row &amp;</type>
+          <declname>row</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="184" column="11" declfile="include/cx_cdb_loader_plugin/helpers.hpp" declline="184" declcolumn="11"/>
+      </memberdef>
+      <memberdef kind="function" id="helpers_8hpp_1a2a28bf76eb29e42c82fad4e318768fdb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::vector&lt; <ref refid="structcx_1_1Defmodule" kindref="compound">Defmodule</ref> &gt;</type>
+        <definition>std::vector&lt; Defmodule &gt; cx::load_defmodules</definition>
+        <argsstring>(pqxx::connection &amp;conn, Tick restore_tick)</argsstring>
+        <name>load_defmodules</name>
+        <qualifiedname>cx::load_defmodules</qualifiedname>
+        <param>
+          <type>pqxx::connection &amp;</type>
+          <declname>conn</declname>
+        </param>
+        <param>
+          <type>Tick</type>
+          <declname>restore_tick</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="185" column="13" declfile="include/cx_cdb_loader_plugin/helpers.hpp" declline="185" declcolumn="13"/>
+      </memberdef>
+      <memberdef kind="function" id="helpers_8hpp_1ae95333c4cbee6ca7af837529ea2cfa9e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::vector&lt; <ref refid="structcx_1_1Deftemplate" kindref="compound">Deftemplate</ref> &gt;</type>
+        <definition>std::vector&lt; Deftemplate &gt; cx::load_deftemplates</definition>
+        <argsstring>(pqxx::connection &amp;conn, const std::string &amp;defmodule, Tick restore_tick)</argsstring>
+        <name>load_deftemplates</name>
+        <qualifiedname>cx::load_deftemplates</qualifiedname>
+        <param>
+          <type>pqxx::connection &amp;</type>
+          <declname>conn</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>defmodule</declname>
+        </param>
+        <param>
+          <type>Tick</type>
+          <declname>restore_tick</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="186" column="13" declfile="include/cx_cdb_loader_plugin/helpers.hpp" declline="186" declcolumn="13"/>
+      </memberdef>
+      <memberdef kind="function" id="helpers_8hpp_1a12e149b3c3f63846720f4477b0cc631d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::vector&lt; <ref refid="structcx_1_1Defglobal" kindref="compound">Defglobal</ref> &gt;</type>
+        <definition>std::vector&lt; Defglobal &gt; cx::load_defglobals</definition>
+        <argsstring>(pqxx::connection &amp;conn, const std::string &amp;defmodule, Tick restore_tick, bool skip_external_addresses)</argsstring>
+        <name>load_defglobals</name>
+        <qualifiedname>cx::load_defglobals</qualifiedname>
+        <param>
+          <type>pqxx::connection &amp;</type>
+          <declname>conn</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>defmodule</declname>
+        </param>
+        <param>
+          <type>Tick</type>
+          <declname>restore_tick</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>skip_external_addresses</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="188" column="13" declfile="include/cx_cdb_loader_plugin/helpers.hpp" declline="188" declcolumn="13"/>
+      </memberdef>
+      <memberdef kind="function" id="helpers_8hpp_1a2bc4371798cacbbb2290a61cbc3df8ad" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::vector&lt; <ref refid="structcx_1_1Deffunction" kindref="compound">Deffunction</ref> &gt;</type>
+        <definition>std::vector&lt; Deffunction &gt; cx::load_deffunctions</definition>
+        <argsstring>(pqxx::connection &amp;conn, const std::string &amp;defmodule, Tick restore_tick)</argsstring>
+        <name>load_deffunctions</name>
+        <qualifiedname>cx::load_deffunctions</qualifiedname>
+        <param>
+          <type>pqxx::connection &amp;</type>
+          <declname>conn</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>defmodule</declname>
+        </param>
+        <param>
+          <type>Tick</type>
+          <declname>restore_tick</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="191" column="13" declfile="include/cx_cdb_loader_plugin/helpers.hpp" declline="191" declcolumn="13"/>
+      </memberdef>
+      <memberdef kind="function" id="helpers_8hpp_1a55fc6c122d7798e258a578fc47e0b30e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::vector&lt; <ref refid="structcx_1_1Defrule" kindref="compound">Defrule</ref> &gt;</type>
+        <definition>std::vector&lt; Defrule &gt; cx::load_defrules</definition>
+        <argsstring>(pqxx::connection &amp;conn, const std::string &amp;defmodule, Tick restore_tick)</argsstring>
+        <name>load_defrules</name>
+        <qualifiedname>cx::load_defrules</qualifiedname>
+        <param>
+          <type>pqxx::connection &amp;</type>
+          <declname>conn</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>defmodule</declname>
+        </param>
+        <param>
+          <type>Tick</type>
+          <declname>restore_tick</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="193" column="13" declfile="include/cx_cdb_loader_plugin/helpers.hpp" declline="193" declcolumn="13"/>
+      </memberdef>
+      <memberdef kind="function" id="helpers_8hpp_1af2bfee48758d4a3db1f2ee10aad3cd6d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::vector&lt; <ref refid="structcx_1_1Deffacts" kindref="compound">Deffacts</ref> &gt;</type>
+        <definition>std::vector&lt; Deffacts &gt; cx::load_deffacts</definition>
+        <argsstring>(pqxx::connection &amp;conn, const std::string &amp;defmodule, Tick restore_tick)</argsstring>
+        <name>load_deffacts</name>
+        <qualifiedname>cx::load_deffacts</qualifiedname>
+        <param>
+          <type>pqxx::connection &amp;</type>
+          <declname>conn</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>defmodule</declname>
+        </param>
+        <param>
+          <type>Tick</type>
+          <declname>restore_tick</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="195" column="13" declfile="include/cx_cdb_loader_plugin/helpers.hpp" declline="195" declcolumn="13"/>
+      </memberdef>
+      <memberdef kind="function" id="helpers_8hpp_1a0629b0fc3e3a65d8032a73284b80a5dc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>std::vector&lt; <ref refid="structcx_1_1Fact" kindref="compound">Fact</ref> &gt;</type>
+        <definition>std::vector&lt; Fact &gt; cx::load_facts</definition>
+        <argsstring>(pqxx::connection &amp;conn, Tick restore_tick, bool skip_external_addresses)</argsstring>
+        <name>load_facts</name>
+        <qualifiedname>cx::load_facts</qualifiedname>
+        <param>
+          <type>pqxx::connection &amp;</type>
+          <declname>conn</declname>
+        </param>
+        <param>
+          <type>Tick</type>
+          <declname>restore_tick</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>skip_external_addresses</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="197" column="13" declfile="include/cx_cdb_loader_plugin/helpers.hpp" declline="197" declcolumn="13"/>
+      </memberdef>
+      <memberdef kind="function" id="helpers_8hpp_1a09b354c2bbb40e65874ab3f95835b3c0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool cx::rule_firing_exists_before_tick</definition>
+        <argsstring>(pqxx::connection &amp;conn, const std::string &amp;defmodule, const std::string &amp;name, const std::vector&lt; std::optional&lt; int64_t &gt; &gt; &amp;basis, int64_t before_tick)</argsstring>
+        <name>rule_firing_exists_before_tick</name>
+        <qualifiedname>cx::rule_firing_exists_before_tick</qualifiedname>
+        <param>
+          <type>pqxx::connection &amp;</type>
+          <declname>conn</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>defmodule</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>name</declname>
+        </param>
+        <param>
+          <type>const std::vector&lt; std::optional&lt; int64_t &gt; &gt; &amp;</type>
+          <declname>basis</declname>
+        </param>
+        <param>
+          <type>int64_t</type>
+          <declname>before_tick</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="200" column="6" declfile="include/cx_cdb_loader_plugin/helpers.hpp" declline="200" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="helpers_8hpp_1a79374f07a2c077a15ca50d844da9ff66" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int64_t</type>
+        <definition>int64_t cx::get_end_tick_for_run</definition>
+        <argsstring>(pqxx::connection &amp;db, int64_t run_index)</argsstring>
+        <name>get_end_tick_for_run</name>
+        <qualifiedname>cx::get_end_tick_for_run</qualifiedname>
+        <param>
+          <type>pqxx::connection &amp;</type>
+          <declname>db</declname>
+        </param>
+        <param>
+          <type>int64_t</type>
+          <declname>run_index</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="203" column="9" declfile="include/cx_cdb_loader_plugin/helpers.hpp" declline="203" declcolumn="9"/>
+      </memberdef>
+      <memberdef kind="function" id="helpers_8hpp_1a358fc10c06e0dd5df0ee4a5207380b47" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int64_t</type>
+        <definition>int64_t cx::resolve_restore_tick</definition>
+        <argsstring>(pqxx::connection &amp;db, int64_t restore_tick_index)</argsstring>
+        <name>resolve_restore_tick</name>
+        <qualifiedname>cx::resolve_restore_tick</qualifiedname>
+        <param>
+          <type>pqxx::connection &amp;</type>
+          <declname>db</declname>
+        </param>
+        <param>
+          <type>int64_t</type>
+          <declname>restore_tick_index</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="204" column="9" declfile="include/cx_cdb_loader_plugin/helpers.hpp" declline="204" declcolumn="9"/>
+      </memberdef>
+      <memberdef kind="function" id="helpers_8hpp_1a2541187ce3269470ba966a327f1b676e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int64_t</type>
+        <definition>int64_t cx::resolve_restore_time</definition>
+        <argsstring>(pqxx::connection &amp;db, const std::string &amp;restore_time, const rclcpp::Logger &amp;logger)</argsstring>
+        <name>resolve_restore_time</name>
+        <qualifiedname>cx::resolve_restore_time</qualifiedname>
+        <param>
+          <type>pqxx::connection &amp;</type>
+          <declname>db</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>restore_time</declname>
+        </param>
+        <param>
+          <type>const rclcpp::Logger &amp;</type>
+          <declname>logger</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="205" column="9" declfile="include/cx_cdb_loader_plugin/helpers.hpp" declline="205" declcolumn="9"/>
+      </memberdef>
+      <memberdef kind="function" id="parser_8hpp_1a7911bea78f4041c6d1ee47dbf8897232" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool cx::matches_regex_rule</definition>
+        <argsstring>(const RegexRule &amp;rule, const std::string &amp;value)</argsstring>
+        <name>matches_regex_rule</name>
+        <qualifiedname>cx::matches_regex_rule</qualifiedname>
+        <param>
+          <type>const <ref refid="structcx_1_1RegexRule" kindref="compound">RegexRule</ref> &amp;</type>
+          <declname>rule</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/parser.hpp" line="76" column="6" declfile="include/cx_cdb_loader_plugin/parser.hpp" declline="76" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="parser_8hpp_1a05e83e3639f1951dae26438da9b19ba7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool cx::matches_any_regex_rule</definition>
+        <argsstring>(const std::vector&lt; RegexRule &gt; &amp;rules, const std::string &amp;value)</argsstring>
+        <name>matches_any_regex_rule</name>
+        <qualifiedname>cx::matches_any_regex_rule</qualifiedname>
+        <param>
+          <type>const std::vector&lt; <ref refid="structcx_1_1RegexRule" kindref="compound">RegexRule</ref> &gt; &amp;</type>
+          <declname>rules</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/parser.hpp" line="78" column="6" declfile="include/cx_cdb_loader_plugin/parser.hpp" declline="78" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="parser_8hpp_1af7675f59d2e192243a957073b2823cc4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>bool</type>
+        <definition>bool cx::allowed_by_generic_regex_rule</definition>
+        <argsstring>(const GenericRegexRule &amp;rule, const std::string &amp;value)</argsstring>
+        <name>allowed_by_generic_regex_rule</name>
+        <qualifiedname>cx::allowed_by_generic_regex_rule</qualifiedname>
+        <param>
+          <type>const <ref refid="structcx_1_1GenericRegexRule" kindref="compound">GenericRegexRule</ref> &amp;</type>
+          <declname>rule</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/parser.hpp" line="80" column="6" declfile="include/cx_cdb_loader_plugin/parser.hpp" declline="80" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="parser_8hpp_1a537a642a90c09b0ae2f519d3d578e47a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="structcx_1_1RegexRule" kindref="compound">RegexRule</ref></type>
+        <definition>RegexRule cx::populate_regex_rule</definition>
+        <argsstring>(const std::string &amp;regex_text, bool is_skip)</argsstring>
+        <name>populate_regex_rule</name>
+        <qualifiedname>cx::populate_regex_rule</qualifiedname>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>regex_text</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>is_skip</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/parser.hpp" line="82" column="11" declfile="include/cx_cdb_loader_plugin/parser.hpp" declline="82" declcolumn="11"/>
+      </memberdef>
+      <memberdef kind="function" id="parser_8hpp_1ae34909099ef95a912095fd9473e9c7ee" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="structcx_1_1GenericRegexRule" kindref="compound">GenericRegexRule</ref></type>
+        <definition>GenericRegexRule cx::populate_generic_regex_rule</definition>
+        <argsstring>(rclcpp_lifecycle::LifecycleNode::SharedPtr &amp;node, const std::string &amp;parameter_prefix)</argsstring>
+        <name>populate_generic_regex_rule</name>
+        <qualifiedname>cx::populate_generic_regex_rule</qualifiedname>
+        <param>
+          <type>rclcpp_lifecycle::LifecycleNode::SharedPtr &amp;</type>
+          <declname>node</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>parameter_prefix</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/parser.hpp" line="84" column="18" declfile="include/cx_cdb_loader_plugin/parser.hpp" declline="84" declcolumn="18"/>
+      </memberdef>
+      <memberdef kind="function" id="parser_8hpp_1aea4b70c605309fe6821a7e568015cfe5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="structcx_1_1RegexConfig" kindref="compound">RegexConfig</ref></type>
+        <definition>RegexConfig cx::populate_regex_config</definition>
+        <argsstring>(rclcpp_lifecycle::LifecycleNode::SharedPtr &amp;node, const std::string &amp;plugin_name)</argsstring>
+        <name>populate_regex_config</name>
+        <qualifiedname>cx::populate_regex_config</qualifiedname>
+        <param>
+          <type>rclcpp_lifecycle::LifecycleNode::SharedPtr &amp;</type>
+          <declname>node</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>plugin_name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/parser.hpp" line="87" column="13" declfile="include/cx_cdb_loader_plugin/parser.hpp" declline="87" declcolumn="13"/>
+      </memberdef>
+      <memberdef kind="function" id="parser_8hpp_1acb3e1c31575ce5bde45500fa50ce78c0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+          <param>
+            <type>typename ObjectNameGetter</type>
+          </param>
+        </templateparamlist>
+        <type>void</type>
+        <definition>void cx::filter_in_place</definition>
+        <argsstring>(std::vector&lt; T &gt; &amp;values, const GenericRegexRule &amp;object_rules, ObjectNameGetter get_object_name)</argsstring>
+        <name>filter_in_place</name>
+        <qualifiedname>cx::filter_in_place</qualifiedname>
+        <param>
+          <type>std::vector&lt; T &gt; &amp;</type>
+          <declname>values</declname>
+        </param>
+        <param>
+          <type>const <ref refid="structcx_1_1GenericRegexRule" kindref="compound">GenericRegexRule</ref> &amp;</type>
+          <declname>object_rules</declname>
+        </param>
+        <param>
+          <type>ObjectNameGetter</type>
+          <declname>get_object_name</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/parser.hpp" line="91" column="6" bodyfile="include/cx_cdb_loader_plugin/parser.hpp" bodystart="91" bodyend="101"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/cx_cdb_loader_plugin/cdb_loader_plugin.hpp" line="32" column="1"/>
+  </compounddef>
+</doxygen>

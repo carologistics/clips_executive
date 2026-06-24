@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygenindex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="index.xsd" version="1.9.8" xml:lang="en-US">
+  <compound refid="classcx_1_1CDBSaverPlugin" kind="class"><name>cx::CDBSaverPlugin</name>
+    <member refid="classcx_1_1CDBSaverPlugin_1a97753984f0d5b148bad6f5bb0ad97363" kind="variable"><name>logger_</name></member>
+    <member refid="classcx_1_1CDBSaverPlugin_1a47a82ee139573d8d6e9c56d6d9f09aa3" kind="variable"><name>db_handlers_</name></member>
+    <member refid="classcx_1_1CDBSaverPlugin_1aafef8e5030d232e8e3738651ee65acae" kind="function"><name>CDBSaverPlugin</name></member>
+    <member refid="classcx_1_1CDBSaverPlugin_1afe675a7fb7c67a6b27460aa80ef96eec" kind="function"><name>~CDBSaverPlugin</name></member>
+    <member refid="classcx_1_1CDBSaverPlugin_1a775f82707c58339b05cca02b7de1dd8d" kind="function"><name>initialize</name></member>
+    <member refid="classcx_1_1CDBSaverPlugin_1a1546d1b17bb7f321f5b6551aa3f6bf9c" kind="function"><name>finalize</name></member>
+    <member refid="classcx_1_1CDBSaverPlugin_1a7825c60f788e7141877aa86718b4ef38" kind="function"><name>clips_env_init</name></member>
+    <member refid="classcx_1_1CDBSaverPlugin_1a04b1b9278347fef5eeca5f49a7a76c15" kind="function"><name>clips_env_destroyed</name></member>
+    <member refid="classcx_1_1CDBSaverPlugin_1a34212fafaebd9bf810febbe9a489da43" kind="function"><name>plugin_load_callback</name></member>
+    <member refid="classcx_1_1CDBSaverPlugin_1a81bdb1f6448dedfa86c79b4617f6dd49" kind="function"><name>plugin_unload_callback</name></member>
+    <member refid="classcx_1_1CDBSaverPlugin_1a04d5040d064a22123e6a02f5510564ae" kind="function"><name>cdb_assert_callback</name></member>
+    <member refid="classcx_1_1CDBSaverPlugin_1aada3e168a474cf68f540b4ae4205508d" kind="function"><name>cdb_retract_callback</name></member>
+    <member refid="classcx_1_1CDBSaverPlugin_1ac84ae1554795c17b0c4c8c81d297b704" kind="function"><name>cdb_before_rule_callback</name></member>
+    <member refid="classcx_1_1CDBSaverPlugin_1a71560b1306e42f7dc2054d8678b0ccce" kind="function"><name>cdb_before_run_callback</name></member>
+    <member refid="classcx_1_1CDBSaverPlugin_1abf649ff4536834c1ff331813caf7b6f0" kind="function"><name>cdb_after_run_callback</name></member>
+    <member refid="classcx_1_1CDBSaverPlugin_1ac27ae77078801507bc18d1307f9f684f" kind="function"><name>cdb_defglobal_assert_callback</name></member>
+    <member refid="classcx_1_1CDBSaverPlugin_1a3de21a9e880899251d2200ef63df3765" kind="function"><name>cdb_defglobal_retract_callback</name></member>
+    <member refid="classcx_1_1CDBSaverPlugin_1aea7e6d38839fc78ee424939dd9c2b166" kind="function"><name>cdb_defrule_assert_callback</name></member>
+    <member refid="classcx_1_1CDBSaverPlugin_1adcc13f9c4b8df65a03092b90c01d1783" kind="function"><name>cdb_defrule_retract_callback</name></member>
+    <member refid="classcx_1_1CDBSaverPlugin_1abff6368ce9e3899cd0991460c15cc3cf" kind="function"><name>cdb_deftemplate_assert_callback</name></member>
+    <member refid="classcx_1_1CDBSaverPlugin_1ab39a7db01985634682c02d3c6f2087d2" kind="function"><name>cdb_deftemplate_retract_callback</name></member>
+    <member refid="classcx_1_1CDBSaverPlugin_1a82471879a5218afa206637a58ca0eca7" kind="function"><name>cdb_deffacts_assert_callback</name></member>
+    <member refid="classcx_1_1CDBSaverPlugin_1a7613d988789daf194eff4e94b7731a97" kind="function"><name>cdb_deffacts_retract_callback</name></member>
+    <member refid="classcx_1_1CDBSaverPlugin_1aa7cd7061f44b80c9bdca512e60bd381b" kind="function"><name>cdb_deffunction_assert_callback</name></member>
+    <member refid="classcx_1_1CDBSaverPlugin_1a47e80b6444c4a44e4cef256552050318" kind="function"><name>cdb_deffunction_retract_callback</name></member>
+    <member refid="classcx_1_1CDBSaverPlugin_1af4366fd8b80327fbac352f3f8cf4b1c5" kind="function"><name>cdb_module_defined_callback</name></member>
+    <member refid="classcx_1_1CDBSaverPlugin_1ad2495defaf891178be8c9ecb53ecd8cd" kind="function"><name>slot_value_to_json</name></member>
+    <member refid="classcx_1_1CDBSaverPlugin_1ab09737da1915683f5e79e11d0c17254c" kind="function"><name>multifield_to_json_list</name></member>
+    <member refid="classcx_1_1CDBSaverPlugin_1a741fee4552d9b6d92d485c2fe57ddc8c" kind="function"><name>clips_fact_to_json</name></member>
+    <member refid="classcx_1_1CDBSaverPlugin_1a55f4e8fbb34c6217ccc9950751e730ff" kind="function"><name>get_module_defintion</name></member>
+    <member refid="classcx_1_1CDBSaverPlugin_1a6fc1bb45c23419b1688bfe0c6d43f4b7" kind="function"><name>parameter_list_to_json</name></member>
+  </compound>
+  <compound refid="classcx_1_1DBHandler" kind="class"><name>cx::DBHandler</name>
+    <member refid="classcx_1_1DBHandler_1a1a5c0457ad986b051b41a9ab512aa643" kind="friend"><name>CDBSaverPlugin</name></member>
+    <member refid="classcx_1_1DBHandler_1aa226728732712a1dbe14d5fb8cb954da" kind="variable"><name>connection_</name></member>
+    <member refid="classcx_1_1DBHandler_1aefca7f2cb41e5b69a52c5d53ab6d1d40" kind="variable"><name>config_</name></member>
+    <member refid="classcx_1_1DBHandler_1ab5bd567b5f4ab83d80f7ba61ec9f5a2d" kind="variable"><name>tick_</name></member>
+    <member refid="classcx_1_1DBHandler_1a01534900c6cabf1353c8e2d681cad9e1" kind="variable"><name>current_run_</name></member>
+    <member refid="classcx_1_1DBHandler_1affe50ec917a92ed5f3d25f76493d9b5f" kind="variable"><name>parent_</name></member>
+    <member refid="classcx_1_1DBHandler_1adb9c0e4f1a340f749dea2e25f237a2a2" kind="function"><name>DBHandler</name></member>
+    <member refid="classcx_1_1DBHandler_1ab771979e3a66d82e1f165dc33f95c97c" kind="function"><name>~DBHandler</name></member>
+    <member refid="classcx_1_1DBHandler_1a7abe04091f1ff93a95a8ead681b644b4" kind="function"><name>assert_fact</name></member>
+    <member refid="classcx_1_1DBHandler_1aacd6577f9ce6460f28e59312234b2649" kind="function"><name>retract_fact</name></member>
+    <member refid="classcx_1_1DBHandler_1a0ace3196c9bca0b9b329cfe39125d4ef" kind="function"><name>assert_defrule</name></member>
+    <member refid="classcx_1_1DBHandler_1a98d59929457f94cee5f1b90682275265" kind="function"><name>retract_defrule</name></member>
+    <member refid="classcx_1_1DBHandler_1a2119127413106731d9f03b032c55afa5" kind="function"><name>assert_deffunction</name></member>
+    <member refid="classcx_1_1DBHandler_1afce0457b621aa5f59cf4437e36ae969a" kind="function"><name>retract_deffunction</name></member>
+    <member refid="classcx_1_1DBHandler_1aaf56f6c109abbff1af2419d90f18ca3b" kind="function"><name>assert_deffacts</name></member>
+    <member refid="classcx_1_1DBHandler_1adbc70d5e2939b15303fa2bc809fd5047" kind="function"><name>retract_deffacts</name></member>
+    <member refid="classcx_1_1DBHandler_1a28edd05a44a1002c41058610a28f3dc1" kind="function"><name>assert_defglobal</name></member>
+    <member refid="classcx_1_1DBHandler_1af84e8161cac5545878a6cb35c84d30e3" kind="function"><name>retract_defglobal</name></member>
+    <member refid="classcx_1_1DBHandler_1a1daee515b23e272d0b79da4f39a62080" kind="function"><name>assert_deftemplate</name></member>
+    <member refid="classcx_1_1DBHandler_1aa50e18cf0c592fa82670745b2efb9fbb" kind="function"><name>retract_deftemplate</name></member>
+    <member refid="classcx_1_1DBHandler_1afa60af024be418e8c1a9d59d1b57232f" kind="function"><name>assert_rule_fired</name></member>
+    <member refid="classcx_1_1DBHandler_1a33c23f4a5447d51059d33c91a7d159b9" kind="function"><name>assert_defmodule</name></member>
+    <member refid="classcx_1_1DBHandler_1a5b00d118c7dafb996325a410e720bb96" kind="function"><name>load_plugin</name></member>
+    <member refid="classcx_1_1DBHandler_1afb4529abd976a3eec9b04844c6b1cf30" kind="function"><name>unload_plugin</name></member>
+    <member refid="classcx_1_1DBHandler_1ae94b590a7c871ac606e72e41be18dcd1" kind="function"><name>start_run</name></member>
+    <member refid="classcx_1_1DBHandler_1a71e92866c0234877b6456ec29e6f07ca" kind="function"><name>end_run</name></member>
+    <member refid="classcx_1_1DBHandler_1a176ccf8b0a68544434546069a8272937" kind="function"><name>init_db</name></member>
+    <member refid="classcx_1_1DBHandler_1a8db116bddfbd110005d7cc753d07695b" kind="function"><name>get_tick</name></member>
+  </compound>
+  <compound refid="structcx_1_1DBHandlerConfig" kind="struct"><name>cx::DBHandlerConfig</name>
+    <member refid="structcx_1_1DBHandlerConfig_1a68b1ea00bdc812fa3bea7b274af34f9c" kind="variable"><name>hostname</name></member>
+    <member refid="structcx_1_1DBHandlerConfig_1af26cc54da070ab29aca78a944f726226" kind="variable"><name>port</name></member>
+    <member refid="structcx_1_1DBHandlerConfig_1a2f42d4a1f676f6af3e4954ad3e1ce9b9" kind="variable"><name>username</name></member>
+    <member refid="structcx_1_1DBHandlerConfig_1a02387064873ac71eeeb278af94ac69ce" kind="variable"><name>password</name></member>
+    <member refid="structcx_1_1DBHandlerConfig_1aa81786e11bc7990f88ddbe5aa7c19631" kind="variable"><name>db_name</name></member>
+  </compound>
+  <compound refid="namespacecx" kind="namespace"><name>cx</name>
+  </compound>
+  <compound refid="cdb__saver__plugin_8hpp" kind="file"><name>cdb_saver_plugin.hpp</name>
+  </compound>
+  <compound refid="db__handler_8hpp" kind="file"><name>db_handler.hpp</name>
+  </compound>
+  <compound refid="dir_29516a5b9c22d4fe449d2174eeb2e991" kind="dir"><name>include/cx_cdb_saver_plugin</name>
+  </compound>
+  <compound refid="dir_d44c64559bbebec7f509842c48db8b23" kind="dir"><name>include</name>
+  </compound>
+</doxygenindex>

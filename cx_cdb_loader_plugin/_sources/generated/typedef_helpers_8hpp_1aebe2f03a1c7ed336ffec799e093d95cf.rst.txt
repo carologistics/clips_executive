@@ -1,0 +1,14 @@
+.. _exhale_typedef_helpers_8hpp_1aebe2f03a1c7ed336ffec799e093d95cf:
+
+Typedef cx::Tick
+================
+
+- Defined in :ref:`file_include_cx_cdb_loader_plugin_helpers.hpp`
+
+
+Typedef Documentation
+---------------------
+
+
+.. doxygentypedef:: cx::Tick
+   :project: cx_cdb_loader_plugin Doxygen Project

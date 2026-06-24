@@ -84,6 +84,9 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
+<tr class="memitem:a3c6d93d92feed9b3b1d46a88c722781c" id="r_a3c6d93d92feed9b3b1d46a88c722781c"><td class="memItemLeft" align="right" valign="top"><a id="a3c6d93d92feed9b3b1d46a88c722781c" name="a3c6d93d92feed9b3b1d46a88c722781c"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>PluginCallback</b> = std::function&lt; void(const std::string &amp;env_name, const std::string &amp;plugin_name)&gt;</td></tr>
+<tr class="separator:a3c6d93d92feed9b3b1d46a88c722781c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3f562bacd27d955e14671d1ad181dc97" id="r_a3f562bacd27d955e14671d1ad181dc97"><td class="memItemLeft" align="right" valign="top"><a id="a3f562bacd27d955e14671d1ad181dc97" name="a3f562bacd27d955e14671d1ad181dc97"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>PluginsMap</b> = std::unordered_map&lt; std::string, cx::ClipsPlugin::Ptr &gt;</td></tr>
 <tr class="separator:a3f562bacd27d955e14671d1ad181dc97"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -130,6 +133,21 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>unload_plugin_cb</b> 
 <tr class="memitem:aba205fddb2cfa776d7a61b1f8ef66cda" id="r_aba205fddb2cfa776d7a61b1f8ef66cda"><td class="memItemLeft" align="right" valign="top"><a id="aba205fddb2cfa776d7a61b1f8ef66cda" name="aba205fddb2cfa776d7a61b1f8ef66cda"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>list_plugin_cb</b> (const std::shared_ptr&lt; rmw_request_id_t &gt; request_header, const std::shared_ptr&lt; cx_msgs::srv::ListClipsPlugins::Request &gt; request, const std::shared_ptr&lt; cx_msgs::srv::ListClipsPlugins::Response &gt; response)</td></tr>
 <tr class="separator:aba205fddb2cfa776d7a61b1f8ef66cda"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85e01cc64ad9e582999f0d72d8fc4da2" id="r_a85e01cc64ad9e582999f0d72d8fc4da2"><td class="memItemLeft" align="right" valign="top"><a id="a85e01cc64ad9e582999f0d72d8fc4da2" name="a85e01cc64ad9e582999f0d72d8fc4da2"></a>
+std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>list_plugins</b> (const std::string &amp;env_name)</td></tr>
+<tr class="separator:a85e01cc64ad9e582999f0d72d8fc4da2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13e8576929d07e1ec05c6d1bc7238c4e" id="r_a13e8576929d07e1ec05c6d1bc7238c4e"><td class="memItemLeft" align="right" valign="top"><a id="a13e8576929d07e1ec05c6d1bc7238c4e" name="a13e8576929d07e1ec05c6d1bc7238c4e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>add_plugin_load_callback</b> (const std::string &amp;callback_name, const PluginCallback &amp;callback)</td></tr>
+<tr class="separator:a13e8576929d07e1ec05c6d1bc7238c4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8d0831cb5fd7a2a6417408bf6b43b47" id="r_aa8d0831cb5fd7a2a6417408bf6b43b47"><td class="memItemLeft" align="right" valign="top"><a id="aa8d0831cb5fd7a2a6417408bf6b43b47" name="aa8d0831cb5fd7a2a6417408bf6b43b47"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>add_plugin_unload_callback</b> (const std::string &amp;callback_name, const PluginCallback &amp;callback)</td></tr>
+<tr class="separator:aa8d0831cb5fd7a2a6417408bf6b43b47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10d4864cfc895c5041c5cafc3c4f8931" id="r_a10d4864cfc895c5041c5cafc3c4f8931"><td class="memItemLeft" align="right" valign="top"><a id="a10d4864cfc895c5041c5cafc3c4f8931" name="a10d4864cfc895c5041c5cafc3c4f8931"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>remove_plugin_load_callback</b> (const std::string &amp;callback_name)</td></tr>
+<tr class="separator:a10d4864cfc895c5041c5cafc3c4f8931"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc78b983ffae4cd58e7fa455c0368608" id="r_acc78b983ffae4cd58e7fa455c0368608"><td class="memItemLeft" align="right" valign="top"><a id="acc78b983ffae4cd58e7fa455c0368608" name="acc78b983ffae4cd58e7fa455c0368608"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>remove_plugin_unload_callback</b> (const std::string &amp;callback_name)</td></tr>
+<tr class="separator:acc78b983ffae4cd58e7fa455c0368608"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>include/cx_clips_env_manager/<a class="el" href="clips__plugin__manager_8hpp_source.html">clips_plugin_manager.hpp</a></li>

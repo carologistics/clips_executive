@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="dir_29516a5b9c22d4fe449d2174eeb2e991" kind="dir">
+    <compoundname>include/cx_cdb_saver_plugin</compoundname>
+    <innerfile refid="cdb__saver__plugin_8hpp">cdb_saver_plugin.hpp</innerfile>
+    <innerfile refid="db__handler_8hpp">db_handler.hpp</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/cx_cdb_saver_plugin/"/>
+  </compounddef>
+</doxygen>

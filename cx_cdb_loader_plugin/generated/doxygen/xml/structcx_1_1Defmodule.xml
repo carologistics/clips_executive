@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="structcx_1_1Defmodule" kind="struct" language="C++" prot="public">
+    <compoundname>cx::Defmodule</compoundname>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structcx_1_1Defmodule_1a471df7624bc5f3c12e2eeeec3d0ad490" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string cx::Defmodule::name</definition>
+        <argsstring></argsstring>
+        <name>name</name>
+        <qualifiedname>cx::Defmodule::name</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="125" column="15" bodyfile="include/cx_cdb_loader_plugin/helpers.hpp" bodystart="125" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1Defmodule_1a2ba3eba440a4d8104f8113ebfc10a84d" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string cx::Defmodule::value</definition>
+        <argsstring></argsstring>
+        <name>value</name>
+        <qualifiedname>cx::Defmodule::value</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="126" column="15" bodyfile="include/cx_cdb_loader_plugin/helpers.hpp" bodystart="126" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1Defmodule_1a1b7a6267efa58c7bcdadcc82d3b6d92f" prot="public" static="no" mutable="no">
+        <type>Tick</type>
+        <definition>Tick cx::Defmodule::start_tick</definition>
+        <argsstring></argsstring>
+        <name>start_tick</name>
+        <qualifiedname>cx::Defmodule::start_tick</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="127" column="8" bodyfile="include/cx_cdb_loader_plugin/helpers.hpp" bodystart="127" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="123" column="1" bodyfile="include/cx_cdb_loader_plugin/helpers.hpp" bodystart="124" bodyend="128"/>
+    <listofallmembers>
+      <member refid="structcx_1_1Defmodule_1a471df7624bc5f3c12e2eeeec3d0ad490" prot="public" virt="non-virtual"><scope>cx::Defmodule</scope><name>name</name></member>
+      <member refid="structcx_1_1Defmodule_1a1b7a6267efa58c7bcdadcc82d3b6d92f" prot="public" virt="non-virtual"><scope>cx::Defmodule</scope><name>start_tick</name></member>
+      <member refid="structcx_1_1Defmodule_1a2ba3eba440a4d8104f8113ebfc10a84d" prot="public" virt="non-virtual"><scope>cx::Defmodule</scope><name>value</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

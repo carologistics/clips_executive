@@ -1,0 +1,290 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="structcx_1_1RegexConfig" kind="struct" language="C++" prot="public">
+    <compoundname>cx::RegexConfig</compoundname>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structcx_1_1RegexConfig_1ad7793917d6c7a1c27d171e1a1da5c638" prot="public" static="no" mutable="no">
+        <type><ref refid="structcx_1_1GenericRegexRule" kindref="compound">GenericRegexRule</ref></type>
+        <definition>GenericRegexRule cx::RegexConfig::module_rules</definition>
+        <argsstring></argsstring>
+        <name>module_rules</name>
+        <qualifiedname>cx::RegexConfig::module_rules</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/parser.hpp" line="55" column="20" bodyfile="include/cx_cdb_loader_plugin/parser.hpp" bodystart="55" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1RegexConfig_1afbc2b20882c39ca9e386fa1890895f48" prot="public" static="no" mutable="no">
+        <type><ref refid="structcx_1_1GenericRegexRule" kindref="compound">GenericRegexRule</ref></type>
+        <definition>GenericRegexRule cx::RegexConfig::defglobal_rules</definition>
+        <argsstring></argsstring>
+        <name>defglobal_rules</name>
+        <qualifiedname>cx::RegexConfig::defglobal_rules</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/parser.hpp" line="57" column="20" bodyfile="include/cx_cdb_loader_plugin/parser.hpp" bodystart="57" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1RegexConfig_1ab420c3dc01e1ca873ed43aff8bc73c4c" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool cx::RegexConfig::skip_defglobals</definition>
+        <argsstring></argsstring>
+        <name>skip_defglobals</name>
+        <qualifiedname>cx::RegexConfig::skip_defglobals</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/parser.hpp" line="58" column="8" bodyfile="include/cx_cdb_loader_plugin/parser.hpp" bodystart="58" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1RegexConfig_1a91c8747761d124b31c3cbaf7a758ee08" prot="public" static="no" mutable="no">
+        <type><ref refid="structcx_1_1GenericRegexRule" kindref="compound">GenericRegexRule</ref></type>
+        <definition>GenericRegexRule cx::RegexConfig::deftemplate_rules</definition>
+        <argsstring></argsstring>
+        <name>deftemplate_rules</name>
+        <qualifiedname>cx::RegexConfig::deftemplate_rules</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/parser.hpp" line="59" column="20" bodyfile="include/cx_cdb_loader_plugin/parser.hpp" bodystart="59" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1RegexConfig_1a58280e993fcba25035db9ba64311d105" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool cx::RegexConfig::skip_deftemplates</definition>
+        <argsstring></argsstring>
+        <name>skip_deftemplates</name>
+        <qualifiedname>cx::RegexConfig::skip_deftemplates</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/parser.hpp" line="60" column="8" bodyfile="include/cx_cdb_loader_plugin/parser.hpp" bodystart="60" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1RegexConfig_1ae09d35d70b50dfbe85b5718b22014a92" prot="public" static="no" mutable="no">
+        <type><ref refid="structcx_1_1GenericRegexRule" kindref="compound">GenericRegexRule</ref></type>
+        <definition>GenericRegexRule cx::RegexConfig::defrule_rules</definition>
+        <argsstring></argsstring>
+        <name>defrule_rules</name>
+        <qualifiedname>cx::RegexConfig::defrule_rules</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/parser.hpp" line="61" column="20" bodyfile="include/cx_cdb_loader_plugin/parser.hpp" bodystart="61" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1RegexConfig_1a7e778f408d91f1cef37f3fe424ec1171" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool cx::RegexConfig::skip_defrules</definition>
+        <argsstring></argsstring>
+        <name>skip_defrules</name>
+        <qualifiedname>cx::RegexConfig::skip_defrules</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/parser.hpp" line="62" column="8" bodyfile="include/cx_cdb_loader_plugin/parser.hpp" bodystart="62" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1RegexConfig_1a706c1fbe771a3c3b9e16fe18630cf09d" prot="public" static="no" mutable="no">
+        <type><ref refid="structcx_1_1GenericRegexRule" kindref="compound">GenericRegexRule</ref></type>
+        <definition>GenericRegexRule cx::RegexConfig::deffacts_rules</definition>
+        <argsstring></argsstring>
+        <name>deffacts_rules</name>
+        <qualifiedname>cx::RegexConfig::deffacts_rules</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/parser.hpp" line="63" column="20" bodyfile="include/cx_cdb_loader_plugin/parser.hpp" bodystart="63" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1RegexConfig_1a3b022de604511b720ed2e3824b4d02e1" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool cx::RegexConfig::skip_deffacts</definition>
+        <argsstring></argsstring>
+        <name>skip_deffacts</name>
+        <qualifiedname>cx::RegexConfig::skip_deffacts</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/parser.hpp" line="64" column="8" bodyfile="include/cx_cdb_loader_plugin/parser.hpp" bodystart="64" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1RegexConfig_1ad22175d28b316f0345df81025ce2280d" prot="public" static="no" mutable="no">
+        <type><ref refid="structcx_1_1GenericRegexRule" kindref="compound">GenericRegexRule</ref></type>
+        <definition>GenericRegexRule cx::RegexConfig::deffunction_rules</definition>
+        <argsstring></argsstring>
+        <name>deffunction_rules</name>
+        <qualifiedname>cx::RegexConfig::deffunction_rules</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/parser.hpp" line="65" column="20" bodyfile="include/cx_cdb_loader_plugin/parser.hpp" bodystart="65" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1RegexConfig_1af0b5e2d505b501c2e235685158b8c287" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool cx::RegexConfig::skip_deffunctions</definition>
+        <argsstring></argsstring>
+        <name>skip_deffunctions</name>
+        <qualifiedname>cx::RegexConfig::skip_deffunctions</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/parser.hpp" line="66" column="8" bodyfile="include/cx_cdb_loader_plugin/parser.hpp" bodystart="66" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1RegexConfig_1aa01b2880becfa6bb29ddc32e40f0e89d" prot="public" static="no" mutable="no">
+        <type><ref refid="structcx_1_1GenericRegexRule" kindref="compound">GenericRegexRule</ref></type>
+        <definition>GenericRegexRule cx::RegexConfig::activation_rules</definition>
+        <argsstring></argsstring>
+        <name>activation_rules</name>
+        <qualifiedname>cx::RegexConfig::activation_rules</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/parser.hpp" line="67" column="20" bodyfile="include/cx_cdb_loader_plugin/parser.hpp" bodystart="67" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1RegexConfig_1aafabf44663b2ac55df14bc2b74f0a486" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool cx::RegexConfig::skip_activations</definition>
+        <argsstring></argsstring>
+        <name>skip_activations</name>
+        <qualifiedname>cx::RegexConfig::skip_activations</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/parser.hpp" line="68" column="8" bodyfile="include/cx_cdb_loader_plugin/parser.hpp" bodystart="68" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1RegexConfig_1a8228fed7108a1caa5c61fded6d53f209" prot="public" static="no" mutable="no">
+        <type><ref refid="structcx_1_1GenericRegexRule" kindref="compound">GenericRegexRule</ref></type>
+        <definition>GenericRegexRule cx::RegexConfig::fact_rules</definition>
+        <argsstring></argsstring>
+        <name>fact_rules</name>
+        <qualifiedname>cx::RegexConfig::fact_rules</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/parser.hpp" line="69" column="20" bodyfile="include/cx_cdb_loader_plugin/parser.hpp" bodystart="69" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1RegexConfig_1a461aa4c693e251c96e144d45b5fc5046" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool cx::RegexConfig::skip_facts</definition>
+        <argsstring></argsstring>
+        <name>skip_facts</name>
+        <qualifiedname>cx::RegexConfig::skip_facts</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/parser.hpp" line="70" column="8" bodyfile="include/cx_cdb_loader_plugin/parser.hpp" bodystart="70" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1RegexConfig_1a3ac6346b935c8aaae641ff9b8de97efb" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool cx::RegexConfig::skip_external_address_values</definition>
+        <argsstring></argsstring>
+        <name>skip_external_address_values</name>
+        <qualifiedname>cx::RegexConfig::skip_external_address_values</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/parser.hpp" line="72" column="8" bodyfile="include/cx_cdb_loader_plugin/parser.hpp" bodystart="72" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1RegexConfig_1a17e29907fef228126d7680e34c06e22b" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool cx::RegexConfig::external_address_values_as_nullptr</definition>
+        <argsstring></argsstring>
+        <name>external_address_values_as_nullptr</name>
+        <qualifiedname>cx::RegexConfig::external_address_values_as_nullptr</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/parser.hpp" line="73" column="8" bodyfile="include/cx_cdb_loader_plugin/parser.hpp" bodystart="73" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="2">
+        <label>cx::GenericRegexRule</label>
+        <link refid="structcx_1_1GenericRegexRule"/>
+      </node>
+      <node id="1">
+        <label>cx::RegexConfig</label>
+        <link refid="structcx_1_1RegexConfig"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>activation_rules</edgelabel>
+          <edgelabel>deffacts_rules</edgelabel>
+          <edgelabel>deffunction_rules</edgelabel>
+          <edgelabel>defglobal_rules</edgelabel>
+          <edgelabel>defrule_rules</edgelabel>
+          <edgelabel>deftemplate_rules</edgelabel>
+          <edgelabel>fact_rules</edgelabel>
+          <edgelabel>module_rules</edgelabel>
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="include/cx_cdb_loader_plugin/parser.hpp" line="53" column="1" bodyfile="include/cx_cdb_loader_plugin/parser.hpp" bodystart="54" bodyend="74"/>
+    <listofallmembers>
+      <member refid="structcx_1_1RegexConfig_1aa01b2880becfa6bb29ddc32e40f0e89d" prot="public" virt="non-virtual"><scope>cx::RegexConfig</scope><name>activation_rules</name></member>
+      <member refid="structcx_1_1RegexConfig_1a706c1fbe771a3c3b9e16fe18630cf09d" prot="public" virt="non-virtual"><scope>cx::RegexConfig</scope><name>deffacts_rules</name></member>
+      <member refid="structcx_1_1RegexConfig_1ad22175d28b316f0345df81025ce2280d" prot="public" virt="non-virtual"><scope>cx::RegexConfig</scope><name>deffunction_rules</name></member>
+      <member refid="structcx_1_1RegexConfig_1afbc2b20882c39ca9e386fa1890895f48" prot="public" virt="non-virtual"><scope>cx::RegexConfig</scope><name>defglobal_rules</name></member>
+      <member refid="structcx_1_1RegexConfig_1ae09d35d70b50dfbe85b5718b22014a92" prot="public" virt="non-virtual"><scope>cx::RegexConfig</scope><name>defrule_rules</name></member>
+      <member refid="structcx_1_1RegexConfig_1a91c8747761d124b31c3cbaf7a758ee08" prot="public" virt="non-virtual"><scope>cx::RegexConfig</scope><name>deftemplate_rules</name></member>
+      <member refid="structcx_1_1RegexConfig_1a17e29907fef228126d7680e34c06e22b" prot="public" virt="non-virtual"><scope>cx::RegexConfig</scope><name>external_address_values_as_nullptr</name></member>
+      <member refid="structcx_1_1RegexConfig_1a8228fed7108a1caa5c61fded6d53f209" prot="public" virt="non-virtual"><scope>cx::RegexConfig</scope><name>fact_rules</name></member>
+      <member refid="structcx_1_1RegexConfig_1ad7793917d6c7a1c27d171e1a1da5c638" prot="public" virt="non-virtual"><scope>cx::RegexConfig</scope><name>module_rules</name></member>
+      <member refid="structcx_1_1RegexConfig_1aafabf44663b2ac55df14bc2b74f0a486" prot="public" virt="non-virtual"><scope>cx::RegexConfig</scope><name>skip_activations</name></member>
+      <member refid="structcx_1_1RegexConfig_1a3b022de604511b720ed2e3824b4d02e1" prot="public" virt="non-virtual"><scope>cx::RegexConfig</scope><name>skip_deffacts</name></member>
+      <member refid="structcx_1_1RegexConfig_1af0b5e2d505b501c2e235685158b8c287" prot="public" virt="non-virtual"><scope>cx::RegexConfig</scope><name>skip_deffunctions</name></member>
+      <member refid="structcx_1_1RegexConfig_1ab420c3dc01e1ca873ed43aff8bc73c4c" prot="public" virt="non-virtual"><scope>cx::RegexConfig</scope><name>skip_defglobals</name></member>
+      <member refid="structcx_1_1RegexConfig_1a7e778f408d91f1cef37f3fe424ec1171" prot="public" virt="non-virtual"><scope>cx::RegexConfig</scope><name>skip_defrules</name></member>
+      <member refid="structcx_1_1RegexConfig_1a58280e993fcba25035db9ba64311d105" prot="public" virt="non-virtual"><scope>cx::RegexConfig</scope><name>skip_deftemplates</name></member>
+      <member refid="structcx_1_1RegexConfig_1a3ac6346b935c8aaae641ff9b8de97efb" prot="public" virt="non-virtual"><scope>cx::RegexConfig</scope><name>skip_external_address_values</name></member>
+      <member refid="structcx_1_1RegexConfig_1a461aa4c693e251c96e144d45b5fc5046" prot="public" virt="non-virtual"><scope>cx::RegexConfig</scope><name>skip_facts</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

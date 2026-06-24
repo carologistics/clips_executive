@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>README &mdash; cx_cdb_loader_plugin 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=86f27845" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+  
+        <script src="../_static/jquery.js?v=8dae8fb0"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+        <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="PACKAGE" href="PACKAGE.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            cx_cdb_loader_plugin
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../generated/index.html">C++ API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../generated/index.html#class-hierarchy">Class Hierarchy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/index.html#file-hierarchy">File Hierarchy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generated/index.html#full-c-api">Full C++ API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../generated/index.html#namespaces">Namespaces</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../generated/namespace_cx.html">Namespace cx</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../generated/index.html#classes-and-structs">Classes and Structs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../generated/structcx_1_1Deffacts.html">Struct Deffacts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/structcx_1_1Deffunction.html">Struct Deffunction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/structcx_1_1Defglobal.html">Struct Defglobal</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/structcx_1_1Defmodule.html">Struct Defmodule</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/structcx_1_1Defrule.html">Struct Defrule</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/structcx_1_1Deftemplate.html">Struct Deftemplate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/structcx_1_1Fact.html">Struct Fact</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/structcx_1_1GenericRegexRule.html">Struct GenericRegexRule</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/structcx_1_1Plugin.html">Struct Plugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/structcx_1_1RegexConfig.html">Struct RegexConfig</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/structcx_1_1RegexRule.html">Struct RegexRule</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/structcx_1_1RuleFiring.html">Struct RuleFiring</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/structcx_1_1TimedFact.html">Struct TimedFact</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/structcx_1_1TimedText.html">Struct TimedText</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/structcx_1_1TimeLookup.html">Struct TimeLookup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/classcx_1_1CDBLoaderPlugin.html">Class CDBLoaderPlugin</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../generated/index.html#enums">Enums</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../generated/enum_helpers_8hpp_1a911397f4eda0a1286820a816d92d0afc.html">Enum SlotType</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../generated/index.html#functions">Functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../generated/function_parser_8hpp_1af7675f59d2e192243a957073b2823cc4.html">Function cx::allowed_by_generic_regex_rule</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/function_helpers_8hpp_1a6723ddd1f692e062e3916d89b3edfc3c.html">Function cx::append_json_to_multifield_builder(clips::Environment *, clips::MultifieldBuilder *, const nlohmann::json&amp;, clips::Fact *, const RegexConfig&amp;, bool&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/function_helpers_8hpp_1a45b919c76296ed00dd04052e3b1c822c.html">Function cx::append_json_to_multifield_builder(clips::Environment *, clips::MultifieldBuilder *, const nlohmann::json&amp;, std::unordered_map&lt;int64_t, clips::Fact *&gt;&amp;, std::vector&lt;clips::Fact *&gt;&amp;, const RegexConfig&amp;)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/function_parser_8hpp_1acb3e1c31575ce5bde45500fa50ce78c0.html">Template Function cx::filter_in_place</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/function_helpers_8hpp_1a79374f07a2c077a15ca50d844da9ff66.html">Function cx::get_end_tick_for_run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/function_helpers_8hpp_1aece7b11f47799965cc03b7c40cf768ce.html">Function cx::get_nullptr_fact</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/function_helpers_8hpp_1a27504d055b0432d500c82ff64d0ea45c.html">Function cx::json_to_multifield</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/function_helpers_8hpp_1af2bfee48758d4a3db1f2ee10aad3cd6d.html">Function cx::load_deffacts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/function_helpers_8hpp_1a2bc4371798cacbbb2290a61cbc3df8ad.html">Function cx::load_deffunctions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/function_helpers_8hpp_1a12e149b3c3f63846720f4477b0cc631d.html">Function cx::load_defglobals</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/function_helpers_8hpp_1a2a28bf76eb29e42c82fad4e318768fdb.html">Function cx::load_defmodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/function_helpers_8hpp_1a55fc6c122d7798e258a578fc47e0b30e.html">Function cx::load_defrules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/function_helpers_8hpp_1ae95333c4cbee6ca7af837529ea2cfa9e.html">Function cx::load_deftemplates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/function_helpers_8hpp_1a0629b0fc3e3a65d8032a73284b80a5dc.html">Function cx::load_facts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/function_parser_8hpp_1a05e83e3639f1951dae26438da9b19ba7.html">Function cx::matches_any_regex_rule</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/function_parser_8hpp_1a7911bea78f4041c6d1ee47dbf8897232.html">Function cx::matches_regex_rule</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/function_helpers_8hpp_1aa18b214b3ee1984cec0cee0807c65dc2.html">Template Function cx::optional_field</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/function_helpers_8hpp_1aef73532000203fc5e8e514680a12af8f.html">Function cx::parse_timed_fact</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/function_helpers_8hpp_1a00a0153adc576ccdc56db5e4d866411c.html">Function cx::parse_timed_text</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/function_parser_8hpp_1ae34909099ef95a912095fd9473e9c7ee.html">Function cx::populate_generic_regex_rule</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/function_parser_8hpp_1aea4b70c605309fe6821a7e568015cfe5.html">Function cx::populate_regex_config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/function_parser_8hpp_1a537a642a90c09b0ae2f519d3d578e47a.html">Function cx::populate_regex_rule</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/function_helpers_8hpp_1a358fc10c06e0dd5df0ee4a5207380b47.html">Function cx::resolve_restore_tick</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/function_helpers_8hpp_1a2541187ce3269470ba966a327f1b676e.html">Function cx::resolve_restore_time</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/function_helpers_8hpp_1a09b354c2bbb40e65874ab3f95835b3c0.html">Function cx::rule_firing_exists_before_tick</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../generated/index.html#typedefs">Typedefs</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../generated/typedef_helpers_8hpp_1aa2239f55c64f5ca6615df6a96a2cc70e.html">Typedef cx::json</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/typedef_helpers_8hpp_1aebe2f03a1c7ed336ffec799e093d95cf.html">Typedef cx::Tick</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../generated/index.html#directories">Directories</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../generated/dir_include.html">Directory include</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/dir_include_cx_cdb_loader_plugin.html">Directory cx_cdb_loader_plugin</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../generated/index.html#files">Files</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../generated/file_include_cx_cdb_loader_plugin_cdb_loader_plugin.hpp.html">File cdb_loader_plugin.hpp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/file_include_cx_cdb_loader_plugin_helpers.hpp.html">File helpers.hpp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../generated/file_include_cx_cdb_loader_plugin_parser.hpp.html">File parser.hpp</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="../standards.html">Standard Documents</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="PACKAGE.html">PACKAGE</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">README</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#cx-cdb-loader-plugin">cx_cdb_loader_plugin</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#disclaimer">Disclaimer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#restoring-external-addresses">Restoring external addresses</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#missing-fact-references">Missing fact references</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#restoring-fired-activations">Restoring fired activations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#continuing-execution-after-restoration">Continuing execution after restoration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-filtering">Module filtering</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#configurable-restore-types">Configurable restore types</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#regex-based-filtering">Regex-based filtering</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#contains-matching">Contains matching</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#example-configuration">Example configuration</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../genindex.html">Index</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">cx_cdb_loader_plugin</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../standards.html">Standard Documents</a></li>
+      <li class="breadcrumb-item active">README</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/standard_docs/README.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="readme">
+<h1>README<a class="headerlink" href="#readme" title="Link to this heading"></a></h1>
+<section id="cx-cdb-loader-plugin">
+<h2>cx_cdb_loader_plugin<a class="headerlink" href="#cx-cdb-loader-plugin" title="Link to this heading"></a></h2>
+<p>This package provides the <code class="docutils literal notranslate"><span class="pre">cx::CDBLoaderPlugin</span></code> CLIPS plugin. It restores a CLIPS environment to a specific point in time based on a PostgreSQL database recording created by the <code class="docutils literal notranslate"><span class="pre">cx::CDBSaverPlugin</span></code>.</p>
+<section id="disclaimer">
+<h3>Disclaimer<a class="headerlink" href="#disclaimer" title="Link to this heading"></a></h3>
+<p>This plugin aims to restore recorded CLIPS environments as comprehensively as possible. However, some information cannot be restored and is therefore lost:</p>
+<ul class="simple">
+<li><p><strong>External addresses:</strong> External objects cannot be restored. By default, they are restored as <code class="docutils literal notranslate"><span class="pre">nullptr</span></code> external addresses.</p></li>
+<li><p><strong>Fact IDs:</strong> Original fact IDs are not preserved exactly. The relative assertion order of non-retracted facts is preserved, but relative fact IDs of retracted facts are lost.</p></li>
+<li><p><strong>Fact references to missing facts:</strong> If a fact or defglobal referenced a fact that was retracted or is not loaded due to this plugin’s configuration, the relationship is preserved, but the relative fact ID of the referenced fact is lost.</p></li>
+<li><p><strong>Defglobal initial values:</strong> Defglobals reset to their initial value on <code class="docutils literal notranslate"><span class="pre">(reset)</span></code>. This initial value is not recorded, so restored defglobals reset to <code class="docutils literal notranslate"><span class="pre">nil</span></code>.</p></li>
+<li><p><strong>Rules fired before <code class="docutils literal notranslate"><span class="pre">CDBSaverPlugin</span></code> was loaded:</strong> CLIPS does not keep a history of fired rules. Therefore, only rule firings that happened while <code class="docutils literal notranslate"><span class="pre">CDBSaverPlugin</span></code> was loaded can be recorded and restored.</p></li>
+<li><p><strong>MAIN defmodule redefinition time:</strong> MAIN is the default CLIPS defmodule and may therefore be redefined once to expose ports. This redefinition is recorded, but the exact tick at which the exported ports became available is not. As a result, when restoring an earlier tick, MAIN is loaded with the definition from its redefinition, even if that redefinition happened after the requested restore tick.</p></li>
+</ul>
+<p>TODO ADD SECTION ABOUT DEFGLOBAL AND SALIENCE EVAULTION
+The primary use case of this plugin is inspection and debugging. It allows a recorded environment to be restored to a specific point in time so that it can be investigated using tools such as <code class="docutils literal notranslate"><span class="pre">cx_cdb_cli</span></code> and <code class="docutils literal notranslate"><span class="pre">cx_cdb_analyzer</span></code>.</p>
+<p>The restored environment must provide the same CLIPS functions that were available during the original recording run. In practice, this usually means loading the same plugins before loading this plugin. The loader compares the recorded configuration with the current configuration and emits a warning if differences are detected. Proceed with caution if such a warning appears, because the restored environment may be incomplete or behave differently from the recorded run.</p>
+</section>
+<section id="restoring-external-addresses">
+<h3>Restoring external addresses<a class="headerlink" href="#restoring-external-addresses" title="Link to this heading"></a></h3>
+<p>External addresses are outside the scope of the recording. The loader can only restore the information that a value pointed to something external; it cannot restore the external object itself.</p>
+<p>By default, external addresses are restored as <code class="docutils literal notranslate"><span class="pre">nullptr</span></code> external addresses. This makes it visible that the value is broken and must not be used as a valid external object.</p>
+<p>However, this can change the fact base. For example, during the original recording, the following two facts may have existed:</p>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>f-1     (msg &lt;Pointer-C-0x101010101010101&gt;)
+f-2     (msg &lt;Pointer-C-0x202020202020202&gt;)
+</pre></div>
+</div>
+<p>After restoration with <code class="docutils literal notranslate"><span class="pre">nullptr</span></code> external addresses, both facts become structurally identical:</p>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>f-1     (msg &lt;Pointer-C-(nil)&gt;)
+</pre></div>
+</div>
+<p>By default, CLIPS does not store duplicate facts, so only one of them may remain.</p>
+<p>If the loader is configured to keep external address values, equality relationships between different external addresses can be preserved for inspection. This can be useful when rule conditions depend on the number of distinct facts or on external address equality.</p>
+<p>However, restored external addresses are not valid pointers in the restored process. Keeping external address values is therefore not recommended if the restored environment is intended to continue running, because <strong>using these addresses as function input can crash CLIPS</strong>.</p>
+<p>If facts and defglobals containing external addresses should not be restored at all, enable:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>drop_external_addresses
+</pre></div>
+</div>
+</section>
+<section id="missing-fact-references">
+<h3>Missing fact references<a class="headerlink" href="#missing-fact-references" title="Link to this heading"></a></h3>
+<p>Facts and defglobals can contain fact addresses that refer to facts that have already been retracted or are not loaded due to this plugin’s configuration.</p>
+<p>For this purpose, the loader temporarily asserts and retracts placeholder facts named:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>nullptr-&lt;fact-id&gt;
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">&lt;fact-id&gt;</span></code> is the fact ID from the original recording run.</p>
+<p>In general, <code class="docutils literal notranslate"><span class="pre">CDBLoaderPlugin</span></code> asserts facts in the same relative order as in the recording run. Placeholder facts for missing fact references are an exception: they receive random fact IDs that are higher than the last restored fact. This means that the relative fact ID of the referenced missing fact is lost.</p>
+<p>The original relationship is still preserved. If two restored values pointed to the same missing fact in the recording, they will also point to the same placeholder fact after restoration.</p>
+</section>
+<section id="restoring-fired-activations">
+<h3>Restoring fired activations<a class="headerlink" href="#restoring-fired-activations" title="Link to this heading"></a></h3>
+<p>Fired activations can be restored to the extent that they were recorded.</p>
+<p>To do this, the loader first restores facts and rules. It then iterates over the activations that would currently be eligible to fire and removes the activations that were already recorded as fired in the original run.</p>
+<p>This only works for facts and rules that are restored by the this plugin.</p>
+<p>Rules fired before <code class="docutils literal notranslate"><span class="pre">CDBSaverPlugin</span></code> was loaded cannot be removed during restoration, because they were never recorded. For this reason, it is generally recommended to load <code class="docutils literal notranslate"><span class="pre">CDBSaverPlugin</span></code> from the start of the environment.</p>
+</section>
+<section id="continuing-execution-after-restoration">
+<h3>Continuing execution after restoration<a class="headerlink" href="#continuing-execution-after-restoration" title="Link to this heading"></a></h3>
+<p>Restoring a CLIPS environment is mainly intended for inspection. Continuing execution from a restored environment may require additional cleanup or reconstruction logic.</p>
+<p>After loading, the plugin asserts the following fact:</p>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>(assert (cdb-restored))
+</pre></div>
+</div>
+<p>You can use this fact in custom rules to repair or reinitialize parts of the environment after restoration.</p>
+<p>Additionally, you can override restored <code class="docutils literal notranslate"><span class="pre">defrules</span></code>, <code class="docutils literal notranslate"><span class="pre">deffunctions</span></code>, <code class="docutils literal notranslate"><span class="pre">deftemplates</span></code>, and <code class="docutils literal notranslate"><span class="pre">defglobals</span></code> by loading <code class="docutils literal notranslate"><span class="pre">cx::FileLoadPlugin</span></code> after this plugin and providing redefinitions.</p>
+<p>In many cases, a custom plugin may also be necessary to restore project-specific external state correctly.</p>
+</section>
+<section id="module-filtering">
+<h3>Module filtering<a class="headerlink" href="#module-filtering" title="Link to this heading"></a></h3>
+<p>The loader can filter which parts of the recorded environment should be restored.</p>
+<p>First, modules can be included or excluded using regexes.</p>
+<p>By default, CLIPS code is in the module <code class="docutils literal notranslate"><span class="pre">MAIN</span></code>.</p>
+<p>The default include regex is “”, which matches everything.</p>
+<p>The default exclude regex is “”, which matches nothing.</p>
+</section>
+<section id="configurable-restore-types">
+<h3>Configurable restore types<a class="headerlink" href="#configurable-restore-types" title="Link to this heading"></a></h3>
+<p>To assist with restoration, the plugin provides configuration options for the following CLIPS object types:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">deffacts</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">facts</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">defrules</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">deftemplates</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">defglobals</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">deffunctions</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">activations</span></code></p></li>
+</ul>
+<p>Each type can be skipped.</p>
+<p>By default, <code class="docutils literal notranslate"><span class="pre">deffacts</span></code> are loaded but not asserted automatically. This is because <code class="docutils literal notranslate"><span class="pre">deffacts</span></code> are normally asserted during <code class="docutils literal notranslate"><span class="pre">(reset)</span></code>, but <code class="docutils literal notranslate"><span class="pre">(reset)</span></code> is skipped when using <code class="docutils literal notranslate"><span class="pre">cx::CDBLoaderPlugin</span></code>.</p>
+<p>If you want the plugin to assert restored <code class="docutils literal notranslate"><span class="pre">deffacts</span></code> manually, enable:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>deffacts.manual_assert
+</pre></div>
+</div>
+</section>
+<section id="regex-based-filtering">
+<h3>Regex-based filtering<a class="headerlink" href="#regex-based-filtering" title="Link to this heading"></a></h3>
+<p>Each configurable type supports the following parameters:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>load_if_match
+skip_if_match
+</pre></div>
+</div>
+<p>Both parameters contain lists of regex strings. The plugin uses the C++ <code class="docutils literal notranslate"><span class="pre">std::regex</span></code> implementation.</p>
+<p>For each object, the loader evaluates all <code class="docutils literal notranslate"><span class="pre">load_if_match</span></code> regexes. If at least one load regex matches, the object is considered for loading. It is only loaded if none of the <code class="docutils literal notranslate"><span class="pre">skip_if_match</span></code> regexes match.</p>
+<p>For the following types, regexes are matched against the object name:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">deffunctions</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">deftemplates</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">defglobals</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">deffacts</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">defrules</span></code></p></li>
+</ul>
+<p>Activations are matched against the corresponding defrule name.</p>
+<p>Facts do not have names, so fact filtering is split into separate matching rules.</p>
+<p>For facts, the <code class="docutils literal notranslate"><span class="pre">deftemplate</span></code> regex matches the fact’s <code class="docutils literal notranslate"><span class="pre">deftemplate</span></code>.</p>
+<p>Ordered facts such as:</p>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>(assert (init))
+</pre></div>
+</div>
+<p>have a deftemplate internally. Here, it is <code class="docutils literal notranslate"><span class="pre">init</span></code>.</p>
+<p>If facts need to be skipped based on their slot values, load a <code class="docutils literal notranslate"><span class="pre">cx::FileLoadPlugin</span></code> after <code class="docutils literal notranslate"><span class="pre">cx::CDBLoaderPlugin</span></code> and provide CLIPS rules that retract the restored facts you do not want to keep.</p>
+</section>
+<section id="contains-matching">
+<h3>Contains matching<a class="headerlink" href="#contains-matching" title="Link to this heading"></a></h3>
+<p>By default, regexes are matched exactly.</p>
+<p>If a regex string starts with <code class="docutils literal notranslate"><span class="pre">/</span></code>, the regex after the <code class="docutils literal notranslate"><span class="pre">/</span></code> is treated as a contains match.</p>
+<p>For example:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>hallo
+</pre></div>
+</div>
+<p>matches only if the value is exactly <code class="docutils literal notranslate"><span class="pre">hallo</span></code>.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/hallo
+</pre></div>
+</div>
+<p>matches if the value contains <code class="docutils literal notranslate"><span class="pre">hallo</span></code>.</p>
+</section>
+<section id="example-configuration">
+<h3>Example configuration<a class="headerlink" href="#example-configuration" title="Link to this heading"></a></h3>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">clips_manager</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;main&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">    </span><span class="nt">main</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugins</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;required_plugin_1&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;required_plugin_2&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;cdb_loader&quot;</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;restore_overrides&quot;</span>
+
+<span class="w">    </span><span class="nt">required_plugin_1</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;my_package::RequiredPlugin1&quot;</span>
+
+<span class="w">    </span><span class="nt">required_plugin_2</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;my_package::RequiredPlugin2&quot;</span>
+
+<span class="w">    </span><span class="nt">cdb_loader</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::CDBLoaderPlugin&quot;</span>
+
+<span class="w">      </span><span class="c1"># PostgreSQL database connection used to read the recording.</span>
+<span class="w">      </span><span class="c1"># These values must point to the database created by cx::CDBSaverPlugin.</span>
+<span class="w">      </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;localhost&quot;</span>
+<span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5432</span>
+<span class="w">      </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cdb_main_2026_05_11t10_50_23&quot;</span>
+<span class="w">      </span><span class="nt">user</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;postgres&quot;</span>
+<span class="w">      </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;postgres&quot;</span>
+
+<span class="w">      </span><span class="c1"># Select what should be restored.</span>
+<span class="w">      </span><span class="c1">#</span>
+<span class="w">      </span><span class="c1"># Exactly one of the following parameters may be set:</span>
+<span class="w">      </span><span class="c1"># - restore_run</span>
+<span class="w">      </span><span class="c1"># - restore_tick</span>
+<span class="w">      </span><span class="c1"># - restore_time</span>
+<span class="w">      </span><span class="c1">#</span>
+<span class="w">      </span><span class="c1"># If more than one is set, the configuration is invalid.</span>
+<span class="w">      </span><span class="c1">#</span>
+<span class="w">      </span><span class="c1"># restore_run and restore_tick are strings because the values are parsed</span>
+<span class="w">      </span><span class="c1"># as long long by the loader.</span>
+
+<span class="w">      </span><span class="c1"># Restore the state after a complete run.</span>
+<span class="w">      </span><span class="c1">#</span>
+<span class="w">      </span><span class="c1"># Positive values are zero-based:</span>
+<span class="w">      </span><span class="c1">#   &quot;0&quot;  = first recorded run</span>
+<span class="w">      </span><span class="c1">#   &quot;1&quot;  = second recorded run</span>
+<span class="w">      </span><span class="c1">#</span>
+<span class="w">      </span><span class="c1"># Negative values count backwards from the end:</span>
+<span class="w">      </span><span class="c1">#   &quot;-1&quot; = latest recorded run</span>
+<span class="w">      </span><span class="c1">#   &quot;-2&quot; = run before the latest recorded run</span>
+<span class="w">      </span><span class="c1">#</span>
+<span class="w">      </span><span class="nt">restore_run</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+
+<span class="w">      </span><span class="c1"># Restore by tick.</span>
+<span class="w">      </span><span class="c1">#</span>
+<span class="w">      </span><span class="c1"># Positive values are zero-based:</span>
+<span class="w">      </span><span class="c1">#   &quot;0&quot;  = first recorded tick</span>
+<span class="w">      </span><span class="c1">#   &quot;1&quot;  = second recorded tick</span>
+<span class="w">      </span><span class="c1">#</span>
+<span class="w">      </span><span class="c1"># Negative values count backwards from the end:</span>
+<span class="w">      </span><span class="c1">#   &quot;-1&quot; = last recorded tick</span>
+<span class="w">      </span><span class="c1">#   &quot;-2&quot; = tick before the last recorded tick</span>
+<span class="w">      </span><span class="c1">#</span>
+<span class="w">      </span><span class="c1"># Mutually exclusive with restore_run and restore_time.</span>
+<span class="w">      </span><span class="c1">#</span>
+<span class="w">      </span><span class="nt">restore_tick</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+
+<span class="w">      </span><span class="c1"># Restore by time.</span>
+<span class="w">      </span><span class="c1">#</span>
+<span class="w">      </span><span class="c1"># A value starting with T+ is interpreted relative to the start time of the</span>
+<span class="w">      </span><span class="c1"># first recorded run. A normal timestamp is interpreted as an absolute time.</span>
+<span class="w">      </span><span class="c1">#</span>
+<span class="w">      </span><span class="c1"># The loader selects the run whose end_time is closest to the requested time</span>
+<span class="w">      </span><span class="c1"># and restores that run&#39;s end_tick.</span>
+<span class="w">      </span><span class="c1">#</span>
+<span class="w">      </span><span class="c1"># Mutually exclusive with restore_run and restore_tick.</span>
+<span class="w">      </span><span class="c1">#</span>
+<span class="w">      </span><span class="c1"># Examples:</span>
+<span class="w">      </span><span class="c1"># restore_time: &quot;T+00:50:23&quot;</span>
+<span class="w">      </span><span class="c1"># restore_time: &quot;2026-05-11T10:50:23Z&quot;</span>
+<span class="w">      </span><span class="c1"># restore_time: &quot;2026-05-11 10:50:23+00&quot;</span>
+<span class="w">      </span><span class="c1">#</span>
+<span class="w">      </span><span class="nt">restore_time</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+
+<span class="w">      </span><span class="c1"># Facts containing external addresses cannot be restored reliably.</span>
+<span class="w">      </span><span class="c1"># If true, facts containing external addresses are dropped.</span>
+<span class="w">      </span><span class="c1"># If false, they are restored with placeholder external addresses.</span>
+<span class="w">      </span><span class="c1"># Defaults to false.</span>
+<span class="w">      </span><span class="nt">drop_external_addresses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="w">      </span><span class="c1"># If true, external addresses are restored as nullptr external addresses.</span>
+<span class="w">      </span><span class="c1"># If false, external address values are restored as invalid external address values.</span>
+<span class="w">      </span><span class="c1"># This is only used when drop_external_addresses is false.</span>
+<span class="w">      </span><span class="c1"># Defaults to true.</span>
+<span class="w">      </span><span class="nt">restore_external_addresses_as_nullptr</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="w">      </span><span class="c1"># Module filtering.</span>
+<span class="w">      </span><span class="nt">modules</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># Empty string means match everything.</span>
+<span class="w">        </span><span class="c1"># Defaults to [&quot;&quot;]</span>
+<span class="w">        </span><span class="nt">load_if_match</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">        </span><span class="c1"># Empty string means match nothing.</span>
+<span class="w">        </span><span class="c1"># Defaults to [&quot;&quot;]</span>
+<span class="w">        </span><span class="nt">skip_if_match</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">      </span><span class="nt">deffacts</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># If true, do not restore deffacts.</span>
+<span class="w">        </span><span class="c1"># Defaults to false.</span>
+<span class="w">        </span><span class="nt">skip</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="w">        </span><span class="c1"># If true, manually assert facts from restored deffacts.</span>
+<span class="w">        </span><span class="c1"># This is useful because cx::CDBLoaderPlugin skips reset.</span>
+<span class="w">        </span><span class="c1"># Defaults to false.</span>
+<span class="w">        </span><span class="nt">manual_assert</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="w">        </span><span class="c1"># Regexes matched against deffacts names.</span>
+<span class="w">        </span><span class="c1"># Empty string means match everything.</span>
+<span class="w">        </span><span class="c1"># Defaults to [&quot;&quot;]</span>
+<span class="w">        </span><span class="nt">load_if_match</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">        </span><span class="c1"># Regexes matched against deffacts names.</span>
+<span class="w">        </span><span class="c1"># Empty string means match nothing.</span>
+<span class="w">        </span><span class="c1"># Defaults to [&quot;&quot;]</span>
+<span class="w">        </span><span class="nt">skip_if_match</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">      </span><span class="nt">facts</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># If true, do not restore facts.</span>
+<span class="w">        </span><span class="c1"># Defaults to false.</span>
+<span class="w">        </span><span class="nt">skip</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="w">        </span><span class="c1"># Regexes matched against the fact deftemplate.</span>
+<span class="w">        </span><span class="c1"># &quot;&quot; matches everything.</span>
+<span class="w">        </span><span class="c1"># Defaults to [&quot;&quot;]</span>
+<span class="w">        </span><span class="nt">load_if_match</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">        </span><span class="c1"># Regexes matched against the fact deftemplate.</span>
+<span class="w">        </span><span class="c1"># &quot;&quot; matches nothing.</span>
+<span class="w">        </span><span class="c1"># Defaults to [&quot;&quot;]</span>
+<span class="w">        </span><span class="nt">skip_if_match</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">      </span><span class="nt">defrules</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># If true, do not restore defrules.</span>
+<span class="w">        </span><span class="c1"># Defaults to false.</span>
+<span class="w">        </span><span class="nt">skip</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="w">        </span><span class="c1"># Regexes matched against defrule names.</span>
+<span class="w">        </span><span class="c1"># Empty string means match everything.</span>
+<span class="w">        </span><span class="c1"># Defaults to [&quot;&quot;]</span>
+<span class="w">        </span><span class="nt">load_if_match</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">        </span><span class="c1"># Regexes matched against defrule names.</span>
+<span class="w">        </span><span class="c1"># Empty string means match nothing.</span>
+<span class="w">        </span><span class="c1"># Defaults to [&quot;&quot;]</span>
+<span class="w">        </span><span class="nt">skip_if_match</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">      </span><span class="nt">deftemplates</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># If true, do not restore deftemplates.</span>
+<span class="w">        </span><span class="c1"># Defaults to false.</span>
+<span class="w">        </span><span class="nt">skip</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="w">        </span><span class="c1"># Regexes matched against deftemplate names.</span>
+<span class="w">        </span><span class="c1"># Empty string means match everything.</span>
+<span class="w">        </span><span class="c1"># Defaults to [&quot;&quot;]</span>
+<span class="w">        </span><span class="nt">load_if_match</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">        </span><span class="c1"># Regexes matched against deftemplate names.</span>
+<span class="w">        </span><span class="c1"># Empty string means match nothing.</span>
+<span class="w">        </span><span class="c1"># Defaults to [&quot;&quot;]</span>
+<span class="w">        </span><span class="nt">skip_if_match</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">      </span><span class="nt">defglobals</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># If true, do not restore defglobals.</span>
+<span class="w">        </span><span class="c1"># Defaults to false.</span>
+<span class="w">        </span><span class="nt">skip</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="w">        </span><span class="c1"># Regexes matched against defglobal names.</span>
+<span class="w">        </span><span class="c1"># Empty string means match everything.</span>
+<span class="w">        </span><span class="c1"># Defaults to [&quot;&quot;]</span>
+<span class="w">        </span><span class="nt">load_if_match</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">        </span><span class="c1"># Regexes matched against defglobal names.</span>
+<span class="w">        </span><span class="c1"># Empty string means match nothing.</span>
+<span class="w">        </span><span class="c1"># Defaults to [&quot;&quot;]</span>
+<span class="w">        </span><span class="nt">skip_if_match</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">      </span><span class="nt">deffunctions</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># If true, do not restore deffunctions.</span>
+<span class="w">        </span><span class="c1"># Defaults to false.</span>
+<span class="w">        </span><span class="nt">skip</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="w">        </span><span class="c1"># Regexes matched against deffunction names.</span>
+<span class="w">        </span><span class="c1"># Empty string means match everything.</span>
+<span class="w">        </span><span class="c1"># Defaults to [&quot;&quot;]</span>
+<span class="w">        </span><span class="nt">load_if_match</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">        </span><span class="c1"># Regexes matched against deffunction names.</span>
+<span class="w">        </span><span class="c1"># Empty string means match nothing.</span>
+<span class="w">        </span><span class="c1"># Defaults to [&quot;&quot;]</span>
+<span class="w">        </span><span class="nt">skip_if_match</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">      </span><span class="nt">activations</span><span class="p">:</span>
+<span class="w">        </span><span class="c1"># If true, do not restore fired activations.</span>
+<span class="w">        </span><span class="c1"># Defaults to false.</span>
+<span class="w">        </span><span class="nt">skip</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="w">        </span><span class="c1"># Regexes matched against activation or rule names.</span>
+<span class="w">        </span><span class="c1"># Empty string means match everything.</span>
+<span class="w">        </span><span class="c1"># Defaults to [&quot;&quot;]</span>
+<span class="w">        </span><span class="nt">load_if_match</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">        </span><span class="c1"># Regexes matched against activation or rule names.</span>
+<span class="w">        </span><span class="c1"># Empty string means match nothing.</span>
+<span class="w">        </span><span class="c1"># Defaults to [&quot;&quot;]</span>
+<span class="w">        </span><span class="nt">skip_if_match</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">    </span><span class="nt">restore_overrides</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::FileLoadPlugin&quot;</span>
+
+<span class="w">      </span><span class="c1"># Load this plugin after cx::CDBLoaderPlugin if you want to override</span>
+<span class="w">      </span><span class="c1"># restored defrules, deffunctions, deftemplates, or defglobals.</span>
+<span class="w">      </span><span class="c1">#</span>
+<span class="w">      </span><span class="c1"># When specifying relative paths, the listed package share directories</span>
+<span class="w">      </span><span class="c1"># are used to resolve them.</span>
+<span class="w">      </span><span class="c1"># Relative paths are resolved in the order of the listed packages.</span>
+<span class="w">      </span><span class="c1"># Defaults to an empty list.</span>
+<span class="w">      </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_bringup&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">      </span><span class="c1"># Specify files to load using the CLIPS load* command when the plugin is loaded.</span>
+<span class="w">      </span><span class="c1"># Supports absolute paths or relative paths using the share directories specified above.</span>
+<span class="w">      </span><span class="c1"># Defaults to an empty list.</span>
+<span class="w">      </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;restore_overrides.clp&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">      </span><span class="c1"># Specify files to load using the CLIPS batch* command when the plugin is loaded.</span>
+<span class="w">      </span><span class="c1"># Supports absolute paths or relative paths using the share directories specified above.</span>
+<span class="w">      </span><span class="c1"># Defaults to an empty list.</span>
+<span class="w">      </span><span class="nt">batch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+
+<span class="w">      </span><span class="c1"># Specify files to load using the CLIPS batch* command when the plugin is unloaded.</span>
+<span class="w">      </span><span class="c1"># This may be used to clean up loaded content to enable dynamic reloading of plugins at runtime.</span>
+<span class="w">      </span><span class="c1"># Supports absolute paths or relative paths using the share directories specified above.</span>
+<span class="w">      </span><span class="c1"># Defaults to an empty list.</span>
+<span class="w">      </span><span class="nt">cleanup_batch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="PACKAGE.html" class="btn btn-neutral float-left" title="PACKAGE" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright The &lt;cx_cdb_loader_plugin&gt; Contributors. License: Apache License 2.0.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

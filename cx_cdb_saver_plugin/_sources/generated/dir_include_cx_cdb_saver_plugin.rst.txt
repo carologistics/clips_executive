@@ -1,0 +1,22 @@
+.. _dir_include_cx_cdb_saver_plugin:
+
+
+Directory cx_cdb_saver_plugin
+=============================
+
+
+|exhale_lsh| :ref:`Parent directory <dir_include>` (``include``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+
+*Directory path:* ``include/cx_cdb_saver_plugin``
+
+
+Files
+-----
+
+- :ref:`file_include_cx_cdb_saver_plugin_cdb_saver_plugin.hpp`
+- :ref:`file_include_cx_cdb_saver_plugin_db_handler.hpp`
+
+

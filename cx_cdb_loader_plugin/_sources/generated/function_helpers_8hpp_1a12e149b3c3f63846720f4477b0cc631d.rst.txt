@@ -1,0 +1,14 @@
+.. _exhale_function_helpers_8hpp_1a12e149b3c3f63846720f4477b0cc631d:
+
+Function cx::load_defglobals
+============================
+
+- Defined in :ref:`file_include_cx_cdb_loader_plugin_helpers.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cx::load_defglobals(pqxx::connection&, const std::string&, Tick, bool)
+   :project: cx_cdb_loader_plugin Doxygen Project

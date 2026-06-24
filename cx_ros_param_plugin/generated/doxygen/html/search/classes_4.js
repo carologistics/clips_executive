@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['protobufplugin_0',['ProtobufPlugin',['http://docs.ros.org/en/latest/p/cx_protobuf_plugin/generated/doxygen/html/classcx_1_1ProtobufPlugin.html',1,'cx']]]
+  ['fact_0',['Fact',['http://docs.ros.org/en/latest/p/cx_cdb_loader_plugin/generated/doxygen/html/structcx_1_1Fact.html',1,'cx']]],
+  ['fileloadplugin_1',['FileLoadPlugin',['http://docs.ros.org/en/latest/p/cx_file_load_plugin/generated/doxygen/html/classcx_1_1FileLoadPlugin.html',1,'cx']]]
 ];

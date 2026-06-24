@@ -1,0 +1,97 @@
+
+.. _file_include_cx_cdb_loader_plugin_parser.hpp:
+
+File parser.hpp
+===============
+
+|exhale_lsh| :ref:`Parent directory <dir_include_cx_cdb_loader_plugin>` (``include/cx_cdb_loader_plugin``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``include/cx_cdb_loader_plugin/parser.hpp``)
+--------------------------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_include_cx_cdb_loader_plugin_parser.hpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``clips_ns/clips.h``
+
+- ``cx_utils/param_utils.hpp``
+
+- ``nlohmann/json.hpp``
+
+- ``pqxx/pqxx``
+
+- ``rclcpp/rclcpp.hpp``
+
+- ``rclcpp_lifecycle/lifecycle_node.hpp``
+
+- ``regex``
+
+- ``string``
+
+- ``vector``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_include_cx_cdb_loader_plugin_helpers.hpp`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_cx`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_struct_structcx_1_1GenericRegexRule`
+
+- :ref:`exhale_struct_structcx_1_1RegexConfig`
+
+- :ref:`exhale_struct_structcx_1_1RegexRule`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_parser_8hpp_1af7675f59d2e192243a957073b2823cc4`
+
+- :ref:`exhale_function_parser_8hpp_1acb3e1c31575ce5bde45500fa50ce78c0`
+
+- :ref:`exhale_function_parser_8hpp_1a05e83e3639f1951dae26438da9b19ba7`
+
+- :ref:`exhale_function_parser_8hpp_1a7911bea78f4041c6d1ee47dbf8897232`
+
+- :ref:`exhale_function_parser_8hpp_1ae34909099ef95a912095fd9473e9c7ee`
+
+- :ref:`exhale_function_parser_8hpp_1aea4b70c605309fe6821a7e568015cfe5`
+
+- :ref:`exhale_function_parser_8hpp_1a537a642a90c09b0ae2f519d3d578e47a`
+

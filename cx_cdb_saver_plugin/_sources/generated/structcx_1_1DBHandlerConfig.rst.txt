@@ -1,0 +1,17 @@
+.. _exhale_struct_structcx_1_1DBHandlerConfig:
+
+Struct DBHandlerConfig
+======================
+
+- Defined in :ref:`file_include_cx_cdb_saver_plugin_db_handler.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: cx::DBHandlerConfig
+   :project: cx_cdb_saver_plugin Doxygen Project
+   :members:
+   :protected-members:
+   :undoc-members:

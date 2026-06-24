@@ -1,0 +1,169 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygenindex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="index.xsd" version="1.9.8" xml:lang="en-US">
+  <compound refid="classcx_1_1CDBLoaderPlugin" kind="class"><name>cx::CDBLoaderPlugin</name>
+    <member refid="classcx_1_1CDBLoaderPlugin_1a7e97e788cc3dbfbe78fe90ee6537096b" kind="variable"><name>logger_</name></member>
+    <member refid="classcx_1_1CDBLoaderPlugin_1ae07a65bcbb308f55d680857d914cd231" kind="variable"><name>fact_id_mapping_</name></member>
+    <member refid="classcx_1_1CDBLoaderPlugin_1a56f83c7aa5bcf91a81f04417db884e0b" kind="function"><name>CDBLoaderPlugin</name></member>
+    <member refid="classcx_1_1CDBLoaderPlugin_1a4957f421659702be5485b8987d5f6370" kind="function"><name>~CDBLoaderPlugin</name></member>
+    <member refid="classcx_1_1CDBLoaderPlugin_1a6969c5559b9ce6afb58305ec8f4e0b66" kind="function"><name>initialize</name></member>
+    <member refid="classcx_1_1CDBLoaderPlugin_1a52a3e9484c84c21eaa3e397f6391ed61" kind="function"><name>clips_env_init</name></member>
+    <member refid="classcx_1_1CDBLoaderPlugin_1a3ced874a36c37724c91b8b2c72190752" kind="function"><name>clips_env_destroyed</name></member>
+    <member refid="classcx_1_1CDBLoaderPlugin_1a2238000c5c024e3c75ead537d2ba5a2c" kind="function"><name>assert_deftemplates</name></member>
+    <member refid="classcx_1_1CDBLoaderPlugin_1a75a4eff43a9601feac8f258d48a3303d" kind="function"><name>assert_deffunctions</name></member>
+    <member refid="classcx_1_1CDBLoaderPlugin_1aeac5505d6276122df37b639876f27224" kind="function"><name>assert_defrules</name></member>
+    <member refid="classcx_1_1CDBLoaderPlugin_1a635cb7aaf8d43d26ed377de2c98d4f8f" kind="function"><name>assert_deffacts</name></member>
+    <member refid="classcx_1_1CDBLoaderPlugin_1ac2b45d7dd71edba78489d947152e0553" kind="function"><name>assert_defglobals</name></member>
+    <member refid="classcx_1_1CDBLoaderPlugin_1abe92a93f2563a2d8c4c1eab6a1cc5100" kind="function"><name>update_defglobals</name></member>
+    <member refid="classcx_1_1CDBLoaderPlugin_1a8d810d8a21017404ec9c2c5cc602b15b" kind="function"><name>assert_facts</name></member>
+  </compound>
+  <compound refid="structcx_1_1Deffacts" kind="struct"><name>cx::Deffacts</name>
+    <member refid="structcx_1_1Deffacts_1a9cecfb741dcb1d501e57d22b58647ba6" kind="variable"><name>name</name></member>
+    <member refid="structcx_1_1Deffacts_1a674b064b495ccc714097b559d86f1b1c" kind="variable"><name>defmodule</name></member>
+    <member refid="structcx_1_1Deffacts_1acd45959675872f3c0ce45a24ce2398ab" kind="variable"><name>value</name></member>
+    <member refid="structcx_1_1Deffacts_1a9938bdec25b83ea6fd3710c0bff2778c" kind="variable"><name>start_tick</name></member>
+    <member refid="structcx_1_1Deffacts_1aac61c3a01c5ade3ae1460d773b1ceb63" kind="variable"><name>end_tick</name></member>
+  </compound>
+  <compound refid="structcx_1_1Deffunction" kind="struct"><name>cx::Deffunction</name>
+    <member refid="structcx_1_1Deffunction_1afd4070ee2b75dacfb077b6d49ade9e9b" kind="variable"><name>name</name></member>
+    <member refid="structcx_1_1Deffunction_1a35970d1fd0d4740b43ea02c5d4ec10bd" kind="variable"><name>defmodule</name></member>
+    <member refid="structcx_1_1Deffunction_1afb2fa3820273c016f1ec9cab36007fde" kind="variable"><name>value</name></member>
+    <member refid="structcx_1_1Deffunction_1a8a0b4cb4f5b3126f55795f5b46bb0d64" kind="variable"><name>start_tick</name></member>
+    <member refid="structcx_1_1Deffunction_1a503c464e76b16fc7c4afd2aee9ed0a7e" kind="variable"><name>end_tick</name></member>
+  </compound>
+  <compound refid="structcx_1_1Defglobal" kind="struct"><name>cx::Defglobal</name>
+    <member refid="structcx_1_1Defglobal_1a5350070781415113c792b0f59e62c50b" kind="variable"><name>name</name></member>
+    <member refid="structcx_1_1Defglobal_1a01d7f39b5bf3ca1c74cbcd0d1c5aded6" kind="variable"><name>defmodule</name></member>
+    <member refid="structcx_1_1Defglobal_1ab3332c3a79c472569d24b9a40975271d" kind="variable"><name>value</name></member>
+    <member refid="structcx_1_1Defglobal_1ad8d2a2e28dd96a1e7f1ea7cbf9949376" kind="variable"><name>start_tick</name></member>
+    <member refid="structcx_1_1Defglobal_1aded04704a15141d64ca1744c0fb50707" kind="variable"><name>end_tick</name></member>
+  </compound>
+  <compound refid="structcx_1_1Defmodule" kind="struct"><name>cx::Defmodule</name>
+    <member refid="structcx_1_1Defmodule_1a471df7624bc5f3c12e2eeeec3d0ad490" kind="variable"><name>name</name></member>
+    <member refid="structcx_1_1Defmodule_1a2ba3eba440a4d8104f8113ebfc10a84d" kind="variable"><name>value</name></member>
+    <member refid="structcx_1_1Defmodule_1a1b7a6267efa58c7bcdadcc82d3b6d92f" kind="variable"><name>start_tick</name></member>
+  </compound>
+  <compound refid="structcx_1_1Defrule" kind="struct"><name>cx::Defrule</name>
+    <member refid="structcx_1_1Defrule_1a68060d1f00699fb8eebd04da48b98d2e" kind="variable"><name>rule_id</name></member>
+    <member refid="structcx_1_1Defrule_1a75514a60236466f87b27a71ce84530e7" kind="variable"><name>name</name></member>
+    <member refid="structcx_1_1Defrule_1af995d011bfe7460c8353b4bc08aefd4f" kind="variable"><name>defmodule</name></member>
+    <member refid="structcx_1_1Defrule_1a8740ffa2c9ccfba66554181a23579a7e" kind="variable"><name>value</name></member>
+    <member refid="structcx_1_1Defrule_1a40e8169276d4e8ac04988a58ac7a843c" kind="variable"><name>salience</name></member>
+    <member refid="structcx_1_1Defrule_1a63eed9c7f191dd6e475ac954cc94b0cf" kind="variable"><name>start_tick</name></member>
+    <member refid="structcx_1_1Defrule_1abb9060734c1828897a029e4d064536c4" kind="variable"><name>end_tick</name></member>
+  </compound>
+  <compound refid="structcx_1_1Deftemplate" kind="struct"><name>cx::Deftemplate</name>
+    <member refid="structcx_1_1Deftemplate_1a19bd122870ae37273af871b3fb355073" kind="variable"><name>name</name></member>
+    <member refid="structcx_1_1Deftemplate_1adf6eea3a7f2f8f60eec7da5678953421" kind="variable"><name>defmodule</name></member>
+    <member refid="structcx_1_1Deftemplate_1a0de010f6688cf8fedab70324204a74d8" kind="variable"><name>value</name></member>
+    <member refid="structcx_1_1Deftemplate_1a0ae472a3ccd0cf61eed71d80c020fec3" kind="variable"><name>start_tick</name></member>
+    <member refid="structcx_1_1Deftemplate_1a3f26b9ce69b039ce847498dde5d5ca84" kind="variable"><name>end_tick</name></member>
+  </compound>
+  <compound refid="structcx_1_1Fact" kind="struct"><name>cx::Fact</name>
+    <member refid="structcx_1_1Fact_1a3083fe8d00cffa778e0831eb21c16144" kind="variable"><name>fact_id</name></member>
+    <member refid="structcx_1_1Fact_1aeec675e1f7e6d5a9a867fee5afbdb864" kind="variable"><name>defmodule</name></member>
+    <member refid="structcx_1_1Fact_1a29865987360a4ec202cc36c2cea31a6a" kind="variable"><name>deftemplate_name</name></member>
+    <member refid="structcx_1_1Fact_1a9aed256759fa211c4d8e40d37fe10234" kind="variable"><name>value</name></member>
+    <member refid="structcx_1_1Fact_1aeb9a87f0e7553339fbd94d13b5337fb2" kind="variable"><name>start_tick</name></member>
+    <member refid="structcx_1_1Fact_1a0cafe92896783fa1c6dd79b48e30e593" kind="variable"><name>end_tick</name></member>
+  </compound>
+  <compound refid="structcx_1_1GenericRegexRule" kind="struct"><name>cx::GenericRegexRule</name>
+    <member refid="structcx_1_1GenericRegexRule_1a88e137074b7b7348faf8559ebecf67e6" kind="variable"><name>skip_if_match</name></member>
+    <member refid="structcx_1_1GenericRegexRule_1a027ca7067811dbbd69a2bdb865483c0a" kind="variable"><name>load_if_match</name></member>
+  </compound>
+  <compound refid="structcx_1_1Plugin" kind="struct"><name>cx::Plugin</name>
+    <member refid="structcx_1_1Plugin_1ab2e2d6bec88c979422dfdd6ddd570631" kind="variable"><name>name</name></member>
+    <member refid="structcx_1_1Plugin_1aaf912702d2b8eb5e7a4f242a1f50d564" kind="variable"><name>start_tick</name></member>
+    <member refid="structcx_1_1Plugin_1af47e6f21794eb1b69769378c8509984a" kind="variable"><name>end_tick</name></member>
+    <member refid="structcx_1_1Plugin_1a6f2ce0bb5a8054af5dbe8d3bc3720afd" kind="variable"><name>config</name></member>
+  </compound>
+  <compound refid="structcx_1_1RegexConfig" kind="struct"><name>cx::RegexConfig</name>
+    <member refid="structcx_1_1RegexConfig_1ad7793917d6c7a1c27d171e1a1da5c638" kind="variable"><name>module_rules</name></member>
+    <member refid="structcx_1_1RegexConfig_1afbc2b20882c39ca9e386fa1890895f48" kind="variable"><name>defglobal_rules</name></member>
+    <member refid="structcx_1_1RegexConfig_1ab420c3dc01e1ca873ed43aff8bc73c4c" kind="variable"><name>skip_defglobals</name></member>
+    <member refid="structcx_1_1RegexConfig_1a91c8747761d124b31c3cbaf7a758ee08" kind="variable"><name>deftemplate_rules</name></member>
+    <member refid="structcx_1_1RegexConfig_1a58280e993fcba25035db9ba64311d105" kind="variable"><name>skip_deftemplates</name></member>
+    <member refid="structcx_1_1RegexConfig_1ae09d35d70b50dfbe85b5718b22014a92" kind="variable"><name>defrule_rules</name></member>
+    <member refid="structcx_1_1RegexConfig_1a7e778f408d91f1cef37f3fe424ec1171" kind="variable"><name>skip_defrules</name></member>
+    <member refid="structcx_1_1RegexConfig_1a706c1fbe771a3c3b9e16fe18630cf09d" kind="variable"><name>deffacts_rules</name></member>
+    <member refid="structcx_1_1RegexConfig_1a3b022de604511b720ed2e3824b4d02e1" kind="variable"><name>skip_deffacts</name></member>
+    <member refid="structcx_1_1RegexConfig_1ad22175d28b316f0345df81025ce2280d" kind="variable"><name>deffunction_rules</name></member>
+    <member refid="structcx_1_1RegexConfig_1af0b5e2d505b501c2e235685158b8c287" kind="variable"><name>skip_deffunctions</name></member>
+    <member refid="structcx_1_1RegexConfig_1aa01b2880becfa6bb29ddc32e40f0e89d" kind="variable"><name>activation_rules</name></member>
+    <member refid="structcx_1_1RegexConfig_1aafabf44663b2ac55df14bc2b74f0a486" kind="variable"><name>skip_activations</name></member>
+    <member refid="structcx_1_1RegexConfig_1a8228fed7108a1caa5c61fded6d53f209" kind="variable"><name>fact_rules</name></member>
+    <member refid="structcx_1_1RegexConfig_1a461aa4c693e251c96e144d45b5fc5046" kind="variable"><name>skip_facts</name></member>
+    <member refid="structcx_1_1RegexConfig_1a3ac6346b935c8aaae641ff9b8de97efb" kind="variable"><name>skip_external_address_values</name></member>
+    <member refid="structcx_1_1RegexConfig_1a17e29907fef228126d7680e34c06e22b" kind="variable"><name>external_address_values_as_nullptr</name></member>
+  </compound>
+  <compound refid="structcx_1_1RegexRule" kind="struct"><name>cx::RegexRule</name>
+    <member refid="structcx_1_1RegexRule_1a067786c43eb9b1b1e483a068af404416" kind="variable"><name>regex</name></member>
+    <member refid="structcx_1_1RegexRule_1a5af18845edc245d2863270b5aa2e4eca" kind="variable"><name>contains_match</name></member>
+  </compound>
+  <compound refid="structcx_1_1RuleFiring" kind="struct"><name>cx::RuleFiring</name>
+    <member refid="structcx_1_1RuleFiring_1a566d5c5bd37f596ea83db297c629f3a8" kind="variable"><name>rule_id</name></member>
+    <member refid="structcx_1_1RuleFiring_1a4ca14b87a1410231f3f149f1693955b4" kind="variable"><name>base</name></member>
+    <member refid="structcx_1_1RuleFiring_1a1dcf7bb725e45beddea37a20412c597f" kind="variable"><name>tick</name></member>
+  </compound>
+  <compound refid="structcx_1_1TimedFact" kind="struct"><name>cx::TimedFact</name>
+    <member refid="structcx_1_1TimedFact_1a3ecff615c5ba0f85553798d2a762adab" kind="variable"><name>tick</name></member>
+    <member refid="structcx_1_1TimedFact_1aea78da2f8d1639c0c0e7561712320e66" kind="variable"><name>value</name></member>
+  </compound>
+  <compound refid="structcx_1_1TimedText" kind="struct"><name>cx::TimedText</name>
+    <member refid="structcx_1_1TimedText_1a69e1167312ba9a660aa0ed8075361bb4" kind="variable"><name>tick</name></member>
+    <member refid="structcx_1_1TimedText_1a5a7113907e3fc326e6becdc4864dfbbd" kind="variable"><name>value</name></member>
+  </compound>
+  <compound refid="structcx_1_1TimeLookup" kind="struct"><name>cx::TimeLookup</name>
+    <member refid="structcx_1_1TimeLookup_1a2ba01e2d4f83980044c07dacc20cb15c" kind="variable"><name>run_number</name></member>
+    <member refid="structcx_1_1TimeLookup_1a3a37882d07d20cc533864c47a4c5a42f" kind="variable"><name>start_time</name></member>
+    <member refid="structcx_1_1TimeLookup_1ab7cee5dbe6f978b027a6d7351a8c2c89" kind="variable"><name>end_time</name></member>
+    <member refid="structcx_1_1TimeLookup_1a07f9f26a165b6849465f735220907b8a" kind="variable"><name>start_tick</name></member>
+    <member refid="structcx_1_1TimeLookup_1a12b09abc7eb811df24f9d6e00cf4fd0c" kind="variable"><name>end_tick</name></member>
+  </compound>
+  <compound refid="namespacecx" kind="namespace"><name>cx</name>
+    <member refid="helpers_8hpp_1a911397f4eda0a1286820a816d92d0afc" kind="enum"><name>SlotType</name></member>
+    <member refid="helpers_8hpp_1a911397f4eda0a1286820a816d92d0afca22ae0e2b89e5e3d477f988cc36d3272b" kind="enumvalue"><name>Float</name></member>
+    <member refid="helpers_8hpp_1a911397f4eda0a1286820a816d92d0afcaa0faef0851b4294c06f2b94bb1cb2044" kind="enumvalue"><name>Integer</name></member>
+    <member refid="helpers_8hpp_1a911397f4eda0a1286820a816d92d0afca27118326006d3829667a400ad23d5d98" kind="enumvalue"><name>String</name></member>
+    <member refid="helpers_8hpp_1a911397f4eda0a1286820a816d92d0afca02c86eb2792f3262c21d030a87e19793" kind="enumvalue"><name>Symbol</name></member>
+    <member refid="helpers_8hpp_1a911397f4eda0a1286820a816d92d0afcac51d62a27a5697e40a7096b95bb30774" kind="enumvalue"><name>ExternalAddress</name></member>
+    <member refid="helpers_8hpp_1a911397f4eda0a1286820a816d92d0afcaecefa3b389ddfda68b3e29de3fac0174" kind="enumvalue"><name>Multifield</name></member>
+    <member refid="helpers_8hpp_1a911397f4eda0a1286820a816d92d0afca291ac89029ab21eecaeb5f0d1a2f33d7" kind="enumvalue"><name>FactAddress</name></member>
+    <member refid="helpers_8hpp_1aa2239f55c64f5ca6615df6a96a2cc70e" kind="typedef"><name>json</name></member>
+    <member refid="helpers_8hpp_1aebe2f03a1c7ed336ffec799e093d95cf" kind="typedef"><name>Tick</name></member>
+    <member refid="helpers_8hpp_1a6723ddd1f692e062e3916d89b3edfc3c" kind="function"><name>append_json_to_multifield_builder</name></member>
+    <member refid="helpers_8hpp_1a45b919c76296ed00dd04052e3b1c822c" kind="function"><name>append_json_to_multifield_builder</name></member>
+    <member refid="helpers_8hpp_1a27504d055b0432d500c82ff64d0ea45c" kind="function"><name>json_to_multifield</name></member>
+    <member refid="helpers_8hpp_1aece7b11f47799965cc03b7c40cf768ce" kind="function"><name>get_nullptr_fact</name></member>
+    <member refid="helpers_8hpp_1aa18b214b3ee1984cec0cee0807c65dc2" kind="function"><name>optional_field</name></member>
+    <member refid="helpers_8hpp_1a00a0153adc576ccdc56db5e4d866411c" kind="function"><name>parse_timed_text</name></member>
+    <member refid="helpers_8hpp_1aef73532000203fc5e8e514680a12af8f" kind="function"><name>parse_timed_fact</name></member>
+    <member refid="helpers_8hpp_1a2a28bf76eb29e42c82fad4e318768fdb" kind="function"><name>load_defmodules</name></member>
+    <member refid="helpers_8hpp_1ae95333c4cbee6ca7af837529ea2cfa9e" kind="function"><name>load_deftemplates</name></member>
+    <member refid="helpers_8hpp_1a12e149b3c3f63846720f4477b0cc631d" kind="function"><name>load_defglobals</name></member>
+    <member refid="helpers_8hpp_1a2bc4371798cacbbb2290a61cbc3df8ad" kind="function"><name>load_deffunctions</name></member>
+    <member refid="helpers_8hpp_1a55fc6c122d7798e258a578fc47e0b30e" kind="function"><name>load_defrules</name></member>
+    <member refid="helpers_8hpp_1af2bfee48758d4a3db1f2ee10aad3cd6d" kind="function"><name>load_deffacts</name></member>
+    <member refid="helpers_8hpp_1a0629b0fc3e3a65d8032a73284b80a5dc" kind="function"><name>load_facts</name></member>
+    <member refid="helpers_8hpp_1a09b354c2bbb40e65874ab3f95835b3c0" kind="function"><name>rule_firing_exists_before_tick</name></member>
+    <member refid="helpers_8hpp_1a79374f07a2c077a15ca50d844da9ff66" kind="function"><name>get_end_tick_for_run</name></member>
+    <member refid="helpers_8hpp_1a358fc10c06e0dd5df0ee4a5207380b47" kind="function"><name>resolve_restore_tick</name></member>
+    <member refid="helpers_8hpp_1a2541187ce3269470ba966a327f1b676e" kind="function"><name>resolve_restore_time</name></member>
+    <member refid="parser_8hpp_1a7911bea78f4041c6d1ee47dbf8897232" kind="function"><name>matches_regex_rule</name></member>
+    <member refid="parser_8hpp_1a05e83e3639f1951dae26438da9b19ba7" kind="function"><name>matches_any_regex_rule</name></member>
+    <member refid="parser_8hpp_1af7675f59d2e192243a957073b2823cc4" kind="function"><name>allowed_by_generic_regex_rule</name></member>
+    <member refid="parser_8hpp_1a537a642a90c09b0ae2f519d3d578e47a" kind="function"><name>populate_regex_rule</name></member>
+    <member refid="parser_8hpp_1ae34909099ef95a912095fd9473e9c7ee" kind="function"><name>populate_generic_regex_rule</name></member>
+    <member refid="parser_8hpp_1aea4b70c605309fe6821a7e568015cfe5" kind="function"><name>populate_regex_config</name></member>
+    <member refid="parser_8hpp_1acb3e1c31575ce5bde45500fa50ce78c0" kind="function"><name>filter_in_place</name></member>
+  </compound>
+  <compound refid="cdb__loader__plugin_8hpp" kind="file"><name>cdb_loader_plugin.hpp</name>
+  </compound>
+  <compound refid="helpers_8hpp" kind="file"><name>helpers.hpp</name>
+  </compound>
+  <compound refid="parser_8hpp" kind="file"><name>parser.hpp</name>
+  </compound>
+  <compound refid="dir_ad42245fcbfcb0c8a1065ae7ff237408" kind="dir"><name>include/cx_cdb_loader_plugin</name>
+  </compound>
+  <compound refid="dir_d44c64559bbebec7f509842c48db8b23" kind="dir"><name>include</name>
+  </compound>
+</doxygenindex>

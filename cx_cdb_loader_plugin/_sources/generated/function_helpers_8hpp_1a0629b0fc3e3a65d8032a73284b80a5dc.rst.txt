@@ -1,0 +1,14 @@
+.. _exhale_function_helpers_8hpp_1a0629b0fc3e3a65d8032a73284b80a5dc:
+
+Function cx::load_facts
+=======================
+
+- Defined in :ref:`file_include_cx_cdb_loader_plugin_helpers.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cx::load_facts(pqxx::connection&, Tick, bool)
+   :project: cx_cdb_loader_plugin Doxygen Project

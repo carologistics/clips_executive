@@ -1,0 +1,14 @@
+.. _exhale_function_helpers_8hpp_1a358fc10c06e0dd5df0ee4a5207380b47:
+
+Function cx::resolve_restore_tick
+=================================
+
+- Defined in :ref:`file_include_cx_cdb_loader_plugin_helpers.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cx::resolve_restore_tick(pqxx::connection&, int64_t)
+   :project: cx_cdb_loader_plugin Doxygen Project

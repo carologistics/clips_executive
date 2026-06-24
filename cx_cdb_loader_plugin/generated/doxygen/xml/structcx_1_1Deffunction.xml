@@ -1,0 +1,103 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="structcx_1_1Deffunction" kind="struct" language="C++" prot="public">
+    <compoundname>cx::Deffunction</compoundname>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structcx_1_1Deffunction_1afd4070ee2b75dacfb077b6d49ade9e9b" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string cx::Deffunction::name</definition>
+        <argsstring></argsstring>
+        <name>name</name>
+        <qualifiedname>cx::Deffunction::name</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="98" column="15" bodyfile="include/cx_cdb_loader_plugin/helpers.hpp" bodystart="98" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1Deffunction_1a35970d1fd0d4740b43ea02c5d4ec10bd" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string cx::Deffunction::defmodule</definition>
+        <argsstring></argsstring>
+        <name>defmodule</name>
+        <qualifiedname>cx::Deffunction::defmodule</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="99" column="15" bodyfile="include/cx_cdb_loader_plugin/helpers.hpp" bodystart="99" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1Deffunction_1afb2fa3820273c016f1ec9cab36007fde" prot="public" static="no" mutable="no">
+        <type><ref refid="structcx_1_1TimedText" kindref="compound">TimedText</ref></type>
+        <definition>TimedText cx::Deffunction::value</definition>
+        <argsstring></argsstring>
+        <name>value</name>
+        <qualifiedname>cx::Deffunction::value</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="100" column="13" bodyfile="include/cx_cdb_loader_plugin/helpers.hpp" bodystart="100" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1Deffunction_1a8a0b4cb4f5b3126f55795f5b46bb0d64" prot="public" static="no" mutable="no">
+        <type>Tick</type>
+        <definition>Tick cx::Deffunction::start_tick</definition>
+        <argsstring></argsstring>
+        <name>start_tick</name>
+        <qualifiedname>cx::Deffunction::start_tick</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="101" column="8" bodyfile="include/cx_cdb_loader_plugin/helpers.hpp" bodystart="101" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1Deffunction_1a503c464e76b16fc7c4afd2aee9ed0a7e" prot="public" static="no" mutable="no">
+        <type>std::optional&lt; Tick &gt;</type>
+        <definition>std::optional&lt;Tick&gt; cx::Deffunction::end_tick</definition>
+        <argsstring></argsstring>
+        <name>end_tick</name>
+        <qualifiedname>cx::Deffunction::end_tick</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="102" column="17" bodyfile="include/cx_cdb_loader_plugin/helpers.hpp" bodystart="102" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>cx::Deffunction</label>
+        <link refid="structcx_1_1Deffunction"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>value</edgelabel>
+        </childnode>
+      </node>
+      <node id="2">
+        <label>cx::TimedText</label>
+        <link refid="structcx_1_1TimedText"/>
+      </node>
+    </collaborationgraph>
+    <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="96" column="1" bodyfile="include/cx_cdb_loader_plugin/helpers.hpp" bodystart="97" bodyend="103"/>
+    <listofallmembers>
+      <member refid="structcx_1_1Deffunction_1a35970d1fd0d4740b43ea02c5d4ec10bd" prot="public" virt="non-virtual"><scope>cx::Deffunction</scope><name>defmodule</name></member>
+      <member refid="structcx_1_1Deffunction_1a503c464e76b16fc7c4afd2aee9ed0a7e" prot="public" virt="non-virtual"><scope>cx::Deffunction</scope><name>end_tick</name></member>
+      <member refid="structcx_1_1Deffunction_1afd4070ee2b75dacfb077b6d49ade9e9b" prot="public" virt="non-virtual"><scope>cx::Deffunction</scope><name>name</name></member>
+      <member refid="structcx_1_1Deffunction_1a8a0b4cb4f5b3126f55795f5b46bb0d64" prot="public" virt="non-virtual"><scope>cx::Deffunction</scope><name>start_tick</name></member>
+      <member refid="structcx_1_1Deffunction_1afb2fa3820273c016f1ec9cab36007fde" prot="public" virt="non-virtual"><scope>cx::Deffunction</scope><name>value</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

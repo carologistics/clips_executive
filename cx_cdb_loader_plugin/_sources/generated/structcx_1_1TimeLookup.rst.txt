@@ -1,0 +1,17 @@
+.. _exhale_struct_structcx_1_1TimeLookup:
+
+Struct TimeLookup
+=================
+
+- Defined in :ref:`file_include_cx_cdb_loader_plugin_helpers.hpp`
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: cx::TimeLookup
+   :project: cx_cdb_loader_plugin Doxygen Project
+   :members:
+   :protected-members:
+   :undoc-members:

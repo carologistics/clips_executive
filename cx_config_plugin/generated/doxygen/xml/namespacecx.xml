@@ -3,10 +3,29 @@
   <compounddef id="namespacecx" kind="namespace" language="C++">
     <compoundname>cx</compoundname>
     <innerclass refid="classcx_1_1AmentIndexPlugin" prot="public">cx::AmentIndexPlugin</innerclass>
+    <innerclass refid="classcx_1_1CDBLoaderPlugin" prot="public">cx::CDBLoaderPlugin</innerclass>
+    <innerclass refid="classcx_1_1CDBSaverPlugin" prot="public">cx::CDBSaverPlugin</innerclass>
     <innerclass refid="classcx_1_1CLIPSEnvManager" prot="public">cx::CLIPSEnvManager</innerclass>
     <innerclass refid="classcx_1_1ClipsPlugin" prot="public">cx::ClipsPlugin</innerclass>
     <innerclass refid="classcx_1_1ClipsPluginManager" prot="public">cx::ClipsPluginManager</innerclass>
     <innerclass refid="classcx_1_1ConfigPlugin" prot="public">cx::ConfigPlugin</innerclass>
+    <innerclass refid="classcx_1_1DBHandler" prot="public">cx::DBHandler</innerclass>
+    <innerclass refid="structcx_1_1DBHandlerConfig" prot="public">cx::DBHandlerConfig</innerclass>
+    <innerclass refid="structcx_1_1Deffacts" prot="public">cx::Deffacts</innerclass>
+    <innerclass refid="structcx_1_1Deffunction" prot="public">cx::Deffunction</innerclass>
+    <innerclass refid="structcx_1_1Defglobal" prot="public">cx::Defglobal</innerclass>
+    <innerclass refid="structcx_1_1Defmodule" prot="public">cx::Defmodule</innerclass>
+    <innerclass refid="structcx_1_1Defrule" prot="public">cx::Defrule</innerclass>
+    <innerclass refid="structcx_1_1Deftemplate" prot="public">cx::Deftemplate</innerclass>
+    <innerclass refid="structcx_1_1Fact" prot="public">cx::Fact</innerclass>
+    <innerclass refid="structcx_1_1GenericRegexRule" prot="public">cx::GenericRegexRule</innerclass>
+    <innerclass refid="structcx_1_1Plugin" prot="public">cx::Plugin</innerclass>
+    <innerclass refid="structcx_1_1RegexConfig" prot="public">cx::RegexConfig</innerclass>
+    <innerclass refid="structcx_1_1RegexRule" prot="public">cx::RegexRule</innerclass>
+    <innerclass refid="structcx_1_1RuleFiring" prot="public">cx::RuleFiring</innerclass>
+    <innerclass refid="structcx_1_1TimedFact" prot="public">cx::TimedFact</innerclass>
+    <innerclass refid="structcx_1_1TimedText" prot="public">cx::TimedText</innerclass>
+    <innerclass refid="structcx_1_1TimeLookup" prot="public">cx::TimeLookup</innerclass>
     <briefdescription>
     </briefdescription>
     <detaileddescription>

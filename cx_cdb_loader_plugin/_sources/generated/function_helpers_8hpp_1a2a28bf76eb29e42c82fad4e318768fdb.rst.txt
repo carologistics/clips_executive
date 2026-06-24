@@ -1,0 +1,14 @@
+.. _exhale_function_helpers_8hpp_1a2a28bf76eb29e42c82fad4e318768fdb:
+
+Function cx::load_defmodules
+============================
+
+- Defined in :ref:`file_include_cx_cdb_loader_plugin_helpers.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cx::load_defmodules(pqxx::connection&, Tick)
+   :project: cx_cdb_loader_plugin Doxygen Project
