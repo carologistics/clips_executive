@@ -58,32 +58,3 @@
   (printout info "Destroying subscription for " ?*TURTLE-POSE-TOPIC* crlf)
   (ros-msgs-destroy-subscription ?*TURTLE-POSE-TOPIC*)
 )
-
-(deffunction countdown (?c)
-(loop-for-count (?i 0 ?c) (println (- ?c ?i)))
-(void))
-
-(defmodule DOMAIN
-  (export deftemplate ?ALL)
-  (export deffunction ?ALL))
-
-(deftemplate DOMAIN::robot-state
-  (slot mode)
-  (slot battery))
-
-(defmodule MAIN (export deftemplate ?ALL))
-
-(defmodule DETECT
-  (import DOMAIN deftemplate robot-state))
-
-(defmodule EXECUTE
-  (import DOMAIN deftemplate robot-state))
-
-(defrule DETECT::low-battery
-  (robot-state (battery ?b&:(< ?b 20)))
-  =>
-  (assert (need-charge)))
-
-(defrule MAIN::start
-  =>
-  (focus DETECT EXECUTE))

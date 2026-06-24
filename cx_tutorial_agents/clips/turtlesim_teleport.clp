@@ -18,57 +18,12 @@
   ?*TURTLE-TELEPORT-TYPE* = "turtlesim/srv/TeleportAbsolute"
 )
 
-(defglobal
-  ?*NICHT-RETRACTED* = (assert (nicht-retracted))
-  ?*RETRACTOR* = (assert (retractor))
-)
-
-(defrule retrator-retracten
-  ?f <- (retractor)
-=>
-  (retract ?f)
-  (assert (jonas 1))
-  (assert (jonas 2))
-)
-
-(defrule nicht-match
-  (jonas 1)
-  (not (jonas 3))
-  (jonas 2)
-=>
-  (printout blue "JONAS 3 NICHT DA ABER 1 2" crlf)
-)
-
-(deftemplate hello
-  (slot value))
-
-
-(deffacts start-condition " THe start condition"
-  (hello (value 1))
-  (hello (value 2))
-)
-
 (defrule turtle-teleport-client-init
 " Create publisher for ros_cx_out."
 =>
   ; create the client
   (ros-msgs-create-client ?*TURTLE-SERVICE* ?*TURTLE-TELEPORT-TYPE*)
   (printout green "Opening client for " ?*TURTLE-SERVICE* crlf)
-  (assert (hello (value 1)))
-  (assert (tim (assert (tim))))
-  (assert (jones (assert (jones))))
-)
-
-(defrule retractor
-  ?f <- (tim)
-=>
-  (retract ?f)
-)
-
-(defrule redefine-1
-?f <- (hello (value 1))
-=>
-(modify ?f (value 2))
 )
 
 (defrule turtle-teleport-request-teleport-mid
@@ -77,7 +32,6 @@
   (not (request ?any-id))
   (turtle-out-of-bounds)
   (time ?any-time) ; used to continuously attempt to request the service until success
-  ?f <- (hello)
   =>
   (bind ?new-req (ros-msgs-create-request ?*TURTLE-TELEPORT-TYPE*))
   (ros-msgs-set-field ?new-req "x" 5.5)
@@ -91,7 +45,6 @@
     (printout red "Start it using \"ros2 run turtlesim turtlesim_node\"" crlf)
   )
   (ros-msgs-destroy-message ?new-req)
-  (modify ?f (value 2))
 )
 (defrule turtle-teleport-done
 " Got response, delete it without reading, it is empty."

@@ -4,8 +4,7 @@
     environments: ["turtlesim_monitor"]
 
     turtlesim_monitor:
-      # plugins: ["executive", "ros_msgs", 'files', "saver"]
-      plugins: ["executive", "ros_msgs", "loader"]
+      plugins: ["executive", "ros_msgs", "files"]
       log_clips_to_file: true
       watch: ["facts", "rules"]
 
@@ -20,14 +19,3 @@
       pkg_share_dirs: ["cx_tutorial_agents"]
       load: ["clips/turtlesim_monitor.clp",
              "clips/turtlesim_teleport.clp"]
-    saver:
-      plugin: "cx::CDBSaverPlugin"
-      username: postgres
-      password: admin
-
-    loader:
-      plugin: "cx::CDBLoaderPlugin"
-      username: postgres
-      password: admin
-      database: "cdb_turtlesim_monitor_2026_05_17t07_07_15"
-      #docker run --name postgres -e POSTGRES_PASSWORD=admin --network host -d postgres
