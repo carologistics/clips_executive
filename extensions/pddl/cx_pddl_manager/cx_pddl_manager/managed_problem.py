@@ -48,7 +48,12 @@ class GoalSpec:
     "allow everything" (i.e. no restriction).
     """
 
-    goal_fluents: list[Any] = field(default_factory=list)
+    goals: list['up.model.fnode.FNode'] = field(default_factory=list)
+    timed_goals: Dict['up.model.timing.TimeInterval', List['up.model.fnode.FNode']] = field(
+        default_factory=dict
+    )
+    trajectory_constraints: list['up.model.fnode.FNode'] = field(default_factory=list)
+
     object_filters: list[str] = field(default_factory=list)
     fluent_filters: list[str] = field(default_factory=list)
     action_filters: list[str] = field(default_factory=list)
@@ -83,23 +88,31 @@ class ManagedGoal:
     # Goal fluents
     # ------------------------------------------------------------------
 
-    def add_goal_fluent(self, expr: Any) -> None:
-        """
-        Append a pre-grounded FNode expression to the goal.
+    def add_goal_expr(self, expr: Any) -> None:
+        self.spec.goals.append(expr)
 
-        Use ManagedProblem.add_goal_fluent() to build the expression from
-        a fluent name + args rather than constructing it manually.
-        """
-        self.spec.goal_fluents.append(expr)
+    def add_timed_goal_expr(self, expr: Any) -> None:
+        self.spec.timed_goals.append(expr)
 
-    def remove_goal_fluent(self, expr: Any) -> None:
-        self.spec.goal_fluents.remove(expr)
+    def add_trajectory_constraint_expr(self, expr: Any) -> None:
+        self.spec.trajectory_consraints.append(expr)
 
     def clear_goals(self) -> None:
-        self.spec.goal_fluents.clear()
+        self.spec.goals.clear()
 
-    def get_goal_fluents(self) -> list[Any]:
-        return list(self.spec.goal_fluents)
+    def clear_timed_goals(self) -> None:
+        self.spec.timed_goals.clear()
+
+    def clear_trajectory_constraint_expr(self) -> None:
+        self.spec.timed_goals.clear()
+
+    def add_goals_to_problem(self, problem):
+        problem._goals = self.spec.goals
+        problem._timed_goals = self.spec.timed_goals
+        problem._trajectory_constraints = self.spec.trajectory_constraints
+
+    def get_goals(self) -> list[Any]:
+        return list(self.spec.goals)
 
     # ------------------------------------------------------------------
     # Filters
@@ -183,8 +196,18 @@ class ManagedProblem:
         self.logger = logger or log
         self.env = env
         self._fnode_mgr = env.expression_manager
+        managed_goal = ManagedGoal(name='base')
+        for expr in self.base_problem._goals:
+            managed_goal.add_goal_expr(expr)
+        self.base_problem.clear_goals()
+        for expr in self.base_problem._timed_goals:
+            managed_goal.add_timed_goal_expr(expr)
+        self.base_problem.clear_timed_goals()
+        for expr in self.base_problem._trajectory_constraints:
+            managed_goal.add_trajectory_constraint_expr(expr)
+        self.base_problem.clear_trajectory_constraints()
         self._executor: cf.ProcessPoolExecutor = cf.ProcessPoolExecutor(max_workers=max_workers)
-        self.goals: dict[str, ManagedGoal] = {'base': ManagedGoal(name='base')}
+        self.goals: dict[str, ManagedGoal] = {'base': managed_goal}
 
     # ------------------------------------------------------------------
     # Goal management
@@ -208,21 +231,11 @@ class ManagedProblem:
         grounded_args = [self.base_problem.object(a) for a in args]
         grounded_fluent = self._fnode_mgr.FluentExp(self.base_problem.fluent(name), grounded_args)
         expr = self._fnode_mgr.Equals(grounded_fluent, value) if value else grounded_fluent
-        self.goals[goal].add_goal_fluent(expr)
-
-    def remove_goal_fluent(
-        self, name: str, args: list[str], value: Any, goal: str = 'base'
-    ) -> None:
-        """Ground a fluent and remove it from the named goal."""
-        grounded_args = [self.base_problem.object(a) for a in args]
-        grounded_fluent = self._fnode_mgr.FluentExp(self.base_problem.fluent(name), grounded_args)
-        expr = self._fnode_mgr.Equals(grounded_fluent, value) if value else grounded_fluent
-        self.goals[goal].remove_goal_fluent(expr)
+        self.goals[goal].add_goal_expr(expr)
 
     # ------------------------------------------------------------------
     # Object / fluent / action mutation
     # ------------------------------------------------------------------
-
     def get_object_list(self) -> list:
         return list(self.base_problem.all_objects)
 
@@ -286,10 +299,7 @@ class ManagedProblem:
             object_filter=spec._effective(spec.object_filters),
             fluent_filter=spec._effective(spec.fluent_filters),
         )
-
-        if plan_kind != PlanKind.HIERARCHICAL_PLAN:
-            for fluent in spec.goal_fluents:
-                goal_problem.add_goal(fluent)
+        managed_goal.add_goals_to_problem(goal_problem)
 
         writer = PDDLWriter(goal_problem)
         dom = writer.get_domain()
@@ -351,12 +361,6 @@ class ManagedProblem:
         for action in self.base_problem.actions:
             if action_filter is None or action.name in action_filter:
                 target_problem.add_action(action)
-
-        for g in self.base_problem.goals:
-            target_problem.add_goal(g)
-        for g in self.base_problem.timed_goals:
-            target_problem.add_timed_goal(g)
-
         return target_problem
 
     # ------------------------------------------------------------------
