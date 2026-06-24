@@ -433,7 +433,8 @@ bool rule_firing_exists_before_tick(
   params.append(array_str.str());
   params.append(before_tick);
 
-  bool exists = tx.query_value<bool>(
+  bool exists = cx::query_value<bool>(
+    tx,
     R"SQL(
             SELECT EXISTS (
                 SELECT 1

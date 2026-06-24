@@ -21,6 +21,15 @@
 
 namespace cx
 {
+template <typename T, typename... Args>
+T query_value(pqxx::transaction_base & tx, const std::string & sql, Args &&... args)
+{
+#if defined(PQXX_EXEC_PARAMS_DEPRECATED)
+  return tx.query_value<T>(sql, pqxx::params{std::forward<Args>(args)...});
+#else
+  return tx.exec_params1(sql, std::forward<Args>(args)...)[0].template as<T>();
+#endif
+}
 
 template <typename... Args>
 pqxx::result exec_params(pqxx::transaction_base & tx, const std::string & sql, Args &&... args)
