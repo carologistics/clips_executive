@@ -19,5 +19,6 @@ Files
 - :ref:`file_include_cx_cdb_loader_plugin_cdb_loader_plugin.hpp`
 - :ref:`file_include_cx_cdb_loader_plugin_helpers.hpp`
 - :ref:`file_include_cx_cdb_loader_plugin_parser.hpp`
+- :ref:`file_include_cx_cdb_loader_plugin_pqxx_compat.hpp`
 
 

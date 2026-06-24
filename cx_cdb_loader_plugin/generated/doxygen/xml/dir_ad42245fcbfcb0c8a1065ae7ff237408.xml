@@ -5,6 +5,7 @@
     <innerfile refid="cdb__loader__plugin_8hpp">cdb_loader_plugin.hpp</innerfile>
     <innerfile refid="helpers_8hpp">helpers.hpp</innerfile>
     <innerfile refid="parser_8hpp">parser.hpp</innerfile>
+    <innerfile refid="pqxx__compat_8hpp">pqxx_compat.hpp</innerfile>
     <briefdescription>
     </briefdescription>
     <detaileddescription>

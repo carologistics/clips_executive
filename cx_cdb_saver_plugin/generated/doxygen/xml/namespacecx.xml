@@ -25,6 +25,74 @@
     <innerclass refid="structcx_1_1TimedFact" prot="public">cx::TimedFact</innerclass>
     <innerclass refid="structcx_1_1TimedText" prot="public">cx::TimedText</innerclass>
     <innerclass refid="structcx_1_1TimeLookup" prot="public">cx::TimeLookup</innerclass>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="pqxx__compat_8hpp_1a68a5f0004f4f54aeaf30d90599102b4f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename...</type>
+            <declname>Args</declname>
+            <defname>Args</defname>
+          </param>
+        </templateparamlist>
+        <type>pqxx::result</type>
+        <definition>pqxx::result cx::exec_params</definition>
+        <argsstring>(pqxx::transaction_base &amp;tx, const std::string &amp;sql, Args &amp;&amp;... args)</argsstring>
+        <name>exec_params</name>
+        <qualifiedname>cx::exec_params</qualifiedname>
+        <param>
+          <type>pqxx::transaction_base &amp;</type>
+          <declname>tx</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>sql</declname>
+        </param>
+        <param>
+          <type>Args &amp;&amp;...</type>
+          <declname>args</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_saver_plugin/pqxx_compat.hpp" line="26" column="14" bodyfile="include/cx_cdb_saver_plugin/pqxx_compat.hpp" bodystart="26" bodyend="33"/>
+      </memberdef>
+      <memberdef kind="function" id="pqxx__compat_8hpp_1a2e0922cb2f8d1a4317b2c9d63e7a542a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename...</type>
+            <declname>Args</declname>
+            <defname>Args</defname>
+          </param>
+        </templateparamlist>
+        <type>pqxx::row</type>
+        <definition>pqxx::row cx::exec_params1</definition>
+        <argsstring>(pqxx::transaction_base &amp;tx, const std::string &amp;sql, Args &amp;&amp;... args)</argsstring>
+        <name>exec_params1</name>
+        <qualifiedname>cx::exec_params1</qualifiedname>
+        <param>
+          <type>pqxx::transaction_base &amp;</type>
+          <declname>tx</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>sql</declname>
+        </param>
+        <param>
+          <type>Args &amp;&amp;...</type>
+          <declname>args</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_saver_plugin/pqxx_compat.hpp" line="36" column="11" bodyfile="include/cx_cdb_saver_plugin/pqxx_compat.hpp" bodystart="36" bodyend="43"/>
+      </memberdef>
+    </sectiondef>
     <briefdescription>
     </briefdescription>
     <detaileddescription>

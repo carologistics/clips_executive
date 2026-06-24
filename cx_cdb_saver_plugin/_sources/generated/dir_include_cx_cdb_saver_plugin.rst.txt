@@ -18,5 +18,6 @@ Files
 
 - :ref:`file_include_cx_cdb_saver_plugin_cdb_saver_plugin.hpp`
 - :ref:`file_include_cx_cdb_saver_plugin_db_handler.hpp`
+- :ref:`file_include_cx_cdb_saver_plugin_pqxx_compat.hpp`
 
 

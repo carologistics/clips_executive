@@ -155,12 +155,16 @@
     <member refid="parser_8hpp_1ae34909099ef95a912095fd9473e9c7ee" kind="function"><name>populate_generic_regex_rule</name></member>
     <member refid="parser_8hpp_1aea4b70c605309fe6821a7e568015cfe5" kind="function"><name>populate_regex_config</name></member>
     <member refid="parser_8hpp_1acb3e1c31575ce5bde45500fa50ce78c0" kind="function"><name>filter_in_place</name></member>
+    <member refid="pqxx__compat_8hpp_1a68a5f0004f4f54aeaf30d90599102b4f" kind="function"><name>exec_params</name></member>
+    <member refid="pqxx__compat_8hpp_1a2e0922cb2f8d1a4317b2c9d63e7a542a" kind="function"><name>exec_params1</name></member>
   </compound>
   <compound refid="cdb__loader__plugin_8hpp" kind="file"><name>cdb_loader_plugin.hpp</name>
   </compound>
   <compound refid="helpers_8hpp" kind="file"><name>helpers.hpp</name>
   </compound>
   <compound refid="parser_8hpp" kind="file"><name>parser.hpp</name>
+  </compound>
+  <compound refid="pqxx__compat_8hpp" kind="file"><name>pqxx_compat.hpp</name>
   </compound>
   <compound refid="dir_ad42245fcbfcb0c8a1065ae7ff237408" kind="dir"><name>include/cx_cdb_loader_plugin</name>
   </compound>

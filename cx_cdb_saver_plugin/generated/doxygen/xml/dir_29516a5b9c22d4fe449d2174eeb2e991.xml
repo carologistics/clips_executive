@@ -4,6 +4,7 @@
     <compoundname>include/cx_cdb_saver_plugin</compoundname>
     <innerfile refid="cdb__saver__plugin_8hpp">cdb_saver_plugin.hpp</innerfile>
     <innerfile refid="db__handler_8hpp">db_handler.hpp</innerfile>
+    <innerfile refid="pqxx__compat_8hpp">pqxx_compat.hpp</innerfile>
     <briefdescription>
     </briefdescription>
     <detaileddescription>

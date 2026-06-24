@@ -71,10 +71,14 @@
     <member refid="structcx_1_1DBHandlerConfig_1aa81786e11bc7990f88ddbe5aa7c19631" kind="variable"><name>db_name</name></member>
   </compound>
   <compound refid="namespacecx" kind="namespace"><name>cx</name>
+    <member refid="pqxx__compat_8hpp_1a68a5f0004f4f54aeaf30d90599102b4f" kind="function"><name>exec_params</name></member>
+    <member refid="pqxx__compat_8hpp_1a2e0922cb2f8d1a4317b2c9d63e7a542a" kind="function"><name>exec_params1</name></member>
   </compound>
   <compound refid="cdb__saver__plugin_8hpp" kind="file"><name>cdb_saver_plugin.hpp</name>
   </compound>
   <compound refid="db__handler_8hpp" kind="file"><name>db_handler.hpp</name>
+  </compound>
+  <compound refid="pqxx__compat_8hpp" kind="file"><name>pqxx_compat.hpp</name>
   </compound>
   <compound refid="dir_29516a5b9c22d4fe449d2174eeb2e991" kind="dir"><name>include/cx_cdb_saver_plugin</name>
   </compound>

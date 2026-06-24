@@ -22,3 +22,12 @@ Classes
 - :ref:`exhale_class_classcx_1_1CDBSaverPlugin`
 
 - :ref:`exhale_class_classcx_1_1DBHandler`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_pqxx__compat_8hpp_1a68a5f0004f4f54aeaf30d90599102b4f`
+
+- :ref:`exhale_function_pqxx__compat_8hpp_1a2e0922cb2f8d1a4317b2c9d63e7a542a`
