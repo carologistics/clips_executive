@@ -19,6 +19,7 @@
   <depend>cx_clips_env_manager</depend>
   <depend>clips_vendor</depend>
   <depend>libpqxx</depend>
+  <depend>nlohmann-json-dev</depend>
 
   <export>
     <build_type>ament_cmake</build_type>
