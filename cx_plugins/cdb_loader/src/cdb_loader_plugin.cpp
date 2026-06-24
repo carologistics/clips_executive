@@ -33,6 +33,7 @@
 // clang-format on
 
 #include <cx_utils/clips_env_context.hpp>
+#include <cx_utils/format.hpp>
 #include <cx_utils/param_utils.hpp>
 
 #include "cx_cdb_loader_plugin/cdb_loader_plugin.hpp"
@@ -157,9 +158,9 @@ void CDBLoaderPlugin::assert_defglobals(
     RCLCPP_DEBUG(
       *logger_, "ASSERTING DEFGLOBAL %s in %s to value from tick %li: %s", defglobal.name.c_str(),
       defglobal.defmodule.c_str(), defglobal.value.tick, defglobal.value.value.dump().c_str());
-    clips::Build(env, std::format("(defglobal {} ?*{}* = nil)", defmodule, defglobal.name).c_str());
+    clips::Build(env, cx::format("(defglobal {} ?*{}* = nil)", defmodule, defglobal.name).c_str());
     clips::Defglobal * global =
-      clips::FindDefglobal(env, std::format("{}::{}", defglobal.defmodule, defglobal.name).c_str());
+      clips::FindDefglobal(env, cx::format("{}::{}", defglobal.defmodule, defglobal.name).c_str());
     switch (defglobal.value.value["type"].get<SlotType>()) {
       case SlotType::String:
         clips::DefglobalSetString(
@@ -217,7 +218,7 @@ void CDBLoaderPlugin::update_defglobals(
 {
   for (Defglobal defglobal : defglobals) {
     clips::Defglobal * global =
-      clips::FindDefglobal(env, std::format("{}::{}", defglobal.defmodule, defglobal.name).c_str());
+      clips::FindDefglobal(env, cx::format("{}::{}", defglobal.defmodule, defglobal.name).c_str());
     switch (defglobal.value.value["type"].get<SlotType>()) {
       case SlotType::FactAddress: {
         if (id_to_fact_ptr.contains(defglobal.value.value["value"].get<int64_t>())) {
@@ -259,7 +260,7 @@ void CDBLoaderPlugin::assert_facts(
     return value.deftemplate_name;
   });
   for (Fact fact : facts) {
-    const std::string qualified_name = std::format("{}::{}", fact.defmodule, fact.deftemplate_name);
+    const std::string qualified_name = cx::format("{}::{}", fact.defmodule, fact.deftemplate_name);
     clips::Deftemplate * deftemplate = clips::FindDeftemplate(env, qualified_name.c_str());
     if (!fact.value.value["type"].is_null() && deftemplate == nullptr) {
       clips::CLIPSLexeme * sym = clips::CreateSymbol(env, qualified_name.c_str());

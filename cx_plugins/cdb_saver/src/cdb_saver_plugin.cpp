@@ -31,6 +31,7 @@
 #include "clips_ns/modulpsr.h"
 #include "cx_cdb_saver_plugin/cdb_saver_plugin.hpp"
 #include "cx_utils/clips_env_context.hpp"
+#include "cx_utils/format.hpp"
 #include "cx_utils/param_utils.hpp"
 #include "nlohmann/json_fwd.hpp"
 #include "rcl_interfaces/msg/list_parameters_result.hpp"
@@ -666,7 +667,7 @@ const std::string CDBSaverPlugin::get_module_defintion(clips::Defmodule * defmod
   if (defmodule->header.ppForm != nullptr) {
     return defmodule->header.ppForm;
   }
-  std::string definition = std::format("(defmodule {})", defmodule->header.name->contents);
+  std::string definition = cx::format("(defmodule {})", defmodule->header.name->contents);
   return definition;
 }
 

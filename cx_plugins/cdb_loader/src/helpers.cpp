@@ -18,6 +18,7 @@
 #include <regex>
 
 #include "cx_cdb_loader_plugin/pqxx_compat.hpp"
+#include "cx_utils/format.hpp"
 
 namespace cx
 {
@@ -149,7 +150,7 @@ clips::Fact * get_nullptr_fact(
   std::unordered_map<int64_t, clips::Fact *> & id_to_fact_ptr,
   std::vector<clips::Fact *> & created_nullptr_facts)
 {
-  clips::Fact * null_fact = clips::AssertString(env, std::format("(nullptr-{})", fact_id).c_str());
+  clips::Fact * null_fact = clips::AssertString(env, cx::format("(nullptr-{})", fact_id).c_str());
   id_to_fact_ptr[fact_id] = null_fact;
   created_nullptr_facts.push_back(null_fact);
   return null_fact;
