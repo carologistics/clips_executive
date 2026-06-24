@@ -771,6 +771,42 @@
         </inbodydescription>
         <location file="include/cx_cdb_loader_plugin/parser.hpp" line="91" column="6" bodyfile="include/cx_cdb_loader_plugin/parser.hpp" bodystart="91" bodyend="101"/>
       </memberdef>
+      <memberdef kind="function" id="pqxx__compat_8hpp_1a41c174636b66ca01e21be8351a502901" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>typename T</type>
+          </param>
+          <param>
+            <type>typename...</type>
+            <declname>Args</declname>
+            <defname>Args</defname>
+          </param>
+        </templateparamlist>
+        <type>T</type>
+        <definition>T cx::query_value</definition>
+        <argsstring>(pqxx::transaction_base &amp;tx, const std::string &amp;sql, Args &amp;&amp;... args)</argsstring>
+        <name>query_value</name>
+        <qualifiedname>cx::query_value</qualifiedname>
+        <param>
+          <type>pqxx::transaction_base &amp;</type>
+          <declname>tx</declname>
+        </param>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>sql</declname>
+        </param>
+        <param>
+          <type>Args &amp;&amp;...</type>
+          <declname>args</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/pqxx_compat.hpp" line="25" column="3" bodyfile="include/cx_cdb_loader_plugin/pqxx_compat.hpp" bodystart="25" bodyend="32"/>
+      </memberdef>
       <memberdef kind="function" id="pqxx__compat_8hpp_1a68a5f0004f4f54aeaf30d90599102b4f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
           <param>
@@ -802,7 +838,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_cdb_loader_plugin/pqxx_compat.hpp" line="26" column="14" bodyfile="include/cx_cdb_loader_plugin/pqxx_compat.hpp" bodystart="26" bodyend="33"/>
+        <location file="include/cx_cdb_loader_plugin/pqxx_compat.hpp" line="35" column="14" bodyfile="include/cx_cdb_loader_plugin/pqxx_compat.hpp" bodystart="35" bodyend="42"/>
       </memberdef>
       <memberdef kind="function" id="pqxx__compat_8hpp_1a2e0922cb2f8d1a4317b2c9d63e7a542a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <templateparamlist>
@@ -835,7 +871,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_cdb_loader_plugin/pqxx_compat.hpp" line="36" column="11" bodyfile="include/cx_cdb_loader_plugin/pqxx_compat.hpp" bodystart="36" bodyend="43"/>
+        <location file="include/cx_cdb_loader_plugin/pqxx_compat.hpp" line="45" column="11" bodyfile="include/cx_cdb_loader_plugin/pqxx_compat.hpp" bodystart="45" bodyend="52"/>
       </memberdef>
     </sectiondef>
     <briefdescription>

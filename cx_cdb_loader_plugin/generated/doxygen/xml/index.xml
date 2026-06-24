@@ -155,6 +155,7 @@
     <member refid="parser_8hpp_1ae34909099ef95a912095fd9473e9c7ee" kind="function"><name>populate_generic_regex_rule</name></member>
     <member refid="parser_8hpp_1aea4b70c605309fe6821a7e568015cfe5" kind="function"><name>populate_regex_config</name></member>
     <member refid="parser_8hpp_1acb3e1c31575ce5bde45500fa50ce78c0" kind="function"><name>filter_in_place</name></member>
+    <member refid="pqxx__compat_8hpp_1a41c174636b66ca01e21be8351a502901" kind="function"><name>query_value</name></member>
     <member refid="pqxx__compat_8hpp_1a68a5f0004f4f54aeaf30d90599102b4f" kind="function"><name>exec_params</name></member>
     <member refid="pqxx__compat_8hpp_1a2e0922cb2f8d1a4317b2c9d63e7a542a" kind="function"><name>exec_params1</name></member>
   </compound>
