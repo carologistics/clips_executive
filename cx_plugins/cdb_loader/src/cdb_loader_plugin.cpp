@@ -400,7 +400,7 @@ bool CDBLoaderPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
 
   // Initializing databse views for easier parsing of composed types
   pqxx::work w(db);
-  w.exec(kViewSchemaSql);
+  w.exec(std::string(kViewSchemaSql));
   w.commit();
 
   int64_t restore_tick;
