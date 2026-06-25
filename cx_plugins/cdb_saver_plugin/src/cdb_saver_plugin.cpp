@@ -76,6 +76,10 @@ void CDBSaverPlugin::initialize()
     node, plugin_name_ + ".username", rclcpp::ParameterValue("anonymous"));
   cx::cx_utils::declare_parameter_if_not_declared(
     node, plugin_name_ + ".password", rclcpp::ParameterValue(std::string()));
+  cx::cx_utils::declare_parameter_if_not_declared(
+    node, plugin_name_ + ".db_prefix", rclcpp::ParameterValue("cdb"));
+  cx::cx_utils::declare_parameter_if_not_declared(
+    node, plugin_name_ + ".db_timestamp_suffix", rclcpp::ParameterValue(true));
 }
 
 void CDBSaverPlugin::finalize()
@@ -92,21 +96,29 @@ bool CDBSaverPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
   int port;
   std::string username;
   std::string password;
+  std::string db_prefix;
+  bool db_timestamp;
   node->get_parameter(plugin_name_ + ".hostname", hostname);
   node->get_parameter(plugin_name_ + ".port", port);
   node->get_parameter(plugin_name_ + ".username", username);
   node->get_parameter(plugin_name_ + ".password", password);
-
-  time_t t = std::time(nullptr);
-  std::tm tm{};
-  gmtime_r(&t, &tm);
-
-  std::ostringstream oss;
-  oss << std::put_time(&tm, "%Y_%m_%dt%H_%M_%S");
+  node->get_parameter(plugin_name_ + ".db_prefix", db_prefix);
+  node->get_parameter(plugin_name_ + ".db_timestamp_suffix", db_timestamp);
 
   std::string env_name = CLIPSEnvContext::get_context(env)->env_name_;
 
-  std::string db_name = "cdb_" + env_name + "_" + oss.str();
+  std::string db_name = db_prefix + "_" + env_name;
+
+  if (db_timestamp) {
+    time_t t = std::time(nullptr);
+    std::tm tm{};
+    gmtime_r(&t, &tm);
+
+    std::ostringstream oss;
+    oss << std::put_time(&tm, "%Y_%m_%dt%H_%M_%S");
+
+    db_name += "_" + oss.str();
+  }
 
   DBHandlerConfig config = {hostname, port, username, password, db_name};
   try {

@@ -66,6 +66,17 @@ bool DBHandler::init_db(DBHandlerConfig & config)
 
   if (admin_connection.is_open()) {
     pqxx::nontransaction n(admin_connection);
+    auto exists = n.query_value<bool>(
+      "SELECT EXISTS (SELECT 1 FROM pg_database WHERE datname = " + n.quote(config.db_name) + ");");
+    if (exists) {
+      // terminate connections first (required in Postgres)
+      n.exec(
+        "SELECT pg_terminate_backend(pid) "
+        "FROM pg_stat_activity "
+        "WHERE datname = " +
+        n.quote(config.db_name) + ";");
+      n.exec("DROP DATABASE " + pqxx::to_string(config.db_name) + ";");
+    }
     n.exec("CREATE DATABASE " + config.db_name + " WITH OWNER " + config.username + ";");
   } else {
     return false;
