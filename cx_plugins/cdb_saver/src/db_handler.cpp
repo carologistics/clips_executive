@@ -48,7 +48,7 @@ DBHandler::DBHandler(DBHandlerConfig & config, rclcpp_lifecycle::LifecycleNode::
 DBHandler::~DBHandler()
 {
   if (connection_) {
-    connection_->close();
+    connection_.reset();
   }
 }
 
@@ -67,7 +67,6 @@ bool DBHandler::init_db(DBHandlerConfig & config)
   if (admin_connection.is_open()) {
     pqxx::nontransaction n(admin_connection);
     n.exec("CREATE DATABASE " + config.db_name + " WITH OWNER " + config.username + ";");
-    admin_connection.close();
   } else {
     return false;
   }
@@ -82,9 +81,8 @@ bool DBHandler::init_db(DBHandlerConfig & config)
 
   if (db_connection.is_open()) {
     pqxx::work w{db_connection};
-    w.exec(kSchemaSql);
+    w.exec(std::string(kSchemaSql));
     w.commit();
-    db_connection.close();
     return true;
   } else {
     return false;

@@ -427,12 +427,6 @@ bool rule_firing_exists_before_tick(
   }
   array_str << "}";
 
-  pqxx::params params;
-  params.append(defmodule);
-  params.append(name);
-  params.append(array_str.str());
-  params.append(before_tick);
-
   bool exists = cx::query_value<bool>(
     tx,
     R"SQL(
@@ -457,7 +451,7 @@ bool rule_firing_exists_before_tick(
                       )
             )
         )SQL",
-    params);
+    defmodule, name, array_str.str(), before_tick);
 
   tx.commit();
   return exists;
