@@ -94,6 +94,14 @@ CLIPSEnvManager::CLIPSEnvManager(const rclcpp::NodeOptions & options)
   cx::cx_utils::declare_parameter_if_not_declared(
     this, "autostart_node", rclcpp::ParameterValue(false));
   get_parameter("autostart_node", autostart_node);
+
+  cx::cx_utils::declare_parameter_if_not_declared(
+    this, "reset_on_startup", rclcpp::ParameterValue(true));
+  get_parameter("reset_on_startup", reset_on_startup_);
+  cx::cx_utils::declare_parameter_if_not_declared(
+    this, "run_on_startup", rclcpp::ParameterValue(true));
+  get_parameter("run_on_startup", reset_on_startup_);
+
   if (autostart_node) {
     autostart();
   }
@@ -165,9 +173,13 @@ CallbackReturn CLIPSEnvManager::on_activate(const rclcpp_lifecycle::State & stat
   for (auto & env : *envs_) {
     auto context = CLIPSEnvContext::get_context(env.second);
     std::scoped_lock env_lock(context->env_mtx_);
-    clips::Reset(env.second.get());
-    clips::RefreshAllAgendas(env.second.get());
-    clips::Run(env.second.get(), -1);
+    if (reset_on_startup_) {
+      clips::Reset(env.second.get());
+    }
+    if (run_on_startup_) {
+      clips::RefreshAllAgendas(env.second.get());
+      clips::Run(env.second.get(), -1);
+    }
   }
   create_bond();
   RCLCPP_INFO(get_logger(), "Activated [%s]...", get_name());
