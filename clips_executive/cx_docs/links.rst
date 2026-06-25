@@ -18,8 +18,9 @@
 .. _blocksworld: https://en.wikipedia.org/wiki/Blocks_world
 .. _pygments: https://pygments.org
 .. _prompt_toolkit: https://python-prompt-toolkit.readthedocs.io
-
+.. _Postgresql: https://www.postgresql.org/
 
 .. |CX| replace:: ROS2 CLIPS-Executive
 .. |APG| replace:: `Advanced Programming Guide (PDF)`_
 .. |BPG| replace:: `Basic Programming Guide (PDF)`_
+.. |CDB| replace:: **C**\ LIPS **D**\ e\ **B**\ ugger (CDB)
