@@ -5,9 +5,9 @@
     model_name: "cx_rl_agent"
 
     training:
-      retraining: false
-      max_episodes: 100
-      timesteps: 3000
+      retraining: true
+      max_episodes: 500
+      timesteps: 6000
       checkpoint_freq: 200
 
     env:
