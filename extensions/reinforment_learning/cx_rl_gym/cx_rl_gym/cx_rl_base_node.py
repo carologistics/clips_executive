@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import datetime
 import importlib
 import os
 from threading import Thread
@@ -149,12 +150,21 @@ class CXRLBaseNode(LifecycleNode):
         storage_path = self.get_parameter('storage_dir').value
         self.save_dir = os.path.join(storage_path, 'cx_rl_data', 'trained_agents')
         logs_root = os.path.join(storage_path, 'cx_rl_data', 'logs')
-        run_id = os.environ.get('CX_RL_RUN_ID')
-        self.log_dir = os.path.join(logs_root, run_id) if run_id else logs_root
+        model_name = self.get_parameter_or(
+            'model_name',
+            rclpy.Parameter('model_name', rclpy.Parameter.Type.STRING, 'cx_rl_agent'),
+        ).value
+        timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+        run_id = f'{model_name}_{timestamp}'
+        self.log_dir = os.path.join(logs_root, run_id)
         self.checkpoint_dir = os.path.join(storage_path, 'checkpoint_agents')
         os.makedirs(self.save_dir, exist_ok=True)
         os.makedirs(self.log_dir, exist_ok=True)
         os.makedirs(self.checkpoint_dir, exist_ok=True)
+        latest = os.path.join(logs_root, f'latest_{model_name}')
+        if os.path.islink(latest) or os.path.exists(latest):
+            os.unlink(latest)
+        os.symlink(run_id, latest)
 
     def set_env(self):
         """Instantiate the environment from the entrypoint parameter."""
