@@ -8,6 +8,7 @@ find_package(builtin_interfaces REQUIRED)
 
 set(SERVICES
   "srv/DestroyClipsEnv.srv"
+  "srv/EvalClips.srv"
   "srv/CreateClipsEnv.srv"
   "srv/ListClipsEnvs.srv"
   "srv/LoadClipsPlugin.srv"

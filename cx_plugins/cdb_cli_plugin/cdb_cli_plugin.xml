@@ -1,0 +1,7 @@
+<class_libraries>
+  <library path="cdb_cli_plugin">
+    <class type="cx::CDBCliPlugin" base_class_type="cx::ClipsPlugin">
+      <description>CLIPS Plugin that allows the cli command line tool to control and interact with an running environment</description>
+    </class>
+  </library>
+</class_libraries>

@@ -4,8 +4,8 @@
     environments: ["turtlesim_monitor"]
 
     turtlesim_monitor:
-      # plugins: ["executive", "ros_msgs", 'files', "saver"]
-      plugins: ["executive", "ros_msgs", "loader"]
+      plugins: ["executive", "ros_msgs", 'files', 'cli'] #, "saver"]
+      # plugins: ["executive", "ros_msgs", "loader"]
       log_clips_to_file: true
       watch: ["facts", "rules"]
 
@@ -25,9 +25,20 @@
       username: postgres
       password: admin
 
+    cli:
+      plugin: "cx::CDBCliPlugin"
+
     loader:
       plugin: "cx::CDBLoaderPlugin"
       username: postgres
       password: admin
-      database: "cdb_turtlesim_monitor_2026_05_17t07_07_15"
+      database: "cdb_turtlesim_monitor_2026_06_02t04_14_51"
+      restore_tick: "-100"
+      skip_external_address_values: true
+      # modules:
+      #   load_if_match: ["1", "MAIN"]
+      #   skip_if_match: [""]
+      # deftemplates:
+      #   load_if_match: ["/msgs"]
+      #   skip_if_match: ["/client"]
       #docker run --name postgres -e POSTGRES_PASSWORD=admin --network host -d postgres

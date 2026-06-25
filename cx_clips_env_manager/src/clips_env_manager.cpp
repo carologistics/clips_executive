@@ -155,8 +155,9 @@ CallbackReturn CLIPSEnvManager::on_activate(const rclcpp_lifecycle::State & stat
   for (auto & env : *envs_) {
     auto context = CLIPSEnvContext::get_context(env.second);
     std::scoped_lock env_lock(context->env_mtx_);
-    clips::Reset(env.second.get());
-    clips::RefreshAllAgendas(env.second.get());
+    // clips::Reset(env.second.get());
+    // clips::RefreshAllAgendas(env.second.get());
+    // TODO decide if the -1 here is okay
     clips::Run(env.second.get(), -1);
   }
   create_bond();

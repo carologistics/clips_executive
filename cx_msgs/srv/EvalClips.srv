@@ -1,0 +1,5 @@
+string env
+string clips
+---
+bool success
+string output
