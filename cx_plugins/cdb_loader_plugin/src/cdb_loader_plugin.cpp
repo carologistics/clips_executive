@@ -71,9 +71,11 @@ void CDBLoaderPlugin::initialize()
     node, plugin_name_ + ".database", rclcpp::ParameterValue(std::string()));
 
   cx::cx_utils::declare_parameter_if_not_declared(
-    node, plugin_name_ + ".restore_run", rclcpp::ParameterValue(std::string()));
+    node, plugin_name_ + ".restore_method", rclcpp::ParameterValue(std::string()));
   cx::cx_utils::declare_parameter_if_not_declared(
-    node, plugin_name_ + ".restore_tick", rclcpp::ParameterValue(std::string()));
+    node, plugin_name_ + ".restore_run", rclcpp::ParameterValue(0));
+  cx::cx_utils::declare_parameter_if_not_declared(
+    node, plugin_name_ + ".restore_tick", rclcpp::ParameterValue(0));
   cx::cx_utils::declare_parameter_if_not_declared(
     node, plugin_name_ + ".restore_time", rclcpp::ParameterValue(std::string()));
 }
@@ -359,27 +361,25 @@ bool CDBLoaderPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
   node->get_parameter(plugin_name_ + ".password", password);
   node->get_parameter(plugin_name_ + ".database", database);
 
-  std::string restore_run_param;
-  std::string restore_tick_param;
+  std::string restore_method;
+  int64_t restore_run_param;
+  int64_t restore_tick_param;
   std::string restore_time_param;
 
+  node->get_parameter(plugin_name_ + ".restore_method", restore_method);
   node->get_parameter(plugin_name_ + ".restore_run", restore_run_param);
   node->get_parameter(plugin_name_ + ".restore_tick", restore_tick_param);
   node->get_parameter(plugin_name_ + ".restore_time", restore_time_param);
 
-  bool restore_run_is_set = restore_run_param != "";
+  bool restore_run_is_set = restore_method == "run";
 
-  bool restore_tick_is_set = restore_tick_param != "";
+  bool restore_tick_is_set = restore_method == "tick";
 
-  bool restore_time_is_set = restore_time_param != "";
-
-  if (
-    static_cast<int>(restore_run_is_set) + static_cast<int>(restore_tick_is_set) +
-      static_cast<int>(restore_time_is_set) !=
-    1) {
+  bool restore_time_is_set = restore_method == "time";
+  if (!restore_run_is_set && !restore_tick_is_set && !restore_time_is_set) {
     RCLCPP_ERROR(
-      *logger_,
-      "Exactly one of restore_run, restore_tick and restore_time parameters has to be set");
+      *logger_, "restore_method %s unknown, expected one of [run, tick, time]",
+      restore_method.c_str());
     return false;
   }
 
@@ -405,10 +405,9 @@ bool CDBLoaderPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
 
   int64_t restore_tick;
   if (restore_run_is_set) {
-    int64_t run = strtoll(restore_run_param.c_str(), nullptr, 10);
-    restore_tick = get_end_tick_for_run(db, run);
+    restore_tick = get_end_tick_for_run(db, restore_run_param);
   } else if (restore_tick_is_set) {
-    restore_tick = resolve_restore_tick(db, strtoll(restore_tick_param.c_str(), nullptr, 10));
+    restore_tick = resolve_restore_tick(db, restore_tick_param);
   } else {
     restore_tick = resolve_restore_time(db, restore_time_param, *logger_);
   }
