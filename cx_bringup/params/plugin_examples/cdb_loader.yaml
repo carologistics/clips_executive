@@ -1,0 +1,193 @@
+/**:
+  ros__parameters:
+    environments: ["cx_cdb"]
+    cx_cdb:
+      plugins: ["cdb_loader", "executive"]
+      log_clips_to_file: true
+      watch: ["facts", "rules"]
+
+    executive:
+      plugin: "cx::ExecutivePlugin"
+      assert_time: true
+      refresh_rate: 10
+      autostart: false
+
+    cdb_loader:
+      plugin: "cx::CDBLoaderPlugin"
+      hostname: "localhost"
+      port: 5432
+      database: "cdb_cx_cdb"
+      username: "cx_user"
+      password: "password"
+
+      # one of [run, tick, time]
+      restore_method: "run"
+
+      # Positive values are zero-based:
+      #   "0"  = first recorded run
+      #   "1"  = second recorded run
+      #
+      # Negative values count backwards from the end:
+      #   "-1" = latest recorded run
+      #   "-2" = run before the latest recorded run
+      #
+      restore_run: -3
+
+      # Restore by tick.
+      #
+      # Positive values are zero-based:
+      #   "0"  = first recorded tick
+      #   "1"  = second recorded tick
+      #
+      # Negative values count backwards from the end:
+      #   "-1" = last recorded tick
+      #   "-2" = tick before the last recorded tick
+      #
+      restore_tick: -2
+
+      # Restore by time.
+      #
+      # A value starting with T+ is interpreted relative to the start time of the
+      # first recorded run. A normal timestamp is interpreted as an absolute time.
+      #
+      # The loader selects the run whose end_time is closest to the requested time
+      # and restores that run's end_tick.
+      #
+      # Examples:
+      # restore_time: "T+00:50:23"
+      # restore_time: "2026-05-11T10:50:23Z"
+      # restore_time: "2026-05-11 10:50:23+00"
+      #
+      restore_time: ""
+
+      # Facts containing external addresses cannot be restored reliably.
+      # If true, facts containing external addresses are dropped.
+      # If false, they are restored with placeholder external addresses.
+      # Defaults to false.
+      drop_external_addresses: false
+
+      # If true, external addresses are restored as nullptr external addresses.
+      # If false, external address values are restored as invalid external address values.
+      # This is only used when drop_external_addresses is false.
+      # Defaults to true.
+      restore_external_addresses_as_nullptr: false
+
+      # Module filtering.
+      modules:
+        # Empty string means match everything.
+        # Defaults to [""]
+        load_if_match: [""]
+
+        # Empty string means match nothing.
+        # Defaults to [""]
+        skip_if_match: [""]
+
+      deffacts:
+        # If true, do not restore deffacts.
+        # Defaults to false.
+        skip: true
+
+        # If true, manually assert facts from restored deffacts.
+        # This is useful because cx::CDBLoaderPlugin skips reset.
+        # Defaults to false.
+        manual_assert: false
+
+        # Regexes matched against deffacts names.
+        # Empty string means match everything.
+        # Defaults to [""]
+        load_if_match: [""]
+
+        # Regexes matched against deffacts names.
+        # Empty string means match nothing.
+        # Defaults to [""]
+        skip_if_match: [""]
+
+      facts:
+        # If true, do not restore facts.
+        # Defaults to false.
+        skip: false
+
+        # Regexes matched against the fact deftemplate.
+        # "" matches everything.
+        # Defaults to [""]
+        load_if_match: [""]
+
+        # Regexes matched against the fact deftemplate.
+        # "" matches nothing.
+        # Defaults to [""]
+        skip_if_match: [""]
+
+      defrules:
+        # If true, do not restore defrules.
+        # Defaults to false.
+        skip: false
+
+        # Regexes matched against defrule names.
+        # Empty string means match everything.
+        # Defaults to [""]
+        load_if_match: [""]
+
+        # Regexes matched against defrule names.
+        # Empty string means match nothing.
+        # Defaults to [""]
+        skip_if_match: [""]
+
+      deftemplates:
+        # If true, do not restore deftemplates.
+        # Defaults to false.
+        skip: false
+
+        # Regexes matched against deftemplate names.
+        # Empty string means match everything.
+        # Defaults to [""]
+        load_if_match: [""]
+
+        # Regexes matched against deftemplate names.
+        # Empty string means match nothing.
+        # Defaults to [""]
+        skip_if_match: [""]
+
+      defglobals:
+        # If true, do not restore defglobals.
+        # Defaults to false.
+        skip: false
+
+        # Regexes matched against defglobal names.
+        # Empty string means match everything.
+        # Defaults to [""]
+        load_if_match: [""]
+
+        # Regexes matched against defglobal names.
+        # Empty string means match nothing.
+        # Defaults to [""]
+        skip_if_match: [""]
+
+      deffunctions:
+        # If true, do not restore deffunctions.
+        # Defaults to false.
+        skip: false
+
+        # Regexes matched against deffunction names.
+        # Empty string means match everything.
+        # Defaults to [""]
+        load_if_match: [""]
+
+        # Regexes matched against deffunction names.
+        # Empty string means match nothing.
+        # Defaults to [""]
+        skip_if_match: [""]
+
+      activations:
+        # If true, do not restore fired activations.
+        # Defaults to false.
+        skip: true
+
+        # Regexes matched against activation or rule names.
+        # Empty string means match everything.
+        # Defaults to [""]
+        load_if_match: [""]
+
+        # Regexes matched against activation or rule names.
+        # Empty string means match nothing.
+        # Defaults to [""]
+        skip_if_match: [""]
