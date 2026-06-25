@@ -29,6 +29,7 @@ from functools import partial
 from itertools import product
 import time
 
+from cx_rl_gym.step_logger import StepLogger
 from cx_rl_interfaces.action import ActionSelection, GetFreeRobot, ResetEnv
 from cx_rl_interfaces.msg import Action
 from cx_rl_interfaces.srv import (
@@ -157,7 +158,22 @@ class CXRLGym(Env):
         self.n_actions = len(sorted_actions)
         self.action_space = Discrete(self.n_actions)
 
+        log_dir = getattr(node, 'log_dir', None)
+        self.step_logger = StepLogger(log_dir) if log_dir else None
+
         self.node.get_logger().debug('cx_rl_gym init complete')
+
+    def _log_step(self, action_string, reward, done):
+        if self.step_logger is None:
+            return
+        self.step_logger.record(
+            self.current_episode,
+            self.current_step,
+            self.total_steps,
+            action_string,
+            reward,
+            done,
+        )
 
     def get_id(self, name: str, args: list[str]) -> str:
         if not args:
@@ -227,6 +243,7 @@ class CXRLGym(Env):
             terminated, reward = self.get_episode_end()
             truncated = False
             info = {'outcome': 'NO-ACTION-FOR-ROBOT'}
+            self._log_step(action_string, reward, terminated)
             return state, reward, terminated, truncated, info
 
         action_msg = ActionSelection.Goal()
@@ -281,6 +298,7 @@ class CXRLGym(Env):
         else:
             info['outcome'] = ''
 
+        self._log_step(action_string, reward, done)
         return state, reward, done, truncated, info
 
     def generate_observation_space(self) -> list[str]:
@@ -367,6 +385,8 @@ class CXRLGym(Env):
 
     def close(self) -> None:
         """Clean up environment resources."""
+        if self.step_logger is not None:
+            self.step_logger.close()
         super().close()
 
     def render(self):
