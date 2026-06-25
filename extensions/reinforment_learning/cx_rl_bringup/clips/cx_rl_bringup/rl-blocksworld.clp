@@ -17,7 +17,7 @@
 
 (defglobal
   ?*CX-RL-REWARD-EPISODE-SUCCESS* = 100
-  ?*CX-RL-REWARD-EPISODE-FAILURE* = -100
+  ?*CX-RL-REWARD-EPISODE-FAILURE* = -50
 )
 
 ; Step 1: Defining the Environment
@@ -155,14 +155,14 @@
   (retract ?obs1 ?obs2)
   (assert (rl-observation (name on) (params ?block (sym-cat ?other-block))))
   (assert (rl-observation (name can-hold) (params ?robot)))
-  (bind ?reward -200)
+  (bind ?reward -51)
   (do-for-fact ((?target rl-observation))
     (and (eq ?target:name target-on)
          (eq ?target:params (create$ ?block (sym-cat ?other-block))))
     (printout green "useful action on "?target:params crlf)
-    (bind ?reward 100)
+    (bind ?reward 49)
   )
-  (if (eq ?reward -200) then
+  (if (eq ?reward -51) then
     (printout red "useless stack " ?block " on " ?other-block crlf)
   )
   (modify ?action (is-finished TRUE) (reward ?reward))
@@ -176,14 +176,14 @@
 =>
   (retract ?obs1 ?obs2)
   (assert (rl-observation (name holding) (params ?robot ?block)))
-  (bind ?reward 50)
+  (bind ?reward 4)
   (do-for-fact ((?target rl-observation))
     (and (eq ?target:name target-on-table)
          (eq ?target:params (create$ ?block)))
     (printout red "useless action pickup "?target:params crlf)
-    (bind ?reward -500)
+    (bind ?reward -101)
   )
-  (if (eq ?reward 50) then
+  (if (eq ?reward 4) then
     (printout green "useful pickup " ?block crlf)
   )
   (modify ?action (is-finished TRUE) (reward ?reward))
@@ -198,14 +198,14 @@
   (retract ?obs1 ?obs2)
   (assert (rl-observation (name holding) (params ?robot ?top-block)))
   (assert (rl-observation (name clear) (params ?bottom-block)))
-  (bind ?reward 50)
+  (bind ?reward 4)
   (do-for-fact ((?target rl-observation))
     (and (eq ?target:name target-on)
          (eq ?target:params (create$ ?top-block ?bottom-block)))
     (printout red "regression unstack " ?top-block " from " ?bottom-block crlf)
-    (bind ?reward -500)
+    (bind ?reward -101)
   )
-  (if (eq ?reward 50) then
+  (if (eq ?reward 4) then
     (printout green "useful unstack " ?top-block " from " ?bottom-block crlf)
   )
   (modify ?action (is-finished TRUE) (reward ?reward))
@@ -220,14 +220,14 @@
   (assert (rl-observation (name on-table) (params ?block)))
   (assert (rl-observation (name clear) (params ?block)))
   (assert (rl-observation (name can-hold) (params ?robot)))
-  (bind ?reward -50)
+  (bind ?reward -11)
   (do-for-fact ((?target rl-observation))
     (and (eq ?target:name target-on-table)
          (eq ?target:params (create$ ?block)))
     (printout green "useful putdown " ?block crlf)
-    (bind ?reward 50)
+    (bind ?reward 4)
   )
-  (if (eq ?reward -50) then
+  (if (eq ?reward -11) then
     (printout red "useless putdown " ?block crlf)
   )
   (modify ?action (is-finished TRUE) (reward ?reward))
@@ -249,7 +249,7 @@
 =>
   (printout green "SUCCESS!" crlf)
   (assert (rl-episode-end (success TRUE)))
-  (modify ?action (reward 1000))
+  (modify ?action (reward 500))
 )
 
 (defrule rl-blocksworld-episode-end-failure
