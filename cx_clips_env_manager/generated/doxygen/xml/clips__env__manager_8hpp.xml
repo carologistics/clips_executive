@@ -319,12 +319,14 @@
 <codeline lineno="118"><highlight class="normal"><sp/><sp/></highlight><highlight class="comment">//<sp/>Connection<sp/>to<sp/>tell<sp/>that<sp/>server<sp/>is<sp/>still<sp/>up</highlight><highlight class="normal"></highlight></codeline>
 <codeline lineno="119"><highlight class="normal"><sp/><sp/>std::unique_ptr&lt;bond::Bond&gt;<sp/>bond_{</highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">};</highlight></codeline>
 <codeline lineno="120"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>bond_heartbeat_period_;</highlight></codeline>
-<codeline lineno="121"><highlight class="normal"><sp/><sp/>rclcpp::TimerBase::SharedPtr<sp/>autostart_timer_;</highlight></codeline>
-<codeline lineno="122"><highlight class="normal"><sp/><sp/>std::unique_ptr&lt;rclcpp::PreShutdownCallbackHandle&gt;<sp/>rcl_preshutdown_cb_handle_{</highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">};</highlight></codeline>
-<codeline lineno="123"><highlight class="normal">};</highlight></codeline>
-<codeline lineno="124"><highlight class="normal">}<sp/><sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>cx</highlight><highlight class="normal"></highlight></codeline>
-<codeline lineno="125"><highlight class="normal"></highlight></codeline>
-<codeline lineno="126"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/><sp/></highlight><highlight class="comment">//<sp/>CX_CLIPS_ENV_MANAGER__CLIPS_ENV_MANAGER_HPP_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>reset_on_startup_;</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>run_on_startup_;</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/>rclcpp::TimerBase::SharedPtr<sp/>autostart_timer_;</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/>std::unique_ptr&lt;rclcpp::PreShutdownCallbackHandle&gt;<sp/>rcl_preshutdown_cb_handle_{</highlight><highlight class="keyword">nullptr</highlight><highlight class="normal">};</highlight></codeline>
+<codeline lineno="125"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="126"><highlight class="normal">}<sp/><sp/></highlight><highlight class="comment">//<sp/>namespace<sp/>cx</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="127"><highlight class="normal"></highlight></codeline>
+<codeline lineno="128"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/><sp/></highlight><highlight class="comment">//<sp/>CX_CLIPS_ENV_MANAGER__CLIPS_ENV_MANAGER_HPP_</highlight><highlight class="normal"></highlight></codeline>
     </programlisting>
     <location file="include/cx_clips_env_manager/clips_env_manager.hpp"/>
   </compounddef>

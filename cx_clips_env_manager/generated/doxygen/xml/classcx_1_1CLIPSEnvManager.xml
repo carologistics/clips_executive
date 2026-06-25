@@ -203,6 +203,34 @@
         </inbodydescription>
         <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="120" column="10" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="120" bodyend="-1"/>
       </memberdef>
+      <memberdef kind="variable" id="classcx_1_1CLIPSEnvManager_1a0fa37f0629113e4756d75479c92f6cb8" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool cx::CLIPSEnvManager::reset_on_startup_</definition>
+        <argsstring></argsstring>
+        <name>reset_on_startup_</name>
+        <qualifiedname>cx::CLIPSEnvManager::reset_on_startup_</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="121" column="8" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="121" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classcx_1_1CLIPSEnvManager_1af8d354569f7a307c2260a7197a7a1e9d" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool cx::CLIPSEnvManager::run_on_startup_</definition>
+        <argsstring></argsstring>
+        <name>run_on_startup_</name>
+        <qualifiedname>cx::CLIPSEnvManager::run_on_startup_</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="122" column="8" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="122" bodyend="-1"/>
+      </memberdef>
       <memberdef kind="variable" id="classcx_1_1CLIPSEnvManager_1ab9df32715bd23f0163731e81c8fac226" prot="private" static="no" mutable="no">
         <type>rclcpp::TimerBase::SharedPtr</type>
         <definition>rclcpp::TimerBase::SharedPtr cx::CLIPSEnvManager::autostart_timer_</definition>
@@ -215,7 +243,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="121" column="32" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="121" bodyend="-1"/>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="123" column="32" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="123" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classcx_1_1CLIPSEnvManager_1a452ff37a418de100df227fbba0972488" prot="private" static="no" mutable="no">
         <type>std::unique_ptr&lt; rclcpp::PreShutdownCallbackHandle &gt;</type>
@@ -230,7 +258,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="122" column="19" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="122" bodyend="122"/>
+        <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="124" column="19" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="124" bodyend="124"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="public-func">
@@ -657,7 +685,7 @@
         <label>rclcpp_lifecycle::LifecycleNode</label>
       </node>
     </collaborationgraph>
-    <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="49" column="1" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="50" bodyend="123"/>
+    <location file="include/cx_clips_env_manager/clips_env_manager.hpp" line="49" column="1" bodyfile="include/cx_clips_env_manager/clips_env_manager.hpp" bodystart="50" bodyend="125"/>
     <listofallmembers>
       <member refid="classcx_1_1CLIPSEnvManager_1a7c9c335a53491baa0b2b8938512af606" prot="private" virt="non-virtual"><scope>cx::CLIPSEnvManager</scope><name>autostart</name></member>
       <member refid="classcx_1_1CLIPSEnvManager_1ab9df32715bd23f0163731e81c8fac226" prot="private" virt="non-virtual"><scope>cx::CLIPSEnvManager</scope><name>autostart_timer_</name></member>
@@ -692,7 +720,9 @@
       <member refid="classcx_1_1CLIPSEnvManager_1a452ff37a418de100df227fbba0972488" prot="private" virt="non-virtual"><scope>cx::CLIPSEnvManager</scope><name>rcl_preshutdown_cb_handle_</name></member>
       <member refid="classcx_1_1CLIPSEnvManager_1a5cfa048782f0c63ec80ab716d0dce951" prot="private" virt="non-virtual"><scope>cx::CLIPSEnvManager</scope><name>redefine_callback</name></member>
       <member refid="classcx_1_1CLIPSEnvManager_1a8d44f9bbad1e3d7d66693f10788b8003" prot="private" virt="non-virtual"><scope>cx::CLIPSEnvManager</scope><name>register_rcl_preshutdown_callback</name></member>
+      <member refid="classcx_1_1CLIPSEnvManager_1a0fa37f0629113e4756d75479c92f6cb8" prot="private" virt="non-virtual"><scope>cx::CLIPSEnvManager</scope><name>reset_on_startup_</name></member>
       <member refid="classcx_1_1CLIPSEnvManager_1a899ea203c8e8c95b88d491daead373d5" prot="public" virt="non-virtual"><scope>cx::CLIPSEnvManager</scope><name>run_cleanups</name></member>
+      <member refid="classcx_1_1CLIPSEnvManager_1af8d354569f7a307c2260a7197a7a1e9d" prot="private" virt="non-virtual"><scope>cx::CLIPSEnvManager</scope><name>run_on_startup_</name></member>
       <member refid="classcx_1_1CLIPSEnvManager_1a78eb7526d1d048443ed6309430bfdab5" prot="public" virt="non-virtual"><scope>cx::CLIPSEnvManager</scope><name>set_topic_logging_callback</name></member>
       <member refid="classcx_1_1CLIPSEnvManager_1ab0904470f0d82538a3c023ec7173f476" prot="private" virt="non-virtual"><scope>cx::CLIPSEnvManager</scope><name>set_topic_logging_service_</name></member>
       <member refid="classcx_1_1CLIPSEnvManager_1a6255a5475a43728a59fe0421be237858" prot="public" virt="non-virtual"><scope>cx::CLIPSEnvManager</scope><name>~CLIPSEnvManager</name></member>

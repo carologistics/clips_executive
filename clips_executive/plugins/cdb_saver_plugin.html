@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CDB Saver Plugin &mdash; clips_executive 0.1.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=86f27845" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=8f9e6779" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom_figure.css" />
+
+  
+  
+        <script src="../_static/jquery.js?v=8dae8fb0"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=360bc84d"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../_static/clipboard.min.js?v=66b4909c"></script>
+        <script src="../_static/copybutton.js?v=71494f10"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="CDB Loader Plugin" href="cdb_loader_plugin.html" />
+    <link rel="prev" title="Ament Index Plugin" href="cx_ament_index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            clips_executive
+          </a>
+              <div class="version">
+                0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/index.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">CLIPS Plugins</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#plugin-interface">Plugin Interface</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#available-plugins">Available Plugins</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cx_ament_index.html">Ament Index Plugin</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">CDB Saver Plugin</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#configuration">Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#features">Features</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#usage-example">Usage Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cdb_loader_plugin.html">CDB Loader Plugin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="executive_plugin.html">Executive Plugin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="config_plugin.html">YAML Configuration Plugin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="file_load_plugin.html">File Load Plugin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="protobuf_plugin.html">Protobuf Plugin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ros_msgs_plugin.html">Generic ROS Msg Plugin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ros_param_plugin.html">ROS Param Plugin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tf2_pose_tracker_plugin.html">TF2 Pose Tracker Plugin</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../plugin_generator/index.html">ROS Interface Plugin Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli/index.html">Command Line Interface (CLI)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extensions/index.html">Extensions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../standards.html">Standard Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../__readme_include.html">README</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">clips_executive</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">CLIPS Plugins</a></li>
+      <li class="breadcrumb-item active">CDB Saver Plugin</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/plugins/cdb_saver_plugin.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="cdb-saver-plugin">
+<span id="usage-cdb-saver-plugin"></span><h1>CDB Saver Plugin<a class="headerlink" href="#cdb-saver-plugin" title="Link to this heading"></a></h1>
+<p>Source code on <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_plugins/cdb_saver_plugin">GitHub</a>.</p>
+<div class="admonition-plugin-class admonition">
+<p class="admonition-title">Plugin Class</p>
+<p>cx::CDBSaverPlugin</p>
+</div>
+<p>This plugin is part of the <strong>C</strong>LIPS <strong>D</strong>e<strong>B</strong>ugger (CDB) suite of the ROS2 CLIPS-Executive.</p>
+<p>This plugin allows to log execution traces of CLIPS into a <a class="reference external" href="https://www.postgresql.org/">Postgresql</a> database.</p>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
+<dl class="field-list">
+<dt class="field-odd"><cite>hostname</cite><span class="colon">:</span></dt>
+<dd class="field-odd"><table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Type</p></td>
+<td><p>Default</p></td>
+</tr>
+<tr class="row-even"><td><p>string</p></td>
+<td><p>“localhost”</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="simple">
+<dt>Description</dt><dd><p>Hostname of the PostgreSQL server.
+It is recommended to use a local PostgreSQL instance to avoid latency during saving.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="field-list" id="cdb-saver-port">
+<dt class="field-odd"><cite>port</cite><span class="colon">:</span></dt>
+<dd class="field-odd"><table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Type</p></td>
+<td><p>Default</p></td>
+</tr>
+<tr class="row-even"><td><p>int</p></td>
+<td><p>5432</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="simple">
+<dt>Description</dt><dd><p>PostgreSQL server port.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="field-list" id="cdb-saver-username">
+<dt class="field-odd"><cite>username</cite><span class="colon">:</span></dt>
+<dd class="field-odd"><table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Type</p></td>
+<td><p>Default</p></td>
+</tr>
+<tr class="row-even"><td><p>string</p></td>
+<td><p>“anonymous”</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="simple">
+<dt>Description</dt><dd><p>PostgreSQL username used by the saver plugin.
+The user must have permission to create databases.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="field-list" id="cdb-saver-password">
+<dt class="field-odd"><cite>password</cite><span class="colon">:</span></dt>
+<dd class="field-odd"><table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Type</p></td>
+<td><p>Default</p></td>
+</tr>
+<tr class="row-even"><td><p>string</p></td>
+<td><p>“”</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="simple">
+<dt>Description</dt><dd><p>PostgreSQL password used by the saver plugin.
+This value is stored in the database as part of the recorded CLIPS executive parameters
+and should therefore not be considered secure.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="field-list" id="cdb-saver-db-prefix">
+<dt class="field-odd"><cite>db_prefix</cite><span class="colon">:</span></dt>
+<dd class="field-odd"><table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Type</p></td>
+<td><p>Default</p></td>
+</tr>
+<tr class="row-even"><td><p>string</p></td>
+<td><p>“cdb”</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="simple">
+<dt>Description</dt><dd><p>Prefix used for the automatically created database name.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="field-list" id="db-timestamp-suffix">
+<dt class="field-odd"><cite>db_timestamp_suffix</cite><span class="colon">:</span></dt>
+<dd class="field-odd"><table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Type</p></td>
+<td><p>Default</p></td>
+</tr>
+<tr class="row-even"><td><p>bool</p></td>
+<td><p>true</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="simple">
+<dt>Description</dt><dd><p>Whether to append a timestamp suffix to the generated database name.
+This is useful for creating unique databases per run.
+Note that if set to <code class="docutils literal notranslate"><span class="pre">false</span></code> this can lead to data loss as any pre-existing database with matching name is automatically dropped.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+<section id="features">
+<h2>Features<a class="headerlink" href="#features" title="Link to this heading"></a></h2>
+<p>The CDB saver plugin registers callbacks with each CLIPS environment to log all changes into a running Postgresql database.</p>
+<section id="database-setup">
+<h3>Database Setup<a class="headerlink" href="#database-setup" title="Link to this heading"></a></h3>
+<p>A running Postgresql instance is required with a user and password matching the credentials as specified in the <a class="reference internal" href="#cdb-saver-username"><span class="std std-ref">parameters</span></a>.</p>
+<p>The user must have permission to create databases.</p>
+<p>An example setup for a user <code class="docutils literal notranslate"><span class="pre">myuser</span></code> with password <code class="docutils literal notranslate"><span class="pre">mypassword</span></code> is shown below:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>-u<span class="w"> </span>postgres<span class="w"> </span>psql
+<span class="nv">postgres</span><span class="o">=</span><span class="c1"># CREATE USER cx_user WITH PASSWORD &#39;password&#39; CREATEDB;</span>
+<span class="nv">postgres</span><span class="o">=</span><span class="c1"># \q</span>
+</pre></div>
+</div>
+<p>Each database is named using a <a class="reference internal" href="#cdb-saver-db-prefix"><span class="std std-ref">configurable prefix</span></a>, followed by <code class="docutils literal notranslate"><span class="pre">_</span></code>, the respective environment name and an optional <span class="xref std std-ref">time stamp</span>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The database is always created fresh, dropping any other database with the same name.</p>
+<p>Not using timestamps as suffix <strong>may lead to data loss</strong>.</p>
+</div>
+</section>
+<section id="database-credentials">
+<h3>Database Credentials<a class="headerlink" href="#database-credentials" title="Link to this heading"></a></h3>
+<p>All parameters of the CLIPS executive are stored in the database to ensure consistency when loading a recorded environment.
+This includes database connection parameters such as the database username and password.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The database credentials are stored in the database as part of the recorded environment.</p>
+<p><strong>They are not stored securely</strong> and should not be used for sensitive or production credentials.</p>
+</div>
+</section>
+<section id="performance-considerations">
+<h3>Performance Considerations<a class="headerlink" href="#performance-considerations" title="Link to this heading"></a></h3>
+<p>Database latency or slow write operations can slow down the execution of the CLIPS executive, as it synchronizes runtime data to the database.</p>
+<p>It is generally recommended to use a PostgreSQL instance running on the same system as the CLIPS executive.</p>
+</section>
+<section id="defmodule-support">
+<h3>Defmodule Support<a class="headerlink" href="#defmodule-support" title="Link to this heading"></a></h3>
+<p>There are some minor limitations when using this plugin in combination with modules.</p>
+<ol class="arabic simple">
+<li><p>The saver plugin must be loaded before any additional modules are defined to keep track of module relationships.</p></li>
+<li><p>Deleting of defmodule is not supported in CLIPS but can be done using the <cite>clear</cite> command.
+However, this plugin can not handle this edge case.</p></li>
+</ol>
+</section>
+<section id="clips-cool-support">
+<h3>CLIPS COOL Support<a class="headerlink" href="#clips-cool-support" title="Link to this heading"></a></h3>
+<p>the CLIPS COOL fragment for object-oriented reasoning is not supported.</p>
+</section>
+</section>
+<section id="usage-example">
+<h2>Usage Example<a class="headerlink" href="#usage-example" title="Link to this heading"></a></h2>
+<p>A minimal working example is provided by the <a class="reference external" href="https://carologistics.github.io/clips_executive/cx_bringup">cx_bringup</a> package. Run it via:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>cx_bringup<span class="w"> </span>cx_launch.py<span class="w"> </span>manager_config:<span class="o">=</span>plugin_examples/cdb_saver.yaml
+</pre></div>
+</div>
+<p>In this example the environment simply counts upwards from 0 to 20.</p>
+<p>You can connect to the database and inspect it.
+For example, in order to see all fact changes:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>psql<span class="w"> </span>-h<span class="w"> </span>localhost<span class="w"> </span>-U<span class="w"> </span>cx_user<span class="w"> </span>-d<span class="w"> </span>cdb_cx_cdb<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT * from fact_values;&quot;</span>
+</pre></div>
+</div>
+<section id="id1">
+<h3>Configuration<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/params/plugin_examples/executive.yaml">cx_bringup/params/plugin_examples/executive.yaml</a>.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">/**</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_cdb&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">cx_cdb</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cdb_saver&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;executive&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;files&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">log_clips_to_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">watch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facts&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;rules&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">    </span><span class="nt">cdb_saver</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::CDBSaverPlugin&quot;</span>
+<span class="w">      </span><span class="nt">hostname</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;localhost&quot;</span>
+<span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5432</span>
+<span class="w">      </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx_user&quot;</span>
+<span class="w">      </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;password&quot;</span>
+<span class="w">      </span><span class="nt">db_prefix</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cdb&quot;</span>
+<span class="w">      </span><span class="c1"># for demonstration purposes this is turned off.</span>
+<span class="w">      </span><span class="nt">db_timestamp_suffix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="w">    </span><span class="nt">executive</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::ExecutivePlugin&quot;</span>
+<span class="w">      </span><span class="nt">assert_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">refresh_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">    </span><span class="nt">files</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::FileLoadPlugin&quot;</span>
+<span class="w">      </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_bringup&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span>
+<span class="w">        </span><span class="s">&quot;clips/plugin_examples/cdb-saver.clp&quot;</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+</section>
+<section id="code">
+<h3>Code<a class="headerlink" href="#code" title="Link to this heading"></a></h3>
+<p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/cdb-saver.clp">cx_bringup/clips/plugin_examples/cdb-saver.clp</a>.</p>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">deftemplate</span> counter
+  <span class="p">(</span><span class="kr">slot</span> value <span class="p">(</span><span class="kr">type</span> INTEGER))
+  <span class="p">(</span><span class="kr">slot</span> last-updated <span class="p">(</span><span class="kr">type</span> FLOAT))
+<span class="p">)</span>
+
+<span class="p">(</span><span class="kd">deffacts</span> init-counter
+  <span class="p">(</span>counter <span class="p">(</span>value <span class="mi">0</span><span class="p">))</span>
+<span class="p">)</span>
+
+<span class="p">(</span><span class="kd">defrule</span> increment-counter
+  <span class="nv">?f</span> &lt;- <span class="p">(</span>counter <span class="p">(</span>value <span class="nv">?n</span><span class="p">)</span> <span class="p">(</span>last-updated <span class="nv">?t</span><span class="p">))</span>
+  <span class="p">(</span>time <span class="nv">?now</span>&amp;:(&lt; <span class="nv">?t</span> <span class="nv">?now</span><span class="p">))</span>
+  <span class="nt">=&gt;</span>
+  <span class="p">(</span>bind <span class="nv">?new-value</span> <span class="p">(</span>+ <span class="nv">?n</span> <span class="mi">1</span><span class="p">))</span>
+  <span class="p">(</span>if <span class="p">(</span>&gt; <span class="nv">?new-value</span> <span class="mi">20</span><span class="p">)</span>
+   then
+    <span class="p">(</span><span class="k k-Name k-Name-Function">retract</span> <span class="nv">?f</span><span class="p">)</span>
+    <span class="p">(</span>cx-shutdown)
+   else
+    <span class="p">(</span><span class="k k-Name k-Name-Function">modify</span> <span class="nv">?f</span> <span class="p">(</span>value <span class="p">(</span>+ <span class="nv">?n</span> <span class="mi">1</span><span class="p">))</span> <span class="p">(</span>last-updated <span class="nv">?now</span><span class="p">))</span>
+  <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cx_ament_index.html" class="btn btn-neutral float-left" title="Ament Index Plugin" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cdb_loader_plugin.html" class="btn btn-neutral float-right" title="CDB Loader Plugin" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Tarik Viehmann.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -36,6 +36,8 @@ Available Plugins
    :maxdepth: 2
 
    cx_ament_index.rst
+   cdb_saver_plugin.rst
+   cdb_loader_plugin.rst
    executive_plugin.rst
    config_plugin.rst
    file_load_plugin.rst

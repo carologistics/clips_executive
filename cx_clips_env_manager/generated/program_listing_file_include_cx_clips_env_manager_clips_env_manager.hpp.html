@@ -257,6 +257,8 @@
 <span class="w">  </span><span class="c1">// Connection to tell that server is still up</span>
 <span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">bond</span><span class="o">::</span><span class="n">Bond</span><span class="o">&gt;</span><span class="w"> </span><span class="n">bond_</span><span class="p">{</span><span class="k">nullptr</span><span class="p">};</span>
 <span class="w">  </span><span class="kt">double</span><span class="w"> </span><span class="n">bond_heartbeat_period_</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="n">reset_on_startup_</span><span class="p">;</span>
+<span class="w">  </span><span class="kt">bool</span><span class="w"> </span><span class="n">run_on_startup_</span><span class="p">;</span>
 <span class="w">  </span><span class="n">rclcpp</span><span class="o">::</span><span class="n">TimerBase</span><span class="o">::</span><span class="n">SharedPtr</span><span class="w"> </span><span class="n">autostart_timer_</span><span class="p">;</span>
 <span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">rclcpp</span><span class="o">::</span><span class="n">PreShutdownCallbackHandle</span><span class="o">&gt;</span><span class="w"> </span><span class="n">rcl_preshutdown_cb_handle_</span><span class="p">{</span><span class="k">nullptr</span><span class="p">};</span>
 <span class="p">};</span>

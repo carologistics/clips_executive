@@ -15,6 +15,8 @@
     <member refid="classcx_1_1CLIPSEnvManager_1aa0c8b12105b2412b871a09f3fbf78e8b" kind="variable"><name>contexts_</name></member>
     <member refid="classcx_1_1CLIPSEnvManager_1abc25b1134c52125229479854e3b2180c" kind="variable"><name>bond_</name></member>
     <member refid="classcx_1_1CLIPSEnvManager_1ad9b7c2e33b32ae5ed7a8741b8f293e4e" kind="variable"><name>bond_heartbeat_period_</name></member>
+    <member refid="classcx_1_1CLIPSEnvManager_1a0fa37f0629113e4756d75479c92f6cb8" kind="variable"><name>reset_on_startup_</name></member>
+    <member refid="classcx_1_1CLIPSEnvManager_1af8d354569f7a307c2260a7197a7a1e9d" kind="variable"><name>run_on_startup_</name></member>
     <member refid="classcx_1_1CLIPSEnvManager_1ab9df32715bd23f0163731e81c8fac226" kind="variable"><name>autostart_timer_</name></member>
     <member refid="classcx_1_1CLIPSEnvManager_1a452ff37a418de100df227fbba0972488" kind="variable"><name>rcl_preshutdown_cb_handle_</name></member>
     <member refid="classcx_1_1CLIPSEnvManager_1ae9fda0b00546734dae34696c3a3d6b50" kind="function"><name>CLIPSEnvManager</name></member>

@@ -130,6 +130,8 @@ Program Listing for File clips_env_manager.hpp
      // Connection to tell that server is still up
      std::unique_ptr<bond::Bond> bond_{nullptr};
      double bond_heartbeat_period_;
+     bool reset_on_startup_;
+     bool run_on_startup_;
      rclcpp::TimerBase::SharedPtr autostart_timer_;
      std::unique_ptr<rclcpp::PreShutdownCallbackHandle> rcl_preshutdown_cb_handle_{nullptr};
    };
