@@ -625,20 +625,20 @@ bool CDBSaverPlugin::clips_env_destroyed(std::shared_ptr<clips::Environment> & e
     return false;
   }
 
-  if (clips::RemoveDeffunctionAssertFunction(env.get(), "cdb_deffunction_assert_callback")) {
+  if (!clips::RemoveDeffunctionAssertFunction(env.get(), "cdb_deffunction_assert_callback")) {
     RCLCPP_ERROR(
       *logger_, "Failed to remove deffunction assert callback for environment %s",
       context->env_name_.c_str());
     return false;
   }
-  if (clips::RemoveDeffunctionRetractFunction(env.get(), "cdb_deffunction_retract_callback")) {
+  if (!clips::RemoveDeffunctionRetractFunction(env.get(), "cdb_deffunction_retract_callback")) {
     RCLCPP_ERROR(
       *logger_, "Failed to remove deffunction retract callback for environment %s",
       context->env_name_.c_str());
     return false;
   }
 
-  if (clips::RemoveDeffactsAssertFunction(env.get(), "cdb_deffacts_assert_callback")) {
+  if (!clips::RemoveDeffactsAssertFunction(env.get(), "cdb_deffacts_assert_callback")) {
     RCLCPP_ERROR(
       *logger_, "Failed to remove deffacts assert callback for environment %s",
       context->env_name_.c_str());
