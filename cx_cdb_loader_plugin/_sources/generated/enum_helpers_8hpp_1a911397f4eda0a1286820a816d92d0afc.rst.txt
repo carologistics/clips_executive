@@ -1,0 +1,14 @@
+.. _exhale_enum_helpers_8hpp_1a911397f4eda0a1286820a816d92d0afc:
+
+Enum SlotType
+=============
+
+- Defined in :ref:`file_include_cx_cdb_loader_plugin_helpers.hpp`
+
+
+Enum Documentation
+------------------
+
+
+.. doxygenenum:: cx::SlotType
+   :project: cx_cdb_loader_plugin Doxygen Project

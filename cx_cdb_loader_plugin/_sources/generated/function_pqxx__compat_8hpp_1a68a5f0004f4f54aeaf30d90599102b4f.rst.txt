@@ -1,0 +1,14 @@
+.. _exhale_function_pqxx__compat_8hpp_1a68a5f0004f4f54aeaf30d90599102b4f:
+
+Template Function cx::exec_params
+=================================
+
+- Defined in :ref:`file_include_cx_cdb_loader_plugin_pqxx_compat.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cx::exec_params(pqxx::transaction_base&, const std::string&, Args&&...)
+   :project: cx_cdb_loader_plugin Doxygen Project

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['rosmsgsplugin_0',['RosMsgsPlugin',['http://docs.ros.org/en/latest/p/cx_ros_msgs_plugin/generated/doxygen/html/classcx_1_1RosMsgsPlugin.html',1,'cx']]],
-  ['rosparamplugin_1',['RosParamPlugin',['../classcx_1_1RosParamPlugin.html',1,'cx']]]
+  ['genericregexrule_0',['GenericRegexRule',['http://docs.ros.org/en/latest/p/cx_cdb_loader_plugin/generated/doxygen/html/structcx_1_1GenericRegexRule.html',1,'cx']]]
 ];

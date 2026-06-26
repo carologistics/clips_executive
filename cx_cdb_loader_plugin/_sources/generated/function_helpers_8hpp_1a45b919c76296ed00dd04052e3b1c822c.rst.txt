@@ -1,0 +1,14 @@
+.. _exhale_function_helpers_8hpp_1a45b919c76296ed00dd04052e3b1c822c:
+
+Function cx::append_json_to_multifield_builder(clips::Environment \*, clips::MultifieldBuilder \*, const nlohmann::json&, std::unordered_map<int64_t, clips::Fact \*>&, std::vector<clips::Fact \*>&, const RegexConfig&)
+=========================================================================================================================================================================================================================
+
+- Defined in :ref:`file_include_cx_cdb_loader_plugin_helpers.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cx::append_json_to_multifield_builder(clips::Environment *, clips::MultifieldBuilder *, const nlohmann::json&, std::unordered_map<int64_t, clips::Fact *>&, std::vector<clips::Fact *>&, const RegexConfig&)
+   :project: cx_cdb_loader_plugin Doxygen Project

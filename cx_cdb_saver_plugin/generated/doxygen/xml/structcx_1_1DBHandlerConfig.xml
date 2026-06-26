@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="structcx_1_1DBHandlerConfig" kind="struct" language="C++" prot="public">
+    <compoundname>cx::DBHandlerConfig</compoundname>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structcx_1_1DBHandlerConfig_1a68b1ea00bdc812fa3bea7b274af34f9c" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string cx::DBHandlerConfig::hostname</definition>
+        <argsstring></argsstring>
+        <name>hostname</name>
+        <qualifiedname>cx::DBHandlerConfig::hostname</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_saver_plugin/db_handler.hpp" line="34" column="15" bodyfile="include/cx_cdb_saver_plugin/db_handler.hpp" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1DBHandlerConfig_1af26cc54da070ab29aca78a944f726226" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int cx::DBHandlerConfig::port</definition>
+        <argsstring></argsstring>
+        <name>port</name>
+        <qualifiedname>cx::DBHandlerConfig::port</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_saver_plugin/db_handler.hpp" line="35" column="7" bodyfile="include/cx_cdb_saver_plugin/db_handler.hpp" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1DBHandlerConfig_1a2f42d4a1f676f6af3e4954ad3e1ce9b9" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string cx::DBHandlerConfig::username</definition>
+        <argsstring></argsstring>
+        <name>username</name>
+        <qualifiedname>cx::DBHandlerConfig::username</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_saver_plugin/db_handler.hpp" line="36" column="15" bodyfile="include/cx_cdb_saver_plugin/db_handler.hpp" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1DBHandlerConfig_1a02387064873ac71eeeb278af94ac69ce" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string cx::DBHandlerConfig::password</definition>
+        <argsstring></argsstring>
+        <name>password</name>
+        <qualifiedname>cx::DBHandlerConfig::password</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_saver_plugin/db_handler.hpp" line="37" column="15" bodyfile="include/cx_cdb_saver_plugin/db_handler.hpp" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1DBHandlerConfig_1aa81786e11bc7990f88ddbe5aa7c19631" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string cx::DBHandlerConfig::db_name</definition>
+        <argsstring></argsstring>
+        <name>db_name</name>
+        <qualifiedname>cx::DBHandlerConfig::db_name</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_saver_plugin/db_handler.hpp" line="38" column="15" bodyfile="include/cx_cdb_saver_plugin/db_handler.hpp" bodystart="38" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/cx_cdb_saver_plugin/db_handler.hpp" line="32" column="1" bodyfile="include/cx_cdb_saver_plugin/db_handler.hpp" bodystart="33" bodyend="39"/>
+    <listofallmembers>
+      <member refid="structcx_1_1DBHandlerConfig_1aa81786e11bc7990f88ddbe5aa7c19631" prot="public" virt="non-virtual"><scope>cx::DBHandlerConfig</scope><name>db_name</name></member>
+      <member refid="structcx_1_1DBHandlerConfig_1a68b1ea00bdc812fa3bea7b274af34f9c" prot="public" virt="non-virtual"><scope>cx::DBHandlerConfig</scope><name>hostname</name></member>
+      <member refid="structcx_1_1DBHandlerConfig_1a02387064873ac71eeeb278af94ac69ce" prot="public" virt="non-virtual"><scope>cx::DBHandlerConfig</scope><name>password</name></member>
+      <member refid="structcx_1_1DBHandlerConfig_1af26cc54da070ab29aca78a944f726226" prot="public" virt="non-virtual"><scope>cx::DBHandlerConfig</scope><name>port</name></member>
+      <member refid="structcx_1_1DBHandlerConfig_1a2f42d4a1f676f6af3e4954ad3e1ce9b9" prot="public" virt="non-virtual"><scope>cx::DBHandlerConfig</scope><name>username</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

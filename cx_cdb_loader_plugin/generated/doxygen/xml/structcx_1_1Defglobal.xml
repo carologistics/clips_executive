@@ -1,0 +1,103 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="structcx_1_1Defglobal" kind="struct" language="C++" prot="public">
+    <compoundname>cx::Defglobal</compoundname>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structcx_1_1Defglobal_1a5350070781415113c792b0f59e62c50b" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string cx::Defglobal::name</definition>
+        <argsstring></argsstring>
+        <name>name</name>
+        <qualifiedname>cx::Defglobal::name</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="71" column="15" bodyfile="include/cx_cdb_loader_plugin/helpers.hpp" bodystart="71" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1Defglobal_1a01d7f39b5bf3ca1c74cbcd0d1c5aded6" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string cx::Defglobal::defmodule</definition>
+        <argsstring></argsstring>
+        <name>defmodule</name>
+        <qualifiedname>cx::Defglobal::defmodule</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="72" column="15" bodyfile="include/cx_cdb_loader_plugin/helpers.hpp" bodystart="72" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1Defglobal_1ab3332c3a79c472569d24b9a40975271d" prot="public" static="no" mutable="no">
+        <type><ref refid="structcx_1_1TimedFact" kindref="compound">TimedFact</ref></type>
+        <definition>TimedFact cx::Defglobal::value</definition>
+        <argsstring></argsstring>
+        <name>value</name>
+        <qualifiedname>cx::Defglobal::value</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="73" column="13" bodyfile="include/cx_cdb_loader_plugin/helpers.hpp" bodystart="73" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1Defglobal_1ad8d2a2e28dd96a1e7f1ea7cbf9949376" prot="public" static="no" mutable="no">
+        <type>Tick</type>
+        <definition>Tick cx::Defglobal::start_tick</definition>
+        <argsstring></argsstring>
+        <name>start_tick</name>
+        <qualifiedname>cx::Defglobal::start_tick</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="74" column="8" bodyfile="include/cx_cdb_loader_plugin/helpers.hpp" bodystart="74" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1Defglobal_1aded04704a15141d64ca1744c0fb50707" prot="public" static="no" mutable="no">
+        <type>std::optional&lt; Tick &gt;</type>
+        <definition>std::optional&lt;Tick&gt; cx::Defglobal::end_tick</definition>
+        <argsstring></argsstring>
+        <name>end_tick</name>
+        <qualifiedname>cx::Defglobal::end_tick</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="75" column="17" bodyfile="include/cx_cdb_loader_plugin/helpers.hpp" bodystart="75" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>cx::Defglobal</label>
+        <link refid="structcx_1_1Defglobal"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>value</edgelabel>
+        </childnode>
+      </node>
+      <node id="2">
+        <label>cx::TimedFact</label>
+        <link refid="structcx_1_1TimedFact"/>
+      </node>
+    </collaborationgraph>
+    <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="69" column="1" bodyfile="include/cx_cdb_loader_plugin/helpers.hpp" bodystart="70" bodyend="76"/>
+    <listofallmembers>
+      <member refid="structcx_1_1Defglobal_1a01d7f39b5bf3ca1c74cbcd0d1c5aded6" prot="public" virt="non-virtual"><scope>cx::Defglobal</scope><name>defmodule</name></member>
+      <member refid="structcx_1_1Defglobal_1aded04704a15141d64ca1744c0fb50707" prot="public" virt="non-virtual"><scope>cx::Defglobal</scope><name>end_tick</name></member>
+      <member refid="structcx_1_1Defglobal_1a5350070781415113c792b0f59e62c50b" prot="public" virt="non-virtual"><scope>cx::Defglobal</scope><name>name</name></member>
+      <member refid="structcx_1_1Defglobal_1ad8d2a2e28dd96a1e7f1ea7cbf9949376" prot="public" virt="non-virtual"><scope>cx::Defglobal</scope><name>start_tick</name></member>
+      <member refid="structcx_1_1Defglobal_1ab3332c3a79c472569d24b9a40975271d" prot="public" virt="non-virtual"><scope>cx::Defglobal</scope><name>value</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

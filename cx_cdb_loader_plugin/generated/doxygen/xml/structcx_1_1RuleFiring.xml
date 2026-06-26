@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="structcx_1_1RuleFiring" kind="struct" language="C++" prot="public">
+    <compoundname>cx::RuleFiring</compoundname>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structcx_1_1RuleFiring_1a566d5c5bd37f596ea83db297c629f3a8" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int cx::RuleFiring::rule_id</definition>
+        <argsstring></argsstring>
+        <name>rule_id</name>
+        <qualifiedname>cx::RuleFiring::rule_id</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="91" column="7" bodyfile="include/cx_cdb_loader_plugin/helpers.hpp" bodystart="91" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1RuleFiring_1a4ca14b87a1410231f3f149f1693955b4" prot="public" static="no" mutable="no">
+        <type>std::vector&lt; int64_t &gt;</type>
+        <definition>std::vector&lt;int64_t&gt; cx::RuleFiring::base</definition>
+        <argsstring></argsstring>
+        <name>base</name>
+        <qualifiedname>cx::RuleFiring::base</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="92" column="15" bodyfile="include/cx_cdb_loader_plugin/helpers.hpp" bodystart="92" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1RuleFiring_1a1dcf7bb725e45beddea37a20412c597f" prot="public" static="no" mutable="no">
+        <type>Tick</type>
+        <definition>Tick cx::RuleFiring::tick</definition>
+        <argsstring></argsstring>
+        <name>tick</name>
+        <qualifiedname>cx::RuleFiring::tick</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="93" column="8" bodyfile="include/cx_cdb_loader_plugin/helpers.hpp" bodystart="93" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="89" column="1" bodyfile="include/cx_cdb_loader_plugin/helpers.hpp" bodystart="90" bodyend="94"/>
+    <listofallmembers>
+      <member refid="structcx_1_1RuleFiring_1a4ca14b87a1410231f3f149f1693955b4" prot="public" virt="non-virtual"><scope>cx::RuleFiring</scope><name>base</name></member>
+      <member refid="structcx_1_1RuleFiring_1a566d5c5bd37f596ea83db297c629f3a8" prot="public" virt="non-virtual"><scope>cx::RuleFiring</scope><name>rule_id</name></member>
+      <member refid="structcx_1_1RuleFiring_1a1dcf7bb725e45beddea37a20412c597f" prot="public" virt="non-virtual"><scope>cx::RuleFiring</scope><name>tick</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -106,11 +106,16 @@
 <span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;main&quot;</span><span class="p p-Indicator">]</span>
 <span class="w">    </span><span class="nt">autostart_node</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">    </span><span class="nt">reset_on_startup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">run_on_startup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">    </span><span class="nt">bond_heartbeat_period</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
 <span class="w">    </span><span class="nt">main</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;executive&quot;</span><span class="p p-Indicator">,</span><span class="s">&quot;files&quot;</span><span class="p p-Indicator">]</span>
 <span class="w">      </span><span class="nt">log_clips_to_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">      </span><span class="nt">watch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;rules&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;facts&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">focus_stack</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+<span class="w">      </span><span class="nt">rule_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-1</span>
+<span class="w">      </span><span class="nt">ignore_redefinition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">    </span><span class="c1"># plugin parameters</span>
 <span class="w">    </span><span class="c1"># ...</span>
 </pre></div>
@@ -148,6 +153,38 @@
 </table>
 <dl class="simple">
 <dt>Description</dt><dd><p>Heartbeat rate when used to bond with other nodes. A period of 0.0 disables bond usage.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">reset_on_startup<span class="colon">:</span></dt>
+<dd class="field-odd"><table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Type</p></td>
+<td><p>Default</p></td>
+</tr>
+<tr class="row-even"><td><p>bool</p></td>
+<td><p>true</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="simple">
+<dt>Description</dt><dd><p>If set to <em>true</em>, automatically call <code class="docutils literal notranslate"><span class="pre">(reset)</span></code> after setting up an environment.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">run_on_startup<span class="colon">:</span></dt>
+<dd class="field-even"><table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Type</p></td>
+<td><p>Default</p></td>
+</tr>
+<tr class="row-even"><td><p>bool</p></td>
+<td><p>true</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="simple">
+<dt>Description</dt><dd><p>If set to <em>true</em>, automatically call <code class="docutils literal notranslate"><span class="pre">(run)</span></code> after setting up an environment.</p>
 </dd>
 </dl>
 </dd>
@@ -272,8 +309,24 @@ This is only relevant in combination with the executive plugin, which is respons
 </tbody>
 </table>
 <dl class="simple">
-<dt>Description</dt><dd><p>If specified, sets an upper limit on the amount of rules that can fire on a single run of the inference engine.
+<dt>Description</dt><dd><p>If &gt; 0, sets an upper limit on the amount of rules that can fire on a single run of the inference engine.
 This is only relevant in combination with the executive plugin, which is responsible for handling runs.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">env.ignore_redefinition<span class="colon">:</span></dt>
+<dd class="field-even"><table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Type</p></td>
+<td><p>Default</p></td>
+</tr>
+<tr class="row-even"><td><p>bool</p></td>
+<td><p>false</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="simple">
+<dt>Description</dt><dd><p>If set to <em>true</em>, prints a warning whenever a construct is defined more than once.</p>
 </dd>
 </dl>
 </dd>

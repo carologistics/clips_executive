@@ -12,11 +12,16 @@ Example
     ros__parameters:
       environments: ["main"]
       autostart_node: false
+      reset_on_startup: true
+      run_on_startup: true
       bond_heartbeat_period: 0.0
       main:
         plugins: ["executive","files"]
         log_clips_to_file: true
         watch: ["rules", "facts"]
+        focus_stack: []
+        rule_limit: -1
+        ignore_redefinition: false
       # plugin parameters
       # ...
 
@@ -44,6 +49,28 @@ Node Parameters
 
   Description
     Heartbeat rate when used to bond with other nodes. A period of 0.0 disables bond usage.
+
+:reset_on_startup:
+
+  ============== =======
+  Type           Default
+  -------------- -------
+  bool           true
+  ============== =======
+
+  Description
+    If set to *true*, automatically call ``(reset)`` after setting up an environment.
+
+:run_on_startup:
+
+  ============== =======
+  Type           Default
+  -------------- -------
+  bool           true
+  ============== =======
+
+  Description
+    If set to *true*, automatically call ``(run)`` after setting up an environment.
 
 
 :environments:
@@ -138,9 +165,19 @@ Given an environment `env`, these are the configuration options:
   ============== =======
 
   Description
-    If specified, sets an upper limit on the amount of rules that can fire on a single run of the inference engine.
+    If > 0, sets an upper limit on the amount of rules that can fire on a single run of the inference engine.
     This is only relevant in combination with the executive plugin, which is responsible for handling runs.
 
+:env.ignore_redefinition:
+
+  ============== =======
+  Type           Default
+  -------------- -------
+  bool           false
+  ============== =======
+
+  Description
+    If set to *true*, prints a warning whenever a construct is defined more than once.
 
 Plugin Parameters
 -----------------

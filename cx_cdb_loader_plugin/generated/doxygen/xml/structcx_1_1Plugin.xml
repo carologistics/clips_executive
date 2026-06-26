@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.9.8" xml:lang="en-US">
+  <compounddef id="structcx_1_1Plugin" kind="struct" language="C++" prot="public">
+    <compoundname>cx::Plugin</compoundname>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structcx_1_1Plugin_1ab2e2d6bec88c979422dfdd6ddd570631" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string cx::Plugin::name</definition>
+        <argsstring></argsstring>
+        <name>name</name>
+        <qualifiedname>cx::Plugin::name</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="132" column="15" bodyfile="include/cx_cdb_loader_plugin/helpers.hpp" bodystart="132" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1Plugin_1aaf912702d2b8eb5e7a4f242a1f50d564" prot="public" static="no" mutable="no">
+        <type>Tick</type>
+        <definition>Tick cx::Plugin::start_tick</definition>
+        <argsstring></argsstring>
+        <name>start_tick</name>
+        <qualifiedname>cx::Plugin::start_tick</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="133" column="8" bodyfile="include/cx_cdb_loader_plugin/helpers.hpp" bodystart="133" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1Plugin_1af47e6f21794eb1b69769378c8509984a" prot="public" static="no" mutable="no">
+        <type>std::optional&lt; Tick &gt;</type>
+        <definition>std::optional&lt;Tick&gt; cx::Plugin::end_tick</definition>
+        <argsstring></argsstring>
+        <name>end_tick</name>
+        <qualifiedname>cx::Plugin::end_tick</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="134" column="17" bodyfile="include/cx_cdb_loader_plugin/helpers.hpp" bodystart="134" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structcx_1_1Plugin_1a6f2ce0bb5a8054af5dbe8d3bc3720afd" prot="public" static="no" mutable="no">
+        <type>json</type>
+        <definition>json cx::Plugin::config</definition>
+        <argsstring></argsstring>
+        <name>config</name>
+        <qualifiedname>cx::Plugin::config</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="135" column="8" bodyfile="include/cx_cdb_loader_plugin/helpers.hpp" bodystart="135" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="include/cx_cdb_loader_plugin/helpers.hpp" line="130" column="1" bodyfile="include/cx_cdb_loader_plugin/helpers.hpp" bodystart="131" bodyend="136"/>
+    <listofallmembers>
+      <member refid="structcx_1_1Plugin_1a6f2ce0bb5a8054af5dbe8d3bc3720afd" prot="public" virt="non-virtual"><scope>cx::Plugin</scope><name>config</name></member>
+      <member refid="structcx_1_1Plugin_1af47e6f21794eb1b69769378c8509984a" prot="public" virt="non-virtual"><scope>cx::Plugin</scope><name>end_tick</name></member>
+      <member refid="structcx_1_1Plugin_1ab2e2d6bec88c979422dfdd6ddd570631" prot="public" virt="non-virtual"><scope>cx::Plugin</scope><name>name</name></member>
+      <member refid="structcx_1_1Plugin_1aaf912702d2b8eb5e7a4f242a1f50d564" prot="public" virt="non-virtual"><scope>cx::Plugin</scope><name>start_tick</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

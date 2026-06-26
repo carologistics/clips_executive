@@ -1,0 +1,26 @@
+.. _exhale_class_classcx_1_1CDBSaverPlugin:
+
+Class CDBSaverPlugin
+====================
+
+- Defined in :ref:`file_include_cx_cdb_saver_plugin_cdb_saver_plugin.hpp`
+
+
+Inheritance Relationships
+-------------------------
+
+Base Type
+*********
+
+- ``public cx::ClipsPlugin``
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: cx::CDBSaverPlugin
+   :project: cx_cdb_saver_plugin Doxygen Project
+   :members:
+   :protected-members:
+   :undoc-members:

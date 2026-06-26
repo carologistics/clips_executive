@@ -1,0 +1,14 @@
+.. _exhale_function_helpers_8hpp_1a00a0153adc576ccdc56db5e4d866411c:
+
+Function cx::parse_timed_text
+=============================
+
+- Defined in :ref:`file_include_cx_cdb_loader_plugin_helpers.hpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: cx::parse_timed_text(const pqxx::row&)
+   :project: cx_cdb_loader_plugin Doxygen Project
