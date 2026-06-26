@@ -349,9 +349,7 @@
   <option  id='TAGFILES' default='no' type='stringlist'>
     <value><![CDATA[/__w/clips_executive/clips_executive/cross_reference/cx_ament_index_plugin/cx_ament_index_plugin.tag=http://docs.ros.org/en/latest/p/cx_ament_index_plugin/generated/doxygen/html]]></value>
     <value><![CDATA[/__w/clips_executive/clips_executive/cross_reference/cx_clips_env_manager/cx_clips_env_manager.tag=http://docs.ros.org/en/latest/p/cx_clips_env_manager/generated/doxygen/html]]></value>
-    <value><![CDATA[/__w/clips_executive/clips_executive/cross_reference/cx_cdb_saver_plugin/cx_cdb_saver_plugin.tag=http://docs.ros.org/en/latest/p/cx_cdb_saver_plugin/generated/doxygen/html]]></value>
     <value><![CDATA[/__w/clips_executive/clips_executive/cross_reference/cx_example_plugin/cx_example_plugin.tag=http://docs.ros.org/en/latest/p/cx_example_plugin/generated/doxygen/html]]></value>
-    <value><![CDATA[/__w/clips_executive/clips_executive/cross_reference/cx_cdb_loader_plugin/cx_cdb_loader_plugin.tag=http://docs.ros.org/en/latest/p/cx_cdb_loader_plugin/generated/doxygen/html]]></value>
     <value><![CDATA[/__w/clips_executive/clips_executive/cross_reference/cx_config_plugin/cx_config_plugin.tag=http://docs.ros.org/en/latest/p/cx_config_plugin/generated/doxygen/html]]></value>
     <value><![CDATA[/__w/clips_executive/clips_executive/cross_reference/cx_plugin/cx_plugin.tag=http://docs.ros.org/en/latest/p/cx_plugin/generated/doxygen/html]]></value>
   </option>

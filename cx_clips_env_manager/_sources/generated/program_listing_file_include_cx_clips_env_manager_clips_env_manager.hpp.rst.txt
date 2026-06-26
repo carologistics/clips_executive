@@ -74,8 +74,6 @@ Program Listing for File clips_env_manager.hpp
      CallbackReturn on_shutdown(const rclcpp_lifecycle::State & state);
      CallbackReturn on_error(const rclcpp_lifecycle::State & state);
    
-     ClipsPluginManager & get_plugin_manager() { return plugin_manager_; }
-   
      void list_envs_callback(
        const std::shared_ptr<rmw_request_id_t> request_header,
        const std::shared_ptr<cx_msgs::srv::ListClipsEnvs::Request> request,
@@ -102,9 +100,6 @@ Program Listing for File clips_env_manager.hpp
    private:
      std::shared_ptr<clips::Environment> new_env(const std::string & env_name);
    
-     static void redefine_callback(
-       clips::Environment * env, const char *, const char *, const char *, void * context);
-   
      bool delete_env(const std::string & env_name);
      // ROS2 SERVICES
      rclcpp::Service<cx_msgs::srv::ListClipsEnvs>::SharedPtr list_envs_service_;
@@ -130,8 +125,6 @@ Program Listing for File clips_env_manager.hpp
      // Connection to tell that server is still up
      std::unique_ptr<bond::Bond> bond_{nullptr};
      double bond_heartbeat_period_;
-     bool reset_on_startup_;
-     bool run_on_startup_;
      rclcpp::TimerBase::SharedPtr autostart_timer_;
      std::unique_ptr<rclcpp::PreShutdownCallbackHandle> rcl_preshutdown_cb_handle_{nullptr};
    };

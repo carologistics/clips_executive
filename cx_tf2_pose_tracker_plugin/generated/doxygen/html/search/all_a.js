@@ -1,7 +1,4 @@
 var searchData=
 [
-  ['tf2posetrackerplugin_0',['Tf2PoseTrackerPlugin',['../classcx_1_1Tf2PoseTrackerPlugin.html',1,'cx']]],
-  ['timedfact_1',['TimedFact',['http://docs.ros.org/en/latest/p/cx_cdb_loader_plugin/generated/doxygen/html/structcx_1_1TimedFact.html',1,'cx']]],
-  ['timedtext_2',['TimedText',['http://docs.ros.org/en/latest/p/cx_cdb_loader_plugin/generated/doxygen/html/structcx_1_1TimedText.html',1,'cx']]],
-  ['timelookup_3',['TimeLookup',['http://docs.ros.org/en/latest/p/cx_cdb_loader_plugin/generated/doxygen/html/structcx_1_1TimeLookup.html',1,'cx']]]
+  ['yaml_0',['YAML',['http://docs.ros.org/en/latest/p/cx_config_plugin/generated/doxygen/html/structYAML_1_1as__if_3_01std_1_1string_00_01std_1_1optional_3_01std_1_1string_01_4_01_4.html',1,'']]]
 ];
