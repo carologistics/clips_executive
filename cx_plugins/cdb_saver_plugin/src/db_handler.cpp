@@ -129,7 +129,7 @@ void DBHandler::retract_fact(uint64_t id, uint64_t tick)
       "WHERE fact_id = $2 AND end_tick IS NULL",
       tick, id);
 
-    if (result.affected_rows() > 1) {
+    if (result.affected_rows() != 1) {
       throw std::runtime_error(
         "fact with id " + std::to_string(id) + " not found or already retracted");
     }
