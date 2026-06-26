@@ -105,17 +105,30 @@
   (assert (pddl-action-condition (instance test) (action ?id)))
 )
 
-(defrule cx-pddl-clips-agent-executable-action
+(defrule cx-pddl-clips-agent-executable-action-mock
 " Condition is satisfied, go ahead with execution "
   (pddl-plan (id ?plan-id) (plan-start ?t))
   (pddl-action-condition (action ?action-id) (state CONDITION-SAT))
   ?pa <- (pddl-action (id ?action-id) (plan ?plan-id) (name ?name) (params $?params) (state SELECTED))
+  (test (neq (ros-param-get-value "pddl.executor" "FALSE") TRUE))
 =>
   (modify ?pa (state EXECUTING) (actual-start-time (- (now) ?t)))
 )
 
-(defrule cx-pddl-clips-agent-execution-done
+(defrule cx-pddl-clips-agent-create-executor
+" Condition is satisfied, go ahead with execution "
+  (pddl-plan (id ?plan-id) (plan-start ?t))
+  (pddl-action-condition (action ?action-id) (state CONDITION-SAT))
+  ?pa <- (pddl-action (id ?action-id) (plan ?plan-id) (name ?name) (params $?params) (state SELECTED))
+  (test (eq (ros-param-get-value "pddl.executor" "FALSE") TRUE))
+=>
+  (assert (pddl-action-executor (action ?action-id)))
+  (modify ?pa (state EXECUTING))
+)
+
+(defrule cx-pddl-clips-agent-execution-done-mock
 " After the duration has elapsed, the action is done "
+  (test (neq (ros-param-get-value "pddl.executor" "FALSE") TRUE))
   (time ?now)
   (pddl-plan (id ?plan-id) (plan-start ?t))
   ?pa <- (pddl-action (id ?id) (plan ?plan-id) (state EXECUTING) (planned-duration ?d) (name ?name)

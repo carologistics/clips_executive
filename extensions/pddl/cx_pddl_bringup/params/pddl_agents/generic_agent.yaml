@@ -3,16 +3,19 @@
     autostart_node: true
     pddl:
       package_dir: "cx_pddl_bringup"
-      plan_type: "TEMPORAL"
+      plan_type: "CLASSICAL"
       # plan_type: "STN"
       # plan_type: "PARTIAL-ORDER"
       # plan_type: "HIERARCHICAL"
-      domain: "depots_temporal_domain.pddl"
-      problem: "depots_temporal_problem.pddl"
+      domain: "multilevel_blocks_domain.pddl"
+      problem: "multilevel_blocks_problem.pddl"
+      #domain: "depots_temporal_domain.pddl"
+      #problem: "depots_temporal_problem.pddl"
       # domain: "depots_classical_domain.pddl"
       # problem: "depots_classical_problem.pddl"
       # domain: "robot_hierarchical_domain.hddl"
       # problem: "robot_hierarchical_problem.hddl"
+      executor: TRUE
     environments: ["cx_pddl_clips_agent"]
 
     cx_pddl_clips_agent:
