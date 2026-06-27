@@ -1,6 +1,8 @@
 /**:
   ros__parameters:
     environments: ["cx_cdb"]
+    reset_on_startup: false
+    run_on_startup: false
     cx_cdb:
       plugins: ["cdb_loader", "executive"]
       log_clips_to_file: true
@@ -43,7 +45,7 @@
       #   "-1" = last recorded tick
       #   "-2" = tick before the last recorded tick
       #
-      restore_tick: -2
+      restore_tick: 0
 
       # Restore by time.
       #

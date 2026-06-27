@@ -1,6 +1,8 @@
 /**:
   ros__parameters:
     environments: ["cx_cdb"]
+    reset_on_startup: true
+    run_on_startup: false
     cx_cdb:
       plugins: ["cdb_saver", "executive", "files"]
       log_clips_to_file: true
