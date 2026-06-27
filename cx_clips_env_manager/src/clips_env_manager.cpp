@@ -100,7 +100,7 @@ CLIPSEnvManager::CLIPSEnvManager(const rclcpp::NodeOptions & options)
   get_parameter("reset_on_startup", reset_on_startup_);
   cx::cx_utils::declare_parameter_if_not_declared(
     this, "run_on_startup", rclcpp::ParameterValue(true));
-  get_parameter("run_on_startup", reset_on_startup_);
+  get_parameter("run_on_startup", run_on_startup_);
 
   if (autostart_node) {
     autostart();
