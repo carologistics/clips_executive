@@ -6,8 +6,8 @@
 
     training:
       retraining: true
-      max_episodes: 500
-      timesteps: 6000
+      max_episodes: 2000
+      timesteps: 13200
       checkpoint_freq: 200
 
     env:
