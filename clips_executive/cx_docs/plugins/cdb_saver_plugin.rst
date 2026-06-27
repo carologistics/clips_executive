@@ -51,7 +51,7 @@ Configuration
   ============ =======
   Type         Default
   ------------ -------
-  string       "anonymous"
+  string       "cx_user"
   ============ =======
 
   Description
@@ -65,7 +65,7 @@ Configuration
   ============ =======
   Type         Default
   ------------ -------
-  string       ""
+  string       "password"
   ============ =======
 
   Description
