@@ -73,9 +73,9 @@ void CDBSaverPlugin::initialize()
   cx::cx_utils::declare_parameter_if_not_declared(
     node, plugin_name_ + ".port", rclcpp::ParameterValue(5432));
   cx::cx_utils::declare_parameter_if_not_declared(
-    node, plugin_name_ + ".username", rclcpp::ParameterValue("anonymous"));
+    node, plugin_name_ + ".username", rclcpp::ParameterValue("cx_user"));
   cx::cx_utils::declare_parameter_if_not_declared(
-    node, plugin_name_ + ".password", rclcpp::ParameterValue(std::string()));
+    node, plugin_name_ + ".password", rclcpp::ParameterValue("password"));
   cx::cx_utils::declare_parameter_if_not_declared(
     node, plugin_name_ + ".db_prefix", rclcpp::ParameterValue("cdb"));
   cx::cx_utils::declare_parameter_if_not_declared(
