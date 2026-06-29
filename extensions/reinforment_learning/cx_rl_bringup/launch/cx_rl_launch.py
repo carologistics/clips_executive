@@ -114,7 +114,7 @@ def generate_launch_description():
         output='screen',
         emulate_tty=True,
         parameters=[rl_config_file],
-        arguments=['--ros-args', '--log-level', log_level],
+        arguments=['--ros-args', '--log-level', "debug"],
     )
 
     include_cx_launch = IncludeLaunchDescription(

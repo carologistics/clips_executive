@@ -26,6 +26,11 @@
 
 (deffunction cx-rl-interfaces-reset-env-handle-goal-callback (?server ?goal ?uuid)
   (printout ?*CX-RL-LOG-LEVEL* ?server " callback (goal " ?goal " ; id " ?uuid " )" crlf)
+  (do-for-fact ((?rl-env rl-reset-env))
+    (str-index ?rl-env:node ?server)
+    (printout error "Received reset during ongoing reset" crlf)
+    (return 1)
+  )
   (return 2)
 )
 

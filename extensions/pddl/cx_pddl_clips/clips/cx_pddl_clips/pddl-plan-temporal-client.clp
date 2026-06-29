@@ -100,7 +100,7 @@
       (bind ?ps-time (cx-pddl-interfaces-timed-plan-action-get-field ?action "start_time"))
       (bind ?p-duration (cx-pddl-interfaces-timed-plan-action-get-field ?action "duration"))
       (assert (pddl-action
-        (id ?id)
+        (id (sym-cat id- (gensym*)))
         (plan ?plan-id)
         (instance ?instance)
         (name ?name)
@@ -110,8 +110,10 @@
       )
       (bind ?id (+ ?id 1))
     )
+    (modify ?pp (state SUCCESS))
   else
     (printout red "plan not found!" crlf)
+    (modify ?pp (state FAILURE))
   )
   (retract ?wr-f)
   (cx-pddl-interfaces-plan-temporal-result-destroy ?res-ptr)

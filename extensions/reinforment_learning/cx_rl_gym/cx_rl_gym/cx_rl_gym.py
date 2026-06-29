@@ -835,6 +835,7 @@ class CXRLGym(Env):
         while self.reset_env_result is None:
             time.sleep(self.time_sleep)
         reset_confirm = self.reset_env_result.confirmation
+        self.reset_env_result = None
         return reset_confirm
 
     def reset_env_goal_response_callback(self, future: Future) -> None:

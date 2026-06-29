@@ -48,7 +48,8 @@
 
 (bind ?rule (str-cat
 "(defrule all-services-actions-created-save-facts \
-   ?cx-f <- (cx-rl-node (name ?node) (ros-comm-init TRUE)) \
+   (not (saved-facts)) \
+   ?cx-f <- (cx-rl-node (name ?node) (ros-comm-init TRUE) (mode ~UNSET)) \
 " ?services-pre ?service-clients-pre ?action-servers-pre
 "  => \
     (printout ?*CX-RL-LOG-LEVEL* \"saved initial facts for \" ?node crlf)  \
@@ -62,6 +63,7 @@
     ) \
     (bind ?path  (str-cat ?path ?node _reset_save)) \
     (modify ?cx-f (fact-reset-file ?path)) \
+    (assert (saved-facts)) \
     (bsave-facts  ?path) \
 ) \
 "))
