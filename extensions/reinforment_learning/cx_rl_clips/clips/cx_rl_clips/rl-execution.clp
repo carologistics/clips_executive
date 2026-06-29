@@ -57,11 +57,11 @@
     (modify ?a (assigned-to ?longest-waiting-robot))
   )
   (retract ?longest-waiting)
-  (assert (rl-robot (node ?node) (name ?robot) (waiting TRUE)))
+  (assert (rl-robot (node ?node) (name ?longest-waiting-robot) (waiting TRUE)))
 )
 
 (defrule cx-rl-action-select-training
-  ?ec <- (rl-current-action-space (node ?node) (state DONE))
+  ;?ec <- (rl-current-action-space (node ?node) (state DONE))
   (cx-rl-node (name ?node) (mode TRAINING))
   (rl-ros-action-meta-action-selection (node ?node) (action-id ?a-id))
   ?next-action <- (rl-action (node ?node) (id ?a-id) (is-selected FALSE) (is-finished FALSE) (assigned-to ?robot))
@@ -74,7 +74,7 @@
     (and (eq ?a:node ?node) (eq ?a:is-selected FALSE))
     (retract ?a)
   )
-  (modify ?ec (state PENDING))
+  ;(modify ?ec (state PENDING))
 )
 
 (defrule cx-rl-unassign-robot-from-finished-action

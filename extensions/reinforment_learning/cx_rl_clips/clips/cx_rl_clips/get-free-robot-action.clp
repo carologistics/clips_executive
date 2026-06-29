@@ -37,6 +37,7 @@
   (cx-rl-interfaces-get-free-robot-accepted-goal (server ?server) (server-goal-handle-ptr ?ptr))
   (test (str-index ?node ?server))
   (not (rl-ros-action-meta-get-free-robot (node ?node) (uuid ?uuid&:(eq ?uuid (cx-rl-interfaces-get-free-robot-server-goal-handle-get-goal-id ?ptr)))))
+  ?cas <- (rl-current-action-space (node ?node) (state DONE))
   (time ?now)
 =>
   (if (not (cx-rl-interfaces-get-free-robot-server-goal-handle-is-canceling ?ptr)) then
@@ -45,6 +46,7 @@
   else
       (printout ?*CX-RL-LOG-LEVEL* "Goal immediately canceled" crlf)
   )
+  (modify ?cas (state PENDING))
 )
 
 (defrule get-free-robot-robot-found
