@@ -7,8 +7,8 @@
       # plan_type: "STN"
       # plan_type: "PARTIAL-ORDER"
       # plan_type: "HIERARCHICAL"
-      domain: "multilevel_blocks_domain.pddl"
-      problem: "multilevel_blocks_problem.pddl"
+      domain: "korea_agent_domain.pddl"
+      problem: "korea_agent_problem.pddl"
       #problem: "multilevel_blocks_problem.pddl"
       #domain: "depots_temporal_domain.pddl"
       #problem: "depots_temporal_problem.pddl"
@@ -17,6 +17,9 @@
       # domain: "robot_hierarchical_domain.hddl"
       # problem: "robot_hierarchical_problem.hddl"
       executor: TRUE
+      #assembly values 'protobuf' or 'timer'
+      assembly: "timer"
+      assembly_timer: 10
     environments: ["cx_pddl_clips_agent"]
 
     cx_pddl_clips_agent:
@@ -29,7 +32,8 @@
                 "hierarchical_plan_method_msg",
                 "pddl_files",
                 "robotino-bts-action-client",
-                "files"]
+                "files"
+                ]
       log_clips_to_file: true
       watch: ["facts", "rules"]
       redirect_stdout_to_debug: true

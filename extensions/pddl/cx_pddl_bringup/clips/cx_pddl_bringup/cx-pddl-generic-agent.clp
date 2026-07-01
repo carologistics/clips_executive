@@ -25,20 +25,33 @@
 " Setup PDDL instance with an active goal to plan for "
   (pddl-manager (ros-comm-init TRUE))
 =>
-  (bind ?type (ros-param-get-value "pddl.plan_type" "TEMPORAL"))
-  (bind ?domain (ros-param-get-value "pddl.domain" "domain.pddl"))
-  (bind ?problem (ros-param-get-value "pddl.problem" "problem.pddl"))
-  (bind ?package (ros-param-get-value "pddl.package_dir" "cx_pddl_bringup"))
-  (bind ?share-dir (ament-index-get-package-share-directory ?package))
+  ;(bind ?type (ros-param-get-value "pddl.plan_type" "TEMPORAL"))
+  ;(bind ?domain (ros-param-get-value "pddl.domain" "domain.pddl"))
+  ;(bind ?problem (ros-param-get-value "pddl.problem" "problem.pddl"))
+  ;(bind ?package (ros-param-get-value "pddl.package_dir" "cx_pddl_bringup"))
+  ;(bind ?share-dir (ament-index-get-package-share-directory ?package))
+  ;(assert
+  ;  (pddl-instance
+  ;    (name test)
+  ;    (domain ?domain)
+  ;    (problem ?problem)
+  ;    (directory (str-cat ?share-dir "/pddl"))
+  ;  )
+  ;  (pddl-get-fluents (instance test))
+  ;  (pddl-plan (id test-plan) (instance test) (goal base) (plan-type (sym-cat ?type)))
+  ;)
   (assert
-    (pddl-instance
-      (name test)
-      (domain ?domain)
-      (problem ?problem)
-      (directory (str-cat ?share-dir "/pddl"))
-    )
-    (pddl-get-fluents (instance test))
-    (pddl-plan (id test-plan) (instance test) (goal base) (plan-type (sym-cat ?type)))
+    (pddl-plan (id game1) (plan-type CLASSICAL) (plan-start 0.0) (state SUCCESS) (action-type CLASSICAL))
+    (pddl-action (plan game1) (state IDLE) (order 0) (name pick) (params SS1-LEFT))
+    (pddl-action (plan game1) (state IDLE) (order 1) (name put) (params WB1-LEFT))
+    (pddl-action (plan game1) (state IDLE) (order 2) (name pick) (params SS1-RIGHT))
+    (pddl-action (plan game1) (state IDLE) (order 3) (name put) (params WB1-RIGHT))
+    (pddl-action (plan game1) (state IDLE) (order 4) (name assemble) (params estop))
+    (pddl-action (plan game1) (state IDLE) (order 5) (name pick) (params SS2-LEFT))
+    (pddl-action (plan game1) (state IDLE) (order 6) (name put) (params WB2-LEFT))
+    (pddl-action (plan game1) (state IDLE) (order 7) (name pick) (params SS2-RIGHT))
+    (pddl-action (plan game1) (state IDLE) (order 8) (name put) (params WB2-RIGHT))
+    (pddl-action (plan game1) (state IDLE) (order 9) (name assemble) (params battery))
   )
 )
 
@@ -97,18 +110,18 @@
   (modify ?pa (state SELECTED))
 )
 
-(defrule cx-pddl-clips-agent-check-action
-" Before executing an action check the condition to make sure it is feasible "
-  (pddl-action (id ?id) (state SELECTED) (name ?name) (params $?params))
-  (not (pddl-action-condition (action ?id)))
-=>
-  (assert (pddl-action-condition (instance test) (action ?id)))
-)
+;(defrule cx-pddl-clips-agent-check-action
+;" Before executing an action check the condition to make sure it is feasible "
+;  (pddl-action (id ?id) (state SELECTED) (name ?name) (params $?params))
+;  (not (pddl-action-condition (action ?id)))
+;=>
+;  (assert (pddl-action-condition (instance test) (action ?id)))
+;)
 
 (defrule cx-pddl-clips-agent-executable-action-mock
 " Condition is satisfied, go ahead with execution "
   (pddl-plan (id ?plan-id) (plan-start ?t))
-  (pddl-action-condition (action ?action-id) (state CONDITION-SAT))
+  ;(pddl-action-condition (action ?action-id) (state CONDITION-SAT))
   ?pa <- (pddl-action (id ?action-id) (plan ?plan-id) (name ?name) (params $?params) (state SELECTED))
   (test (neq (ros-param-get-value "pddl.executor" "FALSE") TRUE))
 =>
@@ -118,7 +131,7 @@
 (defrule cx-pddl-clips-agent-create-executor
 " Condition is satisfied, go ahead with execution "
   (pddl-plan (id ?plan-id) (plan-start ?t))
-  (pddl-action-condition (action ?action-id) (state CONDITION-SAT))
+  ;(pddl-action-condition (action ?action-id) (state CONDITION-SAT))
   ?pa <- (pddl-action (id ?action-id) (plan ?plan-id) (name ?name) (params $?params) (state SELECTED))
   (test (eq (ros-param-get-value "pddl.executor" "FALSE") TRUE))
 =>
@@ -133,7 +146,7 @@
   ?ex <- (pddl-action-executor (action ?action-id) (state SUCCEEDED))
 =>
   (modify ?pa (state DONE))
-  (assert (pddl-action-get-effect (action ?action-id) (apply TRUE)))
+  ;(assert (pddl-action-get-effect (action ?action-id) (apply TRUE)))
 )
 
 (defrule cx-pddl-clips-agent-execution-done-mock
@@ -147,7 +160,7 @@
   (bind ?duration (- (now) (+ ?s ?t)))
   (printout info "Executed action " ?name " in " ?duration " seconds" crlf)
   (modify ?pa (state DONE) (actual-duration ?duration))
-  (assert (pddl-action-get-effect (action ?id) (apply TRUE)))
+  ;(assert (pddl-action-get-effect (action ?id) (apply TRUE)))
 )
 
 (defrule cx-pddl-clips-agent-relax-partial-order
