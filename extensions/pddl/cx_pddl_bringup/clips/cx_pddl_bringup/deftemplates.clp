@@ -14,9 +14,9 @@
    - SUCCEEDED: the execution layer has succeeded in the execution of the action. 
 "                                                                               
   (slot id (type SYMBOL))                                                       
-  (slot worker (type SYMBOL))                                                   
-  (slot action (type SYMBOL))                                           
+  (slot worker (type SYMBOL) (default ROBOT1))                                                   
+  (slot action (type SYMBOL))
+  (slot goal-handle (type EXTERNAL-ADDRESS))
+  (slot goal-ptr (type EXTERNAL-ADDRESS))                                       
   (slot state (type SYMBOL) (allowed-values INIT REQUESTED ACCEPTED ABORTED CANCELLED SUCCEEDED) (default INIT))
 )
-
-;(deftemplate 

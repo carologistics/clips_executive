@@ -62,6 +62,7 @@ def generate_launch_description():
         launch_arguments={
             'package': package,
             'manager_config': manager_config,
+#            'log_level': 'DEBUG',
         }.items(),
     )
 

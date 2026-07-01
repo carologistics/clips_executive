@@ -43,6 +43,7 @@
   (slot output-dir (type STRING))
   (slot state (type SYMBOL) (allowed-values PENDING WAITING PLANNING REQUEST-CANCELING CANCELING CANCELED SUCCESS FAILURE) (default PENDING))
   (slot plan-start (type FLOAT) (default 0.0))
+  (slot retry (type INTEGER) (default 1))
 )
 
 (deftemplate plan-timeline

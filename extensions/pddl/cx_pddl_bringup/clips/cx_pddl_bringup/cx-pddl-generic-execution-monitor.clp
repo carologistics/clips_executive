@@ -12,3 +12,15 @@
 ; WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
+
+(defrule cx-pddl-clips-agent-replan-on-unsat
+  ?plan <- (pddl-plan (id ?plan-id) (plan-start ?t))
+  (pddl-action-condition (action ?action-id) (state CONDITION-UNSAT))
+  (pddl-action (id ?action-id) (plan ?plan-id))
+  (not (pddl-action-executor (state ACCEPTED)))
+  =>
+  (modify ?plan (state PENDING))
+  (do-for-all-facts ((?pa pddl-action)) (eq ?pa:plan ?plan-id)
+       (retract ?pa)
+  )
+)

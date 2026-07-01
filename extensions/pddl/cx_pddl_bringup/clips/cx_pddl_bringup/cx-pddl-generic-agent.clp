@@ -126,6 +126,16 @@
   (modify ?pa (state EXECUTING))
 )
 
+(defrule cx-pddl-clips-agent-done-executor
+" Condition is satisfied, go ahead with execution "
+  (pddl-plan (id ?plan-id) (plan-start ?t))
+  ?pa <- (pddl-action (id ?action-id) (plan ?plan-id) (name ?name) (params $?params) (state EXECUTING))
+  ?ex <- (pddl-action-executor (action ?action-id) (state SUCCEEDED))
+=>
+  (modify ?pa (state DONE))
+  (assert (pddl-action-get-effect (action ?action-id) (apply TRUE)))
+)
+
 (defrule cx-pddl-clips-agent-execution-done-mock
 " After the duration has elapsed, the action is done "
   (test (neq (ros-param-get-value "pddl.executor" "FALSE") TRUE))
@@ -206,3 +216,4 @@
      )
   )
 )
+

@@ -9,6 +9,7 @@
       # plan_type: "HIERARCHICAL"
       domain: "multilevel_blocks_domain.pddl"
       problem: "multilevel_blocks_problem.pddl"
+      #problem: "multilevel_blocks_problem.pddl"
       #domain: "depots_temporal_domain.pddl"
       #problem: "depots_temporal_problem.pddl"
       # domain: "depots_classical_domain.pddl"
@@ -27,6 +28,7 @@
                 "stn_constraint_msg",
                 "hierarchical_plan_method_msg",
                 "pddl_files",
+                "tampanda_simulator",
                 "files"]
       log_clips_to_file: true
       watch: ["facts", "rules"]
@@ -56,7 +58,11 @@
     files:
       plugin: "cx::FileLoadPlugin"
       pkg_share_dirs: ["cx_pddl_bringup"]
-      load: ["clips/cx_pddl_bringup/cx-pddl-generic-agent.clp"]
+      load: ["clips/cx_pddl_bringup/deftemplates.clp",
+             "clips/cx_pddl_bringup/cx-pddl-generic-agent.clp",
+             "clips/cx_pddl_bringup/cx-pddl-generic-execution-monitor.clp",
+             "clips/cx_pddl_bringup/tampanda-action-client.clp"
+            ]
 
     plan_action:
       plugin: "cx::CXCxPddlInterfacesPlanPlugin"
@@ -66,3 +72,5 @@
       plugin: "cx::CXCxPddlInterfacesStnConstraintPlugin"
     hierarchical_plan_method_msg:
       plugin: "cx::CXCxPddlInterfacesHierarchicalPlanMethodPlugin"
+    tampanda_simulator:
+      plugin: "cx::CXTampandaRosInterfacesExecutePddlActionPlugin"
