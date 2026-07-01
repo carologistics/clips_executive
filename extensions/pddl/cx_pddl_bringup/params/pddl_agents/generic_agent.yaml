@@ -28,7 +28,7 @@
                 "stn_constraint_msg",
                 "hierarchical_plan_method_msg",
                 "pddl_files",
-                "tampanda_simulator",
+                "robotino-bts-action-client",
                 "files"]
       log_clips_to_file: true
       watch: ["facts", "rules"]
@@ -61,7 +61,7 @@
       load: ["clips/cx_pddl_bringup/deftemplates.clp",
              "clips/cx_pddl_bringup/cx-pddl-generic-agent.clp",
              "clips/cx_pddl_bringup/cx-pddl-generic-execution-monitor.clp",
-             "clips/cx_pddl_bringup/tampanda-action-client.clp"
+             "clips/cx_pddl_bringup/robotino-bts-action-client.clp"
             ]
 
     plan_action:
@@ -72,5 +72,5 @@
       plugin: "cx::CXCxPddlInterfacesStnConstraintPlugin"
     hierarchical_plan_method_msg:
       plugin: "cx::CXCxPddlInterfacesHierarchicalPlanMethodPlugin"
-    tampanda_simulator:
-      plugin: "cx::CXTampandaRosInterfacesExecutePddlActionPlugin"
+    robotino-bts-action-client:
+      plugin: "cx::CXBtcppRos2InterfacesExecuteTreePlugin"

@@ -14,7 +14,7 @@
   <exec_depend>cx_pddl_clips</exec_depend>
   <exec_depend>cx_bringup</exec_depend>
   <exec_depend>cx_pddl_manager</exec_depend>
-  <exec_depend>tampanda_ros</exec_depend>
+  <exec_depend>robotino_behavior_tree</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>
