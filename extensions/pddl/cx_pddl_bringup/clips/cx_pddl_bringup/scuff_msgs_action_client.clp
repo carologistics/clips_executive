@@ -16,7 +16,7 @@
 ; This file showcases intefaces with ROS action servers and clients
 
 (defglobal
-  ?*SCUFF-MSGS-ACTION-SERVER* = "s/string_command"
+  ?*SCUFF-MSGS-ACTION-SERVER* = "/string_command"
 )
 
 (defrule scuff-action-client-init
