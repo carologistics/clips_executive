@@ -48,10 +48,10 @@
     ;estop cap pick and place
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 2) (name pick) (params SS1-LEFT))
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 3) (name put) (params WB1-RIGHT))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 4) (name assemble-start) (params estop))
+    ;(pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 4) (name assemble-start) (params estop))
     ;carrot 1st piece pick
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 5) (name pick) (params SS2-RIGHT))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 6) (name assemble-end) (params estop))
+    ;(pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 6) (name assemble-end) (params estop))
     ;carrot 1st piece put
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 7) (name put) (params WB1-LEFT))
     ;deliver e-stop
@@ -60,13 +60,13 @@
     ;carrot 2nd place pick and place
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 10) (name pick) (params SS2-RIGHT))
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 11) (name put) (params WB1-RIGHT))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 12) (name assemble-start) (params carrot-base))
+    ;(pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 12) (name assemble-start) (params carrot-base))
     ;pick and place carrot cap
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 13) (name pick) (params SS1-RIGHT))
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 14) (name put) (params WB1-LEFT))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 16) (name assemble-end) (params carrot-base))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 18) (name assemble-start) (params carrot-cap))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 19) (name assemble-end) (params carrot-cap))
+    ;(pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 16) (name assemble-end) (params carrot-base))
+    ;(pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 18) (name assemble-start) (params carrot-cap))
+    ;(pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 19) (name assemble-end) (params carrot-cap))
     ;deliver carrot
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 20) (name pick) (params WB1-RIGHT))
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 21) (name put) (params CC-RIGHT))
