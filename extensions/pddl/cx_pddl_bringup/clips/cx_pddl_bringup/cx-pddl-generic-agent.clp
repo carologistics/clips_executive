@@ -16,14 +16,14 @@
 
 ; ---------------- SETUP INSTANCE ------------------
 
-(defrule cx-pddl-clips-agent-pddl-init
-=>
-  (assert (pddl-manager (node "/pddl_manager")))
-)
+;(defrule cx-pddl-clips-agent-pddl-init
+;=>
+;  (assert (pddl-manager (node "/pddl_manager")))
+;)
 
 (defrule cx-pddl-clips-agent-pddl-add-instance
 " Setup PDDL instance with an active goal to plan for "
-  (pddl-manager (ros-comm-init TRUE))
+  ;(pddl-manager (ros-comm-init TRUE))
 =>
   ;(bind ?type (ros-param-get-value "pddl.plan_type" "TEMPORAL"))
   ;(bind ?domain (ros-param-get-value "pddl.domain" "domain.pddl"))

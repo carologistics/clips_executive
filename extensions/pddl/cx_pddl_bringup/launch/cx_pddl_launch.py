@@ -72,7 +72,7 @@ def generate_launch_description():
     ld = LaunchDescription()
     ld.add_action(declare_package)
     ld.add_action(declare_manager_config)
-    ld.add_action(include_pddl_manager)
+    #ld.add_action(include_pddl_manager)
     ld.add_action(include_cx_launch)
 
     return ld
