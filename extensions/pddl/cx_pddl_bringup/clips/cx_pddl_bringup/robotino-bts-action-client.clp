@@ -58,15 +58,6 @@
   (modify ?ex (state REQUESTED) (goal-ptr ?goal))
 )
 
-(defrule robotino-bts-client-send-goal-assemble
-  (btcpp-ros2-interfaces-execute-tree-client (server ?server))
-  ?ex <- (pddl-action-executor (action ?id) (state INIT))
-  (pddl-action (id ?id) (name assemble) (params $?params))
-  =>
-  (timer )
-  (printout green "we are now assembling")
-)
-
 (defrule robotino-bts-get-goal-response
 " Process the first goal response"
   (btcpp-ros2-interfaces-execute-tree-client (server ?server&:(eq ?server ?*ROBOTINO-BTS-ACTION-SERVER*)))

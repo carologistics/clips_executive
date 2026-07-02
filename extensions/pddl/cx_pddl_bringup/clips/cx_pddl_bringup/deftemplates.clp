@@ -20,3 +20,8 @@
   (slot goal-ptr (type EXTERNAL-ADDRESS))                                       
   (slot state (type SYMBOL) (allowed-values INIT REQUESTED ACCEPTED ABORTED CANCELLED SUCCEEDED) (default INIT))
 )
+
+
+(deftemplate assembly-timer
+  (slot start (type FLOAT) (default 0.0))
+)

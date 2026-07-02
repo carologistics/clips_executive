@@ -18,12 +18,12 @@
       # problem: "robot_hierarchical_problem.hddl"
       executor: TRUE
       #assembly values 'protobuf' or 'timer'
-      assembly: "timer"
+      assembly: "scuff"
       assembly_timer: 10
     environments: ["cx_pddl_clips_agent"]
 
     cx_pddl_clips_agent:
-      plugins: ["executive", "ros_msgs",
+      plugins: ["executive", "ros_msgs", "scuff-msgs",
                 "ament_index",
                 "ros_param",
                 "plan_action",
@@ -32,8 +32,7 @@
                 "hierarchical_plan_method_msg",
                 "pddl_files",
                 "robotino-bts-action-client",
-                "files",
-                scuff-msgs
+                "files"
                 ]
       log_clips_to_file: true
       watch: ["facts", "rules"]
@@ -66,7 +65,8 @@
       load: ["clips/cx_pddl_bringup/deftemplates.clp",
              "clips/cx_pddl_bringup/cx-pddl-generic-agent.clp",
              "clips/cx_pddl_bringup/cx-pddl-generic-execution-monitor.clp",
-             "clips/cx_pddl_bringup/robotino-bts-action-client.clp"
+             "clips/cx_pddl_bringup/robotino-bts-action-client.clp",
+             "clips/cx_pddl_bringup/scuff_msgs_action_client.clp"
             ]
 
     plan_action:
