@@ -49,6 +49,7 @@
      (bind ?payload ?*ROBOTINO-BTS-PAYLOAD-PICK*)
   )
   (bind ?payload (get-payload-str ?loc ?payload))
+  (bind ?loc (str-cat (ros-param-get-value "game.side" "A_") ?loc))
   (printout green "calling action server with payload " ?payload crlf)
   (btcpp-ros2-interfaces-execute-tree-goal-set-field ?goal "target_tree" ManipulateObject)
   (btcpp-ros2-interfaces-execute-tree-goal-set-field ?goal "payload" ?payload)

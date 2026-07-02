@@ -81,3 +81,5 @@
       plugin: "cx::CXBtcppRos2InterfacesExecuteTreePlugin"
     scuff-msgs:
       plugin: "cx::CXScuffMsgsStringCommandPlugin"
+    game:
+      side: "B_"
