@@ -39,7 +39,7 @@
 (defrule robotino-bts-client-send-goal-pick-put
   (btcpp-ros2-interfaces-execute-tree-client (server ?server))
   ?ex <- (pddl-action-executor (action ?id) (state INIT))
-  (pddl-action (id ?id) (name ?action-name&:(or (eq ?action-name pick) (eq ?action-name pick))) (params ?loc $?params))
+  (pddl-action (id ?id) (name ?action-name&:(or (eq ?action-name pick) (eq ?action-name put))) (params ?loc $?params))
   =>
   ;(bind ?goal-string (action-to-goal-str ?action-name $?params))
   (bind ?goal (btcpp-ros2-interfaces-execute-tree-goal-create))
