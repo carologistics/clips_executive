@@ -32,7 +32,8 @@
                 "hierarchical_plan_method_msg",
                 "pddl_files",
                 "robotino-bts-action-client",
-                "files"
+                "files",
+                scuff-msgs
                 ]
       log_clips_to_file: true
       watch: ["facts", "rules"]
@@ -78,3 +79,5 @@
       plugin: "cx::CXCxPddlInterfacesHierarchicalPlanMethodPlugin"
     robotino-bts-action-client:
       plugin: "cx::CXBtcppRos2InterfacesExecuteTreePlugin"
+    scuff-msgs:
+      plugin: "cx::CXScuffMsgsStringCommandPlugin"

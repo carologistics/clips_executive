@@ -7,5 +7,6 @@ find_package(cx_ros_comm_gen REQUIRED)
 
 install(DIRECTORY params pddl launch clips DESTINATION share/${PROJECT_NAME})
 cx_generate_action_bindings("btcpp_ros2_interfaces" "ExecuteTree")
+cx_generate_action_bindings("scuff_msgs" "StringCommand")
 
 ament_package()
