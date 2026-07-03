@@ -1,24 +1,24 @@
-# cx_config_plugin
-This package offers the `cx::ConfigPlugin` CLIPS plugin to read config values from yaml.
+<!-- AUTO-GENERATED via sphinx-build. Do not edit directly. -->
 
-## Usage
-Register this plugin with the plugin manager. It requires no additional configuration, an example setup is shown below:
+<a id="usage-config-plugin"></a>
 
-```yaml
-clips_manager:
-  ros__parameters:
-    environments: ["main"]
-    main:
-      plugins: ["config"]
+# YAML Configuration Plugin
 
-    config:
-      plugin: "cx::ConfigPlugin"
-```
-## CLIPS Features
-This plugin adds deftemplates and deffunctions as listed below:
+Source code on [GitHub](https://github.com/carologistics/clips_executive/blob/master/cx_plugins/config_plugin).
 
-### Deftemplates
-```lisp
+This plugin provides the ability to parse YAML files into CLIPS facts.
+
+## Configuration
+
+This plugin has no specific configuration.
+
+## Features
+
+This plugin adds deftemplates and custom functions as listed below.
+
+## Facts
+
+```clips
 ; Asserted by the config-load function for each configuration value in the parsed yaml file.
 (deftemplate confval
   (slot path (type STRING))
@@ -29,63 +29,72 @@ This plugin adds deftemplates and deffunctions as listed below:
 )
 ```
 
-### Functions
-```lisp
-; Load all config values from a file (absolute path) given a prefix and store tjhem into (confval) facts.
-; The prefix determines tha resulting path in the confval facts.
+## Functions
+
+```clips
+; Load all config values from a file (absolute path) given a prefix and store them into (confval) facts.
+; The prefix can be used to restrict the loaded values to a prefix
+; Use / for nesting, e.g., foo/bar for only retrieving values under bar in this example:
+;  foo:
+;    bar:
+;      ...
+; For / inside of keys, wrap the whole key by single quotes ', e.g., '/foo'/bar if the key is "/foo" instead of "foo".
 (config-load ?file ?prefix)
 ```
-## Example
-Assuming a yaml file at path `/home/<user>/test.yaml`:
+
+## Usage Example
+
+A minimal working example is provided by the [cx_bringup](https://carologistics.github.io/clips_executive/cx_bringup) package. Run it via:
+
+```bash
+ros2 launch cx_bringup cx_launch.py manager_config:=plugin_examples/config.yaml
+```
+
+It loads the used environment manager configuration file into CLIPS and prints the corresponding facts.
+
+## Configuration
+
+File [cx_bringup/params/plugin_examples/config.yaml](https://github.com/carologistics/clips_executive/blob/master/cx_bringup/params/plugin_examples/config.yaml).
+
 ```yaml
-root:
-  branch:
-        val1: true
-        val2: [test1, test2]
-  branch2:
-        val1: false
+clips_manager:
+  ros__parameters:
+    environments: ["cx_config"]
+    cx_config:
+      plugins: ["ament_index", "config", "files"]
+      log_clips_to_file: true
+      watch: ["facts", "rules"]
+
+    ament_index:
+      plugin: "cx::AmentIndexPlugin"
+    config:
+      plugin: "cx::ConfigPlugin"
+    files:
+      plugin: "cx::FileLoadPlugin"
+      pkg_share_dirs: ["cx_bringup"]
+      load: [
+        "clips/plugin_examples/config.clp"]
 ```
-Calling the function with different prefixes yields the following results:
-### Parsing Everyting
-```lisp
-(config-load "/home/<user>/test.yaml" "/")
-(confval
-  (path "/root/branch/val1")
-  (type BOOL)
-  (value TRUE)
-  (is-list FALSE)
-  (list-value)
-)
-(confval
-  (path "/root/branch/val2")
-  (type STRING)
-  (value nil)
-  (is-list TRUE)
-  (list-value "test1" "test2")
-)
-(confval
-  (path "/root/branch2/val1")
-  (type BOOL)
-  (value FALSE)
-  (is-list FLASE)
-  (list-value)
-)
-```
-### Parsing Only "branch"
-```lisp
-(config-load "/home/<user>/test.yaml" "/root/branch")
-(confval
-  (path "/root/branch/val1")
-  (type BOOL)
-  (value TRUE)
-  (is-list FALSE)
-  (list-value)
-)
-(confval
-  (path "/root/branch/val2")
-  (type STRING)
-  (value nil)
-  (is-list TRUE)
-  (list-value "test1" "test2")
+
+## Code
+
+File [cx_bringup/clips/plugin_examples/config.clp](https://github.com/carologistics/clips_executive/blob/master/cx_bringup/clips/plugin_examples/config.clp).
+
+```clips
+(defrule load-bringup-config
+  (not (confval))
+  =>
+  (bind ?share-dir (ament-index-get-package-share-directory "cx_bringup"))
+  (bind ?file (str-cat ?share-dir "/params/plugin_examples/config.yaml"))
+  (printout green "Loading from file " ?file crlf)
+  ; test loading of sequence
+  (printout green " 1. Prefix leading to environments (sequence): " crlf)
+  (config-load ?file "'/**'/ros__parameters/environments")
+  ; test loading of map
+  (printout green " 2. Prefix leading to environment config (map):" crlf)
+  (config-load ?file "'/**'/ros__parameters/cx_config/")
+  ; test loading of value
+  (printout green " 3. Prefix leading to config plugin string (scalar):" crlf)
+  (config-load ?file "'/**'/ros__parameters/config/plugin")
 )
 ```
