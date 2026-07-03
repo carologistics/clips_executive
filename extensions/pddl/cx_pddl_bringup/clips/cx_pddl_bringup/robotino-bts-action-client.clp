@@ -17,14 +17,18 @@
 
 (defglobal
   ?*ROBOTINO-BTS-ACTION-SERVER* = "/robotinobase1/robotino_behavior_server"
-  ?*ROBOTINO-BTS-PAYLOAD-PICK* = "{\"machine_input_tf\":location,\"reference_frame\":\"base_link\",\"object_type\":\"eurobox\",\"action\":\"pick\"}"
-  ?*ROBOTINO-BTS-PAYLOAD-PUT* = "{\"machine_input_tf\":location,\"reference_frame\":\"base_link\",\"object_type\":\"eurobox\",\"action\":\"put\"}"
+  ?*ROBOTINO-BTS-PAYLOAD-PICK* = "{\"machine_input_tf\":location,\"reference_frame\":location-TARGET,\"object_type\":\"eurobox\",\"action\":\"pick\"}"
+  ?*ROBOTINO-BTS-PAYLOAD-PUT* = "{\"machine_input_tf\":location,\"reference_frame\":location-TARGET,\"object_type\":\"eurobox\",\"action\":\"put\"}"
 )
 
 (deffunction get-payload-str (?loc ?payload)
- 	(return
+  (bind ?payload
+    (str-replace ?payload location-TARGET (str-cat "\"" ?loc "-TARGET\""))
+  )
+  (bind ?payload
     (str-replace ?payload location (str-cat "\"" ?loc "\""))
   )
+  (return ?payload)
 )
 
 (defrule robotino-bts-action-client-init
