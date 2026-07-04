@@ -21,9 +21,83 @@
 ;  (assert (pddl-manager (node "/pddl_manager")))
 ;)
 
-(defrule cx-pddl-clips-agent-pddl-add-instance
+(defrule cx-pddl-clips-agent-pddl-add-instance-advanced-production
+  (test (eq (ros-param-get-value "game.type" "advanced_production") "advanced_production"))
+  =>
+  (assert
+    ;produce
+    (pddl-plan (id game1) (plan-type CLASSICAL) (plan-start 0.0) (state SUCCESS) (action-type CLASSICAL))
+    ;magnet
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 0) (name pick) (params SS2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 1) (name put) (params WB2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 2) (name assemble-start) (params magnet1))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 3) (name pick) (params HS))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 4) (name put) (params WB2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 5) (name assemble-end) (params magnet1))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 6) (name assemble-start) (params magnet2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 7) (name assemble-end) (params magnet2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 8) (name pick) (params WB2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 9) (name put) (params CC))
+
+    ;smalltree
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 10) (name pick) (params SS1))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 11) (name put) (params WB2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 12) (name assemble-start) (params smalltree1))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 13) (name pick) (params SS2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 14) (name put) (params WB2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 15) (name assemble-end) (params smalltree1))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 16) (name assemble-start) (params smalltree2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 17) (name pick) (params SS1))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 18) (name put) (params WB2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 19) (name assemble-end) (params smalltree2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 20) (name assemble-start) (params smalltree3))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 21) (name assemble-end) (params smalltree3))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 22) (name pick) (params WB2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 23) (name put) (params CC))
+
+    ;assemble hammer
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 24) (name pick) (params SS1))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 25) (name put) (params WB2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 26) (name assemble-start) (params hammer1))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 27) (name pick) (params SS2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 28) (name put) (params WB2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 29) (name assemble-end) (params hammer1))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 30) (name assemble-start) (params hammer2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 31) (name assemble-end) (params hammer2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 32) (name pick) (params WB2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 33) (name put) (params CC))
+
+    ;icecream
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 34) (name pick) (params SS1))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 35) (name put) (params WB2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 36) (name assemble-start) (params icecream1))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 37) (name pick) (params SS1))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 38) (name put) (params WB2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 39) (name assemble-end) (params icecream1))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 40) (name assemble-start) (params icecream2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 41) (name pick) (params SS2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 42) (name put) (params WB2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 43) (name assemble-end) (params icecream2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 44) (name assemble-start) (params icecream3))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 45) (name pick) (params HS))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 46) (name put) (params WB2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 47) (name assemble-end) (params icecream3))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 48) (name assemble-start) (params icecream4))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 49) (name pick) (params SS1))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 50) (name put) (params WB2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 51) (name assemble-end) (params icecream4))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 52) (name assemble-start) (params icecream5))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 53) (name assemble-end) (params icecream5))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 54) (name pick) (params WB2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 55) (name put) (params CC))
+  )
+)
+
+(defrule cx-pddl-clips-agent-pddl-add-instance-beginner-lifecycle
 " Setup PDDL instance with an active goal to plan for "
   ;(pddl-manager (ros-comm-init TRUE))
+  (test (eq (ros-param-get-value "game.type" "beginner_lifecycle") "beginner_lifecycle"))
+
 =>
   ;(bind ?type (ros-param-get-value "pddl.plan_type" "TEMPORAL"))
   ;(bind ?domain (ros-param-get-value "pddl.domain" "domain.pddl"))
@@ -41,35 +115,59 @@
   ;  (pddl-plan (id test-plan) (instance test) (goal base) (plan-type (sym-cat ?type)))
   ;)
   (assert
+    ;trafficlight
     (pddl-plan (id game1) (plan-type CLASSICAL) (plan-start 0.0) (state SUCCESS) (action-type CLASSICAL))
-    ;estop base pick and place
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 0) (name pick) (params SS2-LEFT))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 1) (name put) (params SS3-LEFT))
-    ;estop cap pick and place
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 2) (name pick) (params SS1-LEFT))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 3) (name put) (params SS3-RIGHT))
-    ;(pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 4) (name assemble-start) (params estop))
-    ;carrot 1st piece pick
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 5) (name pick) (params SS2-RIGHT))
-    ;(pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 6) (name assemble-end) (params estop))
-    ;carrot 1st piece put
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 7) (name put) (params SS3-LEFT))
-    ;deliver e-stop
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 8) (name pick) (params SS3-RIGHT))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 9) (name put) (params WB2-LEFT))
-    ;carrot 2nd place pick and place
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 10) (name pick) (params SS2-RIGHT))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 11) (name put) (params SS3-RIGHT))
-    ;(pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 12) (name assemble-start) (params carrot-base))
-    ;pick and place carrot cap
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 13) (name pick) (params SS1-RIGHT))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 14) (name put) (params SS3-LEFT))
-    ;(pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 16) (name assemble-end) (params carrot-base))
-    ;(pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 18) (name assemble-start) (params carrot-cap))
-    ;(pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 19) (name assemble-end) (params carrot-cap))
-    ;deliver carrot
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 20) (name pick) (params SS3-RIGHT))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 21) (name put) (params WB2-RIGHT))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 0) (name pick) (params SS2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 1) (name put) (params WB2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 2) (name assemble-start) (params trafficlight1))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 3) (name pick) (params SS2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 4) (name put) (params WB2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 5) (name assemble-end) (params trafficlight1))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 6) (name assemble-start) (params trafficlight2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 7) (name pick) (params SS1))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 8) (name put) (params WB2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 9) (name assemble-end) (params trafficlight2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 10) (name assemble-start) (params trafficlight3))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 11) (name assemble-end) (params trafficlight3))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 12) (name pick) (params WB2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 13) (name put) (params CC))
+
+    ;smalltree
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 14) (name pick) (params SS2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 15) (name put) (params WB2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 16) (name assemble-start) (params smalltree1))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 17) (name pick) (params HS))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 18) (name put) (params WB2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 19) (name assemble-end) (params smalltree1))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 20) (name assemble-start) (params smalltree2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 21) (name pick) (params SS2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 22) (name put) (params WB2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 23) (name assemble-end) (params smalltree2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 24) (name assemble-start) (params smalltree3))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 25) (name assemble-end) (params smalltree3))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 26) (name pick) (params WB2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 27) (name put) (params CC))
+
+    ;disassemble estop
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 28) (name pick) (params CC))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 29) (name put) (params WB2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 30) (name disassemble-start) (params estop))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 31) (name disassemble-end) (params estop))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 32) (name pick) (params WB2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 33) (name put) (params HS))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 34) (name pick) (params WB2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 35) (name put) (params SS1))
+    ;disassemble hammer
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 36) (name pick) (params CC))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 37) (name put) (params WB2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 38) (name disassemble-start) (params hammer))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 39) (name disassemble-end) (params hammer))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 40) (name pick) (params WB2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 41) (name put) (params SS1))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 42) (name pick) (params WB2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 43) (name put) (params SS1))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 44) (name pick) (params WB2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 45) (name put) (params SS1))
   )
 )
 
