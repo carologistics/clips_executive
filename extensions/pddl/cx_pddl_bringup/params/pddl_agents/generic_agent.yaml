@@ -16,10 +16,10 @@
       # problem: "depots_classical_problem.pddl"
       # domain: "robot_hierarchical_domain.hddl"
       # problem: "robot_hierarchical_problem.hddl"
-      executor: TRUE
+      executor: FALSE
       #assembly values 'protobuf' or 'timer'
-      assembly: "scuff"
-      assembly_timer: 5
+      assembly: "timer"
+      assembly_timer: 2
     environments: ["cx_pddl_clips_agent"]
 
     cx_pddl_clips_agent:
