@@ -162,7 +162,7 @@
   ?timer <- (assembly-timer (start ?time))
   (pddl-action (id ?id) (name assemble-start) (params ?prod $?params))
   (time ?now)
-  (test (> ?now (+ ?time (ros-param-get-value "assembly-timer" 20))))
+  (test (> ?now (+ ?time (ros-param-get-value "pddl.assembly-timer" 60))))
   =>
   (printout info "timeout for assembly" crlf)
   (retract ?timer)

@@ -18,8 +18,8 @@
       # problem: "robot_hierarchical_problem.hddl"
       executor: TRUE
       #assembly values 'protobuf' or 'timer'
-      assembly: "scuff"
-      assembly_timer: 10
+      assembly: "timer"
+      assembly_timer: 120
     environments: ["cx_pddl_clips_agent"]
 
     cx_pddl_clips_agent:
@@ -83,4 +83,4 @@
       plugin: "cx::CXScuffMsgsStringCommandPlugin"
     game:
       side: "B_"
-      type: "beginner_lifecycle" ;advanced_production
+      type: "beginner_lifecycle"
