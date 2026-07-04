@@ -27,9 +27,9 @@
     ;produce magnet
     (pddl-plan (id game1) (plan-type CLASSICAL) (plan-start 0.0) (state SUCCESS) (action-type CLASSICAL))
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 0) (name pick) (params SS2 red2x2))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 1) (name put) (params WB1))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 1) (name put) (params WB1 red2x2))
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 3) (name pick) (params HS blue2x2))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 4) (name put) (params WB1))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 4) (name put) (params WB1 blue2x2))
     ;(pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 6) (name assemble-start) (params magnet2))
     ;(pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 7) (name assemble-end) (params magnet2))
 
