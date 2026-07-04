@@ -108,8 +108,8 @@
   ;(declare (salience 10))
   ?ex <- (pddl-action-executor (action ?action-id) (state ACCEPTED))
   (pddl-action-executor (goal-handle ?ghp) (action ?o-action-id) (goal-ptr ?goal-msg) (state SUCCEEDED))
-  (pddl-action (id ?action-id) (name assemble-end) (params $?action-params))
-  (pddl-action (id ?o-action-id) (name assemble-start) (params $?action-params))
+  (pddl-action (id ?action-id) (name assemble-end|dissassemble-end) (params $?action-params))
+  (pddl-action (id ?o-action-id) (name assemble-start|dissassemble-start) (params $?action-params))
   ;?f <- (scuff-msgs-string-command-goal-response (server ?server) (client-goal-handle-ptr ?ghp))
   ?g <- (scuff-msgs-string-command-wrapped-result (server ?server) (goal-id ?uuid) (code SUCCEEDED) (result-ptr ?rp))
   (test (eq ?uuid (scuff-msgs-string-command-client-goal-handle-get-goal-id ?ghp)))
@@ -148,7 +148,7 @@
 
 (defrule scuff-bypass-assembly-with-timer
   ?ex <- (pddl-action-executor (action ?id) (state INIT))
-  (pddl-action (id ?id) (name assemble-start) (params ?prod $?params))
+  (pddl-action (id ?id) (name assemble-start|dissassemble-start) (params ?prod $?params))
   (test (eq (ros-param-get-value "pddl.assembly" "timer") "timer"))
   (time ?now)
   =>
@@ -160,7 +160,7 @@
 (defrule scuff-assembly-time-out
   ?ex <- (pddl-action-executor (action ?id) (state ACCEPTED))
   ?timer <- (assembly-timer (start ?time))
-  (pddl-action (id ?id) (name assemble-start) (params ?prod $?params))
+  (pddl-action (id ?id) (name assemble-start|dissassemble-start) (params ?prod $?params))
   (time ?now)
   (test (> ?now (+ ?time (ros-param-get-value "pddl.assembly-timer" 60))))
   =>
@@ -171,7 +171,7 @@
 
 (defrule scuff-bypass-assembly-end-succeed
   ?ex <- (pddl-action-executor (action ?id) (state INIT))
-  (pddl-action (id ?id) (name assemble-end) (params ?prod $?params))
+  (pddl-action (id ?id) (name assemble-end|dissassemble-end) (params ?prod $?params))
   ?timer <- (assembly-timer (start ?time))
   =>
   (modify ?ex (state SUCCEEDED))
