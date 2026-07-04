@@ -39,7 +39,7 @@
 (defrule robotino-bts-client-send-goal-pick-put
   (btcpp-ros2-interfaces-execute-tree-client (server ?server))
   ?ex <- (pddl-action-executor (action ?id) (state INIT))
-  (pddl-action (id ?id) (name ?action-name&:(or (eq ?action-name pick) (eq ?action-name put))) (params ?loc $?params))
+  (pddl-action (id ?id) (name ?action-name&:(or (eq ?action-name pick) (eq ?action-name put))) (params ?loc ?block $?params))
   =>
   ;(bind ?goal-string (action-to-goal-str ?action-name $?params))
   (bind ?goal (btcpp-ros2-interfaces-execute-tree-goal-create))
@@ -50,6 +50,7 @@
   )
   (bind ?loc (str-cat (ros-param-get-value "game.side" "A_") ?loc))
   (bind ?payload (get-payload-str ?loc ?payload))
+  (printout blue ?action-name " " ?block crlf)
   (printout green "calling action server with payload " ?payload crlf)
   (btcpp-ros2-interfaces-execute-tree-goal-set-field ?goal "target_tree" ManipulateObject)
   (btcpp-ros2-interfaces-execute-tree-goal-set-field ?goal "payload" ?payload)
