@@ -16,7 +16,7 @@
       # problem: "depots_classical_problem.pddl"
       # domain: "robot_hierarchical_domain.hddl"
       # problem: "robot_hierarchical_problem.hddl"
-      executor: FALSE
+      executor: TRUE
       #assembly values 'protobuf' or 'timer'
       assembly: "timer"
       assembly_timer: 5
