@@ -34,11 +34,11 @@
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 6) (name disassemble-start) (params traffic-light-dissassemble))
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 6) (name disassemble-end) (params traffic-light-dissassemble))
     ;bring traffic light part boxes to wenbo
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 24) (name pick) (params SS1 red2x2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 24) (name pick) (params SS1-RIGHT red2x2))
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 25) (name put) (params WB1-LEFT red2x2))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 25) (name pick) (params WB1-LEFT yellow2x2))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 24) (name put) (params SS2 yellow2x2))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 3) (name pick) (params SS1 green2x2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 25) (name pick) (params SS2-RIGHT yellow2x2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 24) (name put) (params WB1-LEFT yellow2x2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 3) (name pick) (params SS2-LEFT green2x2))
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 4) (name put) (params WB1-LEFT green2x2))
 
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 82) (name pick) (params CC small-tree))
@@ -50,9 +50,9 @@
     ;green4x2 left, rest already brought
 
     ;assemble e-stop
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 0) (name pick) (params HS yellow4x2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 0) (name pick) (params HS-RIGHT yellow4x2))
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 1) (name put) (params WB1-LEFT yellow4x2))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 2) (name pick) (params SS1 blue2x2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 2) (name pick) (params HS-LEFT blue2x2))
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 3) (name put) (params WB1-LEFT blue2x2))
 
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 4) (name pick) (params CC ice-cream))
@@ -60,7 +60,7 @@
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 6) (name disassemble-start) (params ice-cream-dissassemble))
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 7) (name disassemble-end) (params ice-cream-dissassemble))
 
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 8) (name pick) (params HS red4x2))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 8) (name pick) (params HS-RIGHT red4x2))
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 28) (name put) (params WB1-LEFT red4x2))
     
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 6) (name assemble-start) (params estop-assemble))
@@ -93,32 +93,7 @@
     
     
     ;bring back all recycled parts
-    ;small tree
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 10) (name pick) (params WB1-LEFT  yellow2x2))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 11) (name put) (params SS2 yellow2x2))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 13) (name pick) (params WB1-LEFT green4x2))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 14) (name put) (params SS2 green4x2))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 17) (name pick) (params WB1-LEFT green2x2))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 18) (name put) (params SS2 green2x2))
-
-    ;icecream
     
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 25) (name pick) (params WB1-LEFT yellow4x2))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 27) (name put) (params HS yellow4x2))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 28) (name pick) (params WB1-LEFT yellow4x2))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 27) (name put) (params SS1 red2x2))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 28) (name pick) (params WB1-LEFT red2x2))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 27) (name put) (params HS blue2x2))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 28) (name pick) (params WB1-LEFT blue2x2))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 24) (name put) (params SS2 green2x2))
-
-    ;traffic light
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 25) (name pick) (params WB1-LEFT green2x2))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 24) (name put) (params SS2 green2x2))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 25) (name pick) (params WB1-LEFT yellow2x2))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 27) (name put) (params SS2 yellow4x2))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 28) (name pick) (params WB1-LEFT red2x2))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 27) (name put) (params SS1 red2x2))
   )
 )
 
