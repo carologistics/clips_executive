@@ -24,7 +24,9 @@
 (defrule cx-pddl-clips-agent-pddl-add-instance-advanced-production
   =>
   (assert
-    ;produce
+    ;produce magnet
+    (pddl-plan (id game1) (plan-type CLASSICAL) (plan-start 0.0) (state SUCCESS) (action-type CLASSICAL))
+    
     ;assemble hammer
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 24) (name pick) (params SS2 red2x2))
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 25) (name put) (params WB1 red2x2))
