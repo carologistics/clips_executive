@@ -22,7 +22,6 @@
 ;)
 
 (defrule cx-pddl-clips-agent-pddl-add-instance-advanced-production
-  (test (eq (ros-param-get-value "game.type" "advanced_production") "advanced_production"))
   =>
   (assert
     ;produce
