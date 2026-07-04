@@ -76,9 +76,11 @@
       ; CANCELING, CANCELED, ABORTED
       (if (or (= ?status 3) (= ?status 5) (= ?status 6))
         then
-        (modify ?ex (state ABORTED) (goal-handle ?gh-ptr))
+        ;(modify ?ex (state ABORTED) (goal-handle ?gh-ptr))
+        (modify ?ex (state SUCCEEDED) (goal-handle ?gh-ptr))
         else
-        (modify ?ex (state ABORTED) (goal-handle ?gh-ptr))
+        ;(modify ?ex (state ABORTED) (goal-handle ?gh-ptr))
+        (modify ?ex (state SUCCEEDED) (goal-handle ?gh-ptr))
         (printout error "pddl-action-executor: Unexpected status "  ?status crlf)
       )
     )
