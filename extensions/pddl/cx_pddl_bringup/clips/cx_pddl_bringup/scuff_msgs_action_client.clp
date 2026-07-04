@@ -31,7 +31,7 @@
 (defrule scuff-client-send-goal-assemble-start
   (scuff-msgs-string-command-client (server ?server))
   ?ex <- (pddl-action-executor (action ?id) (state INIT))
-  (pddl-action (id ?id) (name assemble-start) (params ?prod $?params))
+  (pddl-action (id ?id) (name assemble-start|dissassemble-start) (params ?prod $?params))
   (test (neq (ros-param-get-value "pddl.assembly" "timer") "timer"))
   =>
   (bind ?goal (scuff-msgs-string-command-goal-create))
@@ -46,7 +46,7 @@
 (defrule scuff-client-process-assemble-end
   (scuff-msgs-string-command-client (server ?server))
   ?ex <- (pddl-action-executor (action ?id) (state INIT))
-  (pddl-action (id ?id) (name assemble-end) (params ?prod $?params))
+  (pddl-action (id ?id) (name assemble-end|dissassemble-end) (params ?prod $?params))
   (test (neq (ros-param-get-value "pddl.assembly" "timer") "timer"))
   =>
   (modify ?ex (state ACCEPTED))
@@ -58,7 +58,7 @@
   (scuff-msgs-string-command-client (server ?server&:(eq ?server ?*SCUFF-MSGS-ACTION-SERVER*)))
   ?response <- (scuff-msgs-string-command-goal-response (server ?server) (client-goal-handle-ptr ?gh-ptr))
   ?ex <- (pddl-action-executor (action ?id) (goal-ptr ?goal-ptr) (state REQUESTED))
-  (pddl-action (id ?id) (name assemble-start) (params ?prod $?params))
+  (pddl-action (id ?id) (name assemble-start|dissassemble-start) (params ?prod $?params))
   (test (neq (ros-param-get-value "pddl.assembly" "timer") "timer"))
   =>
   (bind ?status (scuff-msgs-string-command-client-goal-handle-get-status ?gh-ptr))
