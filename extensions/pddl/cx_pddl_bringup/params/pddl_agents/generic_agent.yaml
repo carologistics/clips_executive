@@ -83,4 +83,4 @@
       plugin: "cx::CXScuffMsgsStringCommandPlugin"
     game:
       side: "B_"
-      type: "beginner_lifecycle"
+      type: "advanced_lifecycle"
