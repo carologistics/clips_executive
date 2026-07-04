@@ -18,7 +18,7 @@
       # problem: "robot_hierarchical_problem.hddl"
       executor: TRUE
       #assembly values 'protobuf' or 'timer'
-      assembly: "timer"
+      assembly: "scuff"
       assembly_timer: 5
     environments: ["cx_pddl_clips_agent"]
 
