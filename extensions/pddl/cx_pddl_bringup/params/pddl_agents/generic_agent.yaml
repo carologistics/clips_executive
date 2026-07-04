@@ -19,7 +19,7 @@
       executor: FALSE
       #assembly values 'protobuf' or 'timer'
       assembly: "timer"
-      assembly_timer: 2
+      assembly_timer: 5
     environments: ["cx_pddl_clips_agent"]
 
     cx_pddl_clips_agent:
