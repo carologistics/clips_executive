@@ -28,7 +28,7 @@
     (pddl-plan (id game1) (plan-type CLASSICAL) (plan-start 0.0) (state SUCCESS) (action-type CLASSICAL))
 
     ;move three products to wenbo for disassembly
-    
+
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 1) (name pick) (params CC traffic-light))
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 2) (name moveto) (params WB1-LEFT traffic-light))
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 3) (name disassemble-start) (params traffic-light-dissassemble))
@@ -62,38 +62,38 @@
 
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 23) (name pick) (params HS-RIGHT red4x2))
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 24) (name put) (params WB1-LEFT red4x2))
-    
+
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 25) (name assemble-start) (params estop-assemble))
 
 
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 26) (name assemble-end) (params estop-assemble))
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 27) (name pick) (params WB1-LEFT finished-product))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 28) (put) (params CC finished-product))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 28) (name put) (params CC finished-product))
 
     ;assemble hammer
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 29) (name assemble-start) (params hammer-assemble))
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 30) (name assemble-end) (params hammer-assemble))
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 31) (name pick) (params WB1-LEFT finished-product))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 32) (put) (params CC finished-product))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 32) (name put) (params CC finished-product))
 
-    
+
 
     ;assemble burger
 
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 33) (name assemble-start) (params burger-assemble))
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 34) (name pick) (params SS2 green4x2))
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 35) (name put) (params WB1-LEFT green4x2))
-    
+
 
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 36) (name assemble-end) (params burger-assemble))
     (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 37) (name pick) (params WB1-LEFT finished-product))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 38) (put) (params CC finished-product))
+    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 38) (name put) (params CC finished-product))
 
-    
-    
-    
+
+
+
     ;bring back all recycled parts
-    
+
   )
 )
 
@@ -271,4 +271,3 @@
      )
   )
 )
-
