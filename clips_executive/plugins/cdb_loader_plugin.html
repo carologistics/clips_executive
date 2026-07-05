@@ -116,7 +116,7 @@
 <p>This plugin allows to restore the ROS2 CLIPS-Executive using execution traces from a <a class="reference external" href="https://www.postgresql.org/">Postgresql</a> database, as recorded by the <a class="reference internal" href="cdb_saver_plugin.html#usage-cdb-saver-plugin"><span class="std std-ref">CDB Saver Plugin</span></a>.</p>
 <section id="configuration">
 <h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
-<dl class="field-list">
+<dl class="field-list" id="cdb-loader-host">
 <dt class="field-odd"><cite>host</cite><span class="colon">:</span></dt>
 <dd class="field-odd"><table class="docutils align-default">
 <tbody>
@@ -160,7 +160,7 @@
 <td><p>Default</p></td>
 </tr>
 <tr class="row-even"><td><p>string</p></td>
-<td><p>“anonymous”</p></td>
+<td><p>“cx_user”</p></td>
 </tr>
 </tbody>
 </table>
@@ -179,7 +179,7 @@ The user must have permission to access databases.</p>
 <td><p>Default</p></td>
 </tr>
 <tr class="row-even"><td><p>string</p></td>
-<td><p>“”</p></td>
+<td><p>“password”</p></td>
 </tr>
 </tbody>
 </table>
@@ -191,6 +191,26 @@ and should therefore not be considered secure.</p>
 </dl>
 </dd>
 </dl>
+<dl class="field-list" id="cdb-loader-restore-method">
+<dt class="field-odd"><cite>password</cite><span class="colon">:</span></dt>
+<dd class="field-odd"><table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Type</p></td>
+<td><p>Default</p></td>
+</tr>
+<tr class="row-even"><td><p>string</p></td>
+<td><p>“run”</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="simple">
+<dt>Description</dt><dd><p>Method to use when restoring. Allowed values are [“run”, “tick”, “time”].
+See also <a class="reference internal" href="#cdb-loader-restore-run"><span class="std std-ref">restore_run</span></a>, <a class="reference internal" href="#cdb-loader-restore-tick"><span class="std std-ref">restore_tick</span></a>,
+<a class="reference internal" href="#cdb-loader-restore-time"><span class="std std-ref">restore_time</span></a>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="field-list" id="cdb-loader-restore-run">
 <dt class="field-odd"><cite>restore_run</cite><span class="colon">:</span></dt>
 <dd class="field-odd"><table class="docutils align-default">
@@ -198,8 +218,8 @@ and should therefore not be considered secure.</p>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Default</p></td>
 </tr>
-<tr class="row-even"><td><p>string</p></td>
-<td><p>“”</p></td>
+<tr class="row-even"><td><p>int</p></td>
+<td><p>0</p></td>
 </tr>
 </tbody>
 </table>
@@ -217,18 +237,19 @@ and should therefore not be considered secure.</p>
 </ul>
 </dd>
 </dl>
-<p>This value is parsed as a long long integer by the loader.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even"><cite>restore_tick</cite><span class="colon">:</span></dt>
-<dd class="field-even"><table class="docutils align-default">
+</dl>
+<dl class="field-list" id="cdb-loader-restore-tick">
+<dt class="field-odd"><cite>restore_tick</cite><span class="colon">:</span></dt>
+<dd class="field-odd"><table class="docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Default</p></td>
 </tr>
-<tr class="row-even"><td><p>string</p></td>
-<td><p>“”</p></td>
+<tr class="row-even"><td><p>int</p></td>
+<td><p>0</p></td>
 </tr>
 </tbody>
 </table>
@@ -246,10 +267,11 @@ and should therefore not be considered secure.</p>
 </ul>
 </dd>
 </dl>
-<p>Mutually exclusive with <code class="docutils literal notranslate"><span class="pre">restore_run</span></code> and <code class="docutils literal notranslate"><span class="pre">restore_time</span></code>.</p>
 </dd>
 </dl>
 </dd>
+</dl>
+<dl class="field-list" id="cdb-loader-restore-time">
 <dt class="field-odd"><cite>restore_time</cite><span class="colon">:</span></dt>
 <dd class="field-odd"><table class="docutils align-default">
 <tbody>
@@ -269,8 +291,10 @@ Otherwise it is interpreted as an absolute timestamp.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even"><cite>drop_external_addresses</cite><span class="colon">:</span></dt>
-<dd class="field-even"><table class="docutils align-default">
+</dl>
+<dl class="field-list" id="cdb-loader-drop-external-addresses">
+<dt class="field-odd"><cite>drop_external_addresses</cite><span class="colon">:</span></dt>
+<dd class="field-odd"><table class="docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Default</p></td>
@@ -281,11 +305,12 @@ Otherwise it is interpreted as an absolute timestamp.</p>
 </tbody>
 </table>
 <dl class="simple">
-<dt>Description</dt><dd><p>If true, facts containing external addresses are dropped during restore.
-If false, they are restored with placeholder external addresses.</p>
+<dt>Description</dt><dd><p>If true, facts containing external addresses are not restored.</p>
 </dd>
 </dl>
 </dd>
+</dl>
+<dl class="field-list" id="cdb-loader-restore-as-nullptr">
 <dt class="field-odd"><cite>restore_external_addresses_as_nullptr</cite><span class="colon">:</span></dt>
 <dd class="field-odd"><table class="docutils align-default">
 <tbody>
@@ -304,23 +329,28 @@ Only applies when <code class="docutils literal notranslate"><span class="pre">d
 </dd>
 </dl>
 </dd>
-<dt class="field-even"><cite>modules.load_if_match</cite><span class="colon">:</span></dt>
-<dd class="field-even"><table class="docutils align-default">
+</dl>
+<p>Additionally, the loading of the <code class="docutils literal notranslate"><span class="pre">modules</span></code>, <code class="docutils literal notranslate"><span class="pre">deffacts</span></code>, <code class="docutils literal notranslate"><span class="pre">facts</span></code>, <code class="docutils literal notranslate"><span class="pre">deftemplates</span></code>, <code class="docutils literal notranslate"><span class="pre">defrules</span></code>, <code class="docutils literal notranslate"><span class="pre">deffunctions</span></code>, <code class="docutils literal notranslate"><span class="pre">activations</span></code>, <code class="docutils literal notranslate"><span class="pre">defglobals</span></code> constructs can be managed via the following parameters.</p>
+<dl class="field-list" id="cdb-loader-construct-skip">
+<dt class="field-odd"><cite>&lt;construct&gt;.skip</cite><span class="colon">:</span></dt>
+<dd class="field-odd"><table class="docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Default</p></td>
 </tr>
-<tr class="row-even"><td><p>string[]</p></td>
-<td><p>[“”]</p></td>
+<tr class="row-even"><td><p>bool</p></td>
+<td><p>false</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="simple">
-<dt>Description</dt><dd><p>Regex list of modules to include. Empty string matches everything.</p>
+<dt>Description</dt><dd><p>If true, none of the given construct are not restored.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-odd"><cite>modules.skip_if_match</cite><span class="colon">:</span></dt>
+</dl>
+<dl class="field-list" id="cdb-loader-construct-load-if">
+<dt class="field-odd"><cite>&lt;construct&gt;.load_if_match</cite><span class="colon">:</span></dt>
 <dd class="field-odd"><table class="docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p>Type</p></td>
@@ -332,26 +362,31 @@ Only applies when <code class="docutils literal notranslate"><span class="pre">d
 </tbody>
 </table>
 <dl class="simple">
-<dt>Description</dt><dd><p>Regex list of modules to exclude. Empty string matches nothing.</p>
+<dt>Description</dt><dd><p>Regex list of constructs to include. Empty string matches everything.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even"><cite>deffacts.skip</cite><span class="colon">:</span></dt>
-<dd class="field-even"><table class="docutils align-default">
+</dl>
+<dl class="field-list" id="cdb-loader-consruct-skip-if">
+<dt class="field-odd"><cite>&lt;construct&gt;.skip_if_match</cite><span class="colon">:</span></dt>
+<dd class="field-odd"><table class="docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p>Type</p></td>
 <td><p>Default</p></td>
 </tr>
-<tr class="row-even"><td><p>bool</p></td>
-<td><p>false</p></td>
+<tr class="row-even"><td><p>string[]</p></td>
+<td><p>[“”]</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="simple">
-<dt>Description</dt><dd><p>If true, deffacts are not restored.</p>
+<dt>Description</dt><dd><p>Regex list to exclude from the set of all constructs. Empty string matches nothing.</p>
 </dd>
 </dl>
 </dd>
+</dl>
+<p id="cdb-loader-deffacts-manual-assert">Lastly, for deffacts, an extra config value exists:</p>
+<dl class="field-list">
 <dt class="field-odd"><cite>deffacts.manual_assert</cite><span class="colon">:</span></dt>
 <dd class="field-odd"><table class="docutils align-default">
 <tbody>
@@ -369,386 +404,77 @@ Useful because cx::CDBLoaderPlugin skips reset.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even"><cite>deffacts.load_if_match</cite><span class="colon">:</span></dt>
-<dd class="field-even"><table class="docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p>Type</p></td>
-<td><p>Default</p></td>
-</tr>
-<tr class="row-even"><td><p>string[]</p></td>
-<td><p>[“”]</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="simple">
-<dt>Description</dt><dd><p>Regex list of deffacts names to include.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-odd"><cite>deffacts.skip_if_match</cite><span class="colon">:</span></dt>
-<dd class="field-odd"><table class="docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p>Type</p></td>
-<td><p>Default</p></td>
-</tr>
-<tr class="row-even"><td><p>string[]</p></td>
-<td><p>[“”]</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="simple">
-<dt>Description</dt><dd><p>Regex list of deffacts names to exclude.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even"><cite>facts.skip</cite><span class="colon">:</span></dt>
-<dd class="field-even"><table class="docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p>Type</p></td>
-<td><p>Default</p></td>
-</tr>
-<tr class="row-even"><td><p>bool</p></td>
-<td><p>false</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="simple">
-<dt>Description</dt><dd><p>If true, facts are not restored.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-odd"><cite>facts.load_if_match</cite><span class="colon">:</span></dt>
-<dd class="field-odd"><table class="docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p>Type</p></td>
-<td><p>Default</p></td>
-</tr>
-<tr class="row-even"><td><p>string[]</p></td>
-<td><p>[“”]</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="simple">
-<dt>Description</dt><dd><p>Regex list of fact deftemplates to include.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even"><cite>facts.skip_if_match</cite><span class="colon">:</span></dt>
-<dd class="field-even"><table class="docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p>Type</p></td>
-<td><p>Default</p></td>
-</tr>
-<tr class="row-even"><td><p>string[]</p></td>
-<td><p>[“”]</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="simple">
-<dt>Description</dt><dd><p>Regex list of fact deftemplates to exclude.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-odd"><cite>defrules.skip</cite><span class="colon">:</span></dt>
-<dd class="field-odd"><table class="docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p>Type</p></td>
-<td><p>Default</p></td>
-</tr>
-<tr class="row-even"><td><p>bool</p></td>
-<td><p>false</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="simple">
-<dt>Description</dt><dd><p>If true, defrules are not restored.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even"><cite>defrules.load_if_match</cite><span class="colon">:</span></dt>
-<dd class="field-even"><table class="docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p>Type</p></td>
-<td><p>Default</p></td>
-</tr>
-<tr class="row-even"><td><p>string[]</p></td>
-<td><p>[“”]</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="simple">
-<dt>Description</dt><dd><p>Regex list of defrule names to include.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-odd"><cite>defrules.skip_if_match</cite><span class="colon">:</span></dt>
-<dd class="field-odd"><table class="docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p>Type</p></td>
-<td><p>Default</p></td>
-</tr>
-<tr class="row-even"><td><p>string[]</p></td>
-<td><p>[“”]</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="simple">
-<dt>Description</dt><dd><p>Regex list of defrule names to exclude.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even"><cite>deftemplates.skip</cite><span class="colon">:</span></dt>
-<dd class="field-even"><table class="docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p>Type</p></td>
-<td><p>Default</p></td>
-</tr>
-<tr class="row-even"><td><p>bool</p></td>
-<td><p>false</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="simple">
-<dt>Description</dt><dd><p>If true, deftemplates are not restored.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-odd"><cite>deftemplates.load_if_match</cite><span class="colon">:</span></dt>
-<dd class="field-odd"><table class="docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p>Type</p></td>
-<td><p>Default</p></td>
-</tr>
-<tr class="row-even"><td><p>string[]</p></td>
-<td><p>[“”]</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="simple">
-<dt>Description</dt><dd><p>Regex list of deftemplate names to include.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even"><cite>deftemplates.skip_if_match</cite><span class="colon">:</span></dt>
-<dd class="field-even"><table class="docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p>Type</p></td>
-<td><p>Default</p></td>
-</tr>
-<tr class="row-even"><td><p>string[]</p></td>
-<td><p>[“”]</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="simple">
-<dt>Description</dt><dd><p>Regex list of deftemplate names to exclude.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-odd"><cite>defglobals.skip</cite><span class="colon">:</span></dt>
-<dd class="field-odd"><table class="docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p>Type</p></td>
-<td><p>Default</p></td>
-</tr>
-<tr class="row-even"><td><p>bool</p></td>
-<td><p>false</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="simple">
-<dt>Description</dt><dd><p>If true, defglobals are not restored.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even"><cite>defglobals.load_if_match</cite><span class="colon">:</span></dt>
-<dd class="field-even"><table class="docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p>Type</p></td>
-<td><p>Default</p></td>
-</tr>
-<tr class="row-even"><td><p>string[]</p></td>
-<td><p>[“”]</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="simple">
-<dt>Description</dt><dd><p>Regex list of defglobal names to include.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-odd"><cite>defglobals.skip_if_match</cite><span class="colon">:</span></dt>
-<dd class="field-odd"><table class="docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p>Type</p></td>
-<td><p>Default</p></td>
-</tr>
-<tr class="row-even"><td><p>string[]</p></td>
-<td><p>[“”]</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="simple">
-<dt>Description</dt><dd><p>Regex list of defglobal names to exclude.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even"><cite>deffunctions.skip</cite><span class="colon">:</span></dt>
-<dd class="field-even"><table class="docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p>Type</p></td>
-<td><p>Default</p></td>
-</tr>
-<tr class="row-even"><td><p>bool</p></td>
-<td><p>false</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="simple">
-<dt>Description</dt><dd><p>If true, deffunctions are not restored.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-odd"><cite>deffunctions.load_if_match</cite><span class="colon">:</span></dt>
-<dd class="field-odd"><table class="docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p>Type</p></td>
-<td><p>Default</p></td>
-</tr>
-<tr class="row-even"><td><p>string[]</p></td>
-<td><p>[“”]</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="simple">
-<dt>Description</dt><dd><p>Regex list of deffunction names to include.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even"><cite>deffunctions.skip_if_match</cite><span class="colon">:</span></dt>
-<dd class="field-even"><table class="docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p>Type</p></td>
-<td><p>Default</p></td>
-</tr>
-<tr class="row-even"><td><p>string[]</p></td>
-<td><p>[“”]</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="simple">
-<dt>Description</dt><dd><p>Regex list of deffunction names to exclude.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-odd"><cite>activations.skip</cite><span class="colon">:</span></dt>
-<dd class="field-odd"><table class="docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p>Type</p></td>
-<td><p>Default</p></td>
-</tr>
-<tr class="row-even"><td><p>bool</p></td>
-<td><p>false</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="simple">
-<dt>Description</dt><dd><p>If true, fired activations are not restored.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even"><cite>activations.load_if_match</cite><span class="colon">:</span></dt>
-<dd class="field-even"><table class="docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p>Type</p></td>
-<td><p>Default</p></td>
-</tr>
-<tr class="row-even"><td><p>string[]</p></td>
-<td><p>[“”]</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="simple">
-<dt>Description</dt><dd><p>Regex list of activation or rule names to include.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-odd"><cite>activations.skip_if_match</cite><span class="colon">:</span></dt>
-<dd class="field-odd"><table class="docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p>Type</p></td>
-<td><p>Default</p></td>
-</tr>
-<tr class="row-even"><td><p>string[]</p></td>
-<td><p>[“”]</p></td>
-</tr>
-</tbody>
-</table>
-<dl class="simple">
-<dt>Description</dt><dd><p>Regex list of activation or rule names to exclude.</p>
-</dd>
-</dl>
-</dd>
 </dl>
 </section>
 <section id="features">
 <h2>Features<a class="headerlink" href="#features" title="Link to this heading"></a></h2>
-<p>The CDB loader plugin registers callbacks with each CLIPS environment to log all changes into a running Postgresql database.</p>
-<section id="database-setup">
-<h3>Database Setup<a class="headerlink" href="#database-setup" title="Link to this heading"></a></h3>
-<p>A running Postgresql instance is required with a user and password matching the credentials as specified in the <a class="reference internal" href="#cdb-loader-username"><span class="std std-ref">parameters</span></a>.</p>
-<p>The user must have permission to create databases.</p>
-<p>An example setup for a user <code class="docutils literal notranslate"><span class="pre">myuser</span></code> with password <code class="docutils literal notranslate"><span class="pre">mypassword</span></code> is shown below:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>-u<span class="w"> </span>postgres<span class="w"> </span>psql
-<span class="nv">postgres</span><span class="o">=</span><span class="c1"># CREATE USER cx_user WITH PASSWORD &#39;password&#39; CREATEDB;</span>
-<span class="nv">postgres</span><span class="o">=</span><span class="c1"># \q</span>
+<p>The CDB loader plugin restores a previously recorded CLIPS environment from a PostgreSQL database to a specific point in time, primarily for inspection and debugging purposes.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The restored environment must provide the same CLIPS functions that were available during the original recording run.
+In practice, this means loading the same plugins before loading this plugin.
+The loader emits a warning if differences between the recorded and current configuration are detected.</p>
+</div>
+<section id="limitations">
+<h3>Limitations<a class="headerlink" href="#limitations" title="Link to this heading"></a></h3>
+<p>Some information cannot be restored and is therefore lost:</p>
+<ul class="simple">
+<li><p><strong>External addresses:</strong> External objects are restored as <code class="docutils literal notranslate"><span class="pre">nullptr</span></code> external addresses by default.</p></li>
+<li><p><strong>Fact IDs:</strong> The relative assertion order of non-retracted facts is preserved, but relative fact IDs of retracted facts are lost.</p></li>
+<li><p><strong>Fact references to missing facts:</strong> The relationship is preserved, but the relative fact ID of the referenced fact is lost.</p></li>
+<li><p><strong>Defglobal initial values:</strong> Restored defglobals reset to <code class="docutils literal notranslate"><span class="pre">nil</span></code> on <code class="docutils literal notranslate"><span class="pre">(reset)</span></code> instead of their original initial value.</p></li>
+<li><p><strong>Rules fired before</strong> <code class="docutils literal notranslate"><span class="pre">CDBSaverPlugin</span></code> <strong>was loaded:</strong> Only rule firings recorded while <code class="docutils literal notranslate"><span class="pre">CDBSaverPlugin</span></code> was active can be restored.</p></li>
+<li><p><strong>MAIN defmodule redefinition time:</strong> MAIN is always restored with its final redefinition, regardless of the requested restore tick.</p></li>
+</ul>
+</section>
+<section id="external-addresses">
+<h3>External Addresses<a class="headerlink" href="#external-addresses" title="Link to this heading"></a></h3>
+<p>External addresses are outside the scope of the recording. By default, they are restored as <code class="docutils literal notranslate"><span class="pre">nullptr</span></code> external addresses.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Keeping external address values is not recommended if the restored environment is intended to continue running,
+because <strong>using these addresses as function input can crash CLIPS</strong>.</p>
+</div>
+<p>If facts and defglobals containing external addresses should not be restored at all, enable ref:<cite>drop_external_addresses &lt;cdb_loader_drop_externeal_addresses</cite></p>
+</section>
+<section id="continuing-execution-after-restoration">
+<h3>Continuing Execution After Restoration<a class="headerlink" href="#continuing-execution-after-restoration" title="Link to this heading"></a></h3>
+<p>Restoring a CLIPS environment is mainly intended for inspection. After loading, the plugin asserts:</p>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>cdb-restored)
 </pre></div>
 </div>
-<p>Each database is named using a <span class="xref std std-ref">configurable prefix</span>, followed by <code class="docutils literal notranslate"><span class="pre">_</span></code>, the respective environment name and an optional <span class="xref std std-ref">time stamp</span>.</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>The database is always created fresh, dropping any other database with the same name.</p>
-<p>Not using timestamps as suffix <strong>may lead to data loss</strong>.</p>
-</div>
+<p>This fact can be used in custom rules to repair or reinitialize parts of the environment after restoration.
+Restored <code class="docutils literal notranslate"><span class="pre">defrules</span></code>, <code class="docutils literal notranslate"><span class="pre">deffunctions</span></code>, <code class="docutils literal notranslate"><span class="pre">deftemplates</span></code>, and <code class="docutils literal notranslate"><span class="pre">defglobals</span></code> can be overridden by loading <code class="docutils literal notranslate"><span class="pre">cx::FileLoadPlugin</span></code> after this plugin.</p>
 </section>
-<section id="database-credentials">
-<h3>Database Credentials<a class="headerlink" href="#database-credentials" title="Link to this heading"></a></h3>
-<p>All parameters of the CLIPS executive are stored in the database to ensure consistency when loading a recorded environment.
-This includes database connection parameters such as the database username and password.</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>The database credentials are stored in the database as part of the recorded environment.</p>
-<p><strong>They are not stored securely</strong> and should not be used for sensitive or production credentials.</p>
-</div>
+<section id="module-filtering">
+<h3>Module Filtering<a class="headerlink" href="#module-filtering" title="Link to this heading"></a></h3>
+<p>Modules can be included or excluded using regexes matched against module names.
+The default include regex matches everything; the default exclude regex matches nothing.</p>
 </section>
-<section id="performance-considerations">
-<h3>Performance Considerations<a class="headerlink" href="#performance-considerations" title="Link to this heading"></a></h3>
-<p>Database latency or slow write operations can slow down the execution of the CLIPS executive, as it synchronizes runtime data to the database.</p>
-<p>It is generally recommended to use a PostgreSQL instance running on the same system as the CLIPS executive.</p>
-</section>
-<section id="defmodule-support">
-<h3>Defmodule Support<a class="headerlink" href="#defmodule-support" title="Link to this heading"></a></h3>
-<p>There are some minor limitations when using this plugin in combination with modules.</p>
-<ol class="arabic simple">
-<li><p>The loader plugin must be loaded before any additional modules are defined to keep track of module relationships.</p></li>
-<li><p>Deleting of defmodule is not supported in CLIPS but can be done using the <cite>clear</cite> command.
-However, this plugin can not handle this edge case.</p></li>
-</ol>
-</section>
-<section id="clips-cool-support">
-<h3>CLIPS COOL Support<a class="headerlink" href="#clips-cool-support" title="Link to this heading"></a></h3>
-<p>the CLIPS COOL fragment for object-oriented reasoning is not supported.</p>
+<section id="configurable-restore-types">
+<h3>Configurable Restore Types<a class="headerlink" href="#configurable-restore-types" title="Link to this heading"></a></h3>
+<p>The following CLIPS object types can each be individually skipped:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">deffacts</span></code>, <code class="docutils literal notranslate"><span class="pre">facts</span></code>, <code class="docutils literal notranslate"><span class="pre">defrules</span></code>, <code class="docutils literal notranslate"><span class="pre">deftemplates</span></code>, <code class="docutils literal notranslate"><span class="pre">defglobals</span></code>, <code class="docutils literal notranslate"><span class="pre">deffunctions</span></code>, <code class="docutils literal notranslate"><span class="pre">activations</span></code></p></li>
+</ul>
+<p>By default, <code class="docutils literal notranslate"><span class="pre">deffacts</span></code> are loaded but not asserted automatically, since <code class="docutils literal notranslate"><span class="pre">(reset)</span></code> is skipped during restoration.
+To assert them manually, enable <span class="xref std std-ref">deffacts.manual_assert &lt;cdb_loader_deffacts_manual_assert</span>.</p>
+<p>Each type supports regex-based filtering via <code class="docutils literal notranslate"><span class="pre">load_if_match</span></code> and <code class="docutils literal notranslate"><span class="pre">skip_if_match</span></code> parameter lists.
+For facts, regexes are matched against the fact’s <code class="docutils literal notranslate"><span class="pre">deftemplate</span></code> name.
+Prefix a regex with <code class="docutils literal notranslate"><span class="pre">/</span></code> to perform a contains match instead of an exact match.</p>
 </section>
 </section>
 <section id="usage-example">
 <h2>Usage Example<a class="headerlink" href="#usage-example" title="Link to this heading"></a></h2>
-<p>A minimal working example is provided by the <a class="reference external" href="https://carologistics.github.io/clips_executive/cx_bringup">cx_bringup</a> package. Run it via:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>cx_bringup<span class="w"> </span>cx_launch.py<span class="w"> </span>manager_config:<span class="o">=</span>plugin_examples/cdb_loader.yaml
+<p>A minimal working example is provided by the <a class="reference external" href="https://carologistics.github.io/clips_executive/cx_bringup">cx_bringup</a> package. Run the example code from the CDB saver plugin to obtain a database to restore:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>cx_bringup<span class="w"> </span>cx_launch.py<span class="w"> </span>manager_config:<span class="o">=</span>plugin_examples/cdb_saver.yaml
 </pre></div>
 </div>
-<p>In this example the environment simply counts upwards from 0 to 20.</p>
-<p>You can connect to the database and inspect it.
-For example, in order to see all fact changes:</p>
+<p>Then run the CDB loader plugin:</p>
+<blockquote>
+<div><p>ros2 launch cx_bringup cx_launch.py manager_config:=plugin_examples/cdb_loader.yaml</p>
+</div></blockquote>
+<p>This loads the run mid execution.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>psql<span class="w"> </span>-h<span class="w"> </span>localhost<span class="w"> </span>-U<span class="w"> </span>cx_user<span class="w"> </span>-d<span class="w"> </span>cdb_cx_cdb<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT * from fact_values;&quot;</span>
 </pre></div>
 </div>

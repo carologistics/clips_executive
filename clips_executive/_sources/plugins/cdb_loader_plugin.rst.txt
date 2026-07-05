@@ -17,7 +17,7 @@ This plugin allows to restore the |CX| using execution traces from a `Postgresql
 Configuration
 -------------
 
-.. cdb_loader_host:
+.. _cdb_loader_host:
 
 :`host`:
 
@@ -50,7 +50,7 @@ Configuration
   ============ =======
   Type         Default
   ------------ -------
-  string       "anonymous"
+  string       "cx_user"
   ============ =======
 
   Description
@@ -64,13 +64,30 @@ Configuration
   ============ =======
   Type         Default
   ------------ -------
-  string       ""
+  string       "password"
   ============ =======
 
   Description
     PostgreSQL password used by the loader plugin.
     This value is stored in the database as part of the recorded CLIPS executive parameters
     and should therefore not be considered secure.
+
+
+.. _cdb_loader_restore_method:
+
+:`password`:
+
+  ============ =======
+  Type         Default
+  ------------ -------
+  string       "run"
+  ============ =======
+
+  Description
+    Method to use when restoring. Allowed values are ["run", "tick", "time"].
+    See also :ref:`restore_run <cdb_loader_restore_run>`, :ref:`restore_tick <cdb_loader_restore_tick>`,
+    :ref:`restore_time <cdb_loader_restore_time>`.
+
 
 .. _cdb_loader_restore_run:
 
@@ -79,7 +96,7 @@ Configuration
   ============ =======
   Type         Default
   ------------ -------
-  string       ""
+  int          0
   ============ =======
 
   Description
@@ -93,14 +110,14 @@ Configuration
       - "-1" = latest recorded run
       - "-2" = run before the latest recorded run
 
-    This value is parsed as a long long integer by the loader.
+.. _cdb_loader_restore_tick:
 
 :`restore_tick`:
 
   ============ =======
   Type         Default
   ------------ -------
-  string       ""
+  int          0
   ============ =======
 
   Description
@@ -114,7 +131,7 @@ Configuration
       - "-1" = last recorded tick
       - "-2" = tick before the last recorded tick
 
-    Mutually exclusive with ``restore_run`` and ``restore_time``.
+.. _cdb_loader_restore_time:
 
 :`restore_time`:
 
@@ -132,6 +149,8 @@ Configuration
 
     The loader selects the run whose end time is closest to the requested time and restores its end tick.
 
+.. _cdb_loader_drop_external_addresses:
+
 :`drop_external_addresses`:
 
   ============ =======
@@ -141,8 +160,9 @@ Configuration
   ============ =======
 
   Description
-    If true, facts containing external addresses are dropped during restore.
-    If false, they are restored with placeholder external addresses.
+    If true, facts containing external addresses are not restored.
+
+.. _cdb_loader_restore_as_nullptr:
 
 :`restore_external_addresses_as_nullptr`:
 
@@ -157,29 +177,12 @@ Configuration
     If false, they are restored as invalid external address values.
     Only applies when ``drop_external_addresses`` is false.
 
-:`modules.load_if_match`:
 
-  ============ =======
-  Type         Default
-  ------------ -------
-  string[]     [""]
-  ============ =======
+Additionally, the loading of the ``modules``, ``deffacts``, ``facts``, ``deftemplates``, ``defrules``, ``deffunctions``, ``activations``, ``defglobals`` constructs can be managed via the following parameters.
 
-  Description
-    Regex list of modules to include. Empty string matches everything.
+.. _cdb_loader_construct_skip:
 
-:`modules.skip_if_match`:
-
-  ============ =======
-  Type         Default
-  ------------ -------
-  string[]     [""]
-  ============ =======
-
-  Description
-    Regex list of modules to exclude. Empty string matches nothing.
-
-:`deffacts.skip`:
+:`<construct>.skip`:
 
   ============ =======
   Type         Default
@@ -188,7 +191,40 @@ Configuration
   ============ =======
 
   Description
-    If true, deffacts are not restored.
+    If true, none of the given construct are not restored.
+
+
+.. _cdb_loader_construct_load_if:
+
+:`<construct>.load_if_match`:
+
+  ============ =======
+  Type         Default
+  ------------ -------
+  string[]     [""]
+  ============ =======
+
+  Description
+    Regex list of constructs to include. Empty string matches everything.
+
+
+.. _cdb_loader_consruct_skip_if:
+
+:`<construct>.skip_if_match`:
+
+  ============ =======
+  Type         Default
+  ------------ -------
+  string[]     [""]
+  ============ =======
+
+  Description
+    Regex list to exclude from the set of all constructs. Empty string matches nothing.
+
+
+.. _cdb_loader_deffacts_manual_assert:
+
+Lastly, for deffacts, an extra config value exists:
 
 :`deffacts.manual_assert`:
 
@@ -202,305 +238,88 @@ Configuration
     If true, facts from deffacts are manually asserted.
     Useful because cx::CDBLoaderPlugin skips reset.
 
-:`deffacts.load_if_match`:
-
-  ============ =======
-  Type         Default
-  ------------ -------
-  string[]     [""]
-  ============ =======
-
-  Description
-    Regex list of deffacts names to include.
-
-:`deffacts.skip_if_match`:
-
-  ============ =======
-  Type         Default
-  ------------ -------
-  string[]     [""]
-  ============ =======
-
-  Description
-    Regex list of deffacts names to exclude.
-
-:`facts.skip`:
-
-  ============ =======
-  Type         Default
-  ------------ -------
-  bool         false
-  ============ =======
-
-  Description
-    If true, facts are not restored.
-
-:`facts.load_if_match`:
-
-  ============ =======
-  Type         Default
-  ------------ -------
-  string[]     [""]
-  ============ =======
-
-  Description
-    Regex list of fact deftemplates to include.
-
-:`facts.skip_if_match`:
-
-  ============ =======
-  Type         Default
-  ------------ -------
-  string[]     [""]
-  ============ =======
-
-  Description
-    Regex list of fact deftemplates to exclude.
-
-:`defrules.skip`:
-
-  ============ =======
-  Type         Default
-  ------------ -------
-  bool         false
-  ============ =======
-
-  Description
-    If true, defrules are not restored.
-
-:`defrules.load_if_match`:
-
-  ============ =======
-  Type         Default
-  ------------ -------
-  string[]     [""]
-  ============ =======
-
-  Description
-    Regex list of defrule names to include.
-
-:`defrules.skip_if_match`:
-
-  ============ =======
-  Type         Default
-  ------------ -------
-  string[]     [""]
-  ============ =======
-
-  Description
-    Regex list of defrule names to exclude.
-
-:`deftemplates.skip`:
-
-  ============ =======
-  Type         Default
-  ------------ -------
-  bool         false
-  ============ =======
-
-  Description
-    If true, deftemplates are not restored.
-
-:`deftemplates.load_if_match`:
-
-  ============ =======
-  Type         Default
-  ------------ -------
-  string[]     [""]
-  ============ =======
-
-  Description
-    Regex list of deftemplate names to include.
-
-:`deftemplates.skip_if_match`:
-
-  ============ =======
-  Type         Default
-  ------------ -------
-  string[]     [""]
-  ============ =======
-
-  Description
-    Regex list of deftemplate names to exclude.
-
-:`defglobals.skip`:
-
-  ============ =======
-  Type         Default
-  ------------ -------
-  bool         false
-  ============ =======
-
-  Description
-    If true, defglobals are not restored.
-
-:`defglobals.load_if_match`:
-
-  ============ =======
-  Type         Default
-  ------------ -------
-  string[]     [""]
-  ============ =======
-
-  Description
-    Regex list of defglobal names to include.
-
-:`defglobals.skip_if_match`:
-
-  ============ =======
-  Type         Default
-  ------------ -------
-  string[]     [""]
-  ============ =======
-
-  Description
-    Regex list of defglobal names to exclude.
-
-:`deffunctions.skip`:
-
-  ============ =======
-  Type         Default
-  ------------ -------
-  bool         false
-  ============ =======
-
-  Description
-    If true, deffunctions are not restored.
-
-:`deffunctions.load_if_match`:
-
-  ============ =======
-  Type         Default
-  ------------ -------
-  string[]     [""]
-  ============ =======
-
-  Description
-    Regex list of deffunction names to include.
-
-:`deffunctions.skip_if_match`:
-
-  ============ =======
-  Type         Default
-  ------------ -------
-  string[]     [""]
-  ============ =======
-
-  Description
-    Regex list of deffunction names to exclude.
-
-:`activations.skip`:
-
-  ============ =======
-  Type         Default
-  ------------ -------
-  bool         false
-  ============ =======
-
-  Description
-    If true, fired activations are not restored.
-
-:`activations.load_if_match`:
-
-  ============ =======
-  Type         Default
-  ------------ -------
-  string[]     [""]
-  ============ =======
-
-  Description
-    Regex list of activation or rule names to include.
-
-:`activations.skip_if_match`:
-
-  ============ =======
-  Type         Default
-  ------------ -------
-  string[]     [""]
-  ============ =======
-
-  Description
-    Regex list of activation or rule names to exclude.
-
 
 Features
 --------
 
-The CDB loader plugin registers callbacks with each CLIPS environment to log all changes into a running Postgresql database.
+The CDB loader plugin restores a previously recorded CLIPS environment from a PostgreSQL database to a specific point in time, primarily for inspection and debugging purposes.
 
-Database Setup
-^^^^^^^^^^^^^^
+.. note::
+   The restored environment must provide the same CLIPS functions that were available during the original recording run.
+   In practice, this means loading the same plugins before loading this plugin.
+   The loader emits a warning if differences between the recorded and current configuration are detected.
 
-A running Postgresql instance is required with a user and password matching the credentials as specified in the :ref:`parameters <cdb_loader_username>`.
+Limitations
+^^^^^^^^^^^
 
-The user must have permission to create databases.
+Some information cannot be restored and is therefore lost:
 
-An example setup for a user ``myuser`` with password ``mypassword`` is shown below:
+- **External addresses:** External objects are restored as ``nullptr`` external addresses by default.
+- **Fact IDs:** The relative assertion order of non-retracted facts is preserved, but relative fact IDs of retracted facts are lost.
+- **Fact references to missing facts:** The relationship is preserved, but the relative fact ID of the referenced fact is lost.
+- **Defglobal initial values:** Restored defglobals reset to ``nil`` on ``(reset)`` instead of their original initial value.
+- **Rules fired before** ``CDBSaverPlugin`` **was loaded:** Only rule firings recorded while ``CDBSaverPlugin`` was active can be restored.
+- **MAIN defmodule redefinition time:** MAIN is always restored with its final redefinition, regardless of the requested restore tick.
 
-.. code-block:: bash
-
-    sudo -u postgres psql
-    postgres=# CREATE USER cx_user WITH PASSWORD 'password' CREATEDB;
-    postgres=# \q
-
-Each database is named using a :ref:`configurable prefix <cdb_loader_db_prefix>`, followed by ``_``, the respective environment name and an optional :ref:`time stamp <cdb_loader_db_timestamp_suffix>`.
-
-.. warning::
-
-   The database is always created fresh, dropping any other database with the same name.
-
-   Not using timestamps as suffix **may lead to data loss**.
-
-
-Database Credentials
-^^^^^^^^^^^^^^^^^^^^
-
-All parameters of the CLIPS executive are stored in the database to ensure consistency when loading a recorded environment.
-This includes database connection parameters such as the database username and password.
-
-.. warning::
-
-   The database credentials are stored in the database as part of the recorded environment.
-
-   **They are not stored securely** and should not be used for sensitive or production credentials.
-
-
-Performance Considerations
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Database latency or slow write operations can slow down the execution of the CLIPS executive, as it synchronizes runtime data to the database.
-
-It is generally recommended to use a PostgreSQL instance running on the same system as the CLIPS executive.
-
-
-Defmodule Support
-^^^^^^^^^^^^^^^^^
-
-There are some minor limitations when using this plugin in combination with modules.
-
-#. The loader plugin must be loaded before any additional modules are defined to keep track of module relationships.
-#. Deleting of defmodule is not supported in CLIPS but can be done using the `clear` command.
-   However, this plugin can not handle this edge case.
-
-CLIPS COOL Support
+External Addresses
 ^^^^^^^^^^^^^^^^^^
 
-the CLIPS COOL fragment for object-oriented reasoning is not supported.
+External addresses are outside the scope of the recording. By default, they are restored as ``nullptr`` external addresses.
+
+.. warning::
+   Keeping external address values is not recommended if the restored environment is intended to continue running,
+   because **using these addresses as function input can crash CLIPS**.
+
+If facts and defglobals containing external addresses should not be restored at all, enable ref:`drop_external_addresses <cdb_loader_drop_externeal_addresses`
+
+Continuing Execution After Restoration
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Restoring a CLIPS environment is mainly intended for inspection. After loading, the plugin asserts:
+
+.. code-block:: clips
+
+   (cdb-restored)
+
+This fact can be used in custom rules to repair or reinitialize parts of the environment after restoration.
+Restored ``defrules``, ``deffunctions``, ``deftemplates``, and ``defglobals`` can be overridden by loading ``cx::FileLoadPlugin`` after this plugin.
+
+Module Filtering
+^^^^^^^^^^^^^^^^
+
+Modules can be included or excluded using regexes matched against module names.
+The default include regex matches everything; the default exclude regex matches nothing.
+
+Configurable Restore Types
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The following CLIPS object types can each be individually skipped:
+
+- ``deffacts``, ``facts``, ``defrules``, ``deftemplates``, ``defglobals``, ``deffunctions``, ``activations``
+
+By default, ``deffacts`` are loaded but not asserted automatically, since ``(reset)`` is skipped during restoration.
+To assert them manually, enable :ref:`deffacts.manual_assert <cdb_loader_deffacts_manual_assert`.
+
+Each type supports regex-based filtering via ``load_if_match`` and ``skip_if_match`` parameter lists.
+For facts, regexes are matched against the fact's ``deftemplate`` name.
+Prefix a regex with ``/`` to perform a contains match instead of an exact match.
+
 
 
 Usage Example
 -------------
 
-A minimal working example is provided by the :docsite:`cx_bringup` package. Run it via:
+A minimal working example is provided by the :docsite:`cx_bringup` package. Run the example code from the CDB saver plugin to obtain a database to restore:
 
 .. code-block:: bash
 
+    ros2 launch cx_bringup cx_launch.py manager_config:=plugin_examples/cdb_saver.yaml
+
+Then run the CDB loader plugin:
+
     ros2 launch cx_bringup cx_launch.py manager_config:=plugin_examples/cdb_loader.yaml
 
-In this example the environment simply counts upwards from 0 to 20.
+This loads the run mid execution.
 
-You can connect to the database and inspect it.
-For example, in order to see all fact changes:
 
 .. code-block:: bash
 
