@@ -22,79 +22,73 @@
 ;)
 
 (defrule cx-pddl-clips-agent-pddl-add-instance-advanced-production
+  (test (eq (ros-param-get-value "game.agent" "production") "production"))
   =>
   (assert
     ;PLAN!
-    (pddl-plan (id game1) (plan-type CLASSICAL) (plan-start 0.0) (state SUCCESS) (action-type CLASSICAL))
+    (pddl-plan (id game3-production) (plan-type CLASSICAL) (plan-start 0.0) (state SUCCESS) (action-type CLASSICAL))
+    
+    ;bring part-1 to wenbo
+    (pddl-action (id (gensym*)) (plan game3-production) (state IDLE) (order 0) (name pick) (params SS1-LEFT red2x2))
+    (pddl-action (id (gensym*)) (plan game3-production) (state IDLE) (order 1) (name put) (params WB1 red2x2))
+    ;bring part-8 to wenbo
+    (pddl-action (id (gensym*)) (plan game3-production) (state IDLE) (order 2) (name pick) (params HS-LEFT yellow4x2))
+    (pddl-action (id (gensym*)) (plan game3-production) (state IDLE) (order 3) (name put) (params WB1 yellow4x2))
+    ;bring part-7 to wenbo
+    (pddl-action (id (gensym*)) (plan game3-production) (state IDLE) (order 4) (name pick) (params SS1-RIGHT blue4x2))
+    (pddl-action (id (gensym*)) (plan game3-production) (state IDLE) (order 5) (name put) (params WB1 blue4x2))
+    ;bring part-5 to wenbo
+    (pddl-action (id (gensym*)) (plan game3-production) (state IDLE) (order 6) (name pick) (params HS-RIGHT red4x2))
+    (pddl-action (id (gensym*)) (plan game3-production) (state IDLE) (order 7) (name put) (params WB1 red4x2))
 
-    ;move three products to wenbo for disassembly
-
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 1) (name pick) (params CC traffic-light))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 2) (name put) (params WB1 traffic-light))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 3) (name disassemble-start) (params traffic-light-disassemble))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 4) (name disassemble-end) (params traffic-light-disassemble))
-    ;bring traffic light part boxes to wenbo
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 5) (name pick) (params SS1-RIGHT red2x2))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 6) (name put) (params WB1 red2x2))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 7) (name pick) (params SS2-RIGHT yellow2x2))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 8) (name put) (params WB1 yellow2x2))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 9) (name pick) (params SS2-LEFT green2x2))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 10) (name put) (params WB1 green2x2))
-
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 11) (name pick) (params CC small-tree))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 12) (name put) (params WB1 small-tree-disassemble))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 13) (name disassemble-start) (params small-tree-disassemble))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 14) (name disassemble-end) (params small-tree-disassemble))
-
-    ;bring small tree part boxes to wenbo
-    ;green4x2 left, rest already brought
-
-    ;assemble e-stop
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 15) (name pick) (params HS-RIGHT yellow4x2))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 16) (name put) (params WB1 yellow4x2))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 17) (name pick) (params HS-LEFT blue2x2))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 18) (name put) (params WB1 blue2x2))
-
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 19) (name pick) (params CC ice-cream))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 20) (name put) (params WB1 ice-cream))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 21) (name disassemble-start) (params ice-cream-disassemble))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 22) (name disassemble-end) (params ice-cream-disassemble))
-
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 23) (name pick) (params HS-RIGHT red4x2))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 24) (name put) (params WB1 red4x2))
-
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 25) (name assemble-start) (params estop-assemble))
-
-
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 26) (name assemble-end) (params estop-assemble))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 27) (name pick) (params WB1-LEFT finished-product))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 28) (name put) (params CC finished-product))
-
-    ;assemble hammer
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 29) (name assemble-start) (params hammer-assemble))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 30) (name assemble-end) (params hammer-assemble))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 31) (name pick) (params WB1-LEFT finished-product))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 32) (name put) (params CC finished-product))
-
-
-
-    ;assemble burger
-
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 33) (name assemble-start) (params burger-assemble))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 34) (name pick) (params SS2 green4x2))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 35) (name put) (params WB1 green4x2))
-
-
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 36) (name assemble-end) (params burger-assemble))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 37) (name pick) (params WB1-LEFT finished-product))
-    (pddl-action (id (gensym*)) (plan game1) (state IDLE) (order 38) (name put) (params CC finished-product))
-
-
-
-
-    ;bring back all recycled parts
 
   )
+)
+
+(defrule cx-pddl-clips-agent-pddl-add-instance-advanced-production
+  (test (eq (ros-param-get-value "game.agent" "delivery") "delivery"))
+  =>
+  (assert
+    (pddl-plan (id game3-delivery) (plan-type CLASSICAL) (plan-start 0.0) (state SUCCESS) (action-type CLASSICAL))
+    ;take part 4 back
+    (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 27) (name pick) (params WB1-LEFT yellow2x2))
+    (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 27) (name put) (params SS2-RIGHT yellow2x2))
+    ;take part 2 back
+    (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 27) (name pick) (params WB1-LEFT green2x2))
+    (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 27) (name put) (params SS2-LEFT green2x2))
+    ;take part 1 back
+    (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 27) (name pick) (params WB1-LEFT red2x2))
+    (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 27) (name put) (params SS1-LEFT red2x2))
+    
+    ;deliver hammer
+    (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 27) (name pick) (params WB1-LEFT hammer))
+    (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 27) (name put) (params CC hammer))
+    (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 27) (name pick) (params WB1-LEFT estop))
+    (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 27) (name put) (params CC estop))
+    (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 27) (name pick) (params WB1-LEFT burger))
+    (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 27) (name put) (params CC burger))
+
+    ;take part 6 back
+    (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 27) (name pick) (params WB1-LEFT green4x2))
+    (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 27) (name put) (params SS2-LEFT green4x2))
+    ;take part 3 back
+    (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 27) (name pick) (params WB1-LEFT blue2x2))
+    (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 27) (name put) (params HS-LEFT blue2x2))
+    ;take part 8 back
+    (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 27) (name pick) (params WB1-LEFT yellow4x2))
+    (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 27) (name put) (params HS-LEFT yellow4x2))
+    
+    
+  )
+)
+
+(defrule initial-timer-timeout
+  (initial-timer (time ?time))
+  (time ?now)
+  (test (> ?now (+ ?time 60)))
+  =>
+  (printout info "Initial timer timeout" crlf)
+  (retract (initial-timer (time ?time)))
 )
 
 (defrule cx-pddl-clips-agent-select-action-sequential

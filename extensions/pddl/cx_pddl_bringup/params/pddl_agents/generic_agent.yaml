@@ -84,3 +84,4 @@
     game:
       side: "B_"
       type: "advanced_lifecycle"
+      agent: "production"
