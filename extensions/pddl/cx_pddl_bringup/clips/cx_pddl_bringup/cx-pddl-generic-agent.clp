@@ -45,7 +45,7 @@
   )
 )
 
-(defrule cx-pddl-clips-agent-pddl-add-instance-advanced-production
+(defrule cx-pddl-clips-agent-pddl-add-instance-advanced-delivery
   (test (eq (ros-param-get-value "game.agent" "delivery") "delivery"))
   =>
   (assert

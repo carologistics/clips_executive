@@ -1,0 +1,87 @@
+/**:
+  ros__parameters:
+    autostart_node: true
+    pddl:
+      package_dir: "cx_pddl_bringup"
+      plan_type: "CLASSICAL"
+      # plan_type: "STN"
+      # plan_type: "PARTIAL-ORDER"
+      # plan_type: "HIERARCHICAL"
+      domain: "korea_agent_domain.pddl"
+      problem: "korea_agent_problem.pddl"
+      #problem: "multilevel_blocks_problem.pddl"
+      #domain: "depots_temporal_domain.pddl"
+      #problem: "depots_temporal_problem.pddl"
+      # domain: "depots_classical_domain.pddl"
+      # problem: "depots_classical_problem.pddl"
+      # domain: "robot_hierarchical_domain.hddl"
+      # problem: "robot_hierarchical_problem.hddl"
+      executor: TRUE
+      #assembly values 'protobuf' or 'timer'
+      assembly: "scuff"
+      assembly_timer: 5
+    environments: ["cx_pddl_clips_agent"]
+
+    cx_pddl_clips_agent:
+      plugins: ["executive", "ros_msgs", "scuff-msgs",
+                "ament_index",
+                "ros_param",
+                "plan_action",
+                "plan_action_msg",
+                "stn_constraint_msg",
+                "hierarchical_plan_method_msg",
+                "pddl_files",
+                "robotino-bts-action-client",
+                "files"
+                ]
+      log_clips_to_file: true
+      watch: ["facts", "rules"]
+      redirect_stdout_to_debug: true
+
+    ament_index:
+      plugin: "cx::AmentIndexPlugin"
+
+    ros_param:
+      plugin: "cx::RosParamPlugin"
+
+    executive:
+      plugin: "cx::ExecutivePlugin"
+
+    ros_msgs:
+      plugin: "cx::RosMsgsPlugin"
+
+    pddl_files:
+      plugin: "cx::FileLoadPlugin"
+      pkg_share_dirs: ["cx_pddl_clips", "cx_pddl_bringup"]
+      batch: [
+        "clips/cx_pddl_clips/deftemplates.clp",
+        "clips/cx_pddl_bringup/deftemplate-overrides.clp",
+        "clips/cx_pddl_clips/pddl-no-deftemplates.clp"
+      ]
+
+    files:
+      plugin: "cx::FileLoadPlugin"
+      pkg_share_dirs: ["cx_pddl_bringup"]
+      load: ["clips/cx_pddl_bringup/deftemplates.clp",
+             "clips/cx_pddl_bringup/cx-pddl-generic-agent.clp",
+             "clips/cx_pddl_bringup/cx-pddl-generic-execution-monitor.clp",
+             "clips/cx_pddl_bringup/robotino-bts-action-client.clp",
+             "clips/cx_pddl_bringup/scuff_msgs_action_client.clp"
+            ]
+
+    plan_action:
+      plugin: "cx::CXCxPddlInterfacesPlanPlugin"
+    plan_action_msg:
+      plugin: "cx::CXCxPddlInterfacesPlanActionPlugin"
+    stn_constraint_msg:
+      plugin: "cx::CXCxPddlInterfacesStnConstraintPlugin"
+    hierarchical_plan_method_msg:
+      plugin: "cx::CXCxPddlInterfacesHierarchicalPlanMethodPlugin"
+    robotino-bts-action-client:
+      plugin: "cx::CXBtcppRos2InterfacesExecuteTreePlugin"
+    scuff-msgs:
+      plugin: "cx::CXScuffMsgsStringCommandPlugin"
+    game:
+      side: "B_"
+      type: "advanced_lifecycle"
+      agent: "delivery"
