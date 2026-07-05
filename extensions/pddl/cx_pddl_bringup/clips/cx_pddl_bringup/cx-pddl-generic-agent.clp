@@ -53,23 +53,7 @@
     (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 9) (name put) (params CC estop))
     (pddl-plan (id game3-delivery) (plan-type CLASSICAL) (plan-start 0.0) (state SUCCESS) (action-type CLASSICAL))
     ;take part 4 back
-    (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 0) (name pick) (params WB1-LEFT yellow2x2))
-    (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 1) (name put) (params SS2-RIGHT yellow2x2))
-    ;take part 2 back
-    (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 2) (name pick) (params WB1-LEFT green2x2))
-    (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 3) (name put) (params SS2-LEFT green2x2))
-    ;take part 1 back
-    (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 4) (name pick) (params WB1-LEFT red2x2))
-    (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 5) (name put) (params SS1-LEFT red2x2))
-
-    ;deliver hammer
-    (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 6) (name pick) (params WB1-LEFT hammer))
-    (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 7) (name put) (params CC hammer))
-    (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 8) (name pick) (params WB1-LEFT estop))
-    (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 9) (name put) (params CC estop))
-    (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 10) (name pick) (params WB1-LEFT burger))
-    (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 11) (name put) (params CC burger))
-
+    
     ;take part 6 back
     (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 12) (name pick) (params WB1-LEFT green4x2))
     (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 13) (name put) (params SS2-LEFT green4x2))
