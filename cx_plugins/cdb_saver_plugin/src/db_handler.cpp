@@ -66,8 +66,10 @@ bool DBHandler::init_db(DBHandlerConfig & config)
 
   if (admin_connection.is_open()) {
     pqxx::nontransaction n(admin_connection);
-    auto exists = n.query_value<bool>(
+    auto exists = cx::query_value<bool>(
+      n,
       "SELECT EXISTS (SELECT 1 FROM pg_database WHERE datname = " + n.quote(config.db_name) + ");");
+
     if (exists) {
       // terminate connections first (required in Postgres)
       n.exec(
