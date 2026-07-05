@@ -49,6 +49,8 @@
   (test (eq (ros-param-get-value "game.agent" "delivery") "delivery"))
   =>
   (assert
+    (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 5) (name pick) (params SS1-LEFT hammer))
+    (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 9) (name put) (params CC estop))
     (pddl-plan (id game3-delivery) (plan-type CLASSICAL) (plan-start 0.0) (state SUCCESS) (action-type CLASSICAL))
     ;take part 4 back
     (pddl-action (id (gensym*)) (plan game3-delivery) (state IDLE) (order 0) (name pick) (params WB1-LEFT yellow2x2))
