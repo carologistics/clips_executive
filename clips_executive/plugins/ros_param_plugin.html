@@ -107,7 +107,7 @@
              
   <section id="ros-param-plugin">
 <span id="usage-ros-param-plugin"></span><h1>ROS Param Plugin<a class="headerlink" href="#ros-param-plugin" title="Link to this heading"></a></h1>
-<p>Source code on <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_plugins/ros_param_plugin">GitHub</a>.</p>
+<p>Source code on <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_plugins/ros_param_plugin">GitHub</a>.</p>
 <div class="admonition-plugin-class admonition">
 <p class="admonition-title">Plugin Class</p>
 <p>cx::RosParamPlugin</p>
@@ -139,7 +139,7 @@
 <p>It calls all of the provided function to print some parameters.</p>
 <section id="id1">
 <h3>Configuration<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
-<p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/params/plugin_examples/ros_param.yaml">cx_bringup/params/plugin_examples/ros_param.yaml</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/params/plugin_examples/ros_param.yaml">cx_bringup/params/plugin_examples/ros_param.yaml</a>.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">/**</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">unused_param</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;i</span><span class="nv"> </span><span class="s">am</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">used</span><span class="nv"> </span><span class="s">anywhere&quot;</span>
@@ -161,7 +161,7 @@
 </section>
 <section id="code">
 <h3>Code<a class="headerlink" href="#code" title="Link to this heading"></a></h3>
-<p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/ros-param.clp">cx_bringup/clips/plugin_examples/ros-param.clp</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/clips/plugin_examples/ros-param.clp">cx_bringup/clips/plugin_examples/ros-param.clp</a>.</p>
 <div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>printout info <span class="s">&quot;(ros-param-get-value \&quot;</span>environments\&quot; <span class="p">(</span>create$ not-found))&quot; crlf)
 <span class="p">(</span>printout green <span class="s">&quot;    &quot;</span> <span class="p">(</span>ros-param-get-value <span class="s">&quot;environments&quot;</span> <span class="p">(</span>create$ not-found)) crlf)
 

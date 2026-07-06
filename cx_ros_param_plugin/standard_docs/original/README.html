@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ros_param_plugin &mdash; cx_ros_param_plugin 0.1.3 documentation</title>
+  <title>ROS Param Plugin &mdash; cx_ros_param_plugin 0.1.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=86f27845" />
       <link rel="stylesheet" type="text/css" href="../../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
@@ -81,9 +81,10 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../PACKAGE.html">PACKAGE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../README.html">README</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../README.html#ros-param-plugin">ros_param_plugin</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../README.html#usage">Usage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../README.html#clips-features">CLIPS Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../README.html#ros-param-plugin">ROS Param Plugin</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../README.html#configuration">Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../README.html#features">Features</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../README.html#usage-example">Usage Example</a></li>
 </ul>
 </li>
 </ul>
@@ -109,7 +110,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">ros_param_plugin</li>
+      <li class="breadcrumb-item active">ROS Param Plugin</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/standard_docs/original/README.md.txt" rel="nofollow"> View page source</a>
       </li>
@@ -119,32 +120,69 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="ros-param-plugin">
-<h1>ros_param_plugin<a class="headerlink" href="#ros-param-plugin" title="Link to this heading"></a></h1>
-<p>This package offers the `cx::RosParamPlugin’ that fetches parameters from the
-ROS node running the CLIPS manager..</p>
-<section id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
-<p>Register this plugin with the plugin manager. It requires no additional configuration, an example setup is shown below:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">clips_manager</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;main&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">    </span><span class="nt">main</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;ros_param&quot;</span><span class="p p-Indicator">]</span>
-
-<span class="w">    </span><span class="nt">ros_param</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::RosParamPlugin&quot;</span>
+  <!-- AUTO-GENERATED via sphinx-build. Do not edit directly. -->
+<p><a id="usage-ros-param-plugin"></a></p>
+<section id="ros-param-plugin">
+<h1>ROS Param Plugin<a class="headerlink" href="#ros-param-plugin" title="Link to this heading"></a></h1>
+<p>Source code on <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_plugins/ros_param_plugin">GitHub</a>.</p>
+<p>This plugin provides a function to retrieve ROS parameters from the node that manages the CLIPS environments.</p>
+<p>In order to retrieve params from other nodes, the <a class="reference internal" href="#ros_msgs_plugin.md#usage-ros-msgs-plugin"><span class="xref myst">RosMsgsPlugin</span></a> may be used to call the respective services directly.</p>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
+<p>This plugin has no specific configuration options.</p>
+</section>
+<section id="features">
+<h2>Features<a class="headerlink" href="#features" title="Link to this heading"></a></h2>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
+<p>This plugin adds a custom functions as listed below.</p>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>(?bind ?val (ros-param-get-value ?param-name ?default-value))
+; example args: &quot;environments&quot; (create$ not-found)
+; example ret:  (&quot;cx_ros_param&quot;)
 </pre></div>
 </div>
 </section>
-<section id="clips-features">
-<h2>CLIPS Features<a class="headerlink" href="#clips-features" title="Link to this heading"></a></h2>
-<p>This plugin defines user-defined functions that are described below.</p>
-<section id="functions">
-<h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">?bind</span><span class="w"> </span><span class="nv">?val</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-param-get-value</span><span class="w"> </span><span class="nv">?param-name</span><span class="w"> </span><span class="nv">?default-value</span><span class="p">))</span>
-<span class="c1">; example args: &quot;environments&quot; (create$ not-found)</span>
-<span class="c1">; example ret:  (&quot;cx_ros_param&quot;)</span>
+</section>
+<section id="usage-example">
+<h2>Usage Example<a class="headerlink" href="#usage-example" title="Link to this heading"></a></h2>
+<p>A minimal working example is provided by the <a class="reference external" href="https://carologistics.github.io/clips_executive/cx_bringup">cx_bringup</a> package. Run it via:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>cx_bringup<span class="w"> </span>cx_launch.py<span class="w"> </span>manager_config:<span class="o">=</span>plugin_examples/ros_param.yaml
+</pre></div>
+</div>
+<p>It calls all of the provided function to print some parameters.</p>
+<section id="id1">
+<h3>Configuration<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/params/plugin_examples/ros_param.yaml">cx_bringup/params/plugin_examples/ros_param.yaml</a>.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">/**</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">unused_param</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;i</span><span class="nv"> </span><span class="s">am</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">used</span><span class="nv"> </span><span class="s">anywhere&quot;</span>
+<span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_ros_param&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">cx_ros_param</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;ros_param&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;files&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">log_clips_to_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">watch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facts&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;rules&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">    </span><span class="nt">ros_param</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::RosParamPlugin&quot;</span>
+<span class="w">    </span><span class="nt">files</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::FileLoadPlugin&quot;</span>
+<span class="w">      </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_bringup&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">batch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span>
+<span class="w">        </span><span class="s">&quot;clips/plugin_examples/ros-param.clp&quot;</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+</section>
+<section id="code">
+<h3>Code<a class="headerlink" href="#code" title="Link to this heading"></a></h3>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/clips/plugin_examples/ros-param.clp">cx_bringup/clips/plugin_examples/ros-param.clp</a>.</p>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>(printout info &quot;(ros-param-get-value \&quot;environments\&quot; (create$ not-found))&quot; crlf)
+(printout green &quot;    &quot; (ros-param-get-value &quot;environments&quot; (create$ not-found)) crlf)
+
+(printout info &quot;(ros-param-get-value \&quot;cx_ros_param.log_clips_to_file\&quot; FALSE)&quot; crlf)
+(printout green &quot;    &quot; (ros-param-get-value &quot;cx_ros_param.log_clips_to_file&quot; FALSE) crlf)
+
+(printout info &quot;(ros-param-get-value \&quot;bond_heartbeat_period\&quot; 5.5)&quot; crlf)
+(printout green &quot;    &quot; (ros-param-get-value &quot;bond_heartbeat_period&quot; 5.5) crlf)
 </pre></div>
 </div>
 </section>

@@ -108,7 +108,7 @@
              
   <section id="protobuf-plugin">
 <span id="usage-protobuf-plugin"></span><h1>Protobuf Plugin<a class="headerlink" href="#protobuf-plugin" title="Link to this heading"></a></h1>
-<p>Source code on <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_plugins/protobuf_plugin">GitHub</a>.</p>
+<p>Source code on <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_plugins/protobuf_plugin">GitHub</a>.</p>
 <div class="admonition-plugin-class admonition">
 <p class="admonition-title">Plugin Class</p>
 <p>cx::ProtobufPlugin</p>
@@ -325,7 +325,7 @@ However, this requires to build a shared library from proto files and then link 
 <p>It registers a proto file using the configuration options and then creates two UDP broadcast peers communicating via ports <code class="docutils literal notranslate"><span class="pre">4445</span></code> and <code class="docutils literal notranslate"><span class="pre">4444</span></code> on <code class="docutils literal notranslate"><span class="pre">127.0.0.1</span></code>.</p>
 <section id="message">
 <span id="proto-msg-example"></span><h3>Message<a class="headerlink" href="#message" title="Link to this heading"></a></h3>
-<p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/proto/cx_bringup/SearchRequest.proto">cx_bringup/proto/cx_bringup/SearchRequest.proto</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/proto/cx_bringup/SearchRequest.proto">cx_bringup/proto/cx_bringup/SearchRequest.proto</a>.</p>
 <div class="highlight-proto notranslate"><div class="highlight"><pre><span></span><span class="k">syntax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;proto2&quot;</span><span class="p">;</span>
 
 <span class="kd">message</span><span class="w"> </span><span class="nc">SearchRequest</span><span class="w"> </span><span class="p">{</span>
@@ -343,7 +343,7 @@ However, this requires to build a shared library from proto files and then link 
 <section id="id1">
 <h3>Configuration<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
 <p>The configuration creates two environments, each handling a protobuf peer.</p>
-<p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/params/plugin_examples/protobuf.yaml">cx_bringup/params/plugin_examples/protobuf.yaml</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/params/plugin_examples/protobuf.yaml">cx_bringup/params/plugin_examples/protobuf.yaml</a>.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">/**</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_protobuf_peer1&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;cx_protobuf_peer2&quot;</span><span class="p p-Indicator">]</span>
@@ -391,7 +391,7 @@ However, this requires to build a shared library from proto files and then link 
 </section>
 <section id="code">
 <h3>Code<a class="headerlink" href="#code" title="Link to this heading"></a></h3>
-<p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/protobuf-peer1.clp">cx_bringup/clips/plugin_examples/protobuf-peer1.clp</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/clips/plugin_examples/protobuf-peer1.clp">cx_bringup/clips/plugin_examples/protobuf-peer1.clp</a>.</p>
 <div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">defrule</span> protobuf-init-example-peer
   <span class="p">(</span>not <span class="p">(</span>executive-finalize))
   <span class="p">(</span>not <span class="p">(</span>peer <span class="nv">?any-peer-id</span><span class="p">))</span>
@@ -437,7 +437,7 @@ However, this requires to build a shared library from proto files and then link 
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/protobuf-peer2.clp">cx_bringup/clips/plugin_examples/protobuf-peer2.clp</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/clips/plugin_examples/protobuf-peer2.clp">cx_bringup/clips/plugin_examples/protobuf-peer2.clp</a>.</p>
 <div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">defrule</span> protobuf-init-example-peer
   <span class="p">(</span>not <span class="p">(</span>executive-finalize))
   <span class="p">(</span>not <span class="p">(</span>peer <span class="nv">?any-peer-id</span><span class="p">))</span>
@@ -465,7 +465,7 @@ Therefore, a linked plugin is generated:</p>
 </div>
 <section id="id2">
 <h3>Configuration<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
-<p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/params/plugin_examples/protobuf_linked.yaml">cx_bringup/params/plugin_examples/protobuf_linked.yaml</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/params/plugin_examples/protobuf_linked.yaml">cx_bringup/params/plugin_examples/protobuf_linked.yaml</a>.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">/**</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_protobuf_client&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;cx_protobuf_server&quot;</span><span class="p p-Indicator">]</span>
@@ -508,7 +508,7 @@ Therefore, a linked plugin is generated:</p>
 </section>
 <section id="id3">
 <h3>Code<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
-<p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/protobuf-linked-client.clp">cx_bringup/clips/plugin_examples/protobuf-linked-client.clp</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/clips/plugin_examples/protobuf-linked-client.clp">cx_bringup/clips/plugin_examples/protobuf-linked-client.clp</a>.</p>
 <div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">defrule</span> protobuf-init-example-client
   <span class="p">(</span>not <span class="p">(</span>executive-finalize))
   <span class="p">(</span>not <span class="p">(</span>client <span class="nv">?any-c-id</span><span class="p">))</span>
@@ -542,7 +542,7 @@ Therefore, a linked plugin is generated:</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/protobuf-linked-server.clp">cx_bringup/clips/plugin_examples/protobuf-linked-server.clp</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/clips/plugin_examples/protobuf-linked-server.clp">cx_bringup/clips/plugin_examples/protobuf-linked-server.clp</a>.</p>
 <div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">defrule</span> protobuf-init-example-server
   <span class="p">(</span>not <span class="p">(</span>executive-finalize))
   <span class="nt">=&gt;</span>

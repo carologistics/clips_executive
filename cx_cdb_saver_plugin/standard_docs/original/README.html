@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cx_cdb_saver_plugin &mdash; cx_cdb_saver_plugin 0.0.1 documentation</title>
+  <title>CDB Saver Plugin &mdash; cx_cdb_saver_plugin 0.0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=86f27845" />
       <link rel="stylesheet" type="text/css" href="../../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
@@ -84,11 +84,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../../standards.html">Standard Documents</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../PACKAGE.html">PACKAGE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../README.html">README</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../README.html#cx-cdb-saver-plugin">cx_cdb_saver_plugin</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../README.html#disclaimer">Disclaimer</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../README.html#database-creation">Database Creation</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../README.html#performance-considerations">Performance considerations</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../README.html#usage">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../README.html#cdb-saver-plugin">CDB Saver Plugin</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../README.html#configuration">Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../README.html#features">Features</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../README.html#usage-example">Usage Example</a></li>
 </ul>
 </li>
 </ul>
@@ -114,7 +113,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">cx_cdb_saver_plugin</li>
+      <li class="breadcrumb-item active">CDB Saver Plugin</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/standard_docs/original/README.md.txt" rel="nofollow"> View page source</a>
       </li>
@@ -124,65 +123,258 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="cx-cdb-saver-plugin">
-<h1>cx_cdb_saver_plugin<a class="headerlink" href="#cx-cdb-saver-plugin" title="Link to this heading"></a></h1>
-<p>This package offers the <code class="docutils literal notranslate"><span class="pre">cx::CDBSaverPlugin</span></code> CLIPS plugin, which records a CLIPS environment to a PostgreSQL database for later use in the CDB toolchain.</p>
-<section id="disclaimer">
-<h2>Disclaimer<a class="headerlink" href="#disclaimer" title="Link to this heading"></a></h2>
-<p>All parameters of the CLIPS executive are stored in the database to ensure consistency when loading a recorded environment. This includes database connection parameters such as the database username and password.</p>
-<p><strong>The database credentials are therefore not stored securely</strong> and should not be used for sensitive or production credentials.</p>
-<p>It is generally recommended to use a PostgreSQL instance running on the same system as the CLIPS executive. Database latency or slow write operations can slow down the execution of the CLIPS executive, because the saver plugin writes runtime data while the environment is running.</p>
-<p>The saver plugin can also be loaded after an environment has already started. In that case, it takes a snapshot of the current environment when loaded and then continues to record subsequent changes. However, rule firings that occurred before the plugin was loaded are not recorded.</p>
-<p>Because <code class="docutils literal notranslate"><span class="pre">CDBLoaderPlugin</span></code> cannot remove activations that were fired before the saver plugin was loaded, it is generally recommended to load this plugin from the start of the environment.</p>
-<p>Deleting a defmodule is not supported but can be done using the <code class="docutils literal notranslate"><span class="pre">clear</span></code> command; This is not supported and generally speaking not recommended.</p>
-<p>CLIPS global scoping is strictly hierarchical and one-directional: if module A can access constructs from module B, then module B cannot access constructs from module A. To restore an environment correctly, this module hierarchy must be recorded. This is only possible if the saver plugin is loaded before any additional modules are defined.</p>
+  <!-- AUTO-GENERATED via sphinx-build. Do not edit directly. -->
+<p><a id="usage-cdb-saver-plugin"></a></p>
+<section id="cdb-saver-plugin">
+<h1>CDB Saver Plugin<a class="headerlink" href="#cdb-saver-plugin" title="Link to this heading"></a></h1>
+<p>Source code on <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_plugins/cdb_saver_plugin">GitHub</a>.</p>
+<p>This plugin is part of the <strong>C</strong>LIPS <strong>D</strong>e<strong>B</strong>ugger (CDB) suite of the ROS2 CLIPS-Executive.</p>
+<p>This plugin allows to log execution traces of CLIPS into a <a class="reference external" href="https://www.postgresql.org/">Postgresql</a> database.</p>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
+<!-- cdb_saver_hostname: -->
+<ul>
+<li><p><strong>hostname:</strong></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>string</p></td>
+<td><p>“localhost”</p></td>
+</tr>
+</tbody>
+</table>
+<p>Description
+: Hostname of the PostgreSQL server.
+It is recommended to use a local PostgreSQL instance to avoid latency during saving.</p>
+</li>
+</ul>
+<p><a id="cdb-saver-port"></a></p>
+<ul>
+<li><p><strong>port:</strong></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>int</p></td>
+<td><p>5432</p></td>
+</tr>
+</tbody>
+</table>
+<p>Description
+: PostgreSQL server port.</p>
+</li>
+</ul>
+<p><a id="cdb-saver-username"></a></p>
+<ul>
+<li><p><strong>username:</strong></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>string</p></td>
+<td><p>“cx_user”</p></td>
+</tr>
+</tbody>
+</table>
+<p>Description
+: PostgreSQL username used by the saver plugin.
+The user must have permission to create databases.</p>
+</li>
+</ul>
+<p><a id="cdb-saver-password"></a></p>
+<ul>
+<li><p><strong>password:</strong></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>string</p></td>
+<td><p>“password”</p></td>
+</tr>
+</tbody>
+</table>
+<p>Description
+: PostgreSQL password used by the saver plugin.
+This value is stored in the database as part of the recorded CLIPS executive parameters
+and should therefore not be considered secure.</p>
+</li>
+</ul>
+<p><a id="cdb-saver-db-prefix"></a></p>
+<ul>
+<li><p><strong>db_prefix:</strong></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>string</p></td>
+<td><p>“cdb”</p></td>
+</tr>
+</tbody>
+</table>
+<p>Description
+: Prefix used for the automatically created database name.</p>
+</li>
+</ul>
+<p><a id="db-timestamp-suffix"></a></p>
+<ul>
+<li><p><strong>db_timestamp_suffix:</strong></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>bool</p></td>
+<td><p>true</p></td>
+</tr>
+</tbody>
+</table>
+<p>Description
+: Whether to append a timestamp suffix to the generated database name.
+This is useful for creating unique databases per run.
+Note that if set to <code class="docutils literal notranslate"><span class="pre">false</span></code> this can lead to data loss as any pre-existing database with matching name is automatically dropped.</p>
+</li>
+</ul>
 </section>
-<section id="database-creation">
-<h2>Database Creation<a class="headerlink" href="#database-creation" title="Link to this heading"></a></h2>
-<p>The saver plugin creates a new database for each run. Therefore, the configured PostgreSQL user must have permission to create databases.</p>
-<p>Each database is named using the CLIPS environment name and the start time of the run:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>cdb_&lt;environment_name&gt;_&lt;YYYY_MM_DDtHH_MM_SS&gt;
+<section id="features">
+<h2>Features<a class="headerlink" href="#features" title="Link to this heading"></a></h2>
+<p>The CDB saver plugin registers callbacks with each CLIPS environment to log all changes into a running Postgresql database.</p>
+<section id="database-setup">
+<h3>Database Setup<a class="headerlink" href="#database-setup" title="Link to this heading"></a></h3>
+<p>A running Postgresql instance is required with a user and password matching the credentials as specified in the <a class="reference internal" href="#cdb-saver-username"><span class="xref myst">parameters</span></a>.</p>
+<p>The user must have permission to create databases.</p>
+<p>An example setup for a user <code class="docutils literal notranslate"><span class="pre">myuser</span></code> with password <code class="docutils literal notranslate"><span class="pre">mypassword</span></code> is shown below:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>-u<span class="w"> </span>postgres<span class="w"> </span>psql
+<span class="nv">postgres</span><span class="o">=</span><span class="c1"># CREATE USER cx_user WITH PASSWORD &#39;password&#39; CREATEDB;</span>
+<span class="nv">postgres</span><span class="o">=</span><span class="c1"># \q</span>
 </pre></div>
 </div>
+<p>Each database is named using a <a class="reference internal" href="#cdb-saver-db-prefix"><span class="xref myst">configurable prefix</span></a>, followed by <code class="docutils literal notranslate"><span class="pre">_</span></code>, the respective environment name and an optional time stamp.</p>
+<section id="warning">
+<h4>WARNING<a class="headerlink" href="#warning" title="Link to this heading"></a></h4>
+<p>The database is always created fresh, dropping any other database with the same name.</p>
+<p>Not using timestamps as suffix <strong>may lead to data loss</strong>.</p>
+</section>
+</section>
+<section id="database-credentials">
+<h3>Database Credentials<a class="headerlink" href="#database-credentials" title="Link to this heading"></a></h3>
+<p>All parameters of the CLIPS executive are stored in the database to ensure consistency when loading a recorded environment.
+This includes database connection parameters such as the database username and password.</p>
+<section id="id1">
+<h4>WARNING<a class="headerlink" href="#id1" title="Link to this heading"></a></h4>
+<p>The database credentials are stored in the database as part of the recorded environment.</p>
+<p><strong>They are not stored securely</strong> and should not be used for sensitive or production credentials.</p>
+</section>
 </section>
 <section id="performance-considerations">
-<h2>Performance considerations<a class="headerlink" href="#performance-considerations" title="Link to this heading"></a></h2>
-<p>This plugin can significantly slow down the execution of large projects. The main advantage of a CDB saver recording is that it allows the execution flow to be inspected retroactively. This makes it possible to step through a recorded run and understand what happened and why.</p>
-<p>If the main issue is understanding why a rule is not firing, or if the goal is to inspect the current fact base of a running environment, consider using <code class="docutils literal notranslate"><span class="pre">cx_cdb_cli</span></code> or <code class="docutils literal notranslate"><span class="pre">cx_cdb_analyzer</span></code> instead. These tools allow a running environment to be investigated without the performance overhead of continuous recording.</p>
+<h3>Performance Considerations<a class="headerlink" href="#performance-considerations" title="Link to this heading"></a></h3>
+<p>Database latency or slow write operations can slow down the execution of the CLIPS executive, as it synchronizes runtime data to the database.</p>
+<p>It is generally recommended to use a PostgreSQL instance running on the same system as the CLIPS executive.</p>
 </section>
-<section id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
-<p>Register this plugin with the plugin manager. Its configuration parameters are shown in the example setup below.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">clips_manager</span><span class="p">:</span>
+<section id="defmodule-support">
+<h3>Defmodule Support<a class="headerlink" href="#defmodule-support" title="Link to this heading"></a></h3>
+<p>There are some minor limitations when using this plugin in combination with modules.</p>
+<ol class="arabic simple">
+<li><p>The saver plugin must be loaded before any additional modules are defined to keep track of module relationships.</p></li>
+<li><p>Deleting of defmodule is not supported in CLIPS but can be done using the clear command.
+However, this plugin can not handle this edge case.</p></li>
+</ol>
+</section>
+<section id="clips-cool-support">
+<h3>CLIPS COOL Support<a class="headerlink" href="#clips-cool-support" title="Link to this heading"></a></h3>
+<p>the CLIPS COOL fragment for object-oriented reasoning is not supported.</p>
+</section>
+</section>
+<section id="usage-example">
+<h2>Usage Example<a class="headerlink" href="#usage-example" title="Link to this heading"></a></h2>
+<p>A minimal working example is provided by the <a class="reference external" href="https://carologistics.github.io/clips_executive/cx_bringup">cx_bringup</a> package. Run it via:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>cx_bringup<span class="w"> </span>cx_launch.py<span class="w"> </span>manager_config:<span class="o">=</span>plugin_examples/cdb_saver.yaml
+</pre></div>
+</div>
+<p>In this example the environment simply counts upwards from 0 to 20.</p>
+<p>You can connect to the database and inspect it.
+For example, in order to see all fact changes:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>psql<span class="w"> </span>-h<span class="w"> </span>localhost<span class="w"> </span>-U<span class="w"> </span>cx_user<span class="w"> </span>-d<span class="w"> </span>cdb_cx_cdb<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT * from fact_values;&quot;</span>
+</pre></div>
+</div>
+<section id="id2">
+<h3>Configuration<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/params/plugin_examples/executive.yaml">cx_bringup/params/plugin_examples/executive.yaml</a>.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">/**</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;main&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">    </span><span class="nt">main</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cdb_saver&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_cdb&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">cx_cdb</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cdb_saver&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;executive&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;files&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">log_clips_to_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">watch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facts&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;rules&quot;</span><span class="p p-Indicator">]</span>
 
 <span class="w">    </span><span class="nt">cdb_saver</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::CDBSaverPlugin&quot;</span>
-
-<span class="w">      </span><span class="c1"># Hostname of the PostgreSQL server.</span>
-<span class="w">      </span><span class="c1"># It is recommended to use a local PostgreSQL instance to avoid latency during saving.</span>
-<span class="w">      </span><span class="c1"># Defaults to &quot;localhost&quot;.</span>
 <span class="w">      </span><span class="nt">hostname</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;localhost&quot;</span>
-
-<span class="w">      </span><span class="c1"># PostgreSQL server port.</span>
-<span class="w">      </span><span class="c1"># Defaults to 5432.</span>
 <span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5432</span>
+<span class="w">      </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx_user&quot;</span>
+<span class="w">      </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;password&quot;</span>
+<span class="w">      </span><span class="nt">db_prefix</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cdb&quot;</span>
+<span class="w">      </span><span class="c1"># for demonstration purposes this is turned off.</span>
+<span class="w">      </span><span class="nt">db_timestamp_suffix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 
-<span class="w">      </span><span class="c1"># PostgreSQL username used by the saver plugin.</span>
-<span class="w">      </span><span class="c1"># The user must have permission to create databases.</span>
-<span class="w">      </span><span class="c1"># Defaults to &quot;anonymous&quot;.</span>
-<span class="w">      </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;anonymous&quot;</span>
-
-<span class="w">      </span><span class="c1"># PostgreSQL password used by the saver plugin.</span>
-<span class="w">      </span><span class="c1"># This value is stored in the database as part of the recorded CLIPS executive parameters</span>
-<span class="w">      </span><span class="c1"># and should therefore not be considered secure.</span>
-<span class="w">      </span><span class="c1"># Defaults to an empty string.</span>
-<span class="w">      </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="w">    </span><span class="nt">executive</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::ExecutivePlugin&quot;</span>
+<span class="w">      </span><span class="nt">assert_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">refresh_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">    </span><span class="nt">files</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::FileLoadPlugin&quot;</span>
+<span class="w">      </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_bringup&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span>
+<span class="w">        </span><span class="s">&quot;clips/plugin_examples/cdb-saver.clp&quot;</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
+</section>
+<section id="code">
+<h3>Code<a class="headerlink" href="#code" title="Link to this heading"></a></h3>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/clips/plugin_examples/cdb-saver.clp">cx_bringup/clips/plugin_examples/cdb-saver.clp</a>.</p>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>(deftemplate counter
+  (slot value (type INTEGER))
+  (slot last-updated (type FLOAT))
+)
+
+(deffacts init-counter
+  (counter (value 0))
+)
+
+(defrule increment-counter
+  ?f &lt;- (counter (value ?n) (last-updated ?t))
+  (time ?now&amp;:(&lt; ?t ?now))
+  =&gt;
+  (bind ?new-value (+ ?n 1))
+  (if (&gt; ?new-value 20)
+   then
+    (retract ?f)
+    (cx-shutdown)
+   else
+    (modify ?f (value (+ ?n 1)) (last-updated ?now))
+  )
+)
+</pre></div>
+</div>
+</section>
 </section>
 </section>
 

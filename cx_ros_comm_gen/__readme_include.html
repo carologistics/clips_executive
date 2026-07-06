@@ -55,8 +55,8 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="standard_docs/PACKAGE.html">PACKAGE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="standard_docs/README.html">README</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="standard_docs/README.html#cx-ros-comm-gen">cx_ros_comm_gen</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#usage">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="standard_docs/README.html#plugin-generation">Plugin Generation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#pitfalls-and-limitations">Pitfalls and Limitations</a></li>
 </ul>
 </li>
 </ul>
@@ -94,20 +94,10 @@
              
   <section id="readme">
 <h1>README<a class="headerlink" href="#readme" title="Link to this heading"></a></h1>
-<section id="cx-ros-comm-gen">
-<h2>cx_ros_comm_gen<a class="headerlink" href="#cx-ros-comm-gen" title="Link to this heading"></a></h2>
-<p>This package offers a convenient generator that allows to interface with ros nodes via messages, services and action clients/servers.</p>
-<section id="usage">
-<h3>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h3>
-<p>The usage involves a few steps:</p>
-<ol class="arabic simple">
-<li><p>Generating the bindings</p></li>
-<li><p>Loading the generated bindings as CLIPS Executive plugins</p></li>
-<li><p>Using the generated functions and templates</p></li>
-</ol>
-<section id="generating-bindings">
-<h4>Generating Bindings<a class="headerlink" href="#generating-bindings" title="Link to this heading"></a></h4>
-<p>The <em>cx_ros_comm_gen</em> package provides cmake functions to generate bindings for ros messages, services and actions via the following macros:</p>
+<!-- AUTO-GENERATED via sphinx-build. Do not edit directly. -->
+<section id="plugin-generation">
+<h2>Plugin Generation<a class="headerlink" href="#plugin-generation" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">cx_ros_comm_gen</span></code> package provides cmake functions to generate bindings for ROS messages, services and actions via the following macros:</p>
 <div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">cx_generate_msg_bindings</span><span class="p">(</span><span class="s">package</span><span class="w"> </span><span class="s">msg_name</span><span class="p">)</span>
 
 <span class="nb">cx_generate_srv_bindings</span><span class="p">(</span><span class="s">package</span><span class="w"> </span><span class="s">srv_name</span><span class="p">)</span>
@@ -115,20 +105,20 @@
 <span class="nb">cx_generate_action_bindings</span><span class="p">(</span><span class="s">package</span><span class="w"> </span><span class="s">action_name</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>See the below snippet for an example (taken from the <em>cx_bringup</em> package):</p>
+<p>These macros can be used in any existing package that uses <a class="reference external" href="https://docs.ros.org/en/lyrical/How-To-Guides/Ament-CMake-Documentation.html">ament_cmake</a> as build tool. See the below snippet for an example:</p>
 <div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">find_package</span><span class="p">(</span><span class="s">cx_ros_comm_gen</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
 
-<span class="c"># generate bindings to interface with ROS messages, such as std_msgs::msg::String</span>
+<span class="c"># generates the cx::CXStdMsgsStringPlugin</span>
 <span class="nb">cx_generate_msg_bindings</span><span class="p">(</span><span class="s2">&quot;std_msgs&quot;</span><span class="w"> </span><span class="s2">&quot;String&quot;</span><span class="p">)</span>
 
-<span class="c"># generate bindings to interface with ROS services, such as std_srvs::srv::SetBool</span>
+<span class="c"># generates the cx::CXStdSrvsSetBoolPlugin</span>
 <span class="nb">cx_generate_srv_bindings</span><span class="p">(</span><span class="s2">&quot;std_srvs&quot;</span><span class="w"> </span><span class="s2">&quot;SetBool&quot;</span><span class="p">)</span>
 
-<span class="c"># generate bindings to interface with ROS services, such as example_interfaces::action::Fibonacci</span>
+<span class="c"># generates the cx::CXExampleInterfacesFibonacciPlugin</span>
 <span class="nb">cx_generate_action_bindings</span><span class="p">(</span><span class="s2">&quot;example_interfaces&quot;</span><span class="w"> </span><span class="s2">&quot;Fibonacci&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Note that upon invoking these functions the following dependencies will be used, hence it makes sense to add them to the belonging <em>package.xml</em>:</p>
+<p>Note that upon invoking these functions the following dependencies will be used, hence they should be added to the belonging packages <em>package.xml</em>:</p>
 <div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">find_package</span><span class="p">(</span><span class="o">${</span><span class="nv">package</span><span class="o">}</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
 <span class="nb">find_package</span><span class="p">(</span><span class="s">pluginlib</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
 <span class="nb">find_package</span><span class="p">(</span><span class="s">clips_vendor</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
@@ -136,282 +126,20 @@
 <span class="nb">find_package</span><span class="p">(</span><span class="s">rclcpp_action</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span><span class="w"> </span><span class="c"># only if action bindings are generated</span>
 </pre></div>
 </div>
-<p>Invoking these macros causes the following effects:</p>
-<ol class="arabic simple">
-<li><p>A cmake <code class="docutils literal notranslate"><span class="pre">custom_command</span></code> is created that invokes the <em>generator.py</em> script of this package</p></li>
-<li><p>A shared library for the plugin is created using the generated c++ files from the custom command</p></li>
-<li><p>A plugin description file is installed so the plugin becomes available via pluginlib</p></li>
-</ol>
-</section>
-<section id="registering-bindings">
-<h4>Registering Bindings<a class="headerlink" href="#registering-bindings" title="Link to this heading"></a></h4>
-<p>Register the generated plugins with the plugin manager from the <em>cx_plugin_manager</em> package via it’s configuration file.
-For the example above, the configuration is depicted below (the snippet from the <em>cx_bringup</em> package):</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">clips_plugins_manager</span><span class="p">:</span>
-<span class="nt">ros__parameters</span><span class="p">:</span>
-<span class="nt">clips_plugins_list</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_std_msgs_string_plugin&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;cx_std_srvs_set_bool_plugin&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;cx_example_interfaces_fibonacci_plugin&quot;</span><span class="p p-Indicator">]</span>
-<span class="nt">clips_plugins</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">cx_std_msgs_string_plugin</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::CXStdMsgsStringPlugin&quot;</span>
-<span class="w">  </span><span class="nt">cx_std_srvs_set_bool_plugin</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::CXStdSrvsSetBoolPlugin&quot;</span>
-<span class="w">  </span><span class="nt">cx_example_interfaces_fibonacci_plugin</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::CXExampleInterfacesFibonacciPlugin&quot;</span>
-</pre></div>
-</div>
-</section>
-<section id="using-the-bindings-in-clips">
-<h4>Using the Bindings in CLIPS<a class="headerlink" href="#using-the-bindings-in-clips" title="Link to this heading"></a></h4>
-<p>Given a package (e.g., “std_msgs”) and a message (e.g., “String”) all deftemplates and functions are named using Kebab-case (as expected in CLIPS) and are are prefixed by <code class="docutils literal notranslate"><span class="pre">&lt;package-kebab&gt;-&lt;message-kebab&gt;-</span></code> (e.g., “std-msgs-string-“).</p>
-<section id="message-bindings">
-<h5>Message Bindings<a class="headerlink" href="#message-bindings" title="Link to this heading"></a></h5>
-<section id="deftemplates">
-<h6>Deftemplates<a class="headerlink" href="#deftemplates" title="Link to this heading"></a></h6>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; Asserted by the respective create-subscription function.</span>
-<span class="c1">; Retracted by the respective destroy-subscription function.</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;message-kebab&gt;-subscription</span><span class="w"> </span><span class="p">(</span><span class="nv">topic</span><span class="w"> </span><span class="nv">?topic-name-string</span><span class="p">))</span>
-
-<span class="c1">; Asserted by the respective create-publisher function.</span>
-<span class="c1">; Retracted by the respective destroy-publisher function.</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;message-kebab&gt;-publisher</span><span class="w"> </span><span class="p">(</span><span class="nv">topic</span><span class="w"> </span><span class="nv">?topic-name-string</span><span class="p">))</span>
-
-<span class="c1">; Asserted by the callback of a subscriber whenever a message arrives.</span>
-<span class="c1">; Process the message and then call destroy-message before retracting!</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;message-kebab&gt;-message</span><span class="w"> </span><span class="p">(</span><span class="nv">topic</span><span class="w"> </span><span class="nv">?topic-name-string</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">msg-ptr</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="p">))</span>
-</pre></div>
-</div>
-</section>
-<section id="functions">
-<h6>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h6>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; Create and destroy publishers and subscribers.</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;message-kebab&gt;-create-publisher</span><span class="w"> </span><span class="nv">?topic-name</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;message-kebab&gt;-destroy-publisher</span><span class="w"> </span><span class="nv">?topic-name</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;message-kebab&gt;-create-subscription</span><span class="w"> </span><span class="nv">?topic-name</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;message-kebab&gt;-destroy-subscription</span><span class="w"> </span><span class="nv">?topic-name</span><span class="p">)</span>
-
-<span class="c1">; Publish a given message over a topic.</span>
-<span class="c1">; Requires the publisher to be created first using create-publisher.</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;message-kebab&gt;-publish</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="nv">?topic-name</span><span class="p">)</span>
-
-<span class="c1">; Create a message and return a pointer to it</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;message-kebab&gt;-create-message</span><span class="p">))</span>
-<span class="c1">; Destroy a message, call this after publishing a message or processing an incoming message to prevent it from staying in memory.</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;message-kebab&gt;-destroy-message</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="p">)</span>
-
-<span class="c1">; Populate the field of a message.</span>
-<span class="c1">; If the field is a message, then pass a pointer to that message (by using that respective messages bindings).</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;message-kebab&gt;-set-field</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="nv">?field-name</span><span class="w"> </span><span class="nv">?field-value</span><span class="p">)</span>
-
-<span class="c1">; Retrieve a field of a message.</span>
-<span class="c1">; If the field is a message, then a pointer is returned that can only be processed by using that respective messages bindings.</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;message-kebab&gt;-get-field</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="nv">?field-name</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-</section>
-<section id="service-bindings">
-<h5>Service Bindings<a class="headerlink" href="#service-bindings" title="Link to this heading"></a></h5>
-<p>Given a package (e.g., “std_srvs”) and a service (e.g., “SetBool”) all deftemplates and functions are named using Kebab-case (as expected in CLIPS) and are are prefixed by <code class="docutils literal notranslate"><span class="pre">&lt;package-kebab&gt;-&lt;service-kebab&gt;-</span></code> (e.g., “std-srvs-set-bool-“).</p>
-<section id="id1">
-<h6>Deftemplates<a class="headerlink" href="#id1" title="Link to this heading"></a></h6>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; Asserted by the respective creat-client function.</span>
-<span class="c1">; Retracted by the respective destroy-client function.</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;service-kebab&gt;-client</span><span class="w"> </span><span class="p">(</span><span class="nv">service</span><span class="w"> </span><span class="nv">?service-name-string</span><span class="p">))</span>
-
-<span class="c1">; Asserted by the respective create-service function.</span>
-<span class="c1">; Retracted by the respective destroy-service function.</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;service-kebab&gt;-service</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">?service-name-string</span><span class="p">))</span>
-
-<span class="c1">; Asserted by the callback of a client once a response arrives.</span>
-<span class="c1">; Process the response and then call response-destroy before retracting!</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;service-kebab&gt;-response</span><span class="w"> </span><span class="p">(</span><span class="nv">service</span><span class="w"> </span><span class="nv">?service-name-string</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">msg-ptr</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="p">))</span>
-</pre></div>
-</div>
-</section>
-<section id="id2">
-<h6>Functions<a class="headerlink" href="#id2" title="Link to this heading"></a></h6>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; Create and destroy clients and services.</span>
-<span class="c1">; After creating a service, a user-defined function is called whenever a request arrives</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;service-kebab&gt;-create-service</span><span class="w"> </span><span class="nv">?service-name</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;service-kebab&gt;-destroy-service</span><span class="w"> </span><span class="nv">?service-name</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;service-kebab&gt;-create-client</span><span class="w"> </span><span class="nv">?service-name</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;service-kebab&gt;-destroy-client</span><span class="w"> </span><span class="nv">?service-name</span><span class="p">)</span>
-
-<span class="c1">; Send a request to a service provider</span>
-<span class="c1">; Requires the client to be created first using create-client.</span>
-<span class="c1">; Callback will assert a response fact once received.</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;service-kebab&gt;-send-request</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="nv">?topic-name</span><span class="p">)</span>
-
-<span class="c1">; Creating, destroying and processing of requests</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;service-kebab&gt;-request-create</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;service-kebab&gt;-request-destroy</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;service-kebab&gt;-request-set-field</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="nv">?field-name</span><span class="w"> </span><span class="nv">?field-value</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;service-kebab&gt;-request-get-field</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="nv">?field-name</span><span class="p">)</span>
-
-<span class="c1">; Creating, destroying and processing of responses</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;service-kebab&gt;-response-create</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;service-kebab&gt;-response-destroy</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;service-kebab&gt;-response-set-field</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="nv">?field-name</span><span class="w"> </span><span class="nv">?field-value</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;service-kebab&gt;-response-get-field</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="nv">?field-name</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="functions-defined-by-user">
-<h6>Functions Defined by User<a class="headerlink" href="#functions-defined-by-user" title="Link to this heading"></a></h6>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; Define this to react to service calls.</span>
-<span class="c1">; Read the request and populate the response using appropriate functions above.</span>
-<span class="c1">; Do not destroy request or response within this function, they are cleaned up upon exiting the function.</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;service-kebab&gt;-service-callback</span><span class="w"> </span><span class="nv">?service-name</span><span class="w"> </span><span class="nv">?const-request-ptr</span><span class="w"> </span><span class="nv">?response-ptr</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-</section>
-<section id="action-bindings">
-<h5>Action Bindings<a class="headerlink" href="#action-bindings" title="Link to this heading"></a></h5>
-<p>Given a package (e.g., “example_interfaces”) and an action (e.g., “Fibonacci”) all deftemplates and functions are named using Kebab-case (as expected in CLIPS) and are are prefixed by <code class="docutils literal notranslate"><span class="pre">&lt;package-kebab&gt;-&lt;action-kebab&gt;-</span></code> (e.g., “example-interfaces-fibonacci-“).</p>
-<section id="id3">
-<h6>Deftemplates<a class="headerlink" href="#id3" title="Link to this heading"></a></h6>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; Asserted by the respective creat-client function.</span>
-<span class="c1">; Retracted by the respective destroy-client function.</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-client</span><span class="w"> </span><span class="p">(</span><span class="nv">server</span><span class="w"> </span><span class="nv">?server-name-string</span><span class="p">))</span>
-
-<span class="c1">; Asserted by the respective create-server function.</span>
-<span class="c1">; Retracted by the respective destroy-server function.</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-server</span><span class="w"> </span><span class="p">(</span><span class="nv">name</span><span class="w"> </span><span class="nv">?server-name-string</span><span class="p">))</span>
-
-<span class="c1">; Asserted by the goal response callback of a client.</span>
-<span class="c1">; Process the response and then destroy feedback.</span>
-<span class="c1">; The client-goal-handle should persist until the processing of the request is fully done.</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-goal-response</span><span class="w"> </span><span class="p">(</span><span class="nv">server</span><span class="w"> </span><span class="nv">?server-name-string</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">client-goal-handle-ptr</span><span class="w"> </span><span class="nv">?cgh-ptr</span><span class="p">))</span>
-
-<span class="c1">; Asserted by the goal feedback callback of a client.</span>
-<span class="c1">; Process the response and then destroy feedback (it is read-only, do not modify it).</span>
-<span class="c1">; The client-goal-handle should persist (and not be destroyed) until the processing of the goal is fully done and the action is terminated.</span>
-<span class="c1">; In particular, the client goal handle pointer here will match the one from the goal-response fact.</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-goal-feedback</span><span class="w"> </span><span class="p">(</span><span class="nv">server</span><span class="w"> </span><span class="nv">?server-name-string</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">client-goal-handle-ptr</span><span class="w"> </span><span class="nv">?cgh-ptr</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">feedback-ptr</span><span class="w"> </span><span class="nv">?f-ptr</span><span class="p">))</span>
-
-<span class="c1">; Asserted by the goal result callback of a client.</span>
-<span class="c1">; Process the result and then destroy the result pointer before retracting this fact.</span>
-<span class="c1">; &quot;code&quot; is either UNKNOWN SUCCEEDED CANCELED or ABORTED.</span>
-<span class="c1">; &quot;goal-id&quot; is the string representation of a uuid according to rclcpp_action::to_string().</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-wrapped-result</span><span class="w"> </span><span class="p">(</span><span class="nv">server</span><span class="w"> </span><span class="nv">?server-name-string</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">goal-id</span><span class="w"> </span><span class="nv">?uuid-str</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">code</span><span class="w"> </span><span class="nv">?code-symbol</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">result-ptr</span><span class="w"> </span><span class="nv">?f-ptr</span><span class="p">))</span>
-
-<span class="c1">; Asserted by the goal result callback of a server.</span>
-<span class="c1">; Process the server goal handle to retrieve important information such as the goal sent by the client.</span>
-<span class="c1">; The server-goal-handle should persist (and not be destroyed) until the processing of the action is fully done and the action is terminated.</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-accepted-goal</span><span class="w"> </span><span class="p">(</span><span class="nv">server</span><span class="w"> </span><span class="nv">?server-name-string</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">server-goal-handle-ptr</span><span class="w"> </span><span class="nv">?f-ptr</span><span class="p">))</span>
-</pre></div>
-</div>
-</section>
-<section id="id4">
-<h6>Functions<a class="headerlink" href="#id4" title="Link to this heading"></a></h6>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; Create and destroy clients and servers.</span>
-<span class="c1">; After creating a server, user-defined function is called whenever a goal request arrives.</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-create-server</span><span class="w"> </span><span class="nv">?server-name</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-destroy-server</span><span class="w"> </span><span class="nv">?server-name</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-create-client</span><span class="w"> </span><span class="nv">?server-name</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-destroy-client</span><span class="w"> </span><span class="nv">?server-name</span><span class="p">)</span>
-
-<span class="c1">; Send a goal to an action server</span>
-<span class="c1">; Requires the client to be created first using create-client.</span>
-<span class="c1">; Callbacks will assert goal-response feedback and wrapped-result facts.</span>
-<span class="c1">; Do not destroy the ?msg-ptr immediately, keep it until the goal is fully processed.</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-send-goal</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="nv">?server-name</span><span class="p">)</span>
-
-<span class="c1">; Creating, destroying and processing of goals</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-goal-create</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-goal-destroy</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-goal-set-field</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="nv">?field-name</span><span class="w"> </span><span class="nv">?field-value</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-goal-get-field</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="nv">?field-name</span><span class="p">)</span>
-
-<span class="c1">; Creating, destroying and processing of feedback</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-feedback-create</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-feedback-destroy</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-feedback-set-field</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="nv">?field-name</span><span class="w"> </span><span class="nv">?field-value</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-feedback-get-field</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="nv">?field-name</span><span class="p">)</span>
-
-<span class="c1">; Creating, destroying and processing of results</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-result-create</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-result-destroy</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-result-set-field</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="nv">?field-name</span><span class="w"> </span><span class="nv">?field-value</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-result-get-field</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="nv">?field-name</span><span class="p">)</span>
-
-<span class="c1">; Destroy server goal handle pointer.</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-server-goal-handle-destroy</span><span class="w"> </span><span class="nv">?handle-ptr</span><span class="p">)</span>
-<span class="c1">; server goal handle members (see rclcpp_action documentation)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-server-goal-handle-abort</span><span class="w"> </span><span class="nv">?handle-ptr</span><span class="w"> </span><span class="nv">?result-ptr</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-server-goal-handle-succeed</span><span class="w"> </span><span class="nv">?handle-ptr</span><span class="w"> </span><span class="nv">?result-ptr</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-server-goal-handle-canceled</span><span class="w"> </span><span class="nv">?handle-ptr</span><span class="w"> </span><span class="nv">?result-ptr</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?goal-ptr</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-server-goal-handle-get-goal</span><span class="w"> </span><span class="nv">?handle-ptr</span><span class="p">))</span>
-<span class="c1">; the goal id is returned as string representation via rclcpp_action::to_string()</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?uuid-str</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-server-goal-handle-get-goal-id</span><span class="w"> </span><span class="nv">?handle-ptr</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?bool-sym</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-server-goal-handle-is-canceling</span><span class="w"> </span><span class="nv">?handle-ptr</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?bool-sym</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-server-goal-handle-is-active</span><span class="w"> </span><span class="nv">?handle-ptr</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?bool-sym</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-server-goal-handle-is-executing</span><span class="w"> </span><span class="nv">?handle-ptr</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-server-goal-handle-execute</span><span class="w"> </span><span class="nv">?handle-ptr</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-server-goal-handle-publish-feedback</span><span class="w"> </span><span class="nv">?handle-ptr</span><span class="w"> </span><span class="nv">?feedback-ptr</span><span class="p">)</span>
-
-<span class="c1">; client goal handle members (see rclcpp_action documentation)</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?bool-sym</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-client-goal-handle-is-feedback-aware</span><span class="w"> </span><span class="nv">?handle-ptr</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?bool-sym</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-client-goal-handle-is-result-aware</span><span class="w"> </span><span class="nv">?handle-ptr</span><span class="p">))</span>
-<span class="c1">; return codes:</span>
-<span class="c1">; 0 = STATUS_UNKNOWN</span>
-<span class="c1">; 1 = STATUS_ACCEPTED</span>
-<span class="c1">; 2 = STATUS_EXECUTING</span>
-<span class="c1">; 3 = STATUS_CANCELING</span>
-<span class="c1">; 4 = STATUS_SUCCEEDED</span>
-<span class="c1">; 5 = STATUS_CANCELED</span>
-<span class="c1">; 6 = STATUS_ABORTED</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?status-int</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-client-goal-handle-get-status</span><span class="w"> </span><span class="nv">?handle-ptr</span><span class="p">))</span>
-<span class="c1">; the goal id is returned as string representation via rclcpp_action::to_string()</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?uuid-str</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-client-goal-handle-get-goal-id</span><span class="w"> </span><span class="nv">?handle-ptr</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?time-seconds-float</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-client-goal-handle-get-goal-stamp</span><span class="w"> </span><span class="nv">?handle-ptr</span><span class="p">))</span>
-</pre></div>
-</div>
-</section>
-<section id="id5">
-<h6>Functions Defined by User<a class="headerlink" href="#id5" title="Link to this heading"></a></h6>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; Gets called for each server receiving a goal, needs to return one of these integers:</span>
-<span class="c1">; (return 1) ; REJECT</span>
-<span class="c1">; (return 2) ; ACCEPT_AND_EXECUTE</span>
-<span class="c1">; (return 3) ; ACCEPT_AND_DEFER</span>
-<span class="c1">; If the function does not exist, every goal is automatically accepted (ACCEPT_AND_EXECUTE)</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?response-int</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-handle-goal-callback</span><span class="w"> </span><span class="nv">?server-name-str</span><span class="w"> </span><span class="nv">?goal-ptr</span><span class="w"> </span><span class="nv">?uuid-str</span><span class="p">))</span>
-
-<span class="c1">; Gets called for each server receiving a cancelation request, needs to return one of these integers:</span>
-<span class="c1">; (return 0) ; REJECT</span>
-<span class="c1">; (return 1) ; ACCEPT</span>
-<span class="c1">; If the function does not exist, every request is automatically accepted (ACCEPT)</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?response-int</span><span class="w"> </span><span class="p">(</span><span class="nv">&lt;package-kebab&gt;-&lt;action-kebab&gt;-cancel-goal-callback</span><span class="w"> </span><span class="nv">?server-name-str</span><span class="w"> </span><span class="nv">?server-goal-handle-ptr</span><span class="p">))</span>
-</pre></div>
-</div>
-</section>
-</section>
-</section>
 <section id="pitfalls-and-limitations">
-<h4>Pitfalls and Limitations<a class="headerlink" href="#pitfalls-and-limitations" title="Link to this heading"></a></h4>
+<h3>Pitfalls and Limitations<a class="headerlink" href="#pitfalls-and-limitations" title="Link to this heading"></a></h3>
 <section id="nested-messages">
-<h5>Nested Messages<a class="headerlink" href="#nested-messages" title="Link to this heading"></a></h5>
+<h4>Nested Messages<a class="headerlink" href="#nested-messages" title="Link to this heading"></a></h4>
 <p>It is quite common to have nested messages in ROS.
 Just creating the binding to the top-level message does not give access to the functions required to create or read the message fields that are of a different message type.
 In that case it is necessary to also generate bindings for the nested messages.</p>
 </section>
 <section id="object-lifetimes-and-clips">
-<h5>Object Lifetimes and CLIPS<a class="headerlink" href="#object-lifetimes-and-clips" title="Link to this heading"></a></h5>
-<p>Since clips stores objects via void pointers, dynamic object lifetime management via <code class="docutils literal notranslate"><span class="pre">std::shared_ptr</span></code> does not work direcly from within CLIPS.
-Instead, object lifetimes need to be managed more explicitly through the usage of <code class="docutils literal notranslate"><span class="pre">create</span></code> and <code class="docutils literal notranslate"><span class="pre">destroy</span></code> functions.</p>
+<h4>Object Lifetimes and CLIPS<a class="headerlink" href="#object-lifetimes-and-clips" title="Link to this heading"></a></h4>
+<p>Since clips stores objects via void pointers, dynamic object lifetime management via std::shared_ptr does not work directly from within CLIPS.
+Instead, object lifetimes need to be managed more explicitly through the usage of create and destroy functions.</p>
 <p>It is advised to clean up all objects as soon as they are not needed anymore in order to free up memory.</p>
-<p>This is mostly straight-forward in case of short lifetimes (e.g., creating a message and immidiately sending it), but can be a bit tricky in case of long-lasting references, such as goals and goal handles in action clients/servers. In particular, it is adviced to clean up resources belonging to a goal to only be cleaned up once the goal is fully processed and either rejected or finished.</p>
-</section>
-<section id="callbacks-and-mutexes">
-<h5>Callbacks and Mutexes<a class="headerlink" href="#callbacks-and-mutexes" title="Link to this heading"></a></h5>
-<p>It can be tricky to interface between ROS callbacks and CLIPS environments, especially if locks are guarding said callbacks that are not visible to the end user.
-As CLIPS environment access must also guarded by locks (as access is not thread-safe), this can easily create deadlocks in situations, where other functions can be called from clips that also try to acquire the lock held by a callback.</p>
-<p>Example: The feedback callback for action clients is guarded by a mutex that is also used by client goal handles to access members in a thread-safe manner (such as get_status()).</p>
-<p>A CLIPS rule that calls ClientGoalHandle::get_status() will therefore attempt to lock such a mutex while the clips lock is being held by the thread running the clips environment.
-If a callback is received right before, then the clips environment will stall as the function call is stuck (mutex is held by the callback function), while the callback function is stuck because it tries to acquire the lock for the clips environment (because it wants to pass the callback content to the clips environment).</p>
-<p>In these cases special care must be taken, e.g., by deferring CLIPS access out of scope of the mutexes guarding the callbacks.</p>
-</section>
+<p>This is mostly straight-forward in case of short lifetimes (e.g., creating a message and immediately sending it), but can be a bit tricky in case of long-lasting references, such as goals and goal handles in action clients/servers. In particular, it is advised to clean up resources belonging to a goal once the goal is fully processed and either rejected or finished.</p>
 </section>
 </section>
 </section>

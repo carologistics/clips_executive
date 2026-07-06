@@ -85,10 +85,14 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="standard_docs/PACKAGE.html">PACKAGE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="standard_docs/README.html">README</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="standard_docs/README.html#cx-ros-msgs-plugin">cx_ros_msgs_plugin</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#usage">Usage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#clips-features">CLIPS Features</a></li>
-<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#object-lifetimes-and-clips">Object Lifetimes and CLIPS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="standard_docs/README.html#generic-ros-msg-plugin">Generic ROS Msg Plugin</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#attention">ATTENTION</a></li>
+<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#configuration">Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#features">Features</a></li>
+<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#usage-example-1-publishers-and-subscribers">Usage Example 1: Publishers and Subscribers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#usage-example-2-service-client">Usage Example 2: Service Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#usage-example-3-service-provider">Usage Example 3: Service Provider</a></li>
+<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#usage-example-4-action-client">Usage Example 4: Action Client</a></li>
 </ul>
 </li>
 </ul>
@@ -126,112 +130,720 @@
              
   <section id="readme">
 <h1>README<a class="headerlink" href="#readme" title="Link to this heading"></a></h1>
-<section id="cx-ros-msgs-plugin">
-<h2>cx_ros_msgs_plugin<a class="headerlink" href="#cx-ros-msgs-plugin" title="Link to this heading"></a></h2>
-<p>This package offers the `cx::RosMsgsPlugin’ that provides functions to interface with ros topics of any type.
-It makes use of the ROS introspection API to create generic publishers and subscriptions on-the-fly and to serialize and deserialize ROS messages.</p>
-<section id="usage">
-<h3>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h3>
-<p>Register this plugin with the plugin manager. It requires no additional configuration, an example setup is shown below:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">clips_manager</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;main&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">    </span><span class="nt">main</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;ros_msgs&quot;</span><span class="p p-Indicator">]</span>
+<!-- AUTO-GENERATED via sphinx-build. Do not edit directly. -->
+<p><a id="usage-ros-msgs-plugin"></a></p>
+<section id="generic-ros-msg-plugin">
+<h2>Generic ROS Msg Plugin<a class="headerlink" href="#generic-ros-msg-plugin" title="Link to this heading"></a></h2>
+<p>Source code on <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_plugins/ros_msgs_plugin">GitHub</a>.</p>
+<p>This plugin provides the ability to interface with ROS topics of any type using introspection.</p>
+<section id="attention">
+<h3>ATTENTION<a class="headerlink" href="#attention" title="Link to this heading"></a></h3>
+<p>ROS introspection used to be limited to topics.
+Service introspection was started in Jazzy and finished in Kilted.
+Action introspection was started in Kilted and is not completed yet.
+The features of this plugin vary, depending on the ROS version it is compiled with.</p>
+</section>
+<section id="configuration">
+<h3>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h3>
+<p>This plugin has no specific configuration options.</p>
+</section>
+<section id="features">
+<h3>Features<a class="headerlink" href="#features" title="Link to this heading"></a></h3>
+<section id="facts">
+<h4>Facts<a class="headerlink" href="#facts" title="Link to this heading"></a></h4>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>; Asserted by the create-subscription function.
+; Retracted by the destroy-subscription function.
+(deftemplate ros-msgs-subscription
+  (slot topic (type STRING)) ; example: &quot;/cx_string_in&quot;
+  (slot type (type STRING))  ; example: &quot;std_msgs/msg/String&quot;
+)
 
-<span class="w">    </span><span class="nt">ros_msgs</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::RosMsgsPlugin&quot;</span>
+; Asserted by the ros-msgs-create-publisher function.
+; Retracted by the respective ros-msgs-destroy-publisher function.
+(deftemplate-ros-msgs-publisher
+  (slot topic (type STRING)) ; example: &quot;/cx_string_out&quot;
+  (slot type (type STRING))  ; example: &quot;std_msgs/msg/String&quot;
+)
+
+; Asserted by the callback of a subscription whenever a message arrives.
+; Process the message and then call ros-msgs-destroy-message before retracting!
+(deftemplate ros-msgs-message
+  (slot topic (type STRING))             ; example: &quot;/cx_string_in&quot;
+  (slot msg-ptr (type EXTERNAL-ADDRESS)) ; example: &lt;Pointer-C-0x7f1550001d20&gt;
+)
 </pre></div>
 </div>
-</section>
-<section id="clips-features">
-<h3>CLIPS Features<a class="headerlink" href="#clips-features" title="Link to this heading"></a></h3>
-<p>This plugin defines deftemplates and user-defined functions that are described below.</p>
-<section id="deftemplates">
-<h4>Deftemplates<a class="headerlink" href="#deftemplates" title="Link to this heading"></a></h4>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; Asserted by the create-subscription function.</span>
-<span class="c1">; Retracted by the destroy-subscription function.</span>
-<span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">ros-msgs-subscription</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">topic</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span><span class="w"> </span><span class="c1">; example: &quot;/cx_string_in&quot;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span><span class="w">  </span><span class="c1">; example: &quot;std_msgs/msg/String&quot;</span>
-<span class="p">)</span>
+<p>Supported since Jazzy:</p>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>; Asserted by the ros-msgs-create-client function.
+; Retracted by the respective ros-msgs-destroy-client function.
+(deftemplate-ros-msgs-client
+  (slot topic (type STRING)) ; example: &quot;/ros_cx_client&quot;
+  (slot type (type STRING))  ; example: &quot;std_srvs/srv/SetBool&quot;
+)
 
-<span class="c1">; Asserted by the ros-msgs-create-publisher function.</span>
-<span class="c1">; Retracted by the respective ros-msgs-destroy-publisher function.</span>
-<span class="p">(</span><span class="nv">deftemplate-ros-msgs-publisher</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">topic</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span><span class="w"> </span><span class="c1">; example: &quot;/cx_string_out&quot;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span><span class="w">  </span><span class="c1">; example: &quot;std_msgs/msg/String&quot;</span>
-<span class="p">)</span>
+; Asserted by the callback of ros-msgs-async-send-request.
+; Process the response like a normal message and then call
+; ros-msgs-destroy-message before retracting!
+(deftemplate ros-msgs-response
+  (slot service (type STRING))            ; example: &quot;/ros_cx_client&quot;
+  (slot request-id (type INTEGER))        ; example: 1
+  (slot msg-ptr (type EXTERNAL-ADDRESS))  ; example: &lt;Pointer-C-0x7f1550001d20&gt;
+)
+</pre></div>
+</div>
+<p>Supported since Kilted:</p>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>; Asserted by the ros-msgs-create-service function.
+; Retracted by the respective ros-msgs-destroy-service function.
+(deftemplate ros-msgs-service
+  (slot service (type STRING)) ; example: &quot;/ros_cx_service&quot;
+  (slot type (type STRING))    ; example: &quot;std_srvs/srv/SetBool&quot;
+)
 
-<span class="c1">; Asserted by the callback of a subscriber whenever a message arrives.</span>
-<span class="c1">; Process the message and then call ros-msgs-destroy-msgs before retracting!</span>
-<span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">ros-msgs-message</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">topic</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span><span class="w"> </span><span class="c1">; example          : &quot;/cx_string_in&quot;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">msg-ptr</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">EXTERNAL-ADDRESS</span><span class="p">))</span><span class="w"> </span><span class="nv">example:</span><span class="w"> </span><span class="nv">&lt;Pointer-C-0x7f1550001d20&gt;</span>
-<span class="p">)</span>
+; Asserted by the ros-msgs-create-action-client function.
+; Retracted by the respective ros-msgs-destroy-action-client function.
+(deftemplate ros-msgs-action-client
+  (slot server (type STRING))
+  (slot type (type STRING)))
+)
+
+; Asserted by the goal response callback of ros-msgs-async-send-goal function.
+; Process the response by using the client goal handle functions:
+; - ros-msgs-client-goal-handle-get-goal-id
+; - ros-msgs-client-goal-handle-get-goal-stamp
+; - ros-msgs-client-goal-handle-get-status
+; Call ros-msgs-destroy-client-goal-handle before retracting.
+; Clean up only after goal is completely handled by the server.
+(deftemplate ros-msgs-goal-response
+  (slot server (type STRING))
+  (slot client-goal-handle-ptr (type EXTERNAL-ADDRESS))
+)
+
+; Asserted by the goal result callback of ros-msgs-async-send-goal function.
+; The result is a ROS message and can be processed using ros-msgs-get-field.
+(deftemplate ros-msgs-wrapped-result
+  (slot server (type STRING))
+  (slot goal-id (type SYMBOL))
+  (slot code (type SYMBOL) (allowed-values UNKNOWN SUCCEEDED CANCELED  ABORTED))
+  (slot result-ptr (type EXTERNAL-ADDRESS))
+)
+
+; Asserted by the goal feedback callback of ros-msgs-async-send-goal function.
+; The feedback is a ROS message and can be processed using ros-msgs-get-field.
+(deftemplate ros-msgs-feedback
+  (slot server (type STRING))
+  (slot client-goal-handle-ptr (type EXTERNAL-ADDRESS))
+  (slot feedback-ptr (type EXTERNAL-ADDRESS))
+)
 </pre></div>
 </div>
 </section>
 <section id="functions">
 <h4>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h4>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; Create and destroy publishers and subscribers.</span>
-<span class="p">(</span><span class="nv">ros-msgs-create-publisher</span><span class="w"> </span><span class="nv">?topic-name</span><span class="w"> </span><span class="nv">?msg-type</span><span class="p">)</span><span class="w">    </span><span class="c1">; example args: &quot;/cx_string_out&quot; &quot;std_msgs/msg/String&quot;</span>
-<span class="p">(</span><span class="nv">ros-msgs-destroy-publisher</span><span class="w"> </span><span class="nv">?topic-name</span><span class="p">)</span><span class="w">             </span><span class="c1">; example args: &quot;/cx_string_out&quot;</span>
-<span class="p">(</span><span class="nv">ros-msgs-create-subscription</span><span class="w"> </span><span class="nv">?topic-name</span><span class="w"> </span><span class="nv">?msg-type</span><span class="p">)</span><span class="w"> </span><span class="c1">; example args: &quot;/cx_string_in&quot; &quot;std_msgs/msg/String&quot;</span>
-<span class="p">(</span><span class="nv">ros-msgs-destroy-subscription</span><span class="w"> </span><span class="nv">?topic-name</span><span class="p">)</span><span class="w">          </span><span class="c1">; example args: &quot;/cx_string_in&quot;</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>; Create and destroy publishers, subscribers
+(ros-msgs-create-publisher ?topic-name ?msg-type)    ; example args: &quot;/cx_string_out&quot; &quot;std_msgs/msg/String&quot;
+(ros-msgs-destroy-publisher ?topic-name)             ; example args: &quot;/cx_string_out&quot;
+(ros-msgs-create-subscription ?topic-name ?msg-type) ; example args: &quot;/cx_string_in&quot; &quot;std_msgs/msg/String&quot;
+(ros-msgs-destroy-subscription ?topic-name)          ; example args: &quot;/cx_string_in&quot;
 
-<span class="c1">; Publish a given message over a topic.</span>
-<span class="c1">; Requires the publisher to be created first using create-publisher.</span>
-<span class="p">(</span><span class="nv">ros-msgs-publish</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="nv">?topic-name</span><span class="p">)</span>
+; Publish a given message over a topic.
+; Requires the publisher to be created first using ros-msgs-create-publisher.
+(ros-msgs-publish ?msg-ptr ?topic-name)
 
-<span class="c1">; Create a message and return a pointer to it</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-create-message</span><span class="w"> </span><span class="nv">?msg-type</span><span class="p">))</span><span class="w"> </span><span class="c1">; example args: &quot;std_msgs/msg/String&quot;</span>
-<span class="w">                                                    </span><span class="c1">; example ret: &lt;Pointer-C-0x7f1550001d20&gt;</span>
+; Create a message and return a pointer to it
+(bind ?msg-ptr (ros-msgs-create-message ?msg-type)) ; example args: &quot;std_msgs/msg/String&quot;
+                                                    ; example ret: &lt;Pointer-C-0x7f1550001d20&gt;
 
-<span class="c1">; Destroy a message, call this after publishing a message or processing an incoming message to prevent it from staying in memory.</span>
-<span class="p">(</span><span class="nv">ros-msgs-destroy-message</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="p">)</span><span class="w"> </span><span class="c1">; example args: &lt;Pointer-C-0x7f1550001d20&gt;</span>
+; Destroy a message, call this after publishing a message or processing an incoming message to prevent it from staying in memory.
+(ros-msgs-destroy-message ?msg-ptr) ; example args: &lt;Pointer-C-0x7f1550001d20&gt;
 
-<span class="c1">; Populate the field of a message.</span>
-<span class="c1">; If the field is a message, then pass a pointer to that message obtained from ros-msgs-create-message.</span>
-<span class="p">(</span><span class="nv">ros-msgs-set-field</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="nv">?field-name</span><span class="w"> </span><span class="nv">?field-value</span><span class="p">)</span><span class="w"> </span><span class="c1">; example args: &lt;Pointer-C-0x7f1550001d20&gt; &quot;data&quot; &quot;Hello World&quot;</span>
+; Populate the field of a message.
+; If the field is a message, then pass a pointer to that message obtained from ros-msgs-create-message.
+(ros-msgs-set-field ?msg-ptr ?field-name ?field-value) ; example args: &lt;Pointer-C-0x7f1550001d20&gt; &quot;data&quot; &quot;Hello World&quot;
 
-<span class="c1">; Retrieve a field of a message.</span>
-<span class="c1">; If the field is a message, then a pointer is returned that can be further inspected by passing it to ros-msgs-get-field.</span>
-<span class="p">(</span><span class="nv">ros-msgs-get-field</span><span class="w"> </span><span class="nv">?msg-ptr</span><span class="w"> </span><span class="nv">?field-name</span><span class="p">)</span>
+; Retrieve a field of a message.
+; If the field is a message, then a pointer is returned that can be further inspected by passing it to ros-msgs-get-field.
+(ros-msgs-get-field ?msg-ptr ?field-name)
+
+; Convert an array representation of a goal uuid to a symbol using rclcpp_action::to_string.
+(bind ?uuid-sym (ros-msgs-goal-uuid-to-string ?uuid-multifield)) ; example arg: (43 47 40 182 6 191 57 8 170 98 1 22 43 138 62 142)
+                                                                 ; example ret: 2b2f28b6-06bf-3908-aa62-01162b8a3e8e
+</pre></div>
+</div>
+<p>Supported since Jazzy:</p>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>; Create and destroy service clients.
+(ros-msgs-create-client ?service-name ?service-type) ; example args: &quot;/ros_cx_client&quot; &quot;std_srvs/srv/SetBool&quot;
+(ros-msgs-destroy-client ?service-name)              ; example args: &quot;/ros_cx_client&quot;
+
+; Create a request message and return a pointer to it.
+; It is a regular message and hence can be pouplated with ros-msgs-set-field
+; and destroyed with ros-msgs-destroy-message.
+(bind ?msg-ptr (ros-msgs-create-request ?msg-type)) ; example args: &quot;std_srvs/srv/SetBool&quot;
+                                                    ; example ret: &lt;Pointer-C-0x7f1550001d20&gt;
+
+; Send a given request message to a service.
+; Requires the service client to be created first using ros-msgs-create-client.
+(bind ?request-id (ros-msgs-async-send-request ?msg-ptr ?service-name)) ; example args: &quot;std_srvs/srv/SetBool&quot;
+                                                                        ; example ret: 1 (or FALSE if sending the request failed)
+</pre></div>
+</div>
+<p>Supported since Kilted:</p>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>; Create and destroy service providers.
+; In order to answer service requests, define a function with the following signature:
+; (deffunction &lt;service_name&gt;-service-callback (?name ?request ?response)
+;   &lt;process request and populate response like regular ros messages&gt;
+; )
+; Do not cleanup the request or response, their lifetime is handled automatically.
+;
+; Example:
+; (deffunction /ros_cx_service-service-callback (?name ?request ?response)
+;   (printout green &quot;Received a request&quot; crlf)
+;   (bind ?data (ros-msgs-get-field ?request &quot;data&quot;))
+;   (printout yellow ?data crlf)
+;   (ros-msgs-set-field ?response &quot;success&quot; TRUE)
+;   (ros-msgs-set-field ?response &quot;message&quot; (str-cat &quot;Received &quot; ?data))
+; )
+(ros-msgs-create-service ?service-name ?service-type) ; example_args: &quot;/ros_cx_service&quot; &quot;std_srvs/srv/SetBool&quot;
+(ros-msgs-destroy-service ?service-name)              ; example_args: &quot;/ros_cx_service&quot;
+
+; Create and destroy action clients.
+(ros-msgs-create-action-client ?action-server ?type) ; eample args: &quot;fibonacci&quot; &quot;example_interfaces/action/Fibonacci&quot;
+(ros-msgs-destroy-action-client ?action-server) ; example args: &quot;fibonacci&quot;
+
+; Create a goal request and return a pointer to it.
+; It is a regular message and hence can be pouplated with ros-msgs-set-field
+; and destroyed with ros-msgs-destroy-message..
+(bind ?req-ptr (ros-msgs-create-goal-request ?type)) ; example args: &quot;example_interfaces/action/Fibonacci&quot;
+                                                     ; example ret: &lt;Pointer-C-0x7f1550001d20&gt;
+
+; Send a goal request to an action server.
+; This registers three callbacks: response, feedback and result.
+; These assert the corrending facts of the following types:
+; - ros-msgs-goal-response
+; - ros-msgs-wrapped-result
+; - ros-msgs-feedback
+(ros-msgs-async-send-goal ?action-server ?req-ptr) ; example args: &quot;fibonacci&quot; &lt;Pointer-C-0x7f1550001d20&gt;
+
+; Functions to inspect client goal handles that are contained in the facts asserted by action callbacks.
+
+; Uses rclcpp_action::to_string to provide a formatted version of the associated goal id (as SYMBOL).
+(bind ?g-id (ros-msgs-client-goal-handle-get-goal-id ?client-goal-handle-ptr)) ; example args: &lt;Pointer-C-0x7f1550001d20&gt;
+                                                        ; example ret: f2d1cd46-58f2-5bfe-d49f-e182c4a4eccc
+
+; Provide the goal stamp using get_goal_stamp().seconds()
+(bind ?ts (ros-msgs-client-goal-handle-get-goal-stamp ?client-goal-handle-ptr)) ; example args: &lt;Pointer-C-0x7f1550001d20&gt;
+                                                                                ; example ret: 1698326401.123456
+
+; Checks if a feedback callback is registered (should always return true, as the plugin always registers one.
+(bind ?aware (ros-msgs-client-goal-handle-is-feedback-aware ?client-goal-handle-ptr)) ; example args: &lt;Pointer-C-0x7f1550001d20&gt;
+                                                                                      ; example ret: TRUE
+
+; Checks if a result callback is registered (should always return true, as the plugin always registers one.
+(bind ?aware (ros-msgs-client-goal-handle-is-result-aware ?client-goal-handle-ptr)) ; example args: &lt;Pointer-C-0x7f1550001d20&gt;
+                                                                                    ; example ret: TRUE
+
+; Delete a client goal handle. Use this only after the associated goal is fully processed.
+(ros-msgs-destroy-client-goal-handle ?client-goal-handle-ptr) ; example args: &lt;Pointer-C-0x7f1550001d20&gt;
 </pre></div>
 </div>
 </section>
-</section>
-<section id="object-lifetimes-and-clips">
-<h3>Object Lifetimes and CLIPS<a class="headerlink" href="#object-lifetimes-and-clips" title="Link to this heading"></a></h3>
-<p>Since clips stores objects via void pointers, dynamic object lifetime management via <code class="docutils literal notranslate"><span class="pre">std::shared_ptr</span></code> does not work direcly from within CLIPS.
-Instead, object lifetimes need to be managed more explicitly through the usage of <code class="docutils literal notranslate"><span class="pre">create</span></code> and <code class="docutils literal notranslate"><span class="pre">destroy</span></code> functions.</p>
+<section id="message-lifetimes">
+<h4>Message Lifetimes<a class="headerlink" href="#message-lifetimes" title="Link to this heading"></a></h4>
+<p>Since clips stores objects via void pointers, dynamic object lifetime management via std::shared_ptr does not work directly from within CLIPS.
+Instead, object lifetimes need to be managed more explicitly through the usage of create and destroy functions.</p>
 <p>It is advised to clean up all objects as soon as they are not needed anymore in order to free up memory.</p>
 <p>Note that when processing nested messages, the message obtained via <strong>ros-msgs-get-field</strong> is not allocating new memory, but rather points to the memory of the parent message.
 Calling <strong>ros-msgs-destroy-message</strong> is not necessary, as sub-messages retrieved via <strong>ros-msgs-get-field</strong> only hold a shallow reference and are cleaned up when the parent message is destroyed. Calling it anyways, will only invalidate this shallow reference.</p>
 <p>When creating a new message via <strong>ros-msgs-create-message</strong>, new memory is allocated.
-When using <strong>ros-msgs-set-field</strong> to set a nested message, dynamic memory from the sub-message is moved to the parent message, hence the nested message loses all dynamicly allocated data (e.g., unbound arrays, strings).
+When using <strong>ros-msgs-set-field</strong> to set a nested message, dynamic memory from the sub-message is moved to the parent message, hence the nested message loses all dynamically allocated data (e.g., unbound arrays, strings).
 See the example below:</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?new-msg</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-create-message</span><span class="w"> </span><span class="s">&quot;geometry_msgs/msg/Twist&quot;</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?sub-msg</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-create-message</span><span class="w"> </span><span class="s">&quot;geometry_msgs/msg/Vector3&quot;</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">ros-msgs-set-field</span><span class="w"> </span><span class="nv">?sub-msg</span><span class="w"> </span><span class="s">&quot;x&quot;</span><span class="w"> </span><span class="mf">5.5</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">ros-msgs-set-field</span><span class="w"> </span><span class="nv">?new-msg</span><span class="w"> </span><span class="s">&quot;linear&quot;</span><span class="w"> </span><span class="nv">?sub-msg</span><span class="p">)</span>
-<span class="c1">; now all dynamicly allocated members of ?sub-msg are reset,</span>
-<span class="c1">; as they are moved to the parent message.</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>(bind ?new-msg (ros-msgs-create-message &quot;geometry_msgs/msg/Twist&quot;))
+(bind ?sub-msg (ros-msgs-create-message &quot;geometry_msgs/msg/Vector3&quot;))
+(ros-msgs-set-field ?sub-msg &quot;x&quot; 1.0)
+(ros-msgs-set-field ?new-msg &quot;linear&quot; ?sub-msg)
+; now all dynamicly allocated members of ?sub-msg are reset,
+; as they are moved to the parent message.
 </pre></div>
 </div>
 <p>In particular, obtaining a nested message from one message <code class="docutils literal notranslate"><span class="pre">?source</span></code> and setting it as a member to another message <code class="docutils literal notranslate"><span class="pre">?sink</span></code> will cause <code class="docutils literal notranslate"><span class="pre">?source</span></code> to lose all dynamic data within it’s sub-message, as the sub-message obtained is actually pointing to memory within <code class="docutils literal notranslate"><span class="pre">?source</span></code>:</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?source</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-create-message</span><span class="w"> </span><span class="s">&quot;geometry_msgs/msg/Twist&quot;</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?sub-msg</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-create-message</span><span class="w"> </span><span class="s">&quot;geometry_msgs/msg/Vector3&quot;</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">ros-msgs-set-field</span><span class="w"> </span><span class="nv">?sub-msg</span><span class="w"> </span><span class="s">&quot;x&quot;</span><span class="w"> </span><span class="mf">5.5</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">ros-msgs-set-field</span><span class="w"> </span><span class="nv">?source</span><span class="w"> </span><span class="s">&quot;linear&quot;</span><span class="w"> </span><span class="nv">?sub-msg</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?sink</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-create-message</span><span class="w"> </span><span class="s">&quot;geometry_msgs/msg/Twist&quot;</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?source-sub-msg</span><span class="w"> </span><span class="p">(</span><span class="nv">ros-msgs-get-field</span><span class="w"> </span><span class="nv">?source</span><span class="w"> </span><span class="s">&quot;linear&quot;</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">ros-msgs-set-field</span><span class="w"> </span><span class="nv">?sink</span><span class="w"> </span><span class="s">&quot;linear&quot;</span><span class="w"> </span><span class="nv">?source-sub-msg</span><span class="p">)</span>
-<span class="c1">; now all dynamicly allocated members of the sub message in ?source are reset,</span>
-<span class="c1">; as they are moved to ?sink.</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>(bind ?source (ros-msgs-create-message &quot;geometry_msgs/msg/Twist&quot;))
+(bind ?sub-msg (ros-msgs-create-message &quot;geometry_msgs/msg/Vector3&quot;))
+(ros-msgs-set-field ?sub-msg &quot;x&quot; 5.5)
+(ros-msgs-set-field ?source &quot;linear&quot; ?sub-msg)
+(bind ?sink (ros-msgs-create-message &quot;geometry_msgs/msg/Twist&quot;))
+(bind ?source-sub-msg (ros-msgs-get-field ?source &quot;linear&quot;))
+(ros-msgs-set-field ?sink &quot;linear&quot; ?source-sub-msg)
+; now all dynamicly allocated members of the sub message in ?source are reset,
+; as they are moved to ?sink.
 </pre></div>
 </div>
+</section>
+<section id="action-lifetime">
+<h4>Action Lifetime<a class="headerlink" href="#action-lifetime" title="Link to this heading"></a></h4>
+<p>When dealing with actions, always make sure to keep the relevant goal handles alive for the entire duration of the associated action. Do not attempt to preemptively delete it. The same goes for goal requests.</p>
+</section>
+</section>
+<section id="usage-example-1-publishers-and-subscribers">
+<h3>Usage Example 1: Publishers and Subscribers<a class="headerlink" href="#usage-example-1-publishers-and-subscribers" title="Link to this heading"></a></h3>
+<p>A minimal working example is provided by the <a class="reference external" href="https://carologistics.github.io/clips_executive/cx_bringup">cx_bringup</a> package. Run it via:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>cx_bringup<span class="w"> </span>cx_launch.py<span class="w"> </span>manager_config:<span class="o">=</span>plugin_examples/ros_msgs.yaml
+</pre></div>
+</div>
+<p>It creates a <code class="docutils literal notranslate"><span class="pre">std_msgs/msg/String</span></code> subscription on topic <code class="docutils literal notranslate"><span class="pre">/ros_cx_in</span></code> and prints out any text send over it.
+Additionally, it creates a publisher on <code class="docutils literal notranslate"><span class="pre">/ros_cx_out</span></code> that publishes <code class="docutils literal notranslate"><span class="pre">Hello</span> <span class="pre">World</span></code> whenever something is received over the <code class="docutils literal notranslate"><span class="pre">/ros_cx_in</span></code> topic.</p>
+<section id="id1">
+<h4>Configuration<a class="headerlink" href="#id1" title="Link to this heading"></a></h4>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/params/plugin_examples/ros_msgs.yaml">cx_bringup/params/plugin_examples/ros_msgs.yaml</a>.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">clips_manager</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_ros_msgs&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">    </span><span class="nt">cx_ros_msgs</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;executive&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;ros_msgs&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;files&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">watch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facts&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;rules&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">    </span><span class="nt">executive</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::ExecutivePlugin&quot;</span>
+
+<span class="w">    </span><span class="nt">ros_msgs</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::RosMsgsPlugin&quot;</span>
+
+<span class="w">    </span><span class="nt">files</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::FileLoadPlugin&quot;</span>
+<span class="w">      </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_bringup&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span>
+<span class="w">        </span><span class="s">&quot;clips/plugin_examples/ros-msgs.clp&quot;</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+</section>
+<section id="code">
+<h4>Code<a class="headerlink" href="#code" title="Link to this heading"></a></h4>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/clips/plugin_examples/ros-msgs.clp">cx_bringup/clips/plugin_examples/ros-msgs.clp</a>.</p>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>(defrule ros-msgs-pub-init
+&quot; Create publisher for ros_cx_out.&quot;
+  (not (ros-msgs-publisher (topic &quot;ros_cx_out&quot;)))
+  (not (executive-finalize))
+=&gt;
+  ; create the publisher
+  (ros-msgs-create-publisher &quot;ros_cx_out&quot; &quot;std_msgs/msg/String&quot;)
+  (printout info &quot;Publishing on /ros_cx_out&quot; crlf)
+)
+
+(defrule ros-msgs-pub-hello
+&quot; Whenever a message comes in, send out a Hello World message in response. &quot;
+  (declare (salience 1))
+  (ros-msgs-publisher (topic ?topic))
+  (ros-msgs-message)
+  =&gt;
+  (printout yellow &quot;Sending Hello World Message!&quot; crlf)
+  (bind ?msg (ros-msgs-create-message &quot;std_msgs/msg/String&quot;))
+  (ros-msgs-set-field ?msg &quot;data&quot; &quot;Hello World!&quot;)
+  (ros-msgs-publish ?msg ?topic)
+  (ros-msgs-destroy-message ?msg)
+)
+
+(defrule ros-msgs-sub-init
+&quot; Create a simple subscriber using the generated bindings. &quot;
+  (not (ros-msgs-subscription (topic &quot;ros_cx_in&quot;)))
+  (not (executive-finalize))
+=&gt;
+  (ros-msgs-create-subscription &quot;ros_cx_in&quot; &quot;std_msgs/msg/String&quot;)
+  (printout info &quot;Listening for String messages on /ros_cx_in&quot; crlf)
+)
+
+(defrule ros-msgs-receive
+&quot; React to incoming messages and answer (on a different topic). &quot;
+  (ros-msgs-subscription (topic ?sub))
+  ?msg-f &lt;- (ros-msgs-message (topic ?sub) (msg-ptr ?inc-msg))
+  =&gt;
+  (bind ?recv (ros-msgs-get-field ?inc-msg &quot;data&quot;))
+  (printout blue &quot;Recieved via &quot; ?sub &quot;: &quot; ?recv crlf)
+  (ros-msgs-destroy-message ?inc-msg)
+  (retract ?msg-f)
+)
+
+(defrule ros-msgs-pub-sub-finalize
+&quot; Delete the publisher and subscription on executive finalize. &quot;
+  (executive-finalize)
+  (ros-msgs-publisher (topic ?topic))
+  (ros-msgs-subscription (topic ?in-topic))
+=&gt;
+  (printout info &quot;Destroying publishers and subscriptions &quot; crlf)
+  (ros-msgs-destroy-publisher ?topic)
+  (ros-msgs-destroy-subscription ?in-topic)
+)
+
+(defrule ros-msgs-message-cleanup
+&quot; Delete the messages on executive finalize. &quot;
+  (executive-finalize)
+  ?msg-f &lt;- (ros-msgs-message (msg-ptr ?ptr))
+=&gt;
+  (ros-msgs-destroy-message ?ptr)
+  (retract ?msg-f)
+)
+</pre></div>
+</div>
+</section>
+</section>
+<section id="usage-example-2-service-client">
+<h3>Usage Example 2: Service Client<a class="headerlink" href="#usage-example-2-service-client" title="Link to this heading"></a></h3>
+<p>This example requires ROS jazzy or later.</p>
+<p>A minimal working example is provided by the <a class="reference external" href="https://carologistics.github.io/clips_executive/cx_bringup">cx_bringup</a> package. Run it via:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>cx_bringup<span class="w"> </span>cx_launch.py<span class="w"> </span>manager_config:<span class="o">=</span>plugin_examples/ros_msgs_client.yaml
+</pre></div>
+</div>
+<p>It creates a <code class="docutils literal notranslate"><span class="pre">std_srvs/srv/SetBool</span></code> client for <code class="docutils literal notranslate"><span class="pre">/ros_cx_client</span></code>, sends a request and prints the response.</p>
+<p>In order to launch a simple service to send the request to, run the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>cx_bringup<span class="w"> </span>test_service.py
+</pre></div>
+</div>
+<section id="id2">
+<h4>Configuration<a class="headerlink" href="#id2" title="Link to this heading"></a></h4>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/params/plugin_examples/ros_msgs_client.yaml">cx_bringup/params/plugin_examples/ros_msgs_client.yaml</a>.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">/**</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_ros_msgs_client&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">cx_ros_msgs_client</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;executive&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;ros_msgs&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;files&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">log_clips_to_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">watch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facts&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;rules&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">    </span><span class="nt">executive</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::ExecutivePlugin&quot;</span>
+<span class="w">      </span><span class="nt">publish_on_refresh</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">      </span><span class="nt">assert_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">refresh_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">    </span><span class="nt">ros_msgs</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::RosMsgsPlugin&quot;</span>
+<span class="w">    </span><span class="nt">files</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::FileLoadPlugin&quot;</span>
+<span class="w">      </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_bringup&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span>
+<span class="w">        </span><span class="s">&quot;clips/plugin_examples/ros-msgs-client.clp&quot;</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h4>Code<a class="headerlink" href="#id3" title="Link to this heading"></a></h4>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/clips/plugin_examples/ros-msgs-client.clp">cx_bringup/clips/plugin_examples/ros-msgs-client.clp</a>.</p>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>(defrule ros-msgs-client-init
+&quot; Create publisher for ros_cx_out.&quot;
+  (not (ros-msgs-client (service &quot;ros_cx_client&quot;)))
+  (not (executive-finalize))
+=&gt;
+  ; create the publisher
+  (ros-msgs-create-client &quot;ros_cx_client&quot; &quot;std_srvs/srv/SetBool&quot;)
+  (printout info &quot;Opening client on /ros_cx_client&quot; crlf)
+)
+
+(defrule ros-msgs-request-true
+&quot; Attempt to request the service. &quot;
+  (ros-msgs-client (service ?service))
+  (not (request ?any-id))
+  (time ?any-time) ; used to continuously attempt to request the service until success
+  =&gt;
+  (bind ?new-req (ros-msgs-create-request &quot;std_srvs/srv/SetBool&quot;))
+  (ros-msgs-set-field ?new-req &quot;data&quot; TRUE)
+  (bind ?id (ros-msgs-async-send-request ?new-req ?service))
+  (if ?id then
+    (printout yellow &quot;Request sent with id &quot; ?id crlf)
+    (assert (request ?id))
+   else
+    (printout red &quot;Sending of request failed, is the service running?&quot; crlf)
+    (printout red &quot;Start it using \&quot;ros2 run cx_bringup test_service.py\&quot;&quot; crlf)
+  )
+  (ros-msgs-destroy-message ?new-req)
+)
+
+(defrule set-bool-client-response-received
+&quot; Get response, read it and delete.&quot;
+  ?msg-fact &lt;- (ros-msgs-response (service ?service) (msg-ptr ?ptr) (request-id ?id))
+  (request ?id)
+=&gt;
+  (bind ?succ (ros-msgs-get-field ?ptr &quot;success&quot;))
+  (bind ?msg (ros-msgs-get-field ?ptr &quot;message&quot;))
+  (printout green &quot;Received response from &quot; ?service &quot; with: &quot; ?succ &quot; (&quot; ?msg &quot;)&quot; crlf)
+  (ros-msgs-destroy-message ?ptr)
+  (retract ?msg-fact)
+)
+
+(defrule ros-msgs-client-finalize
+&quot; Delete the client on executive finalize. &quot;
+  (executive-finalize)
+  (ros-msgs-client (service ?service))
+=&gt;
+  (printout info &quot;Destroying client&quot; crlf)
+  (ros-msgs-destroy-client ?service)
+)
+
+(defrule ros-msgs-message-cleanup
+&quot; Delete the messages on executive finalize. &quot;
+  (executive-finalize)
+  ?msg-f &lt;- (ros-msgs-message (msg-ptr ?ptr))
+=&gt;
+  (ros-msgs-destroy-message ?ptr)
+  (retract ?msg-f)
+)
+</pre></div>
+</div>
+</section>
+</section>
+<section id="usage-example-3-service-provider">
+<h3>Usage Example 3: Service Provider<a class="headerlink" href="#usage-example-3-service-provider" title="Link to this heading"></a></h3>
+<p>This example requires ROS kilted or later.</p>
+<p>A minimal working example is provided by the <a class="reference external" href="https://carologistics.github.io/clips_executive/cx_bringup">cx_bringup</a> package. Run it via:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>cx_bringup<span class="w"> </span>cx_launch.py<span class="w"> </span>manager_config:<span class="o">=</span>plugin_examples/ros_msgs_service.yaml
+</pre></div>
+</div>
+<p>It creates a <code class="docutils literal notranslate"><span class="pre">std_srvs/srv/SetBool</span></code> service <code class="docutils literal notranslate"><span class="pre">/ros_cx_service</span></code> and prints all requests, returning successfully and adding a message with the request.</p>
+<p>In order to launch a simple client to send the request, run the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>service<span class="w"> </span>call<span class="w"> </span>/ros_cx_service<span class="w"> </span>std_srvs/srv/SetBool<span class="w"> </span><span class="s2">&quot;{data: true}&quot;</span>
+</pre></div>
+</div>
+<section id="id4">
+<h4>Configuration<a class="headerlink" href="#id4" title="Link to this heading"></a></h4>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/params/plugin_examples/ros_msgs_service.yaml">cx_bringup/params/plugin_examples/ros_msgs_service.yaml</a>.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">/**</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_ros_msgs_service&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">cx_ros_msgs_service</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;executive&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;ros_msgs&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;files&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">log_clips_to_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">watch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facts&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;rules&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">    </span><span class="nt">executive</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::ExecutivePlugin&quot;</span>
+<span class="w">      </span><span class="nt">publish_on_refresh</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">      </span><span class="nt">assert_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">refresh_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">    </span><span class="nt">ros_msgs</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::RosMsgsPlugin&quot;</span>
+<span class="w">    </span><span class="nt">files</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::FileLoadPlugin&quot;</span>
+<span class="w">      </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_bringup&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span>
+<span class="w">        </span><span class="s">&quot;clips/plugin_examples/ros-msgs-service.clp&quot;</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+</section>
+<section id="id5">
+<h4>Code<a class="headerlink" href="#id5" title="Link to this heading"></a></h4>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/clips/plugin_examples/ros-msgs-service.clp">cx_bringup/clips/plugin_examples/ros-msgs-service.clp</a>.</p>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>(defrule set-bool-service-init
+&quot; Create a simple service using the generated bindings. &quot;
+  (not (std-srvs-set-bool-service (name &quot;set_bool_srv&quot;)))
+=&gt;
+  (std-srvs-set-bool-create-service &quot;set_bool_srv&quot;)
+  (printout info &quot;Created service for /ros_cx_srv&quot; crlf)
+)
+
+; this function needs to be defined in order to respond to messages
+(deffunction std-srvs-set-bool-service-callback (?service-name ?request ?response)
+  (bind ?req-data (std-srvs-set-bool-request-get-field ?request &quot;data&quot;))
+  (printout green &quot;Received request on &quot; ?service-name &quot;. Data: &quot; ?req-data crlf)
+  (if ?req-data then
+    (std-srvs-set-bool-response-set-field ?response &quot;success&quot; TRUE)
+    (std-srvs-set-bool-response-set-field ?response &quot;message&quot; (str-cat &quot;Received the request: &quot; ?req-data))
+    (assert (send-request))
+   else
+    (std-srvs-set-bool-response-set-field ?response &quot;success&quot; FALSE)
+    (std-srvs-set-bool-response-set-field ?response &quot;message&quot; (str-cat &quot;Received the request: &quot; ?req-data))
+  )
+)
+
+(defrule set-bool-srv-cleanup
+  (executive-finalize)
+  (std-srvs-set-bool-service (name ?service))
+  =&gt;
+  (std-srvs-set-bool-destroy-service ?service)
+)
+</pre></div>
+</div>
+</section>
+</section>
+<section id="usage-example-4-action-client">
+<h3>Usage Example 4: Action Client<a class="headerlink" href="#usage-example-4-action-client" title="Link to this heading"></a></h3>
+<p>This example requires ROS kilted or later.</p>
+<p>A minimal working example is provided by the <a class="reference external" href="https://carologistics.github.io/clips_executive/cx_bringup">cx_bringup</a> package. Run it via:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>cx_bringup<span class="w"> </span>cx_launch.py<span class="w"> </span>manager_config:<span class="o">=</span>plugin_examples/ros_msgs_action_client.yaml
+</pre></div>
+</div>
+<p>The launch file starts two CLIPS environments:
+: - One environment provides an action server that computes Fibonacci sequences. It is implemented using generated bindings for the server via <a class="reference external" href="https://carologistics.github.io/clips_executive/cx_ros_comm_gen">cx_ros_comm_gen</a>.</p>
+<ul class="simple">
+<li><p>The second environment acts as an action client. It first requests a Fibonacci sequence of order 5. After the goal completes, it sends a second request for a sequence of order 10. The second goal is canceled after the sixth element has been computed.</p></li>
+</ul>
+<section id="id6">
+<h4>Configuration<a class="headerlink" href="#id6" title="Link to this heading"></a></h4>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/params/plugin_examples/ros_msgs_action_client.yaml">cx_bringup/params/plugin_examples/ros_msgs_action_client.yaml</a>.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">/**</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_ros_msgs_action_client&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;cx_fibonacci_server&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">    </span><span class="nt">cx_ros_msgs_action_client</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;executive&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;ros_msgs&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;files_client&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">log_clips_to_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">watch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facts&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;rules&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">redirect_stdout_to_debug</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="w">    </span><span class="nt">cx_fibonacci_server</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;executive&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;fibonacci&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;files_server&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">log_clips_to_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">watch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facts&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;rules&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">redirect_stdout_to_debug</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="w">    </span><span class="nt">executive</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::ExecutivePlugin&quot;</span>
+<span class="w">      </span><span class="nt">assert_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="w">    </span><span class="nt">fibonacci</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::CXExampleInterfacesFibonacciPlugin&quot;</span>
+
+<span class="w">    </span><span class="nt">ros_msgs</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::RosMsgsPlugin&quot;</span>
+
+<span class="w">    </span><span class="nt">files_client</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::FileLoadPlugin&quot;</span>
+<span class="w">      </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_bringup&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span>
+<span class="w">        </span><span class="s">&quot;clips/plugin_examples/ros-msgs-action-client.clp&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">    </span><span class="nt">files_server</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::FileLoadPlugin&quot;</span>
+<span class="w">      </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_bringup&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span>
+<span class="w">        </span><span class="s">&quot;clips/plugin_examples/fibonacci-action-server.clp&quot;</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+</section>
+<section id="id7">
+<h4>Code<a class="headerlink" href="#id7" title="Link to this heading"></a></h4>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/clips/plugin_examples/ros-msgs-action-client.clp">cx_bringup/clips/plugin_examples/ros-msgs-action-client.clp</a>.</p>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>(defrule ros-msgs-action-client-init
+&quot; Create a client for fibonacci example action server.&quot;
+  (not (ros-msgs-action-client (server &quot;ros_cx_fibonacci&quot;)))
+  (not (executive-finalize))
+=&gt;
+  (ros-msgs-create-action-client &quot;ros_cx_fibonacci&quot; &quot;example_interfaces/action/Fibonacci&quot;)
+  (printout yellow &quot;Created client for /ros_cx_fibonacci&quot; crlf)
+)
+
+(defrule ros-msgs-action-client-send-goal
+&quot; Send a goal request for the 10th fibonacci number. &quot;
+  (ros-msgs-action-client (server ?server))
+  (not (send-request))
+=&gt;
+  (assert (send-request))
+  (bind ?new-req (ros-msgs-create-goal-request &quot;example_interfaces/action/Fibonacci&quot;))
+  (ros-msgs-set-field ?new-req &quot;order&quot; 5)
+  (bind ?val (ros-msgs-get-field ?new-req &quot;order&quot;))
+  (bind ?id (ros-msgs-async-send-goal ?new-req ?server))
+  (assert (fibonacci-goal ?new-req))
+  (printout yellow &quot;Sending goal fibonacci(5)&quot; crlf)
+  ; do not destroy goal directly, it is kept alive
+  ;(ros-msgs-destroy-message ?new-req)
+)
+
+(defrule ros-msgs-action-client-check-client-goal-handle
+&quot; Process the response for the requested goal.&quot;
+  (ros-msgs-action-client (server ?server))
+  (ros-msgs-goal-response (server ?server) (client-goal-handle-ptr ?cgh-ptr))
+=&gt;
+  (bind ?g-id (ros-msgs-client-goal-handle-get-goal-id ?cgh-ptr))
+  (bind ?stamp (ros-msgs-client-goal-handle-get-goal-stamp ?cgh-ptr))
+  (printout yellow &quot;Response: goal id &quot; ?g-id &quot; at stamp &quot; ?stamp &quot; with status &quot; (ros-msgs-client-goal-handle-get-status ?cgh-ptr) crlf)
+)
+
+(defrule ros-msgs-action-client-read-feedback
+  (ros-msgs-action-client (server ?server))
+ ?fact &lt;- (ros-msgs-feedback (server ?server) (client-goal-handle-ptr ?cgh-ptr) (feedback-ptr ?msg-ptr))
+=&gt;
+  (bind ?seq (ros-msgs-get-field ?msg-ptr &quot;sequence&quot;))
+  (printout yellow &quot;partial sequence: &quot; ?seq crlf)
+  (ros-msgs-destroy-message ?msg-ptr)
+  (if (= (length$ ?seq) 7) then
+     (assert (cancel-goal))
+  )
+  (retract ?fact)
+)
+
+(defrule ros-msgs-action-client-cleanup-after-wrapped-result
+  ?response-f &lt;- (ros-msgs-goal-response (server ?server) (client-goal-handle-ptr ?cgh-ptr))
+  ?result-f &lt;- (ros-msgs-wrapped-result (server ?server) (goal-id ?id) (code ?code) (result-ptr ?res-ptr))
+  (test (eq ?id (ros-msgs-client-goal-handle-get-goal-id ?cgh-ptr)))
+  ?req-f &lt;- (fibonacci-goal ?req-ptr)
+=&gt;
+  (printout yellow &quot;Action result: &quot; ?code crlf)
+  (if (eq ?code SUCCEEDED)
+    then
+    (bind ?seq (ros-msgs-get-field ?res-ptr &quot;sequence&quot;))
+    (printout yellow &quot;Final fibonacci sequence: &quot; ?seq crlf)
+  )
+  (if (eq ?code CANCELED)
+    then
+    (bind ?seq (ros-msgs-get-field ?res-ptr &quot;sequence&quot;))
+    (printout yellow &quot;Canceled fibonacci sequence: &quot; ?seq crlf)
+  )
+  (ros-msgs-destroy-message ?res-ptr)
+  (ros-msgs-destroy-message ?req-ptr)
+  (ros-msgs-destroy-client-goal-handle ?cgh-ptr)
+  (retract ?response-f ?result-f ?req-f)
+)
+
+(defrule ros-msgs-action-client-send-goal-that-cancels-later
+&quot; Send out a second goal for the fibonacci sequence of order 10 once the previous goal is completed. &quot;
+  (ros-msgs-action-client (server ?server))
+  (send-request)
+  (not (fibonacci-goal ?))
+  (not (send-request-again))
+=&gt;
+  (assert (send-request-again))
+  (printout yellow &quot;Request fibonacci(10), will cancel before finish&quot; crlf)
+  (bind ?new-req (ros-msgs-create-goal-request &quot;example_interfaces/action/Fibonacci&quot;))
+  (ros-msgs-set-field ?new-req &quot;order&quot; 10)
+  (bind ?val (ros-msgs-get-field ?new-req &quot;order&quot;))
+  (bind ?id (ros-msgs-async-send-goal ?new-req ?server))
+  (assert (fibonacci-goal ?new-req))
+  ; do not destroy goal directly, it is kept alive
+  ;(ros-msgs-destroy-message ?new-req)
+)
+
+(defrule ros-msgs-action-client-request-cancel
+&quot; Send out a cancel request after the partial feedback provides a sequence of length 7. &quot;
+  (cancel-goal)
+  (ros-msgs-action-client (server ?server))
+  (ros-msgs-goal-response (server ?server) (client-goal-handle-ptr ?ghp))
+=&gt;
+  (ros-msgs-async-cancel-goal ?server ?ghp)
+  (printout yellow &quot;Canceling current goal&quot; crlf)
+)
+
+(defrule ros-msgs-action-client-cleanup-cancel-response
+&quot; Process the cancel response and clean up afterwards. &quot;
+  ?msg-f &lt;- (ros-msgs-cancel-response (cancel-response-ptr ?msg))
+=&gt;
+  (bind ?error-code (ros-msgs-get-field ?msg &quot;return_code&quot;))
+  (bind ?goals-canceling (ros-msgs-get-field ?msg &quot;goals_canceling&quot;))
+  (foreach ?g ?goals-canceling
+    (bind ?goal-id-msg (ros-msgs-get-field ?g &quot;goal_id&quot;))
+    (bind ?goal-id (ros-msgs-get-field ?goal-id-msg &quot;uuid&quot;))
+    (bind ?goal-id-str (ros-msgs-goal-uuid-to-string ?goal-id))
+    (printout yellow &quot;Canceled goal with id: &quot; ?goal-id-str crlf)
+    (ros-msgs-destroy-message ?goal-id-msg)
+  )
+  (ros-msgs-destroy-message ?msg)
+)
+
+(defrule ros-msgs-action-client-finalize
+&quot; Delete the client on executive finalize. &quot;
+  (executive-finalize)
+  (ros-msgs-action-client (server ?server))
+=&gt;
+  (printout info &quot;Destroying action client&quot; crlf)
+  (ros-msgs-destroy-action-client ?server)
+)
+</pre></div>
+</div>
+</section>
 </section>
 </section>
 </section>

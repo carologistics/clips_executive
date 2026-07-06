@@ -276,7 +276,7 @@
 </dl>
 <section id="id1">
 <h3>Configuration<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
-<p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/params/plugin_examples/fibonacci_action.yaml">cx_bringup/params/plugin_examples/fibonacci_action.yaml</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/params/plugin_examples/fibonacci_action.yaml">cx_bringup/params/plugin_examples/fibonacci_action.yaml</a>.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">/**</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_fibonacci_server&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;cx_fibonacci_client&quot;</span><span class="p p-Indicator">]</span>
@@ -318,7 +318,7 @@
 </section>
 <section id="code">
 <h3>Code<a class="headerlink" href="#code" title="Link to this heading"></a></h3>
-<p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/fibonacci-action-server.clp">cx_bringup/clips/plugin_examples/fibonacci-action-server.clp</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/clips/plugin_examples/fibonacci-action-server.clp">cx_bringup/clips/plugin_examples/fibonacci-action-server.clp</a>.</p>
 <div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">deftemplate</span> fibonacci
   <span class="p">(</span><span class="kr">slot</span> uuid <span class="p">(</span><span class="kr">type</span> STRING))
   <span class="p">(</span><span class="kr">slot</span> order <span class="p">(</span><span class="kr">type</span> INTEGER))
@@ -447,7 +447,7 @@
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/fibonacci-action-client.clp">cx_bringup/clips/plugin_examples/fibonacci-action-client.clp</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/clips/plugin_examples/fibonacci-action-client.clp">cx_bringup/clips/plugin_examples/fibonacci-action-client.clp</a>.</p>
 <div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">defrule</span> fibonacci-action-client-init
 <span class="s">&quot; Create a simple client using the generated bindings. &quot;</span>
   <span class="p">(</span>not <span class="p">(</span>example-interfaces-fibonacci-client <span class="p">(</span>server <span class="s">&quot;ros_cx_fibonacci&quot;</span><span class="p">)))</span>

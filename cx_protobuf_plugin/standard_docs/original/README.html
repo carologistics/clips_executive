@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cx_protobuf_plugin &mdash; cx_protobuf_plugin 0.1.3 documentation</title>
+  <title>Protobuf Plugin &mdash; cx_protobuf_plugin 0.1.3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=86f27845" />
       <link rel="stylesheet" type="text/css" href="../../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
@@ -88,10 +88,12 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../PACKAGE.html">PACKAGE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../README.html">README</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../README.html#cx-protobuf-plugin">cx_protobuf_plugin</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../README.html#usage">Usage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../README.html#clips-features">CLIPS Features</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../README.html#object-lifetimes-and-clips">Object Lifetimes and CLIPS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../README.html#protobuf-plugin">Protobuf Plugin</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../README.html#note">NOTE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../README.html#configuration">Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../README.html#features">Features</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../README.html#usage-example-register-message-via-configuration">Usage Example: Register Message via Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../README.html#usage-example-register-message-via-linked-plugin">Usage Example: Register Message via Linked Plugin</a></li>
 </ul>
 </li>
 </ul>
@@ -117,7 +119,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">cx_protobuf_plugin</li>
+      <li class="breadcrumb-item active">Protobuf Plugin</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/standard_docs/original/README.md.txt" rel="nofollow"> View page source</a>
       </li>
@@ -127,18 +129,260 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="cx-protobuf-plugin">
-<h1>cx_protobuf_plugin<a class="headerlink" href="#cx-protobuf-plugin" title="Link to this heading"></a></h1>
-<p>This package offers the `cx::ProtobufPlugin’ plugin that allows to communicate via protobuf through <a class="reference external" href="https://github.com/fawkesrobotics/protobuf_comm">protobuf_comm</a>.</p>
-<section id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
-<p>Register this plugin with the plugin manager.
-It’s configuration parameters are depicted in this example setup below.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">clips_manager</span><span class="p">:</span>
+  <!-- AUTO-GENERATED via sphinx-build. Do not edit directly. -->
+<p><a id="usage-protobuf-plugin"></a></p>
+<section id="protobuf-plugin">
+<h1>Protobuf Plugin<a class="headerlink" href="#protobuf-plugin" title="Link to this heading"></a></h1>
+<p>Source code on <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_plugins/protobuf_plugin">GitHub</a>.</p>
+<p>This plugin enables communication via protobuf through <a class="reference external" href="https://carologistics.github.io/clips_executive/protobuf_comm">protobuf_comm</a>, a C++ library to handle communication via Protocol Buffers (<a class="reference external" href="https://protobuf.dev/">protobuf</a>) using a simple framing protocol.</p>
+<section id="note">
+<h2>NOTE<a class="headerlink" href="#note" title="Link to this heading"></a></h2>
+<p>This Plugin relies on protobuf_comm and thus is subject to the GPLv2+ license.</p>
+</section>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
+<ul>
+<li><p><strong>pkg_share_dirs:</strong></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>string vector</p></td>
+<td><p>[]</p></td>
+</tr>
+</tbody>
+</table>
+<p>Description
+: When specifying relative paths, look at the share directories of the listed packages to resolve them (in the specified order).</p>
+</li>
+<li><p><strong>proto_paths:</strong></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>string vector</p></td>
+<td><p>[]</p></td>
+</tr>
+</tbody>
+</table>
+<p>Description
+: Location to directories containing .proto files. The messages found in the given directories are registered automatically for usage.
+Supports absolute paths or relative paths using the share directories specified above.</p>
+</li>
+</ul>
+</section>
+<section id="features">
+<h2>Features<a class="headerlink" href="#features" title="Link to this heading"></a></h2>
+<p>The utilized <a class="reference external" href="https://carologistics.github.io/clips_executive/protobuf_comm">protobuf_comm</a> library (de)-serializes proto using a framing protocol that other communication endpoints therefore need to adhere to, as well.
+Refer to it’s documentation to get details on the layout of the frame headers.</p>
+<p>It requires messages using <a class="reference external" href="https://protobuf.dev/programming-guides/proto2/">proto2</a> syntax that additionally define a <code class="docutils literal notranslate"><span class="pre">CompType</span></code> enum acting as a unique identifier (using a tmple <code class="docutils literal notranslate"><span class="pre">COMP_ID</span></code> and <code class="docutils literal notranslate"><span class="pre">MESSAGE_TYPE</span></code>.
+An example message is depicted below:</p>
+<div class="highlight-proto notranslate"><div class="highlight"><pre><span></span><span class="kd">message</span><span class="w"> </span><span class="nc">SearchRequest</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">enum</span><span class="w"> </span><span class="n">CompType</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">COMP_ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="p">;</span>
+<span class="w">    </span><span class="na">MSG_TYPE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">required</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="na">query</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Messages can be exchanged either via establishing TCP Client-Server connections or via UDP broadcast peers.</p>
+<section id="registering-messages">
+<h3>Registering Messages<a class="headerlink" href="#registering-messages" title="Link to this heading"></a></h3>
+<p>Messages need to be registered before they can be used.
+The easiest way is to utilize the configuration options to specify directories that host proto definitions (<code class="docutils literal notranslate"><span class="pre">.proto</span></code> files).
+This automatically registers all found messages when the plugin is loaded in a CLIPS environment.</p>
+<p>It is also possible to instead register types explicitly by looking them up from a linked library.
+However, this requires to build a shared library from proto files and then link it together with the <a class="reference external" href="https://carologistics.github.io/clips_executive/cx_protobuf_plugin">cx_protobuf_plugin</a> plugin, creating a new linked plugin.</p>
+<p>In order to accomplish this, this plugin offers two cmake macros:</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="c"># Generates a new plugin called NEW_PLUGIN_NAME (should be a name in CamelCase, e.g., CustomProtobufPlugin) given a list of protobuf message definitions PROTO_FILES.</span>
+<span class="nb">cx_generate_linked_protobuf_plugin_from_proto</span><span class="p">(</span><span class="s">NEW_PLUGIN_NAME</span><span class="w"> </span><span class="s">PROTO_FILES</span><span class="p">)</span>
+<span class="c"># Generates a new plugin called NEW_PLUGIN_NAME (should be a name in CamelCase, e.g., CustomProtobufPlugin) given a shared library that is linked against via target_link_libraries().</span>
+<span class="nb">cx_generate_linked_protobuf_plugin_from_lib</span><span class="p">(</span><span class="s">NEW_PLUGIN_NAME</span><span class="w"> </span><span class="s">SHARED_LIBRARY_TARGET</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="facts">
+<h3>Facts<a class="headerlink" href="#facts" title="Link to this heading"></a></h3>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>; Asserted whenever a message is received
+(deftemplate protobuf-msg
+  (slot type (type STRING))            ; (package + &quot;.&quot; +) message-name
+  (slot comp-id (type INTEGER))
+  (slot msg-type (type INTEGER))
+  (slot rcvd-via (type SYMBOL)
+    (allowed-values STREAM BROADCAST)
+  )
+  (multislot rcvd-from                 ; address and port
+    (cardinality 2 2)
+  )
+  (slot rcvd-at (type FLOAT))          ; ros timestamp in seconds
+  (slot client-type (type SYMBOL)
+    (allowed-values SERVER CLIENT PEER)
+  )
+  (slot client-id (type INTEGER))
+  (slot ptr (type EXTERNAL-ADDRESS))
+)
+
+; Asserted whenever a message handled by a  client could not be processed
+(deftemplate protobuf-receive-failed
+  (slot comp-id (type INTEGER))
+  (slot msg-type (type INTEGER))
+  (slot rcvd-via (type SYMBOL)
+    (allowed-values STREAM BROADCAST)
+  )
+  (multislot rcvd-from (cardinality 2 2))
+  (slot client-id (type INTEGER))
+  (slot message (type STRING))
+)
+
+; Asserted whenever a message handled by a server could not be processed
+(deftemplate protobuf-server-receive-failed
+  (slot comp-id (type INTEGER))
+  (slot msg-type (type INTEGER))
+  (slot rcvd-via (type SYMBOL)
+    (allowed-values STREAM BROADCAST)
+  )
+  (multislot rcvd-from (cardinality 2 2))
+  (slot client-id (type INTEGER))
+  (slot message (type STRING))
+)
+
+; asynchronously asserted once a client is created via pb-connect
+(protobuf-client-connected ?client-id)
+; asynchronously asserted once a client is disconnected via pb-disconnect
+(protobuf-client-disconnected ?client-id)
+; asynchronously asserted once a server is created via pb-server-enable
+(protobuf-server-client-connected ?client-id ?endpoint ?port)
+; asynchronously asserted once a server is created via pb-server-disable
+(protobuf-server-client-connected ?client-id)
+</pre></div>
+</div>
+</section>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>; functions for processing messages:
+(bind ?res (pb-field-names ?msg))
+(bind ?res (pb-field-type ?msg ?field-name))
+(bind ?res (pb-has-field ?msg ?field-name))
+(bind ?res (pb-field-label ?msg ?field-name))
+(bind ?res (pb-field-value ?msg ?field-name))
+(bind ?res (pb-field-list ?msg ?field-name))
+(bind ?res (pb-field-is-list ?msg ?field-name))
+(bind ?res (pb-create ?full-name))
+(pb-set-field ?msg ?field-name ?value)
+(pb-add-list ?msg ?field-name ?list)
+;
+(bind ?res (pb-tostring ?msg))
+
+; functions for using a stream server or clients
+(pb-server-enable ?port)
+(pb-server-disable)
+(pb-send ?client-id ?msg)
+(bind ?res (pb-connect ?host ?port))
+(pb-disconnect ?client-id)
+
+; functions for using broadcast peers
+(bind ?res (pb-peer-create ?address ?port))
+(bind ?res (pb-peer-create-local ?address ?send-port ?recv-port))
+(bind ?res (pb-peer-create-crypto ?address ?port ?crypto ?cypher))
+(bind ?res (pb-peer-create-local-crypto ?address ?send-port ?recv-port ?crypto ?cypher))
+(pb-peer-destroy ?peer-id)
+(pb-peer-setup-crypto ?peer-id ?key ?cypher)
+(pb-broadcast ?peer-id ?msg)
+
+; In order to use types from a linked library, they need to be registered via this function first.
+(bind ?res (pb-register-type ?full-name))    ; returns TRUE if successful, FALSE otherwise
+</pre></div>
+</div>
+</section>
+<section id="rules">
+<h3>Rules<a class="headerlink" href="#rules" title="Link to this heading"></a></h3>
+<p>Per default the Plugin ensures that all asserted facts are cleaned up with lowest possible salience.</p>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>(defglobal
+  ?*PRIORITY-PROTOBUF-RETRACT*    = -10000
+)
+
+(defrule protobuf-cleanup-receive-failed
+  (declare (salience ?*PRIORITY-PROTOBUF-RETRACT*))
+  ?f &lt;- (protobuf-receive-failed (comp-id ?cid) (msg-type ?mt)
+    (rcvd-from ?host ?port) (message ?msg))
+  =&gt;
+  (retract ?f)
+  (printout t &quot;Protobuf rcv fail for &quot; ?cid &quot;:&quot; ?mt &quot; from &quot; ?host &quot;:&quot; ?port &quot;: &quot; ?msg crlf)
+)
+
+(defrule protobuf-cleanup-server-receive-failed
+  (declare (salience ?*PRIORITY-PROTOBUF-RETRACT*))
+  ?f &lt;- (protobuf-server-receive-failed (comp-id ?cid) (msg-type ?mt)
+    (rcvd-from ?host ?port) (message ?msg))
+  =&gt;
+  (retract ?f)
+  (printout t &quot;Protobuf server rcv fail for &quot; ?cid &quot;:&quot; ?mt &quot; from &quot; ?host &quot;:&quot; ?port &quot;: &quot; ?msg crlf)
+)
+
+(defrule protobuf-cleanup-message
+  (declare (salience ?*PRIORITY-PROTOBUF-RETRACT*))
+  ?pf &lt;- (protobuf-msg (ptr ?p))
+  =&gt;
+  (pb-destroy ?p)
+  (retract ?pf)
+)
+</pre></div>
+</div>
+</section>
+</section>
+<section id="usage-example-register-message-via-configuration">
+<h2>Usage Example: Register Message via Configuration<a class="headerlink" href="#usage-example-register-message-via-configuration" title="Link to this heading"></a></h2>
+<p>A minimal working example is provided by the <a class="reference external" href="https://carologistics.github.io/clips_executive/cx_bringup">cx_bringup</a> package.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>cx_bringup<span class="w"> </span>cx_launch.py<span class="w"> </span>manager_config:<span class="o">=</span>plugin_examples/protobuf.yaml
+</pre></div>
+</div>
+<p>It registers a proto file using the configuration options and then creates two UDP broadcast peers communicating via ports <code class="docutils literal notranslate"><span class="pre">4445</span></code> and <code class="docutils literal notranslate"><span class="pre">4444</span></code> on <code class="docutils literal notranslate"><span class="pre">127.0.0.1</span></code>.</p>
+<p><a id="proto-msg-example"></a></p>
+<section id="message">
+<h3>Message<a class="headerlink" href="#message" title="Link to this heading"></a></h3>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/proto/cx_bringup/SearchRequest.proto">cx_bringup/proto/cx_bringup/SearchRequest.proto</a>.</p>
+<div class="highlight-proto notranslate"><div class="highlight"><pre><span></span><span class="k">syntax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;proto2&quot;</span><span class="p">;</span>
+
+<span class="kd">message</span><span class="w"> </span><span class="nc">SearchRequest</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">enum</span><span class="w"> </span><span class="n">CompType</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="na">COMP_ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="p">;</span>
+<span class="w">    </span><span class="na">MSG_TYPE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="w">  </span><span class="k">required</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="na">query</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">  </span><span class="k">required</span><span class="w"> </span><span class="kt">int32</span><span class="w"> </span><span class="na">page_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="w">  </span><span class="k">required</span><span class="w"> </span><span class="kt">int32</span><span class="w"> </span><span class="na">results_per_page</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="id1">
+<h3>Configuration<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<p>The configuration creates two environments, each handling a protobuf peer.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/params/plugin_examples/protobuf.yaml">cx_bringup/params/plugin_examples/protobuf.yaml</a>.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">/**</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;main&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">    </span><span class="nt">main</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;protobuf&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_protobuf_peer1&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;cx_protobuf_peer2&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">cx_protobuf_peer1</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;executive&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;protobuf&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;files_peer1&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">log_clips_to_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">watch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facts&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;rules&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">cx_protobuf_peer2</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;executive&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;protobuf&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;files_peer2&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">log_clips_to_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">watch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facts&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;rules&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">    </span><span class="nt">executive</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::ExecutivePlugin&quot;</span>
+<span class="w">      </span><span class="nt">publish_on_refresh</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">      </span><span class="nt">assert_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">refresh_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
 
 <span class="w">    </span><span class="nt">protobuf</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::ProtobufPlugin&quot;</span>
@@ -149,149 +393,207 @@ It’s configuration parameters are depicted in this example setup below.</p>
 <span class="w">      </span><span class="c1"># Specify directories to look for protobuf messages.</span>
 <span class="w">      </span><span class="c1"># Supports absolute paths or relative paths using the share directories specified above.</span>
 <span class="w">      </span><span class="c1"># Defaults to an empty list</span>
-<span class="w">      </span><span class="nt">proto_paths</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;proto&quot;</span><span class="p p-Indicator">]</span>
-</pre></div>
-</div>
-<p>This automatically makes all proto files in the given paths available for serialization and deserialization and is the recommended use for this plugin.</p>
-<p>It is also possible to instead register types explicitly by looking them up from a linked library.
-However, this requires to build a shared library from proto files and then link it together with the <strong>cx_protobuf_plugin</strong>.</p>
-<p>In order to accomplish this, this plugin offers two cmake macros:</p>
-<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="c"># Generates a new plugin called NEW_PLUGIN_NAME (should be a name in CamelCase, e.g., CustomProtobufPlugin) given a list of protobuf message definitions PROTO_FILES.</span>
-<span class="nb">cx_generate_linked_protobuf_plugin_from_proto</span><span class="p">(</span><span class="s">NEW_PLUGIN_NAME</span><span class="w"> </span><span class="s">PROTO_FILES</span><span class="p">)</span>
-<span class="c"># Generates a new plugin called NEW_PLUGIN_NAME (should be a name in CamelCase, e.g., CustomProtobufPlugin) given a shared library that is linked against via target_link_libraries().</span>
-<span class="nb">cx_generate_linked_protobuf_plugin_from_lib</span><span class="p">(</span><span class="s">NEW_PLUGIN_NAME</span><span class="w"> </span><span class="s">SHARED_LIBRARY_TARGET</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="clips-features">
-<h2>CLIPS Features<a class="headerlink" href="#clips-features" title="Link to this heading"></a></h2>
-<p>This plugin defines deftemplates, rules and user-defined functions that are described below.</p>
-<p>It allows two differnet way of communication. Either via broadcast peers or via client server connection.</p>
-<section id="deftemplates">
-<h3>Deftemplates<a class="headerlink" href="#deftemplates" title="Link to this heading"></a></h3>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; Asserted by the create-subscription function.</span>
-<span class="c1">; Retracted by the destroy-subscription function.</span>
-<span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">protobuf-msg</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span><span class="w">            </span><span class="c1">; (package + &quot;.&quot; +) message-name</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">comp-id</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">msg-type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">rcvd-via</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">STREAM</span><span class="w"> </span><span class="nv">BROADCAST</span><span class="p">)</span>
-<span class="w">  </span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">rcvd-from</span><span class="w">                 </span><span class="c1">; address and port</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">cardinality</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
-<span class="w">  </span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">rcvd-at</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">FLOAT</span><span class="p">))</span><span class="w">          </span><span class="c1">; ros timestamp in seconds</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">client-type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">SERVER</span><span class="w"> </span><span class="nv">CLIENT</span><span class="w"> </span><span class="nv">PEER</span><span class="p">)</span>
-<span class="w">  </span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">client-id</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">ptr</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">EXTERNAL-ADDRESS</span><span class="p">))</span>
-<span class="p">)</span>
+<span class="w">      </span><span class="nt">proto_paths</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;proto/cx_bringup&quot;</span><span class="p p-Indicator">]</span>
 
-<span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">protobuf-receive-failed</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">comp-id</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">msg-type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">rcvd-via</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">STREAM</span><span class="w"> </span><span class="nv">BROADCAST</span><span class="p">)</span>
-<span class="w">  </span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">rcvd-from</span><span class="w"> </span><span class="p">(</span><span class="nv">cardinality</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">client-id</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">message</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
-<span class="p">)</span>
+<span class="w">    </span><span class="nt">files_peer1</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::FileLoadPlugin&quot;</span>
+<span class="w">      </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_bringup&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span>
+<span class="w">        </span><span class="s">&quot;clips/plugin_examples/protobuf-peer1.clp&quot;</span><span class="p p-Indicator">]</span>
 
-<span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">protobuf-server-receive-failed</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">comp-id</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">msg-type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">rcvd-via</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">STREAM</span><span class="w"> </span><span class="nv">BROADCAST</span><span class="p">)</span>
-<span class="w">  </span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">rcvd-from</span><span class="w"> </span><span class="p">(</span><span class="nv">cardinality</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">client-id</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">INTEGER</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">message</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
-<span class="p">)</span>
+<span class="w">    </span><span class="nt">files_peer2</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::FileLoadPlugin&quot;</span>
+<span class="w">      </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_bringup&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="c1"># same as peer1, just overriding the peer creation</span>
+<span class="w">      </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span>
+<span class="w">        </span><span class="s">&quot;clips/plugin_examples/protobuf-peer1.clp&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">        </span><span class="s">&quot;clips/plugin_examples/protobuf-peer2.clp&quot;</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 </section>
-<section id="defrules">
-<h3>Defrules<a class="headerlink" href="#defrules" title="Link to this heading"></a></h3>
-<p>It defines defrules and a defglobal to clean up the fact once the end of the agenda is reached:</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">defglobal</span>
-<span class="w">  </span><span class="nv">?*PRIORITY-PROTOBUF-RETRACT*</span><span class="w">    </span><span class="nb">=</span><span class="w"> </span><span class="mi">-10000</span>
-<span class="p">)</span>
+<section id="code">
+<h3>Code<a class="headerlink" href="#code" title="Link to this heading"></a></h3>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/clips/plugin_examples/protobuf-peer1.clp">cx_bringup/clips/plugin_examples/protobuf-peer1.clp</a>.</p>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>(defrule protobuf-init-example-peer
+  (not (executive-finalize))
+  (not (peer ?any-peer-id))
+  =&gt;
+  (bind ?peer-1 (pb-peer-create-local 127.0.0.1 4444 4445))
+  (assert (peer ?peer-1 4444 4445))
+  (printout green &quot;127.0.0.1 4444 4445&quot; crlf)
+  (assert (started (now)))
+)
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">protobuf-cleanup-receive-failed</span>
-<span class="w">  </span><span class="p">(</span><span class="k">declare</span><span class="w"> </span><span class="p">(</span><span class="nv">salience</span><span class="w"> </span><span class="nv">?*PRIORITY-PROTOBUF-RETRACT*</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">?f</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">protobuf-receive-failed</span><span class="w"> </span><span class="p">(</span><span class="nv">comp-id</span><span class="w"> </span><span class="nv">?cid</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">msg-type</span><span class="w"> </span><span class="nv">?mt</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">rcvd-from</span><span class="w"> </span><span class="nv">?host</span><span class="w"> </span><span class="nv">?port</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">message</span><span class="w"> </span><span class="nv">?msg</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?f</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="s">&quot;Protobuf rcv fail for &quot;</span><span class="w"> </span><span class="nv">?cid</span><span class="w"> </span><span class="s">&quot;:&quot;</span><span class="w"> </span><span class="nv">?mt</span><span class="w"> </span><span class="s">&quot; from &quot;</span><span class="w"> </span><span class="nv">?host</span><span class="w"> </span><span class="s">&quot;:&quot;</span><span class="w"> </span><span class="nv">?port</span><span class="w"> </span><span class="s">&quot;: &quot;</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="p">)</span>
+(defrule protobuf-send-msg
+  (peer ?peer-id ?source ?target)
+  (started ?start)
+  (time ?now&amp;:(&gt; ?now (+ ?start 1)))
+  =&gt;
+  (bind ?msg (pb-create &quot;SearchRequest&quot;))
+  (pb-set-field ?msg &quot;query&quot; &quot;hello&quot;)
+  (pb-set-field ?msg &quot;page_number&quot; ?source)
+  (pb-set-field ?msg &quot;results_per_page&quot; ?target)
+  (pb-broadcast ?peer-id ?msg)
+  (pb-destroy ?msg)
+)
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">protobuf-cleanup-server-receive-failed</span>
-<span class="w">  </span><span class="p">(</span><span class="k">declare</span><span class="w"> </span><span class="p">(</span><span class="nv">salience</span><span class="w"> </span><span class="nv">?*PRIORITY-PROTOBUF-RETRACT*</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">?f</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">protobuf-server-receive-failed</span><span class="w"> </span><span class="p">(</span><span class="nv">comp-id</span><span class="w"> </span><span class="nv">?cid</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">msg-type</span><span class="w"> </span><span class="nv">?mt</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="nv">rcvd-from</span><span class="w"> </span><span class="nv">?host</span><span class="w"> </span><span class="nv">?port</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">message</span><span class="w"> </span><span class="nv">?msg</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?f</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">printout</span><span class="w"> </span><span class="no">t</span><span class="w"> </span><span class="s">&quot;Protobuf server rcv fail for &quot;</span><span class="w"> </span><span class="nv">?cid</span><span class="w"> </span><span class="s">&quot;:&quot;</span><span class="w"> </span><span class="nv">?mt</span><span class="w"> </span><span class="s">&quot; from &quot;</span><span class="w"> </span><span class="nv">?host</span><span class="w"> </span><span class="s">&quot;:&quot;</span><span class="w"> </span><span class="nv">?port</span><span class="w"> </span><span class="s">&quot;: &quot;</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="nv">crlf</span><span class="p">)</span>
-<span class="p">)</span>
+(defrule protobuf-read-msg
+  (protobuf-msg (type ?type) (comp-id ?comp-id) (msg-type ?msg-type)
+    (rcvd-via ?via) (rcvd-from ?address ?port) (rcvd-at ?rcvd-at)
+    (client-type ?c-type) (client-id ?c-id) (ptr ?ptr))
+  =&gt;
+  (printout blue ?c-id &quot;(&quot;?c-type&quot;) received&quot; ?type
+    &quot; (&quot; ?comp-id &quot; &quot; ?msg-type &quot;) from &quot; ?address &quot;:&quot; ?port &quot;
+    &quot; (- (now)  ?rcvd-at) &quot;s ago&quot; crlf
+  )
+  (bind ?var (pb-tostring ?ptr))
+  (printout yellow ?var crlf)
+)
 
-<span class="p">(</span><span class="nv">defrule</span><span class="w"> </span><span class="nv">protobuf-cleanup-message</span>
-<span class="w">  </span><span class="p">(</span><span class="k">declare</span><span class="w"> </span><span class="p">(</span><span class="nv">salience</span><span class="w"> </span><span class="nv">?*PRIORITY-PROTOBUF-RETRACT*</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">?pf</span><span class="w"> </span><span class="nv">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="nv">protobuf-msg</span><span class="w"> </span><span class="p">(</span><span class="nv">ptr</span><span class="w"> </span><span class="nv">?p</span><span class="p">))</span>
-<span class="w">  </span><span class="nv">=&gt;</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">pb-destroy</span><span class="w"> </span><span class="nv">?p</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">retract</span><span class="w"> </span><span class="nv">?pf</span><span class="p">)</span>
-<span class="p">)</span>
+(defrule protobuf-close-peer
+  (executive-finalize)
+  ?f &lt;- (peer ?any-peer-id $?)
+  =&gt;
+  (pb-peer-destroy ?any-peer-id)
+  (retract ?f)
+)
 </pre></div>
 </div>
-</section>
-<section id="functions">
-<h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; functions for processing messages:</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-field-names</span><span class="w"> </span><span class="nv">?msg</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-field-type</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="nv">?field-name</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-has-field</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="nv">?field-name</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-field-label</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="nv">?field-name</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-field-value</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="nv">?field-name</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-field-list</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="nv">?field-name</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-field-is-list</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="nv">?field-name</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-create</span><span class="w"> </span><span class="nv">?full-name</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">pb-set-field</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="nv">?field-name</span><span class="w"> </span><span class="nv">?value</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">pb-add-list</span><span class="w"> </span><span class="nv">?msg</span><span class="w"> </span><span class="nv">?field-name</span><span class="w"> </span><span class="nv">?list</span><span class="p">)</span>
-<span class="c1">;</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-tostring</span><span class="w"> </span><span class="nv">?msg</span><span class="p">))</span>
-
-<span class="c1">; functions for using a stream server or clients</span>
-<span class="p">(</span><span class="nv">pb-server-enable</span><span class="w"> </span><span class="nv">?port</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">pb-server-disable</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">pb-send</span><span class="w"> </span><span class="nv">?client-id</span><span class="w"> </span><span class="nv">?msg</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-connect</span><span class="w"> </span><span class="nv">?host</span><span class="w"> </span><span class="nv">?port</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">pb-disconnect</span><span class="w"> </span><span class="nv">?host</span><span class="w"> </span><span class="nv">?port</span><span class="p">)</span>
-
-<span class="c1">; functions for using broadcast peers</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-peer-create</span><span class="w"> </span><span class="nv">?address</span><span class="w"> </span><span class="nv">?port</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-peer-create-local</span><span class="w"> </span><span class="nv">?address</span><span class="w"> </span><span class="nv">?send-port</span><span class="w"> </span><span class="nv">?recv-port</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-peer-create-crypto</span><span class="w"> </span><span class="nv">?address</span><span class="w"> </span><span class="nv">?port</span><span class="w"> </span><span class="nv">?crypto</span><span class="w"> </span><span class="nv">?cypher</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-peer-create-local-crypto</span><span class="w"> </span><span class="nv">?address</span><span class="w"> </span><span class="nv">?send-port</span><span class="w"> </span><span class="nv">?recv-port</span><span class="w"> </span><span class="nv">?crypto</span><span class="w"> </span><span class="nv">?cypher</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">pb-peer-destroy</span><span class="w"> </span><span class="nv">?peer-id</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">pb-peer-setup-crypto</span><span class="w"> </span><span class="nv">?peer-id</span><span class="w"> </span><span class="nv">?key</span><span class="w"> </span><span class="nv">?cypher</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">pb-broadcast</span><span class="w"> </span><span class="nv">?peer-id</span><span class="w"> </span><span class="nv">?msg</span><span class="p">)</span>
-
-<span class="c1">; In order to use types from a linked library, they need to be registered via this function first.</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?res</span><span class="w"> </span><span class="p">(</span><span class="nv">pb-register-type</span><span class="w"> </span><span class="nv">?full-name</span><span class="p">))</span><span class="w">    </span><span class="c1">; returns TRUE if successful, FALSE otherwise</span>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/clips/plugin_examples/protobuf-peer2.clp">cx_bringup/clips/plugin_examples/protobuf-peer2.clp</a>.</p>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>(defrule protobuf-init-example-peer
+  (not (executive-finalize))
+  (not (peer ?any-peer-id))
+  =&gt;
+  (bind ?peer-2 (pb-peer-create-local 127.0.0.1 4445 4444))
+  (assert (peer ?peer-2 4445 4444))
+  (printout green &quot;127.0.0.1 4445 4444&quot; crlf)
+  (assert (started (now)))
+)
 </pre></div>
 </div>
 </section>
 </section>
-<section id="object-lifetimes-and-clips">
-<h2>Object Lifetimes and CLIPS<a class="headerlink" href="#object-lifetimes-and-clips" title="Link to this heading"></a></h2>
-<p>Since clips stores objects via void pointers, dynamic object lifetime management via <code class="docutils literal notranslate"><span class="pre">std::shared_ptr</span></code> does not work direcly from within CLIPS.
-Instead, object lifetimes need to be managed more explicitly through the usage of <code class="docutils literal notranslate"><span class="pre">create</span></code> and <code class="docutils literal notranslate"><span class="pre">destroy</span></code> functions.</p>
-<p>It is advised to clean up all objects as soon as they are not needed anymore in order to free up memory.</p>
-<p>Note that when processing nested messages, the message obtained via <strong>pb-field-value</strong> is allocating new memory, hence the returned external address also needs to be cleaned up afterwards.</p>
+<section id="usage-example-register-message-via-linked-plugin">
+<h2>Usage Example: Register Message via Linked Plugin<a class="headerlink" href="#usage-example-register-message-via-linked-plugin" title="Link to this heading"></a></h2>
+<p>A minimal working example is provided by the <a class="reference external" href="https://carologistics.github.io/clips_executive/cx_bringup">cx_bringup</a> package.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>cx_bringup<span class="w"> </span>cx_launch.py<span class="w"> </span>manager_config:<span class="o">=</span>plugin_examples/protobuf_linked.yaml
+</pre></div>
+</div>
+<p>It creates a server on port <code class="docutils literal notranslate"><span class="pre">4446</span></code> and a client (in a separate CLIPS environment) that sends messages (using the same <a class="reference internal" href="#proto-msg-example"><span class="xref myst">message definitions</span></a> as in the first example).</p>
+<p>This time the messages are not registered directly through the config, but rather through linking them directly to the loaded plugin.
+Therefore, a linked plugin is generated:</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">cx_generate_linked_protobuf_plugin_from_proto</span><span class="p">(</span><span class="s2">&quot;BringupProtobufPlugin&quot;</span><span class="w"> </span><span class="s">proto/cx_bringup/SearchRequest.proto</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="id2">
+<h3>Configuration<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/params/plugin_examples/protobuf_linked.yaml">cx_bringup/params/plugin_examples/protobuf_linked.yaml</a>.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">/**</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_protobuf_client&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;cx_protobuf_server&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">cx_protobuf_client</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;executive&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;protobuf&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;files_client&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">log_clips_to_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">watch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facts&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;rules&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">cx_protobuf_server</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;executive&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;protobuf&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;files_server&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">log_clips_to_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">watch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facts&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;rules&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">    </span><span class="nt">executive</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::ExecutivePlugin&quot;</span>
+<span class="w">      </span><span class="nt">publish_on_refresh</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">      </span><span class="nt">assert_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">refresh_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+
+<span class="w">    </span><span class="nt">protobuf</span><span class="p">:</span>
+<span class="w">      </span><span class="c1"># Uses the plugin generated from cmake</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::BringupProtobufPlugin&quot;</span>
+<span class="w">      </span><span class="c1"># While it additionally acts like the base plugin, including all</span>
+<span class="w">      </span><span class="c1"># configuration that can be found in the protobuf example, it actually</span>
+<span class="w">      </span><span class="c1"># does not need to specify any other parameter if it registers the types</span>
+<span class="w">      </span><span class="c1"># at runtime.</span>
+
+<span class="w">    </span><span class="nt">files_client</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::FileLoadPlugin&quot;</span>
+<span class="w">      </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_bringup&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span>
+<span class="w">        </span><span class="s">&quot;clips/plugin_examples/protobuf-linked-client.clp&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">    </span><span class="nt">files_server</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::FileLoadPlugin&quot;</span>
+<span class="w">      </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_bringup&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span>
+<span class="w">        </span><span class="s">&quot;clips/plugin_examples/protobuf-linked-server.clp&quot;</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h3>Code<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/clips/plugin_examples/protobuf-linked-client.clp">cx_bringup/clips/plugin_examples/protobuf-linked-client.clp</a>.</p>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>(defrule protobuf-init-example-client
+  (not (executive-finalize))
+  (not (client ?any-c-id))
+  =&gt;
+  (bind ?res (pb-connect 127.0.0.1 4446))
+  (printout green &quot;Connect to server: &quot; ?res crlf)
+  (assert (client ?res))
+  (bind ?success (pb-register-type &quot;SearchRequest&quot;))
+  (printout green &quot;Register Type: &quot; ?success crlf)
+)
+
+(defrule peer-send-msg
+  (client ?c-id)
+  (protobuf-client-connected ?c-id)
+  (not (protobuf-msg))
+  =&gt;
+  (bind ?msg (pb-create &quot;SearchRequest&quot;))
+  (pb-set-field ?msg &quot;query&quot; &quot;hello&quot;)
+  (pb-set-field ?msg &quot;page_number&quot; ?c-id)
+  (pb-set-field ?msg &quot;results_per_page&quot; ?c-id)
+  (pb-send ?c-id ?msg)
+  (pb-destroy ?msg)
+)
+
+(defrule protobuf-close
+  (executive-finalize)
+  ?f &lt;- (client ?any-client)
+  =&gt;
+  (pb-disconnect ?any-client)
+  (retract ?f)
+)
+</pre></div>
+</div>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/clips/plugin_examples/protobuf-linked-server.clp">cx_bringup/clips/plugin_examples/protobuf-linked-server.clp</a>.</p>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>(defrule protobuf-init-example-server
+  (not (executive-finalize))
+  =&gt;
+  (pb-server-enable 4446)
+  (bind ?success (pb-register-type &quot;SearchRequest&quot;))
+  (printout green &quot;Register Type: &quot; ?success crlf)
+)
+
+(defrule protobuf-msg-read
+  (protobuf-msg (type ?type) (comp-id ?comp-id) (msg-type ?msg-type)
+    (rcvd-via ?via) (rcvd-from ?address ?port) (rcvd-at ?rcvd-at)
+    (client-type ?c-type) (client-id ?c-id) (ptr ?ptr))
+  =&gt;
+  (printout blue ?c-id &quot;(&quot;?c-type&quot;) received&quot; ?type
+    &quot; (&quot; ?comp-id &quot; &quot; ?msg-type &quot;) from &quot; ?address &quot;:&quot; ?port &quot;
+    &quot; (- (now)  ?rcvd-at) &quot;s ago&quot; crlf
+  )
+  (bind ?var (pb-tostring ?ptr))
+  (printout yellow ?var crlf)
+)
+
+(defrule protobuf-close
+  (executive-finalize)
+  =&gt;
+  (pb-server-disable)
+)
+</pre></div>
+</div>
+</section>
 </section>
 </section>
 

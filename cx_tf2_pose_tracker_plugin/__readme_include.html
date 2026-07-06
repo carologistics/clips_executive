@@ -84,9 +84,10 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="standard_docs/PACKAGE.html">PACKAGE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="standard_docs/README.html">README</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="standard_docs/README.html#cx-tf2-pose-tracker-plugin">cx_tf2_pose_tracker_plugin</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#usage">Usage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#clips-features">CLIPS Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="standard_docs/README.html#tf2-pose-tracker-plugin">TF2 Pose Tracker Plugin</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#configuration">Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#features">Features</a></li>
+<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#usage-example">Usage Example</a></li>
 </ul>
 </li>
 </ul>
@@ -124,51 +125,131 @@
              
   <section id="readme">
 <h1>README<a class="headerlink" href="#readme" title="Link to this heading"></a></h1>
-<section id="cx-tf2-pose-tracker-plugin">
-<h2>cx_tf2_pose_tracker_plugin<a class="headerlink" href="#cx-tf2-pose-tracker-plugin" title="Link to this heading"></a></h2>
-<p>This package offers the `cx::Tf2PoseTrackerPlugin’ that allows to perform periodic lookups to update poses obtained from a transform tree.</p>
-<section id="usage">
-<h3>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h3>
-<p>Register this plugin with the plugin manager.
-It’s configuration parameters are depicted in this example setup below.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">clips_manager</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;main&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">    </span><span class="nt">main</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;tf2_pose_tracker&quot;</span><span class="p p-Indicator">]</span>
-
-<span class="w">    </span><span class="nt">tf2_pose_tracker</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::Tf2PoseTrackerPlugin&quot;</span>
-<span class="w">      </span><span class="c1"># Whether to spin up a new node for tf lookups or use the main CX node</span>
-<span class="w">      </span><span class="c1"># Defaults to true</span>
-<span class="w">      </span><span class="nt">spin_thread</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</pre></div>
-</div>
+<!-- AUTO-GENERATED via sphinx-build. Do not edit directly. -->
+<p><a id="usage-tf2-pose-tracker-plugin"></a></p>
+<section id="tf2-pose-tracker-plugin">
+<h2>TF2 Pose Tracker Plugin<a class="headerlink" href="#tf2-pose-tracker-plugin" title="Link to this heading"></a></h2>
+<p>Source code on <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_plugins/tf2_pose_tracker-plugin">GitHub</a>.</p>
+<p>This plugin provides the ability to perform periodic lookups on the transform tree of a ROS system, updating the fact-base accordingly.</p>
+<section id="configuration">
+<h3>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h3>
+<ul>
+<li><p><strong>spin_thread:</strong></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>bool</p></td>
+<td><p>true</p></td>
+</tr>
+</tbody>
+</table>
+<p>Description
+: When set to true, this creates a new node that handles the transform listener, otherwise the main CLIPS manager node handles the subscription in a new callback group.</p>
+</li>
+</ul>
 </section>
-<section id="clips-features">
-<h3>CLIPS Features<a class="headerlink" href="#clips-features" title="Link to this heading"></a></h3>
-<p>This plugin adds deftemplates and deffunctions as listed below:</p>
-<section id="deftemplates">
-<h4>Deftemplates<a class="headerlink" href="#deftemplates" title="Link to this heading"></a></h4>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; Asserted and modified by the periodic lookup started with tf2-start-periodic-lookup.</span>
-<span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">tf2-tracked-pose</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">parent</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">child</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">stamp</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">FLOAT</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">translation</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">FLOAT</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">cardinality</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">rotation</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">FLOAT</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">cardinality</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">4</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">timer</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">EXTERNAL-ADDRESS</span><span class="p">))</span>
-<span class="p">)</span>
+<section id="features">
+<h3>Features<a class="headerlink" href="#features" title="Link to this heading"></a></h3>
+<section id="facts">
+<h4>Facts<a class="headerlink" href="#facts" title="Link to this heading"></a></h4>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>; Asserted and modified by the periodic lookup started with tf2-start-periodic-lookup.
+(deftemplate tf2-tracked-pose
+  (slot parent (type STRING))
+  (slot child (type STRING))
+  (slot stamp (type FLOAT))
+  (multislot translation (type FLOAT) (cardinality 3 3))
+  (multislot rotation (type FLOAT) (cardinality 4 4))
+  (slot timer (type EXTERNAL-ADDRESS))
+)
 </pre></div>
 </div>
 </section>
 <section id="functions">
 <h4>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h4>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; Start a ROS timer to periodically lookup the pose of ?child-frame relative to ?parent-frame.</span>
-<span class="c1">; Returns TRUE if timer was created successfully, FALSE otherwise.</span>
-<span class="p">(</span><span class="nv">tf2-start-periodic-lookup</span><span class="w"> </span><span class="nv">?parent-frame</span><span class="w"> </span><span class="nv">?child-frame</span><span class="w"> </span><span class="nv">?frequency-hz</span><span class="p">)</span><span class="w">   </span><span class="c1">; example-args: &quot;map&quot; &quot;base_link&quot; 2.0</span>
-<span class="c1">; Stop a started ROS timer using the timer of the associated tf2-tracked-pose fact.</span>
-<span class="p">(</span><span class="nv">tf2-stop-periodic-lookup</span><span class="w"> </span><span class="nv">?timer-ptr</span><span class="p">)</span><span class="w"> </span><span class="c1">; example args: &lt;Pointer-C-0x7f1550001d20&gt;</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>; Start a ROS timer to periodically lookup the pose of ?child-frame relative to ?parent-frame.
+; Returns TRUE if timer was created successfully, FALSE otherwise.
+(tf2-start-periodic-lookup ?parent-frame ?child-frame ?frequency-hz)   ; example-args: &quot;map&quot; &quot;base_link&quot; 2.0
+; Stop a started ROS timer using the timer of the associated tf2-tracked-pose fact.
+(tf2-stop-periodic-lookup ?timer-ptr) ; example args: &lt;Pointer-C-0x7f1550001d20&gt;
+</pre></div>
+</div>
+</section>
+</section>
+<section id="usage-example">
+<h3>Usage Example<a class="headerlink" href="#usage-example" title="Link to this heading"></a></h3>
+<p>This plugin is discussed in more depth in the <a class="reference external" href="https://carologistics.github.io/clips_executive/plugins/writing_a_plugin.rst">Writing a Plugin for TF Monitoring Tutorial</a></p>
+<p>A minimal working example is provided by the <a class="reference external" href="https://carologistics.github.io/clips_executive/cx_tutorial_agents">cx_tutorial_agents</a> package.
+It requires the <a class="reference external" href="https://docs.ros.org/en/lyrical/p/turtlesim">turtlesim</a> package, which provides a minimal simulation environment to interact with and the <a class="reference external" href="https://docs.ros.org/en/lyrical/p/turtle_tf2_py">turtle_tf2_py</a> package to obtain transforms from the simulation.</p>
+<p>Open a terminal and start the tf2 turtlesim demo:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>turtle_tf2_py<span class="w"> </span>turtle_tf2_demo.launch.py
+</pre></div>
+</div>
+<p>In a second terminal run the example setup for the plugin:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>cx_bringup<span class="w"> </span>cx_launch.py<span class="w"> </span>manager_config:<span class="o">=</span>tf2_tracked_pose.yaml<span class="w"> </span>package:<span class="o">=</span>cx_tutorial_agents
+</pre></div>
+</div>
+<p>It will track the pose of turtle1 with a frequency of 0.2 hz and stop the tracking after 5 updates.</p>
+<p>Optionally, open a third terminal to control the turtle:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>run<span class="w"> </span>turtlesim<span class="w"> </span>turtle_teleop_key
+</pre></div>
+</div>
+<section id="id1">
+<h4>Configuration<a class="headerlink" href="#id1" title="Link to this heading"></a></h4>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_tutorial_agents/params/tf2_tracked_pose.yaml">cx_tutorial_agents/params/tf2_tracked_pose.yaml</a>.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">/**</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">autostart_node</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;tf2_pose_tracker_turtlebot&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">    </span><span class="nt">tf2_pose_tracker_turtlebot</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;executive&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;tf2_pose_tracker&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;files&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">log_clips_to_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">watch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facts&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;rules&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">    </span><span class="nt">executive</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::ExecutivePlugin&quot;</span>
+
+<span class="w">    </span><span class="nt">tf2_pose_tracker</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::Tf2PoseTrackerPlugin&quot;</span>
+
+<span class="w">    </span><span class="nt">files</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::FileLoadPlugin&quot;</span>
+<span class="w">      </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_tutorial_agents&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;clips/tf2_tracked_pose.clp&quot;</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+</section>
+<section id="code">
+<h4>Code<a class="headerlink" href="#code" title="Link to this heading"></a></h4>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_tutorial_agents/clips/tf2_tracked_pose.clp">cx_tutorial_agents/clips/tf2_tracked_pose.clp</a>.</p>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>(deftemplate counter (slot iteration (type INTEGER)))
+
+
+(defrule tf2-tracked-pose-open
+  =&gt;
+  (tf2-start-periodic-lookup &quot;world&quot; &quot;turtle1&quot; 0.2)
+  (assert (counter (iteration 0)))
+)
+
+(defrule tf2-tracked-pose-print
+  (tf2-tracked-pose (translation $?trans) (rotation $?rot))
+  =&gt;
+  (printout green &quot;pos at &quot; ?trans &quot; with rot &quot; ?rot crlf)
+  (do-for-fact ((?c counter)) TRUE (modify ?c (iteration (+ 1 ?c:iteration))))
+)
+
+(defrule tf2-tracked-pose-stop
+  ?pose &lt;- (tf2-tracked-pose (timer ?t))
+  ?count &lt;- (counter (iteration 5))
+  =&gt;
+  (printout blue &quot;Stopping timer &quot; ?t crlf)
+  (tf2-stop-periodic-lookup ?t)
+  (retract ?pose ?count)
+)
 </pre></div>
 </div>
 </section>

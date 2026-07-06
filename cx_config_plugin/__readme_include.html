@@ -86,10 +86,14 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="standard_docs/PACKAGE.html">PACKAGE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="standard_docs/README.html">README</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="standard_docs/README.html#cx-config-plugin">cx_config_plugin</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#usage">Usage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#clips-features">CLIPS Features</a></li>
-<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#example">Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="standard_docs/README.html#yaml-configuration-plugin">YAML Configuration Plugin</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#configuration">Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#features">Features</a></li>
+<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#facts">Facts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#usage-example">Usage Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#id1">Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#code">Code</a></li>
 </ul>
 </li>
 </ul>
@@ -127,107 +131,98 @@
              
   <section id="readme">
 <h1>README<a class="headerlink" href="#readme" title="Link to this heading"></a></h1>
-<section id="cx-config-plugin">
-<h2>cx_config_plugin<a class="headerlink" href="#cx-config-plugin" title="Link to this heading"></a></h2>
-<p>This package offers the <code class="docutils literal notranslate"><span class="pre">cx::ConfigPlugin</span></code> CLIPS plugin to read config values from yaml.</p>
-<section id="usage">
-<h3>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h3>
-<p>Register this plugin with the plugin manager. It requires no additional configuration, an example setup is shown below:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">clips_manager</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;main&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">    </span><span class="nt">main</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;config&quot;</span><span class="p p-Indicator">]</span>
-
-<span class="w">    </span><span class="nt">config</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::ConfigPlugin&quot;</span>
-</pre></div>
-</div>
+<!-- AUTO-GENERATED via sphinx-build. Do not edit directly. -->
+<p><a id="usage-config-plugin"></a></p>
+<section id="yaml-configuration-plugin">
+<h2>YAML Configuration Plugin<a class="headerlink" href="#yaml-configuration-plugin" title="Link to this heading"></a></h2>
+<p>Source code on <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_plugins/config_plugin">GitHub</a>.</p>
+<p>This plugin provides the ability to parse YAML files into CLIPS facts.</p>
+<section id="configuration">
+<h3>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h3>
+<p>This plugin has no specific configuration.</p>
 </section>
-<section id="clips-features">
-<h3>CLIPS Features<a class="headerlink" href="#clips-features" title="Link to this heading"></a></h3>
-<p>This plugin adds deftemplates and deffunctions as listed below:</p>
-<section id="deftemplates">
-<h4>Deftemplates<a class="headerlink" href="#deftemplates" title="Link to this heading"></a></h4>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; Asserted by the config-load function for each configuration value in the parsed yaml file.</span>
-<span class="p">(</span><span class="nv">deftemplate</span><span class="w"> </span><span class="nv">confval</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">path</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="k">type</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">FLOAT</span><span class="w"> </span><span class="nv">UINT</span><span class="w"> </span><span class="nv">INT</span><span class="w"> </span><span class="nv">BOOL</span><span class="w"> </span><span class="nv">STRING</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">value</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">slot</span><span class="w"> </span><span class="nv">is-list</span><span class="w"> </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">SYMBOL</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">allowed-values</span><span class="w"> </span><span class="nv">TRUE</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nv">default</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">multislot</span><span class="w"> </span><span class="nv">list-value</span><span class="p">)</span>
-<span class="p">)</span>
+<section id="features">
+<h3>Features<a class="headerlink" href="#features" title="Link to this heading"></a></h3>
+<p>This plugin adds deftemplates and custom functions as listed below.</p>
+</section>
+<section id="facts">
+<h3>Facts<a class="headerlink" href="#facts" title="Link to this heading"></a></h3>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>; Asserted by the config-load function for each configuration value in the parsed yaml file.
+(deftemplate confval
+  (slot path (type STRING))
+  (slot type (type SYMBOL) (allowed-values FLOAT UINT INT BOOL STRING))
+  (slot value)
+  (slot is-list (type SYMBOL) (allowed-values TRUE FALSE) (default FALSE))
+  (multislot list-value)
+)
 </pre></div>
 </div>
 </section>
 <section id="functions">
-<h4>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h4>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="c1">; Load all config values from a file (absolute path) given a prefix and store tjhem into (confval) facts.</span>
-<span class="c1">; The prefix determines tha resulting path in the confval facts.</span>
-<span class="p">(</span><span class="nv">config-load</span><span class="w"> </span><span class="nv">?file</span><span class="w"> </span><span class="nv">?prefix</span><span class="p">)</span>
+<h3>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h3>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>; Load all config values from a file (absolute path) given a prefix and store them into (confval) facts.
+; The prefix can be used to restrict the loaded values to a prefix
+; Use / for nesting, e.g., foo/bar for only retrieving values under bar in this example:
+;  foo:
+;    bar:
+;      ...
+; For / inside of keys, wrap the whole key by single quotes &#39;, e.g., &#39;/foo&#39;/bar if the key is &quot;/foo&quot; instead of &quot;foo&quot;.
+(config-load ?file ?prefix)
 </pre></div>
 </div>
 </section>
-</section>
-<section id="example">
-<h3>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h3>
-<p>Assuming a yaml file at path <code class="docutils literal notranslate"><span class="pre">/home/&lt;user&gt;/test.yaml</span></code>:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">root</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">branch</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">val1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">        </span><span class="nt">val2</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">test1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">test2</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">branch2</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">val1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<section id="usage-example">
+<h3>Usage Example<a class="headerlink" href="#usage-example" title="Link to this heading"></a></h3>
+<p>A minimal working example is provided by the <a class="reference external" href="https://carologistics.github.io/clips_executive/cx_bringup">cx_bringup</a> package. Run it via:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>cx_bringup<span class="w"> </span>cx_launch.py<span class="w"> </span>manager_config:<span class="o">=</span>plugin_examples/config.yaml
 </pre></div>
 </div>
-<p>Calling the function with different prefixes yields the following results:</p>
-<section id="parsing-everyting">
-<h4>Parsing Everyting<a class="headerlink" href="#parsing-everyting" title="Link to this heading"></a></h4>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">config-load</span><span class="w"> </span><span class="s">&quot;/home/&lt;user&gt;/test.yaml&quot;</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">confval</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">path</span><span class="w"> </span><span class="s">&quot;/root/branch/val1&quot;</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">BOOL</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">value</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">is-list</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">list-value</span><span class="p">)</span>
-<span class="p">)</span>
-<span class="p">(</span><span class="nv">confval</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">path</span><span class="w"> </span><span class="s">&quot;/root/branch/val2&quot;</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">value</span><span class="w"> </span><span class="no">nil</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">is-list</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">list-value</span><span class="w"> </span><span class="s">&quot;test1&quot;</span><span class="w"> </span><span class="s">&quot;test2&quot;</span><span class="p">)</span>
-<span class="p">)</span>
-<span class="p">(</span><span class="nv">confval</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">path</span><span class="w"> </span><span class="s">&quot;/root/branch2/val1&quot;</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">BOOL</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">value</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">is-list</span><span class="w"> </span><span class="nv">FLASE</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">list-value</span><span class="p">)</span>
-<span class="p">)</span>
+<p>It loads the used environment manager configuration file into CLIPS and prints the corresponding facts.</p>
+</section>
+<section id="id1">
+<h3>Configuration<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/params/plugin_examples/config.yaml">cx_bringup/params/plugin_examples/config.yaml</a>.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">clips_manager</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_config&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">cx_config</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;ament_index&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;config&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;files&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">log_clips_to_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">watch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facts&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;rules&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">    </span><span class="nt">ament_index</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::AmentIndexPlugin&quot;</span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::ConfigPlugin&quot;</span>
+<span class="w">    </span><span class="nt">files</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::FileLoadPlugin&quot;</span>
+<span class="w">      </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_bringup&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span>
+<span class="w">        </span><span class="s">&quot;clips/plugin_examples/config.clp&quot;</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 </section>
-<section id="parsing-only-branch">
-<h4>Parsing Only “branch”<a class="headerlink" href="#parsing-only-branch" title="Link to this heading"></a></h4>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">config-load</span><span class="w"> </span><span class="s">&quot;/home/&lt;user&gt;/test.yaml&quot;</span><span class="w"> </span><span class="s">&quot;/root/branch&quot;</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">confval</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">path</span><span class="w"> </span><span class="s">&quot;/root/branch/val1&quot;</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">BOOL</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">value</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">is-list</span><span class="w"> </span><span class="nv">FALSE</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">list-value</span><span class="p">)</span>
-<span class="p">)</span>
-<span class="p">(</span><span class="nv">confval</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">path</span><span class="w"> </span><span class="s">&quot;/root/branch/val2&quot;</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="k">type</span><span class="w"> </span><span class="nv">STRING</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">value</span><span class="w"> </span><span class="no">nil</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">is-list</span><span class="w"> </span><span class="nv">TRUE</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nv">list-value</span><span class="w"> </span><span class="s">&quot;test1&quot;</span><span class="w"> </span><span class="s">&quot;test2&quot;</span><span class="p">)</span>
-<span class="p">)</span>
+<section id="code">
+<h3>Code<a class="headerlink" href="#code" title="Link to this heading"></a></h3>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/clips/plugin_examples/config.clp">cx_bringup/clips/plugin_examples/config.clp</a>.</p>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>(defrule load-bringup-config
+  (not (confval))
+  =&gt;
+  (bind ?share-dir (ament-index-get-package-share-directory &quot;cx_bringup&quot;))
+  (bind ?file (str-cat ?share-dir &quot;/params/plugin_examples/config.yaml&quot;))
+  (printout green &quot;Loading from file &quot; ?file crlf)
+  ; test loading of sequence
+  (printout green &quot; 1. Prefix leading to environments (sequence): &quot; crlf)
+  (config-load ?file &quot;&#39;/**&#39;/ros__parameters/environments&quot;)
+  ; test loading of map
+  (printout green &quot; 2. Prefix leading to environment config (map):&quot; crlf)
+  (config-load ?file &quot;&#39;/**&#39;/ros__parameters/cx_config/&quot;)
+  ; test loading of value
+  (printout green &quot; 3. Prefix leading to config plugin string (scalar):&quot; crlf)
+  (config-load ?file &quot;&#39;/**&#39;/ros__parameters/config/plugin&quot;)
+)
 </pre></div>
 </div>
-</section>
 </section>
 </section>
 </section>

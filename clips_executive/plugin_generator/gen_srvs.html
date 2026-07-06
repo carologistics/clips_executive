@@ -198,7 +198,7 @@
 The server response with a message containing the requested data field.</p>
 <section id="id1">
 <h3>Configuration<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
-<p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/params/plugin_examples/set_bool_srv.yaml">cx_bringup/params/plugin_examples/set_bool_srv.yaml</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/params/plugin_examples/set_bool_srv.yaml">cx_bringup/params/plugin_examples/set_bool_srv.yaml</a>.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">/**</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_set_bool_srv&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;cx_set_bool_client&quot;</span><span class="p p-Indicator">]</span>
@@ -237,7 +237,7 @@ The server response with a message containing the requested data field.</p>
 </section>
 <section id="code">
 <h3>Code<a class="headerlink" href="#code" title="Link to this heading"></a></h3>
-<p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/set-bool-client.clp">cx_bringup/clips/plugin_examples/set-bool-client.clp</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/clips/plugin_examples/set-bool-client.clp">cx_bringup/clips/plugin_examples/set-bool-client.clp</a>.</p>
 <div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">defrule</span> set-bool-client-init
 <span class="s">&quot; Create a simple client using the generated bindings. &quot;</span>
   <span class="p">(</span>not <span class="p">(</span>std-srvs-set-bool-client <span class="p">(</span>service <span class="s">&quot;set_bool_srv&quot;</span><span class="p">)))</span>
@@ -300,7 +300,7 @@ The server response with a message containing the requested data field.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>File <a class="reference external" href="https://github.com/carologistics/clip__executive/blob/master/cx_bringup/clips/plugin_examples/set-bool-srv.clp">cx_bringup/clips/plugin_examples/set-bool-srv.clp</a>.</p>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/clips/plugin_examples/set-bool-srv.clp">cx_bringup/clips/plugin_examples/set-bool-srv.clp</a>.</p>
 <div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">defrule</span> set-bool-service-init
 <span class="s">&quot; Create a simple service using the generated bindings. &quot;</span>
   <span class="p">(</span>not <span class="p">(</span>std-srvs-set-bool-service <span class="p">(</span>name <span class="s">&quot;set_bool_srv&quot;</span><span class="p">)))</span>

@@ -84,9 +84,10 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="standard_docs/PACKAGE.html">PACKAGE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="standard_docs/README.html">README</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="standard_docs/README.html#cx-example-plugin">cx_example_plugin</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#usage">Usage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#clips-features">CLIPS Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="standard_docs/README.html#executive-plugin">Executive Plugin</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#configuration">Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#features">Features</a></li>
+<li class="toctree-l4"><a class="reference internal" href="standard_docs/README.html#usage-example">Usage Example</a></li>
 </ul>
 </li>
 </ul>
@@ -124,67 +125,213 @@
              
   <section id="readme">
 <h1>README<a class="headerlink" href="#readme" title="Link to this heading"></a></h1>
-<section id="cx-example-plugin">
-<h2>cx_example_plugin<a class="headerlink" href="#cx-example-plugin" title="Link to this heading"></a></h2>
-<p>This package provides continuous execution of CLIPS environments.
-With a set frequency, this plugin refreshes all agendas and then runs the loaded CLIPS environments.</p>
-<section id="usage">
-<h3>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h3>
-<p>Register this plugin with the plugin manager.
-It’s configuration parameters are depicted in this example setup below.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">clips_manager</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;main&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">    </span><span class="nt">main</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;executive&quot;</span><span class="p p-Indicator">]</span>
-
-<span class="w">    </span><span class="nt">executive</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::ExecutivePlugin&quot;</span>
-<span class="w">      </span><span class="c1"># Publish an empty message with each agenda refresh.</span>
-<span class="w">      </span><span class="c1"># Mainly useful for debug purposes to observe true refresh rate.</span>
-<span class="w">      </span><span class="c1"># Defaults to false</span>
-<span class="w">      </span><span class="nt">publish_on_refresh</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">      </span><span class="c1"># With each iteration, insert the latest ros time into the CLIPS environment.</span>
-<span class="w">      </span><span class="c1"># Defaults to true</span>
-<span class="w">      </span><span class="nt">assert_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">      </span><span class="c1"># Rate with which the environments should run in hz.</span>
-<span class="w">      </span><span class="c1"># Note that this is only an upper bound, as it lets all environment</span>
-<span class="w">      </span><span class="c1"># run until the Agenda is empty.</span>
-<span class="w">      </span><span class="c1"># Defaults to 10</span>
-<span class="w">      </span><span class="nt">refresh_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<!-- AUTO-GENERATED via sphinx-build. Do not edit directly. -->
+<p><a id="usage-executive-plugin"></a></p>
+<section id="executive-plugin">
+<h2>Executive Plugin<a class="headerlink" href="#executive-plugin" title="Link to this heading"></a></h2>
+<p>Source code on <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_plugins/executive_plugin">GitHub</a>.</p>
+<p>This plugin provides continuous and ad-hoc execution of CLIPS environments.
+Additionally, it enables reasoning about the current ROS and system time.</p>
+<section id="configuration">
+<h3>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h3>
+<p><a id="refresh-rate"></a></p>
+<ul>
+<li><p><strong>refresh_rate:</strong></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>int</p></td>
+<td><p>10</p></td>
+</tr>
+</tbody>
+</table>
+<p>Description
+: Target rate (in Hz) with which agendas are refreshed and run is called.
+This is done sequentially for the registered environments.</p>
+</li>
+</ul>
+<p><a id="publish-on-refresh"></a></p>
+<ul>
+<li><p><strong>publish_on_refresh:</strong></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>bool</p></td>
+<td><p>false</p></td>
+</tr>
+</tbody>
+</table>
+<p>Description
+: Whether to publish an empty message with each agenda refresh on the clips_executive/refresh_agenda topic.
+Mainly useful for debug purposes to measure the actual refresh rate.</p>
+</li>
+</ul>
+<p><a id="assert-time"></a></p>
+<ul>
+<li><p><strong>assert_time:</strong></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>bool</p></td>
+<td><p>true</p></td>
+</tr>
+</tbody>
+</table>
+<p>Description
+: Whether the latest ROS time as fact into the CLIPS environment on each iteration.</p>
+</li>
+<li><p><strong>autostart:</strong></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>bool</p></td>
+<td><p>true</p></td>
+</tr>
+</tbody>
+</table>
+<p>Description
+: Whether to start periodic execution when loading the plugin.</p>
+</li>
+</ul>
+</section>
+<section id="features">
+<h3>Features<a class="headerlink" href="#features" title="Link to this heading"></a></h3>
+<p>The executive plugin periodically runs all managed CLIPS environments at the configured <a class="reference internal" href="#refresh-rate"><span class="xref myst">refresh_rate</span></a>.
+Each tick performs the following steps:</p>
+<ol class="arabic simple">
+<li><p>Optionally asserts the current time as <code class="docutils literal notranslate"><span class="pre">(time</span> <span class="pre">(now))</span></code> into the environment.</p></li>
+<li><p>Refreshes all agendas.</p></li>
+<li><p>If a <a class="reference internal" href="#../getting_started/configuration.md#focus-stack"><span class="xref myst">focus_stack</span></a> is configured for an environment, iterates through the stack in order, running each module’s agenda (respecting a possibly set <a class="reference internal" href="#../getting_started/configuration.md#rule-limit"><span class="xref myst">rule_limit</span></a>) before moving to the next.
+Otherwise, runs the <code class="docutils literal notranslate"><span class="pre">MAIN</span></code> module’s agenda.</p></li>
+<li><p>Repeats steps 2-3 until no rules fire, ensuring cross-module interactions are fully resolved.</p></li>
+<li><p>Optionally publishes the total number of rules fired on a topic.</p></li>
+</ol>
+<p>Execution can be paused and resumed at any time via services,
+or a single tick can be triggered manually, regardless of the current pause state.</p>
+<p>CLIPS commands can be sent directly to a managed environment via dedicated <code class="docutils literal notranslate"><span class="pre">eval</span></code> and <code class="docutils literal notranslate"><span class="pre">build</span></code> services.
+<code class="docutils literal notranslate"><span class="pre">eval</span></code> evaluates an expression using CLIPS <code class="docutils literal notranslate"><span class="pre">Eval</span></code>, while <code class="docutils literal notranslate"><span class="pre">build</span></code> defines a new construct using CLIPS <code class="docutils literal notranslate"><span class="pre">Build</span></code>.
+If no environment is specified, the command is executed in the first managed environment.</p>
+<section id="note">
+<h4>NOTE<a class="headerlink" href="#note" title="Link to this heading"></a></h4>
+<p>When using a focus stack, the current module is reset to <code class="docutils literal notranslate"><span class="pre">MAIN</span></code> after each module’s agenda is run.
+This ensures that time assertion and other framework operations always operate in a predictable context.</p>
+</section>
+<section id="id1">
+<h4>NOTE<a class="headerlink" href="#id1" title="Link to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">Eval</span></code> is intended for invoking arbirary commands (e.g. <code class="docutils literal notranslate"><span class="pre">(assert</span> <span class="pre">(foo))</span></code>, <code class="docutils literal notranslate"><span class="pre">(facts)</span></code>),
+while <code class="docutils literal notranslate"><span class="pre">Build</span></code> is intended for defining constructs (e.g. <code class="docutils literal notranslate"><span class="pre">(defrule</span> <span class="pre">...)</span></code>, <code class="docutils literal notranslate"><span class="pre">(deftemplate</span> <span class="pre">...)</span></code>).</p>
+</section>
+<section id="ros-interfaces">
+<h4>ROS Interfaces<a class="headerlink" href="#ros-interfaces" title="Link to this heading"></a></h4>
+<p>All interaces are prefixed by tha name of the CX node, followed by the name of the executive plugin, e.g., <code class="docutils literal notranslate"><span class="pre">clips_manager/executive</span></code>.</p>
+<ul class="simple">
+<li><p><em>/ns/node/plugin/refresh_agenda</em>: Topic where a mesage is published after each tick, indicating the number of rules that fired (requires <a class="reference internal" href="#publish-on-refresh"><span class="xref myst">publish_on_refresh</span></a>).</p></li>
+<li><p><em>/ns/node/plugin/pause</em>: Service for stopping periodic ticks according to the configured <a class="reference internal" href="#refresh-rate"><span class="xref myst">refresh_rate</span></a>.</p></li>
+<li><p><em>/ns/node/plugin/resume</em>: Service that for starting the periodic ticks.</p></li>
+<li><p><em>/ns/node/plugin/tick_once</em>: Serivce for ticking once.</p></li>
+<li><p><em>/ns/node/plugin/eval</em>: Service for processing a string as an <code class="docutils literal notranslate"><span class="pre">eval</span></code> command in a given environment.</p></li>
+<li><p><em>/ns/node/plugin/build</em>: Service for processing a string as an <code class="docutils literal notranslate"><span class="pre">build</span></code> command in a given environment.</p></li>
+</ul>
+</section>
+<section id="facts">
+<h4>Facts<a class="headerlink" href="#facts" title="Link to this heading"></a></h4>
+<p>If <a class="reference internal" href="#assert-time"><span class="xref myst">assert_time</span></a> is set to <code class="docutils literal notranslate"><span class="pre">true</span></code>, it asserts the ordered fact time with the current ROS time as float.</p>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>(time ?ros-time-float)
 </pre></div>
 </div>
 </section>
-<section id="clips-features">
-<h3>CLIPS Features<a class="headerlink" href="#clips-features" title="Link to this heading"></a></h3>
+<section id="functions">
+<h4>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h4>
 <p>This plugin adds deffunctions to retrieve the current time.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?ros-time</span><span class="w"> </span><span class="p">(</span><span class="nv">now</span><span class="p">))</span><span class="w">         </span><span class="c1">; returns a FLOAT holding get_clock()-&gt;now().seconds()</span>
-<span class="p">(</span><span class="nv">bind</span><span class="w"> </span><span class="nv">?sys-time</span><span class="w"> </span><span class="p">(</span><span class="nv">now-systime</span><span class="p">))</span><span class="w"> </span><span class="c1">; returns a FLOAT of system time</span>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>(bind ?ros-time (now))         ; returns a FLOAT holding get_clock()-&gt;now().seconds()
+(bind ?sys-time (now-systime)) ; returns a FLOAT of system time
 </pre></div>
 </div>
-<p>It additionally provides additional changes, if <strong>assert_time</strong> is <code class="docutils literal notranslate"><span class="pre">true</span></code>.
-Then it asserts an unordered fact <code class="docutils literal notranslate"><span class="pre">time</span></code> with the current ROS time, which looks like this:</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nb">time</span><span class="w"> </span><span class="mf">1729689959.63119</span><span class="p">)</span>
+</section>
+<section id="other">
+<h4>Other<a class="headerlink" href="#other" title="Link to this heading"></a></h4>
+<p>Lastly, the <code class="docutils literal notranslate"><span class="pre">time</span></code> fact is unwatched after the first assertion.</p>
+</section>
+</section>
+<section id="usage-example">
+<h3>Usage Example<a class="headerlink" href="#usage-example" title="Link to this heading"></a></h3>
+<p>A minimal working example is provided by the <a class="reference external" href="https://carologistics.github.io/clips_executive/cx_bringup">cx_bringup</a> package. Run it via:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>cx_bringup<span class="w"> </span>cx_launch.py<span class="w"> </span>manager_config:<span class="o">=</span>plugin_examples/executive.yaml
 </pre></div>
 </div>
-<p>It then also defines a defrule and defglobal to clean up the fact once the end of the agenda is reached:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(defglobal
-  ?*PRIORITY-TIME-RETRACT*    = -10000
-)
+<p>It prints the current ROS and system time in each iteration and compares the time at the start of the iteration with the time at the time the rule is fired.</p>
+<p>The executive can be stopped by calling the <code class="docutils literal notranslate"><span class="pre">pause</span></code> service:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>service<span class="w"> </span>call<span class="w"> </span>/executive/pause<span class="w"> </span>std_srvs/srv/Trigger<span class="w"> </span><span class="o">{}</span>
+</pre></div>
+</div>
+<p>Individual ticks (a run of the inference engine until termination) can be invoked via the <code class="docutils literal notranslate"><span class="pre">tick_once</span></code> service:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>service<span class="w"> </span>call<span class="w"> </span>/executive/tick_once<span class="w"> </span>std_srvs/srv/Trigger<span class="w"> </span><span class="o">{}</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">eval</span></code> and <code class="docutils literal notranslate"><span class="pre">build</span></code> functions allow for ad-hoc interaction with an environment:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>service<span class="w"> </span>call<span class="w"> </span>/executive/build<span class="w"> </span>cx_msgs/srv/ClipsCommand<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s1">&#39;{env_name: &quot;cx_executive&quot;, command: &quot;(deftemplate example (slot message (type STRING)))&quot;}&#39;</span>
+ros2<span class="w"> </span>service<span class="w"> </span>call<span class="w"> </span>/executive/eval<span class="w"> </span>cx_msgs/srv/ClipsCommand<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s1">&#39;{env_name: &quot;cx_executive&quot;, command: &quot;(assert (example (message \&quot;hello\&quot;)))&quot;}&#39;</span>
+</pre></div>
+</div>
+<p>Finally, the <code class="docutils literal notranslate"><span class="pre">resume</span></code> service is used in order to resume automatic execution:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>service<span class="w"> </span>call<span class="w"> </span>/executive/resume<span class="w"> </span>std_srvs/srv/Trigger<span class="w"> </span><span class="o">{}</span>
+</pre></div>
+</div>
+<section id="id2">
+<h4>Configuration<a class="headerlink" href="#id2" title="Link to this heading"></a></h4>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/params/plugin_examples/executive.yaml">cx_bringup/params/plugin_examples/executive.yaml</a>.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">clips_manager</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_executive&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">cx_executive</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;executive&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;files&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">log_clips_to_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">watch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facts&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;rules&quot;</span><span class="p p-Indicator">]</span>
 
-(defrule time-retract
-  (declare (salience ?*PRIORITY-TIME-RETRACT*))
-  ?f &lt;- (time $?)
+<span class="w">    </span><span class="nt">executive</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::ExecutivePlugin&quot;</span>
+<span class="w">      </span><span class="nt">publish_on_refresh</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">      </span><span class="nt">assert_time</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">      </span><span class="nt">refresh_rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">    </span><span class="nt">files</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::FileLoadPlugin&quot;</span>
+<span class="w">      </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_bringup&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span>
+<span class="w">        </span><span class="s">&quot;clips/plugin_examples/executive.clp&quot;</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+</section>
+<section id="code">
+<h4>Code<a class="headerlink" href="#code" title="Link to this heading"></a></h4>
+<p>File <a class="reference external" href="https://github.com/carologistics/clips_executive/blob/master/cx_bringup/clips/plugin_examples/executive.clp">cx_bringup/clips/plugin_examples/executive.clp</a>.</p>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span>(defrule print-time
+  (time ?now)
   =&gt;
-  (retract ?f)
+  (printout info &quot;time between agenda refresh and rule fire: &quot; (- (now) ?now) crlf)
+  (printout info &quot;ROS time: &quot; (now) crlf)
+  (printout info &quot;sys time: &quot; (now-systime) crlf)
 )
 </pre></div>
 </div>
-<p>Lastly, it unwatches both the <code class="docutils literal notranslate"><span class="pre">time</span></code> fact and <code class="docutils literal notranslate"><span class="pre">time-retract</span></code> rule as they otherwise would spam the log.</p>
-<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">unwatch</span><span class="w"> </span><span class="nv">facts</span><span class="w"> </span><span class="nb">time</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">unwatch</span><span class="w"> </span><span class="nv">rules</span><span class="w"> </span><span class="nv">time-retract</span><span class="p">)</span>
-</pre></div>
-</div>
+</section>
 </section>
 </section>
 </section>
