@@ -4,13 +4,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reinforcement Learning CLIPS Interfaces &mdash; clips_executive 0.1.3 documentation</title>
+  <title>Reinforcement Learning CLIPS Interfaces &mdash; CLIPS Executive</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=86f27845" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=8f9e6779" />
       <link rel="stylesheet" type="text/css" href="../../_static/custom_figure.css" />
 
   
+    <link rel="shortcut icon" href="../../_static/logo.ico"/>
   
         <script src="../../_static/jquery.js?v=8dae8fb0"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
@@ -35,7 +36,8 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            clips_executive
+            CLIPS Executive
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
                 0.1
@@ -80,7 +82,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">clips_executive</a>
+          <a href="../../index.html">CLIPS Executive</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -115,7 +117,7 @@ In the following, the CLIPS interface is described as provided by the <code clas
 <li><p><a class="reference internal" href="../../plugins/executive_plugin.html#usage-executive-plugin"><span class="std std-ref">cx::ExecutivePlugin</span></a>: Manages the overall reasoning and control flow, interleaving ROS feedback with CLIPS reasoning.</p></li>
 <li><p><a class="reference internal" href="../../plugins/ros_msgs_plugin.html#usage-ros-msgs-plugin"><span class="std std-ref">cx::RosMsgsPlugin</span></a>: Provides access to ROS interfaces.</p></li>
 <li><p><a class="reference internal" href="../../plugins/ros_param_plugin.html#usage-ros-param-plugin"><span class="std std-ref">cx::RosParamPlugin</span></a>: Used to fetch RL parameters that are also required within CLIPS.</p></li>
-<li><p><a class="reference internal" href="../../plugins/cx_ament_index.html#usage-ament-index-plugin"><span class="std std-ref">cx::AmentIndexPlugin</span></a>: Resolves package paths via <code class="docutils literal notranslate"><span class="pre">ament_index</span></code>. Required for setting up the CLIPS interfaces.</p></li>
+<li><p><a class="reference internal" href="../../plugins/ament_index_plugin.html#usage-ament-index-plugin"><span class="std std-ref">cx::AmentIndexPlugin</span></a>: Resolves package paths via <code class="docutils literal notranslate"><span class="pre">ament_index</span></code>. Required for setting up the CLIPS interfaces.</p></li>
 </ul>
 <p>Also, as the current configuration is compatible with ROS 2 kilted or above, action server introspection is not supported, hence the following plugins (generated through <a class="reference internal" href="../../plugin_generator/index.html#usage-cx-ros-comm-gen"><span class="std std-ref">ros_comm_gen</span></a> by the <code class="docutils literal notranslate"><span class="pre">cx_rl_clips</span></code> package) are needed:</p>
 <ul class="simple">
