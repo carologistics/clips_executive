@@ -6,7 +6,7 @@
 
 Source code on [GitHub](https://github.com/carologistics/clips_executive/blob/master/cx_plugins/ament_index_plugin).
 
-This plugin provides CLIPS bindings for functions of [ament_index_cpp](https://docs.ros.org/en/humble/p/ament_index_cpp).
+This plugin provides CLIPS bindings for functions of [ament_index_cpp](https://docs.ros.org/en/lyrical/p/ament_index_cpp).
 
 ## Configuration
 

@@ -67,7 +67,7 @@ author = 'Tarik Viehmann'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
-ros_distro = os.getenv('ROS_DISTRO', 'humble')  # Default to 'humble' if ROS_DISTRO is not set
+ros_distro = os.getenv('ROS_DISTRO', 'lyrical')
 
 extensions = [
     'sphinx.ext.extlinks',

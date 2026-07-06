@@ -49,7 +49,7 @@ This plugin provides the ability to perform periodic lookups on the transform tr
 This plugin is discussed in more depth in the [Writing a Plugin for TF Monitoring Tutorial](https://carologistics.github.io/clips_executive/plugins/writing_a_plugin.rst)
 
 A minimal working example is provided by the [cx_tutorial_agents](https://carologistics.github.io/clips_executive/cx_tutorial_agents) package.
-It requires the [turtlesim](https://docs.ros.org/en/humble/p/turtlesim) package, which provides a minimal simulation environment to interact with and the [turtle_tf2_py](https://docs.ros.org/en/humble/p/turtle_tf2_py) package to obtain transforms from the simulation.
+It requires the [turtlesim](https://docs.ros.org/en/lyrical/p/turtlesim) package, which provides a minimal simulation environment to interact with and the [turtle_tf2_py](https://docs.ros.org/en/lyrical/p/turtle_tf2_py) package to obtain transforms from the simulation.
 
 Open a terminal and start the tf2 turtlesim demo:
 

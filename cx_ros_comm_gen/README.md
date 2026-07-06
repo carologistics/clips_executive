@@ -12,7 +12,7 @@ cx_generate_srv_bindings(package srv_name)
 cx_generate_action_bindings(package action_name)
 ```
 
-These macros can be used in any existing package that uses [ament_cmake](https://docs.ros.org/en/humble/How-To-Guides/Ament-CMake-Documentation.html) as build tool. See the below snippet for an example:
+These macros can be used in any existing package that uses [ament_cmake](https://docs.ros.org/en/lyrical/How-To-Guides/Ament-CMake-Documentation.html) as build tool. See the below snippet for an example:
 
 ```cmake
 find_package(cx_ros_comm_gen REQUIRED)
