@@ -60,7 +60,7 @@ class CLIPSLexer(RegexLexer):
 
 sys.path.insert(0, os.path.abspath('.'))
 
-project = 'clips_executive'
+project = 'CLIPS Executive'
 project_copyright = '2024, Tarik Viehmann'
 
 author = 'Tarik Viehmann'
@@ -84,6 +84,10 @@ html_theme = 'alabaster'
 # html_static_path = ['_static']
 # Add static path for custom CSS
 html_static_path = ['_static']
+html_title = 'CLIPS Executive'
+html_short_title = 'CLIPS Executive'
+html_logo = '_static/logo.svg'
+html_favicon = '_static/logo.ico'
 
 
 # Include custom CSS file
