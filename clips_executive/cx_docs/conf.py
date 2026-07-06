@@ -60,14 +60,14 @@ class CLIPSLexer(RegexLexer):
 
 sys.path.insert(0, os.path.abspath('.'))
 
-project = 'clips_executive'
+project = 'CLIPS Executive'
 project_copyright = '2024, Tarik Viehmann'
 
 author = 'Tarik Viehmann'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
-ros_distro = os.getenv('ROS_DISTRO', 'humble')  # Default to 'humble' if ROS_DISTRO is not set
+ros_distro = os.getenv('ROS_DISTRO', 'lyrical')
 
 extensions = [
     'sphinx.ext.extlinks',
@@ -84,6 +84,10 @@ html_theme = 'alabaster'
 # html_static_path = ['_static']
 # Add static path for custom CSS
 html_static_path = ['_static']
+html_title = 'CLIPS Executive'
+html_short_title = 'CLIPS Executive'
+html_logo = '_static/logo.svg'
+html_favicon = '_static/logo.ico'
 
 
 # Include custom CSS file
@@ -97,7 +101,7 @@ if local:
     extlinks = {
         'docsite': ('https://carologistics.github.io/clips_executive/%s', '%s'),
         # ('http://localhost:8000/%s', '%s'),
-        'source-master': ('https://github.com/carologistics/clip__executive/blob/master/%s', '%s'),
+        'source-master': ('https://github.com/carologistics/clips_executive/blob/master/%s', '%s'),
         'rosdoc': (f'https://docs.ros.org/en/{ros_distro}/p/%s', '%s'),
         'rostut': (f'https://docs.ros.org/en/{ros_distro}/%s', '%s'),
     }

@@ -1,37 +1,127 @@
-# cx_file_load_plugin
-This package offers the `cx::FileLoadPlugin' that allows to load files into CLIPS using batch* and load*.
+<!-- AUTO-GENERATED via sphinx-build. Do not edit directly. -->
 
-When just defining constructs, it is recommended to use load* over batch*, as it provides better error output.
-When arbitrary commands should be executed, batch* should be used.
+<a id="usage-file-load-plugin"></a>
 
-## Usage
-Register this plugin with the plugin manager.
-It's configuration parameters are depicted in this example setup below.
+# File Load Plugin
+
+Source code on [GitHub](https://github.com/carologistics/clips_executive/blob/master/cx_plugins/file_load_plugin).
+
+This plugin provides the ability to load files into CLIPS using `batch*` and `load*` through configuration values.
+
+#### NOTE
+The plugin always sets the current module to `MAIN` before loading a file.
+This ensures predictable behavior when loaded files define their own modules.
+Since defining a `defmodule` in CLIPS automatically switches the current module,
+subsequent file loads could otherwise operate in an unexpected module context.
+
+## Configuration
+
+* **pkg_share_dirs:**
+  | Type          | Default   |
+  |---------------|-----------|
+  | string vector | []        |
+
+  Description
+  : When specifying relative paths, look at the share directories of the listed packages to resolve them (in the specified order).
+* **load:**
+  | Type          | Default   |
+  |---------------|-----------|
+  | string vector | []        |
+
+  Description
+  : Specify files to load using CLIPS load\* command when the plugin is loaded.
+    Supports absolute paths or relative paths using the share directories specified above.
+* **batch:**
+  | Type          | Default   |
+  |---------------|-----------|
+  | string vector | []        |
+
+  Description
+  : Specify files to load using CLIPS batch\* command when the plugin is loaded. This happens after the files specified in `load` are loaded.
+    Supports absolute paths or relative paths using the share directories specified above.
+* **cleanup_batch:**
+  | Type          | Default   |
+  |---------------|-----------|
+  | string vector | []        |
+
+  Description
+  : Specify files to load using CLIPS batch\* command when the plugin is unloaded.
+    This may be used to clean up all loaded content to gracefully undo whatever was loaded in before.
+    Supports absolute paths or relative paths using the share directories specified above.
+
+## Features
+
+This plugin injects the user-defined code into the CLIPS environments and has no other effects.
+
+For the difference between `load*` and `batch*` please consult the CLIPS [Basic Programming Guide (PDF)](https://clipsrules.net/documentation/v641/bpg641.pdf).
+
+#### NOTE
+It is recommended to use load over batch whenever possible due to the superior error handling of load.
+E.g., when using batch, a missing closing parenthesis `)`  may lead to a silent failure as CLIPS treats this as an uncompleted command and waits for another closing parenthesis to appear before actually processing the input.
+
+## Usage Example
+
+A minimal working example is provided by the [cx_bringup](https://carologistics.github.io/clips_executive/cx_bringup) package. Run it via:
+
+```bash
+ros2 launch cx_bringup cx_launch.py manager_config:=plugin_examples/file_load.yaml
+```
+
+Note, that while file-load.clp is loaded before file-load-batch.clp, the rules of file-load.clp will only be executed, once the CLIPS engine runs. hence, the expected output is that batch is printed before Hello World.
+
+### Configuration
+
+File [cx_bringup/params/plugin_examples/file_load.yaml](https://github.com/carologistics/clips_executive/blob/master/cx_bringup/params/plugin_examples/file_load.yaml).
 
 ```yaml
 clips_manager:
   ros__parameters:
-    environments: ["main"]
-    main:
+    environments: ["cx_file_load"]
+    cx_file_load:
       plugins: ["files"]
+      watch: ["facts", "rules"]
 
     files:
       plugin: "cx::FileLoadPlugin"
-      # When specifying relative paths, look at the share directories of the listed packages to resolve them.
-      # Attempts to resolve the relative paths in order of the listed packages
-      # Defaults to an empty list
       pkg_share_dirs: ["cx_bringup"]
-      # Specify files to load using CLIPS load* command when the plugin is loaded.
-      # Supports absolute paths or relative paths using the share directories specified above.
-      # Defaults to an empty list
-      load: ["example.clp"]
-      # Specify files to load using CLIPS batch* command when the plugin is loaded.
-      # Supports absolute paths or relative paths using the share directories specified above.
-      # Defaults to an empty list
-      batch: ["example.clp"]
-      # Specify files to load using CLIPS batch* command when the plugin is unloaded.
-      # This may be used to clean up all loaded content to enable dynamic reloading of plugins at runtime.
-      # Supports absolute paths or relative paths using the share directories specified above.
-      # Defaults to an empty list
-      cleanup_batch: ["example.clp"]
+      load: ["clips/plugin_examples/file-load.clp"]
+      batch: ["clips/plugin_examples/file-load-batch.clp"]
+      cleanup_batch: ["clips/plugin_examples/file-load-cleanup-batch.clp"]
+```
+
+### Code
+
+File [cx_bringup/clips/plugin_examples/file-load.clp](https://github.com/carologistics/clips_executive/blob/master/cx_bringup/clips/plugin_examples/file-load.clp).
+
+```clips
+(defrule hello-world
+   (not (hello))
+   =>
+   (printout green "Hello world" crlf)
+   (assert (hello))
+)
+(defrule goodbye-world
+   (executive-finalize)
+   =>
+   (printout blue "Goodbye world" crlf)
+)
+```
+
+File [cx_bringup/clips/plugin_examples/file-load-batch.clp](https://github.com/carologistics/clips_executive/blob/master/cx_bringup/clips/plugin_examples/file-load-batch.clp).
+
+```clips
+(printout yellow "batch" crlf)
+```
+
+File [cx_bringup/clips/plugin_examples/file-load-cleanup-batch.clp](https://github.com/carologistics/clips_executive/blob/master/cx_bringup/clips/plugin_examples/file-load-cleanup-batch.clp).
+
+```clips
+; file-load-cleanup-batch.clp
+
+(printout yellow "cleanup batch" crlf)
+(undefrule hello-world)
+(undefrule goodbye-world)
+(do-for-all-facts ((?h hello))
+  (retract ?h)
+)
 ```

@@ -1,27 +1,24 @@
-# cx_ament_index_plugin
-This package offers the `cx::AmentIndexPlugin' that provides the functions from ament_index_cpp to CLIPS.
+<!-- AUTO-GENERATED via sphinx-build. Do not edit directly. -->
 
-## Usage
-Register this plugin with the plugin manager. It requires no additional configuration, an example setup is shown below:
+<a id="usage-ament-index-plugin"></a>
 
-```yaml
-clips_manager:
-  ros__parameters:
-    environments: ["main"]
-    main:
-      plugins: ["ament_index"]
+# Ament Index Plugin
 
-    ament_index:
-      plugin: "cx::AmentIndexPlugin"
-```
+Source code on [GitHub](https://github.com/carologistics/clips_executive/blob/master/cx_plugins/ament_index_plugin).
 
-## CLIPS Features
-This plugin defines user-defined functions that are described below.
-Refer to the [ament_index_cpp API](https://docs.ros.org/en/rolling/p/ament_index_cpp/generated/index.html) for detailed information.
+This plugin provides CLIPS bindings for functions of [ament_index_cpp](https://docs.ros.org/en/lyrical/p/ament_index_cpp).
 
-Note that all functions catch potential exceptions thrown by `ament_index_cpp` and return `FALSE` in that case.
+## Configuration
+
+This plugin has no specific configuration options.
+
+## Features
+
+Note that all functions listed below catch potential exceptions thrown by ament_index_cpp and return FALSE in that case.
+
 ### Functions
-```lisp
+
+```clips
 (bind ?ret (ament-index-get-package-prefix ?package-name))
 ; example args: "cx_bringup"
 ; example ret:  "/opt/ros/<ros-distro>
@@ -35,7 +32,7 @@ Note that all functions catch potential exceptions thrown by `ament_index_cpp` a
 
 (bind ?ret (ament-index-has-resource ?res-type ?res-name))
 ; example args: "vendor_packages" "clips_vendor"
-; example ret:  TRUE
+; example ret:  FALSE or a path like "/opt/ros/kited"
 
 (bind ?ret (ament-index-get-resource ?res-type ?res-name))
 ; example args: "vendor_packages" "clips_vendor"
@@ -47,4 +44,88 @@ Note that all functions catch potential exceptions thrown by `ament_index_cpp` a
 
 (bind ?prefix (ament-index-get-search-paths))
 ; example ret: ("/opt/ros/<ros-distro>" "<path-to-other-prefix>" ...)
+```
+
+## Usage Example
+
+A minimal working example is provided by the [cx_bringup](https://carologistics.github.io/clips_executive/cx_bringup) package. Run it via:
+
+```bash
+ros2 launch cx_bringup cx_launch.py manager_config:=plugin_examples/ament_index.yaml
+```
+
+It calls all of the provided functions once and prints their output.
+
+### Configuration
+
+File [cx_bringup/params/plugin_examples/ament_index.yaml](https://github.com/carologistics/clips_executive/blob/master/cx_bringup/params/plugin_examples/ament_index.yaml).
+
+```yaml
+clips_manager:
+  ros__parameters:
+    environments: ["cx_ament_index"]
+    cx_ament_index:
+      plugins: ["ament_index", "files"]
+      log_clips_to_file: true
+      watch: ["facts", "rules"]
+
+    ament_index:
+      plugin: "cx::AmentIndexPlugin"
+    files:
+      plugin: "cx::FileLoadPlugin"
+      pkg_share_dirs: ["cx_bringup"]
+      batch: [
+        "clips/plugin_examples/ament-index.clp"]
+```
+
+### Code
+
+File [cx_bringup/clips/plugin_examples/ament-index.clp](https://github.com/carologistics/clips_executive/blob/master/cx_bringup/clips/plugin_examples/ament-index.clp).
+
+```clips
+(deffunction print-pairs (?pairs ?key-str ?value-str)
+  (bind ?length (length$ ?pairs))
+  (bind ?index 1)
+
+  (while (< ?index (min 10 ?length))
+     (bind ?key (nth$ ?index ?pairs))
+     (bind ?value (nth$ (+ ?index 1) ?pairs))
+     (printout green "    " ?key-str ": " ?key " "?value-str ": " ?value crlf)
+     (bind ?index (+ ?index 2))
+  )
+  (if (> ?length 10) then
+   (printout green "    " " ... " crlf)
+  )
+)
+(deffunction print-in-lines (?multi)
+  (bind ?length (length$ ?multi))
+  (bind ?index 1)
+
+  (while (< ?index (min 5 ?length))
+     (bind ?key (nth$ ?index ?multi))
+     (printout green "    " ?key crlf)
+     (bind ?index (+ ?index 1))
+  )
+  (if (> ?length 5) then
+   (printout green "    " " ... " crlf)
+  )
+)
+
+(printout info "(ament-index-get-package-prefix \"cx_bringup\")" crlf)
+(printout green "    " (ament-index-get-package-prefix "cx_bringup") crlf)
+
+(printout info "(ament-index-get-packages-with-prefixes)" crlf)
+(print-pairs (ament-index-get-packages-with-prefixes) "Package" "Prefix")
+
+(printout info "(ament-index-get-package-share-directory \"rclcpp\")" crlf)
+(printout green "    " (ament-index-get-package-share-directory "rclcpp") crlf)
+
+(printout info "(ament-index-get-resource \"vendor_packages\" \"clips_vendor\")" crlf)
+(print-pairs (ament-index-get-resource "vendor_packages" "clips_vendor") "Content" "Path")
+
+(printout info "(ament-index-get-resources \"vendor_packages\")" crlf)
+(print-pairs (ament-index-get-resources "vendor_packages") "Package" "Prefix")
+
+(printout info "(ament-index-get-search-paths)" crlf)
+(print-in-lines (ament-index-get-search-paths))
 ```
