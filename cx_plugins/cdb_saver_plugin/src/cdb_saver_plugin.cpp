@@ -1,0 +1,688 @@
+// Copyright (c) 2024-2026 Carologistics
+// SPDX-License-Identifier: Apache-2.0
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// TODO(techtasie): BATCH UPLOAD
+
+// RANGES is defined in clips_ns/clips.h, which causes issues with
+// pqxx/pqxx. It needs to be included before clips_ns/clips.h to avoid compilation errors.
+
+#include <cstddef>
+#include <cstdint>
+#include <cstdio>
+#include <ctime>
+#include <memory>
+
+#include "pqxx/pqxx"
+#undef RANGES
+
+#include "clips_ns/clips.h"
+#include "clips_ns/modulpsr.h"
+#include "cx_cdb_saver_plugin/cdb_saver_plugin.hpp"
+#include "cx_utils/clips_env_context.hpp"
+#include "cx_utils/format.hpp"
+#include "cx_utils/param_utils.hpp"
+#include "nlohmann/json_fwd.hpp"
+#include "rcl_interfaces/msg/list_parameters_result.hpp"
+
+// To export as plugin
+#include "cx_clips_env_manager/clips_env_manager.hpp"
+#include "cx_clips_env_manager/clips_plugin_manager.hpp"
+#include "pluginlib/class_list_macros.hpp"
+
+namespace cx
+{
+
+CDBSaverPlugin::CDBSaverPlugin() {}
+
+CDBSaverPlugin::~CDBSaverPlugin() {}
+
+void CDBSaverPlugin::initialize()
+{
+  logger_ = std::make_unique<rclcpp::Logger>(rclcpp::get_logger(plugin_name_));
+
+  std::shared_ptr<rclcpp_lifecycle::LifecycleNode> node = parent_.lock();
+  if (!node) {
+    return;
+  }
+
+  CLIPSEnvManager * env_manager = static_cast<CLIPSEnvManager *>(parent_.lock().get());
+
+  env_manager->get_plugin_manager().add_plugin_load_callback(
+    "cdb_plugin_load_callback",
+    std::bind(
+      &CDBSaverPlugin::plugin_load_callback, this, std::placeholders::_1, std::placeholders::_2));
+  env_manager->get_plugin_manager().add_plugin_unload_callback(
+    "cdb_plugin_unload_callback",
+    std::bind(
+      &CDBSaverPlugin::plugin_unload_callback, this, std::placeholders::_1, std::placeholders::_2));
+
+  cx::cx_utils::declare_parameter_if_not_declared(
+    node, plugin_name_ + ".hostname", rclcpp::ParameterValue("localhost"));
+  cx::cx_utils::declare_parameter_if_not_declared(
+    node, plugin_name_ + ".port", rclcpp::ParameterValue(5432));
+  cx::cx_utils::declare_parameter_if_not_declared(
+    node, plugin_name_ + ".username", rclcpp::ParameterValue("cx_user"));
+  cx::cx_utils::declare_parameter_if_not_declared(
+    node, plugin_name_ + ".password", rclcpp::ParameterValue("password"));
+  cx::cx_utils::declare_parameter_if_not_declared(
+    node, plugin_name_ + ".db_prefix", rclcpp::ParameterValue("cdb"));
+  cx::cx_utils::declare_parameter_if_not_declared(
+    node, plugin_name_ + ".db_timestamp_suffix", rclcpp::ParameterValue(true));
+}
+
+void CDBSaverPlugin::finalize()
+{
+  CLIPSEnvManager * env_manager = static_cast<CLIPSEnvManager *>(parent_.lock().get());
+  env_manager->get_plugin_manager().remove_plugin_load_callback("cdb_plugin_load_callback");
+  env_manager->get_plugin_manager().remove_plugin_unload_callback("cdb_plugin_unload_callback");
+}
+
+bool CDBSaverPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
+{
+  std::shared_ptr<rclcpp_lifecycle::LifecycleNode> node = parent_.lock();
+  std::string hostname;
+  int port;
+  std::string username;
+  std::string password;
+  std::string db_prefix;
+  bool db_timestamp;
+  node->get_parameter(plugin_name_ + ".hostname", hostname);
+  node->get_parameter(plugin_name_ + ".port", port);
+  node->get_parameter(plugin_name_ + ".username", username);
+  node->get_parameter(plugin_name_ + ".password", password);
+  node->get_parameter(plugin_name_ + ".db_prefix", db_prefix);
+  node->get_parameter(plugin_name_ + ".db_timestamp_suffix", db_timestamp);
+
+  std::string env_name = CLIPSEnvContext::get_context(env)->env_name_;
+
+  std::string db_name = db_prefix + "_" + env_name;
+
+  if (db_timestamp) {
+    time_t t = std::time(nullptr);
+    std::tm tm{};
+    gmtime_r(&t, &tm);
+
+    std::ostringstream oss;
+    oss << std::put_time(&tm, "%Y_%m_%dt%H_%M_%S");
+
+    db_name += "_" + oss.str();
+  }
+
+  DBHandlerConfig config = {hostname, port, username, password, db_name};
+  try {
+    RCLCPP_INFO(
+      *logger_, "Connecting to database %s at %s:%d with user %s", config.db_name.c_str(),
+      config.hostname.c_str(), config.port, config.username.c_str());
+    db_handlers_.emplace(env_name, std::make_unique<DBHandler>(config, parent_));
+  } catch (const std::exception & e) {
+    RCLCPP_ERROR(*logger_, "Failed to connect to database: %s", e.what());
+    return false;
+  }
+  DBHandler * db_handler_ptr = db_handlers_[env_name].get();
+
+  clips::Defmodule * theModule;
+  clips::Defrule * theRule;
+  clips::Defglobal * theDefGlobal;
+  clips::Deffunction * theDefFunction;
+  clips::Deftemplate * theDefTemplate;
+  clips::Deffacts * theDefFacts;
+  clips::Fact * theFact;
+
+  for (theModule = clips::GetNextDefmodule(env.get(), NULL); theModule != NULL;
+       theModule = clips::GetNextDefmodule(env.get(), theModule)) {
+    clips::SetCurrentModule(env.get(), theModule);
+    const std::string module_name = theModule->header.name->contents;
+    for (theRule = clips::GetNextDefrule(env.get(), NULL); theRule != NULL;
+         theRule = clips::GetNextDefrule(env.get(), theRule)) {
+      const std::string name = theRule->header.name->contents;
+      const int salience = theRule->salience;
+      const std::string definition = theRule->header.ppForm;
+
+      db_handler_ptr->assert_defrule(name, module_name, definition, salience, 0);
+    }
+    for (theDefGlobal = clips::GetNextDefglobal(env.get(), NULL); theDefGlobal != NULL;
+         theDefGlobal = clips::GetNextDefglobal(env.get(), theDefGlobal)) {
+      std::string name = theDefGlobal->header.name->contents;
+      std::string value_json =
+        slot_value_to_json(theDefGlobal->current.header->type, &theDefGlobal->current).dump();
+      db_handler_ptr->assert_defglobal(name, module_name, value_json, 0);
+    }
+    for (theDefFunction = clips::GetNextDeffunction(env.get(), NULL); theDefFunction != NULL;
+         theDefFunction = clips::GetNextDeffunction(env.get(), theDefFunction)) {
+      std::string name = theDefFunction->header.name->contents;
+      std::string definition = theDefFunction->header.ppForm;
+      db_handler_ptr->assert_deffunction(name, module_name, definition, 0);
+    }
+    for (theDefTemplate = clips::GetNextDeftemplate(env.get(), NULL); theDefTemplate != NULL;
+         theDefTemplate = clips::GetNextDeftemplate(env.get(), theDefTemplate)) {
+      std::string name = theDefTemplate->header.name->contents;
+      if (theDefTemplate->header.ppForm == nullptr) {
+        continue;
+      }
+      db_handler_ptr->assert_deftemplate(name, module_name, theDefTemplate->header.ppForm, 0);
+    }
+    for (theDefFacts = clips::GetNextDeffacts(env.get(), NULL); theDefFacts != NULL;
+         theDefFacts = clips::GetNextDeffacts(env.get(), theDefFacts)) {
+      std::string name = theDefFacts->header.name->contents;
+      db_handler_ptr->assert_deffacts(name, module_name, theDefFacts->header.ppForm, 0);
+    }
+    for (theFact = clips::GetNextFact(env.get(), NULL); theFact != NULL;
+         theFact = clips::GetNextFact(env.get(), theFact)) {
+      theDefTemplate = theFact->whichDeftemplate;
+      std::string deftemplate_name = theDefTemplate->header.name->contents;
+      std::string module_name =
+        theDefTemplate->header.whichModule->theModule->header.name->contents;
+      db_handler_ptr->assert_fact(
+        theFact->factIndex, module_name, deftemplate_name, clips_fact_to_json(theFact), 0);
+    }
+    db_handler_ptr->assert_defmodule(
+      theModule->header.name->contents, get_module_defintion(theModule), 0);
+  }
+
+  CLIPSEnvManager * env_manager = static_cast<CLIPSEnvManager *>(parent_.lock().get());
+  std::vector<std::string> plugins = env_manager->get_plugin_manager().list_plugins(env_name);
+  for (auto plugin : plugins) {
+    rcl_interfaces::msg::ListParametersResult parameters =
+      parent_.lock()->list_parameters({plugin}, 0);
+    std::string config_json = parameter_list_to_json(parameters).dump();
+    db_handler_ptr->load_plugin(plugin, config_json, 0);
+  }
+
+  clips::AddAssertFunction(
+    env.get(), "cdb_assert_callback", &cdb_assert_callback, 0, db_handler_ptr);
+  clips::AddRetractFunction(
+    env.get(), "cdb_retract_callback", &cdb_retract_callback, 0, db_handler_ptr);
+
+  clips::AddBeforeRuleFiresFunction(
+    env.get(), "cdb_before_rule_callback", &cdb_before_rule_callback, 0, db_handler_ptr);
+
+  clips::AddBeforeRunFiresFunction(
+    env.get(), "cdb_before_run_callback", &cdb_before_run_callback, 0, db_handler_ptr);
+  clips::AddAfterRunFiresFunction(
+    env.get(), "cdb_after_run_callback", &cdb_after_run_callback, 0, db_handler_ptr);
+
+  clips::AddDefruleAssertFunction(
+    env.get(), "cdb_defrule_assert_callback", &cdb_defrule_assert_callback, 0, db_handler_ptr);
+  clips::AddDefruleRetractFunction(
+    env.get(), "cdb_defrule_retract_callback", &cdb_defrule_retract_callback, 0, db_handler_ptr);
+
+  clips::AddDeftemplateAssertFunction(
+    env.get(), "cdb_deftemplate_assert_callback", &cdb_deftemplate_assert_callback, 0,
+    db_handler_ptr);
+  clips::AddDeftemplateRetractFunction(
+    env.get(), "cdb_deftemplate_retract_callback", &cdb_deftemplate_retract_callback, 0,
+    db_handler_ptr);
+
+  clips::AddDeffunctionAssertFunction(
+    env.get(), "cdb_deffunction_assert_callback", &cdb_deffunction_assert_callback, 0,
+    db_handler_ptr);
+  clips::AddDeffunctionRetractFunction(
+    env.get(), "cdb_deffunction_retract_callback", &cdb_deffunction_retract_callback, 0,
+    db_handler_ptr);
+
+  clips::AddDeffactsAssertFunction(
+    env.get(), "cdb_deffacts_assert_callback", &cdb_deffacts_assert_callback, 0, db_handler_ptr);
+  clips::AddDeffactsRetractFunction(
+    env.get(), "cdb_deffacts_retract_callback", &cdb_deffacts_retract_callback, 0, db_handler_ptr);
+
+  clips::AddDefglobalAssertFunction(
+    env.get(), "cdb_defglobal_assert", &cdb_defglobal_assert_callback, 0, db_handler_ptr);
+  clips::AddDefglobalRetractFunction(
+    env.get(), "cdb_defglobal_retract", &cdb_defglobal_retract_callback, 0, db_handler_ptr);
+
+  clips::AddAfterModuleDefinedFunction(
+    env.get(), "cdb_module_defined_callback", &cdb_module_defined_callback, 0, db_handler_ptr);
+
+  return true;
+}
+
+void CDBSaverPlugin::plugin_load_callback(
+  const std::string & env_name, const std::string & plugin_name)
+{
+  auto db = db_handlers_.find(env_name);
+  if (db == db_handlers_.end()) {
+    return;
+  }
+
+  rcl_interfaces::msg::ListParametersResult parameters =
+    parent_.lock()->list_parameters({plugin_name}, 0);
+  std::string config_json = parameter_list_to_json(parameters).dump();
+  db->second->load_plugin(plugin_name, config_json, db->second->get_tick());
+}
+
+nlohmann::json CDBSaverPlugin::parameter_list_to_json(
+  const rcl_interfaces::msg::ListParametersResult & parameters)
+{
+  nlohmann::json json_list = nlohmann::json::array();
+  for (const auto & parameter : parameters.names) {
+    nlohmann::json param;
+    param["name"] = parameter;
+    rclcpp::Parameter value = parent_.lock()->get_parameter(parameter);
+    param["type"] = value.get_type_name();
+    param["value"] = value.value_to_string();
+    json_list.push_back(param);
+  }
+  return json_list;
+}
+
+void CDBSaverPlugin::plugin_unload_callback(
+  const std::string & env_name, const std::string & plugin_name)
+{
+  auto db = db_handlers_.find(env_name);
+  if (db == db_handlers_.end()) {
+    return;
+  }
+  db->second->unload_plugin(plugin_name, db->second->get_tick());
+}
+
+void CDBSaverPlugin::cdb_assert_callback(clips::Environment * /*env*/, void * fact, void * context)
+{
+  clips::Fact * f = static_cast<clips::Fact *>(fact);
+
+  clips::Deftemplate * deftemplate = f->whichDeftemplate;
+  const char * deftemplate_name = deftemplate->header.name->contents;
+  std::string module_name = deftemplate->header.whichModule->theModule->header.name->contents;
+
+  DBHandler * db = static_cast<DBHandler *>(context);
+  db->assert_fact(
+    f->factIndex, module_name, deftemplate_name, clips_fact_to_json(f).c_str(), db->get_tick());
+}
+
+void CDBSaverPlugin::cdb_retract_callback(clips::Environment * /*env*/, void * fact, void * context)
+{
+  clips::Fact * f = static_cast<clips::Fact *>(fact);
+  DBHandler * db = static_cast<DBHandler *>(context);
+  db->retract_fact(f->factIndex, db->get_tick());
+}
+
+void CDBSaverPlugin::cdb_defrule_assert_callback(
+  clips::Environment * /*env*/, clips::Defrule * defrule, void * context)
+{
+  std::string name = defrule->header.name->contents;
+  std::string module_name = defrule->header.whichModule->theModule->header.name->contents;
+  std::string definition = defrule->header.ppForm;
+  int salience = defrule->salience;
+  DBHandler * db = static_cast<DBHandler *>(context);
+  db->assert_defrule(name, module_name, definition, salience, db->get_tick());
+}
+
+void CDBSaverPlugin::cdb_defrule_retract_callback(
+  clips::Environment * /*env*/, clips::Defrule * defrule, void * context)
+{
+  std::string name = defrule->header.name->contents;
+  std::string module_name = defrule->header.whichModule->theModule->header.name->contents;
+  DBHandler * db = static_cast<DBHandler *>(context);
+  db->retract_defrule(name, module_name, db->get_tick());
+}
+
+void CDBSaverPlugin::cdb_deffacts_assert_callback(
+  clips::Environment * /*env*/, clips::Deffacts * deffacts, void * context)
+{
+  std::string name = deffacts->header.name->contents;
+  std::string module_name = deffacts->header.whichModule->theModule->header.name->contents;
+  std::string definition = deffacts->header.ppForm;
+  DBHandler * db = static_cast<DBHandler *>(context);
+  db->assert_deffacts(name, module_name, definition, db->get_tick());
+}
+
+void CDBSaverPlugin::cdb_deffacts_retract_callback(
+  clips::Environment * /*env*/, clips::Deffacts * deffacts, void * context)
+{
+  std::string name = deffacts->header.name->contents;
+  std::string module_name = deffacts->header.whichModule->theModule->header.name->contents;
+  std::string definition = deffacts->header.ppForm;
+  DBHandler * db = static_cast<DBHandler *>(context);
+  db->retract_deffacts(name, module_name, db->get_tick());
+}
+
+void CDBSaverPlugin::cdb_deftemplate_assert_callback(
+  clips::Environment * /*env*/, clips::Deftemplate * deftemplate, void * context)
+{
+  std::string name = deftemplate->header.name->contents;
+  std::string module_name = deftemplate->header.whichModule->theModule->header.name->contents;
+  std::string definition = deftemplate->header.ppForm;
+  DBHandler * db = static_cast<DBHandler *>(context);
+  db->assert_deftemplate(name, module_name, definition, db->get_tick());
+}
+
+void CDBSaverPlugin::cdb_deftemplate_retract_callback(
+  clips::Environment * /*env*/, clips::Deftemplate * deftemplate, void * context)
+{
+  std::string name = deftemplate->header.name->contents;
+  std::string module_name = deftemplate->header.whichModule->theModule->header.name->contents;
+  std::string definition = deftemplate->header.ppForm;
+  DBHandler * db = static_cast<DBHandler *>(context);
+  db->retract_deftemplate(name, module_name, db->get_tick());
+}
+
+void CDBSaverPlugin::cdb_deffunction_assert_callback(
+  clips::Environment * /*env*/, clips::Deffunction * deffunction, void * context)
+{
+  std::string name = deffunction->header.name->contents;
+  std::string module_name = deffunction->header.whichModule->theModule->header.name->contents;
+  std::string definition = deffunction->header.ppForm;
+  DBHandler * db = static_cast<DBHandler *>(context);
+  db->assert_deffunction(name, module_name, definition, db->get_tick());
+}
+
+void CDBSaverPlugin::cdb_deffunction_retract_callback(
+  clips::Environment * /*env*/, clips::Deffunction * deffunction, void * context)
+{
+  std::string name = deffunction->header.name->contents;
+  std::string module_name = deffunction->header.whichModule->theModule->header.name->contents;
+  std::string definition = deffunction->header.ppForm;
+  DBHandler * db = static_cast<DBHandler *>(context);
+  db->retract_deffunction(name, module_name, db->get_tick());
+}
+
+void CDBSaverPlugin::cdb_defglobal_assert_callback(
+  clips::Environment * /*env*/, clips::Defglobal * defglobal, void * context)
+{
+  CDBSaverPlugin * cdb_plugin = static_cast<CDBSaverPlugin *>(context);
+  std::string name = defglobal->header.name->contents;
+  std::string module_name = defglobal->header.whichModule->theModule->header.name->contents;
+  std::string value_json =
+    cdb_plugin->slot_value_to_json(defglobal->current.header->type, &defglobal->current).dump();
+  DBHandler * db = static_cast<DBHandler *>(context);
+  db->assert_defglobal(name, module_name, value_json, db->get_tick());
+}
+
+void CDBSaverPlugin::cdb_defglobal_retract_callback(
+  clips::Environment * /*env*/, clips::Defglobal * defglobal, void * context)
+{
+  std::string name = defglobal->header.name->contents;
+  std::string module_name = defglobal->header.whichModule->theModule->header.name->contents;
+  DBHandler * db = static_cast<DBHandler *>(context);
+  db->retract_defglobal(name, module_name, db->get_tick());
+}
+
+void CDBSaverPlugin::cdb_before_rule_callback(
+  clips::Environment * /*env*/, clips::Activation * act, void * context)
+{
+  std::string name = act->theRule->header.name->contents;
+  std::string module_name = act->theRule->header.whichModule->theModule->header.name->contents;
+  std::vector<std::optional<uint64_t>> basis;
+  for (int i = 0; i < act->basis->bcount; i++) {
+    if (
+      (get_nth_pm_match(act->basis, i) != NULL) &&
+      (get_nth_pm_match(act->basis, i)->matchingItem != NULL)) {
+      clips::PatternEntity * matchingItem = get_nth_pm_match(act->basis, i)->matchingItem;
+      basis.push_back((((clips::Fact *)matchingItem))->factIndex);
+    } else {
+      basis.push_back(std::nullopt);
+    }
+  }
+  DBHandler * db = static_cast<DBHandler *>(context);
+  db->assert_rule_fired(name, module_name, basis, db->get_tick());
+}
+
+void CDBSaverPlugin::cdb_before_run_callback(clips::Environment * /*env*/, void * context)
+{
+  DBHandler * db = static_cast<DBHandler *>(context);
+  db->current_run_ = db->start_run(db->parent_.lock()->now().nanoseconds(), db->tick_);
+}
+
+void CDBSaverPlugin::cdb_after_run_callback(clips::Environment * /*env*/, void * context)
+{
+  DBHandler * db = static_cast<DBHandler *>(context);
+  db->end_run(db->current_run_, db->parent_.lock()->now().nanoseconds(), db->tick_);
+}
+
+void CDBSaverPlugin::cdb_module_defined_callback(clips::Environment * env, void * context)
+{
+  DBHandler * db = static_cast<DBHandler *>(context);
+  clips::Defmodule * theModule = clips::GetCurrentModule(env);
+  db->assert_defmodule(
+    theModule->header.name->contents, get_module_defintion(theModule), db->get_tick());
+}
+
+nlohmann::json CDBSaverPlugin::slot_value_to_json(uint16_t type, clips::CLIPSValue * value)
+{
+  nlohmann::json json;
+  switch (type) {
+    case FLOAT_TYPE: {
+      json["value"] = value->floatValue->contents;
+      json["type"] = "FLOAT";
+      break;
+    }
+    case INTEGER_TYPE: {
+      json["value"] = value->integerValue->contents;
+      json["type"] = "INTEGER";
+      break;
+    }
+    case STRING_TYPE: {
+      json["value"] = value->lexemeValue->contents;
+      json["type"] = "STRING";
+      break;
+    }
+    case SYMBOL_TYPE: {
+      json["value"] = value->lexemeValue->contents;
+      json["type"] = "SYMBOL";
+      break;
+    }
+    case EXTERNAL_ADDRESS_TYPE: {
+      json["type"] = "EXTERNAL_ADDRESS";
+      void * address = (value->externalAddressValue->contents);
+      std::ostringstream oss;
+      oss << static_cast<const void *>(address);
+      json["value"] = oss.str();
+      break;
+    }
+    case VOID_TYPE: {
+      throw "VOID FOUND";
+      // NOTE Void type should only be used internally in CLIPS,
+      // so we shouldn't encounter it here. If we do, it's likely a bug.
+      // It's used a the default init state for return types of evaluations
+      // Or unset fact slots during construction
+      // but on assert it turns into SYMBOL nil
+      break;
+    }
+    case MULTIFIELD_TYPE: {
+      clips::Multifield * theSegment = value->multifieldValue;
+      json["value"] = multifield_to_json_list(theSegment);
+      json["type"] = "MULTIFIELD";
+      break;
+    }
+    case FACT_ADDRESS_TYPE: {
+      json["type"] = "FACT_ADDRESS";
+      json["value"] = value->factValue->factIndex;
+      break;
+    }
+    default:
+      json["type"] = "UNKNOWN";
+      throw "UNKNOWN TYPE";
+      // NOTE instance is for COOL; BITMAP is internal
+  }
+  return json;
+}
+
+std::vector<nlohmann::json> CDBSaverPlugin::multifield_to_json_list(clips::Multifield * theSegment)
+{
+  clips::CLIPSValue * theMultifield = theSegment->contents;
+  size_t range = theSegment->length;
+  std::vector<nlohmann::json> json_list;
+  for (size_t j = 0; j < range; j++) {
+    json_list.push_back(slot_value_to_json(theMultifield[j].header->type, &theMultifield[j]));
+  }
+  return json_list;
+}
+
+std::string CDBSaverPlugin::clips_fact_to_json(clips::Fact * f)
+{
+  nlohmann::json json;
+  clips::Deftemplate * deftemplate = f->whichDeftemplate;
+  // Logic stolen from factmngr.c void PrintFact(...)
+  if (f->whichDeftemplate->implied == false) {
+    /*=========================================*/
+    /* Print a deftemplate (non-ordered) fact. */
+    /*=========================================*/
+    std::vector<nlohmann::json> slots;
+    struct clips::templateSlot * slotPtr = deftemplate->slotList;
+    clips::CLIPSValue * sublist = f->theProposition.contents;
+    int i = 0;
+    while (slotPtr != NULL) {
+      nlohmann::json slot_json;
+      const char * slotname = slotPtr->slotName->contents;
+      clips::CLIPSValue * value = &sublist[i];
+      if (slotPtr->multislot) {
+        clips::Multifield * theSegment = value->multifieldValue;
+        slot_json["value"] = multifield_to_json_list(theSegment);
+        slot_json["type"] = "MULTIFIELD";
+
+      } else {
+        uint16_t type = ((clips::TypeHeader *)value->value)->type;
+        slot_json = slot_value_to_json(type, value);
+      }
+      slotPtr = slotPtr->next;
+      i++;
+      slot_json["name"] = slotname;
+      slots.push_back(slot_json);
+    }
+    json["slots"] = slots;
+  } else {
+    /*==============================*/
+    /* Print an ordered fact (which */
+    /* has an implied deftemplate). */
+    /*==============================*/
+    clips::Multifield * theSegment = f->theProposition.contents[0].multifieldValue;
+    json["value"] = multifield_to_json_list(theSegment);
+    json["type"] = "MULTIFIELD";
+  }
+  return json.dump();
+}
+
+bool CDBSaverPlugin::clips_env_destroyed(std::shared_ptr<clips::Environment> & env)
+{
+  CLIPSEnvContext * context = CLIPSEnvContext::get_context(env.get());
+  RCLCPP_INFO(*logger_, "Destroying CDBSaverPlugin for environment %s", context->env_name_.c_str());
+
+  if (!clips::RemoveAssertFunction(env.get(), "cdb_assert_callback")) {
+    RCLCPP_ERROR(
+      *logger_, "Failed to remove assert callback for environment %s", context->env_name_.c_str());
+    return false;
+  }
+  if (!clips::RemoveRetractFunction(env.get(), "cdb_retract_callback")) {
+    RCLCPP_ERROR(
+      *logger_, "Failed to remove retract callback for environment %s", context->env_name_.c_str());
+    return false;
+  }
+
+  if (!clips::RemoveBeforeRuleFiresFunction(env.get(), "cdb_before_rule_callback")) {
+    RCLCPP_ERROR(
+      *logger_, "Failed to remove before rule callback for environment %s",
+      context->env_name_.c_str());
+    return false;
+  }
+
+  if (!clips::RemoveBeforeRunFiresFunction(env.get(), "cdb_before_run_callback")) {
+    RCLCPP_ERROR(
+      *logger_, "Failed to remove before run callback for environment %s",
+      context->env_name_.c_str());
+    return false;
+  }
+  if (!clips::RemoveAfterRunFiresFunction(env.get(), "cdb_after_run_callback")) {
+    RCLCPP_ERROR(
+      *logger_, "Failed to remove after run callback for environment %s",
+      context->env_name_.c_str());
+    return false;
+  }
+
+  if (!clips::RemoveDefruleAssertFunction(env.get(), "cdb_defrule_assert_callback")) {
+    RCLCPP_ERROR(
+      *logger_, "Failed to remove defrule assert callback for environment %s",
+      context->env_name_.c_str());
+    return false;
+  }
+  if (!clips::RemoveDefruleRetractFunction(env.get(), "cdb_defrule_retract_callback")) {
+    RCLCPP_ERROR(
+      *logger_, "Failed to remove defrule retract callback for environment %s",
+      context->env_name_.c_str());
+    return false;
+  }
+
+  if (!clips::RemoveDeftemplateAssertFunction(env.get(), "cdb_deftemplate_assert_callback")) {
+    RCLCPP_ERROR(
+      *logger_, "Failed to remove deftemplate assert callback for environment %s",
+      context->env_name_.c_str());
+    return false;
+  }
+  if (!clips::RemoveDeftemplateRetractFunction(env.get(), "cdb_deftemplate_retract_callback")) {
+    RCLCPP_ERROR(
+      *logger_, "Failed to remove deftemplate retract callback for environment %s",
+      context->env_name_.c_str());
+    return false;
+  }
+
+  if (!clips::RemoveDeffunctionAssertFunction(env.get(), "cdb_deffunction_assert_callback")) {
+    RCLCPP_ERROR(
+      *logger_, "Failed to remove deffunction assert callback for environment %s",
+      context->env_name_.c_str());
+    return false;
+  }
+  if (!clips::RemoveDeffunctionRetractFunction(env.get(), "cdb_deffunction_retract_callback")) {
+    RCLCPP_ERROR(
+      *logger_, "Failed to remove deffunction retract callback for environment %s",
+      context->env_name_.c_str());
+    return false;
+  }
+
+  if (!clips::RemoveDeffactsAssertFunction(env.get(), "cdb_deffacts_assert_callback")) {
+    RCLCPP_ERROR(
+      *logger_, "Failed to remove deffacts assert callback for environment %s",
+      context->env_name_.c_str());
+    return false;
+  }
+  if (!clips::RemoveDeffactsRetractFunction(env.get(), "cdb_deffacts_retract_callback")) {
+    RCLCPP_ERROR(
+      *logger_, "Failed to remove deffacts retract callback for environment %s",
+      context->env_name_.c_str());
+    return false;
+  }
+
+  if (!clips::RemoveDefglobalAssertFunction(env.get(), "cdb_defglobal_assert")) {
+    RCLCPP_ERROR(
+      *logger_, "Failed to remove defglobal assert callback for environment %s",
+      context->env_name_.c_str());
+    return false;
+  }
+  if (!clips::RemoveDefglobalRetractFunction(env.get(), "cdb_defglobal_retract")) {
+    RCLCPP_ERROR(
+      *logger_, "Failed to remove defglobal retract callback for environment %s",
+      context->env_name_.c_str());
+    return false;
+  }
+
+  if (!clips::RemoveAfterModuleDefinedFunction(env.get(), "cdb_module_defined_callback")) {
+    RCLCPP_ERROR(
+      *logger_, "Failed to remove module defined callback for environment %s",
+      context->env_name_.c_str());
+    return false;
+  }
+  db_handlers_.erase(context->env_name_);
+  return true;
+}
+
+const std::string CDBSaverPlugin::get_module_defintion(clips::Defmodule * defmodule)
+{
+  if (defmodule->header.ppForm != nullptr) {
+    return defmodule->header.ppForm;
+  }
+  std::string definition = cx::format("(defmodule {})", defmodule->header.name->contents);
+  return definition;
+}
+
+}  // namespace cx
+
+PLUGINLIB_EXPORT_CLASS(cx::CDBSaverPlugin, cx::ClipsPlugin)

@@ -94,6 +94,14 @@ CLIPSEnvManager::CLIPSEnvManager(const rclcpp::NodeOptions & options)
   cx::cx_utils::declare_parameter_if_not_declared(
     this, "autostart_node", rclcpp::ParameterValue(false));
   get_parameter("autostart_node", autostart_node);
+
+  cx::cx_utils::declare_parameter_if_not_declared(
+    this, "reset_on_startup", rclcpp::ParameterValue(true));
+  get_parameter("reset_on_startup", reset_on_startup_);
+  cx::cx_utils::declare_parameter_if_not_declared(
+    this, "run_on_startup", rclcpp::ParameterValue(true));
+  get_parameter("run_on_startup", run_on_startup_);
+
   if (autostart_node) {
     autostart();
   }
@@ -165,9 +173,13 @@ CallbackReturn CLIPSEnvManager::on_activate(const rclcpp_lifecycle::State & stat
   for (auto & env : *envs_) {
     auto context = CLIPSEnvContext::get_context(env.second);
     std::scoped_lock env_lock(context->env_mtx_);
-    clips::Reset(env.second.get());
-    clips::RefreshAllAgendas(env.second.get());
-    clips::Run(env.second.get(), -1);
+    if (reset_on_startup_) {
+      clips::Reset(env.second.get());
+    }
+    if (run_on_startup_) {
+      clips::RefreshAllAgendas(env.second.get());
+      clips::Run(env.second.get(), -1);
+    }
   }
   create_bond();
   RCLCPP_INFO(get_logger(), "Activated [%s]...", get_name());
@@ -273,6 +285,16 @@ void CLIPSEnvManager::create_env_callback(
       response->error = "Failed to initialize environment " + request->env_name;
     }
   }
+}
+
+void CLIPSEnvManager::redefine_callback(
+  clips::Environment * /*env*/, const char * construct_type, const char * construct_name,
+  const char * module_name, void * context)
+{
+  CLIPSEnvManager * manager = static_cast<CLIPSEnvManager *>(context);
+  RCLCPP_WARN(
+    manager->get_logger(), "Redefinition detected for %s '%s' in module '%s'", construct_type,
+    construct_name, module_name);
 }
 
 void CLIPSEnvManager::destroy_env_callback(
@@ -413,6 +435,8 @@ std::shared_ptr<clips::Environment> CLIPSEnvManager::new_env(const std::string &
     this, env_name + ".watch", rclcpp::ParameterValue(std::vector<std::string>{}));
   cx::cx_utils::declare_parameter_if_not_declared(
     this, env_name + ".redirect_stdout_to_debug", rclcpp::ParameterValue(false));
+  cx::cx_utils::declare_parameter_if_not_declared(
+    this, env_name + ".ignore_redefinition", rclcpp::ParameterValue(false));
   std::vector<std::string> watch_info;
   get_parameter(env_name + ".watch", watch_info);
   for (const auto & w : watch_info) {
@@ -425,6 +449,8 @@ std::shared_ptr<clips::Environment> CLIPSEnvManager::new_env(const std::string &
   get_parameter(env_name + ".log_clips_to_topic", log_to_topic);
   bool stdout_to_debug = false;
   get_parameter(env_name + ".redirect_stdout_to_debug", stdout_to_debug);
+  bool ignore_redefinition;
+  get_parameter("ignore_redefinition", ignore_redefinition);
 
   using clips::environmentData;
   contexts_[env_name] = std::make_unique<CLIPSEnvContext>(env_name, log_to_file, stdout_to_debug);
@@ -453,6 +479,11 @@ std::shared_ptr<clips::Environment> CLIPSEnvManager::new_env(const std::string &
       std::thread([]() { rclcpp::shutdown(); }).detach();
     },
     "cx_shutdown", nullptr);
+
+  if (!ignore_redefinition) {
+    clips::AddRedefineCallbackFunction(
+      env, "env_manager_redefine_callback", &redefine_callback, 0, this);
+  }
 
   RCLCPP_INFO(get_logger(), "Initialized new CLIPS environment: %s", env_name.c_str());
   return clips;

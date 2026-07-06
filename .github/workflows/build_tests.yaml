@@ -74,10 +74,9 @@ jobs:
           if [ "${{ matrix.ros_distro }}" = "humble" ]; then
             pip install unified-planning
           else
-            pip install unified-planning --break-system-packages
+            pip install unified-planning --break-system-packages --ignore-installed numpy
           fi
       - name: Checkout clips_vendor
-        if: contains(fromJSON('["lyrical"]'), matrix.ros_distro)
         uses: actions/checkout@v6
         with:
           repository: carologistics/clips_vendor

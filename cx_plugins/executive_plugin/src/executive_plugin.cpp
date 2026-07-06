@@ -17,6 +17,7 @@
 
 #include <string>
 
+#include "clips_ns/tmpltutl.h"
 #include "cx_utils/clips_env_context.hpp"
 #include "cx_utils/param_utils.hpp"
 
@@ -353,9 +354,8 @@ bool ExecutivePlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
   }
 
   if (assert_time_) {
-    clips::Fact * time_fact = clips::AssertString(env.get(), "(time (now))");
+    clips::CreateImpliedDeftemplate(env.get(), clips::CreateSymbol(env.get(), "time"), true);
     clips::Eval(env.get(), "(unwatch facts time)", nullptr);
-    clips::Retract(time_fact);
   }
   auto context = CLIPSEnvContext::get_context(env);
   std::string env_param_prefix = context->env_name_;

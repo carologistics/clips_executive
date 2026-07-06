@@ -1,0 +1,448 @@
+// Copyright (c) 2026 Carologistics
+// SPDX-License-Identifier: Apache-2.0
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include "cx_cdb_saver_plugin/db_handler.hpp"
+
+#include <iostream>
+#include <sstream>
+#include <stdexcept>
+#include <vector>
+
+#include "cx_cdb_saver_plugin/pqxx_compat.hpp"
+#include "cx_cdb_saver_plugin/schema_sql.hpp"
+
+namespace cx
+{
+
+DBHandler::DBHandler(DBHandlerConfig & config, rclcpp_lifecycle::LifecycleNode::WeakPtr parent)
+: config_(config), parent_(parent)
+{
+  tick_ = 0;
+  current_run_ = -1;
+
+  if (!init_db(config)) {
+    throw(std::runtime_error("Failed to initialize database"));
+  }
+  try {
+    std::string connection_settings{
+      "dbname=" + config.db_name + " user=" + config.username + " password=" + config.password +
+      " port=" + std::to_string(config.port) + " host=" + config.hostname + " gssencmode=disable"};
+    connection_ = std::make_shared<pqxx::connection>(connection_settings);
+  } catch (const std::exception & e) {
+    throw(std::runtime_error("Failed to connect to database: " + std::string(e.what())));
+  }
+}
+
+DBHandler::~DBHandler()
+{
+  if (connection_) {
+    connection_.reset();
+  }
+}
+
+bool DBHandler::init_db(DBHandlerConfig & config)
+{
+  std::ostringstream admin_conn;
+  admin_conn << "dbname=postgres gssencmode=disable "
+             << "user=" << config.username << ' ';
+  if (!config.password.empty()) {
+    admin_conn << "password=" << config.password << ' ';
+  }
+  admin_conn << "port=" << config.port << ' ' << "host=" << config.hostname;
+
+  pqxx::connection admin_connection{admin_conn.str()};
+
+  if (admin_connection.is_open()) {
+    pqxx::nontransaction n(admin_connection);
+    auto exists = cx::query_value<bool>(
+      n,
+      "SELECT EXISTS (SELECT 1 FROM pg_database WHERE datname = " + n.quote(config.db_name) + ");");
+
+    if (exists) {
+      // terminate connections first (required in Postgres)
+      n.exec(
+        "SELECT pg_terminate_backend(pid) "
+        "FROM pg_stat_activity "
+        "WHERE datname = " +
+        n.quote(config.db_name) + ";");
+      n.exec("DROP DATABASE " + pqxx::to_string(config.db_name) + ";");
+    }
+    n.exec("CREATE DATABASE " + config.db_name + " WITH OWNER " + config.username + ";");
+  } else {
+    return false;
+  }
+  std::ostringstream conn;
+  conn << "dbname=" << config.db_name << ' ' << "user=" << config.username << ' '
+       << "gssencmode=disable ";
+  if (!config.password.empty()) {
+    conn << "password=" << config.password << ' ';
+  }
+  conn << "port=" << config.port << ' ' << "host=" << config.hostname;
+  pqxx::connection db_connection{conn.str()};
+
+  if (db_connection.is_open()) {
+    pqxx::work w{db_connection};
+    w.exec(std::string(kSchemaSql));
+    w.commit();
+    return true;
+  } else {
+    return false;
+  }
+}
+
+void DBHandler::assert_fact(
+  uint64_t id, const std::string & module_name, const std::string & deftemplate,
+  const std::string & fact_json, uint64_t tick)
+{
+  try {
+    pqxx::work w(*connection_);
+
+    cx::exec_params(
+      w, "SELECT assert_fact_upsert($1, $2, $3, $4, $5::jsonb);", id, module_name, deftemplate,
+      tick, fact_json);
+
+    w.commit();
+  } catch (const std::exception & e) {
+    throw std::runtime_error("Failed to assert fact: " + std::string(e.what()));
+  }
+}
+
+void DBHandler::retract_fact(uint64_t id, uint64_t tick)
+{
+  try {
+    pqxx::work w(*connection_);
+
+    pqxx::result result = cx::exec_params(
+      w,
+      "UPDATE facts "
+      "SET end_tick = $1 "
+      "WHERE fact_id = $2 AND end_tick IS NULL",
+      tick, id);
+
+    if (result.affected_rows() != 1) {
+      throw std::runtime_error(
+        "fact with id " + std::to_string(id) + " not found or already retracted");
+    }
+
+    w.commit();
+  } catch (const std::exception & e) {
+    throw std::runtime_error("Failed to retract fact: " + std::string(e.what()));
+  }
+}
+
+void DBHandler::assert_defrule(
+  const std::string & name, const std::string & module_name, const std::string & definition,
+  const int salience, uint64_t tick)
+{
+  try {
+    pqxx::work w(*connection_);
+
+    cx::exec_params(
+      w, "SELECT defrule_upsert($1, $2, $3, $4, $5);", name, module_name, tick, definition,
+      salience);
+
+    w.commit();
+  } catch (const std::exception & e) {
+    throw std::runtime_error("Failed to assert rule: " + std::string(e.what()));
+  }
+}
+
+void DBHandler::retract_defrule(
+  const std::string & name, const std::string & module_name, uint64_t tick)
+{
+  try {
+    pqxx::work w(*connection_);
+
+    cx::exec_params(w, "SELECT defrule_retract($1, $2, $3);", name, module_name, tick);
+
+    w.commit();
+  } catch (const std::exception & e) {
+    throw std::runtime_error("Failed to retract rule: " + std::string(e.what()));
+  }
+}
+
+void DBHandler::assert_deffunction(
+  const std::string & name, const std::string & module_name, const std::string & definition,
+  uint64_t tick)
+{
+  try {
+    pqxx::work w(*connection_);
+
+    cx::exec_params(
+      w, "SELECT deffunction_upsert($1, $2, $3, $4);", name, module_name, tick, definition);
+
+    w.commit();
+  } catch (const std::exception & e) {
+    throw std::runtime_error("Failed to assert deffunction: " + std::string(e.what()));
+  }
+}
+
+void DBHandler::retract_deffunction(
+  const std::string & name, const std::string & module_name, uint64_t tick)
+{
+  try {
+    pqxx::work w(*connection_);
+
+    cx::exec_params(w, "SELECT deffunction_retract($1, $2, $3);", name, module_name, tick);
+
+    w.commit();
+  } catch (const std::exception & e) {
+    throw std::runtime_error("Failed to retract deffunction: " + std::string(e.what()));
+  }
+}
+
+void DBHandler::assert_deffacts(
+  const std::string & name, const std::string & module_name, const std::string & definition,
+  uint64_t tick)
+{
+  try {
+    pqxx::work w(*connection_);
+
+    cx::exec_params(
+      w, "SELECT deffacts_upsert($1, $2, $3, $4);", name, module_name, tick, definition);
+
+    w.commit();
+  } catch (const std::exception & e) {
+    throw std::runtime_error("Failed to assert deffacts: " + std::string(e.what()));
+  }
+}
+
+void DBHandler::retract_deffacts(
+  const std::string & name, const std::string & module_name, uint64_t tick)
+{
+  try {
+    pqxx::work w(*connection_);
+
+    cx::exec_params(w, "SELECT deffacts_retract($1, $2, $3);", name, module_name, tick);
+
+    w.commit();
+  } catch (const std::exception & e) {
+    throw std::runtime_error("Failed to retract deffacts: " + std::string(e.what()));
+  }
+}
+
+void DBHandler::assert_defglobal(
+  const std::string & name, const std::string & module_name, const std::string & value_json,
+  uint64_t tick)
+{
+  try {
+    pqxx::work w(*connection_);
+
+    cx::exec_params(
+      w, "SELECT defglobal_upsert($1, $2, $3, $4::jsonb);", name, module_name, tick, value_json);
+
+    w.commit();
+  } catch (const std::exception & e) {
+    throw std::runtime_error("Failed to assert defglobal: " + std::string(e.what()));
+  }
+}
+
+void DBHandler::retract_defglobal(
+  const std::string & name, const std::string & module_name, uint64_t tick)
+{
+  try {
+    pqxx::work w(*connection_);
+
+    cx::exec_params(w, "SELECT defglobal_retract($1, $2, $3);", name, module_name, tick);
+
+    w.commit();
+  } catch (const std::exception & e) {
+    throw std::runtime_error("Failed to retract defglobal: " + std::string(e.what()));
+  }
+}
+
+void DBHandler::assert_deftemplate(
+  const std::string & name, const std::string & module_name, const std::string & definition,
+  uint64_t tick)
+{
+  try {
+    pqxx::work w(*connection_);
+
+    cx::exec_params(
+      w, "SELECT deftemplate_upsert($1, $2, $3, $4);", name, module_name, tick, definition);
+
+    w.commit();
+  } catch (const std::exception & e) {
+    throw std::runtime_error("Failed to assert deftemplate: " + std::string(e.what()));
+  }
+}
+
+void DBHandler::retract_deftemplate(
+  const std::string & name, const std::string & module_name, uint64_t tick)
+{
+  try {
+    pqxx::work w(*connection_);
+
+    cx::exec_params(w, "SELECT deftemplate_retract($1, $2, $3);", name, module_name, tick);
+
+    w.commit();
+  } catch (const std::exception & e) {
+    throw std::runtime_error("Failed to retract deftemplate: " + std::string(e.what()));
+  }
+}
+
+void DBHandler::assert_rule_fired(
+  const std::string & name, const std::string & module_name,
+  const std::vector<std::optional<uint64_t>> & basis, uint64_t tick)
+{
+  try {
+    pqxx::work w(*connection_);
+
+    std::ostringstream array_str;
+    array_str << "{";
+    for (size_t i = 0; i < basis.size(); ++i) {
+      if (i > 0) {
+        array_str << ",";
+      }
+
+      if (basis[i].has_value()) {
+        array_str << *basis[i];
+      } else {
+        array_str << "NULL";
+      }
+    }
+    array_str << "}";
+
+    pqxx::result result = cx::exec_params(
+      w,
+      R"SQL(
+            INSERT INTO rule_firing (rule_id, base, tick)
+            SELECT rule_id, $3::bigint[], $4
+            FROM defrules
+            WHERE name = $1
+              AND module = $2
+              AND end_tick IS NULL
+          )SQL",
+      name, module_name, array_str.str(), tick);
+
+    if (result.affected_rows() != 1) {
+      throw std::runtime_error("Rule '" + name + "' in module '" + module_name + "' not found");
+    }
+
+    w.commit();
+  } catch (const std::exception & e) {
+    throw std::runtime_error("Failed to assert rule firing: " + std::string(e.what()));
+  }
+}
+
+void DBHandler::assert_defmodule(
+  const std::string & name, const std::string & definition, uint64_t tick)
+{
+  try {
+    pqxx::work w(*connection_);
+
+    pqxx::result result = cx::exec_params(
+      w,
+      R"SQL(
+            INSERT INTO defmodules (name, value, start_tick)
+            VALUES ($1, $2, $3)
+            ON CONFLICT (name) DO UPDATE
+            SET
+              value = EXCLUDED.value
+          )SQL",
+      name, definition, tick);
+
+    if (result.affected_rows() != 1) {
+      throw std::runtime_error("Defmodule '" + name + "' not added");
+    }
+
+    w.commit();
+  } catch (const std::exception & e) {
+    throw std::runtime_error("Failed to assert defmodule: " + std::string(e.what()));
+  }
+}
+
+void DBHandler::load_plugin(
+  const std::string & plugin_name, const std::string & config_json, uint64_t tick)
+{
+  try {
+    pqxx::work w(*connection_);
+
+    cx::exec_params(w, "SELECT plugin_load($1, $2, $3::jsonb);", plugin_name, tick, config_json);
+
+    w.commit();
+  } catch (const std::exception & e) {
+    throw std::runtime_error("Failed to assert plugin load: " + std::string(e.what()));
+  }
+}
+
+void DBHandler::unload_plugin(const std::string & plugin_name, uint64_t tick)
+{
+  try {
+    pqxx::work w(*connection_);
+
+    cx::exec_params(w, "SELECT plugin_unload($1, $2);", plugin_name, tick);
+
+    w.commit();
+  } catch (const std::exception & e) {
+    throw std::runtime_error("Failed to assert plugin unload: " + std::string(e.what()));
+  }
+}
+
+uint64_t DBHandler::start_run(int64_t start_time_ns, uint64_t start_tick)
+{
+  try {
+    pqxx::work w(*connection_);
+
+    pqxx::row row = cx::exec_params1(
+      w,
+      R"sql(
+        INSERT INTO time_lookup (start_time, start_tick)
+        VALUES (
+          TIMESTAMP 'epoch' + ($1::numeric / 1000000000.0) * INTERVAL '1 second',
+          $2
+        )
+        RETURNING run_number;
+      )sql",
+      start_time_ns, start_tick);
+
+    uint64_t run_number = row[0].as<uint64_t>();
+
+    w.commit();
+    return run_number;
+  } catch (const std::exception & e) {
+    throw std::runtime_error("Failed to start run: " + std::string(e.what()));
+  }
+}
+
+void DBHandler::end_run(uint64_t run_number, int64_t end_time_ns, uint64_t end_tick)
+{
+  try {
+    pqxx::work w(*connection_);
+
+    pqxx::result result = cx::exec_params(
+      w,
+      R"sql(
+        UPDATE time_lookup
+        SET
+          end_time = TIMESTAMP 'epoch' + ($2::numeric / 1000000000.0) * INTERVAL '1 second',
+          end_tick = $3
+        WHERE run_number = $1
+          AND end_tick IS NULL;
+      )sql",
+      run_number, end_time_ns, end_tick);
+
+    if (result.affected_rows() != 1) {
+      throw std::runtime_error(
+        "run with number " + std::to_string(run_number) + " not found or already finished");
+    }
+
+    w.commit();
+  } catch (const std::exception & e) {
+    throw std::runtime_error("Failed to finish run: " + std::string(e.what()));
+  }
+}
+
+}  // namespace cx

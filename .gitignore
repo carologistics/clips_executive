@@ -1,7 +1,6 @@
 /.vscode/**
 \#*
-.\#*
-*~
+.\#* *~
 *.aux
 *.bbl
 *.blg
@@ -18,3 +17,6 @@
 /*.pdf
 _minted*
 *.listing
+.clangd
+*.cache
+compile_commands.json

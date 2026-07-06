@@ -1,0 +1,105 @@
+// Copyright (c) 2026 Carologistics
+// SPDX-License-Identifier: Apache-2.0
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#pragma once
+
+#include <cstdint>
+#include <memory>
+#include <optional>
+#include <string>
+#include <vector>
+
+#include "pqxx/pqxx"
+// RANGES is defined in clips_ns/clips.h, which causes issues with
+// pqxx/pqxx
+#undef RANGES
+#include "rclcpp_lifecycle/lifecycle_node.hpp"
+
+namespace cx
+{
+struct DBHandlerConfig
+{
+  std::string hostname;
+  int port;
+  std::string username;
+  std::string password;
+  std::string db_name;
+};
+class DBHandler
+{
+  friend class CDBSaverPlugin;
+
+public:
+  DBHandler(DBHandlerConfig & config, rclcpp_lifecycle::LifecycleNode::WeakPtr parent);
+  ~DBHandler();
+
+  void assert_fact(
+    uint64_t id, const std::string & module_name, const std::string & deftemplate,
+    const std::string & fact_json, uint64_t tick);
+  void retract_fact(uint64_t id, uint64_t tick);
+
+  void assert_defrule(
+    const std::string & name, const std::string & module_name, const std::string & definition,
+    const int salience, uint64_t tick);
+  void retract_defrule(const std::string & name, const std::string & module_name, uint64_t tick);
+
+  void assert_deffunction(
+    const std::string & name, const std::string & module_name, const std::string & definition,
+    uint64_t tick);
+  void retract_deffunction(
+    const std::string & name, const std::string & module_name, uint64_t tick);
+
+  void assert_deffacts(
+    const std::string & name, const std::string & module_name, const std::string & definition,
+    uint64_t tick);
+  void retract_deffacts(const std::string & name, const std::string & module_name, uint64_t tick);
+
+  void assert_defglobal(
+    const std::string & name, const std::string & module_name, const std::string & value_json,
+    uint64_t tick);
+  void retract_defglobal(const std::string & name, const std::string & module_name, uint64_t tick);
+
+  void assert_deftemplate(
+    const std::string & name, const std::string & module_name, const std::string & definition,
+    uint64_t tick);
+  void retract_deftemplate(
+    const std::string & name, const std::string & module_name, uint64_t tick);
+
+  void assert_rule_fired(
+    const std::string & name, const std::string & module_name,
+    const std::vector<std::optional<uint64_t>> & basis, uint64_t tick);
+
+  void assert_defmodule(const std::string & name, const std::string & definition, uint64_t tick);
+
+  void load_plugin(const std::string & plugin_name, const std::string & config_json, uint64_t tick);
+  void unload_plugin(const std::string & plugin_name, uint64_t tick);
+
+  uint64_t start_run(int64_t start_time_ns, uint64_t start_tick);
+  void end_run(uint64_t run_number, int64_t end_time_ns, uint64_t end_tick);
+
+  bool init_db(DBHandlerConfig & config);
+
+  inline uint64_t get_tick() { return tick_++; }
+
+private:
+  std::shared_ptr<pqxx::connection> connection_;
+  DBHandlerConfig config_;
+
+  uint64_t tick_;
+  uint64_t current_run_;
+
+  rclcpp_lifecycle::LifecycleNode::WeakPtr parent_;
+};
+}  // namespace cx
