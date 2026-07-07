@@ -87,7 +87,7 @@ html_static_path = ['_static']
 html_title = 'CLIPS Executive'
 html_short_title = 'CLIPS Executive'
 html_logo = '_static/logo.svg'
-html_favicon = '_static/logo.ico'
+html_favicon = '_static/icon.svg'
 
 
 # Include custom CSS file
