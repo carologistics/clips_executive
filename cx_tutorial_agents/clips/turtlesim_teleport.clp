@@ -19,7 +19,7 @@
 )
 
 (defrule turtle-teleport-client-init
-" Create publisher for ros_cx_out."
+" Create a client for the teleport service"
 =>
   ; create the client
   (ros-msgs-create-client ?*TURTLE-SERVICE* ?*TURTLE-TELEPORT-TYPE*)
@@ -46,6 +46,7 @@
   )
   (ros-msgs-destroy-message ?new-req)
 )
+
 (defrule turtle-teleport-done
 " Got response, delete it without reading, it is empty."
   ?msg-fact <- (ros-msgs-response (service ?service) (msg-ptr ?ptr) (request-id ?id))
