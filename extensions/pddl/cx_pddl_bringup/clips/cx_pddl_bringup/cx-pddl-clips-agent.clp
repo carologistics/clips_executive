@@ -48,15 +48,15 @@
   (pddl-action (plan ?plan-id))
   (not (plan-timeline (plan-id ?plan-id)))
   =>
-  (assert (plan-timeline (plan-id ?plan-id) (current-time ?st))) 
-) 
+  (assert (plan-timeline (plan-id ?plan-id) (current-time ?st)))
+)
 
 (defrule cx-pddl-clips-agent-select-action
 " Start executing the first action of the resulting plan "
   ?plan <- (pddl-plan (id ?plan-id) (plan-start ?p-start))
   ;(not (pddl-action (state EXECUTING|SELECTED)))
   ?pa <- (pddl-action (plan ?plan-id) (planned-start-time ?t) (state IDLE))
-  ?pt <- (plan-timeline (plan-id ?plan-id) (current-time ?st&:(< (- ?t ?st) 1)))
+  ?pt <- (plan-timeline (plan-id ?plan-id) (current-time ?st&:(<= (- ?t ?st) 0)))
   ;(not (pddl-action (plan ?plan-id) (state IDLE) (planned-start-time ?ot&:(< ?ot ?t))))
 =>
   (if (= ?p-start 0.0) then (modify ?plan (plan-start (now))))
@@ -98,11 +98,12 @@
 
 (defrule cx-pddl-clips-agent-update-timeline
 "When all parallel actions at a particular time are done, move the timeline forward."
-  (pddl-action (id ?id) (plan ?plan-id) (state DONE) (planned-start-time ?st) (planned-duration ?d)) 
-  (not (pddl-action (id ?o-id&:(neq ?id ?o-id)) (plan ?plan-id) (state ~DONE) (planned-start-time ?st) (planned-duration ?d)))
   ?pt <- (plan-timeline (plan-id ?plan-id) (current-time ?st))
+  (pddl-action (id ?id) (plan ?plan-id) (state ~DONE) (planned-start-time ?st1&:(> ?st1 ?st)))
+  (not (pddl-action (id ?o-id1) (plan ?plan-id) (state ~DONE) (planned-start-time ?st2&:(<= ?st2 ?st))))
+  (not (pddl-action (id ?o-id2&:(neq ?id ?o-id2)) (plan ?plan-id) (state ~DONE) (planned-start-time ?st3&:(< ?st3 ?st1))))
   =>
-  (modify ?pt (current-time (+ ?st ?d))) 
+  (modify ?pt (current-time ?st1))
 )
 
 (defrule cx-pddl-clips-agent-print-exec-times
