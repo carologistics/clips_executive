@@ -20,7 +20,7 @@ from dataclasses import dataclass, field
 import importlib
 import logging
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any, Dict, List
 
 from unified_planning.engines.results import POSITIVE_OUTCOMES
 from unified_planning.environment import Environment, get_environment
@@ -31,6 +31,11 @@ from unified_planning.plans.plan import PlanKind
 
 from .plan_handlers import PlanMessages, dispatch_plan_result
 from .renamings import Renamings
+
+if TYPE_CHECKING:
+    from unified_planning.model.fnode import FNode
+    from unified_planning.model.metrics import PlanQualityMetric
+    from unified_planning.model.timing import TimeInterval
 
 log = logging.getLogger(__name__)
 
@@ -49,17 +54,15 @@ class GoalSpec:
     "allow everything" (i.e. no restriction).
     """
 
-    goals: list['up.model.fnode.FNode'] = field(default_factory=list)
-    timed_goals: Dict['up.model.timing.TimeInterval', List['up.model.fnode.FNode']] = field(
-        default_factory=dict
-    )
-    trajectory_constraints: list['up.model.fnode.FNode'] = field(default_factory=list)
+    goals: list[FNode] = field(default_factory=list)
+    timed_goals: Dict[TimeInterval, List[FNode]] = field(default_factory=dict)
+    trajectory_constraints: list[FNode] = field(default_factory=list)
 
     object_filters: list[str] = field(default_factory=list)
     fluent_filters: list[str] = field(default_factory=list)
     action_filters: list[str] = field(default_factory=list)
 
-    quality_metrics: list['up.model.metrics.PlanQualityMetric'] = field(default_factory=list)
+    quality_metrics: list[PlanQualityMetric] = field(default_factory=list)
 
     # Convenience: treat an empty filter list as "no restriction"
     def _effective(self, lst: list) -> list | None:
@@ -117,7 +120,7 @@ class ManagedGoal:
         problem._timed_goals = self.spec.timed_goals
         problem._trajectory_constraints = self.spec.trajectory_constraints
         for metric in self.spec.quality_metrics:
-            problem.add_quality_metric(spec)
+            problem.add_quality_metric(metric)
 
     def get_goals(self) -> list[Any]:
         return list(self.spec.goals)
@@ -249,7 +252,7 @@ class ManagedProblem:
         return self.goals[goal]
 
     def _replace_goal_string(self, writer_output: str, new_goal: str) -> str:
-        """Helper to replace a goal string from a problem with an empty goal description."""
+        """Replace a goal string from a problem with a new description."""
         start = writer_output.index('(:goal')
 
         # Find the matching closing parenthesis of (:goal ...)
