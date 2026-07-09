@@ -30,6 +30,7 @@
     set_goals SetGoals
     clear_goals ClearGoals
     set_action_filter SetActionFilter
+    set_goal_from_string SetGoalFromString
     set_object_filter SetObjectFilter
     set_fluent_filter SetFluentFilter
     create_goal_instance CreateGoalInstance
@@ -531,6 +532,16 @@
   (multislot filter (type SYMBOL) (default (create$ )))
   (slot instance (type SYMBOL))
   (slot goal (type SYMBOL))
+)
+
+(deftemplate pddl-set-goal-from-string
+" Facts to specify PDDL goal specification and/or metrics.
+"
+  (slot instance (type SYMBOL))
+  (slot goal (type SYMBOL))
+  (slot goal-description (type STRING))
+  (slot state (type SYMBOL) (allowed-values PENDING DONE ERROR) (default PENDING))
+  (slot error (type STRING))
 )
 
 (deftemplate pddl-set-goals

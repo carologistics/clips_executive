@@ -35,6 +35,7 @@ set(SERVICES
     "srv/GetFunctions.srv"
     "srv/SetActionFilter.srv"
     "srv/SetFluentFilter.srv"
+    "srv/SetGoalFromString.srv"
     "srv/SetObjectFilter.srv"
     "srv/CreateGoalInstance.srv"
     "srv/AddFluents.srv")

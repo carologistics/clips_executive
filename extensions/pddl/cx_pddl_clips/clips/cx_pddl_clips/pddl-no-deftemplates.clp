@@ -31,10 +31,8 @@ pddl-get-predicates.clp
 pddl-get-type-objects.clp
 pddl-planning-filter.clp
 pddl-plan-client.clp
-;pddl-plan-classical-client.clp
-;pddl-plan-partial-ordered-client.clp
-;pddl-plan-hierarchical-client.clp
 pddl-set-goals.clp
+pddl-set-goal-from-string.clp
 )
 (load* (str-cat (ament-index-get-package-share-directory "cx_pddl_clips") "/clips/cx_pddl_clips/" ?f))
 )
