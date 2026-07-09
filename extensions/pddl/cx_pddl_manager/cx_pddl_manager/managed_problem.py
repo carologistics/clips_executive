@@ -59,6 +59,8 @@ class GoalSpec:
     fluent_filters: list[str] = field(default_factory=list)
     action_filters: list[str] = field(default_factory=list)
 
+    quality_metrics: list['up.model.metrics.PlanQualityMetric'] = field(default_factory=list)
+
     # Convenience: treat an empty filter list as "no restriction"
     def _effective(self, lst: list) -> list | None:
         return lst if lst else None
@@ -98,6 +100,9 @@ class ManagedGoal:
     def add_trajectory_constraint_expr(self, expr: Any) -> None:
         self.spec.trajectory_consraints.append(expr)
 
+    def add_quality_metric(self, expr: Any) -> None:
+        self.spec.quality_metrics.append(expr)
+
     def clear_goals(self) -> None:
         self.spec.goals.clear()
 
@@ -111,6 +116,8 @@ class ManagedGoal:
         problem._goals = self.spec.goals
         problem._timed_goals = self.spec.timed_goals
         problem._trajectory_constraints = self.spec.trajectory_constraints
+        for metric in self.spec.quality_metrics:
+            problem.add_quality_metric(spec)
 
     def get_goals(self) -> list[Any]:
         return list(self.spec.goals)
@@ -211,7 +218,9 @@ class ManagedProblem:
         self.base_problem.clear_timed_goals()
         for expr in self.base_problem._trajectory_constraints:
             managed_goal.add_trajectory_constraint_expr(expr)
-        self.base_problem.clear_trajectory_constraints()
+        for expr in self.base_problem.quality_metrics:
+            managed_goal.add_quality_metric(expr)
+        self.base_problem.clear_quality_metrics()
         self._executor: cf.ProcessPoolExecutor = cf.ProcessPoolExecutor(max_workers=max_workers)
         self.goals: dict[str, ManagedGoal] = {'base': managed_goal}
 
