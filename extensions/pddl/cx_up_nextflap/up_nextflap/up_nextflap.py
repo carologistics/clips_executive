@@ -491,6 +491,9 @@ class NextFLAPImpl(Engine, OneshotPlannerMixin, PlanValidatorMixin):
         lines = plan_str[1:-1].split('|')
         actions = []
         for line in lines:
+            line = line.strip()
+            if not line:
+                continue
             pos = line.index(':')
             start = Fraction(round(float(line[:pos])*1000), 1000)
             pos2 = line.index(')', pos)
