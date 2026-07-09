@@ -13,32 +13,6 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
-(deftemplate pddl-object-change
-" Interface for objects.clp
-  Assert a fact of this type in order to indicate that an object needs to be
-  added to/removed from a pddl instance.
-  @slot instance: pddl instance to add the object to.
-  @slot name: name of the object.
-  @slot type: type of the object.
-  @slot delete: if true, remove the object, else add it.
-  Slots set automatically:
-  @slot state:
-   - PENDING: The object was not added yet.
-   - WAITING: The object is about to be added and is waiting for confirmation.
-   - ERROR: The object might not have been fetched due to an error.
-   - ON-HOLD: Unused state that can be set in order to defer the object update
-     to a later time (by switching it manually to PENDING).
-  @slot error: provide information on encountered errors.
-"
-  (slot instance (type SYMBOL))
-  (slot name (type SYMBOL))
-  (slot type (type SYMBOL))
-  (slot delete (type SYMBOL) (allowed-values FALSE TRUE) (default FALSE))
-  (slot request-id (type INTEGER))
-  (slot state (type SYMBOL) (allowed-values PENDING WAITING ERROR ON-HOLD) (default PENDING))
-  (slot error (type STRING))
-)
-
 (defrule pddl-object-change-request
   (declare (salience ?*PRIORITY-PDDL-OBJECTS*))
   (pddl-object-change (instance ?instance) (state PENDING))
