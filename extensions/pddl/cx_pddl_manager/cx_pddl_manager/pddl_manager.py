@@ -970,7 +970,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
             response.success = False
             return response
 
-        result = self.managed_problems[request.pddl_instance].plan(
+        success, result = self.managed_problems[request.pddl_instance].plan(
             request.goal_instance, plan_kind_up, request.output_dir
         )
         response.actions = []
@@ -990,7 +990,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
                 case _:
                     response.actions = result
         else:
-            response.success = False
+            response.success = success
         goal_handle.succeed()
         return response
 
