@@ -700,6 +700,43 @@ Facts of these types are used internally and should be ignored.
     (slot meta (type SYMBOL))
   )
 
+.. _pddl-set-goal-from-string:
+
+pddl-set-goal-from-string
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Register arbitrary goal specifications with the external PDDL manager.
+As :ref:`pddl-set-goals` is limited to simple fuent conditions, this string-based
+method provides an alternative when more flexibility is needed.
+Internally a temporary problem file is created with the current fluents and objects.
+
+The provided string is then placed at the end of the file.
+An example string is provided below:
+
+.. code-block:: bash
+
+  "(:goal (and (on a b) (on b c)))"
+
+
+This method can also be used to specify a goal with custom plan quality metrics:
+
+.. code-block:: bash
+
+  "(:goal ...) (:metric (minimize (fuel-cost)))"
+
+Note that this will re-create the goal instance, any prior goal fluents set for
+the goal via :ref:`pddl-set-goals` are lost.
+
+.. code-block:: clips
+
+  (deftemplate pddl-set-goal-from-string
+    (slot instance (type SYMBOL))
+    (slot goal (type SYMBOL))
+    (slot goal-description (type STRING))
+    (slot state (type SYMBOL) (allowed-values PENDING DONE ERROR) (default PENDING))
+    (slot error (type STRING))
+  )
+
 .. _pddl-set-goals:
 
 pddl-set-goals
