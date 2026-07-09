@@ -228,6 +228,50 @@ class ManagedProblem:
     # Goal management
     # ------------------------------------------------------------------
 
+    def add_goal_from_string(self, goal: str = 'base', goal_description: str = '') -> ManagedGoal:
+        """Create and register a new named goal, populate it given a goal descriotion string."""
+        managed_goal = ManagedGoal(name=goal)
+        writer = PDDLWriter(self.base_problem)
+        domain_string = writer.get_domain()
+        problem_string = writer.get_problem()
+        problem_string = self._replace_goal_string(problem_string, goal_description)
+        reader = PDDLReader()
+        temp_problem = reader.parse_problem_string(domain_string, problem_string)
+        for expr in temp_problem._goals:
+            managed_goal.add_goal_expr(expr)
+        for expr in temp_problem._timed_goals:
+            managed_goal.add_timed_goal_expr(expr)
+        for expr in temp_problem._trajectory_constraints:
+            managed_goal.add_trajectory_constraint_expr(expr)
+        for expr in temp_problem.quality_metrics:
+            managed_goal.add_quality_metric(expr)
+        self.goals[goal] = managed_goal
+        return self.goals[goal]
+
+    def _replace_goal_string(self, writer_output: str, new_goal: str) -> str:
+        """Helper to replace a goal string from a problem with an empty goal description."""
+        start = writer_output.index('(:goal')
+
+        # Find the matching closing parenthesis of (:goal ...)
+        depth = 0
+        end = None
+
+        for i in range(start, len(writer_output)):
+            if writer_output[i] == '(':
+                depth += 1
+            elif writer_output[i] == ')':
+                depth -= 1
+                if depth == 0:
+                    end = i + 1
+                    break
+
+        if end is None:
+            raise RuntimeError('Could not find end of goal')
+
+        replacement = f"""{new_goal}"""
+
+        return writer_output[:start] + replacement + writer_output[end:]
+
     def add_goal(self, goal: str = 'base') -> ManagedGoal:
         """Create and register a new named goal, returning it for configuration."""
         self.goals[goal] = ManagedGoal(name=goal)

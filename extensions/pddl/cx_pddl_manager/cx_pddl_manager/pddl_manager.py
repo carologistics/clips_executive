@@ -40,6 +40,7 @@ from cx_pddl_interfaces.srv import (
     SetActionFilter,
     SetFluentFilter,
     SetFunctions,
+    SetGoalFromString,
     SetGoals,
     SetObjectFilter,
 )
@@ -100,6 +101,7 @@ class PddlManagerLifecycleNode(LifecycleNode):
         self.get_fluents_srv = None
         self.get_functions_srv = None
         self.set_goals_srv = None
+        self.set_goal_from_string_srv = None
         self.clear_goals_srv = None
         self.plan_action_srv = None
         self.set_action_filter_srv = None
@@ -268,6 +270,12 @@ class PddlManagerLifecycleNode(LifecycleNode):
             SetGoals,
             f'{self.get_name()}/set_goals',
             self.handle_set_goals,
+            callback_group=self.srv_cb_group,
+        )
+        self.set_goal_from_string_srv = self.create_service(
+            SetGoalFromString,
+            f'{self.get_name()}/set_goal_from_string',
+            self.handle_set_goal_from_string,
             callback_group=self.srv_cb_group,
         )
         self.clear_goals_srv = self.create_service(
@@ -505,6 +513,20 @@ class PddlManagerLifecycleNode(LifecycleNode):
         response.error = error
         if not response.success:
             self.get_logger().error(f'{response.error}')
+        return response
+
+    def handle_set_goal_from_string(self, request, response):
+        if request.pddl_instance not in self.managed_problems.keys():
+            response.error = 'Unknown pddl instance'
+            response.success = False
+        else:
+            try:
+                managed_instance = self.managed_problems[request.pddl_instance]
+                managed_instance.add_goal_from_string(request.goal_instance, request.goal_string)
+                response.success = True
+            except Exception as e:
+                response.error = f'error while setting goal from string: {e}'
+                response.success = False
         return response
 
     def handle_set_object_filter(self, request, response):
