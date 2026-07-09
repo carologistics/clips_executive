@@ -16,12 +16,17 @@
 
 ; ---------------- SETUP INSTANCE ------------------
 
-(defrule cx-pddl-clips-agent-pddl-init
+(defrule cx-pddl-bringup-generic-agent-pddl-init
 =>
   (assert (pddl-manager (node "/pddl_manager")))
 )
 
-(defrule cx-pddl-clips-agent-pddl-add-instance
+(deftemplate plan-timeline
+  (slot plan-id (type SYMBOL))
+  (slot current-time (type FLOAT) (default 0.0))
+)
+
+(defrule cx-pddl-bringup-generic-agent-pddl-add-instance
 " Setup PDDL instance with an active goal to plan for "
   (pddl-manager (ros-comm-init TRUE))
 =>
@@ -42,9 +47,17 @@
   )
 )
 
-(defrule cx-pddl-clips-agent-select-action-sequential
+(defrule cx-pddl-bringup-generic-agent-plan-received
+  (pddl-plan (id ?plan-id) (plan-start ?st) (action-type TEMPORAL))
+  (pddl-action (plan ?plan-id))
+  (not (plan-timeline (plan-id ?plan-id)))
+  =>
+  (assert (plan-timeline (plan-id ?plan-id) (current-time ?st)))
+)
+
+(defrule cx-pddl-bringup-generic-agent-select-action-sequential
 " Start executing the first action of the resulting plan "
-  ?plan <- (pddl-plan (id ?plan-id) (plan-type CLASSICAL) (plan-start ?p-start) (state SUCCESS) (action-type CLASSICAL))
+  ?plan <- (pddl-plan (id ?plan-id) (plan-type HIERARCHICAL|CLASSICAL) (plan-start ?p-start) (state SUCCESS) (action-type CLASSICAL))
   (not (pddl-action (state EXECUTING|SELECTED)))
   ?pa <- (pddl-action (plan ?plan-id) (order ?o) (state IDLE))
   (not (pddl-action (plan ?plan-id) (state IDLE) (order ?oo&:(< ?oo ?o))))
@@ -53,41 +66,19 @@
   (modify ?pa (state SELECTED))
 )
 
-(defrule cx-pddl-clips-agent-select-action-hierarchical-sequential
-" Start executing the first action of the resulting plan "
-  ?plan <- (pddl-plan (id ?plan-id) (plan-type HIERARCHICAL) (plan-start ?p-start) (state SUCCESS) (action-type CLASSICAL))
-  (not (pddl-action (state EXECUTING|SELECTED)))
-  ?pa <- (pddl-action (plan ?plan-id) (order ?o) (state IDLE))
-  (not (pddl-action (plan ?plan-id) (state IDLE) (order ?oo&:(< ?oo ?o))))
-=>
-  (if (= ?p-start 0.0) then (modify ?plan (plan-start (now))))
-  (modify ?pa (state SELECTED))
-)
-
-(defrule cx-pddl-clips-agent-select-action-hierarchical-temporal
+(defrule cx-pddl-bringup-generic-agent-select-action-temporal
 " Start executing the first action of the resulting plan based on start time"
-  ?plan <- (pddl-plan (id ?plan-id) (plan-type HIERARCHICAL) (plan-start ?p-start) (state SUCCESS) (action-type TEMPORAL))
-  (not (pddl-action (state EXECUTING|SELECTED)))
-  ?pa <- (pddl-action (plan ?plan-id) (planned-start-time ?t) (state IDLE))
-  (not (pddl-action (plan ?plan-id) (state IDLE) (planned-start-time ?ot&:(< ?ot ?t))))
+  ?plan <- (pddl-plan (id ?plan-id) (plan-type TEMPORAL|HIERARCHICAL) (plan-start ?p-start) (state SUCCESS) (action-type TEMPORAL))
+  ?pa <- (pddl-action (id ?a-id) (plan ?plan-id) (planned-start-time ?t) (state IDLE))
+  (not (pddl-action (id ?a-id2&:(neq ?a-id ?a-id2)) (plan ?plan-id) (planned-start-time ?t2&:(< ?t2 ?t)) (state IDLE)))
+  ?pt <- (plan-timeline (plan-id ?plan-id) (current-time ?st&:(<= ?t ?st)))
 =>
   (if (= ?p-start 0.0) then (modify ?plan (plan-start (now))))
   (modify ?pa (state SELECTED))
+  (modify ?pt (current-time ?t))
 )
 
-
-(defrule cx-pddl-clips-agent-select-action-temporal
-" Start executing the first action of the resulting plan based on start time"
-  ?plan <- (pddl-plan (id ?plan-id) (plan-type TEMPORAL) (plan-start ?p-start) (state SUCCESS) (action-type TEMPORAL))
-  (not (pddl-action (state EXECUTING|SELECTED)))
-  ?pa <- (pddl-action (plan ?plan-id) (planned-start-time ?t) (state IDLE))
-  (not (pddl-action (plan ?plan-id) (state IDLE) (planned-start-time ?ot&:(< ?ot ?t))))
-=>
-  (if (= ?p-start 0.0) then (modify ?plan (plan-start (now))))
-  (modify ?pa (state SELECTED))
-)
-
-(defrule cx-pddl-clips-agent-select-action-partial-order
+(defrule cx-pddl-bringup-generic-agent-select-action-partial-order
 " Start executing the first action of the resulting plan based on order"
   ?plan <- (pddl-plan (id ?plan-id) (plan-type PARTIAL-ORDER) (plan-start ?p-start) (state SUCCESS) (action-type CLASSICAL))
   (not (pddl-action (state EXECUTING|SELECTED)))
@@ -97,7 +88,7 @@
   (modify ?pa (state SELECTED))
 )
 
-(defrule cx-pddl-clips-agent-check-action
+(defrule cx-pddl-bringup-generic-agent-check-action
 " Before executing an action check the condition to make sure it is feasible "
   (pddl-action (id ?id) (state SELECTED) (name ?name) (params $?params))
   (not (pddl-action-condition (action ?id)))
@@ -105,7 +96,7 @@
   (assert (pddl-action-condition (instance test) (action ?id)))
 )
 
-(defrule cx-pddl-clips-agent-executable-action
+(defrule cx-pddl-bringup-generic-agent-executable-action
 " Condition is satisfied, go ahead with execution "
   (pddl-plan (id ?plan-id) (plan-start ?t))
   (pddl-action-condition (action ?action-id) (state CONDITION-SAT))
@@ -114,7 +105,7 @@
   (modify ?pa (state EXECUTING) (actual-start-time (- (now) ?t)))
 )
 
-(defrule cx-pddl-clips-agent-execution-done
+(defrule cx-pddl-bringup-generic-agent-execution-done
 " After the duration has elapsed, the action is done "
   (time ?now)
   (pddl-plan (id ?plan-id) (plan-start ?t))
@@ -127,7 +118,7 @@
   (assert (pddl-action-get-effect (action ?id) (apply TRUE)))
 )
 
-(defrule cx-pddl-clips-agent-relax-partial-order
+(defrule cx-pddl-bringup-generic-agent-relax-partial-order
   (pddl-plan (id ?plan-id) (plan-type PARTIAL-ORDER))
   (pddl-action (order ?o) (plan ?plan-id) (state DONE))
   (pddl-action (plan ?plan-id) (id ?a-id) (state IDLE) (predecessors $? ?o $?))
@@ -144,13 +135,24 @@
   )
 )
 
-(defrule cx-pddl-clips-agent-rm-get-effect-on-done
+(defrule cx-pddl-bringup-generic-agent-update-timeline
+"When all parallel actions at a particular time are done, move the timeline forward."
+  (pddl-plan (id ?plan-id) (action-type TEMPORAL))
+  ?pt <- (plan-timeline (plan-id ?plan-id) (current-time ?st))
+  (pddl-action (id ?id) (plan ?plan-id) (state ~DONE) (planned-start-time ?st1&:(> ?st1 ?st)))
+  (not (pddl-action (id ?o-id1) (plan ?plan-id) (state ~DONE) (planned-start-time ?st2&:(<= ?st2 ?st))))
+  (not (pddl-action (id ?o-id2&:(neq ?id ?o-id2)) (plan ?plan-id) (state ~DONE) (planned-start-time ?st3&:(< ?st3 ?st1))))
+  =>
+  (modify ?pt (current-time ?st1))
+)
+
+(defrule cx-pddl-bringup-generic-agent-rm-get-effect-on-done
   ?f <- (pddl-action-get-effect (state DONE))
   =>
   (retract ?f)
 )
 
-(defrule cx-pddl-clips-agent-print-exec-times
+(defrule cx-pddl-bringup-generic-agent-print-exec-times
 " Once everything is done, print out planned vs actual times "
   (pddl-action)
   (not (pddl-action (state ~DONE)))
@@ -166,7 +168,7 @@
   (assert (printed))
 )
 
-(defrule cx-pddl-clips-agent-detect-STN-no-execution-available
+(defrule cx-pddl-bringup-generic-agent-detect-STN-no-execution-available
 " For STN plans, there is no execution available "
   ?plan <- (pddl-plan (id ?plan-id) (plan-type STN) (plan-start ?p-start) (state SUCCESS) (action-type STN))
 =>
