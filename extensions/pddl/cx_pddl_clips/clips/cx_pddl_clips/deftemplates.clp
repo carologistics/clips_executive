@@ -52,30 +52,6 @@
   (slot ros-comm-init (type SYMBOL) (allowed-values TRUE FALSE) (default FALSE))
 )
 
-(deftemplate pddl-instance
-" Interface for instances.clp
-  Assert a fact of this type to initialize a pddl instance with the external pddl manager.
-  @slot name: unique name to refer to when using this instance
-  @slot domain: name of a domain.pddl file to be loaded.
-  @slot problem: optional name of the problem.pddl, leave empty if no problem should be loaded initially.
-  Slots set automatically:
-  @slot state:
-   - PENDING: The instance was not registered yet.
-   - LOADED: The instance is loaded and ready for usage.
-   - ERROR: The fluents were not fetched due to an error.
-  @busy-with: Indicates the current operation
-  @slot error: provide information on encountered errors.
-"
-  (slot name (type SYMBOL))
-  (slot domain (type STRING))
-  (slot problem (type STRING))
-  (slot directory (type STRING))
-  (slot state (type SYMBOL) (allowed-values PENDING LOADED ERROR) (default PENDING))
-  (slot busy-with (type SYMBOL) (allowed-values FALSE OBJECTS FLUENTS NUMERIC-FLUENTS ACTION-EFFECTS CREATE-GOAL-INSTANCE CLEAR-GOALS SET-GOALS CHECK-CONDITIONS GET-FLUENTS GET-NUMERIC-FLUENTS GET-PREDICATES GET-TYPE-OBJECTS GET-ACTION-NAMES SET-ACTION-FILTER SET-OBJECT-FILTER SET-FLUENT-FILTER CREATE-GOAL-INSTANCE) (default FALSE))
-  (slot error (type STRING))
-)
-
-
 (deftemplate pddl-action
 " Represents a grounded pddl action in a pddl instance.
   @slot instance: pddl instance belonging to the action.
