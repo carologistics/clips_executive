@@ -22,6 +22,7 @@ import logging
 from pathlib import Path
 from typing import Any
 
+from unified_planning.engines.results import POSITIVE_OUTCOMES
 from unified_planning.environment import Environment, get_environment
 from unified_planning.io import PDDLReader, PDDLWriter
 from unified_planning.model import Problem
@@ -170,7 +171,12 @@ def _run_planner_process(
 
     with env.factory.OneshotPlanner(name='custom_planner') as planner:
         result = planner.solve(problem, timeout=60.0)
-        return dispatch_plan_result(result.plan, problem_name, goal_name, plan_kind, problem, r)
+        if result.status in POSITIVE_OUTCOMES:
+            return True, dispatch_plan_result(
+                result.plan, problem_name, goal_name, plan_kind, problem, r
+            )
+        else:
+            return False, []
 
 
 # ---------------------------------------------------------------------------
