@@ -91,7 +91,6 @@
   (test (eq (cx-pddl-interfaces-plan-temporal-client-goal-handle-get-goal-id ?gh-ptr) ?uuid))
   =>
   (bind ?plan-found (cx-pddl-interfaces-plan-temporal-result-get-field ?res-ptr "success"))
-  (bind ?id 0)
   (if ?plan-found then
     (bind ?plan (cx-pddl-interfaces-plan-temporal-result-get-field ?res-ptr "actions"))
     (foreach ?action ?plan
@@ -100,7 +99,7 @@
       (bind ?ps-time (cx-pddl-interfaces-timed-plan-action-get-field ?action "start_time"))
       (bind ?p-duration (cx-pddl-interfaces-timed-plan-action-get-field ?action "duration"))
       (assert (pddl-action
-        (id ?id)
+        (id (gensym*))
         (plan ?plan-id)
         (instance ?instance)
         (name ?name)
@@ -108,10 +107,11 @@
         (planned-start-time ?ps-time)
         (planned-duration ?p-duration))
       )
-      (bind ?id (+ ?id 1))
     )
+    (modify ?pp (state SUCCESS))
   else
     (printout red "plan not found!" crlf)
+    (modify ?pp (state FAILURE))
   )
   (retract ?wr-f)
   (cx-pddl-interfaces-plan-temporal-result-destroy ?res-ptr)
