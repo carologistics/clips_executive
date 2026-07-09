@@ -94,7 +94,7 @@ instance.
 Every PDDL instance starts with a default goal instance called
 ``base`` that contains the specification supplied through the problem file (or nothing if no file is provided).
 Additional goal instances are created via
-``/create_goal_instance``.
+``/create_goal_instance`` or directly from a string via ``/set_goal_from_string``.
 
 The instance can be updated continuously during execution to reflect the
 current state of the world via services:
@@ -172,6 +172,8 @@ The PDDL Manager exposes a wide range of ROS 2 interfaces.
      - :ref:`pddl-numeric-fluent-change`
    * - :abbr:`/get_functions (Retrieve values of numeric functions)`
      - :ref:`pddl-get-numeric-fluents`
+   * - :abbr:`/set_goal_from_string (Create a goal instance for planning and populate it from a string)`
+     - :ref:`pddl-set-goal-from-string`
    * - :abbr:`/set_goals (Register goal conditions with the PDDL manager)`
      - :ref:`pddl-set-goals`
    * - :abbr:`/clear_goals (Clear all goal conditions of a PDDL instance)`
