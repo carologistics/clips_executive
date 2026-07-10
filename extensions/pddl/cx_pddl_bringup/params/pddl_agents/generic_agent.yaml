@@ -3,12 +3,6 @@
     autostart_node: true
     pddl:
       package_dir: "cx_pddl_bringup"
-      plan_type: "TEMPORAL"
-      # plan_type: "STN"
-      # plan_type: "PARTIAL-ORDER"
-      # plan_type: "HIERARCHICAL"
-      domain: "domain.pddl"
-      problem: "problem.pddl"
       #domain: "depots_temporal_domain.pddl"
       #problem: "depots_temporal_problem.pddl"
       # domain: "depots_classical_domain.pddl"

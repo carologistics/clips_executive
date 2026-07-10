@@ -16,10 +16,4 @@ install(PROGRAMS
   RENAME pddl_manager
 )
 
-install(DIRECTORY
-  launch
-  params
-  DESTINATION share/${PROJECT_NAME}
-)
-
 ament_package()
