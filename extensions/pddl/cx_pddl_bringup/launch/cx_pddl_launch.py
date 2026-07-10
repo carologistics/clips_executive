@@ -46,7 +46,7 @@ def generate_launch_description():
     )
     declare_manager_config = DeclareLaunchArgument(
         'manager_config',
-        default_value='pddl_agents/cx_pddl_clips_agent.yaml',
+        default_value='pddl_agents/generic_agent.yaml',
         description='Name of the CLIPS environment manager configuration',
     )
 
