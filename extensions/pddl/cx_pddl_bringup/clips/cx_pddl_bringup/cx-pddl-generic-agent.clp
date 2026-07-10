@@ -40,7 +40,7 @@
       (name test)
       (domain ?domain)
       (problem ?problem)
-      (directory (str-cat ?share-dir "/pddl"))
+      (directory ?share-dir)
     )
     (pddl-get-fluents (instance test))
     (pddl-plan (id test-plan) (instance test) (goal base) (plan-type (sym-cat ?type)))
