@@ -707,12 +707,14 @@ The launch file starts:
 * the configured PDDL CLIPS agent.
 
 
-Run the example using:
+Run the example on a simple blocksworld domain using:
 
 .. code-block:: bash
 
    ros2 launch cx_pddl_bringup cx_pddl_launch.py \
-     manager_config:=pddl_agents/generic_agent.yaml
+     pddl_plan_type:='TEMPORAL' \
+     pddl_domain:='pddl/domain.pddl' \
+     pddl_problem:='pddl/problem.pddl'
 
 
 A warning about unavailable services may appear during startup. This is
@@ -721,6 +723,19 @@ initialized. Requests are retried automatically.
 
 Also, additional warnings will indicate the successful override of the deftemplate definitions.
 
+The cx_pddl_bringup package additional supplies the depots domain from the IPC:
+
+.. code-block:: bash
+
+   ros2 launch cx_pddl_bringup cx_pddl_launch.py \
+     pddl_plan_type:='PARTIAL-ORDER' \
+     pddl_domain:='pddl/depots_classical_domain.pddl' \
+     pddl_problem:='pddl/depots_classical_problem.hddl'
+
+   ros2 launch cx_pddl_bringup cx_pddl_launch.py \
+     pddl_plan_type:='TEMPORAL' \
+     pddl_domain:='pddl/depots_temporal_domain.pddl' \
+     pddl_problem:='pddl/depots_temporal_problem.hddl'
 
 Summary
 -------
