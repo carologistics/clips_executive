@@ -69,11 +69,13 @@
   ?gfr <- (rl-ros-action-meta-get-free-robot (node ?node) (uuid ?uuid) (robot "") (last-search ?last) (found FALSE) (abort-action FALSE))
   (test (eq ?uuid (cx-rl-interfaces-get-free-robot-server-goal-handle-get-goal-id ?ptr)))
   (rl-robot (node ?node) (name ?robot-name) (waiting TRUE))
-  (rl-episode-end (node ?node) (success ?success))
+  ?ree <- (rl-episode-end (node ?node) (success ?success) (reset-triggered FALSE))
   (rl-current-action-space (node ?node) (state DONE))
 =>
   (modify ?gfr (last-search (now)) (found TRUE))
+  (modify ?ree (reset-triggered TRUE))
 )
+
 
 (defrule get-free-robot-search-update
   (cx-rl-node (name ?node))
@@ -82,12 +84,17 @@
   ?gfr <- (rl-ros-action-meta-get-free-robot (node ?node) (uuid ?uuid) (robot "") (last-search ?last) (found FALSE) (abort-action FALSE))
   (time ?now&:(> (- ?now ?last) ?*CX-RL-GET-FREE-ROBOT-SEARCH-UPDATE-INTERVAL*))
   (test (eq ?uuid (cx-rl-interfaces-get-free-robot-server-goal-handle-get-goal-id ?ptr)))
+  ;(rl-robot (node ?node) (name ?robot-name) (waiting TRUE))
+  (not (rl-action (node ?node) (is-selected FALSE)))
+  (not (rl-episode-end (node ?node) (success ?success)))
+  ?cas <- (rl-current-action-space (node ?node) (state DONE))
 =>
   (bind ?feedback (cx-rl-interfaces-get-free-robot-feedback-create))
   (cx-rl-interfaces-get-free-robot-feedback-set-field ?feedback "feedback" "No free robot found, retrying...")
   (cx-rl-interfaces-get-free-robot-server-goal-handle-publish-feedback ?ptr ?feedback)
   (cx-rl-interfaces-get-free-robot-feedback-destroy ?feedback)
   (modify ?gfr (last-search ?now))
+  (modify ?cas (state PENDING))
 )
 
 (defrule get-free-robot-abort

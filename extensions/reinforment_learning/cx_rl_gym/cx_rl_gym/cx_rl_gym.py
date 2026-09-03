@@ -24,7 +24,6 @@ Gym-compatible `step()` and `reset()` interfaces, while environment
 state and actions are managed via ROS 2 services and actions.
 """
 
-
 from functools import partial
 from itertools import product
 import time
@@ -52,6 +51,7 @@ import pandas as pd
 from rclpy.action import ActionClient
 from rclpy.node import Node
 from rclpy.task import Future
+import threading
 
 
 class CXRLGym(Env):
@@ -79,51 +79,53 @@ class CXRLGym(Env):
         self.rl_model = None
 
         self.node_name_prefix = node.get_name()  # <-- use this as the prefix
-        self.node.get_logger().debug('cx_rl_gym init')
+        self.node.get_logger().debug("cx_rl_gym init")
 
         # Helper function to prepend the node name to topic/service names
         def prefixed(name: str) -> str:
-            return f'{self.node_name_prefix}/{name}'
+            return f"{self.node_name_prefix}/{name}"
 
         # Service clients
-        self.end_training_client = self.node.create_client(EndTraining, prefixed('end_training'))
+        self.end_training_client = self.node.create_client(
+            EndTraining, prefixed("end_training")
+        )
         self.get_action_list_executable_for_robot_client = self.node.create_client(
-            GetActionListRobot, prefixed('get_action_list_executable_for_robot')
+            GetActionListRobot, prefixed("get_action_list_executable_for_robot")
         )
         self.get_observable_objects_client = self.node.create_client(
-            GetObservableObjects, prefixed('get_observable_objects')
+            GetObservableObjects, prefixed("get_observable_objects")
         )
         self.get_observable_predicates_client = self.node.create_client(
-            GetObservablePredicates, prefixed('get_observable_predicates')
+            GetObservablePredicates, prefixed("get_observable_predicates")
         )
         self.get_predefined_observables_client = self.node.create_client(
-            GetPredefinedObservables, prefixed('get_predefined_observables')
+            GetPredefinedObservables, prefixed("get_predefined_observables")
         )
         self.get_predefined_actions_client = self.node.create_client(
-            GetPredefinedActions, prefixed('get_predefined_actions')
+            GetPredefinedActions, prefixed("get_predefined_actions")
         )
         self.get_observable_actions_client = self.node.create_client(
-            GetObservableActions, prefixed('get_observable_actions')
+            GetObservableActions, prefixed("get_observable_actions")
         )
         self.get_episode_end_client = self.node.create_client(
-            GetEpisodeEnd, prefixed('get_episode_end')
+            GetEpisodeEnd, prefixed("get_episode_end")
         )
         self.get_current_observations_client = self.node.create_client(
-            GetObservations, prefixed('get_current_observations')
+            GetObservations, prefixed("get_current_observations")
         )
 
         # Service provider
         self.get_status_service = self.node.create_service(
-            GetStatus, prefixed('get_status'), self.get_status
+            GetStatus, prefixed("get_status"), self.get_status
         )
 
         # Action clients
-        self.reset_env_client = ActionClient(self.node, ResetEnv, prefixed('reset_env'))
+        self.reset_env_client = ActionClient(self.node, ResetEnv, prefixed("reset_env"))
         self.get_free_robot_client = ActionClient(
-            self.node, GetFreeRobot, prefixed('get_free_robot')
+            self.node, GetFreeRobot, prefixed("get_free_robot")
         )
         self.action_selection_client = ActionClient(
-            self.node, ActionSelection, prefixed('action_selection')
+            self.node, ActionSelection, prefixed("action_selection")
         )
 
         # initialize other internal state
@@ -136,10 +138,11 @@ class CXRLGym(Env):
 
         self.time_sleep = 0.001
         self.shutdown = False
-        self.next_robot = ''
+        self.next_robot = ""
         self.robot_locked = False
         self.executable_actions_dicts_for_robot = {}
         self.executable_actions_dict = {}
+        self.in_reset = False
 
         # Observation space
         obs_space = self.generate_observation_space()
@@ -151,13 +154,13 @@ class CXRLGym(Env):
 
         # Action space
         action_space = self.generate_action_space()
-        sorted_actions = ['no-op'] + sorted(set(action_space))
+        sorted_actions = ["no-op"] + sorted(set(action_space))
         self.action_dict = dict(zip(range(len(sorted_actions)), sorted_actions))
         self.inv_action_dict = dict(zip(sorted_actions, range(len(sorted_actions))))
         self.n_actions = len(sorted_actions)
         self.action_space = Discrete(self.n_actions)
 
-        self.node.get_logger().debug('cx_rl_gym init complete')
+        self.node.get_logger().debug("cx_rl_gym init complete")
 
     def get_id(self, name: str, args: list[str]) -> str:
         if not args:
@@ -166,7 +169,9 @@ class CXRLGym(Env):
 
     def on_training_end(self):
         while not self.end_training_client.wait_for_service(1.0):
-            self.node.get_logger().info('Waiting for service (end_client) to be ready...')
+            self.node.get_logger().info(
+                "Waiting for service (end_client) to be ready..."
+            )
 
         request = EndTraining.Request()
         future = self.end_training_client.call_async(request)
@@ -180,7 +185,9 @@ class CXRLGym(Env):
             ===GYM-FUNCTIONS===
     """
 
-    def step(self, action: int) -> tuple[npt.NDArray[np.float32], int, bool, bool, dict]:
+    def step(
+        self, action: int
+    ) -> tuple[npt.NDArray[np.float32], int, bool, bool, dict]:
         """
         Execute one environment step.
 
@@ -207,26 +214,40 @@ class CXRLGym(Env):
                 Additional debug information.
 
         """
+        if self.in_reset:
+            self.node.get_logger().info("In reset, canceling step.")
+            self.robot_locked = False
+            state = None
+            reward = 0
+            terminated = None
+            truncated = None
+            info = {"outcome": "RESET"}
+            return state, reward, terminated, truncated, info
         self.current_step += 1
         self.total_steps += 1
         action_string = self.action_dict[action]
         robot = self.next_robot
 
-        self.node.get_logger().info(f'In step function with action {action}: {action_string}')
+        self.node.get_logger().info(
+            f"In step function with action {action}: {action_string}"
+        )
 
         if action_string in self.executable_actions_dicts_for_robot[robot]:
             action_id = self.executable_actions_dicts_for_robot[robot][action_string]
         else:
             self.node.get_logger().debug(
-                f'Action {action_string} not executable for robot \
-                {robot}!'
+                f"Action {action_string} not executable for robot \
+                {robot}!"
+            )
+            self.node.get_logger().info(
+                f"Thread {threading.get_ident()}: Unlock Robot (action not executable)"
             )
             self.robot_locked = False
             state = self.get_observation()
 
             terminated, reward = self.get_episode_end()
             truncated = False
-            info = {'outcome': 'NO-ACTION-FOR-ROBOT'}
+            info = {"outcome": "NO-ACTION-FOR-ROBOT"}
             return state, reward, terminated, truncated, info
 
         action_msg = ActionSelection.Goal()
@@ -244,12 +265,12 @@ class CXRLGym(Env):
 
         while self.action_selection_results.get(robot) is None:
             if self.shutdown:
-                self.node.get_logger().debug('Shutdown triggered!')
+                self.node.get_logger().debug("Shutdown triggered!")
                 state = None
-                reward = None
+                reward = 0
                 terminated = None
                 truncated = None
-                info = {'outcome': 'SHUTDOWN'}
+                info = {"outcome": "SHUTDOWN"}
                 return state, reward, terminated, truncated, info
 
             time.sleep(self.time_sleep)
@@ -261,30 +282,30 @@ class CXRLGym(Env):
         result_reward = result.reward
         result_info = result.info
 
-        self.node.get_logger().debug('Getting observation of current state')
+        self.node.get_logger().debug("Getting observation of current state")
         state = self.get_observation()
-        self.node.get_logger().debug('Current state observed')
+        self.node.get_logger().debug("Current state observed")
 
         self.node.get_logger().info(
-            f'Action {result_action_id} finished with reward {result_reward}. {result_info}'
+            f"Action {result_action_id} finished with reward {result_reward}. {result_info}"
         )
 
         done = False
         truncated = False
         info = {}
         reward = result_reward
-        if result_info == 'Done':
-            info['outcome'] = 'Game Over'
+        if self.in_reset or result_info == "Aborted":
+            info["outcome"] = "RESET"
+        elif result_info == "Done":
+            info["outcome"] = "Game Over"
             done = True
-        elif result_info == 'Aborted':
-            info['outcome'] = 'RESET'
         else:
-            info['outcome'] = ''
+            info["outcome"] = ""
 
         return state, reward, done, truncated, info
 
     def generate_observation_space(self) -> list[str]:
-        self.node.get_logger().debug('Generating observation space...')
+        self.node.get_logger().debug("Generating observation space...")
         obs_space = []
         predefined_observables = self.get_predefined_observables()
         obs_space += predefined_observables
@@ -302,28 +323,32 @@ class CXRLGym(Env):
                     types_for_param_name[param_name]
                 )
 
-                if observable_objects_for_param_type[0] == 'Not found':
+                if observable_objects_for_param_type[0] == "Not found":
                     observable_object_not_found = True
 
-                observable_objects_for_param_name[param_name] = observable_objects_for_param_type
+                observable_objects_for_param_name[param_name] = (
+                    observable_objects_for_param_type
+                )
 
             if observable_object_not_found:
                 continue
             obs_df = self.expand_grid(observable_objects_for_param_name)
 
-            obs_df.insert(0, '(', '(')
-            obs_df.insert(len(obs_df.columns), ')', ')')
-            obs_df.insert(0, 'Predicate', predicate)
+            obs_df.insert(0, "(", "(")
+            obs_df.insert(len(obs_df.columns), ")", ")")
+            obs_df.insert(0, "Predicate", predicate)
 
-            obs_str = obs_df.to_string(header=False, index=False, index_names=False).split('\n')
-            values = ['#'.join(element.split()) for element in obs_str]
-            values = [w.replace('#(#', '(') for w in values]
-            values = [w.replace('#)', ')') for w in values]
+            obs_str = obs_df.to_string(
+                header=False, index=False, index_names=False
+            ).split("\n")
+            values = ["#".join(element.split()) for element in obs_str]
+            values = [w.replace("#(#", "(") for w in values]
+            values = [w.replace("#)", ")") for w in values]
 
             obs_space += values
 
-        self.node.get_logger().debug(f'Observation space: {obs_space}')
-        self.node.get_logger().debug('Observation space size: ' + str(len(obs_space)))
+        self.node.get_logger().debug(f"Observation space: {obs_space}")
+        self.node.get_logger().debug("Observation space size: " + str(len(obs_space)))
         return obs_space
 
     def reset(
@@ -351,7 +376,8 @@ class CXRLGym(Env):
                 Metadata about the reset process.
 
         """
-        self.node.get_logger().info('Resetting environment...')
+        self.node.get_logger().info("Resetting environment...")
+        self.in_reset = True
         self.current_episode += 1
         self.current_step = 0
         super().reset(seed=seed)
@@ -361,8 +387,9 @@ class CXRLGym(Env):
 
         self.executable_actions_dicts_for_robot = {}
         self.executable_actions_dict = {}
-
+        self.in_reset = False
         info = {}
+        self.node.get_logger().info("Reset finished")
         return (state, info)
 
     def close(self) -> None:
@@ -378,15 +405,25 @@ class CXRLGym(Env):
         raise NotImplementedError()
 
     def action_masks(self) -> npt.NDArray[np.int8]:
-        self.node.get_logger().debug('Creating action masks...')
-        while self.robot_locked:
+        self.node.get_logger().debug(
+            f"Thread {threading.get_ident()}: Creating action masks..."
+        )
+        while self.robot_locked or self.in_reset:
             if self.shutdown:
                 return np.zeros((self.n_actions), dtype=np.int8)
             time.sleep(self.time_sleep)
         self.robot_locked = True
+        self.node.get_logger().info(
+            f"Thread {threading.get_ident()}: Lock Robot (action masks)"
+        )
         success, self.next_robot = self.get_free_robot()
         if not success:
-            self.node.get_logger().debug('get_free_robot aborted, unlocking robot selection...')
+            self.node.get_logger().debug(
+                "get_free_robot aborted, unlocking robot selection..."
+            )
+            self.node.get_logger().info(
+                f"Thread {threading.get_ident()}: Unlock Robot (abort)"
+            )
             self.robot_locked = False
             return np.zeros((self.n_actions), dtype=np.int8)
         self.executable_actions_dicts_for_robot[self.next_robot] = (
@@ -419,7 +456,7 @@ class CXRLGym(Env):
         """
         self.exec_action_selection_service = self.node.create_service(
             ExecActionSelection,
-            self.node_name_prefix + '/exec_action_selection',
+            self.node_name_prefix + "/exec_action_selection",
             self.exec_action_selection,
         )
         self.rl_model = model
@@ -442,9 +479,11 @@ class CXRLGym(Env):
             A mapping of action names to action IDs for the specified robot.
 
         """
-        while not self.get_action_list_executable_for_robot_client.wait_for_service(1.0):
+        while not self.get_action_list_executable_for_robot_client.wait_for_service(
+            1.0
+        ):
             self.node.get_logger().info(
-                'Waiting for service (get_action_list_executable_for_robot) to be ready...'
+                "Waiting for service (get_action_list_executable_for_robot) to be ready..."
             )
 
         request = GetActionListRobot.Request()
@@ -456,11 +495,13 @@ class CXRLGym(Env):
         response = future.result()
         return self.unpack_transmitted_actions(response.actions, response.action_ids)
 
-    def unpack_transmitted_actions(self, action_list: list[Action], action_ids: list[str]):
+    def unpack_transmitted_actions(
+        self, action_list: list[Action], action_ids: list[str]
+    ):
         action_encoded_ids = [self.get_id(obj.name, obj.params) for obj in action_list]
         assert len(action_encoded_ids) == len(
             action_ids
-        ), 'Action list and action IDs must have the same length'
+        ), "Action list and action IDs must have the same length"
 
         return dict(zip(action_encoded_ids, action_ids))
 
@@ -484,7 +525,7 @@ class CXRLGym(Env):
         """
         while not self.get_observable_objects_client.wait_for_service(1.0):
             self.node.get_logger().info(
-                'Waiting for service (get_observable_objects) to be ready...'
+                "Waiting for service (get_observable_objects) to be ready..."
             )
 
         request = GetObservableObjects.Request()
@@ -518,7 +559,7 @@ class CXRLGym(Env):
         """
         while not self.get_observable_predicates_client.wait_for_service(1.0):
             self.node.get_logger().info(
-                'Waiting for service (get_observable_predicates) to be ready...'
+                "Waiting for service (get_observable_predicates) to be ready..."
             )
 
         request = GetObservablePredicates.Request()
@@ -549,7 +590,7 @@ class CXRLGym(Env):
         """
         while not self.get_predefined_observables_client.wait_for_service(1.0):
             self.node.get_logger().info(
-                'Waiting for service (get_predefined_observables) to be ready...'
+                "Waiting for service (get_predefined_observables) to be ready..."
             )
 
         request = GetPredefinedObservables.Request()
@@ -558,7 +599,10 @@ class CXRLGym(Env):
         while not future.done():
             time.sleep(self.time_sleep)
         response = future.result()
-        ids = [self.get_id(predicate.name, predicate.params) for predicate in response.observables]
+        ids = [
+            self.get_id(predicate.name, predicate.params)
+            for predicate in response.observables
+        ]
         return ids
 
     def get_predefined_actions(self) -> list:
@@ -575,7 +619,7 @@ class CXRLGym(Env):
         """
         while not self.get_predefined_actions_client.wait_for_service(1.0):
             self.node.get_logger().info(
-                'Waiting for service (get_predefined_actions) to be ready...'
+                "Waiting for service (get_predefined_actions) to be ready..."
             )
 
         request = GetPredefinedActions.Request()
@@ -602,7 +646,7 @@ class CXRLGym(Env):
         """
         while not self.get_observable_actions_client.wait_for_service(1.0):
             self.node.get_logger().info(
-                'Waiting for service (get_observable_actions) to be ready...'
+                "Waiting for service (get_observable_actions) to be ready..."
             )
 
         request = GetObservableActions.Request()
@@ -632,7 +676,7 @@ class CXRLGym(Env):
             A list of action strings for the RL environment.
 
         """
-        self.node.get_logger().debug('Generating action space...')
+        self.node.get_logger().debug("Generating action space...")
         action_space = []
 
         # Step 1: Add predefined actions
@@ -652,7 +696,7 @@ class CXRLGym(Env):
             skip_action = False
             for param_name, obj_type in param_types.items():
                 objects = self.get_observable_objects(obj_type)
-                if not objects or objects[0] == 'Not found':
+                if not objects or objects[0] == "Not found":
                     skip_action = True
                     break
                 observable_objects_for_param_name[param_name] = objects
@@ -664,21 +708,23 @@ class CXRLGym(Env):
             action_df = self.expand_grid(observable_objects_for_param_name)
 
             # Add action name and parentheses for consistency
-            action_df.insert(0, '(', '(')
-            action_df.insert(len(action_df.columns), ')', ')')
-            action_df.insert(0, 'Action', action_name)
+            action_df.insert(0, "(", "(")
+            action_df.insert(len(action_df.columns), ")", ")")
+            action_df.insert(0, "Action", action_name)
 
             # Convert each row to a single action string
             action_strings = action_df.to_string(
                 header=False, index=False, index_names=False
-            ).split('\n')
-            action_strings = ['#'.join(element.split()) for element in action_strings]
-            action_strings = [w.replace('#(#', '(').replace('#)', ')') for w in action_strings]
+            ).split("\n")
+            action_strings = ["#".join(element.split()) for element in action_strings]
+            action_strings = [
+                w.replace("#(#", "(").replace("#)", ")") for w in action_strings
+            ]
 
             action_space += action_strings
 
-        self.node.get_logger().info(f'Action space: {action_space}')
-        self.node.get_logger().info('Action space size: ' + str(len(action_space)))
+        self.node.get_logger().info(f"Action space: {action_space}")
+        self.node.get_logger().info("Action space size: " + str(len(action_space)))
         return action_space
 
     def get_current_observations(self) -> str:
@@ -695,7 +741,7 @@ class CXRLGym(Env):
         """
         while not self.get_current_observations_client.wait_for_service(1.0):
             self.node.get_logger().info(
-                'Waiting for service (get_current_observations) to be ready...'
+                "Waiting for service (get_current_observations) to be ready..."
             )
 
         request = GetObservations.Request()
@@ -721,7 +767,9 @@ class CXRLGym(Env):
 
         """
         while not self.get_episode_end_client.wait_for_service(1.0):
-            self.node.get_logger().info('Waiting for service (get_episode_end) to be ready...')
+            self.node.get_logger().info(
+                "Waiting for service (get_episode_end) to be ready..."
+            )
 
         request = GetEpisodeEnd.Request()
         future = self.get_episode_end_client.call_async(request)
@@ -764,7 +812,9 @@ class CXRLGym(Env):
         return response
 
     def exec_action_selection(
-        self, request: ExecActionSelection.Request, response: ExecActionSelection.Response
+        self,
+        request: ExecActionSelection.Request,
+        response: ExecActionSelection.Response,
     ) -> ExecActionSelection.Response:
         """
         Execute the RL-based action selection process.
@@ -787,9 +837,11 @@ class CXRLGym(Env):
             The populated response containing the selected action ID.
 
         """
-        self.node.get_logger().debug('Selecting action...')
+        self.node.get_logger().debug("Selecting action...")
 
-        observation_ids = [self.get_id(pred.name, pred.params) for pred in request.observations]
+        observation_ids = [
+            self.get_id(pred.name, pred.params) for pred in request.observations
+        ]
         observation = self.get_observation_encoding_fron_ids(observation_ids)
         self.executable_actions_dict = self.unpack_transmitted_actions(
             request.actions, request.action_ids
@@ -802,7 +854,7 @@ class CXRLGym(Env):
 
         if np.sum(action_mask) == 0:
             action_mask[0] = 1
-            response.action_id = 'no-op'
+            response.action_id = "no-op"
             return response
 
         action, _ = self.rl_model.predict(
@@ -831,7 +883,9 @@ class CXRLGym(Env):
         self.reset_env_send_goal_future = self.reset_env_client.send_goal_async(
             goal_msg, self.reset_env_feedback_callback
         )
-        self.reset_env_send_goal_future.add_done_callback(self.reset_env_goal_response_callback)
+        self.reset_env_send_goal_future.add_done_callback(
+            self.reset_env_goal_response_callback
+        )
         while self.reset_env_result is None:
             time.sleep(self.time_sleep)
         reset_confirm = self.reset_env_result.confirmation
@@ -850,12 +904,14 @@ class CXRLGym(Env):
         """
         goal_handle = future.result()
         if not goal_handle.accepted:
-            self.node.get_logger().debug('reset_env rejected')
+            self.node.get_logger().debug("reset_env rejected")
             return
-        self.node.get_logger().debug('reset_env accepted')
+        self.node.get_logger().debug("reset_env accepted")
         self.reset_env_goal_handle = goal_handle
         self.reset_env_get_result_future = goal_handle.get_result_async()
-        self.reset_env_get_result_future.add_done_callback(self.reset_env_get_result_callback)
+        self.reset_env_get_result_future.add_done_callback(
+            self.reset_env_get_result_callback
+        )
 
     def reset_env_get_result_callback(self, future: Future) -> None:
         """
@@ -867,7 +923,7 @@ class CXRLGym(Env):
                 The future containing the action result.
 
         """
-        self.node.get_logger().debug('Result for reset_env received')
+        self.node.get_logger().debug("Result for reset_env received")
         self.reset_env_result = future.result().result
 
     def reset_env_feedback_callback(self, feedback_msg: ResetEnv.Feedback) -> None:
@@ -895,9 +951,9 @@ class CXRLGym(Env):
         """
         cancel_response = future.result()
         if len(cancel_response.goals_canceling) > 0:
-            self.node.get_logger().debug('reset_env canceled')
+            self.node.get_logger().debug("reset_env canceled")
         else:
-            self.node.get_logger().error('Failed to cancel reset_env!')
+            self.node.get_logger().error("Failed to cancel reset_env!")
 
     def get_free_robot(self) -> tuple[bool, str]:
         """
@@ -915,17 +971,22 @@ class CXRLGym(Env):
         """
         goal_msg = GetFreeRobot.Goal()
         self.get_free_robot_client.wait_for_server()
-        self.get_free_robot_send_goal_future = self.get_free_robot_client.send_goal_async(
-            goal_msg, self.get_free_robot_feedback_callback
+        self.get_free_robot_send_goal_future = (
+            self.get_free_robot_client.send_goal_async(
+                goal_msg, self.get_free_robot_feedback_callback
+            )
         )
         self.get_free_robot_send_goal_future.add_done_callback(
             self.get_free_robot_goal_response_callback
         )
         while self.get_free_robot_result is None:
             if self.shutdown is True:
-                if self.get_free_robot_goal_handle and self.get_free_robot_goal_handle.is_active:
+                if (
+                    self.get_free_robot_goal_handle
+                    and self.get_free_robot_goal_handle.is_active
+                ):
                     self.get_free_robot_goal_handle.cancel_goal_async()
-                return False, ''
+                return False, ""
             time.sleep(self.time_sleep)
         success = self.get_free_robot_result.success
         robot = self.get_free_robot_result.robot
@@ -944,9 +1005,9 @@ class CXRLGym(Env):
         """
         goal_handle = future.result()
         if not goal_handle.accepted:
-            self.node.get_logger().debug('get_free_robot rejected')
+            self.node.get_logger().debug("get_free_robot rejected")
             return
-        self.node.get_logger().debug('get_free robot accepted')
+        self.node.get_logger().debug("get_free robot accepted")
         self.get_free_robot_goal_handle = goal_handle
         self.get_free_robot_get_result_future = goal_handle.get_result_async()
         self.get_free_robot_get_result_future.add_done_callback(
@@ -963,10 +1024,12 @@ class CXRLGym(Env):
                 The future containing the action result.
 
         """
-        self.node.get_logger().debug('Result for get_free_robot received')
+        self.node.get_logger().debug("Result for get_free_robot received")
         self.get_free_robot_result = future.result().result
 
-    def get_free_robot_feedback_callback(self, feedback_msg: GetFreeRobot.Feedback) -> None:
+    def get_free_robot_feedback_callback(
+        self, feedback_msg: GetFreeRobot.Feedback
+    ) -> None:
         """
         Handle feedback messages from the `GetFreeRobot` action via callback.
 
@@ -991,11 +1054,13 @@ class CXRLGym(Env):
         """
         cancel_response = future.result()
         if len(cancel_response.goals_canceling) > 0:
-            self.node.get_logger().debug('get_free_robot canceled')
+            self.node.get_logger().debug("get_free_robot canceled")
         else:
-            self.node.get_logger().error('Failed to cancel get_free_robot!')
+            self.node.get_logger().error("Failed to cancel get_free_robot!")
 
-    def action_selection_goal_response_callback(self, future: Future, robot: str) -> None:
+    def action_selection_goal_response_callback(
+        self, future: Future, robot: str
+    ) -> None:
         """
         Handle goal responses from the action selection server via callback.
 
@@ -1009,9 +1074,9 @@ class CXRLGym(Env):
         """
         goal_handle = future.result()
         if not goal_handle.accepted:
-            self.node.get_logger().debug('Action selection rejected')
+            self.node.get_logger().debug("Action selection rejected")
             return
-        self.node.get_logger().debug('Action selection accepted')
+        self.node.get_logger().debug("Action selection accepted")
         self.action_selection_goal_handles[robot] = goal_handle
         self.action_selection_get_result_futures[robot] = goal_handle.get_result_async()
         self.action_selection_get_result_futures[robot].add_done_callback(
@@ -1032,7 +1097,7 @@ class CXRLGym(Env):
         """
         self.action_selection_results[robot] = future.result().result
         self.node.get_logger().debug(
-            f'Result for action {self.action_selection_results[robot].action_id} received'
+            f"Result for action {self.action_selection_results[robot].action_id} received"
         )
 
     def action_selection_feedback_callback(
@@ -1053,12 +1118,13 @@ class CXRLGym(Env):
 
         """
         feedback = feedback_msg.feedback.feedback
-        if feedback == 'Action selection fact asserted':
-            self.robot_locked = False
-            self.node.get_logger().debug(
-                f'Action selection fact for {robot} asserted, \
-                unlocking robot selection...'
+        if feedback == "Action selection fact asserted":
+            self.node.get_logger().info(
+                f"Thread {threading.get_ident()}: Unlock Robot (action selection)"
             )
+            self.robot_locked = False
+            self.node.get_logger().debug(f"Action selection fact for {robot} asserted, \
+                unlocking robot selection...")
             return
         self.node.get_logger().debug(feedback)
 
@@ -1076,9 +1142,11 @@ class CXRLGym(Env):
         """
         cancel_response = future.result()
         if len(cancel_response.goals_canceling) > 0:
-            self.node.get_logger().debug(f'Action selection for {robot} canceled')
+            self.node.get_logger().debug(f"Action selection for {robot} canceled")
         else:
-            self.node.get_logger().error(f'Failed to cancel action selection for {robot}!')
+            self.node.get_logger().error(
+                f"Failed to cancel action selection for {robot}!"
+            )
 
     """
             ===HELPER-FUNCTIONS===
@@ -1118,7 +1186,9 @@ class CXRLGym(Env):
                 A DataFrame containing one row per value combination.
 
         """
-        return pd.DataFrame(list(product(*dictionary.values())), columns=dictionary.keys())
+        return pd.DataFrame(
+            list(product(*dictionary.values())), columns=dictionary.keys()
+        )
 
     def create_observable_dict(
         self,

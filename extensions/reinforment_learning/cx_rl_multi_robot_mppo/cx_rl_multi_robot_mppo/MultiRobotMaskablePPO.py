@@ -335,7 +335,9 @@ class MultiRobotMaskablePPO(MaskablePPO):
             obs_tensor = obs_as_tensor(self._last_obs, self.device)
 
             if use_masking:
+                print(f"Thread {current_thread}: in action_masks")
                 action_masks = get_action_masks(env)
+                print(f"Thread {current_thread}: after action_masks")
                 if np.sum(action_masks) == 0:
                     action_masks[0, :] = 0
                     action_masks[0, 0] = 1
@@ -344,7 +346,9 @@ class MultiRobotMaskablePPO(MaskablePPO):
             else:
                 actions, values, log_probs = self.policy(obs_tensor)
                 actions = actions.cpu().numpy()
+        print(f"Thread {current_thread}: in step with action {actions}")
         new_obs, rewards, dones, infos = env.step(actions)
+        print(f"Thread {current_thread}: after step with reward {rewards}, done {dones} and info {infos}")
 
         callback.update_locals(locals())
         if not callback.on_step():

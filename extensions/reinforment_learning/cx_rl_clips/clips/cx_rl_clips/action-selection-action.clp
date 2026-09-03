@@ -82,8 +82,10 @@
   )
 =>
   (bind ?done FALSE)
-  (do-for-fact ((?end rl-episode-end)) TRUE
+  (do-for-fact ((?end rl-episode-end)) 
+    (eq ?end:reset-triggered FALSE)
     (bind ?done TRUE)
+    (modify ?end (reset-triggered TRUE))
   )
   (printout ?*CX-RL-LOG-LEVEL* "rl-action finished for action " ?action-id crlf)
   (if (eq ?done TRUE) then (bind ?info "Done") else (bind ?info ""))

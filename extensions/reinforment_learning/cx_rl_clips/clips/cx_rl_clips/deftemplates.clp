@@ -93,6 +93,9 @@
   (slot success (type SYMBOL)
     (allowed-values TRUE FALSE)
     (default TRUE))
+  (slot reset-triggered (type SYMBOL)
+    (allowed-values TRUE FALSE)
+    (default FALSE))
 )
 
 (deftemplate rl-observable-type
