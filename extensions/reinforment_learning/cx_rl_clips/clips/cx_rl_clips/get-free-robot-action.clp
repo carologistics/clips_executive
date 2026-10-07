@@ -25,7 +25,12 @@
 )
 
 (deffunction cx-rl-interfaces-get-free-robot-handle-goal-callback (?server ?goal ?uuid)
+    (do-for-fact ((?end-f rl-episode-end))
+      (eq ?end-f:node ?*CX-RL-NODE-NAME*)
+      (return 1)
+    )
     (return 2)
+
 )
 
 (deffunction cx-rl-interfaces-get-free-robot-cancel-goal-callback (?server ?goal ?goal-handle)

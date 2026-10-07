@@ -131,6 +131,7 @@ class CXRLGym(Env):
         # initialize other internal state
         self.reset_env_result = None
         self.get_free_robot_result = None
+        self.get_free_robot_rejected = False
         self.action_selection_send_goal_futures = {}
         self.action_selection_get_result_futures = {}
         self.action_selection_results = {}
@@ -214,19 +215,21 @@ class CXRLGym(Env):
                 Additional debug information.
 
         """
-        if self.in_reset:
+        robot = self.next_robot
+
+        if self.in_reset or robot == "RESET":
             self.node.get_logger().info("In reset, canceling step.")
             self.robot_locked = False
             state = None
             reward = 0
-            terminated = None
-            truncated = None
+            terminated = False
+            truncated = False
             info = {"outcome": "RESET"}
             return state, reward, terminated, truncated, info
+
         self.current_step += 1
         self.total_steps += 1
         action_string = self.action_dict[action]
-        robot = self.next_robot
 
         self.node.get_logger().info(
             f"In step function with action {action}: {action_string}"
@@ -417,6 +420,7 @@ class CXRLGym(Env):
             f"Thread {threading.get_ident()}: Lock Robot (action masks)"
         )
         success, self.next_robot = self.get_free_robot()
+        print(success, self.next_robot)
         if not success:
             self.node.get_logger().debug(
                 "get_free_robot aborted, unlocking robot selection..."
@@ -987,6 +991,9 @@ class CXRLGym(Env):
                 ):
                     self.get_free_robot_goal_handle.cancel_goal_async()
                 return False, ""
+            if self.get_free_robot_rejected:
+                self.get_free_robot_rejected = False
+                return False, "RESET"
             time.sleep(self.time_sleep)
         success = self.get_free_robot_result.success
         robot = self.get_free_robot_result.robot
@@ -1005,7 +1012,8 @@ class CXRLGym(Env):
         """
         goal_handle = future.result()
         if not goal_handle.accepted:
-            self.node.get_logger().debug("get_free_robot rejected")
+            self.node.get_logger().info("get_free_robot rejected")
+            self.get_free_robot_rejected = True
             return
         self.node.get_logger().debug("get_free robot accepted")
         self.get_free_robot_goal_handle = goal_handle
