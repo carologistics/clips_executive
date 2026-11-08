@@ -17,7 +17,7 @@
 import concurrent.futures as cf
 from typing import Callable
 
-from bondpy import bondpy
+import bondpy
 from cx_pddl_interfaces.action import PlanTemporal
 from cx_pddl_interfaces.msg import Fluent as FluentMsg
 from cx_pddl_interfaces.msg import FluentEffect, Function, FunctionEffect
