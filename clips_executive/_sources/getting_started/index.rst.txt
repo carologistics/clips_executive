@@ -11,5 +11,6 @@ A general project description can be found on the :ref:`main landing page <main>
    installation.rst
    usage.rst
    configuration.rst
+   editor_support.rst
    logging.rst
    dynamic.rst
