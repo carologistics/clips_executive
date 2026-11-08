@@ -64,7 +64,7 @@
       (printout error "Sending of request failed, is the service " ?rm-s " running?" crlf)
     )
     (ros-msgs-destroy-message ?new-req)
-    (foreach ?msg ?object-add-msgs
+    (foreach ?msg ?object-rm-msgs
       (ros-msgs-destroy-message ?msg)
     )
   )
