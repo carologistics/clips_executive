@@ -114,8 +114,8 @@ loads the required plugins, and specifies which CLIPS files are loaded.
       pddl:
         package_dir: "cx_pddl_bringup"
         plan_type: "TEMPORAL"
-        domain: "domain.pddl"
-        problem: "problem.pddl"
+        domain: "pddl/domain.pddl"
+        problem: "pddl/problem.pddl"
 
       environments: ["cx_pddl_clips_agent"]
 
