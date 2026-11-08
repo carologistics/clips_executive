@@ -98,6 +98,9 @@ jobs:
           apt update
           rosdep update
           . /opt/ros/${{ matrix.ros_distro }}/setup.sh
+          # enable extensions:
+          rm extensions/*/COLCON_IGNORE
+
           rosdep install --from-paths . --ignore-src \
             -r -y
           # Install packages missing from rosdep index on noble for rolling
