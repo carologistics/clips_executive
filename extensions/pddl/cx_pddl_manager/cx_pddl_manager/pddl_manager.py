@@ -827,22 +827,90 @@ class PddlManagerLifecycleNode(LifecycleNode):
             function_effects = []
             fluent_effects = []
             if hasattr(grounded_action, 'preconditions'):
+                # Classical planning
                 for eff in grounded_action.effects:
+                    operator = ''
+                    match eff.kind:
+                        case EffectKind.ASSIGN:
+                            operator = '='
+                        case EffectKind.INCREASE:
+                            operator = '+'
+                        case EffectKind.DECREASE:
+                            operator = '-'
+                        case _:
+                            response.error = f'Unknown operator kind: {eff.kind}'
+                            self.get_logger().error(response.error)
+                            response.success = False
+                            return response
+
                     args = []
                     for arg in eff.fluent.args:
                         args.append(f'{arg}')
-                    fluent = FluentMsg(
-                        pddl_instance=action.pddl_instance,
-                        name=eff.fluent.fluent().name,
-                        args=args,
-                    )
-                    fluent_effects.append(
-                        FluentEffect(
-                            fluent=fluent,
-                            time_point='START',
-                            value=eff.value.bool_constant_value(),
+                    if eff.value.is_bool_constant():
+                        # this is a normal fluent change effect
+                        fluent = FluentMsg(
+                            pddl_instance=action.pddl_instance,
+                            name=eff.fluent.fluent().name,
+                            args=args,
                         )
-                    )
+                        fluent_effects.append(
+                            FluentEffect(
+                                fluent=fluent,
+                                time_point='START',
+                                value=eff.value.bool_constant_value(),
+                            )
+                        )
+                    else:
+                        function_msg = Function(
+                            pddl_instance=action.pddl_instance,
+                            name=eff.fluent.fluent().name,
+                            args=args,
+                        )
+                        if eff.value.is_int_constant():
+                            # this is a function change effect
+                            function_effects.append(
+                                FunctionEffect(
+                                    function=function_msg,
+                                    operator_type=operator,
+                                    time_point='START',
+                                    value=float(eff.value.int_constant_value()),
+                                )
+                            )
+                        elif eff.value.is_real_constant():
+                            # this is a function change effect
+                            function_effects.append(
+                                FunctionEffect(
+                                    function=function_msg,
+                                    operator_type=operator,
+                                    time_point='START',
+                                    value=eff.value.real_constant_value(),
+                                )
+                            )
+                        elif eff.value.is_fluent_exp():
+                            # this is a function change effect
+                            rhs_fnode = self.managed_problems[
+                                action.pddl_instance
+                            ].base_problem.initial_value(eff.value)
+                            if rhs_fnode.is_real_constant():
+                                rhs_val = rhs_fnode.real_constant_value()
+                            elif rhs_fnode.is_int_constant():
+                                rhs_val = float(rhs_fnode.int_constant_value())
+                            else:
+                                raise Exception(f'value of {eff.val} is unexpected ')
+                            function_effects.append(
+                                FunctionEffect(
+                                    function=function_msg,
+                                    operator_type=operator,
+                                    time_point='START',
+                                    value=rhs_val,
+                                )
+                            )
+                        else:
+                            response.error = f'Unknown value type: {eff.value}'
+                            self.get_logger().error(response.error)
+                            response.success = False
+                            return response
+
             else:
                 for cond, value in grounded_action.effects.items():
                     time_point = ''
