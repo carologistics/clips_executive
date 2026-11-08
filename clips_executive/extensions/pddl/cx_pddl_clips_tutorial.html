@@ -228,8 +228,8 @@ loads the required plugins, and specifies which CLIPS files are loaded.</p>
 <span class="w">    </span><span class="nt">pddl</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">package_dir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx_pddl_bringup&quot;</span>
 <span class="w">      </span><span class="nt">plan_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;TEMPORAL&quot;</span>
-<span class="w">      </span><span class="nt">domain</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;domain.pddl&quot;</span>
-<span class="w">      </span><span class="nt">problem</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;problem.pddl&quot;</span>
+<span class="w">      </span><span class="nt">domain</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;pddl/domain.pddl&quot;</span>
+<span class="w">      </span><span class="nt">problem</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;pddl/problem.pddl&quot;</span>
 
 <span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_pddl_clips_agent&quot;</span><span class="p p-Indicator">]</span>
 
@@ -739,12 +739,12 @@ initialized. Requests are retried automatically.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ros2<span class="w"> </span>launch<span class="w"> </span>cx_pddl_bringup<span class="w"> </span>cx_pddl_launch.py<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>pddl_plan_type:<span class="o">=</span><span class="s1">&#39;PARTIAL-ORDER&#39;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>pddl_domain:<span class="o">=</span><span class="s1">&#39;pddl/depots_classical_domain.pddl&#39;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>pddl_problem:<span class="o">=</span><span class="s1">&#39;pddl/depots_classical_problem.hddl&#39;</span>
+<span class="w">  </span>pddl_problem:<span class="o">=</span><span class="s1">&#39;pddl/depots_classical_problem.pddl&#39;</span>
 
 ros2<span class="w"> </span>launch<span class="w"> </span>cx_pddl_bringup<span class="w"> </span>cx_pddl_launch.py<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>pddl_plan_type:<span class="o">=</span><span class="s1">&#39;TEMPORAL&#39;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>pddl_domain:<span class="o">=</span><span class="s1">&#39;pddl/depots_temporal_domain.pddl&#39;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>pddl_problem:<span class="o">=</span><span class="s1">&#39;pddl/depots_temporal_problem.hddl&#39;</span>
+<span class="w">  </span>pddl_problem:<span class="o">=</span><span class="s1">&#39;pddl/depots_temporal_problem.pddl&#39;</span>
 </pre></div>
 </div>
 </section>
