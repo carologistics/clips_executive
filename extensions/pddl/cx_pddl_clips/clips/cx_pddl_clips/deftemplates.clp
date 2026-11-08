@@ -457,6 +457,7 @@
   (slot value (type FLOAT))
   (slot request-id (type INTEGER))
   (slot state (type SYMBOL) (allowed-values PENDING WAITING ERROR ON-HOLD) (default PENDING))
+  (slot error (type STRING))
 )
 
 (deftemplate pddl-object-change
