@@ -257,7 +257,7 @@ clips::UDFValue {{name_camel}}::send_request(clips::Environment *env, {{message_
   int id = 0;
   {
     std::scoped_lock map_lock{map_mtx_};
-    rclcpp::Client<std_srvs::srv::SetBool>::FutureAndRequestId fut_and_req = clients_[env_name][service_name]->async_send_request(req_shared);
+    rclcpp::Client<{{message_type}}>::FutureAndRequestId fut_and_req = clients_[env_name][service_name]->async_send_request(req_shared);
     future = fut_and_req.share();
     id = fut_and_req.request_id;
   }
