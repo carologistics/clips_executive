@@ -119,6 +119,11 @@ jobs:
 
       - name: Build ROS workspace
         run: |
+          if [ "${{ matrix.ros_distro }}" = "humble" ]; then
+            pip install "setuptools<81"
+          else
+            pip install --break-system-packages "setuptools<81"
+          fi
           . /opt/ros/${{ matrix.ros_distro }}/setup.sh
           colcon build --merge-install --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebInfo
 
