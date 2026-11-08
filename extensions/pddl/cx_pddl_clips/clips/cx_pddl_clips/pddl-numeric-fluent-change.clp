@@ -72,7 +72,7 @@
    else
     (printout error "Failed to set numeric fluents \"" ?instance "\":" ?error crlf)
     ; TODO: how to deal with failed removing of fluents
-    (delayed-do-for-all-facts ((?ppf pddl-numeric-fluent-change)) (and ?ppf:request-sent (eq ?ppf:instance ?instance) ?ppf:delete)
+    (delayed-do-for-all-facts ((?ppf pddl-numeric-fluent-change)) (and (eq ?ppf:state WAITING) (eq ?ppf:instance ?instance))
       (modify ?ppf (error ?error) (state ERROR))
     )
   )

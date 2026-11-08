@@ -30,8 +30,9 @@ pddl-get-numeric-fluents.clp
 pddl-get-predicates.clp
 pddl-get-type-objects.clp
 pddl-planning-filter.clp
-pddl-plan-temporal-client.clp
+pddl-plan-client.clp
 pddl-set-goals.clp
+pddl-set-goal-from-string.clp
 )
 (load* (str-cat (ament-index-get-package-share-directory "cx_pddl_clips") "/clips/cx_pddl_clips/" ?f))
 )

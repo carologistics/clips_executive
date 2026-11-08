@@ -93,11 +93,11 @@ bool CDBSaverPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
 {
   std::shared_ptr<rclcpp_lifecycle::LifecycleNode> node = parent_.lock();
   std::string hostname;
-  int port;
+  int port = 0;
   std::string username;
   std::string password;
   std::string db_prefix;
-  bool db_timestamp;
+  bool db_timestamp = false;
   node->get_parameter(plugin_name_ + ".hostname", hostname);
   node->get_parameter(plugin_name_ + ".port", port);
   node->get_parameter(plugin_name_ + ".username", username);

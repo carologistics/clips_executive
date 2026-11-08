@@ -98,6 +98,9 @@ jobs:
           apt update
           rosdep update
           . /opt/ros/${{ matrix.ros_distro }}/setup.sh
+          # enable extensions:
+          rm extensions/*/COLCON_IGNORE
+
           rosdep install --from-paths . --ignore-src \
             -r -y
           # Install packages missing from rosdep index on noble for rolling
@@ -119,6 +122,13 @@ jobs:
 
       - name: Build ROS workspace
         run: |
+          # remove pulled in pip dependency of setuptools
+          if [ "${{ matrix.ros_distro }}" = "humble" ]; then
+            pip uninstall setuptools -y
+          else
+            pip uninstall --break-system-packages setuptools -y
+          fi
+          apt-get install -y --reinstall python3-setuptools python3-pkg-resources
           . /opt/ros/${{ matrix.ros_distro }}/setup.sh
           colcon build --merge-install --cmake-args -DCMAKE_BUILD_TYPE=RelWithDebInfo
 

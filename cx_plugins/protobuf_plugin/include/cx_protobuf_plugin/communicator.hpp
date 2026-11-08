@@ -35,6 +35,7 @@
 #include <vector>
 
 #include "clips_ns/clips.h"
+#undef RHS
 #include "protobuf_comm/server.h"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 

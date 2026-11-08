@@ -1,0 +1,27 @@
+string pddl_instance
+string goal_instance
+uint8 SEQUENTIAL_PLAN = 0
+uint8 TIME_TRIGGERED_PLAN = 1
+uint8 PARTIAL_ORDER_PLAN = 2
+uint8 HIERARCHICAL_PLAN = 3
+uint8 STN_PLAN = 4
+uint8 plan_kind
+# optional: if set, saves domain/problem files as <pddl_instance>_<goal_instance>_domain.pddl etc.
+string output_dir
+---
+bool success
+PlanAction[] actions
+
+# Result for hierarchical  plans
+uint8 FLAT_PLAN_SEQUENTIAL = 0
+uint8 FLAT_PLAN_TEMPORAL   = 1
+uint8 flat_plan_kind
+
+# Abstract task / method nodes from the decomposition tree.
+# Not directly executable, but useful for monitoring and failure reasoning.
+# The task_id on each action above matches a prefix of a method's task_id here,
+# letting consumers reconstruct which method each primitive action belongs to.
+HierarchicalPlanMethod[] methods
+
+StnConstraint[] stn_constraints
+---

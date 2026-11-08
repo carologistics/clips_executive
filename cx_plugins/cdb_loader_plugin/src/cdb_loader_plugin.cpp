@@ -351,7 +351,7 @@ bool CDBLoaderPlugin::clips_env_init(std::shared_ptr<clips::Environment> & env)
 {
   std::shared_ptr<rclcpp_lifecycle::LifecycleNode> node = parent_.lock();
   std::string hostname;
-  int port;
+  int port = 0;
   std::string username;
   std::string password;
   std::string database;

@@ -13,6 +13,7 @@
 ; See the License for the specific language governing permissions and
 ; limitations under the License.
 
+(undefrule protobuf-init-example-peer)
 (defrule protobuf-init-example-peer
   (not (executive-finalize))
   (not (peer ?any-peer-id))

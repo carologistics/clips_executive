@@ -30,6 +30,7 @@
     set_goals SetGoals
     clear_goals ClearGoals
     set_action_filter SetActionFilter
+    set_goal_from_string SetGoalFromString
     set_object_filter SetObjectFilter
     set_fluent_filter SetFluentFilter
     create_goal_instance CreateGoalInstance
@@ -51,36 +52,17 @@
   (slot ros-comm-init (type SYMBOL) (allowed-values TRUE FALSE) (default FALSE))
 )
 
-(deftemplate pddl-instance
-" Interface for instances.clp
-  Assert a fact of this type to initialize a pddl instance with the external pddl manager.
-  @slot name: unique name to refer to when using this instance
-  @slot domain: name of a domain.pddl file to be loaded.
-  @slot problem: optional name of the problem.pddl, leave empty if no problem should be loaded initially.
-  Slots set automatically:
-  @slot state:
-   - PENDING: The instance was not registered yet.
-   - LOADED: The instance is loaded and ready for usage.
-   - ERROR: The fluents were not fetched due to an error.
-  @busy-with: Indicates the current operation
-  @slot error: provide information on encountered errors.
-"
-  (slot name (type SYMBOL))
-  (slot domain (type STRING))
-  (slot problem (type STRING))
-  (slot directory (type STRING))
-  (slot state (type SYMBOL) (allowed-values PENDING LOADED ERROR) (default PENDING))
-  (slot busy-with (type SYMBOL) (allowed-values FALSE OBJECTS FLUENTS NUMERIC-FLUENTS ACTION-EFFECTS CREATE-GOAL-INSTANCE CLEAR-GOALS SET-GOALS CHECK-CONDITIONS GET-FLUENTS GET-NUMERIC-FLUENTS GET-PREDICATES GET-TYPE-OBJECTS GET-ACTION-NAMES SET-ACTION-FILTER SET-OBJECT-FILTER SET-FLUENT-FILTER CREATE-GOAL-INSTANCE) (default FALSE))
-  (slot error (type STRING))
-)
-
-
 (deftemplate pddl-action
 " Represents a grounded pddl action in a pddl instance.
   @slot instance: pddl instance belonging to the action.
   @slot name: name of the action.
   @slot params: parameters of the  action.
   @slot plan: name of the associated plan
+
+  The following slots only carry meaning in some variants of PDDL planning:
+  @slot order: holds sequential plan index or partial order/STN identifier
+  @slot predecessors: list of partial order identifiers to all predecessors
+  @slot task-id: identifier for hierarchical planning to match with pddl-method
   @slot: planned-start-time: start time of the action in the plan
   @slot: planned-duration: assumed duration of the action according to plan
 "
@@ -89,8 +71,54 @@
   (slot name (type SYMBOL))
   (multislot params (type SYMBOL) (default (create$)))
   (slot plan (type SYMBOL))
+  (slot order (type INTEGER))
+  (multislot predecessors (type INTEGER))
+  (slot task-id (type SYMBOL))
   (slot planned-start-time (type FLOAT))
   (slot planned-duration (type FLOAT))
+)
+
+(deftemplate pddl-method
+" Represents a grounded pddl method in a hddl instance.
+  @slot instance: pddl instance belonging to the action.
+  @slot plan: name of the associated plan
+  @slot name: name of the action.
+  @slot params: parameters of the action.
+  @slot task-id: decomposition identifier
+"
+  (slot instance (type SYMBOL))
+  (slot plan (type SYMBOL))
+  (slot id (type SYMBOL)) ; this should be a globally unique ID
+  (slot name (type SYMBOL))
+  (multislot params (type SYMBOL) (default (create$)))
+  (slot task-id (type SYMBOL))
+)
+
+(deftemplate pddl-stn-constraint
+" Represents a STN constraint of a STN plan.
+  These have the form: L < A - B < U, where A is the source, B the destination.
+  @slot instance: pddl instance belonging to the action.
+  @slot plan: name of the associated plan
+  @slot from: action id of the source action.
+  @slot from-role: timepoint of the source aciton (START or END).
+  @slot to: action id of the target action.
+  @slot to-role: timepoint of the target aciton (START or END).
+  @slot is-lower-bounded: If FALSE, lower-bound is actually -INF.
+  @slot is-upper-bounded: If FALSE, upper-bound is actually INF.
+  @slot lower-bound: lower bound of the constraint.
+  @slot upper-bound: upper bound of the constraint.
+"
+  (slot instance (type SYMBOL))
+  (slot plan (type SYMBOL))
+  (slot id (type SYMBOL)) ; this should be a globally unique ID
+  (slot from (type INTEGER))
+  (slot from-role (type SYMBOL) (allowed-values START END))
+  (slot to (type INTEGER))
+  (slot to-role (type SYMBOL) (allowed-values START END))
+  (slot is-lower-bounded (type SYMBOL) (allowed-values TRUE FALSE))
+  (slot is-upper-bounded (type SYMBOL) (allowed-values TRUE FALSE))
+  (slot lower-bound (type INTEGER))
+  (slot upper-bound (type INTEGER))
 )
 
 (deftemplate pddl-goal-fluent
@@ -429,6 +457,7 @@
   (slot value (type FLOAT))
   (slot request-id (type INTEGER))
   (slot state (type SYMBOL) (allowed-values PENDING WAITING ERROR ON-HOLD) (default PENDING))
+  (slot error (type STRING))
 )
 
 (deftemplate pddl-object-change
@@ -463,10 +492,10 @@
   (slot id (type SYMBOL))
   (slot goal (type SYMBOL))
   (slot goal-ptr (type EXTERNAL-ADDRESS))
-  (slot plan-type (type SYMBOL) (allowed-values CLASSICAL TEMPORAL) (default CLASSICAL))
+  (slot plan-type (type SYMBOL) (allowed-values CLASSICAL TEMPORAL PARTIAL-ORDER HIERARCHICAL STN) (default CLASSICAL))
+  (slot action-type (type SYMBOL) (allowed-values CLASSICAL TEMPORAL STN) (default CLASSICAL))
   (slot goal-handle (type EXTERNAL-ADDRESS))
   (slot output-dir (type STRING))
-  (slot type (type SYMBOL) (allowed-values TEMPORAL CLASSICAL))
   (slot state (type SYMBOL) (allowed-values PENDING WAITING PLANNING REQUEST-CANCELING CANCELING CANCELED SUCCESS FAILURE) (default PENDING))
 )
 
@@ -480,6 +509,16 @@
   (multislot filter (type SYMBOL) (default (create$ )))
   (slot instance (type SYMBOL))
   (slot goal (type SYMBOL))
+)
+
+(deftemplate pddl-set-goal-from-string
+" Facts to specify PDDL goal specification and/or metrics.
+"
+  (slot instance (type SYMBOL))
+  (slot goal (type SYMBOL))
+  (slot goal-description (type STRING))
+  (slot state (type SYMBOL) (allowed-values PENDING DONE ERROR) (default PENDING))
+  (slot error (type STRING))
 )
 
 (deftemplate pddl-set-goals
