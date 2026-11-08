@@ -21,7 +21,7 @@
   (not (pddl-service-request-meta (service ?s)))
   =>
   (bind ?new-req (ros-msgs-create-request ?type))
-  (ros-msgs-set-field ?new-req "pddl_instance" "rcll")
+  (ros-msgs-set-field ?new-req "pddl_instance" ?instance)
   (bind ?id (ros-msgs-async-send-request ?new-req ?s))
   (if ?id then
     (modify ?pi-f (busy-with GET-NUMERIC-FLUENTS))
