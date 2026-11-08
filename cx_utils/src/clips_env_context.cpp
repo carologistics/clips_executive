@@ -16,12 +16,15 @@
 
 #include "cx_utils/clips_env_context.hpp"
 
+#include <rclcpp/version.h>
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 
 #include <filesystem>
+#if RCLCPP_VERSION_MAJOR > 33 || (RCLCPP_VERSION_MAJOR == 33 && RCLCPP_VERSION_MINOR >= 1)
+#include <rclcpp/log_directory.hpp>
+#endif
 
-#include "rclcpp/log_directory.hpp"
 #include "rclcpp/logging.hpp"
 
 namespace cx
