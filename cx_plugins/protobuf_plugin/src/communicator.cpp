@@ -37,7 +37,7 @@ using boost::placeholders::_1;
 using boost::placeholders::_2;
 using boost::placeholders::_3;
 using boost::placeholders::_4;
-namespace pb = google::protobuf;
+namespace gpb = google::protobuf;
 
 namespace protobuf_clips
 {
@@ -773,11 +773,11 @@ clips::UDFValue ClipsProtobufCommunicator::clips_pb_field_names(void * msgptr)
     field_names.lexemeValue = clips::CreateBoolean(clips_, false);
     return field_names;
   }
-  const pb::Descriptor * desc = msg->GetDescriptor();
+  const gpb::Descriptor * desc = msg->GetDescriptor();
   const int field_count = desc->field_count();
   std::string out_str = "";
   for (int i = 0; i < field_count; ++i) {
-    out_str += " " + desc->field(i)->name();
+    out_str += " " + std::string(desc->field(i)->name());
   }
   field_names.multifieldValue = clips::StringToMultifield(clips_, out_str.c_str());
   return field_names;
@@ -794,63 +794,63 @@ clips::UDFValue ClipsProtobufCommunicator::clips_pb_field_type(
     return res;
   }
 
-  const pb::Descriptor * desc = msg->GetDescriptor();
-  const pb::FieldDescriptor * field = desc->FindFieldByName(field_name);
+  const gpb::Descriptor * desc = msg->GetDescriptor();
+  const gpb::FieldDescriptor * field = desc->FindFieldByName(field_name);
   if (!field) {
     res.lexemeValue = clips::CreateSymbol(clips_, "DOES-NOT-EXIST");
     return res;
   }
 
   switch (field->type()) {
-    case pb::FieldDescriptor::TYPE_DOUBLE:
+    case gpb::FieldDescriptor::TYPE_DOUBLE:
       res.lexemeValue = clips::CreateSymbol(clips_, "DOUBLE");
       break;
-    case pb::FieldDescriptor::TYPE_FLOAT:
+    case gpb::FieldDescriptor::TYPE_FLOAT:
       res.lexemeValue = clips::CreateSymbol(clips_, "FLOAT");
       break;
-    case pb::FieldDescriptor::TYPE_INT64:
+    case gpb::FieldDescriptor::TYPE_INT64:
       res.lexemeValue = clips::CreateSymbol(clips_, "INT64");
       break;
-    case pb::FieldDescriptor::TYPE_UINT64:
+    case gpb::FieldDescriptor::TYPE_UINT64:
       res.lexemeValue = clips::CreateSymbol(clips_, "UINT64");
       break;
-    case pb::FieldDescriptor::TYPE_INT32:
+    case gpb::FieldDescriptor::TYPE_INT32:
       res.lexemeValue = clips::CreateSymbol(clips_, "INT32");
       break;
-    case pb::FieldDescriptor::TYPE_FIXED64:
+    case gpb::FieldDescriptor::TYPE_FIXED64:
       res.lexemeValue = clips::CreateSymbol(clips_, "FIXED64");
       break;
-    case pb::FieldDescriptor::TYPE_FIXED32:
+    case gpb::FieldDescriptor::TYPE_FIXED32:
       res.lexemeValue = clips::CreateSymbol(clips_, "FIXED32");
       break;
-    case pb::FieldDescriptor::TYPE_BOOL:
+    case gpb::FieldDescriptor::TYPE_BOOL:
       res.lexemeValue = clips::CreateSymbol(clips_, "BOOL");
       break;
-    case pb::FieldDescriptor::TYPE_STRING:
+    case gpb::FieldDescriptor::TYPE_STRING:
       res.lexemeValue = clips::CreateSymbol(clips_, "STRING");
       break;
-    case pb::FieldDescriptor::TYPE_MESSAGE:
+    case gpb::FieldDescriptor::TYPE_MESSAGE:
       res.lexemeValue = clips::CreateSymbol(clips_, "MESSAGE");
       break;
-    case pb::FieldDescriptor::TYPE_BYTES:
+    case gpb::FieldDescriptor::TYPE_BYTES:
       res.lexemeValue = clips::CreateSymbol(clips_, "BYTES");
       break;
-    case pb::FieldDescriptor::TYPE_UINT32:
+    case gpb::FieldDescriptor::TYPE_UINT32:
       res.lexemeValue = clips::CreateSymbol(clips_, "UINT32");
       break;
-    case pb::FieldDescriptor::TYPE_ENUM:
+    case gpb::FieldDescriptor::TYPE_ENUM:
       res.lexemeValue = clips::CreateSymbol(clips_, "ENUM");
       break;
-    case pb::FieldDescriptor::TYPE_SFIXED32:
+    case gpb::FieldDescriptor::TYPE_SFIXED32:
       res.lexemeValue = clips::CreateSymbol(clips_, "SFIXED32");
       break;
-    case pb::FieldDescriptor::TYPE_SFIXED64:
+    case gpb::FieldDescriptor::TYPE_SFIXED64:
       res.lexemeValue = clips::CreateSymbol(clips_, "SFIXED64");
       break;
-    case pb::FieldDescriptor::TYPE_SINT32:
+    case gpb::FieldDescriptor::TYPE_SINT32:
       res.lexemeValue = clips::CreateSymbol(clips_, "SINT32");
       break;
-    case pb::FieldDescriptor::TYPE_SINT64:
+    case gpb::FieldDescriptor::TYPE_SINT64:
       res.lexemeValue = clips::CreateSymbol(clips_, "SINT64");
       break;
     default:
@@ -870,14 +870,14 @@ clips::UDFValue ClipsProtobufCommunicator::clips_pb_has_field(void * msgptr, std
     return res;
   }
 
-  const pb::Descriptor * desc = msg->GetDescriptor();
-  const pb::FieldDescriptor * field = desc->FindFieldByName(field_name);
+  const gpb::Descriptor * desc = msg->GetDescriptor();
+  const gpb::FieldDescriptor * field = desc->FindFieldByName(field_name);
   if (!field) {
     res.lexemeValue = clips::CreateBoolean(clips_, false);
     return res;
   }
 
-  const pb::Reflection * refl = msg->GetReflection();
+  const gpb::Reflection * refl = msg->GetReflection();
 
   if (field->is_repeated()) {
     res.lexemeValue = clips::CreateBoolean(clips_, (refl->FieldSize(*msg, field) > 0));
@@ -898,26 +898,20 @@ clips::UDFValue ClipsProtobufCommunicator::clips_pb_field_label(
     return res;
   }
 
-  const pb::Descriptor * desc = msg->GetDescriptor();
-  const pb::FieldDescriptor * field = desc->FindFieldByName(field_name);
+  const gpb::Descriptor * desc = msg->GetDescriptor();
+  const gpb::FieldDescriptor * field = desc->FindFieldByName(field_name);
   if (!field) {
     res.lexemeValue = clips::CreateSymbol(clips_, "DOES-NOT-EXIST");
     return res;
   }
-  switch (field->label()) {
-    case pb::FieldDescriptor::LABEL_OPTIONAL:
-      res.lexemeValue = clips::CreateSymbol(clips_, "OPTIONAL");
-      return res;
-    case pb::FieldDescriptor::LABEL_REQUIRED:
-      res.lexemeValue = clips::CreateSymbol(clips_, "REQUIRED");
-      return res;
-    case pb::FieldDescriptor::LABEL_REPEATED:
-      res.lexemeValue = clips::CreateSymbol(clips_, "REPEATED");
-      return res;
-    default:
-      res.lexemeValue = clips::CreateSymbol(clips_, "UNKNOWN");
-      return res;
+  if (field->is_repeated()) {
+    res.lexemeValue = clips::CreateSymbol(clips_, "REPEATED");
+  } else if (field->is_required()) {
+    res.lexemeValue = clips::CreateSymbol(clips_, "REQUIRED");
+  } else {
+    res.lexemeValue = clips::CreateSymbol(clips_, "OPTIONAL");
   }
+  return res;
 }
 
 clips::UDFValue ClipsProtobufCommunicator::clips_pb_field_value(
@@ -931,8 +925,8 @@ clips::UDFValue ClipsProtobufCommunicator::clips_pb_field_value(
     return res;
   }
 
-  const pb::Descriptor * desc = msg->GetDescriptor();
-  const pb::FieldDescriptor * field = desc->FindFieldByName(field_name);
+  const gpb::Descriptor * desc = msg->GetDescriptor();
+  const gpb::FieldDescriptor * field = desc->FindFieldByName(field_name);
   if (!field) {
     RCLCPP_WARN(
       *logger_,
@@ -941,8 +935,8 @@ clips::UDFValue ClipsProtobufCommunicator::clips_pb_field_value(
     res.lexemeValue = clips::CreateSymbol(clips_, "DOES-NOT-EXIST");
     return res;
   }
-  const pb::Reflection * refl = msg->GetReflection();
-  if (field->type() != pb::FieldDescriptor::TYPE_MESSAGE && !refl->HasField(*msg, field)) {
+  const gpb::Reflection * refl = msg->GetReflection();
+  if (field->type() != gpb::FieldDescriptor::TYPE_MESSAGE && !refl->HasField(*msg, field)) {
     RCLCPP_WARN(
       *logger_,
       cx::format("CLIPS-Protobuf: Field {} of {} not set", field_name, msg->GetTypeName()).c_str());
@@ -950,37 +944,37 @@ clips::UDFValue ClipsProtobufCommunicator::clips_pb_field_value(
     return res;
   }
   switch (field->type()) {
-    case pb::FieldDescriptor::TYPE_DOUBLE:
+    case gpb::FieldDescriptor::TYPE_DOUBLE:
       res.floatValue = clips::CreateFloat(clips_, refl->GetDouble(*msg, field));
       return res;
-    case pb::FieldDescriptor::TYPE_FLOAT:
+    case gpb::FieldDescriptor::TYPE_FLOAT:
       res.floatValue = clips::CreateFloat(clips_, refl->GetFloat(*msg, field));
       return res;
-    case pb::FieldDescriptor::TYPE_INT64:
+    case gpb::FieldDescriptor::TYPE_INT64:
       res.integerValue = clips::CreateInteger(clips_, refl->GetInt64(*msg, field));
       return res;
-    case pb::FieldDescriptor::TYPE_UINT64:
+    case gpb::FieldDescriptor::TYPE_UINT64:
       res.integerValue = clips::CreateInteger(clips_, (int64_t)refl->GetUInt64(*msg, field));
       return res;
-    case pb::FieldDescriptor::TYPE_INT32:
+    case gpb::FieldDescriptor::TYPE_INT32:
       res.integerValue = clips::CreateInteger(clips_, refl->GetInt32(*msg, field));
       return res;
-    case pb::FieldDescriptor::TYPE_FIXED64:
+    case gpb::FieldDescriptor::TYPE_FIXED64:
       res.integerValue = clips::CreateInteger(clips_, (int64_t)refl->GetUInt64(*msg, field));
       return res;
-    case pb::FieldDescriptor::TYPE_FIXED32:
+    case gpb::FieldDescriptor::TYPE_FIXED32:
       res.integerValue = clips::CreateInteger(clips_, refl->GetUInt32(*msg, field));
       return res;
-    case pb::FieldDescriptor::TYPE_BOOL:
+    case gpb::FieldDescriptor::TYPE_BOOL:
       res.lexemeValue = clips::CreateBoolean(clips_, refl->GetBool(*msg, field));
       return res;
-    case pb::FieldDescriptor::TYPE_BYTES:
+    case gpb::FieldDescriptor::TYPE_BYTES:
       res.lexemeValue = clips::CreateString(clips_, "BYTES");
       return res;
-    case pb::FieldDescriptor::TYPE_STRING:
+    case gpb::FieldDescriptor::TYPE_STRING:
       res.lexemeValue = clips::CreateString(clips_, refl->GetString(*msg, field).c_str());
       return res;
-    case pb::FieldDescriptor::TYPE_MESSAGE: {
+    case gpb::FieldDescriptor::TYPE_MESSAGE: {
       const google::protobuf::Message & mfield = refl->GetMessage(*msg, field);
       google::protobuf::Message * mcopy = mfield.New();
       mcopy->CopyFrom(mfield);
@@ -990,22 +984,23 @@ clips::UDFValue ClipsProtobufCommunicator::clips_pb_field_value(
       res.externalAddressValue = clips::CreateCExternalAddress(clips_, m.get());
       return res;
     }
-    case pb::FieldDescriptor::TYPE_UINT32:
+    case gpb::FieldDescriptor::TYPE_UINT32:
       res.integerValue = clips::CreateInteger(clips_, refl->GetUInt32(*msg, field));
       return res;
-    case pb::FieldDescriptor::TYPE_ENUM:
-      res.lexemeValue = clips::CreateSymbol(clips_, refl->GetEnum(*msg, field)->name().c_str());
+    case gpb::FieldDescriptor::TYPE_ENUM:
+      res.lexemeValue =
+        clips::CreateSymbol(clips_, std::string(refl->GetEnum(*msg, field)->name()).c_str());
       return res;
-    case pb::FieldDescriptor::TYPE_SFIXED32:
+    case gpb::FieldDescriptor::TYPE_SFIXED32:
       res.integerValue = clips::CreateInteger(clips_, refl->GetInt32(*msg, field));
       return res;
-    case pb::FieldDescriptor::TYPE_SFIXED64:
+    case gpb::FieldDescriptor::TYPE_SFIXED64:
       res.integerValue = clips::CreateInteger(clips_, refl->GetInt64(*msg, field));
       return res;
-    case pb::FieldDescriptor::TYPE_SINT32:
+    case gpb::FieldDescriptor::TYPE_SINT32:
       res.integerValue = clips::CreateInteger(clips_, refl->GetInt32(*msg, field));
       return res;
-    case pb::FieldDescriptor::TYPE_SINT64:
+    case gpb::FieldDescriptor::TYPE_SINT64:
       res.integerValue = clips::CreateInteger(clips_, refl->GetInt64(*msg, field));
       return res;
     default:
@@ -1023,61 +1018,61 @@ void ClipsProtobufCommunicator::clips_pb_set_field(
     return;
   }
 
-  const pb::Descriptor * desc = msg->GetDescriptor();
-  const pb::FieldDescriptor * field = desc->FindFieldByName(field_name);
+  const gpb::Descriptor * desc = msg->GetDescriptor();
+  const gpb::FieldDescriptor * field = desc->FindFieldByName(field_name);
   if (!field) {
     RCLCPP_WARN(
       *logger_, cx::format("CLIPS-Protobuf: Could not find field {}", field_name).c_str());
     return;
   }
-  const pb::Reflection * refl = msg->GetReflection();
+  const gpb::Reflection * refl = msg->GetReflection();
 
   try {
     switch (field->type()) {
-      case pb::FieldDescriptor::TYPE_DOUBLE:
+      case gpb::FieldDescriptor::TYPE_DOUBLE:
         refl->SetDouble(msg.get(), field, value.floatValue->contents);
         break;
-      case pb::FieldDescriptor::TYPE_FLOAT:
+      case gpb::FieldDescriptor::TYPE_FLOAT:
         refl->SetFloat(msg.get(), field, value.floatValue->contents);
         break;
-      case pb::FieldDescriptor::TYPE_SFIXED64:
-      case pb::FieldDescriptor::TYPE_SINT64:
-      case pb::FieldDescriptor::TYPE_INT64:
+      case gpb::FieldDescriptor::TYPE_SFIXED64:
+      case gpb::FieldDescriptor::TYPE_SINT64:
+      case gpb::FieldDescriptor::TYPE_INT64:
         refl->SetInt64(msg.get(), field, value.integerValue->contents);
         break;
-      case pb::FieldDescriptor::TYPE_FIXED64:
-      case pb::FieldDescriptor::TYPE_UINT64:
+      case gpb::FieldDescriptor::TYPE_FIXED64:
+      case gpb::FieldDescriptor::TYPE_UINT64:
         refl->SetUInt64(msg.get(), field, value.integerValue->contents);
         break;
-      case pb::FieldDescriptor::TYPE_SFIXED32:
-      case pb::FieldDescriptor::TYPE_SINT32:
-      case pb::FieldDescriptor::TYPE_INT32:
+      case gpb::FieldDescriptor::TYPE_SFIXED32:
+      case gpb::FieldDescriptor::TYPE_SINT32:
+      case gpb::FieldDescriptor::TYPE_INT32:
         refl->SetInt32(msg.get(), field, value.integerValue->contents);
         break;
-      case pb::FieldDescriptor::TYPE_BOOL:
+      case gpb::FieldDescriptor::TYPE_BOOL:
         refl->SetBool(msg.get(), field, std::strcmp(value.lexemeValue->contents, "TRUE") == 0);
         break;
-      case pb::FieldDescriptor::TYPE_STRING:
+      case gpb::FieldDescriptor::TYPE_STRING:
         refl->SetString(msg.get(), field, value.lexemeValue->contents);
         break;
-      case pb::FieldDescriptor::TYPE_MESSAGE: {
+      case gpb::FieldDescriptor::TYPE_MESSAGE: {
         auto sub_msg = messages_[value.externalAddressValue->contents];
         if (!sub_msg) {
           messages_.erase(msgptr);
           return;
         }
-        pb::Message * mut_msg = refl->MutableMessage(msg.get(), field);
+        gpb::Message * mut_msg = refl->MutableMessage(msg.get(), field);
         mut_msg->CopyFrom(*(sub_msg.get()));
       } break;
-      case pb::FieldDescriptor::TYPE_BYTES:
+      case gpb::FieldDescriptor::TYPE_BYTES:
         break;
-      case pb::FieldDescriptor::TYPE_FIXED32:
-      case pb::FieldDescriptor::TYPE_UINT32:
+      case gpb::FieldDescriptor::TYPE_FIXED32:
+      case gpb::FieldDescriptor::TYPE_UINT32:
         refl->SetUInt32(msg.get(), field, value.integerValue->contents);
         break;
-      case pb::FieldDescriptor::TYPE_ENUM: {
-        const pb::EnumDescriptor * enumdesc = field->enum_type();
-        const pb::EnumValueDescriptor * enumval =
+      case gpb::FieldDescriptor::TYPE_ENUM: {
+        const gpb::EnumDescriptor * enumdesc = field->enum_type();
+        const gpb::EnumValueDescriptor * enumval =
           enumdesc->FindValueByName(value.lexemeValue->contents);
         if (enumval) {
           refl->SetEnum(msg.get(), field, enumval);
@@ -1113,62 +1108,62 @@ void ClipsProtobufCommunicator::clips_pb_add_list(
     return;
   }
 
-  const pb::Descriptor * desc = msg->GetDescriptor();
-  const pb::FieldDescriptor * field = desc->FindFieldByName(field_name);
+  const gpb::Descriptor * desc = msg->GetDescriptor();
+  const gpb::FieldDescriptor * field = desc->FindFieldByName(field_name);
   if (!field) {
     RCLCPP_WARN(
       *logger_, cx::format("CLIPS-Protobuf: Could not find field {}", field_name).c_str());
     return;
   }
-  const pb::Reflection * refl = msg->GetReflection();
+  const gpb::Reflection * refl = msg->GetReflection();
 
   try {
     switch (field->type()) {
-      case pb::FieldDescriptor::TYPE_DOUBLE:
+      case gpb::FieldDescriptor::TYPE_DOUBLE:
         refl->AddDouble(msg.get(), field, value.floatValue->contents);
         break;
-      case pb::FieldDescriptor::TYPE_FLOAT:
+      case gpb::FieldDescriptor::TYPE_FLOAT:
         refl->AddFloat(msg.get(), field, value.floatValue->contents);
         break;
-      case pb::FieldDescriptor::TYPE_SFIXED64:
-      case pb::FieldDescriptor::TYPE_SINT64:
-      case pb::FieldDescriptor::TYPE_INT64:
+      case gpb::FieldDescriptor::TYPE_SFIXED64:
+      case gpb::FieldDescriptor::TYPE_SINT64:
+      case gpb::FieldDescriptor::TYPE_INT64:
         refl->AddInt64(msg.get(), field, value.integerValue->contents);
         break;
-      case pb::FieldDescriptor::TYPE_FIXED64:
-      case pb::FieldDescriptor::TYPE_UINT64:
+      case gpb::FieldDescriptor::TYPE_FIXED64:
+      case gpb::FieldDescriptor::TYPE_UINT64:
         refl->AddUInt64(msg.get(), field, (int64_t)value.integerValue->contents);
         break;
-      case pb::FieldDescriptor::TYPE_SFIXED32:
-      case pb::FieldDescriptor::TYPE_SINT32:
-      case pb::FieldDescriptor::TYPE_INT32:
+      case gpb::FieldDescriptor::TYPE_SFIXED32:
+      case gpb::FieldDescriptor::TYPE_SINT32:
+      case gpb::FieldDescriptor::TYPE_INT32:
         refl->AddInt32(msg.get(), field, value.integerValue->contents);
         break;
-      case pb::FieldDescriptor::TYPE_BOOL:
+      case gpb::FieldDescriptor::TYPE_BOOL:
         refl->AddBool(msg.get(), field, std::strcmp(value.lexemeValue->contents, "TRUE") == 0);
         break;
-      case pb::FieldDescriptor::TYPE_STRING:
+      case gpb::FieldDescriptor::TYPE_STRING:
         refl->AddString(msg.get(), field, value.lexemeValue->contents);
         break;
-      case pb::FieldDescriptor::TYPE_MESSAGE: {
+      case gpb::FieldDescriptor::TYPE_MESSAGE: {
         std::shared_ptr<google::protobuf::Message> mfrom =
           messages_[value.externalAddressValue->contents];
         if (!mfrom) {
           messages_.erase(value.externalAddressValue->contents);
           return;
         }
-        pb::Message * new_msg = refl->AddMessage(msg.get(), field);
+        gpb::Message * new_msg = refl->AddMessage(msg.get(), field);
         new_msg->CopyFrom(*mfrom);
       } break;
-      case pb::FieldDescriptor::TYPE_BYTES:
+      case gpb::FieldDescriptor::TYPE_BYTES:
         throw std::logic_error("Unsupported type BYTES");
-      case pb::FieldDescriptor::TYPE_FIXED32:
-      case pb::FieldDescriptor::TYPE_UINT32:
+      case gpb::FieldDescriptor::TYPE_FIXED32:
+      case gpb::FieldDescriptor::TYPE_UINT32:
         refl->AddUInt32(msg.get(), field, value.integerValue->contents);
         break;
-      case pb::FieldDescriptor::TYPE_ENUM: {
-        const pb::EnumDescriptor * enumdesc = field->enum_type();
-        const pb::EnumValueDescriptor * enumval =
+      case gpb::FieldDescriptor::TYPE_ENUM: {
+        const gpb::EnumDescriptor * enumdesc = field->enum_type();
+        const gpb::EnumValueDescriptor * enumval =
           enumdesc->FindValueByName(value.lexemeValue->contents);
         if (enumval) refl->AddEnum(msg.get(), field, enumval);
       } break;
@@ -1179,7 +1174,7 @@ void ClipsProtobufCommunicator::clips_pb_add_list(
     RCLCPP_WARN(
       *logger_, cx::format(
                   "CLIPS-Protobuf: Failed to add field {} of {}: {}", field_name,
-                  msg->GetTypeName().c_str(), e.what())
+                  std::string(msg->GetTypeName()).c_str(), e.what())
                   .c_str());
   }
 }
@@ -1239,17 +1234,17 @@ void ClipsProtobufCommunicator::clips_pb_send(int64_t client_id, void * msgptr)
       // printf("Client ID %li is unknown, cannot send message of type %s\n",
       //     client_id, (*m)->GetTypeName().c_str());
     }
-  } catch (google::protobuf::FatalException & e) {
-    RCLCPP_WARN(
-      *logger_, cx::format(
-                  "CLIPS-Profobuf: Failed to send message of type {}: {}",
-                  msg->GetTypeName().c_str(), e.what())
-                  .c_str());
   } catch (std::runtime_error & e) {
     RCLCPP_WARN(
       *logger_, cx::format(
                   "CLIPS-Profobuf: Failed to send message of type {}: {}",
-                  msg->GetTypeName().c_str(), e.what())
+                  std::string(msg->GetTypeName()).c_str(), e.what())
+                  .c_str());
+  } catch (std::exception & e) {
+    RCLCPP_WARN(
+      *logger_, cx::format(
+                  "CLIPS-Profobuf: Failed to send message of type {}: {}",
+                  std::string(msg->GetTypeName()).c_str(), e.what())
                   .c_str());
   }
 }
@@ -1280,12 +1275,12 @@ void ClipsProtobufCommunicator::clips_pb_broadcast(int64_t peer_id, void * msgpt
 
   try {
     peers_[peer_id]->send(msg);
-  } catch (google::protobuf::FatalException & e) {
+  } catch (std::runtime_error & e) {
     RCLCPP_WARN(
       *logger_,
       cx::format("Failed to broadcast message of type {}: {}", msg->GetTypeName(), e.what())
         .c_str());
-  } catch (std::runtime_error & e) {
+  } catch (std::exception & e) {
     RCLCPP_WARN(
       *logger_,
       cx::format("Failed to broadcast message of type {}: {}", msg->GetTypeName(), e.what())
@@ -1328,8 +1323,8 @@ clips::UDFValue ClipsProtobufCommunicator::clips_pb_field_list(
     return res;
   }
 
-  const pb::Descriptor * desc = msg->GetDescriptor();
-  const pb::FieldDescriptor * field = desc->FindFieldByName(field_name);
+  const gpb::Descriptor * desc = msg->GetDescriptor();
+  const gpb::FieldDescriptor * field = desc->FindFieldByName(field_name);
   if (!field) {
     res.lexemeValue = clips::CreateSymbol(clips_, "DOES-NOT-EXIST");
     return res;
@@ -1337,9 +1332,7 @@ clips::UDFValue ClipsProtobufCommunicator::clips_pb_field_list(
   res.begin = 0;
   res.range = -1;
   clips::MultifieldBuilder * mb = clips::CreateMultifieldBuilder(clips_, 10);
-  if (
-    field->label() == pb::FieldDescriptor::LABEL_REQUIRED ||
-    field->label() == pb::FieldDescriptor::LABEL_OPTIONAL) {
+  if (!field->is_repeated()) {
     clips::UDFValue aux_val = clips_pb_field_value(msgptr, field_name);
     clips::MBAppend(mb, static_cast<clips::CLIPSValue *>(aux_val.value));
     res.multifieldValue = clips::MBCreate(mb);
@@ -1347,25 +1340,25 @@ clips::UDFValue ClipsProtobufCommunicator::clips_pb_field_list(
     return res;
   }
 
-  const pb::Reflection * refl = msg->GetReflection();
+  const gpb::Reflection * refl = msg->GetReflection();
   int field_size = refl->FieldSize(*msg, field);
   for (int i = 0; i < field_size; ++i) {
     switch (field->type()) {
-      case pb::FieldDescriptor::TYPE_DOUBLE:
+      case gpb::FieldDescriptor::TYPE_DOUBLE:
         clips::MBAppendFloat(mb, refl->GetRepeatedDouble(*msg, field, i));
         break;
-      case pb::FieldDescriptor::TYPE_FLOAT:
+      case gpb::FieldDescriptor::TYPE_FLOAT:
         clips::MBAppendFloat(mb, refl->GetRepeatedFloat(*msg, field, i));
         break;
-      case pb::FieldDescriptor::TYPE_UINT64:
-      case pb::FieldDescriptor::TYPE_FIXED64:
+      case gpb::FieldDescriptor::TYPE_UINT64:
+      case gpb::FieldDescriptor::TYPE_FIXED64:
         clips::MBAppendInteger(mb, (int64_t)refl->GetRepeatedUInt64(*msg, field, i));
         break;
-      case pb::FieldDescriptor::TYPE_UINT32:
-      case pb::FieldDescriptor::TYPE_FIXED32:
+      case gpb::FieldDescriptor::TYPE_UINT32:
+      case gpb::FieldDescriptor::TYPE_FIXED32:
         clips::MBAppendInteger(mb, refl->GetRepeatedUInt32(*msg, field, i));
         break;
-      case pb::FieldDescriptor::TYPE_BOOL:
+      case gpb::FieldDescriptor::TYPE_BOOL:
         // Booleans are represented as Symbols in CLIPS
         if (refl->GetRepeatedBool(*msg, field, i)) {
           clips::MBAppendSymbol(mb, "TRUE");
@@ -1373,30 +1366,31 @@ clips::UDFValue ClipsProtobufCommunicator::clips_pb_field_list(
           clips::MBAppendSymbol(mb, "FALSE");
         }
         break;
-      case pb::FieldDescriptor::TYPE_STRING:
+      case gpb::FieldDescriptor::TYPE_STRING:
         clips::MBAppendString(mb, refl->GetRepeatedString(*msg, field, i).c_str());
         break;
-      case pb::FieldDescriptor::TYPE_MESSAGE: {
+      case gpb::FieldDescriptor::TYPE_MESSAGE: {
         const google::protobuf::Message & sub_msg = refl->GetRepeatedMessage(*msg, field, i);
         google::protobuf::Message * mcopy = sub_msg.New();
         mcopy->CopyFrom(sub_msg);
         messages_[mcopy] = std::shared_ptr<google::protobuf::Message>(mcopy);
         clips::MBAppendCLIPSExternalAddress(mb, clips::CreateCExternalAddress(clips_, mcopy));
       } break;
-      case pb::FieldDescriptor::TYPE_BYTES:
+      case gpb::FieldDescriptor::TYPE_BYTES:
         clips::MBAppendString(mb, "BYTES");
         break;
-      case pb::FieldDescriptor::TYPE_ENUM:
-        clips::MBAppendSymbol(mb, refl->GetRepeatedEnum(*msg, field, i)->name().c_str());
+      case gpb::FieldDescriptor::TYPE_ENUM:
+        clips::MBAppendSymbol(
+          mb, std::string(refl->GetRepeatedEnum(*msg, field, i)->name()).c_str());
         break;
-      case pb::FieldDescriptor::TYPE_SFIXED32:
-      case pb::FieldDescriptor::TYPE_INT32:
-      case pb::FieldDescriptor::TYPE_SINT32:
+      case gpb::FieldDescriptor::TYPE_SFIXED32:
+      case gpb::FieldDescriptor::TYPE_INT32:
+      case gpb::FieldDescriptor::TYPE_SINT32:
         clips::MBAppendInteger(mb, refl->GetRepeatedInt32(*msg, field, i));
         break;
-      case pb::FieldDescriptor::TYPE_SFIXED64:
-      case pb::FieldDescriptor::TYPE_SINT64:
-      case pb::FieldDescriptor::TYPE_INT64:
+      case gpb::FieldDescriptor::TYPE_SFIXED64:
+      case gpb::FieldDescriptor::TYPE_SINT64:
+      case gpb::FieldDescriptor::TYPE_INT64:
         clips::MBAppendInteger(mb, refl->GetRepeatedInt64(*msg, field, i));
         break;
       default:
@@ -1420,8 +1414,8 @@ clips::UDFValue ClipsProtobufCommunicator::clips_pb_field_is_list(
     return res;
   }
 
-  const pb::Descriptor * desc = msg->GetDescriptor();
-  const pb::FieldDescriptor * field = desc->FindFieldByName(field_name);
+  const gpb::Descriptor * desc = msg->GetDescriptor();
+  const gpb::FieldDescriptor * field = desc->FindFieldByName(field_name);
   if (!field) {
     res.lexemeValue = clips::CreateBoolean(clips_, false);
   }
@@ -1436,7 +1430,7 @@ void ClipsProtobufCommunicator::clips_assert_message(
 {
   clips::FactBuilder * fact_builder = clips::CreateFactBuilder(clips_, "protobuf-msg");
   if (fact_builder) {
-    clips::FBPutSlotString(fact_builder, "type", msg->GetTypeName().c_str());
+    clips::FBPutSlotString(fact_builder, "type", std::string(msg->GetTypeName()).c_str());
     clips::FBPutSlotInteger(fact_builder, "comp-id", comp_id);
     clips::FBPutSlotInteger(fact_builder, "msg-type", msg_type);
     clips::FBPutSlotSymbol(fact_builder, "rcvd-via", (ct == CT_PEER) ? "BROADCAST" : "STREAM");
