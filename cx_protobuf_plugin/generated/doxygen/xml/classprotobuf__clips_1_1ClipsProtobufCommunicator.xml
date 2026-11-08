@@ -34,7 +34,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="128" column="3" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="129" bodyend="133"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="129" column="3" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="130" bodyend="134"/>
       </memberdef>
       <memberdef kind="typedef" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ade456e5303c2b07b14baaeab7d9d734b" prot="private" static="no">
         <type>std::map&lt; protobuf_comm::ProtobufStreamServer::ClientID, int64_t &gt;</type>
@@ -48,7 +48,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="186" column="20" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="186" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="187" column="20" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="187" bodyend="-1"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="private-attrib">
@@ -64,7 +64,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="169" column="23" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="169" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="170" column="23" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="170" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a88a5fbae5611aea57cd1650395dd2b71" prot="private" static="no" mutable="no">
         <type>std::mutex &amp;</type>
@@ -78,7 +78,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="170" column="15" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="170" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="171" column="15" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="171" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a1b9a40d1b0ed689da580ab88bb0e4353" prot="private" static="no" mutable="no">
         <type>std::unique_ptr&lt; protobuf_comm::MessageRegister &gt;</type>
@@ -92,7 +92,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="172" column="19" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="172" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="173" column="19" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="173" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ae3fe8f937a7d80c6a66ff9847ef7fba7" prot="private" static="no" mutable="no">
         <type>std::unique_ptr&lt; protobuf_comm::ProtobufStreamServer &gt;</type>
@@ -106,7 +106,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="173" column="19" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="173" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="174" column="19" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="174" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a6a08ac723978380780964abd5b6e5d08" prot="private" static="no" mutable="no">
         <type>boost::signals2::signal&lt; void(protobuf_comm::ProtobufStreamServer::ClientID, std::shared_ptr&lt; google::protobuf::Message &gt;)&gt;</type>
@@ -120,7 +120,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="177" column="5" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="177" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="178" column="5" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="178" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a60f343e263ccf3eedf0f9d4ea61a0eaf" prot="private" static="no" mutable="no">
         <type>boost::signals2::signal&lt; void(std::string, uint16_t, std::shared_ptr&lt; google::protobuf::Message &gt;)&gt;</type>
@@ -134,7 +134,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="179" column="5" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="179" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="180" column="5" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="180" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a9dce840404330838221a698f9d27c7ac" prot="private" static="no" mutable="no">
         <type>boost::signals2::signal&lt; void(int64_t, std::shared_ptr&lt; google::protobuf::Message &gt;)&gt;</type>
@@ -148,7 +148,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="180" column="27" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="180" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="181" column="27" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="181" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a5bf56334a263cd9841b997591e1fbd6e" prot="private" static="no" mutable="no">
         <type>std::mutex</type>
@@ -162,7 +162,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="182" column="14" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="182" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="183" column="14" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="183" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a80664fa2e24f5b7660a3d6dd143627fc" prot="private" static="no" mutable="no">
         <type>int64_t</type>
@@ -176,7 +176,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="183" column="11" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="183" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="184" column="11" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="184" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1aa8cd268d3b810c1e686dab400a758abb" prot="private" static="no" mutable="no">
         <type>std::map&lt; int64_t, protobuf_comm::ProtobufStreamServer::ClientID &gt;</type>
@@ -190,7 +190,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="185" column="12" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="185" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="186" column="12" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="186" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a44a1cf57abbaf826970e950ce9165cb4" prot="private" static="no" mutable="no">
         <type>RevServerClientMap</type>
@@ -204,7 +204,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="187" column="22" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="187" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="188" column="22" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="188" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1abf6543c675ac8f5c5015fb45cca52f09" prot="private" static="no" mutable="no">
         <type>std::map&lt; int64_t, std::unique_ptr&lt; protobuf_comm::ProtobufStreamClient &gt; &gt;</type>
@@ -218,7 +218,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="188" column="12" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="188" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="189" column="12" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="189" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a8ab87cdd854ddc49632ba2f0682cbb87" prot="private" static="no" mutable="no">
         <type>std::map&lt; int64_t, std::unique_ptr&lt; protobuf_comm::ProtobufBroadcastPeer &gt; &gt;</type>
@@ -232,7 +232,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="189" column="12" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="189" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="190" column="12" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="190" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a1852ed9d31f2a6a64f6e71bbbc541ebe" prot="private" static="no" mutable="no">
         <type>std::map&lt; int64_t, std::pair&lt; std::string, uint16_t &gt; &gt;</type>
@@ -246,7 +246,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="191" column="12" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="191" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="192" column="12" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="192" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1af6be31d1eac412f73eb26c7eda6e3a44" prot="private" static="no" mutable="no">
         <type>std::list&lt; std::string &gt;</type>
@@ -260,7 +260,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="193" column="13" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="193" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="194" column="13" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="194" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ae527f28f7afc49ce8ec3b16473c3bef9" prot="private" static="no" mutable="no">
         <type>rclcpp_lifecycle::LifecycleNode::WeakPtr</type>
@@ -275,7 +275,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="195" column="44" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="195" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="196" column="44" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="196" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a287f10014cc4ec9ac2c1ace6b46ee008" prot="private" static="no" mutable="no">
         <type>std::unordered_map&lt; void *, std::shared_ptr&lt; google::protobuf::Message &gt; &gt;</type>
@@ -289,7 +289,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="197" column="22" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="197" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="198" column="22" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="198" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ae974df78369ef25054ad9def0ee3b8aa" prot="private" static="no" mutable="no">
         <type>std::unique_ptr&lt; rclcpp::Logger &gt;</type>
@@ -303,7 +303,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="199" column="19" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="199" bodyend="-1"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="200" column="19" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="200" bodyend="-1"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="public-func">
@@ -331,7 +331,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="58" column="3"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="59" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a21429c700fae3b6f7c9b17b7c26da803" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -361,7 +361,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="61" column="3"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="62" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1abc30ac62426556659a0ca76f9da141ac" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -375,7 +375,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="64" column="3"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="65" column="3"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a62f89d0182fcf10d9167f9b42b2bdf06" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -393,7 +393,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="66" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="67" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ad9031ecd13912bcde0e2059d9efacefe" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -407,7 +407,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="67" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="68" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a63ddae947df78b3e1f788f956713e3e0" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>boost::signals2::signal&lt; void(protobuf_comm::ProtobufStreamServer::ClientID, std::shared_ptr&lt; google::protobuf::Message &gt;)&gt; &amp;</type>
@@ -424,7 +424,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="74" column="3" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="74" bodyend="77"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="75" column="3" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="75" bodyend="78"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a25d865044f1659d7b2e01e76415ebc0f" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>boost::signals2::signal&lt; void(std::string, uint16_t, std::shared_ptr&lt; google::protobuf::Message &gt;)&gt; &amp;</type>
@@ -441,7 +441,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="83" column="3" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="83" bodyend="86"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="84" column="3" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="84" bodyend="87"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a92030039e325ddd9cbb8168c28701c48" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
         <type>boost::signals2::signal&lt; void(int64_t, std::shared_ptr&lt; google::protobuf::Message &gt;)&gt; &amp;</type>
@@ -458,7 +458,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="92" column="3" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="92" bodyend="95"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="93" column="3" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="93" bodyend="96"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="private-func">
@@ -474,7 +474,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="98" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="99" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a43970233a023ac6b402495a220ac771c" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>clips::UDFValue</type>
@@ -492,7 +492,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="100" column="19"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="101" column="19"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a7202de9a2c1c247f15b3792d73dea609" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>clips::UDFValue</type>
@@ -510,7 +510,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="101" column="19"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="102" column="19"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ac1f9aef49491aceaa9e73e7010382e87" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>clips::UDFValue</type>
@@ -532,7 +532,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="102" column="19"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="103" column="19"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a336724ac739a9dff83fa71fd7f38532f" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>clips::UDFValue</type>
@@ -554,7 +554,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="103" column="19"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="104" column="19"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1af02bed787bfd388edd7a4e77a3d73ac7" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>clips::UDFValue</type>
@@ -576,7 +576,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="104" column="19"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="105" column="19"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a68bcfe9d0ae3e94c4486ee70193f4b56" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>clips::UDFValue</type>
@@ -598,7 +598,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="105" column="19"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="106" column="19"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a9205f619f6922422c9dd04fb5ab30e2c" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>clips::UDFValue</type>
@@ -620,7 +620,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="106" column="19"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="107" column="19"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a3869b1e60d1bbbb2909520c86a84bfe1" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>clips::UDFValue</type>
@@ -642,7 +642,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="107" column="19"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="108" column="19"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a60842a4d9f8735f70fe0632e04ebe5ea" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>clips::UDFValue</type>
@@ -660,7 +660,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="108" column="19"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="109" column="19"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a0d9eed812f5b51db1cca30bb90de59bf" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -678,7 +678,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="109" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="110" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a78e1d3cc0ae1ab2ab2d29c0409c9f47c" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -704,7 +704,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="110" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="111" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a47a7fc72aea166d20d31e7ed214affc1" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -730,7 +730,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="111" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="112" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ae27761b05525d2c3517a7de8a7fe9274" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -752,7 +752,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="112" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="113" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a67ee73dd17b309665a3573d9b586a6e9" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>std::string</type>
@@ -770,7 +770,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="113" column="15"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="114" column="15"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a2ff7f849fbf35c8c7d935f519c202344" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>int64_t</type>
@@ -792,7 +792,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="114" column="11"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="115" column="11"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a20b2e07fc695a2e08888de71869a430d" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -810,7 +810,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="115" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="116" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a71f1aeaaf68c4347f5b485b28472dcf3" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -832,7 +832,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="116" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="117" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1af2c594569eea6fd0c60991421c87a724" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>int64_t</type>
@@ -854,7 +854,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="118" column="11"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="119" column="11"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a168021a7355c4cc7a699e53c57ac302c" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>int64_t</type>
@@ -880,7 +880,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="119" column="11"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="120" column="11"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1acd55dbb76e99a59126ab66571a873ad4" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>int64_t</type>
@@ -912,7 +912,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="120" column="11"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="121" column="11"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a4ce02fb46d41a27fec1f08779094e5d1" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>int64_t</type>
@@ -948,7 +948,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="122" column="11"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="123" column="11"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a4c4f2e60759aed1928c54a85a114da80" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -966,7 +966,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="125" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="126" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ad7801e92d7a1a5d16dd3be5950cd906c" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -992,7 +992,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="126" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="127" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ad82d1201ce393e43eec323a6cfc39501" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -1031,7 +1031,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="134" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="135" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a85b54230f87368f7d78f6940940a1bf6" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -1053,7 +1053,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="137" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="138" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a4274a1055ed3c38f5ae25c012b9e9d32" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -1075,7 +1075,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="140" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="141" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ab1946f562e3036e39fa88839c78110ee" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -1105,7 +1105,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="143" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="144" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a45398a1f49b47032742bb5f84bd7d4d2" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -1135,7 +1135,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="147" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="148" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ae7dcd316c675b6211528edcfe18afa2e" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -1169,7 +1169,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="151" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="152" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ab6c640599dae9781fd81f9d2a4b2c0cc" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -1195,7 +1195,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="154" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="155" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a35121d6612a81561adb4dddab748df89" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -1217,7 +1217,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="156" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="157" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1adb668d9ad8b6095064aa52104a906eaa" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -1235,7 +1235,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="158" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="159" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a2af97c7f44ea7eda92882a62835a1356" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -1257,7 +1257,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="159" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="160" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a959dc6cdf6da9ee0fc4b18c801324bca" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -1287,7 +1287,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="160" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="161" column="8"/>
       </memberdef>
       <memberdef kind="function" id="classprotobuf__clips_1_1ClipsProtobufCommunicator_1ac6baa516edcf05b9dac91e71c790212d" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -1317,7 +1317,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="163" column="8"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="164" column="8"/>
       </memberdef>
     </sectiondef>
     <sectiondef kind="private-static-func">
@@ -1337,14 +1337,14 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="include/cx_protobuf_plugin/communicator.hpp" line="166" column="22"/>
+        <location file="include/cx_protobuf_plugin/communicator.hpp" line="167" column="22"/>
       </memberdef>
     </sectiondef>
     <briefdescription>
     </briefdescription>
     <detaileddescription>
     </detaileddescription>
-    <location file="include/cx_protobuf_plugin/communicator.hpp" line="55" column="1" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="56" bodyend="200"/>
+    <location file="include/cx_protobuf_plugin/communicator.hpp" line="56" column="1" bodyfile="include/cx_protobuf_plugin/communicator.hpp" bodystart="57" bodyend="201"/>
     <listofallmembers>
       <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1a1852ed9d31f2a6a64f6e71bbbc541ebe" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>client_endpoints_</name></member>
       <member refid="classprotobuf__clips_1_1ClipsProtobufCommunicator_1abf6543c675ac8f5c5015fb45cca52f09" prot="private" virt="non-virtual"><scope>protobuf_clips::ClipsProtobufCommunicator</scope><name>clients_</name></member>

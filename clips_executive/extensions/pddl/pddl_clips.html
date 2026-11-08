@@ -8,7 +8,7 @@
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=86f27845" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=8f9e6779" />
-      <link rel="stylesheet" type="text/css" href="../../_static/custom_figure.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom_figure.css?v=029e56d8" />
 
   
     <link rel="shortcut icon" href="../../_static/icon.svg"/>
@@ -22,7 +22,9 @@
         <script src="../../_static/copybutton.js?v=71494f10"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="PDDL Domain and Problem File Example" href="domain.html" />
+    <link rel="prev" title="PDDL Manager" href="pddl_manager.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -48,13 +50,29 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../getting_started/index.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../plugins/index.html">CLIPS Plugins</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../plugin_generator/index.html">ROS Interface Plugin Generator</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../cli/index.html">Command Line Interface (CLI)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../index.html">Extensions</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Extensions</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">PDDL Integration for CLIPS</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="index.html#background-pddl">Background: PDDL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#overview">Overview</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html#content">Content</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pddl_manager.html">PDDL Manager</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">PDDL CLIPS Interfaces</a></li>
+<li class="toctree-l4"><a class="reference internal" href="domain.html">PDDL Domain and Problem File Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cx_pddl_clips_tutorial.html">Tutorial: cx_pddl_clips Agent</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../rl/index.html">Reinforcement Learning Integration for CLIPS</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../standards.html">Standard Documents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../__readme_include.html">README</a></li>
 </ul>
@@ -73,6 +91,8 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Extensions</a></li>
+          <li class="breadcrumb-item"><a href="index.html">PDDL Integration for CLIPS</a></li>
       <li class="breadcrumb-item active">PDDL CLIPS Interfaces</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/extensions/pddl/pddl_clips.rst.txt" rel="nofollow"> View page source</a>
@@ -88,107 +108,13 @@
 <p>The PDDL integration is provided in the form of the <cite>PDDL Manager</cite>, a ROS lifecycle node that provides ROS interfaces, which can be called through the ROS2 CLIPS-Executive plugins that handle ROS communication.</p>
 <p>In order to reduce the manual overhead, the <code class="docutils literal notranslate"><span class="pre">cx_pddl_clips</span></code> package provides a CLIPS-based interface for interacting with the PDDL Manager node in ROS 2.
 This allows to interact with the PDDL manager by simply asserting and monitoring CLIPS facts, without the need to do direct ROS communication (e.g., populating ROS messages or waiting for service feedback).</p>
-<section id="pddl-manager">
-<h2>PDDL Manager<a class="headerlink" href="#pddl-manager" title="Link to this heading"></a></h2>
-<p>The PDDL Manager node has the following responsibilities:</p>
-<ul class="simple">
-<li><p>Manage multiple PDDL instances concurrently.</p></li>
-<li><p>Load PDDL files (optionally templated via Jinja).</p></li>
-<li><p>Manage fluents, objects, functions, and goals.</p></li>
-<li><p>Check conditions and apply effects of actions.</p></li>
-<li><p>Configure planning goals.</p></li>
-<li><p>Applying planning filters to narrow down problems to a subset of actions, objects, and fluents for more detailed execution models.</p></li>
-<li><p>Trigger planning a for each goal concurrently.</p></li>
-</ul>
-</section>
-<section id="pddl-manager-services">
-<h2>PDDL Manager Services<a class="headerlink" href="#pddl-manager-services" title="Link to this heading"></a></h2>
-<p>The PDDL Manager exposes a wide range of ROS 2 interfaces.</p>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 50.0%" />
-<col style="width: 50.0%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Service / Topic</p></th>
-<th class="head"><p>Corresponding Deftemplate(s)</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><abbr title="Add a new PDDL instance to the manager">/add_pddl_instance</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-instance"><span class="std std-ref">pddl-instance</span></a></p></td>
-</tr>
-<tr class="row-odd"><td><p><abbr title="Check if the preconditions of a PDDL action are satisfied">/check_action_condition</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-action-condition"><span class="std std-ref">pddl-action-condition</span></a></p></td>
-</tr>
-<tr class="row-even"><td><p><abbr title="Retrieve the effects of a PDDL action">/get_action_effects</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-action-get-effect"><span class="std std-ref">pddl-action-get-effect</span></a></p></td>
-</tr>
-<tr class="row-odd"><td><p><abbr title="Get the list of available action names for a PDDL instance">/get_action_names</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-action-names"><span class="std std-ref">pddl-action-names</span></a></p></td>
-</tr>
-<tr class="row-even"><td><p><abbr title="Fetch all current boolean fluents of a PDDL instance">/get_fluents</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-get-fluents"><span class="std std-ref">pddl-get-fluents</span></a></p></td>
-</tr>
-<tr class="row-odd"><td><p><abbr title="Add multiple fluents to a PDDL instance">/add_fluents</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-fluent-change"><span class="std std-ref">pddl-fluent-change</span></a></p></td>
-</tr>
-<tr class="row-even"><td><p><abbr title="Remove multiple fluents from a PDDL instance">/rm_fluents</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-fluent-change"><span class="std std-ref">pddl-fluent-change</span></a></p></td>
-</tr>
-<tr class="row-odd"><td><p><abbr title="Add objects to a PDDL instance">/add_objects</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-object-change"><span class="std std-ref">pddl-object-change</span></a></p></td>
-</tr>
-<tr class="row-even"><td><p><abbr title="Remove objects from a PDDL instance">/rm_objects</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-object-change"><span class="std std-ref">pddl-object-change</span></a></p></td>
-</tr>
-<tr class="row-odd"><td><p><abbr title="Set values for numeric functions in the PDDL instance">/set_functions</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-numeric-fluent-change"><span class="std std-ref">pddl-numeric-fluent-change</span></a></p></td>
-</tr>
-<tr class="row-even"><td><p><abbr title="Retrieve values of numeric functions">/get_functions</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-get-numeric-fluents"><span class="std std-ref">pddl-get-numeric-fluents</span></a></p></td>
-</tr>
-<tr class="row-odd"><td><p><abbr title="Register goal conditions with the PDDL manager">/set_goals</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-set-goals"><span class="std std-ref">pddl-set-goals</span></a></p></td>
-</tr>
-<tr class="row-even"><td><p><abbr title="Clear all goal conditions of a PDDL instance">/clear_goals</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-clear-goals"><span class="std std-ref">pddl-clear-goals</span></a></p></td>
-</tr>
-<tr class="row-odd"><td><p><abbr title="Apply a filter to restrict planning to specific actions">/set_action_filter</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-planning-filter"><span class="std std-ref">pddl-planning-filter</span></a></p></td>
-</tr>
-<tr class="row-even"><td><p><abbr title="Apply a filter to restrict planning to specific objects">/set_object_filter</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-planning-filter"><span class="std std-ref">pddl-planning-filter</span></a></p></td>
-</tr>
-<tr class="row-odd"><td><p><abbr title="Apply a filter to restrict planning to specific fluents">/set_fluent_filter</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-planning-filter"><span class="std std-ref">pddl-planning-filter</span></a></p></td>
-</tr>
-<tr class="row-even"><td><p><abbr title="Create a new goal instance for planning">/create_goal_instance</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-create-goal-instance"><span class="std std-ref">pddl-create-goal-instance</span></a></p></td>
-</tr>
-<tr class="row-odd"><td><p><abbr title="Fetch all predicates of a PDDL instance">/get_predicates</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-get-predicates"><span class="std std-ref">pddl-get-predicates</span></a></p></td>
-</tr>
-<tr class="row-even"><td><p><abbr title="Fetch all objects of a certain type in a PDDL instance">/get_type_objects</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-get-type-objects"><span class="std std-ref">pddl-get-type-objects</span></a></p></td>
-</tr>
-<tr class="row-odd"><td><p><abbr title="Send a temporal planning goal and retrieve the resulting plan">/temp_plan</abbr></p></td>
-<td><p><a class="reference internal" href="#pddl-plan"><span class="std std-ref">pddl-plan</span></a>, <a class="reference internal" href="#pddl-action"><span class="std std-ref">pddl-action</span></a></p></td>
-</tr>
-<tr class="row-even"><td><p><abbr title="Publishes updates about instance changes in the manager">/instance_update</abbr></p></td>
-<td><p><a class="reference internal" href="#id18"><span class="std std-ref">pddl-manager</span></a></p></td>
-</tr>
-</tbody>
-</table>
-</section>
 <section id="clips-integration">
 <h2>CLIPS Integration<a class="headerlink" href="#clips-integration" title="Link to this heading"></a></h2>
-<p>CLIPS needs to interact with the PDDL Manager by creating subscriptions and clients for the endpoints to then utilize the features as desired.
+<p>CLIPS needs to interact with the <a class="reference internal" href="pddl_manager.html#pddl-manager"><span class="std std-ref">PDDL Manager</span></a> by creating subscriptions and clients for the endpoints to then utilize the features as desired.
 In order to reduce manual overhead, predefined rules and deftemplates are available, which are described in the remainder of this document.</p>
 <p>The idea is to have templates for facts that correspond to the individual endpoints of the PDDL manager.
 The workflow then is for users to simply assert a fact of a defined template to trigger the request to the PDDL manager, then using rules to observe the provided slots for the outcome.</p>
-<p>A comprehensive example for using this integration is given in the <a class="reference internal" href="cx_pddl_clips_tutorial.html#cx-pddl-clips-tutorial"><span class="std std-ref">Tutorial for using the PDDL Manager with cx_pddl_clips</span></a>
-An example for using the interfaces directly without this additional integration can be found in the <a class="reference internal" href="raw_tutorial.html#raw-pddl-agent"><span class="std std-ref">Tutorial for using the PDDL Manager directly</span></a>.</p>
+<p>A comprehensive example for using this integration is given in the <a class="reference internal" href="cx_pddl_clips_tutorial.html#cx-pddl-clips-tutorial"><span class="std std-ref">Tutorial for using the PDDL Manager with cx_pddl_clips</span></a></p>
 <section id="request-execution-model">
 <h3>Request Execution Model<a class="headerlink" href="#request-execution-model" title="Link to this heading"></a></h3>
 <p>The CLIPS interface allows users to assert multiple request facts concurrently
@@ -266,25 +192,38 @@ In order to integrate the PDDL manager with the ROS2 CLIPS-Executive, the follow
 <li><p><a class="reference internal" href="../../plugins/ros_msgs_plugin.html#usage-ros-msgs-plugin"><span class="std std-ref">cx::RosMsgsPlugin</span></a>: Provides access to ROS interfaces of the PDDL manager from within CLIPS.</p></li>
 <li><p><a class="reference internal" href="../../plugins/ament_index_plugin.html#usage-ament-index-plugin"><span class="std std-ref">cx::AmentIndexPlugin</span></a>: Resolves package paths via <code class="docutils literal notranslate"><span class="pre">ament_index</span></code>. While not required, it is very useful in order to load PDDL files.</p></li>
 </ul>
-<p>Also, as the current configuration is compatible with ROS 2 jazzy, action client introspection is not supported, hence the following plugins are needed to trigger temporal planning and obtain the resulting plan:</p>
+<p>Also, as the current configuration is compatible with ROS 2 jazzy, action client introspection is not supported, hence the following plugins are needed to trigger planning and obtain the resulting plan:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">cx::CXCxPddlMsgsPlanTemporalPlugin</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cx::CXCxPddlMsgsTimedPlanActionPlugin</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cx::CXCxPddlInterfacesPlanPlugin</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cx:CXCxPddlInterfacesPlanActionPlugin</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;cx::CXCxPddlInterfacesHierarchicalPlanMethodPlugin</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cx::CXCxPddlInterfacesStnConstraintPlugin</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cx::CXCxPddlInterfacesHierarchicalPlanMethodPlugin</span></code></p></li>
 </ul>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">/**</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">ros__parameters</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">autostart_node</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;example_agent&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">environments</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_pddl_clips_agent&quot;</span><span class="p p-Indicator">]</span>
 
-<span class="w">    </span><span class="nt">structured_pddl_agent</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">cx_pddl_clips_agent</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">plugins</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;executive&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;ros_msgs&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">                </span><span class="s">&quot;ament_index&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">                </span><span class="s">&quot;ros_param&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">                </span><span class="s">&quot;plan_action&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">                </span><span class="s">&quot;plan_action_msg&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">                </span><span class="s">&quot;stn_constraint_msg&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">                </span><span class="s">&quot;hierarchical_plan_method_msg&quot;</span><span class="p p-Indicator">,</span>
 <span class="w">                </span><span class="s">&quot;pddl_files&quot;</span><span class="p p-Indicator">,</span>
 <span class="w">                </span><span class="s">&quot;files&quot;</span><span class="p p-Indicator">]</span>
 <span class="w">      </span><span class="nt">log_clips_to_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">      </span><span class="nt">watch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facts&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;rules&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">redirect_stdout_to_debug</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
 <span class="w">    </span><span class="nt">ament_index</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::AmentIndexPlugin&quot;</span>
+
+<span class="w">    </span><span class="nt">ros_param</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::RosParamPlugin&quot;</span>
 
 <span class="w">    </span><span class="nt">executive</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::ExecutivePlugin&quot;</span>
@@ -294,15 +233,26 @@ In order to integrate the PDDL manager with the ROS2 CLIPS-Executive, the follow
 
 <span class="w">    </span><span class="nt">pddl_files</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::FileLoadPlugin&quot;</span>
-<span class="w">      </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_pddl_clips&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_pddl_clips&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;cx_pddl_bringup&quot;</span><span class="p p-Indicator">]</span>
 <span class="w">      </span><span class="nt">batch</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span>
-<span class="w">        </span><span class="s">&quot;clips/cx_pddl_clips/pddl.clp&quot;</span>
+<span class="w">        </span><span class="s">&quot;clips/cx_pddl_clips/deftemplates.clp&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">        </span><span class="s">&quot;clips/cx_pddl_bringup/deftemplate-overrides.clp&quot;</span><span class="p p-Indicator">,</span>
+<span class="w">        </span><span class="s">&quot;clips/cx_pddl_clips/pddl-no-deftemplates.clp&quot;</span>
 <span class="w">      </span><span class="p p-Indicator">]</span>
 
 <span class="w">    </span><span class="nt">files</span><span class="p">:</span>
 <span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::FileLoadPlugin&quot;</span>
 <span class="w">      </span><span class="nt">pkg_share_dirs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;cx_pddl_bringup&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">      </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;clips/cx_pddl_clips_agent.clp&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;clips/cx_pddl_bringup/cx-pddl-generic-agent.clp&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">    </span><span class="nt">plan_action</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::CXCxPddlInterfacesPlanPlugin&quot;</span>
+<span class="w">    </span><span class="nt">plan_action_msg</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::CXCxPddlInterfacesPlanActionPlugin&quot;</span>
+<span class="w">    </span><span class="nt">stn_constraint_msg</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::CXCxPddlInterfacesStnConstraintPlugin&quot;</span>
+<span class="w">    </span><span class="nt">hierarchical_plan_method_msg</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cx::CXCxPddlInterfacesHierarchicalPlanMethodPlugin&quot;</span>
 </pre></div>
 </div>
 </section>
@@ -326,7 +276,7 @@ PDDL manager and load a PDDL problem into CLIPS.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>The first step is to initialize the interfaces to a running PDDL manager instance by asserting a respective <a class="reference internal" href="#id18"><span class="std std-ref">pddl-manager</span></a> fact.
+<p>The first step is to initialize the interfaces to a running PDDL manager instance by asserting a respective <a class="reference internal" href="#pddl-manager"><span class="std std-ref">pddl-manager</span></a> fact.
 To create an instance, a <a class="reference internal" href="#pddl-instance"><span class="std std-ref">pddl-instance</span></a> fact is asserted, providing the domain and
 problem files, as well as the directory containing them.
 In order to fetch the initial fluents of the instance (as provided in the problem file), a <a class="reference internal" href="#pddl-get-fluents"><span class="std std-ref">pddl-get-fluents</span></a> fact is asserted.</p>
@@ -342,11 +292,13 @@ Can also be asserted directly, if actions are needed in different contexts (e.g.
 Used to track parameters, plan order, and scheduled times.</p>
 <div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">deftemplate</span> pddl-action
   <span class="p">(</span><span class="kr">slot</span> instance <span class="p">(</span><span class="kr">type</span> SYMBOL))
-  <span class="p">(</span><span class="kr">slot</span> id <span class="p">(</span><span class="kr">type</span> SYMBOL))
-  <span class="p">(</span><span class="kr">slot</span> plan <span class="p">(</span><span class="kr">type</span> SYMBOL))
+  <span class="p">(</span><span class="kr">slot</span> id <span class="p">(</span><span class="kr">type</span> SYMBOL)) <span class="c1">; this should be a globally unique ID</span>
   <span class="p">(</span><span class="kr">slot</span> name <span class="p">(</span><span class="kr">type</span> SYMBOL))
   <span class="p">(</span>multislot params <span class="p">(</span><span class="kr">type</span> SYMBOL) <span class="p">(</span>default <span class="p">(</span>create$)))
-  <span class="p">(</span><span class="kr">slot</span> plan-order-class <span class="p">(</span><span class="kr">type</span> INTEGER))
+  <span class="p">(</span><span class="kr">slot</span> plan <span class="p">(</span><span class="kr">type</span> SYMBOL))
+  <span class="p">(</span><span class="kr">slot</span> order <span class="p">(</span><span class="kr">type</span> INTEGER))
+  <span class="p">(</span>multislot predecessors <span class="p">(</span><span class="kr">type</span> INTEGER))
+  <span class="p">(</span><span class="kr">slot</span> task-id <span class="p">(</span><span class="kr">type</span> SYMBOL))
   <span class="p">(</span><span class="kr">slot</span> planned-start-time <span class="p">(</span><span class="kr">type</span> FLOAT))
   <span class="p">(</span><span class="kr">slot</span> planned-duration <span class="p">(</span><span class="kr">type</span> FLOAT))
 <span class="p">)</span>
@@ -569,13 +521,28 @@ Also ensures that no confliction requests are made simultaneously, by always tra
 </pre></div>
 </div>
 </section>
-<section id="id18">
-<span id="id19"></span><h3>pddl-manager<a class="headerlink" href="#id18" title="Link to this heading"></a></h3>
+<section id="pddl-manager">
+<span id="id18"></span><h3>pddl-manager<a class="headerlink" href="#pddl-manager" title="Link to this heading"></a></h3>
 <p>Assert a fact of this type to specify the name of the PDDL manager node.</p>
 <div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">deftemplate</span> pddl-manager
 <span class="s">&quot; Store information on the external pddl manager.</span>
 <span class="s">&quot;</span>
   <span class="p">(</span><span class="kr">slot</span> node <span class="p">(</span><span class="kr">type</span> STRING) <span class="p">(</span>default <span class="s">&quot;/pddl_manager&quot;</span><span class="p">))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="pddl-method">
+<span id="id19"></span><h3>pddl-method<a class="headerlink" href="#pddl-method" title="Link to this heading"></a></h3>
+<p>Represents a grounded PDDL method in a PDDL instance belonging to a hierarchical plan.
+Automatically created when a plan is received.</p>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">deftemplate</span> pddl-method
+  <span class="p">(</span><span class="kr">slot</span> instance <span class="p">(</span><span class="kr">type</span> SYMBOL))
+  <span class="p">(</span><span class="kr">slot</span> plan <span class="p">(</span><span class="kr">type</span> SYMBOL))
+  <span class="p">(</span><span class="kr">slot</span> id <span class="p">(</span><span class="kr">type</span> SYMBOL)) <span class="c1">; this should be a globally unique ID</span>
+  <span class="p">(</span><span class="kr">slot</span> name <span class="p">(</span><span class="kr">type</span> SYMBOL))
+  <span class="p">(</span>multislot params <span class="p">(</span><span class="kr">type</span> SYMBOL) <span class="p">(</span>default <span class="p">(</span>create$)))
+  <span class="p">(</span><span class="kr">slot</span> task-id <span class="p">(</span><span class="kr">type</span> SYMBOL))
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -627,19 +594,18 @@ Acts as a transient layer to synchronize with the external PDDL manager.</p>
 </section>
 <section id="pddl-plan">
 <span id="id23"></span><h3>pddl-plan<a class="headerlink" href="#pddl-plan" title="Link to this heading"></a></h3>
-<p>Represents a PDDL plan.</p>
-<p>Consists of individual <cite>pddl-action</cite> facts with matching plan id.</p>
+<p>Represents a PDDL plan. The chosen <code class="docutils literal notranslate"><span class="pre">plan-type</span></code> determines the format of the resulting plans.</p>
+<p>Plans consist of individual <a class="reference internal" href="#pddl-action"><span class="std std-ref">pddl-action</span></a> facts with matching plan id and might additionally have <a class="reference internal" href="#pddl-stn-constraint"><span class="std std-ref">pddl-stn-constraint</span></a> (for STN plans) or <a class="reference internal" href="#pddl-method"><span class="std std-ref">pddl-method</span></a> facts (for hierarchical plans).</p>
 <div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">deftemplate</span> pddl-plan
   <span class="p">(</span><span class="kr">slot</span> instance <span class="p">(</span><span class="kr">type</span> SYMBOL))
   <span class="p">(</span><span class="kr">slot</span> id <span class="p">(</span><span class="kr">type</span> SYMBOL))
   <span class="p">(</span><span class="kr">slot</span> goal <span class="p">(</span><span class="kr">type</span> SYMBOL))
   <span class="p">(</span><span class="kr">slot</span> goal-ptr <span class="p">(</span><span class="kr">type</span> EXTERNAL-ADDRESS))
-  <span class="p">(</span><span class="kr">slot</span> plan-type <span class="p">(</span><span class="kr">type</span> SYMBOL) <span class="p">(</span><span class="kr">allowed-values</span> CLASSICAL TEMPORAL) <span class="p">(</span>default CLASSICAL))
+  <span class="p">(</span><span class="kr">slot</span> plan-type <span class="p">(</span><span class="kr">type</span> SYMBOL) <span class="p">(</span><span class="kr">allowed-values</span> CLASSICAL TEMPORAL PARTIAL-ORDER HIERARCHICAL STN) <span class="p">(</span>default CLASSICAL))
+  <span class="p">(</span><span class="kr">slot</span> action-type <span class="p">(</span><span class="kr">type</span> SYMBOL) <span class="p">(</span><span class="kr">allowed-values</span> CLASSICAL TEMPORAL STN) <span class="p">(</span>default CLASSICAL))
   <span class="p">(</span><span class="kr">slot</span> goal-handle <span class="p">(</span><span class="kr">type</span> EXTERNAL-ADDRESS))
   <span class="p">(</span><span class="kr">slot</span> output-dir <span class="p">(</span><span class="kr">type</span> STRING))
-  <span class="p">(</span><span class="kr">slot</span> <span class="kr">type</span> <span class="p">(</span><span class="kr">type</span> SYMBOL) <span class="p">(</span><span class="kr">allowed-values</span> TEMPORAL CLASSICAL))
   <span class="p">(</span><span class="kr">slot</span> state <span class="p">(</span><span class="kr">type</span> SYMBOL) <span class="p">(</span><span class="kr">allowed-values</span> PENDING WAITING PLANNING REQUEST-CANCELING CANCELING CANCELED SUCCESS FAILURE) <span class="p">(</span>default PENDING))
-  <span class="p">(</span><span class="kr">slot</span> plan-start <span class="p">(</span><span class="kr">type</span> FLOAT) <span class="p">(</span>default <span class="mf">0.0</span><span class="p">))</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -681,8 +647,35 @@ Can filter actions, objects, or fluents by defining a whitelist.</p>
 </pre></div>
 </div>
 </section>
+<section id="pddl-set-goal-from-string">
+<span id="id27"></span><h3>pddl-set-goal-from-string<a class="headerlink" href="#pddl-set-goal-from-string" title="Link to this heading"></a></h3>
+<p>Register arbitrary goal specifications with the external PDDL manager.
+As <a class="reference internal" href="#pddl-set-goals"><span class="std std-ref">pddl-set-goals</span></a> is limited to simple fuent conditions, this string-based
+method provides an alternative when more flexibility is needed.
+Internally a temporary problem file is created with the current fluents and objects.</p>
+<p>The provided string is then placed at the end of the file.
+An example string is provided below:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;(:goal (and (on a b) (on b c)))&quot;</span>
+</pre></div>
+</div>
+<p>This method can also be used to specify a goal with custom plan quality metrics:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;(:goal ...) (:metric (minimize (fuel-cost)))&quot;</span>
+</pre></div>
+</div>
+<p>Note that this will re-create the goal instance, any prior goal fluents set for
+the goal via <a class="reference internal" href="#pddl-set-goals"><span class="std std-ref">pddl-set-goals</span></a> are lost.</p>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">deftemplate</span> pddl-set-goal-from-string
+  <span class="p">(</span><span class="kr">slot</span> instance <span class="p">(</span><span class="kr">type</span> SYMBOL))
+  <span class="p">(</span><span class="kr">slot</span> goal <span class="p">(</span><span class="kr">type</span> SYMBOL))
+  <span class="p">(</span><span class="kr">slot</span> goal-description <span class="p">(</span><span class="kr">type</span> STRING))
+  <span class="p">(</span><span class="kr">slot</span> state <span class="p">(</span><span class="kr">type</span> SYMBOL) <span class="p">(</span><span class="kr">allowed-values</span> PENDING DONE ERROR) <span class="p">(</span>default PENDING))
+  <span class="p">(</span><span class="kr">slot</span> error <span class="p">(</span><span class="kr">type</span> STRING))
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
 <section id="pddl-set-goals">
-<span id="id27"></span><h3>pddl-set-goals<a class="headerlink" href="#pddl-set-goals" title="Link to this heading"></a></h3>
+<span id="id28"></span><h3>pddl-set-goals<a class="headerlink" href="#pddl-set-goals" title="Link to this heading"></a></h3>
 <p>Register goal conditions with the external PDDL manager.
 The goal conditions are defined using <a class="reference internal" href="#pddl-goal-fluent"><span class="std std-ref">pddl-goal-fluent</span></a> and <a class="reference internal" href="#pddl-goal-numeric-fluent"><span class="std std-ref">pddl-goal-numeric-fluent</span></a> facts with matching goal ids.</p>
 <div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">deftemplate</span> pddl-set-goals
@@ -694,8 +687,30 @@ The goal conditions are defined using <a class="reference internal" href="#pddl-
 </pre></div>
 </div>
 </section>
+<section id="pddl-stn-constraint">
+<span id="id29"></span><h3>pddl-stn-constraint<a class="headerlink" href="#pddl-stn-constraint" title="Link to this heading"></a></h3>
+<p>Represents a STN constraint of a STN plan.
+Automatically created when a plan is received.
+The slots <code class="docutils literal notranslate"><span class="pre">from</span></code> and <code class="docutils literal notranslate"><span class="pre">to</span></code> correspond to the ids of a given plan action in the respective <code class="docutils literal notranslate"><span class="pre">order</span></code> field.
+Constraints have the form: <code class="docutils literal notranslate"><span class="pre">lower-bound</span> <span class="pre">&lt;</span> <span class="pre">time(to,</span> <span class="pre">to-role)</span> <span class="pre">-</span> <span class="pre">time(from,</span> <span class="pre">from-role)</span> <span class="pre">&lt;</span> <span class="pre">upper-bound</span></code></p>
+<div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">deftemplate</span> pddl-stn-constraint
+  <span class="p">(</span><span class="kr">slot</span> instance <span class="p">(</span><span class="kr">type</span> SYMBOL))
+  <span class="p">(</span><span class="kr">slot</span> plan <span class="p">(</span><span class="kr">type</span> SYMBOL))
+  <span class="p">(</span><span class="kr">slot</span> id <span class="p">(</span><span class="kr">type</span> SYMBOL)) <span class="c1">; this should be a globally unique ID</span>
+  <span class="p">(</span><span class="kr">slot</span> from <span class="p">(</span><span class="kr">type</span> INTEGER))
+  <span class="p">(</span><span class="kr">slot</span> from-role <span class="p">(</span><span class="kr">type</span> SYMBOL) <span class="p">(</span><span class="kr">allowed-values</span> START END))
+  <span class="p">(</span><span class="kr">slot</span> to <span class="p">(</span><span class="kr">type</span> INTEGER))
+  <span class="p">(</span><span class="kr">slot</span> to-role <span class="p">(</span><span class="kr">type</span> SYMBOL) <span class="p">(</span><span class="kr">allowed-values</span> START END))
+  <span class="p">(</span><span class="kr">slot</span> is-lower-bounded <span class="p">(</span><span class="kr">type</span> SYMBOL) <span class="p">(</span><span class="kr">allowed-values</span> TRUE FALSE))
+  <span class="p">(</span><span class="kr">slot</span> is-upper-bounded <span class="p">(</span><span class="kr">type</span> SYMBOL) <span class="p">(</span><span class="kr">allowed-values</span> TRUE FALSE))
+  <span class="p">(</span><span class="kr">slot</span> lower-bound <span class="p">(</span><span class="kr">type</span> INTEGER))
+  <span class="p">(</span><span class="kr">slot</span> upper-bound <span class="p">(</span><span class="kr">type</span> INTEGER))
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
 <section id="pddl-type-objects">
-<span id="id28"></span><h3>pddl-type-objects<a class="headerlink" href="#pddl-type-objects" title="Link to this heading"></a></h3>
+<span id="id30"></span><h3>pddl-type-objects<a class="headerlink" href="#pddl-type-objects" title="Link to this heading"></a></h3>
 <p>Lists all objects of a certain type in a PDDL instance.
 Created using <a class="reference internal" href="#pddl-get-type-objects"><span class="std std-ref">pddl-get-type-objects</span></a>.</p>
 <div class="highlight-clips notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kd">deftemplate</span> pddl-type-objects
@@ -712,7 +727,10 @@ Created using <a class="reference internal" href="#pddl-get-type-objects"><span 
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pddl_manager.html" class="btn btn-neutral float-left" title="PDDL Manager" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="domain.html" class="btn btn-neutral float-right" title="PDDL Domain and Problem File Example" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

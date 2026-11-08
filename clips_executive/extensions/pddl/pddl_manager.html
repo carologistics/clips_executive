@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDDL Manager &mdash; CLIPS Executive</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=86f27845" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=8f9e6779" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom_figure.css?v=029e56d8" />
+
+  
+    <link rel="shortcut icon" href="../../_static/icon.svg"/>
+  
+        <script src="../../_static/jquery.js?v=8dae8fb0"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=360bc84d"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/clipboard.min.js?v=66b4909c"></script>
+        <script src="../../_static/copybutton.js?v=71494f10"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="PDDL CLIPS Interfaces" href="pddl_clips.html" />
+    <link rel="prev" title="Usage" href="usage.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            CLIPS Executive
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started/index.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plugins/index.html">CLIPS Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../plugin_generator/index.html">ROS Interface Plugin Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cli/index.html">Command Line Interface (CLI)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Extensions</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">PDDL Integration for CLIPS</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="index.html#background-pddl">Background: PDDL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#overview">Overview</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html#content">Content</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">PDDL Manager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pddl_clips.html">PDDL CLIPS Interfaces</a></li>
+<li class="toctree-l4"><a class="reference internal" href="domain.html">PDDL Domain and Problem File Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cx_pddl_clips_tutorial.html">Tutorial: cx_pddl_clips Agent</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../rl/index.html">Reinforcement Learning Integration for CLIPS</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../standards.html">Standard Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../__readme_include.html">README</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">CLIPS Executive</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Extensions</a></li>
+          <li class="breadcrumb-item"><a href="index.html">PDDL Integration for CLIPS</a></li>
+      <li class="breadcrumb-item active">PDDL Manager</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/extensions/pddl/pddl_manager.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="pddl-manager">
+<span id="id1"></span><h1>PDDL Manager<a class="headerlink" href="#pddl-manager" title="Link to this heading"></a></h1>
+<p>The PDDL Manager node has the following responsibilities:</p>
+<ul class="simple">
+<li><p>Manage multiple PDDL instances concurrently.</p></li>
+<li><p>Load PDDL files (optionally templated via Jinja).</p></li>
+<li><p>Manage fluents, objects, functions, and goals.</p></li>
+<li><p>Check conditions and apply effects of actions.</p></li>
+<li><p>Configure planning goals.</p></li>
+<li><p>Applying planning filters to narrow down problems to a subset of actions, objects, and fluents for more detailed execution models.</p></li>
+<li><p>Trigger planning a for each goal concurrently.</p></li>
+<li><p>Return resulting plans in the chosen target format (<code class="docutils literal notranslate"><span class="pre">SEQUENTIAL_PLAN</span></code>, <code class="docutils literal notranslate"><span class="pre">TIME_TRIGGERED_PLAN</span></code>, <code class="docutils literal notranslate"><span class="pre">PARTIAL_ORDER_PLAN</span></code>, <code class="docutils literal notranslate"><span class="pre">HIERARCHICAL_PLAN</span></code>, <code class="docutils literal notranslate"><span class="pre">STN_PLAN</span></code>)</p></li>
+</ul>
+<section id="ros-parameters">
+<h2>ROS Parameters<a class="headerlink" href="#ros-parameters" title="Link to this heading"></a></h2>
+<p>The following ROS parameters are available:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25.0%" />
+<col style="width: 15.0%" />
+<col style="width: 60.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">bond_heartbeat_period</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">0.0</span></code></p></td>
+<td><p>Frequency of bond pulse.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">planner</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">up_nextflap:NextFLAPImpl</span></code></p></td>
+<td><p>Colon sepearated identifier of the library for importlib and the Class name</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="node-parameters">
+<h2>Node Parameters<a class="headerlink" href="#node-parameters" title="Link to this heading"></a></h2>
+<dl class="field-list">
+<dt class="field-odd">autostart_node<span class="colon">:</span></dt>
+<dd class="field-odd"><table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Type</p></td>
+<td><p>Default</p></td>
+</tr>
+<tr class="row-even"><td><p>bool</p></td>
+<td><p>false</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="simple">
+<dt>Description</dt><dd><p>If set to <em>true</em>, automatically activate the lifecycle node on startup.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">bond_heartbeat_period<span class="colon">:</span></dt>
+<dd class="field-even"><table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Type</p></td>
+<td><p>Default</p></td>
+</tr>
+<tr class="row-even"><td><p>float</p></td>
+<td><p>0.0</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="simple">
+<dt>Description</dt><dd><p>Heartbeat rate when used to bond with other nodes. A period of 0.0 disables bond usage.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">planner<span class="colon">:</span></dt>
+<dd class="field-odd"><table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Type</p></td>
+<td><p>Default</p></td>
+</tr>
+<tr class="row-even"><td><p>string</p></td>
+<td><p>“up_nextflap:NextFLAPImpl”</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="simple">
+<dt>Description</dt><dd><p>Colon sepearated identifier of the library for importlib and the Class name.
+Nextflap is provided alongside this extension. When choosing other planners, make sure the respective package is installed on your system.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+<section id="basic-workflow">
+<h2>Basic Workflow<a class="headerlink" href="#basic-workflow" title="Link to this heading"></a></h2>
+<p>The PDDL Manager is designed around a clear separation between the <em>domain
+model</em> (what is true about the world and what actions are available) and
+<em>goals</em> (what a particular planning request wants to achieve and
+which subset of the model it operates on).</p>
+<section id="pddl-instances-and-associated-goals">
+<h3>PDDL Instances and Associated Goals<a class="headerlink" href="#pddl-instances-and-associated-goals" title="Link to this heading"></a></h3>
+<p>The entry point for any use of the manager is the creation of an <cite>instance</cite>, which handles a PDDL domain, it’s evolution over time and all associated planning goals.
+An instance is setup by loading a PDDL domain fila (and
+optionally a problem file) via <code class="docutils literal notranslate"><span class="pre">/add_pddl_instance</span></code>.
+The manager parses file using Jinja2, supporting parameterized and modular domain templates.
+If an initial state is supplied (via a problem file), it becomes the current state of the domain represented by the instance. Otherwise the current state is empty.</p>
+<p>The instance further manages <em>goals</em>, which are  named planning sub-problem attached to a PDDL
+instance.
+Every PDDL instance starts with a default goal instance called
+<code class="docutils literal notranslate"><span class="pre">base</span></code> that contains the specification supplied through the problem file (or nothing if no file is provided).
+Additional goal instances are created via
+<code class="docutils literal notranslate"><span class="pre">/create_goal_instance</span></code> or directly from a string via <code class="docutils literal notranslate"><span class="pre">/set_goal_from_string</span></code>.</p>
+<p>The instance can be updated continuously during execution to reflect the
+current state of the world via services:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">/add_fluents</span></code> and <code class="docutils literal notranslate"><span class="pre">/rm_fluents</span></code> assert or retract boolean predicates.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/set_functions</span></code> updates the value of numeric fluents.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/add_objects</span></code> and <code class="docutils literal notranslate"><span class="pre">/rm_objects</span></code> extend or reduce the object universe.</p></li>
+</ul>
+<p>Note that planning requests automatically operates on the
+latest world state.</p>
+</section>
+<section id="planning">
+<h3>Planning<a class="headerlink" href="#planning" title="Link to this heading"></a></h3>
+<p>A planning request is sent as a ROS 2 action goal to <code class="docutils literal notranslate"><span class="pre">/plan</span></code>.  The
+request carries three pieces of information: the PDDL instance name, the
+goal instance name, and the desired output plan kind.</p>
+<p>Because planning runs in a subprocess, multiple goal instances,even
+across different PDDL instances, can be planned concurrently without
+blocking each other or blocking service calls that update the world state.</p>
+</section>
+<section id="condition-checking-and-effect-inspection">
+<h3>Condition Checking and Effect Inspection<a class="headerlink" href="#condition-checking-and-effect-inspection" title="Link to this heading"></a></h3>
+<p>Beyond planning, the manager exposes two services that support reactive
+execution without requiring a separate planning call.</p>
+<p><code class="docutils literal notranslate"><span class="pre">/check_action_condition</span></code> evaluates whether the preconditions of a named
+action (with concrete object arguments) are satisfied in the current base
+problem state.  It returns a boolean result and, on failure, the list of
+unsatisfied conditions as human-readable strings.  This is useful for an
+executor that wants to verify applicability before dispatching an action to
+the physical system.</p>
+<p><code class="docutils literal notranslate"><span class="pre">/get_action_effects</span></code> computes and returns the effects that a named action
+would have if applied in the current state.  Effects are returned as two
+separate lists — boolean fluent effects and numeric function effects — each
+annotated with the time point at which they take effect (<code class="docutils literal notranslate"><span class="pre">START</span></code> or
+<code class="docutils literal notranslate"><span class="pre">END</span></code>) and, for numeric effects, the operator (<code class="docutils literal notranslate"><span class="pre">=</span></code>, <code class="docutils literal notranslate"><span class="pre">+</span></code>, <code class="docutils literal notranslate"><span class="pre">-</span></code>).
+This allows an executor to <em>predict</em> and <em>apply</em> effects locally without
+sending another service call to the manager after each action completes.</p>
+</section>
+</section>
+<section id="pddl-manager-interfaces">
+<h2>PDDL Manager Interfaces<a class="headerlink" href="#pddl-manager-interfaces" title="Link to this heading"></a></h2>
+<p>The PDDL Manager exposes a wide range of ROS 2 interfaces.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50.0%" />
+<col style="width: 50.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Service / Topic</p></th>
+<th class="head"><p>Corresponding Deftemplate(s)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><abbr title="Add a new PDDL instance to the manager">/add_pddl_instance</abbr></p></td>
+<td><p><a class="reference internal" href="pddl_clips.html#pddl-instance"><span class="std std-ref">pddl-instance</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><abbr title="Check if the preconditions of a PDDL action are satisfied">/check_action_condition</abbr></p></td>
+<td><p><a class="reference internal" href="pddl_clips.html#pddl-action-condition"><span class="std std-ref">pddl-action-condition</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><abbr title="Retrieve the effects of a PDDL action">/get_action_effects</abbr></p></td>
+<td><p><a class="reference internal" href="pddl_clips.html#pddl-action-get-effect"><span class="std std-ref">pddl-action-get-effect</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><abbr title="Get the list of available action names for a PDDL instance">/get_action_names</abbr></p></td>
+<td><p><a class="reference internal" href="pddl_clips.html#pddl-action-names"><span class="std std-ref">pddl-action-names</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><abbr title="Fetch all current boolean fluents of a PDDL instance">/get_fluents</abbr></p></td>
+<td><p><a class="reference internal" href="pddl_clips.html#pddl-get-fluents"><span class="std std-ref">pddl-get-fluents</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><abbr title="Add multiple fluents to a PDDL instance">/add_fluents</abbr></p></td>
+<td><p><a class="reference internal" href="pddl_clips.html#pddl-fluent-change"><span class="std std-ref">pddl-fluent-change</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><abbr title="Remove multiple fluents from a PDDL instance">/rm_fluents</abbr></p></td>
+<td><p><a class="reference internal" href="pddl_clips.html#pddl-fluent-change"><span class="std std-ref">pddl-fluent-change</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><abbr title="Add objects to a PDDL instance">/add_objects</abbr></p></td>
+<td><p><a class="reference internal" href="pddl_clips.html#pddl-object-change"><span class="std std-ref">pddl-object-change</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><abbr title="Remove objects from a PDDL instance">/rm_objects</abbr></p></td>
+<td><p><a class="reference internal" href="pddl_clips.html#pddl-object-change"><span class="std std-ref">pddl-object-change</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><abbr title="Set values for numeric functions in the PDDL instance">/set_functions</abbr></p></td>
+<td><p><a class="reference internal" href="pddl_clips.html#pddl-numeric-fluent-change"><span class="std std-ref">pddl-numeric-fluent-change</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><abbr title="Retrieve values of numeric functions">/get_functions</abbr></p></td>
+<td><p><a class="reference internal" href="pddl_clips.html#pddl-get-numeric-fluents"><span class="std std-ref">pddl-get-numeric-fluents</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><abbr title="Create a goal instance for planning and populate it from a string">/set_goal_from_string</abbr></p></td>
+<td><p><a class="reference internal" href="pddl_clips.html#pddl-set-goal-from-string"><span class="std std-ref">pddl-set-goal-from-string</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><abbr title="Register goal conditions with the PDDL manager">/set_goals</abbr></p></td>
+<td><p><a class="reference internal" href="pddl_clips.html#pddl-set-goals"><span class="std std-ref">pddl-set-goals</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><abbr title="Clear all goal conditions of a PDDL instance">/clear_goals</abbr></p></td>
+<td><p><a class="reference internal" href="pddl_clips.html#pddl-clear-goals"><span class="std std-ref">pddl-clear-goals</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><abbr title="Apply a filter to restrict planning to specific actions">/set_action_filter</abbr></p></td>
+<td><p><a class="reference internal" href="pddl_clips.html#pddl-planning-filter"><span class="std std-ref">pddl-planning-filter</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><abbr title="Apply a filter to restrict planning to specific objects">/set_object_filter</abbr></p></td>
+<td><p><a class="reference internal" href="pddl_clips.html#pddl-planning-filter"><span class="std std-ref">pddl-planning-filter</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><abbr title="Apply a filter to restrict planning to specific fluents">/set_fluent_filter</abbr></p></td>
+<td><p><a class="reference internal" href="pddl_clips.html#pddl-planning-filter"><span class="std std-ref">pddl-planning-filter</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><abbr title="Create a new goal instance for planning">/create_goal_instance</abbr></p></td>
+<td><p><a class="reference internal" href="pddl_clips.html#pddl-create-goal-instance"><span class="std std-ref">pddl-create-goal-instance</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><abbr title="Fetch all predicates of a PDDL instance">/get_predicates</abbr></p></td>
+<td><p><a class="reference internal" href="pddl_clips.html#pddl-get-predicates"><span class="std std-ref">pddl-get-predicates</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><abbr title="Fetch all objects of a certain type in a PDDL instance">/get_type_objects</abbr></p></td>
+<td><p><a class="reference internal" href="pddl_clips.html#pddl-get-type-objects"><span class="std std-ref">pddl-get-type-objects</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><abbr title="Send a planning goal and retrieve the resulting plan">/plan</abbr></p></td>
+<td><p><a class="reference internal" href="pddl_clips.html#pddl-plan"><span class="std std-ref">pddl-plan</span></a>, <a class="reference internal" href="pddl_clips.html#pddl-action"><span class="std std-ref">pddl-action</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><abbr title="Publishes updates about instance changes in the manager">/instance_update</abbr></p></td>
+<td><p><a class="reference internal" href="pddl_clips.html#pddl-manager"><span class="std std-ref">pddl-manager</span></a></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="plan-converions">
+<h2>Plan Converions<a class="headerlink" href="#plan-converions" title="Link to this heading"></a></h2>
+<p>In the Unified Planning Framework, the output format of a planning result depends on the planner used.
+For example, the NextFLAP planner returns partial-order plans when solving classical PDDL problems, while other planners may produce sequential plans instead.</p>
+<p>The Unified Planning Framework also provides utilities to convert plans between different representations, such as converting between sequential and partial-order plans, or between time-triggered (temporal) plans and Simple Temporal Network (STN) representations.</p>
+<p>The PDDL Manager requires users to explicitly specify their desired output format and converts retrieved plans accordingly.
+However, not all conversions are meaningful or supported. For instance, converting a classical plan into a hierarchical plan is generally not appropriate, since no abstract tasks or methods are available in that setting.
+Users should therefore carefully consider the chosen PDDL model, planner, and requested output format to ensure compatibility and meaningful results.</p>
+<p>In addition to the conversions provided by the Unified Planning Framework, the PDDL Manager implements further conversions from time-triggered plans or STNs into partial-order plans.
+This conversion is based on a relaxation of the underlying STN: temporal constraints are removed, and the remaining structure is interpreted as causal links.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="usage.html" class="btn btn-neutral float-left" title="Usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pddl_clips.html" class="btn btn-neutral float-right" title="PDDL CLIPS Interfaces" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Tarik Viehmann.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
