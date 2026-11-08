@@ -730,12 +730,12 @@ The cx_pddl_bringup package additional supplies the depots domain from the IPC:
    ros2 launch cx_pddl_bringup cx_pddl_launch.py \
      pddl_plan_type:='PARTIAL-ORDER' \
      pddl_domain:='pddl/depots_classical_domain.pddl' \
-     pddl_problem:='pddl/depots_classical_problem.hddl'
+     pddl_problem:='pddl/depots_classical_problem.pddl'
 
    ros2 launch cx_pddl_bringup cx_pddl_launch.py \
      pddl_plan_type:='TEMPORAL' \
      pddl_domain:='pddl/depots_temporal_domain.pddl' \
-     pddl_problem:='pddl/depots_temporal_problem.hddl'
+     pddl_problem:='pddl/depots_temporal_problem.pddl'
 
 Summary
 -------
