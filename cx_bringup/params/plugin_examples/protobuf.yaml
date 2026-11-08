@@ -36,6 +36,6 @@
       plugin: "cx::FileLoadPlugin"
       pkg_share_dirs: ["cx_bringup"]
       # same as peer1, just overriding the peer creation
-      load: [
+      batch: [
         "clips/plugin_examples/protobuf-peer1.clp",
         "clips/plugin_examples/protobuf-peer2.clp"]
