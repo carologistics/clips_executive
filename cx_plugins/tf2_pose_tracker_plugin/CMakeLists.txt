@@ -32,6 +32,10 @@ add_library(${PROJECT_NAME} SHARED src/tf2_pose_tracker_plugin.cpp)
 if(ROS_DISTRO STREQUAL "humble")
   target_compile_definitions(${PROJECT_NAME} PRIVATE HUMBLE)
 endif()
+# tf2_ros only takes NodeInterfaces from lyrical on; rolling removed the per-interface constructor
+if(ROS_DISTRO STRGREATER_EQUAL "lyrical")
+  target_compile_definitions(${PROJECT_NAME} PRIVATE USE_TF2_NODE_INTERFACES)
+endif()
 
 pluginlib_export_plugin_description_file(cx_plugin tf2_pose_tracker_plugin.xml)
 

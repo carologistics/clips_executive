@@ -21,6 +21,7 @@
 
 #include <filesystem>
 
+#include "rclcpp/log_directory.hpp"
 #include "rclcpp/logging.hpp"
 
 namespace cx

@@ -48,6 +48,8 @@ void Tf2PoseTrackerPlugin::initialize()
 #ifdef HUMBLE
   tf_listener_ = std::make_unique<tf2_ros::TransformListener>(*tf_buffer_, tf_spin_thread);
 
+#elif defined(USE_TF2_NODE_INTERFACES)
+  tf_listener_ = std::make_unique<tf2_ros::TransformListener>(*tf_buffer_, *node, tf_spin_thread);
 #else
   tf_listener_ = std::make_unique<tf2_ros::TransformListener>(
     *tf_buffer_, node->get_node_base_interface(), node->get_node_logging_interface(),
